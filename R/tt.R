@@ -1,13 +1,13 @@
 #' @export
 tt <- function(x,
-               format = "tblr",
+               output = "tblr",
                inner = NULL,
                outer = NULL) {
 
   checkmate::assert_data_frame(x)
-  checkmate::assert_choice(format, c("tblr", "html"))
+  checkmate::assert_choice(output, c("tblr", "html"))
 
-  if (format == "tblr") {
+  if (output == "tblr") {
     out <- spec_table_latex(x, inner = inner, outer = outer)
   }
   return(out)

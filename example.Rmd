@@ -9,7 +9,7 @@ header-includes: \usepackage{tabularray}
 devtools::document()
 pkgload::load_all()
 x <- mtcars[1:4, 1:5]
-tt(x, inner = "vlines,hlines={dashed,fg=blue}") |>  
+tt(x, output = "tblr", inner = "vlines,hlines={dashed,fg=blue}") |>  
   spec_column(1:2, halign = "c", bold = TRUE) |>
   spec_column(4, halign = "r", fg = "blue", wd = "4cm") |>
   spec_row(c(1, 4), bg = "pink", italic = TRUE) |>

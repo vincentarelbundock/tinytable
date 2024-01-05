@@ -1,15 +1,11 @@
 # TODO: Order of priority by last called
 spec_table_latex <- function(x, inner = NULL, outer = NULL) {
+
   checkmate::assert_string(inner, null.ok = TRUE)
   checkmate::assert_string(outer, null.ok = TRUE)
 
-  begin <- c(
-    "\\begin{table}",
-    "\\begin{tblr}[         %% tabularray outer open",
-    "]                     %% tabularray outer close",
-    "{                     %% tabularray inner open",
-    "}                     %% tabularray inner close"
-  )
+  template <- readLines(here::here("inst/template_tblr.tex"))
+
   if (!is.null(colnames(x))) {
     header <- paste(colnames(x), collapse = " & ")
     header <- paste(header, "\\\\")
@@ -18,12 +14,16 @@ spec_table_latex <- function(x, inner = NULL, outer = NULL) {
   }
   body <- apply(x, 1, paste, collapse = " & ")
   body <- paste(body, "\\\\")
-  end <- c(
-    "\\end{tblr}",
-    "\\end{table}",
-    ""
+
+  idx <- grep("\\$TINYTABLE_BODY", template)
+  out <- c(
+    template[1:(idx - 1)],
+    header,
+    body,
+    template[(idx + 1):length(template)]
   )
-  out <- c(begin, header, body, end)
+
+  out <- trimws(out)
   out <- paste(out, collapse = "\n")
 
   tabularray_cols <- rep("Q[]", ncol(x))
