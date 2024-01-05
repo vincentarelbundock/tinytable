@@ -1,3 +1,8 @@
+<!--
+table.rows[1].style.backgroundColor = "yellow";
+table.rows[i].cells[1].style.fontVariant = "small-caps"; 
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,35 +15,9 @@
 <body>
     <div class="container mt-4">
         <table class="table" id="myTable">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First Name</th>
-                    <th scope="col">Last Name</th>
-                    <th scope="col">Username</th>
-                </tr>
-            </thead>
+            $TINYTABLE_BOOTSTRAP_HEADER
             <tbody>
-
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                </tr>
-                <tr>
-
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>the Bird</td>
-                    <td>@twitter</td>
-                </tr>
+              $TINYTABLE_BOOTSTRAP_BODY
             </tbody>
         </table>
     </div>
@@ -48,10 +27,10 @@
 
             var table = document.getElementById("myTable");
             if (table.rows.length > 1) {
-                // Change background color of specific rows
                 table.rows[1].style.backgroundColor = "yellow"; // Second row
-
-                table.rows[2].style.backgroundColor = "pink";   // Third row
+                table.rows[1].style.fontWeight = 'bold';
+                table.rows[1].style.fontStyle = 'italic';
+                // tinytable style rows before this
             }
         }
 
@@ -59,9 +38,9 @@
             var table = document.getElementById("myTable");
             for (var i = 0; i < table.rows.length; i++) {
                 if (table.rows[i].cells.length > 1) {
-                    // Change text color of the second column
-                    table.rows[i].cells[1].style.color = "blue"; // Change to your desired color
-
+                    table.rows[i].cells[1].style.color = "blue";
+                    table.rows[i].cells[1].style.fontVariant = "small-caps";
+                    // tinytable style columns before this
                 }
             }
         }
