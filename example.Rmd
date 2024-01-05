@@ -6,14 +6,15 @@ header-includes: \usepackage{tabularray}
 ---
 
 ```{r, results="asis"}
-source("R/latex.R")
+devtools::document()
+pkgload::load_all()
 x <- mtcars[1:4, 1:5]
-init_latex(x) |>  
-  style_columns_latex(1:2, halign = "c", bold = TRUE) |>
-  style_rows_latex(c(1, 4), bg = "pink", italic = TRUE) |>
-  style_columns_latex(4, halign = "r", fg = "blue", wd = "4cm") |>
-  style_cells_latex(1:2, 1:2, bg = "black") |>
-  style_cells_latex(4, 4, monospace = TRUE, bold = TRUE) |>
+tt(x, inner = "vlines,hlines={dashed,fg=blue}") |>  
+  spec_column(1:2, halign = "c", bold = TRUE) |>
+  spec_column(4, halign = "r", fg = "blue", wd = "4cm") |>
+  spec_row(c(1, 4), bg = "pink", italic = TRUE) |>
+  spec_cell(1:2, 1:2, bg = "black", fg = "white") |>
+  spec_cell(4, 4, monospace = TRUE, bold = TRUE) |>
   cat()
 ```
 

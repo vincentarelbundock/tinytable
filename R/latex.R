@@ -1,6 +1,8 @@
 # TODO: Order of priority by last called
-#
-init_latex <- function(x) {
+spec_table_latex <- function(x, inner = NULL, outer = NULL) {
+  checkmate::assert_string(inner, null.ok = TRUE)
+  checkmate::assert_string(outer, null.ok = TRUE)
+
   begin <- c(
     "\\begin{table}",
     "\\begin{tblr}[         %% tabularray outer open",
@@ -22,6 +24,7 @@ init_latex <- function(x) {
     ""
   )
   out <- c(begin, header, body, end)
+  out <- paste(out, collapse = "\n")
 
   tabularray_cols <- rep("Q[]", ncol(x))
   tabularray_rows <- rep("Q[]", nrow(x))
@@ -29,15 +32,21 @@ init_latex <- function(x) {
     tabularray_rows <- c("Q[]|", tabularray_rows)
   }
 
-  idx <- grep("% tabularray inner open", out)
-  out <- c(
-    out[1:idx],
+  new <- c(
     sprintf("colspec={%s},", paste(tabularray_cols, collapse = "")),
-    sprintf("rowspec={%s},", paste(tabularray_rows, collapse = "")),
-    out[(idx + 1):length(out)]
-  )
+    sprintf("rowspec={%s},", paste(tabularray_rows, collapse = ""))
+  ) 
+  out <- tabularray_setting(out, new, inner = TRUE)
 
-  out <- paste(out, collapse = "\n")
+  if (!is.null(inner)) {
+    if (!grepl(",$", trimws(inner))) inner <- paste0(inner, ",")
+    out <- tabularray_setting(out, inner, inner = TRUE)
+  }
+  if (!is.null(outer)) {
+    if (!grepl(",$", trimws(outer))) outer <- paste0(outer, ",")
+    out <- tabularray_setting(out, outer, inner = FALSE)
+  }
+
   attr(out, "ncol") <- ncol(x)
   attr(out, "nrow") <- nrow(x)
   attr(out, "tabularray_cols") <- tabularray_cols
@@ -45,6 +54,27 @@ init_latex <- function(x) {
   class(out) <- c("tinytable_latex", class(out))
   return(out)
 }
+
+
+
+tabularray_setting <- function(x, new, inner = TRUE) {
+  att <- attributes(x)    
+  out <- strsplit(x, "\n")[[1]]
+  if (isTRUE(inner)) {
+    idx <- grep("% tabularray inner close", out)
+  } else {
+    idx <- grep("% tabularray outer close", out)
+  }
+  out <- c(
+    out[1:(idx - 1)],
+    new,
+    out[idx:length(out)]
+  )
+  out <- paste(out, collapse = "\n")
+  attributes(out) <- att
+  return(out)
+}
+
 
 
 tabularray_spec <- function(bold,
@@ -108,154 +138,4 @@ tabularray_spec <- function(bold,
 
   return(spec)
 }
-
-
-style_columns_latex <- function(x,
-                                j,
-                                halign = NULL,
-                                valign = NULL,
-                                wd = NULL,
-                                fg = NULL,
-                                bg = NULL,
-                                bold = FALSE,
-                                italic = FALSE,
-                                monospace = FALSE,
-                                smallcaps = FALSE) {
-
-  cols <- attr(x, "tabularray_cols")
-  checkmate::assert_class(x, classes = "tinytable_latex")
-  checkmate::assert_integerish(j, lower = 1, upper = length(cols), null.ok = FALSE)
-
-  # Get spec from tabularray_spec function
-  spec <- tabularray_spec(
-    bold = bold,
-    italic = italic,
-    monospace = monospace,
-    smallcaps = smallcaps,
-    fg = fg,
-    bg = bg,
-    wd = wd,
-    halign = halign
-  )
-
-  # Update columns
-  cols[j] <- sub("\\[.*\\]", spec, cols[j])
-  cols_string <- paste(cols, collapse = "")
-
-  # Write colspec= header
-  tab <- strsplit(x, "\n")[[1]]
-  idx <- grep("^colspec=\\{", tab)
-  tab[idx] <- sprintf("colspec={%s},", cols_string)
-
-  # Re-build table
-  tab <- paste(tab, collapse = "\n")
-  attributes(tab) <- attributes(x)
-  attr(tab, "tabularray_cols") <- cols
-
-  return(tab)
-}
-
-
-style_rows_latex <- function(x,
-                             i,
-                             halign = NULL,
-                             valign = NULL,
-                             wd = NULL,
-                             fg = NULL,
-                             bg = NULL,
-                             bold = FALSE,
-                             italic = FALSE,
-                             monospace = FALSE,
-                             smallcaps = FALSE) {
-
-  rows <- attr(x, "tabularray_rows")
-  checkmate::assert_class(x, classes = "tinytable_latex")
-  checkmate::assert_integerish(i, lower = 1, upper = length(rows), null.ok = FALSE)
-
-  # Get spec from tabularray_spec function (same as used in style_columns_latex)
-  spec <- tabularray_spec(
-    bold = bold,
-    italic = italic,
-    monospace = monospace,
-    smallcaps = smallcaps,
-    fg = fg,
-    bg = bg,
-    wd = wd,
-    halign = halign
-  )
-
-  # Update rows
-  rows[i] <- sub("\\[.*\\]", spec, rows[i])
-  rows_string <- paste(rows, collapse = "")
-
-  # Write rowspec= header
-  tab <- strsplit(x, "\n")[[1]]
-  idx <- grep("^rowspec=\\{", tab)
-  tab[idx] <- sprintf("rowspec={%s},", rows_string)
-
-  # Re-build table
-
-  tab <- paste(tab, collapse = "\n")
-  attributes(tab) <- attributes(x)
-  attr(tab, "tabularray_rows") <- rows
-
-
-  return(tab)
-}
-
-
-style_cells_latex <- function(x,
-                              i,
-                              j,
-                              halign = NULL,
-                              valign = NULL,
-                              wd = NULL,
-                              fg = NULL,
-                              bg = NULL,
-                              bold = FALSE,
-                              italic = FALSE,
-                              monospace = FALSE,
-                              smallcaps = FALSE) {
-
-  checkmate::assert_class(x, classes = "tinytable_latex")
-  checkmate::assert_integerish(i, lower = 1, upper = attr(x, "nrow"), null.ok = FALSE)
-  checkmate::assert_integerish(j, lower = 1, upper = attr(x, "ncol"), null.ok = FALSE)
-
-  # Get spec from tabularray_spec function
-  spec <- tabularray_spec(
-    bold = bold,
-    italic = italic,
-    monospace = monospace,
-    smallcaps = smallcaps,
-    fg = fg,
-    bg = bg,
-    wd = wd,
-    halign = halign
-  )
-
-  # Construct cell header
-  cell_header <- sprintf(
-    "cell{%s}{%s}={%s},",
-    paste(i, collapse = ","),
-    paste(j, collapse = ","),
-    # for some reason, double-escaping is happening
-    gsub("\\\\\\\\", "\\\\", gsub("\\[|\\]", "", spec))
-  )
-
-  # Find and replace the cell spec
-  tab <- strsplit(x, "\n")[[1]]
-  idx <- grep("% tabularray inner close", tab)
-  tab <- c(
-    tab[1:(idx - 1)],
-    cell_header,
-    tab[idx:length(tab)]
-  )
-
-  # Re-build table
-  tab <- paste(tab, collapse = "\n")
-  attributes(tab) <- attributes(x)
-
-  return(tab)
-}
-
 

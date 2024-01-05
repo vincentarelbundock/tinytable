@@ -1,5 +1,5 @@
 init_html <- function(x) {
-  template <- readLines("bootstrap_example.html")
+  template <- readLines(here::here("inst/bootstrap_template.html"))
   # header
   idx <- grep("$TINYTABLE_BOOTSTRAP_HEADER", template, fixed = TRUE)
   if (!is.null(colnames(x))) {
