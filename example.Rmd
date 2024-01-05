@@ -1,0 +1,19 @@
+---
+title: title
+date: "`r Sys.Date()`"
+output: pdf_document
+header-includes: \usepackage{tabularray}
+---
+
+```{r, results="asis"}
+source("R/latex.R")
+x <- mtcars[1:4, 1:5]
+init_latex(x) |>  
+  style_columns_latex(1:2, halign = "c", bold = TRUE) |>
+  style_rows_latex(c(1, 4), bg = "pink", italic = TRUE) |>
+  style_columns_latex(4, halign = "r", fg = "blue", wd = "4cm") |>
+  style_cells_latex(1:2, 1:2, bg = "black") |>
+  style_cells_latex(4, 4, monospace = TRUE, bold = TRUE) |>
+  cat()
+```
+
