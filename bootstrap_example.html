@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytable</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container mt-4">
+        <table class="table" id="myTable">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Username</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>@fat</td>
+                </tr>
+                <tr>
+
+                    <th scope="row">3</th>
+                    <td>Larry</td>
+                    <td>the Bird</td>
+                    <td>@twitter</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function updateRows() {
+
+            var table = document.getElementById("myTable");
+            if (table.rows.length > 1) {
+                // Change background color of specific rows
+                table.rows[1].style.backgroundColor = "yellow"; // Second row
+
+                table.rows[2].style.backgroundColor = "pink";   // Third row
+            }
+        }
+
+        function updateColumns() {
+            var table = document.getElementById("myTable");
+            for (var i = 0; i < table.rows.length; i++) {
+                if (table.rows[i].cells.length > 1) {
+                    // Change text color of the second column
+                    table.rows[i].cells[1].style.color = "blue"; // Change to your desired color
+
+                }
+            }
+        }
+
+        window.onload = function() {
+            updateRows();
+            updateColumns();
+        };
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
+
