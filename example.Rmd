@@ -2,19 +2,34 @@
 title: title
 date: "`r Sys.Date()`"
 output: pdf_document
-header-includes: \usepackage{tabularray}
+header-includes: 
+  - \usepackage{tabularray}
+  - \UseTblrLibrary{booktabs}
 ---
 
 ```{r, results="asis"}
 devtools::document()
 pkgload::load_all()
-x <- mtcars[1:4, 1:5]
-tt(x, output = "tblr", inner = "vlines,hlines={dashed,fg=blue}") |>  
-  spec_column(1:2, halign = "c", bold = TRUE) |>
-  spec_column(4, halign = "r", fg = "blue", wd = "4cm") |>
-  spec_row(c(1, 4), bg = "pink", italic = TRUE) |>
-  spec_cell(1:2, 1:2, bg = "black", fg = "white") |>
-  spec_cell(4, 4, monospace = TRUE, bold = TRUE) |>
-  cat()
+x <- mtcars[1:4, 1:4]
+```
+
+# Rows
+
+```{r}
+devtools::document()
+pkgload::load_all()
+tt(x, output = "tblr") |>
+  spec_row(i = 2:3, fg = "blue6", bg = "pink", font="\\bfseries")
+```
+
+# Cells
+
+## Spanning cells
+
+```{r}
+# r=3: cell spans 3 rows
+# c=2: cells spans 2 columns 
+tt(x, output = "tblr") |>
+  spec_cell(i = 2, j = 1, r = 3, c = 2, bg = "pink")
 ```
 

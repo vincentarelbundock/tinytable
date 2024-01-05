@@ -1,47 +1,70 @@
 #' @export
 spec_column.tinytable_latex <- function(x,
-                                        j,
-                                        halign = NULL,
-                                        valign = NULL,
-                                        wd = NULL,
-                                        fg = NULL,
-                                        bg = NULL,
-                                        bold = FALSE,
-                                        italic = FALSE,
-                                        monospace = FALSE,
-                                        smallcaps = FALSE) {
+  col,
+  halign = NULL,
+  valign = NULL,
+  wd = NULL,
+  co = NULL,
+  bg = NULL,
+  fg = NULL,
+  font = NULL,
+  mode = NULL,
+  cmd = NULL,
+  preto = NULL,
+  appto = NULL,
+  tabularray = "") {
 
-  cols <- attr(x, "tabularray_cols")
-  checkmate::assert_class(x, classes = "tinytable_latex")
-  checkmate::assert_integerish(j, lower = 1, upper = length(cols), null.ok = FALSE)
+  checkmate::assert_integerish(col, lower = 1, null.ok = FALSE)
 
-  # Get spec from tabularray_spec function
-  spec <- tabularray_spec(
-    bold = bold,
-    italic = italic,
-    monospace = monospace,
-    smallcaps = smallcaps,
-    fg = fg,
-    bg = bg,
-    wd = wd,
-    halign = halign
-  )
+  content <- ""
+  span <- ""
 
-  # Update columns
-  cols[j] <- sub("\\[.*\\]", spec, cols[j])
-  cols_string <- paste(cols, collapse = "")
+  checkmate::assert_choice(halign, choice = c("l", "c", "r", "j"), null.ok = TRUE)
+  if (!is.null(halign)) content <- paste0(content, ",halign=", halign)
 
-  # Write colspec= header
-  tab <- strsplit(x, "\n")[[1]]
-  idx <- grep("^colspec=\\{", tab)
-  tab[idx] <- sprintf("colspec={%s},", cols_string)
+  checkmate::assert_choice(valign, choice = c("t", "m", "b", "h", "f"), null.ok = TRUE)
+  if (!is.null(valign)) content <- paste0(content, ",valign=", valign)
 
-  # Re-build table
-  tab <- paste(tab, collapse = "\n")
-  attributes(tab) <- attributes(x)
-  attr(tab, "tabularray_cols") <- cols
+  checkmate::assert_string(wd, null.ok = TRUE)
+  if (!is.null(wd)) content <- paste0(content, ",wd=", wd)
 
-  return(tab)
+  checkmate::assert_string(co, null.ok = TRUE)
+  if (!is.null(co)) content <- paste0(content, ",co=", co)
+
+  checkmate::assert_string(bg, null.ok = TRUE)
+  if (!is.null(bg)) content <- paste0(content, ",bg=", bg)
+
+  checkmate::assert_string(fg, null.ok = TRUE)
+  if (!is.null(fg)) content <- paste0(content, ",fg=", fg)
+
+  checkmate::assert_string(font, null.ok = TRUE)
+  if (!is.null(font)) content <- paste0(content, ",font=", font)
+
+  checkmate::assert_string(mode, null.ok = TRUE)
+  if (!is.null(mode)) content <- paste0(content, ",mode=", mode)
+
+  checkmate::assert_string(cmd, null.ok = TRUE)
+  if (!is.null(cmd)) content <- paste0(content, ",cmd=", cmd)
+
+  checkmate::assert_string(preto, null.ok = TRUE)
+  if (!is.null(preto)) content <- paste0(content, ",preto=", preto)
+
+  checkmate::assert_string(appto, null.ok = TRUE)
+  if (!is.null(appto)) content <- paste0(content, ",appto=", appto)
+
+  content <- gsub(",+", ",", content)
+  span <- gsub(",+", ",", span)
+
+  spec <- sprintf(
+    "column{%s}={%s}{%s}%s,",
+    paste(col, collapse = ","),
+    span,
+    content,
+    tabularray
+  ) 
+  spec <- gsub("\\{,*", "\\{", spec)
+
+  out <- tabularray_setting(x, spec, inner = TRUE)
+
+  return(out)
 }
-
-

@@ -3,48 +3,61 @@ spec_row.tinytable_latex <- function(x,
                                      i,
                                      halign = NULL,
                                      valign = NULL,
-                                     wd = NULL,
-                                     fg = NULL,
+                                     ht = NULL,
                                      bg = NULL,
-                                     bold = FALSE,
-                                     italic = FALSE,
-                                     monospace = FALSE,
-                                     smallcaps = FALSE) {
+                                     fg = NULL,
+                                     font = NULL,
+                                     mode = NULL,
+                                     cmd = NULL,
+                                     preto = NULL,
+                                     appto = NULL,
+                                     tabularray = NULL) {
 
-  rows <- attr(x, "tabularray_rows")
-  checkmate::assert_class(x, classes = "tinytable_latex")
-  checkmate::assert_integerish(i, lower = 1, upper = length(rows), null.ok = FALSE)
+  checkmate::assert_integerish(i, lower = 1, null.ok = FALSE)
 
-  # Get spec from tabularray_spec function (same as used in style_columns_latex)
-  spec <- tabularray_spec(
-    bold = bold,
-    italic = italic,
-    monospace = monospace,
-    smallcaps = smallcaps,
-    fg = fg,
-    bg = bg,
-    wd = wd,
-    halign = halign
-  )
+  content <- ""
 
-  # Update rows
-  rows[i] <- sub("\\[.*\\]", spec, rows[i])
-  rows_string <- paste(rows, collapse = "")
+  checkmate::assert_choice(halign, choice = c("l", "c", "r", "j"), null.ok = TRUE)
+  if (!is.null(halign)) content <- paste0(content, ",halign=", halign)
 
-  # Write rowspec= header
-  tab <- strsplit(x, "\n")[[1]]
-  idx <- grep("^rowspec=\\{", tab)
-  tab[idx] <- sprintf("rowspec={%s},", rows_string)
+  checkmate::assert_choice(valign, choice = c("t", "m", "b", "h", "f"), null.ok = TRUE)
+  if (!is.null(valign)) content <- paste0(content, ",valign=", valign)
 
-  # Re-build table
+  checkmate::assert_string(ht, null.ok = TRUE)
+  if (!is.null(ht)) content <- paste0(content, ",ht=", ht)
 
-  tab <- paste(tab, collapse = "\n")
-  attributes(tab) <- attributes(x)
-  attr(tab, "tabularray_rows") <- rows
+  checkmate::assert_string(bg, null.ok = TRUE)
+  if (!is.null(bg)) content <- paste0(content, ",bg=", bg)
 
+  checkmate::assert_string(fg, null.ok = TRUE)
+  if (!is.null(fg)) content <- paste0(content, ",fg=", fg)
 
-  return(tab)
+  checkmate::assert_string(font, null.ok = TRUE)
+  if (!is.null(font)) content <- paste0(content, ",font=", font)
+
+  checkmate::assert_string(mode, null.ok = TRUE)
+  if (!is.null(mode)) content <- paste0(content, ",mode=", mode)
+
+  checkmate::assert_string(cmd, null.ok = TRUE)
+  if (!is.null(cmd)) content <- paste0(content, ",cmd=", cmd)
+
+  checkmate::assert_string(preto, null.ok = TRUE)
+  if (!is.null(preto)) content <- paste0(content, ",preto=", preto)
+
+  checkmate::assert_string(appto, null.ok = TRUE)
+  if (!is.null(appto)) content <- paste0(content, ",appto=", appto)
+
+  checkmate::assert_string(tabularray, null.ok = TRUE)
+  if (!is.null(tabularray)) content <- paste0(content, ",", tabularray)
+
+  content <- gsub(",+", ",", content)
+
+  new <- sprintf(
+    "row{%s}={%s},",
+    paste(i, collapse = ","),
+    content) 
+
+  out <- tabularray_setting(x, new, inner = TRUE)
+
+  return(out)
 }
-
-
-
