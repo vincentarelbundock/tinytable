@@ -1,6 +1,6 @@
 #' @export
 tt <- function(x,
-               output = "tblr",
+               output = NULL,
                caption = NULL,
                hlines = "booktabs",
                vlines = NULL,
@@ -9,8 +9,22 @@ tt <- function(x,
                tabularray_inner = NULL,
                tabularray_outer = NULL) {
   checkmate::assert_data_frame(x)
-  checkmate::assert_string(caption, null.ok = TRUE)
-  checkmate::assert_choice(output, c("tblr", "html"))
+  assert_string(caption, null.ok = TRUE)
+  assert_choice(output, c("tblr", "html"), null.ok = TRUE)
+
+
+  if (is.null(output)) {
+    if (isTRUE(check_dependency("knitr"))) {
+      if (isTRUE(knitr::is_latex_output())) {
+        output <- "tblr"
+      } else if (isTRUE(knitr::is_html_output())) {
+        output <- "html"
+      } else {
+        output <- "tblr"
+      }
+    }
+  }
+
   if (output == "tblr") {
     out <- spec_table_latex(x,
       caption = caption,

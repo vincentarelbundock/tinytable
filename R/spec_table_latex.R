@@ -7,18 +7,17 @@ spec_table_latex <- function(x,
                              tabularray_inner = NULL,
                              tabularray_outer = NULL) {
 
-  checkmate::assert_string(tabularray_placement, null.ok = TRUE)
-  checkmate::assert_flag(tabularray_extendable, null.ok = FALSE)
-  checkmate::assert_string(tabularray_inner, null.ok = TRUE)
-  checkmate::assert_string(tabularray_outer, null.ok = TRUE)
+  assert_string(tabularray_placement, null.ok = TRUE)
+  assert_flag(tabularray_extendable, null.ok = FALSE)
+  assert_string(tabularray_inner, null.ok = TRUE)
+  assert_string(tabularray_outer, null.ok = TRUE)
   checkmate::assert(
     checkmate::check_choice(hlines, choices = "booktabs"),
-    checkmate::check_integerish(hlines, lower = 1, upper = nrow(x)),
-    checkmate::check_flag(hlines)
+    check_integerish(hlines, lower = 1, upper = nrow(x)),
+    check_flag(hlines)
   )
 
-  template <- readLines(here::here("inst/template_tblr.tex"))
-
+  template <- readLines(system.file("templates/tblr.tex", package = "tinytable"))
 
   if (!is.null(tabularray_placement)) {
     template <- sub(
@@ -76,7 +75,7 @@ spec_table_latex <- function(x,
   # vlines
   if (isTRUE(vlines)) {
     out <- tabularray_setting(out, "vlines,", inner = TRUE)
-  } else if (isTRUE(checkmate::check_integerish(vlines))) {
+  } else if (isTRUE(check_integerish(vlines))) {
     out <- tabularray_setting(
       out,
       sprintf("vline{%s},", paste(vlines, collapse = ",")),
@@ -86,7 +85,7 @@ spec_table_latex <- function(x,
   # hlines
   if (isTRUE(hlines)) {
     out <- tabularray_setting(out, "hlines,", inner = TRUE)
-  } else if (isTRUE(checkmate::check_integerish(hlines))) {
+  } else if (isTRUE(check_integerish(hlines))) {
     out <- tabularray_setting(
       out,
       sprintf("hline{%s},", paste(hlines, collapse = ",")),
