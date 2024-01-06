@@ -1,6 +1,8 @@
 
-<img src="man/figures/tinytable_logo.png" height = "125" class = "center"><br>
-
+<p align="center">
+<img src="man/figures/tinytable_logo.png" height = "125" class = "center">
+</p>
+<br>
 <!-- badges: start -->
 <!-- badges: end -->
 
