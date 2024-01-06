@@ -26,6 +26,11 @@ tt_html <- function(x, bootstrap_class, ...) {
     paste0("updateColumns", id),
     template,
     fixed = TRUE)
+  template <- gsub(
+    "updateCells",
+    paste0("updateCells", id),
+    template,
+    fixed = TRUE)
 
   # header
   idx <- grep("$TINYTABLE_BOOTSTRAP_HEADER", template, fixed = TRUE)
@@ -73,6 +78,8 @@ bootstrap_setting <- function(x, new, component = "row") {
     idx <- grep("tinytable rows before this", out)
   } else if (component == "column") {
     idx <- grep("tinytable columns before this", out)
+  } else if (component == "cell") {
+    idx <- grep("tinytable cells before this", out)
   }
   out <- c(
     out[1:(idx - 1)],

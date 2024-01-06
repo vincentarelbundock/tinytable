@@ -32,7 +32,7 @@ style_column.tinytable_html <- function(x,
       t = "top",
       m = "middle",
       b = "bottom")
-      new <- sprintf('table.rows[i].cells[%s].style.verticalAlign = "%s";', col, valign)
+      new <- sprintf('table.rows[i].cells[%s].style.Align = "%s";', col, valign)
       out <- bootstrap_setting(out, new, component = "column")
     }
 
