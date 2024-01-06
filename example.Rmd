@@ -1,12 +1,10 @@
 ---
-title: "`tinytable` and `tabularray`"
-subtitle: "Supremely customizable \\LaTeX{} tables in `R`"
-date: "`r Sys.Date()`"
-output: pdf_document
+title: "`tinytable`"
 ---
 
 ```{r}
-library(tinytable)
+# library(tinytable)
+pkgload::load_all()
 options(tt_placement = "H")
 x <- mtcars[1:4, 1:4]
 ```
@@ -25,16 +23,24 @@ tt(x,
 
 By default, all functions transform all cells. For example, calling `style_column()` without specifying column numbers will apply the transformation to all columns:
 
+TODO: HTML Broken
+
 ```{r}
 tt(x) |>
-  style_column(bg = "pink") |> str()
+  style_column(bg = "pink")
+```
+
+```{r}
+tt(x) |>
+  style_row(bg = "pink")
 ```
 
 # Columns
 
 ```{r}
 tt(x) |>
-  style_column(j = 2:3, fg = "white", bg = "olive2", cmd="\\texttt")
+  style_column(j = 2:3, fg = "white", bg = "olive", cmd="\\texttt") |>
+  style_row(i = 2:3, fg = "white", bg = "olive", cmd="\\texttt")
 ```
 
 # Rows
@@ -75,3 +81,9 @@ tt(k, tabularray_inner = "cmd=\\fakeverb")
 # Caption and labels
 
 # Math
+
+```{r}
+tt(x, output = "html") |>
+  style_column(j = 2:3, fg = "white", bg = "olive", cmd="\\texttt") |>
+  style_row(i = 2:3, fg = "white", bg = "pink", cmd="\\texttt")
+```

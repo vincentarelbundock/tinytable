@@ -1,20 +1,20 @@
 #' @export
 style_column.tinytable_latex <- function(x,
-                                        j = NULL,
-                                        halign = NULL,
-                                        valign = NULL,
-                                        wd = NULL,
-                                        co = NULL,
-                                        bg = NULL,
-                                        fg = NULL,
-                                        font = NULL,
-                                        mode = NULL,
-                                        cmd = NULL,
-                                        preto = NULL,
-                                        appto = NULL,
-                                        tabularray = "",
-                                        ...) {
- 
+                                         j = NULL,
+                                         halign = NULL,
+                                         valign = NULL,
+                                         wd = NULL,
+                                         co = NULL,
+                                         bg = NULL,
+                                         fg = NULL,
+                                         font = NULL,
+                                         mode = NULL,
+                                         cmd = NULL,
+                                         preto = NULL,
+                                         appto = NULL,
+                                         tabularray = "",
+                                         ...) {
+
   content <- ""
 
   assert_integerish(j, lower = 1, null.ok = TRUE)

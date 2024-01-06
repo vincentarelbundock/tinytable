@@ -7,7 +7,11 @@ sanitize_output <- function(output) {
   assert_choice(output, choice = c("tblr", "html"), null.ok = TRUE)
 
   # default output format
-  if (is.null(output)) out <- "tblr"
+  if (is.null(output)) {
+    out <- "tblr"
+  } else {
+    out <- output
+  }
 
   if (isTRUE(check_dependency("knitr")) && isTRUE(check_dependency("rmarkdown"))) {
     if (isTRUE(knitr::is_latex_output())) {

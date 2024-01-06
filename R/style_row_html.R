@@ -1,14 +1,14 @@
 #' @export
 style_row.tinytable_html <- function(x,
-                                    i = NULL,
-                                    halign = NULL,
-                                    valign = NULL,
-                                    ht = NULL,
-                                    bg = NULL,
-                                    fg = NULL,
-                                    font = NULL,
-                                    mode = NULL,
-                                    ...) {
+                                     i = NULL,
+                                     halign = NULL,
+                                     valign = NULL,
+                                     ht = NULL,
+                                     bg = NULL,
+                                     fg = NULL,
+                                     font = NULL,
+                                     mode = NULL,
+                                     ...) {
 
   assert_integerish(i, lower = 1, null.ok = TRUE)
 
@@ -20,9 +20,9 @@ style_row.tinytable_html <- function(x,
     assert_choice(halign, choice = c("c", "l", "r"), null.ok = TRUE)
     if (!is.null(halign)) {
       tmp <- switch(halign,
-         c = "center",
-         l = "left",
-         r = "right")
+      c = "center",
+      l = "left",
+      r = "right")
       new <- sprintf("table.rows[%s].style.textAlign = '%s';", row, tmp)
       out <- bootstrap_setting(out, new, component = "row")
     }
@@ -30,9 +30,9 @@ style_row.tinytable_html <- function(x,
     assert_choice(valign, choice = c("t", "m", "b"), null.ok = TRUE)
     if (!is.null(valign)) {
       tmp <- switch(valign,
-         t = "top",
-         m = "middle",
-         b = "bottom")
+      t = "top",
+      m = "middle",
+      b = "bottom")
       new <- sprintf("table.rows[%s].style.verticalAlign = '%s';", row, tmp)
       out <- bootstrap_setting(out, new, component = "row")
     }
