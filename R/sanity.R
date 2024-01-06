@@ -1,3 +1,28 @@
+usepackage_latex <- function(name, options = NULL, extra_lines = NULL) {
+  invisible(knitr::knit_meta_add(list(rmarkdown::latex_dependency(name, options, extra_lines))))
+}
+
+
+sanitize_output <- function(output) {
+  assert_choice(output, choice = c("tblr", "html"), null.ok = TRUE)
+
+  # default output format
+  if (is.null(output)) out <- "tblr"
+
+  if (isTRUE(check_dependency("knitr")) && isTRUE(check_dependency("rmarkdown"))) {
+    if (isTRUE(knitr::is_latex_output())) {
+      usepackage_latex("float")
+      usepackage_latex("tabularray", extra_lines = "\\UseTblrLibrary{booktabs}")
+      if (is.null(output)) out <- "tblr"
+    } else if (isTRUE(knitr::is_html_output())) {
+      if (is.null(output)) out <- "html"
+    }
+  }
+
+  return(out)
+}
+
+
 #' check if dependency is installed
 #'
 #' @noRd

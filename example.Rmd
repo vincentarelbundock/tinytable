@@ -3,31 +3,13 @@ title: "`tinytable` and `tabularray`"
 subtitle: "Supremely customizable \\LaTeX{} tables in `R`"
 date: "`r Sys.Date()`"
 output: pdf_document
-header-includes: 
-  - \usepackage{float}
-  - \usepackage{tabularray}
-  - \UseTblrLibrary{booktabs}
 ---
 
-```{r, results="asis"}
-# devtools::document()
-pkgload::load_all()
+```{r}
+library(tinytable)
 options(tt_placement = "H")
 x <- mtcars[1:4, 1:4]
 ```
-
-# HTML
-
-```{r, eval = FALSE}
-devtools::document()
-pkgload::load_all()
-tt(x, output = "html") |> 
-  # style_row(bg = "pink", fg = "blue", ht = "2cm", valign = "m", font = "monospace") |>
-  style_column(1:2, bg = "pink") |>
-  # cat()
-  cat(file = "~/Downloads/trash.html")
-```
-
 
 # Width
 
@@ -45,7 +27,7 @@ By default, all functions transform all cells. For example, calling `style_colum
 
 ```{r}
 tt(x) |>
-  style_column(bg = "pink")
+  style_column(bg = "pink") |> str()
 ```
 
 # Columns
