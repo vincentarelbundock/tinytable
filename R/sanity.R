@@ -17,13 +17,13 @@ assert_dependency <- function(library_name){
   return(invisible())
 }
 
-assert_choice <- function(x, choices, null.ok = FALSE) {
+assert_choice <- function(x, choice, null.ok = FALSE) {
     if (is.null(x) && isTRUE(null.ok)) return(TRUE)
-    if (is.character(x) && length(x) == 1 && x %in% choices) return(TRUE)
+    if (is.character(x) && length(x) == 1 && x %in% choice) return(TRUE)
     msg <- sprintf(
       "`%s` must be one of: %s",
       as.character(substitute(x)),
-      paste(choices, collapse = ", "))
+      paste(choice, collapse = ", "))
     stop(msg, call. = FALSE)
 }
 
@@ -61,4 +61,9 @@ assert_integerish <- function(x, lower = NULL, upper = NULL, null.ok = FALSE) {
   if (!isTRUE(check_integerish(x, null.ok = null.ok))) {
     stop(msg, call. = FALSE)
   }
+}
+
+assert_data_frame <- function(x) {
+  msg <- sprintf("`%s` must be a data.frame.", as.character(substitute(x)))
+  if (!is.data.frame(x)) stop(msg, call. = FALSE)
 }

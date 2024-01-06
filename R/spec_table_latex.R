@@ -11,11 +11,15 @@ spec_table_latex <- function(x,
   assert_flag(tabularray_extendable, null.ok = FALSE)
   assert_string(tabularray_inner, null.ok = TRUE)
   assert_string(tabularray_outer, null.ok = TRUE)
-  checkmate::assert(
-    checkmate::check_choice(hlines, choices = "booktabs"),
-    check_integerish(hlines, lower = 1, upper = nrow(x)),
+
+  flag <- (
+    isTRUE(hlines == "booktabs") ||
+    check_integerish(hlines, lower = 1, upper = nrow(x)) ||
     check_flag(hlines)
   )
+  if (!isTRUE(flag)) {
+    stop("`hlines` must be 'booktabs', a logical flag, or a vector of integers.", call. = FALSE)
+  }
 
   template <- readLines(system.file("templates/tblr.tex", package = "tinytable"))
 

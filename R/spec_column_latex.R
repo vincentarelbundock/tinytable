@@ -14,7 +14,7 @@ spec_column.tinytable_latex <- function(x,
                                         appto = NULL,
                                         tabularray = "",
                                         ...) {
-
+ 
   content <- ""
 
   assert_integerish(j, lower = 1, null.ok = TRUE)

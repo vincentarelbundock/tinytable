@@ -8,7 +8,7 @@ tt <- function(x,
                tabularray_placement = getOption("tt_placement", default = NULL),
                tabularray_inner = NULL,
                tabularray_outer = NULL) {
-  checkmate::assert_data_frame(x)
+  assert_data_frame(x)
   assert_string(caption, null.ok = TRUE)
   assert_choice(output, c("tblr", "html"), null.ok = TRUE)
 
@@ -28,8 +28,8 @@ tt <- function(x,
   if (output == "tblr") {
     out <- spec_table_latex(x,
       caption = caption,
-      hlines = hlines,
-      vlines = vlines,
+      # hlines = hlines,
+      # vlines = vlines,
       tabularray_extendable = tabularray_extendable,
       tabularray_placement = tabularray_placement,
       tabularray_inner = tabularray_inner,
