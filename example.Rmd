@@ -110,15 +110,13 @@ tt(x, bootstrap_class = "table table-striped")
 
 ## Custom CSS
 
-```{css}
-.table-custom th, .table-custom td {
+
+```{r, eval = knitr::is_html_output()}
+css <- "
+.table-custom, .table-custom th, .table-custom td {
   text-align: right;
   background-color: pink !important;
 }
+"
+tt(x, bootstrap_css = css, bootstrap_class = "table table-custom")
 ```
-
-```{r, eval = knitr::is_html_output()}
-tt(x, bootstrap_class = "table table-custom")
-```
-
-

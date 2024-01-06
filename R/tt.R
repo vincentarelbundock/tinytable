@@ -4,7 +4,8 @@ tt <- function(x,
                caption = NULL,
                hlines = "booktabs",
                vlines = NULL,
-               bootstrap_class = "table",
+               bootstrap_css = "",
+               bootstrap_class = "table table-tinytable",
                tabularray_extendable = getOption("tt_extendable", default = FALSE),
                tabularray_placement = getOption("tt_placement", default = NULL),
                tabularray_inner = NULL,
@@ -13,6 +14,7 @@ tt <- function(x,
   assert_data_frame(x)
   assert_string(caption, null.ok = TRUE)
   assert_string(bootstrap_class, null.ok = FALSE)
+  assert_string(bootstrap_css, null.ok = FALSE)
   output <- sanitize_output(output)
 
   if (output == "tblr") {
@@ -27,6 +29,7 @@ tt <- function(x,
   } else {
     out <- tt_html(x,
       caption = caption,
+      bootstrap_css = bootstrap_css,
       bootstrap_class = bootstrap_class
     )
 
