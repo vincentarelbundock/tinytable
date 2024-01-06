@@ -13,9 +13,10 @@ spec_row.tinytable_latex <- function(x,
                                      appto = NULL,
                                      tabularray = NULL) {
 
-  checkmate::assert_integerish(i, lower = 1, null.ok = FALSE)
-
   content <- ""
+
+  checkmate::assert_integerish(i, lower = 1, null.ok = TRUE)
+  if (is.null(i)) i <- seq_len(attr(x, "nrow"))
 
   checkmate::assert_choice(halign, choice = c("l", "c", "r", "j"), null.ok = TRUE)
   if (!is.null(halign)) content <- paste0(content, ",halign=", halign)

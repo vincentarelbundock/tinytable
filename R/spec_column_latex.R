@@ -1,23 +1,23 @@
 #' @export
 spec_column.tinytable_latex <- function(x,
-  col,
-  halign = NULL,
-  valign = NULL,
-  wd = NULL,
-  co = NULL,
-  bg = NULL,
-  fg = NULL,
-  font = NULL,
-  mode = NULL,
-  cmd = NULL,
-  preto = NULL,
-  appto = NULL,
-  tabularray = "") {
-
-  checkmate::assert_integerish(col, lower = 1, null.ok = FALSE)
+                                        j = NULL,
+                                        halign = NULL,
+                                        valign = NULL,
+                                        wd = NULL,
+                                        co = NULL,
+                                        bg = NULL,
+                                        fg = NULL,
+                                        font = NULL,
+                                        mode = NULL,
+                                        cmd = NULL,
+                                        preto = NULL,
+                                        appto = NULL,
+                                        tabularray = "") {
 
   content <- ""
-  span <- ""
+
+  checkmate::assert_integerish(j, lower = 1, null.ok = TRUE)
+  if (is.null(j)) j <- seq_len(attr(x, "ncol"))
 
   checkmate::assert_choice(halign, choice = c("l", "c", "r", "j"), null.ok = TRUE)
   if (!is.null(halign)) content <- paste0(content, ",halign=", halign)
@@ -52,19 +52,17 @@ spec_column.tinytable_latex <- function(x,
   checkmate::assert_string(appto, null.ok = TRUE)
   if (!is.null(appto)) content <- paste0(content, ",appto=", appto)
 
+  checkmate::assert_string(tabularray, null.ok = TRUE)
+  if (!is.null(tabularray)) content <- paste0(content, ",", tabularray)
+
   content <- gsub(",+", ",", content)
-  span <- gsub(",+", ",", span)
 
-  spec <- sprintf(
-    "column{%s}={%s}{%s}%s,",
-    paste(col, collapse = ","),
-    span,
-    content,
-    tabularray
-  ) 
-  spec <- gsub("\\{,*", "\\{", spec)
+  new <- sprintf(
+    "column{%s}={%s},",
+    paste(j, collapse = ","),
+    content) 
 
-  out <- tabularray_setting(x, spec, inner = TRUE)
+  out <- tabularray_setting(x, new, inner = TRUE)
 
   return(out)
 }

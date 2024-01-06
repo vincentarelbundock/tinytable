@@ -1,24 +1,28 @@
 #' @export
 spec_cell.tinytable_latex <- function(x,
-  i, j,
-  halign = NULL,
-  valign = NULL,
-  wd = NULL,
-  bg = NULL,
-  fg = NULL,
-  font = NULL,
-  mode = NULL,
-  cmd = NULL,
-  preto = NULL,
-  appto = NULL,
-  r = NULL,
-  c = NULL) {
-
-  checkmate::assert_integerish(i, lower = 1, upper = attr(x, "nrow"), null.ok = FALSE)
-  checkmate::assert_integerish(j, lower = 1, upper = attr(x, "ncol"), null.ok = FALSE)
+                                      i = NULL,
+                                      j = NULL,
+                                      halign = NULL,
+                                      valign = NULL,
+                                      wd = NULL,
+                                      bg = NULL,
+                                      fg = NULL,
+                                      font = NULL,
+                                      mode = NULL,
+                                      cmd = NULL,
+                                      preto = NULL,
+                                      appto = NULL,
+                                      r = NULL,
+                                      c = NULL) {
 
   content <- ""
   span <- ""
+
+  checkmate::assert_integerish(i, lower = 1, null.ok = TRUE)
+  if (is.null(i)) i <- seq_len(attr(x, "nrow"))
+
+  checkmate::assert_integerish(j, lower = 1, null.ok = TRUE)
+  if (is.null(j)) j <- seq_len(attr(x, "ncol"))
 
   # DRY might be nice but less readable
   checkmate::assert_choice(halign, choice = c("l", "c", "r", "j"), null.ok = TRUE)

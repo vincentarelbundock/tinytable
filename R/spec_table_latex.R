@@ -2,9 +2,13 @@ spec_table_latex <- function(x,
                              caption = NULL,
                              hlines = "booktabs",
                              vlines = FALSE,
+                             tabularray_placement = NULL,
+                             tabularray_extendable = FALSE,
                              tabularray_inner = NULL,
                              tabularray_outer = NULL) {
 
+  checkmate::assert_string(tabularray_placement, null.ok = TRUE)
+  checkmate::assert_flag(tabularray_extendable, null.ok = FALSE)
   checkmate::assert_string(tabularray_inner, null.ok = TRUE)
   checkmate::assert_string(tabularray_outer, null.ok = TRUE)
   checkmate::assert(
@@ -14,6 +18,15 @@ spec_table_latex <- function(x,
   )
 
   template <- readLines(here::here("inst/template_tblr.tex"))
+
+
+  if (!is.null(tabularray_placement)) {
+    template <- sub(
+      "\\begin{table}", 
+      sprintf("\\begin{table}[%s]", tabularray_placement),
+      template,
+      fixed = TRUE)
+  }
 
   # caption
   if (is.null(caption)) {
@@ -48,10 +61,10 @@ spec_table_latex <- function(x,
   out <- trimws(out)
   out <- paste(out, collapse = "\n")
 
-  tabularray_cols <- rep("Q[]", ncol(x))
-  tabularray_rows <- rep("Q[]", nrow(x))
-  if (!is.null(header)) { 
-    tabularray_rows <- c("Q[]", tabularray_rows)
+  if (isTRUE(tabularray_extendable)) {
+    tabularray_cols <- rep("X[]", ncol(x))
+  } else {
+    tabularray_cols <- rep("Q[]", ncol(x))
   }
 
   # colspec (we don't need rowspec)
@@ -93,7 +106,6 @@ spec_table_latex <- function(x,
   attr(out, "ncol") <- ncol(x)
   attr(out, "nrow") <- nrow(x)
   attr(out, "tabularray_cols") <- tabularray_cols
-  attr(out, "tabularray_rows") <- tabularray_rows
   class(out) <- c("tinytable_latex", "knit_asis", class(out))
   return(out)
 }
