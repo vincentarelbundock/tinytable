@@ -1,6 +1,5 @@
 #' @noRd
 #' @export
-#' @importFrom knitr knit_print
 knit_print.tinytable_html <- function(x, ...) {
   # from htmltools:::html_preserve
   # GPL3
@@ -19,7 +18,6 @@ knit_print.tinytable_html <- function(x, ...) {
 
 #' @noRd
 #' @export
-#' @importFrom knitr knit_print
 knit_print.tinytable_latex <- function(x, ...) {
   out <- x
   # from knitr::asis_output
