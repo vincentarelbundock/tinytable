@@ -1,5 +1,5 @@
 #' @export
-spec_row.tinytable_html <- function(x,
+style_row.tinytable_html <- function(x,
                                     i = NULL,
                                     halign = NULL,
                                     valign = NULL,

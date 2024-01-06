@@ -1,4 +1,4 @@
-spec_table_html <- function(x, ...) {
+tt_html <- function(x, ...) {
   template <- readLines(system.file("templates/bootstrap.html", package = "tinytable"))
   # header
   idx <- grep("$TINYTABLE_BOOTSTRAP_HEADER", template, fixed = TRUE)

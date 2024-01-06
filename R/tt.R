@@ -26,7 +26,7 @@ tt <- function(x,
   }
 
   if (output == "tblr") {
-    out <- spec_table_latex(x,
+    out <- tt_latex(x,
       caption = caption,
       # hlines = hlines,
       # vlines = vlines,
@@ -35,7 +35,7 @@ tt <- function(x,
       tabularray_inner = tabularray_inner,
       tabularray_outer = tabularray_outer)
   } else {
-    out <- spec_table_html(x,
+    out <- tt_html(x,
       caption = caption,
       # hlines = hlines,
       # vlines = vlines,

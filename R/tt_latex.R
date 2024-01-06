@@ -1,11 +1,11 @@
-spec_table_latex <- function(x,
-                             caption = NULL,
-                             hlines = "booktabs",
-                             vlines = FALSE,
-                             tabularray_placement = NULL,
-                             tabularray_extendable = FALSE,
-                             tabularray_inner = NULL,
-                             tabularray_outer = NULL) {
+tt_latex <- function(x,
+                     caption = NULL,
+                     hlines = "booktabs",
+                     vlines = FALSE,
+                     tabularray_placement = NULL,
+                     tabularray_extendable = FALSE,
+                     tabularray_inner = NULL,
+                     tabularray_outer = NULL) {
 
   assert_string(tabularray_placement, null.ok = TRUE)
   assert_flag(tabularray_extendable, null.ok = FALSE)
@@ -38,7 +38,7 @@ spec_table_latex <- function(x,
   } else {
     template <- sub("\\$TINYTABLE_CAPTION", caption, template)
   }
-  
+
   if (!is.null(colnames(x))) {
     header <- paste(colnames(x), collapse = " & ")
     header <- paste(header, "\\\\")

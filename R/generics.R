@@ -1,14 +1,14 @@
 #' @export
-spec_cell <- function(x, ...) {
-  UseMethod("spec_cell", x)
+style_cell <- function(x, ...) {
+  UseMethod("style_cell", x)
 }
 
 #' @export
-spec_row <- function(x, ...) {
-  UseMethod("spec_row", x)
+style_row <- function(x, ...) {
+  UseMethod("style_row", x)
 }
 
 #' @export
-spec_column <- function(x, ...) {
-  UseMethod("spec_column", x)
+style_column <- function(x, ...) {
+  UseMethod("style_column", x)
 }

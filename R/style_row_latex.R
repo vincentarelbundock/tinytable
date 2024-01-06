@@ -1,24 +1,23 @@
 #' @export
-spec_column.tinytable_latex <- function(x,
-                                        j = NULL,
-                                        halign = NULL,
-                                        valign = NULL,
-                                        wd = NULL,
-                                        co = NULL,
-                                        bg = NULL,
-                                        fg = NULL,
-                                        font = NULL,
-                                        mode = NULL,
-                                        cmd = NULL,
-                                        preto = NULL,
-                                        appto = NULL,
-                                        tabularray = "",
-                                        ...) {
- 
+style_row.tinytable_latex <- function(x,
+                                     i,
+                                     halign = NULL,
+                                     valign = NULL,
+                                     ht = NULL,
+                                     bg = NULL,
+                                     fg = NULL,
+                                     font = NULL,
+                                     mode = NULL,
+                                     cmd = NULL,
+                                     preto = NULL,
+                                     appto = NULL,
+                                     tabularray = NULL,
+                                     ...) {
+
   content <- ""
 
-  assert_integerish(j, lower = 1, null.ok = TRUE)
-  if (is.null(j)) j <- seq_len(attr(x, "ncol"))
+  assert_integerish(i, lower = 1, null.ok = TRUE)
+  if (is.null(i)) i <- seq_len(attr(x, "nrow"))
 
   assert_choice(halign, choice = c("l", "c", "r", "j"), null.ok = TRUE)
   if (!is.null(halign)) content <- paste0(content, ",halign=", halign)
@@ -26,11 +25,8 @@ spec_column.tinytable_latex <- function(x,
   assert_choice(valign, choice = c("t", "m", "b", "h", "f"), null.ok = TRUE)
   if (!is.null(valign)) content <- paste0(content, ",valign=", valign)
 
-  assert_string(wd, null.ok = TRUE)
-  if (!is.null(wd)) content <- paste0(content, ",wd=", wd)
-
-  assert_string(co, null.ok = TRUE)
-  if (!is.null(co)) content <- paste0(content, ",co=", co)
+  assert_string(ht, null.ok = TRUE)
+  if (!is.null(ht)) content <- paste0(content, ",ht=", ht)
 
   assert_string(bg, null.ok = TRUE)
   if (!is.null(bg)) content <- paste0(content, ",bg=", bg)
@@ -59,8 +55,8 @@ spec_column.tinytable_latex <- function(x,
   content <- gsub(",+", ",", content)
 
   new <- sprintf(
-    "column{%s}={%s},",
-    paste(j, collapse = ","),
+    "row{%s}={%s},",
+    paste(i, collapse = ","),
     content) 
 
   out <- tabularray_setting(x, new, inner = TRUE)

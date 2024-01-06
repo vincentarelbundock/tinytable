@@ -1,5 +1,5 @@
 #' @export
-spec_cell.tinytable_latex <- function(x,
+style_cell.tinytable_latex <- function(x,
                                       i = NULL,
                                       j = NULL,
                                       halign = NULL,
