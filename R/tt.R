@@ -34,6 +34,16 @@ tt <- function(x,
       tabularray_placement = tabularray_placement,
       tabularray_inner = tabularray_inner,
       tabularray_outer = tabularray_outer)
+  } else {
+    out <- spec_table_html(x,
+      caption = caption,
+      # hlines = hlines,
+      # vlines = vlines,
+      tabularray_extendable = tabularray_extendable,
+      tabularray_placement = tabularray_placement,
+      tabularray_inner = tabularray_inner,
+      tabularray_outer = tabularray_outer)
+
   }
   return(out)
 }
