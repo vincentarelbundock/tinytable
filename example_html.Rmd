@@ -1,0 +1,14 @@
+---
+title: title
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r, results="html"}
+# devtools::document()
+pkgload::load_all()
+x <- mtcars[1:4, 1:4]
+tt(x, output = "html") |> cat()
+
+kableExtra::kbl(x, format = "html") |> cat()
+```

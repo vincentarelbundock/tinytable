@@ -1,22 +1,3 @@
-bootstrap_setting <- function(x, new, component = "row") {
-  att <- attributes(x)    
-  out <- strsplit(x, "\n")[[1]]
-  if (component == "row") {
-    idx <- grep("tinytable columns before this", out)
-  }
-  out <- c(
-    out[1:(idx - 1)],
-    new,
-    out[idx:length(out)]
-  )
-  out <- paste(out, collapse = "\n")
-  attributes(out) <- att
-  class(out) <- class(x)
-  return(out)
-}
-
-
-
 #' @export
 spec_row.tinytable_html <- function(x,
                                     i = NULL,

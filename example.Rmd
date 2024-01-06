@@ -19,9 +19,11 @@ x <- mtcars[1:4, 1:4]
 # HTML
 
 ```{r, eval = FALSE}
+devtools::document()
 pkgload::load_all()
 tt(x, output = "html") |> 
-  spec_row(bg = "pink", fg = "blue", ht = "2cm", valign = "m", font = "monospace") |>
+  # spec_row(bg = "pink", fg = "blue", ht = "2cm", valign = "m", font = "monospace") |>
+  spec_column(1:2, bg = "pink") |>
   # cat()
   cat(file = "~/Downloads/trash.html")
 ```
