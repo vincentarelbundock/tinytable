@@ -1,7 +1,14 @@
-tt_html <- function(x, ...) {
+tt_html <- function(x, bootstrap_class, ...) {
   template <- readLines(system.file("templates/bootstrap.html", package = "tinytable"))
 
-  # TODO HACK: unique table ID
+  # bootstrap class
+  template <- gsub(
+    "$TINYTABLE_BOOTSTRAP_CLASS",
+    bootstrap_class,
+    template,
+    fixed = TRUE)
+
+  # unique table ID
   id <- sample(c(0:9, letters), 30, replace = TRUE)
   id <- tools::toTitleCase(paste(id, collapse = ""))
   template <- gsub(
@@ -9,7 +16,6 @@ tt_html <- function(x, ...) {
     paste0(c("tinytable", id), collapse = ""),
     template,
     fixed = TRUE)
-
   template <- gsub(
     "updateRows",
     paste0("updateRows", id),
@@ -20,7 +26,6 @@ tt_html <- function(x, ...) {
     paste0("updateColumns", id),
     template,
     fixed = TRUE)
-
 
   # header
   idx <- grep("$TINYTABLE_BOOTSTRAP_HEADER", template, fixed = TRUE)
