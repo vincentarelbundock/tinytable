@@ -1,18 +1,18 @@
 #' @export
 style_row.tinytable_latex <- function(x,
-                                     i,
-                                     halign = NULL,
-                                     valign = NULL,
-                                     ht = NULL,
-                                     bg = NULL,
-                                     fg = NULL,
-                                     font = NULL,
-                                     mode = NULL,
-                                     cmd = NULL,
-                                     preto = NULL,
-                                     appto = NULL,
-                                     tabularray = NULL,
-                                     ...) {
+                                      i = NULL,
+                                      halign = NULL,
+                                      valign = NULL,
+                                      ht = NULL,
+                                      bg = NULL,
+                                      fg = NULL,
+                                      font = NULL,
+                                      mode = NULL,
+                                      cmd = NULL,
+                                      preto = NULL,
+                                      appto = NULL,
+                                      tabularray = NULL,
+                                      ...) {
 
   content <- ""
 

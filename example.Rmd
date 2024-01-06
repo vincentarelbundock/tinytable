@@ -27,7 +27,7 @@ By default, all functions transform all cells. For example, calling `style_colum
 TODO: HTML Broken
 
 ```{r}
-tt(x,) |>
+tt(x) |>
   style_column(bg = "pink")
 ```
 
@@ -88,3 +88,32 @@ tt(x, output = "html") |>
   style_column(j = 2:3, fg = "white", bg = "olive", cmd="\\texttt") |>
   style_row(i = 2:3, fg = "white", bg = "pink", cmd="\\texttt")
 ```
+
+# HTML-specific features
+
+## Bootstrap classes
+
+<https://getbootstrap.com/docs/5.3/content/tables/>
+
+```{r, eval = knitr::is_html_output()}
+tt(x, bootstrap_class = "table table-dark")
+```
+
+```{r, eval = knitr::is_html_output()}
+tt(x, bootstrap_class = "table table-striped")
+```
+
+## Custom CSS
+
+```{css}
+.table-custom th, .table-custom td {
+  text-align: right;
+  background-color: pink !important;
+}
+```
+
+```{r, eval = knitr::is_html_output()}
+tt(x, bootstrap_class = "table table-custom")
+```
+
+
