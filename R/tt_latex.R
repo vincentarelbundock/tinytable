@@ -1,35 +1,6 @@
-tt_latex <- function(x,
-                     caption = NULL,
-                     hlines = "booktabs",
-                     vlines = FALSE,
-                     extendable = FALSE,
-                     tabularray_placement = NULL,
-                     tabularray_inner = NULL,
-                     tabularray_outer = NULL) {
+tt_latex <- function(x, caption, settings) {
 
-  assert_string(tabularray_placement, null.ok = TRUE)
-  assert_flag(tabularray_extendable, null.ok = FALSE)
-  assert_string(tabularray_inner, null.ok = TRUE)
-  assert_string(tabularray_outer, null.ok = TRUE)
-
-  flag <- (
-    isTRUE(hlines == "booktabs") ||
-    check_integerish(hlines, lower = 1, upper = nrow(x)) ||
-    check_flag(hlines)
-  )
-  if (!isTRUE(flag)) {
-    stop("`hlines` must be 'booktabs', a logical flag, or a vector of integers.", call. = FALSE)
-  }
-
-  template <- readLines(system.file("templates/tblr.tex", package = "tinytable"))
-
-  if (!is.null(tabularray_placement)) {
-    template <- sub(
-      "\\begin{table}", 
-      sprintf("\\begin{table}[%s]", tabularray_placement),
-      template,
-      fixed = TRUE)
-  }
+  template <- settings$template
 
   # caption
   if (is.null(caption)) {
@@ -48,7 +19,7 @@ tt_latex <- function(x,
   body <- apply(x, 1, paste, collapse = " & ")
   body <- paste(body, "\\\\")
 
-  if (isTRUE(hlines == "booktabs")) {
+  if (isTRUE(settings$theme == "booktabs")) {
     header <- c("\\toprule", header, "\\midrule")
     body <- c(body, "\\bottomrule")
   }
@@ -64,7 +35,7 @@ tt_latex <- function(x,
   out <- trimws(out)
   out <- paste(out, collapse = "\n")
 
-  if (isTRUE(tabularray_extendable)) {
+  if (isTRUE(settings$extendable)) {
     tabularray_cols <- rep("X[]", ncol(x))
   } else {
     tabularray_cols <- rep("Q[]", ncol(x))
@@ -75,26 +46,6 @@ tt_latex <- function(x,
     out,
     sprintf("colspec={%s},", paste(tabularray_cols, collapse = "")),
     inner = TRUE)
-
-  # vlines
-  if (isTRUE(vlines)) {
-    out <- tabularray_setting(out, "vlines,", inner = TRUE)
-  } else if (isTRUE(check_integerish(vlines))) {
-    out <- tabularray_setting(
-      out,
-      sprintf("vline{%s},", paste(vlines, collapse = ",")),
-      inner = TRUE)
-  }
-
-  # hlines
-  if (isTRUE(hlines)) {
-    out <- tabularray_setting(out, "hlines,", inner = TRUE)
-  } else if (isTRUE(check_integerish(hlines))) {
-    out <- tabularray_setting(
-      out,
-      sprintf("hline{%s},", paste(hlines, collapse = ",")),
-      inner = TRUE)
-  }
 
   # inner and outer tabularray settings
   if (!is.null(tabularray_inner)) {

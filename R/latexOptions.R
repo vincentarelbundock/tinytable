@@ -1,11 +1,13 @@
 latexOptions <- function(
+  # tinytable
   env = "table+tblr",
   extendable = FALSE,
   placement = NULL,
+  theme = "booktabs",
+  # tblr inner
   wd = "",
   fg = "",
   bg = "",
-  # cells
   halign = "",
   valign = "",
   font = "",
@@ -13,6 +15,9 @@ latexOptions <- function(
   cmd = "",
   preto = "",
   appto = "",
+  # tblr outer
+  hlines = FALSE,
+  vlines = FALSE,
   # rows
   ht = "",
   abovesep = "",
@@ -39,6 +44,8 @@ latexOptions <- function(
   out <- ""
 
   assert_flag(extendable)
+
+  assert_choice(theme, c("booktabs", "plain"))
 
   assert_choice(env, c("table+tblr", "tblr"))
   if (env %in% c("table+tblr", "tbrl")) {
@@ -83,22 +90,31 @@ latexOptions <- function(
   }
   arguments <- c(arguments, args)
 
+  # clean arguments
+  arguments <- arguments[arguments != ""]
+  arguments <- sapply(names(arguments), function(n) paste0(n, "=", arguments[[n]]))
+
   out <- list(
     rows_keys = c("halign", "valign", "ht", "bg", "fg", "font", "mode", "cmd", "abovesep", "belowsep", "rowsep", "preto", "appto"),
     columns_keys = c("halign", "valign", "wd", "co", "bg", "fg", "font", "mode", "cmd", "leftsep", "rightsep", "colsep", "preto", "appto"),
     hborders_keys = c("pagebreak", "abovespace", "belowspace"),
     vborders_keys = c("leftspace", "rightspace"),
     cells_keys = c("halign", "valign", "wd", "bg", "fg", "font", "mode", "cmd"),
-    outer_specs_keys = c("baseline", "long", "tall", "expand"),
+    outer_specs_keys = c("baseline", "long", "tall", "expand", "hlines", "vlines"),
     inner_specs_keys = c("rulesep", "stretch", "abovesep", "belowsep", "rowsep", "leftsep", "rightsep", "colsep", "hspan", "vspan", "baseline")
   )
   out <- lapply(out, function(x) intersect(x, names(arguments)))
+  out <- lapply(out, function(x) arguments[x])
+  out <- sapply(out, paste, collapse = ",")
 
   arguments <- list(
+    environment = env,
+    theme = theme,
     extendable = extendable,
     template = template,
     spec = arguments
   )
+  arguments <- c(arguments, out)
   class(arguments) <- c("tinytable_latexOptions", class(arguments))
   
   return(arguments)
