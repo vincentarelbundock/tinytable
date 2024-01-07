@@ -12,6 +12,14 @@ tt(
   html = htmlOptions()
 )
 }
+\arguments{
+\item{output}{"markdown", "latex", or "html". If \code{output} is \code{NULL}, then:
+\itemize{
+\item "html" if \code{knitr::is_html_output()} is \code{TRUE}
+\item "latex" if \code{knitr::is_latex_output()} is \code{TRUE}
+\item Otherwise determined by setting a global option: \code{options(tt_output_default = "markdown")}
+}}
+}
 \description{
 Draw a table
 }

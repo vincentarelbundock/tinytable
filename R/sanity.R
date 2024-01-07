@@ -4,11 +4,11 @@ usepackage_latex <- function(name, options = NULL, extra_lines = NULL) {
 
 
 sanitize_output <- function(output) {
-  assert_choice(output, choice = c("latex", "html"), null.ok = TRUE)
+  assert_choice(output, choice = c("markdown", "latex", "html"), null.ok = TRUE)
 
   # default output format
   if (is.null(output)) {
-    out <- "latex"
+    out <- getOption("tt_output_default", default = "markdown")
   } else {
     out <- output
   }

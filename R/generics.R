@@ -32,6 +32,10 @@ style_cell <- function(x,
 }
 
 
+#' @export
+style_cell.default <- function(x, ...) return(x)
+
+
 #' Style Rows in a `tinytable`
 #'
 #' @inheritParams style_cell
