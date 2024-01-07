@@ -2,6 +2,9 @@ tt_latex <- function(x, caption, settings) {
 
   template <- settings$template
 
+  ncols <- ncol(x)
+  nrows <- nrow(x)
+
   # caption
   if (is.null(caption)) {
     idx <- grep("\\$TINYTABLE_CAPTION", template)
@@ -14,6 +17,7 @@ tt_latex <- function(x, caption, settings) {
   if (!is.null(colnames(x))) {
     header <- paste(colnames(x), collapse = " & ")
     header <- paste(header, "\\\\")
+    nrows <- nrows + 1
   } else {
     header <- NULL
   }
@@ -57,8 +61,8 @@ tt_latex <- function(x, caption, settings) {
     out <- tabularray_setting(out, settings$inner_specs_keys, inner = TRUE)
   }
 
-  attr(out, "ncol") <- ncol(x)
-  attr(out, "nrow") <- nrow(x)
+  attr(out, "ncol") <- ncols
+  attr(out, "nrow") <- nrows
   attr(out, "tabularray_cols") <- tabularray_cols
   class(out) <- c("tinytable_latex", "knit_asis", class(out))
   return(out)

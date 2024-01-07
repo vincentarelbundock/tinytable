@@ -4,20 +4,35 @@ title: "`tinytable`"
 
 ```{r}
 # library(tinytable)
-devtools::document()
+# devtools::document()
 pkgload::load_all()
+options(tt_latexOptions_placement = "H")
 x <- mtcars[1:4, 1:4]
+tt(x) |> style_row(2:3, italic = TRUE, background = "blue2", color = "white")
+```
+
+
+```{r}
+tt(x) |> style_row(2:3,
+  latex = latexOptions(
+    bg = "pink",
+    fg = "blue",
+    cmd = "\\textit"
+    ))
+```
+
+
+```{r}
 tt(x,
   html = htmlOptions(
     class = "table table-striped"),
   latex = latexOptions(
     theme = "plain",
-    placement = "H",
     hlines = "dotted,fg=blue",
     vlines = "dashed,fg=red,wd=1pt")
 )
 ```
 
 ```{r}
-tt(x, latex = latexOptions(placement = "H"))
+tt(x)
 ```

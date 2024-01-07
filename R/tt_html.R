@@ -1,7 +1,7 @@
 tt_html <- function(x, caption, settings) {
   template <- settings$template
 
-  # bootstrap class and css
+  # insert bootstrap class and css
   template <- gsub(
     "$TINYTABLE_BOOTSTRAP_CLASS",
     settings$class,
@@ -13,8 +13,8 @@ tt_html <- function(x, caption, settings) {
     template,
     fixed = TRUE)
 
-  # unique table ID
-  id <- sample(c(0:9, letters), 30, replace = TRUE)
+  # (pseudo-)unique table IDs
+  id <- sample(c(0:9, letters), 20, replace = TRUE)
   id <- tools::toTitleCase(paste(id, collapse = ""))
   template <- gsub(
     "$TINYTABLE_TABLE_ID",

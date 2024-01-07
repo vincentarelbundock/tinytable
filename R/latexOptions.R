@@ -1,15 +1,15 @@
 latexOptions <- function(
   # tinytable
   env = "table+tblr",
-  extendable = FALSE,
-  placement = NULL,
-  theme = "booktabs",
+  extendable = getOption("tt_latexOptions_extendable", default = FALSE),
+  placement = getOption("tt_latexOptions_placement", default = NULL),
+  theme = getOption("tt_latexOptions_theme", default = "booktabs"),
   # tblr inner
   wd = "",
   fg = "",
   bg = "",
-  halign = "",
-  valign = "",
+  halign = NULL,
+  valign = NULL,
   font = "",
   mode = "",
   cmd = "",
@@ -60,7 +60,13 @@ latexOptions <- function(
   }
   template <- sub("$TINYTABLE_PLACEMENT", placement, template, fixed = TRUE)
 
-  args <- list(wd = wd, fg = fg, bg = bg, halign = halign, valign = valign, font = font, cmd = cmd, preto = preto, appto = appto, ht = ht, abovesep = abovesep, belowsep = belowsep, rowsep = rowsep, leftsep = leftsep, rightsep = rightsep, dash = dash, text = text)
+  assert_choice(halign, choice = c("l", "c", "r", "j"), null.ok = TRUE)
+  if (!is.null(halign)) arguments[["halign"]] <- halign
+
+  assert_choice(valign, choice = c("t", "m", "b", "h", "f"), null.ok = TRUE)
+  if (!is.null(valign)) arguments[["valign"]] <- valign
+
+  args <- list(wd = wd, fg = fg, bg = bg, font = font, cmd = cmd, preto = preto, appto = appto, ht = ht, abovesep = abovesep, belowsep = belowsep, rowsep = rowsep, leftsep = leftsep, rightsep = rightsep, dash = dash, text = text)
   for (n in names(args)) {
     assert_string(args[[n]], name = n)
   }
