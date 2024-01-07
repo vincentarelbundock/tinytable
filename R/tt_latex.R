@@ -2,8 +2,8 @@ tt_latex <- function(x,
                      caption = NULL,
                      hlines = "booktabs",
                      vlines = FALSE,
+                     extendable = FALSE,
                      tabularray_placement = NULL,
-                     tabularray_extendable = FALSE,
                      tabularray_inner = NULL,
                      tabularray_outer = NULL) {
 

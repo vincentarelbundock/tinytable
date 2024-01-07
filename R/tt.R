@@ -6,10 +6,6 @@ tt <- function(x,
                vlines = NULL,
                bootstrap_css = "",
                bootstrap_class = "table table-tinytable",
-               tabularray_extendable = getOption("tt_extendable", default = FALSE),
-               tabularray_placement = getOption("tt_placement", default = NULL),
-               tabularray_inner = NULL,
-               tabularray_outer = NULL) {
 
   assert_data_frame(x)
   assert_string(caption, null.ok = TRUE)

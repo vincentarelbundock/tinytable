@@ -46,20 +46,20 @@ assert_dependency <- function(library_name){
   return(invisible())
 }
 
-assert_choice <- function(x, choice, null.ok = FALSE) {
+assert_choice <- function(x, choice, null.ok = FALSE, name = as.character(substitute(x))) {
     if (is.null(x) && isTRUE(null.ok)) return(TRUE)
     if (is.character(x) && length(x) == 1 && x %in% choice) return(TRUE)
     msg <- sprintf(
       "`%s` must be one of: %s",
-      as.character(substitute(x)),
+      name,
       paste(choice, collapse = ", "))
     stop(msg, call. = FALSE)
 }
 
-assert_string <- function(x, null.ok = FALSE) {
+assert_string <- function(x, null.ok = FALSE, name = as.character(substitute(x))) {
     if (is.null(x) && isTRUE(null.ok)) return(TRUE)
     if (is.character(x) && length(x) == 1) return(TRUE)
-    msg <- sprintf("`%s` must be a string.", as.character(substitute(x)))
+    msg <- sprintf("`%s` must be a string.", name)
     stop(msg, call. = FALSE)
 }
 
@@ -69,30 +69,32 @@ check_flag <- function(x, null.ok = FALSE) {
     return(FALSE)
 }
 
-assert_flag <- function(x, null.ok = FALSE) {
-  msg <- sprintf("`%s` must be a logical flag.", as.character(substitute(x)))
+assert_flag <- function(x, null.ok = FALSE, name = as.character(substitute(x))) {
+  msg <- sprintf("`%s` must be a logical flag.", name)
   if (!isTRUE(check_flag(x, null.ok = null.ok))) {
     stop(msg, call. = FALSE)
   }
 }
 
-check_integerish <- function(x, lower = NULL, upper = NULL, null.ok = TRUE) {
+
+check_integerish <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok = TRUE) {
   if (is.null(x) && isTRUE(null.ok)) return(TRUE)
   if (!is.numeric(x)) return(FALSE)
+  if (!is.null(len) && length(x) != len) return(FALSE)
   if (!is.null(lower) && any(x < lower)) return(FALSE)
   if (!is.null(upper) && any(x > upper)) return(FALSE)
   if (any(abs(x - round(x)) > (.Machine$double.eps)^0.5)) return(FALSE)
   return(TRUE)
 }
 
-assert_integerish <- function(x, lower = NULL, upper = NULL, null.ok = FALSE) {
-  msg <- sprintf("`%s` must be integer-ish", as.character(substitute(x)))
+assert_integerish <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
+  msg <- sprintf("`%s` must be integer-ish", name)
   if (!isTRUE(check_integerish(x, null.ok = null.ok))) {
     stop(msg, call. = FALSE)
   }
 }
 
-assert_data_frame <- function(x) {
-  msg <- sprintf("`%s` must be a data.frame.", as.character(substitute(x)))
+assert_data_frame <- function(x, name = as.character(substitute(x))) {
+  msg <- sprintf("`%s` must be a data.frame.", name)
   if (!is.data.frame(x)) stop(msg, call. = FALSE)
 }
