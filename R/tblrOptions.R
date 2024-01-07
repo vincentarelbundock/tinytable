@@ -53,39 +53,46 @@ tblrOptions <- function(
   }
   template <- sub("$TINYTABLE_PLACEMENT", placement, template)
 
-  arguments <- NULL
+  arguments <- list()
 
   args <- list(wd = wd, fg = fg, bg = bg, halign = halign, valign = valign, font = font, cmd = cmd, preto = preto, appto = appto, ht = ht, abovesep = abovesep, belowsep = belowsep, rowsep = rowsep, leftsep = leftsep, rightsep = rightsep, dash = dash, text = text)
   for (n in names(args)) {
     assert_string(args[[n]], name = n)
-    arguments <- c(arguments, paste0(n, "=", args[[n]]))
   }
+  arguments <- c(arguments, args)
 
   assert_choice(mode, c("", "math", "imath", "text"))
-  arguments <- c(arguments, paste0("mode=", mode))
+  arguments <- c(arguments, list(mode = mode))
 
   assert_flag(endpos)
-  if (!isTRUE(endpos)) arguments <- c(arguments, "endpos=false")
+  if (!isTRUE(endpos)) {
+    arguments <- c(arguments, list(endpos = "false"))
+  }
   
   args <- list(c = c, r = r, co = co, leftpos = leftpos, rightpos = rightpos)
   for (n in names(args)) {
     assert_integerish(args[[n]], len = 1, name = n)
-    if (args[[n]] != 1) arguments <- c(arguments, paste0(n, "=", args[[n]]))
+    if (args[[n]] == 1) args[[n]] <- NULL
   }
+  arguments <- c(arguments, args)
  
   args <- list(abovepos = abovepos, belowpos = belowpos)
   for (n in names(args)) {
     assert_integerish(args[[n]], len = 1, name = n)
-    if (args[[n]] != 0) arguments <- c(arguments, paste0(n, "=", args[[n]]))
+    if (args[[n]] == 0) args[[n]] <- NULL
   }
+  arguments <- c(arguments, args)
 
-  rows_keys <- c("halign", "valign", "ht", "bg", "fg", "font", "mode", "cmd", "abovesep", "belowsep", "rowsep", "preto", "appto")
-  columns_keys <- c("halign", "valign", "wd", "co", "bg", "fg", "font", "mode", "$", "$$", "cmd", "leftsep", "rightsep", "colsep", "preto", "appto")
-  hborders_keys <- c("pagebreak", "abovespace", "belowspace")
-  vborders_keys <- c("leftspace", "rightspace")
-  cells_keys <- c("halign", "valign", "wd", "bg", "fg", "font", "mode", "cmd")
-  outer_specs_keys <- c("baseline", "long", "tall", "expand")
-  inner_specs_keys <- c("rulesep", "stretch", "abovesep", "belowsep", "rowsep", "leftsep", "rightsep", "colsep", "hspan", "vspan", "baseline")
+  out <- list(
+    rows_keys = c("halign", "valign", "ht", "bg", "fg", "font", "mode", "cmd", "abovesep", "belowsep", "rowsep", "preto", "appto"),
+    columns_keys = c("halign", "valign", "wd", "co", "bg", "fg", "font", "mode", "cmd", "leftsep", "rightsep", "colsep", "preto", "appto"),
+    hborders_keys = c("pagebreak", "abovespace", "belowspace"),
+    vborders_keys = c("leftspace", "rightspace"),
+    cells_keys = c("halign", "valign", "wd", "bg", "fg", "font", "mode", "cmd"),
+    outer_specs_keys = c("baseline", "long", "tall", "expand"),
+    inner_specs_keys = c("rulesep", "stretch", "abovesep", "belowsep", "rowsep", "leftsep", "rightsep", "colsep", "hspan", "vspan", "baseline")
+  )
+  out <- lapply(out, function(x) intersect(x, names(arguments)))
 
   arguments <- list(
     extendable = extendable,
