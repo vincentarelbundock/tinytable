@@ -13,6 +13,23 @@ tinytable_html <- function(x, caption, settings) {
     template,
     fixed = TRUE)
 
+  # caption
+  if (is.null(caption)) {
+    template <- sub(
+      "$TINYTABLE_BOOTSTRAP_CAPTION",
+      "",
+      template,
+      fixed = TRUE
+    )
+  } else {
+    template <- sub(
+      "$TINYTABLE_BOOTSTRAP_CAPTION",
+      sprintf("<caption>%s</caption>", caption),
+      template,
+      fixed = TRUE
+    )
+  }
+
   # (pseudo-)unique table IDs
   id <- get_id("")
   template <- gsub(

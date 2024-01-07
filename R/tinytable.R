@@ -7,11 +7,11 @@
 #' @template tabularray
 #' @export
 tinytable <- function(x,
-                   output = NULL,
-                   caption = NULL,
-                   latex = latexOptions(),   
-                   html = htmlOptions()
-                   ) {
+                      output = NULL,
+                      caption = NULL,
+                      latex = latexOptions(),   
+                      html = htmlOptions()
+                      ) {
 
   # sanity checks
   output <- sanitize_output(output)
