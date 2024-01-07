@@ -1,3 +1,6 @@
+#' LaTeX options
+#' @template tabularray
+#' @export
 latexOptions <- function(
   # tinytable
   env = "table+tblr",
