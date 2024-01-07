@@ -8,9 +8,8 @@ devtools::document()
 pkgload::load_all()
 x <- mtcars[1:4, 1:4]
 tt(x,
-  output = "tblr",
   html = htmlOptions(
-    class = "table .table-striped"),
+    class = "table table-striped"),
   latex = latexOptions(
     theme = "plain",
     placement = "H",
@@ -20,9 +19,5 @@ tt(x,
 ```
 
 ```{r}
-# library(tinytable)
-tt(x,
-  output = "tblr",
-  latex = latexOptions(placement = "H")
-)
+tt(x, latex = latexOptions(placement = "H"))
 ```

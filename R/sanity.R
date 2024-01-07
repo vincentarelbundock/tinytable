@@ -4,23 +4,26 @@ usepackage_latex <- function(name, options = NULL, extra_lines = NULL) {
 
 
 sanitize_output <- function(output) {
-  assert_choice(output, choice = c("tblr", "html"), null.ok = TRUE)
+  assert_choice(output, choice = c("latex", "html"), null.ok = TRUE)
 
   # default output format
   if (is.null(output)) {
-    out <- "tblr"
+    out <- "latex"
   } else {
     out <- output
   }
 
   if (isTRUE(check_dependency("knitr")) && isTRUE(check_dependency("rmarkdown"))) {
+
     if (isTRUE(knitr::is_latex_output())) {
       usepackage_latex("float")
       usepackage_latex("tabularray", extra_lines = "\\UseTblrLibrary{booktabs}")
-      if (is.null(output)) out <- "tblr"
+      if (is.null(output)) out <- "latex"
+
     } else if (isTRUE(knitr::is_html_output())) {
       if (is.null(output)) out <- "html"
     }
+
   }
 
   return(out)

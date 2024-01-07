@@ -1,6 +1,5 @@
 tt_html <- function(x, caption, settings) {
   template <- settings$template
-  browser()
 
   # bootstrap class and css
   template <- gsub(

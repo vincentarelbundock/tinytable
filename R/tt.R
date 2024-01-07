@@ -20,7 +20,7 @@ tt <- function(x,
   }
 
   # build table
-  if (output == "tblr") {
+  if (output == "latex") {
     out <- tt_latex(x,
       caption = caption,
       settings = latex
