@@ -104,5 +104,3 @@ tblrOptions <- function(
 
 }
 
-source("sanity.R")
-tblrOptions(c = 2, valign = "c", halign = "j") |> print()
