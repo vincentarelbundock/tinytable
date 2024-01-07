@@ -1,61 +1,55 @@
 #' @export
 style_column.tinytable_html <- function(x,
                                         j = NULL,
-                                        halign = NULL,
-                                        valign = NULL,
-                                        bg = NULL,
-                                        fg = NULL,
-                                        font = NULL,
+                                        color = NULL,
+                                        background = NULL,
+                                        bold = FALSE,
+                                        italic = FALSE,
+                                        html = htmlOptions(),
                                         ...) {
 
   assert_integerish(j, lower = 1, null.ok = TRUE)
+  assert_string(color, null.ok = TRUE)
+  assert_string(background, null.ok = TRUE)
+  assert_flag(bold)
+  assert_flag(italic)
 
+  # all columns
   if (is.null(j)) j <- seq_len(attr(x, "ncol"))
 
   out <- x
 
-  for (col in j) {
+  columnid <- get_id(stem = "style_column_")
 
-    assert_choice(halign, choice = c("c", "l", "r"), null.ok = TRUE)
-    if (!is.null(halign)) {
-      tmp <- switch(halign,
-      c = "center",
-      l = "left",
-      r = "right")
-      new <- sprintf('table.rows[i].cells[%s].style.textAlign = "%s";', col, halign)
-      out <- bootstrap_setting(out, new, component = "column")
-    }
+  css <- sprintf("%s .table td.%s {", strrep(" ", 8), columnid)
+  if (!is.null(color)) {
+    tmp <- sprintf("%s color: %s", strrep(" ", 10), color)
+    css <- c(css, tmp)
+  }
+  if (!is.null(background)) {
+    tmp <- sprintf("%s background-color: %s", strrep(" ", 10), background)
+    css <- c(css, tmp)
+  }
+  if (isTRUE(bold)) {
+    tmp <- sprintf("%s font-weight: bold", strrep(" ", 10))
+    css <- c(css, tmp)
+  }
+  if (isTRUE(italic)) {
+    tmp <- sprintf("%s font-style: italic", strrep(" ", 10))
+    css <- c(css, tmp)
+  }
+  tmp <- sprintf("%s}", strrep(" ", 8))
+  css <- c(css, tmp)
+  css <- trimws(css)
+  css <- paste(css, collapse = "; ")
 
-    assert_choice(valign, choice = c("t", "m", "b"), null.ok = TRUE)
-    if (!is.null(valign)) {
-      tmp <- switch(valign,
-      t = "top",
-      m = "middle",
-      b = "bottom")
-      new <- sprintf('table.rows[i].cells[%s].style.Align = "%s";', col, valign)
-      out <- bootstrap_setting(out, new, component = "column")
-    }
+  out <- bootstrap_setting(out, css, component = "css")
 
-    assert_string(bg, null.ok = TRUE)
-    if (!is.null(bg)) {
-      new <- sprintf('table.rows[i].cells[%s].style.backgroundColor = "%s";', col, bg)
-      out <- bootstrap_setting(out, new, component = "column")
-    }
-
-    assert_string(fg, null.ok = TRUE)
-    if (!is.null(fg)) {
-      new <- sprintf('table.rows[i].cells[%s].style.color = "%s";', col, fg)
-      out <- bootstrap_setting(out, new, component = "column")
-    }
-
-    assert_string(font, null.ok = TRUE)
-    if (!is.null(font)) {
-      new <- sprintf("table.rows[%s].style.fontFamily = '%s';", col, font)
-      out <- bootstrap_setting(out, new, component = "column")
-    }
-
+  for (column in j) {
+    # 0-indexing in JS
+    new <- sprintf("table.rows[i].cells[%s].classList.add('%s');", column - 1, columnid)
+    out <- bootstrap_setting(out, new, component = "column")
   }
 
   return(out)
 }
-

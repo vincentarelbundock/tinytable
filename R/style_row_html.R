@@ -1,7 +1,6 @@
 #' @export
 style_row.tinytable_html <- function(x,
                                      i = NULL,
-                                     j = NULL,
                                      color = NULL,
                                      background = NULL,
                                      bold = FALSE,
@@ -20,40 +19,35 @@ style_row.tinytable_html <- function(x,
 
   out <- x
 
-  rowid <- get_id(stem = "tr_")
-  css <- sub("$TINYTABLE_ID",
-    rowid,
-    ".table tr.$TINYTABLE_ID {
-      background-color: blue;
-      color: white;
-    }",
-    fixed = TRUE)
+  rowid <- get_id(stem = "style__row_")
+
+  css <- sprintf("%s .table tr.%s td {", strrep(" ", 8), rowid)
+  if (!is.null(color)) {
+    tmp <- sprintf("%s color: %s", strrep(" ", 10), color)
+    css <- c(css, tmp)
+  }
+  if (!is.null(background)) {
+    tmp <- sprintf("%s background-color: %s", strrep(" ", 10), background)
+    css <- c(css, tmp)
+  }
+  if (isTRUE(bold)) {
+    tmp <- sprintf("%s font-weight: bold", strrep(" ", 10))
+    css <- c(css, tmp)
+  }
+  if (isTRUE(italic)) {
+    tmp <- sprintf("%s font-style: italic", strrep(" ", 10))
+    css <- c(css, tmp)
+  }
+  tmp <- sprintf("%s}", strrep(" ", 8))
+  css <- c(css, tmp)
+  css <- trimws(css)
+  css <- paste(css, collapse = "; ")
+
   out <- bootstrap_setting(out, css, component = "css")
 
   for (row in i) {
-
     new <- sprintf("table.rows[%s].classList.add('%s');", row, rowid)
-    new <- paste(strrep(" ", 13), new)
     out <- bootstrap_setting(out, new, component = "row")
-  
-    if (!is.null(background)) {
-      new <- sprintf("table.rows[%s].style.backgroundColor = '%s';", row, background)
-      new <- paste(strrep(" ", 13), new)
-      out <- bootstrap_setting(out, new, component = "row")
-    }
-    
-    if (isTRUE(bold)) {
-      new <- sprintf("table.rows[%s].style.fontWeight = 'bold';", row)
-      new <- paste(strrep(" ", 13), new)
-      out <- bootstrap_setting(out, new, component = "row")
-    }
-
-    if (isTRUE(italic)) {
-      new <- sprintf("table.rows[%s].style.fontStyle = 'italic';", row)
-      new <- paste(strrep(" ", 13), new)
-      out <- bootstrap_setting(out, new, component = "row")
-    }
-
   }
 
   return(out)
