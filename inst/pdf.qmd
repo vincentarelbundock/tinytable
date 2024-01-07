@@ -2,14 +2,10 @@
 title: "`tinytable`: PDF documents"
 ---
 
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(eval = FALSE)
-```
-
 ```{r}
 library(tinytable)
 options(tt_latexOptions_placement = "H")
+options(tt_output_default = "latex")
 x <- mtcars[1:4, 1:5]
 ```
 
@@ -23,7 +19,7 @@ tt(x) |>
 ```
 
 ```{r}
-tt(x) |> style_row(italic = TRUE, bold = TRUE, color = "blue", background = "pink!important")
+tt(x) |> style_row(italic = TRUE, bold = TRUE, color = "blue", background = "pink")
 ```
 
 ```{r}

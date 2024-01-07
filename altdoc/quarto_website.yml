@@ -1,0 +1,40 @@
+project:
+  type: website
+
+website:
+  title: "$ALTDOC_PACKAGE_NAME"
+  navbar:
+    search: true
+    right:
+      - icon: github
+        href: $ALTDOC_PACKAGE_URL_GITHUB
+        aria-label: $ALTDOC_PACKAGE_NAME GitHub
+  sidebar:
+    collapse-level: 1
+    contents:
+      - text: Home
+        file: index.qmd
+      - section: Articles
+        contents:
+          - text: Get started
+            href: vignettes/get_started.qmd
+          - text: PDF tables
+            href: vignettes/pdf.pdf
+      - section: $ALTDOC_MAN_BLOCK
+      - text: News
+        file: $ALTDOC_NEWS
+      - text: Changelog
+        file: $ALTDOC_CHANGELOG
+      - text: License
+        file: $ALTDOC_LICENSE
+      - text: Licence
+        file: $ALTDOC_LICENCE
+      - text: Code of conduct
+        file: $ALTDOC_CODE_OF_CONDUCT
+      - text: Citation
+        file: $ALTDOC_CITATION
+
+format:
+  html:
+    theme: cosmo
+    number-sections: false
