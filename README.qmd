@@ -19,13 +19,13 @@ dep_hux <- tools::package_dependencies(c("huxtable"), recursive=TRUE, db=db)[[1]
 dep_dt <- tools::package_dependencies(c("DT"), recursive=TRUE, db=db)[[1]] |> length()
 dep_gt <- tools::package_dependencies(c("gt"), recursive=TRUE, db=db)[[1]] |> length()
 ```
-The core design philosophy rests on three pillars.
+The design philosophy of this package rests on three pillars.
 
 First, _data is separate from style_. The code that `tinytable` creates keeps the data (characters and numbers in a table) separate from the style that should be applied to each cell. This brings important benefits: the files produced by the package are human-readable, which makes them easy to edit and customize. Moreover, keeping data separate from style can be very useful when diagnosing problems.
 
 Second, _tables should be deeply customizable._ Users' needs are incredibly varied, and a table drawing package should be flexible enough to accomodate many ideas. To achieve this, `tinytable` builds on the work of existing frameworks for table creating in HTML and LaTeX formats.
 
-Third, [lightweight is the right weight.](https://www.tinyverse.org/) Some of the most popular table-drawing packages in the `R` ecosystem are heavy. For instance, `kableExtra` imports `r dep_ke`, `gt` `r dep_gt`, `huxtable` `r dep_hux`, and `DT` `r dep_dt`. In contrast, `tinytable` imports no other `R`  package by default.
+Third, [_lightweight is the right weight._](https://www.tinyverse.org/) Some of the most popular table-drawing packages in the `R` ecosystem are heavy. For instance, `kableExtra` imports `r dep_ke` dependencies, `gt` `r dep_gt`, `huxtable` `r dep_hux`, and `DT` `r dep_dt`. In contrast, `tinytable` imports no other `R`  package by default.
 
 There `tinytable` is also "small" along several other dimensions:
 

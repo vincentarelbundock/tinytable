@@ -14,7 +14,7 @@ customizable tables: `tabularray` for LaTeX/PDF and Bootstrap for HTML.
 
 ## Why?
 
-The core design philosophy rests on three pillars.
+The design philosophy of this package rests on three pillars.
 
 First, *data is separate from style*. The code that `tinytable` creates
 keeps the data (characters and numbers in a table) separate from the
@@ -29,11 +29,11 @@ to accomodate many ideas. To achieve this, `tinytable` builds on the
 work of existing frameworks for table creating in HTML and LaTeX
 formats.
 
-Third, [lightweight is the right weight.](https://www.tinyverse.org/)
+Third, [*lightweight is the right weight.*](https://www.tinyverse.org/)
 Some of the most popular table-drawing packages in the `R` ecosystem are
-heavy. For instance, `kableExtra` imports 66, `gt` 65, `huxtable` 29,
-and `DT` 43. In contrast, `tinytable` imports no other `R` package by
-default.
+heavy. For instance, `kableExtra` imports 66 dependencies, `gt` 65,
+`huxtable` 29, and `DT` 43. In contrast, `tinytable` imports no other
+`R` package by default.
 
 There `tinytable` is also “small” along several other dimensions:
 
