@@ -39,6 +39,7 @@ tt_latex <- function(x, caption, settings) {
     template[(idx + 1):length(template)]
   )
 
+  out <- trimws(out)
   out <- paste(out, collapse = "\n")
 
   if (isTRUE(settings$extendable)) {

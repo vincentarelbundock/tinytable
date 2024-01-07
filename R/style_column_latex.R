@@ -9,16 +9,20 @@ style_column.tinytable_latex <- function(x,
                                          latex = latexOptions(),
                                          ...) {
 
+  out <- x
+
   assert_integerish(j, lower = 1, null.ok = TRUE)
   assert_string(color, null.ok = TRUE)
   assert_string(background, null.ok = TRUE)
   assert_flag(bold)
   assert_flag(italic)
+  assert_string(align, null.ok = TRUE)
 
   keys <- latex$columns_keys
 
   # all columns
   if (is.null(j)) j <- seq_len(attr(x, "ncol"))
+
 
   # color, background, italic, and bold
   if (!is.null(color)) {
@@ -42,16 +46,29 @@ style_column.tinytable_latex <- function(x,
     }
   }
 
-  # no keys no change
-  if (keys == "") return(x)
+  # build and insert keys
+  if (keys != "") {
+    keys <- paste0("{", keys, "}")
+    new <- sprintf(
+      "column{%s}={%s},",
+      paste(j, collapse = ","),
+      keys) 
+    out <- tabularray_setting(out, new, inner = TRUE)
+  }
 
-  # build keys
-  new <- sprintf(
-    "column{%s}={%s},",
-    paste(j, collapse = ","),
-    keys) 
-
-  out <- tabularray_setting(x, new, inner = TRUE)
+  # align: we work one column at a time because they could have different alignments
+  if (is.character(align)) {
+    align <- strsplit(align, "")[[1]]
+    if (any(!align %in% c("j", "c", "r", "l")) || length(align) != length(j)) {
+      msg <- sprintf(
+        "`align` must be a string of length %s with character in 'j', 'c', 'r', 'l'.",
+        length(j))
+      stop(msg, call. = FALSE)
+    }
+    for (i in seq_along(align)) {
+      out <- tabularray_setting(out, sprintf("column{%s}={halign=%s},", j[i], align[i]))
+    } 
+  }
 
   return(out)
 }  

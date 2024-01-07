@@ -1,14 +1,20 @@
 ---
 title: "`tinytable`"
+header-includes: \usepackage{tabularray}
 ---
 
 ```{r}
 # library(tinytable)
-# devtools::document()
+devtools::document()
 pkgload::load_all()
 options(tt_latexOptions_placement = "H")
 x <- mtcars[1:4, 1:4]
 ```
+```{r}
+pkgload::load_all()
+tt(x) |> style_column(align = "cllr") |> cat()
+```
+
 ```{r}
 tt(x) |> style_column(italic = TRUE, background = "blue2", color = "white")
 ```
