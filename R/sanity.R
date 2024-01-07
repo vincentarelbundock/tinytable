@@ -60,8 +60,8 @@ assert_choice <- function(x, choice, null.ok = FALSE, name = as.character(substi
 }
 
 assert_string <- function(x, null.ok = FALSE, name = as.character(substitute(x))) {
-    if (is.null(x) && isTRUE(null.ok)) return(TRUE)
-    if (is.character(x) && length(x) == 1) return(TRUE)
+    if (is.null(x) && isTRUE(null.ok)) return(invisible(TRUE))
+    if (is.character(x) && length(x) == 1) return(invisible(TRUE))
     msg <- sprintf("`%s` must be a string.", name)
     stop(msg, call. = FALSE)
 }

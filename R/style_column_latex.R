@@ -48,7 +48,6 @@ style_column.tinytable_latex <- function(x,
 
   # build and insert keys
   if (keys != "") {
-    keys <- paste0("{", keys, "}")
     new <- sprintf(
       "column{%s}={%s},",
       paste(j, collapse = ","),
