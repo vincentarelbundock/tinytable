@@ -5,39 +5,11 @@
 \title{LaTeX options}
 \usage{
 latexOptions(
-  env = "table+tblr",
+  environment = getOption("tt_latexOptions_environment", default = "table+tblr"),
   extendable = getOption("tt_latexOptions_extendable", default = FALSE),
   placement = getOption("tt_latexOptions_placement", default = NULL),
   theme = getOption("tt_latexOptions_theme", default = "booktabs"),
-  wd = "",
-  fg = "",
-  bg = "",
-  halign = NULL,
-  valign = NULL,
-  font = "",
-  mode = "",
-  cmd = "",
-  preto = "",
-  appto = "",
-  hlines = NULL,
-  vlines = NULL,
-  ht = "",
-  abovesep = "",
-  belowsep = "",
-  rowsep = "",
-  r = 1,
-  c = 1,
-  co = 1,
-  leftsep = "",
-  rightsep = "",
-  colsep = "",
-  dash = "",
-  text = "",
-  leftpos = 1,
-  rightpos = 1,
-  endpos = TRUE,
-  abovepos = 0,
-  belowpos = 0
+  ...
 )
 }
 \description{

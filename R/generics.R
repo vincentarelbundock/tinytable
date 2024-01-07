@@ -17,6 +17,7 @@
 #' @param latex sytling options for the `tabularray` framework for LaTeX. See `?latexOptions` for details.
 #' @param html styling options for the Bootstrap framework for HTML. See `?htmlOptions` for details.
 #' @return Returns the modified table object with the specified cell styles applied.
+#' @template tabularray
 #' @export
 style_cell <- function(x,
                        i = NULL,
@@ -36,6 +37,7 @@ style_cell <- function(x,
 #' @inheritParams style_cell
 #' @inherit style_cell return
 #' @inherit style_cell description
+#' @template tabularray
 #' @export
 style_row <- function(x,
                       i = NULL,
@@ -54,6 +56,7 @@ style_row <- function(x,
 #' @inheritParams style_cell
 #' @inherit style_cell return
 #' @inherit style_cell description
+#' @template tabularray
 #' @export
 style_column <- function(x,
                          j = NULL,
@@ -61,6 +64,7 @@ style_column <- function(x,
                          background = NULL,
                          bold = FALSE,
                          italic = FALSE,
+                         align = NULL,
                          latex = latexOptions(),
                          html = htmlOptions()) {
   UseMethod("style_column", x)

@@ -1,3 +1,6 @@
+#' Draw a table
+#'
+#' @template tabularray
 #' @export
 tt <- function(x,
                output = NULL,
