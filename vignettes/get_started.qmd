@@ -24,7 +24,7 @@ tinytable(x, caption = "Data about cars.")
 TODO: Cross-references
 
 
-## Style: Cells, Rows, Columns
+## Style
 
 Customization options include text alignment, color, font, and background.
 
@@ -46,6 +46,16 @@ These functions all share the same set of arguments:
 
 
 ### `style_cell()`
+
+```{r}
+tinytable(x) |>
+  style_cell(
+    2, 3,
+    background = "black",
+    color = "white",
+    bold = TRUE,
+    italic = TRUE)
+```
 
 
 ### `style_row()`
@@ -78,6 +88,8 @@ tinytable(x) |>
 
 ## Headers
 
+The header can be omitted from the table by deleting the column names in the `x` data frame:
+
 ```{r}
 k <- x
 colnames(k) <- NULL
@@ -85,9 +97,7 @@ tinytable(k)
 ```
 
 
+## PDF customization: `tabularray`
 
 
-## Customizing PDF / LaTeX: `tabularray`
-
-
-## Customizing HTML: Bootstrap
+## HTML customization: `Bootstrap`
