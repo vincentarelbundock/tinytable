@@ -8,16 +8,23 @@ title: "`tinytable`"
 pkgload::load_all()
 options(tt_latexOptions_placement = "H")
 x <- mtcars[1:4, 1:4]
-tt(x) |> style_row(2:3, italic = TRUE, background = "blue2", color = "white")
+```
+```{r}
+tt(x) |> style_column(italic = TRUE, background = "blue2", color = "white")
 ```
 
+```{r}
+tt(x) |> style_column(c(1, 4), italic = TRUE, background = "blue2", color = "white")
+```
+
+```{r}
+tt(x) |> style_row(2:3, italic = TRUE, background = "blue2", color = "white")
+```
 
 ```{r}
 tt(x) |> style_row(2:3,
   latex = latexOptions(
-    bg = "pink",
-    fg = "blue",
-    cmd = "\\textit"
+    cmd = "\\texttt"
     ))
 ```
 

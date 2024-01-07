@@ -9,6 +9,6 @@ style_row <- function(x, i, color, background, bold, italic, latex, html) {
 }
 
 #' @export
-style_column <- function(x, i, latex, html) {
+style_column <- function(x, i, align, color, background, bold, italic, latex, html) {
   UseMethod("style_column", x)
 }
