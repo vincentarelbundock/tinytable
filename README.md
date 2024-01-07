@@ -9,8 +9,11 @@
 
 `tinytable` is a small but powerful `R` package to draw LaTeX/PDF, HTML,
 Markdown, and Typst tables. The interface is minimalist, but it gives
-users direct access to powerful frameworks to create endlessly
-customizable tables: `tabularray` for LaTeX/PDF and Bootstrap for HTML.
+users direct and convenient access to powerful frameworks to create
+endlessly customizable tables:
+
+-   `tabularray` for LaTeX and PDF
+-   Bootstrap for HTML.
 
 ## Why?
 
@@ -35,14 +38,12 @@ heavy. For instance, `kableExtra` imports 66 dependencies, `gt` 65,
 `huxtable` 29, and `DT` 43. In contrast, `tinytable` imports no other
 `R` package by default.
 
-There `tinytable` is also “small” along several other dimensions:
+`tinytable` is “small” along several dimensions:
 
 -   The user interface is simple, streamlined, consistent, uncluttered.
 -   The `tinytable` code base is very small and easy to maintain.
 -   `tinytable` is a very thin wrapper around incredibly powerful
-    frameworks: Bootstrap for HTML and `tabularray` for LaTeX/PDF. By
-    staying “close to the metal”, `tinytable` allows users to create
-    endlessly customizable tables:.
+    frameworks: Bootstrap for HTML and `tabularray` for LaTeX.
 -   `tinytable` imports no 3rd party `R` package.
 -   This package is free. Tiny tables for a tiny price!
 
