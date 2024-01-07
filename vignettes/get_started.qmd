@@ -34,8 +34,8 @@ Customization options include text alignment, color, font, and background.
 
 These functions all share the same set of arguments:
 
-* `i` row numbers: integer vector or `NULL`
-* `j` column numbers: integer vector or `NULL`
+* `i` row numbers: integer vector or `NULL` to style all rows.
+* `j` column numbers: integer vector or `NULL` to style all columns.
 * `color`: text color
 * `background`: background color
 * `bold`: bold text
@@ -47,15 +47,31 @@ These functions all share the same set of arguments:
 
 ### `style_cell()`
 
+To style individual cells, we use the `style_cell()`  function. The first two arguments (`i` and `j`) identify the positions of the cells of interest, by row and column numbers respectively. To style a cell in the 2nd row and 3rd column, we can do:
+
 ```{r}
 tinytable(x) |>
   style_cell(
-    2, 3,
+    i = 2,
+    j = 3,
     background = "black",
     color = "white",
     bold = TRUE,
     italic = TRUE)
 ```
+
+The `i` and `j` accept vectors of integers to modify several cells at once:
+
+```{r}
+tinytable(x) |> style_cell(2, c(1, 3), background = "olive")
+```
+
+We can style all cells by omitting the `i` and `j` columns altogether:
+
+```{r}
+tinytable(x) |> style_cell(color = "blue")
+```
+
 
 
 ### `style_row()`
@@ -97,7 +113,8 @@ tinytable(k)
 ```
 
 
-## PDF customization: `tabularray`
+## More customization
 
+### LaTeX with `tabularray`
 
-## HTML customization: `Bootstrap`
+### HTML with `Bootstrap`

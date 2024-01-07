@@ -19,7 +19,7 @@ style_row.tinytable_html <- function(x,
 
   out <- x
 
-  rowid <- get_id(stem = "style__row_")
+  rowid <- get_id(stem = "style_row_")
 
   css <- sprintf("%s .table tr.%s td {", strrep(" ", 8), rowid)
   if (!is.null(color)) {

@@ -50,7 +50,8 @@ style_cell.tinytable_html <- function(x,
 
   for (row in i) {
     for (col in j) {
-      new <- sprintf("table.rows[%s].cells[%s].classList.add('%s');", row, col, cellid)
+      # 0-indexing in JS
+      new <- sprintf("table.rows[%s].cells[%s].classList.add('%s');", row, col - 1, cellid)
       out <- bootstrap_setting(out, new, component = "row")
     }
   }
