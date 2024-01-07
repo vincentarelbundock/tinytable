@@ -1,4 +1,4 @@
-tblrOptions <- function(
+latexOptions <- function(
   env = "table+tblr",
   extendable = FALSE,
   placement = NULL,
@@ -99,6 +99,7 @@ tblrOptions <- function(
     template = template,
     spec = arguments
   )
+  class(arguments) <- c("tinytable_latexOptions", class(arguments))
   
   return(arguments)
 

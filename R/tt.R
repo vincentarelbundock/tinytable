@@ -2,16 +2,22 @@
 tt <- function(x,
                output = NULL,
                caption = NULL,
-               hlines = "booktabs",
-               vlines = NULL,
-               bootstrap_css = "",
-               bootstrap_class = "table table-tinytable",
+               latex = latexOptions(),   
+               html = htmlOptions()
+               ) {
 
   assert_data_frame(x)
   assert_string(caption, null.ok = TRUE)
-  assert_string(bootstrap_class, null.ok = FALSE)
-  assert_string(bootstrap_css, null.ok = FALSE)
   output <- sanitize_output(output)
+
+  if (!inherits(latex, "tinytable_latexOptions")) {
+    msg <- "The `latex` argument must be a call to the `latexOptions()` function. See `?tt` and `?latexOptions` for details and examples."
+    stop(msg, call. = FALSE)
+  }
+  if (!inherits(latex, "tinytable_htmlOptions")) {
+    msg <- "The `html` argument must be a call to the `htmlOptions()` function. See `?tt` and `?htmlOptions` for details and examples."
+    stop(msg, call. = FALSE)
+  }
 
   if (output == "tblr") {
     out <- tt_latex(x,
