@@ -24,7 +24,7 @@ tt_latex <- function(x, caption, settings) {
   body <- apply(x, 1, paste, collapse = " & ")
   body <- paste(body, "\\\\")
 
-  # body: theme
+  # theme: booktabs
   if (isTRUE(settings$theme == "booktabs")) {
     header <- c("\\toprule", header, "\\midrule")
     body <- c(body, "\\bottomrule")
@@ -53,6 +53,11 @@ tt_latex <- function(x, caption, settings) {
     out,
     sprintf("colspec={%s},", paste(tabularray_cols, collapse = "")),
     inner = TRUE)
+
+  # theme: grid
+  if (settings$theme == "grid") {
+    out <- tabularray_setting(out, new = "hlines={},vlines={}", inner = TRUE)
+  }
 
   # inner and outer tabularray settings
   if (settings$outer_specs_keys != "") {

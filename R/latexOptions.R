@@ -13,7 +13,7 @@ latexOptions <- function(
   assert_choice(environment, c("table+tblr", "tblr"))
   assert_flag(extendable)
   assert_string(placement, null.ok = TRUE)
-  assert_choice(theme, c("booktabs", "plain"))
+  assert_choice(theme, c("booktabs", "void", "grid"))
 
   if (environment %in% c("table+tblr", "tbrl")) {
     template <- readLines(system.file("templates/tblr.tex", package = "tinytable"))
@@ -31,18 +31,26 @@ latexOptions <- function(
     dots$endpos <- tolower(dots$endpos)
   }
 
-  if ("hlines" %in% names(dots)) {
-    dots$hlines <- sprintf("{%s}", dots$hlines)
-  }
-
-  if ("vlines" %in% names(dots)) {
-    dots$vlines <- sprintf("{%s}", dots$vlines)
-  }
-
   # clean dots
-  dots <- dots[dots != ""]
-  dots <- sapply(names(dots), function(n) paste0(n, "=", dots[[n]]))
+  # loop over indices to allow duplicate keys like vline
+  for (i in seq_along(dots)) {
+    n <- names(dots)[i]
 
+    if (n %in% c("vline", "hline")) {
+      if (!is.character(dots[[i]]) || length(dots[[i]]) != 2) {
+        msg <- "The `hline` and `vline` keys must be character vectors of length 2, ex: `hline=c('2,3', 'orange,2pt')`"
+        stop(msg, call. = FALSE)
+      }
+      dots[[i]] <- sprintf("%s{%s}={%s}", n, dots[[i]][1], dots[[i]][2])
+
+    } else if (n %in% c("vlines", "hlines")) {
+      dots[[i]] <- sprintf("%s={%s}", n, dots[[i]])
+
+    } else {
+      dots[[n]] <- paste0(n, "=", dots[[i]])
+    }
+  }
+  
   out <- list(
     rows_keys = c("halign", "valign", "ht", "bg", "fg", "font", "mode", "cmd", "abovesep", "belowsep", "rowsep", "preto", "appto"),
     columns_keys = c("halign", "valign", "wd", "co", "bg", "fg", "font", "mode", "cmd", "leftsep", "rightsep", "colsep", "preto", "appto"),
@@ -50,12 +58,15 @@ latexOptions <- function(
     vborders_keys = c("leftspace", "rightspace"),
     cells_keys = c("halign", "valign", "wd", "bg", "fg", "font", "mode", "cmd"),
     outer_specs_keys = c("baseline", "long", "tall", "expand"),
-    inner_specs_keys = c("rulesep", "hlines", "vlines", "stretch", "abovesep", "belowsep", "rowsep", "leftsep", "rightsep", "colsep", "hspan", "vspan", "baseline"),
+    inner_specs_keys = c("rulesep", "hlines", "vline", "hline", "vlines", "stretch", "abovesep", "belowsep", "rowsep", "leftsep", "rightsep", "colsep", "hspan", "vspan", "baseline"),
     span = c("r", "c")
   )
-  out <- lapply(out, function(x) intersect(x, names(dots)))
-  out <- lapply(out, function(x) dots[x])
-  out <- sapply(out, paste, collapse = ",")
+
+  # do not select by name to allow duplicate keys like hline
+  for (i in seq_along(out)) {
+    idx <- names(dots) %in% out[[i]]
+    out[[i]] <- paste(dots[idx], collapse = ",")
+  }
 
   dots <- list(
     environment = environment,

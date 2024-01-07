@@ -46,13 +46,14 @@ tt(x) |> style_row(2:3,
     ))
 ```
 
+```{r}
+tt(x, latex = latexOptions(theme = "grid"))
+```
 
 ```{r}
 tt(x,
-  html = htmlOptions(
-    class = "table table-striped"),
   latex = latexOptions(
-    theme = "plain",
+    theme = "void",
     hlines = "dotted,fg=blue",
     vlines = "dashed,fg=red,wd=1pt")
 )
@@ -61,3 +62,34 @@ tt(x,
 ```{r}
 tt(x)
 ```
+
+# Themes
+
+`tinytable` includes three basic "themes" for LaTeX tables: "booktabs" (default), "grid", and "void". The theme can be selected using the `latexOptions()` function.
+
+```{r}
+tt(x, latex = latexOptions(theme = "booktabs"))
+```
+
+```{r}
+tt(x, latex = latexOptions(theme = "grid"))
+```
+
+```{r}
+tt(x, latex = latexOptions(theme = "void"))
+```
+
+The "void" theme can be useful when combined with the `hline*`  and `vline*` arguments. For example:
+
+```{r}
+tt(x,
+  latex = latexOptions(
+    theme = "void",
+    hline = c("1,6", "fg=orange,wd=2pt"),
+    hline = c("2", "fg=orange,wd=1pt"),
+    vlines = "dotted,fg=olive,wd=1pt",
+  )
+)
+```
+
+
