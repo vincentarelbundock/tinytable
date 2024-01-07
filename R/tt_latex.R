@@ -48,13 +48,11 @@ tt_latex <- function(x, caption, settings) {
     inner = TRUE)
 
   # inner and outer tabularray settings
-  if (!is.null(tabularray_inner)) {
-    if (!grepl(",$", trimws(tabularray_inner))) inner <- paste0(tabularray_inner, ",")
-    out <- tabularray_setting(out, tabularray_inner, inner = TRUE)
+  if (settings$outer_specs_keys != "") {
+    out <- tabularray_setting(out, settings$outer_specs_keys, inner = FALSE)
   }
-  if (!is.null(tabularray_outer)) {
-    if (!grepl(",$", trimws(tabularray_outer))) tabularray_outer <- paste0(tabularray_outer, ",")
-    out <- tabularray_setting(out, tabularray_outer, inner = FALSE)
+  if (settings$inner_specs_keys != "") {
+    out <- tabularray_setting(out, settings$outer_specs_keys, inner = TRUE)
   }
 
   attr(out, "ncol") <- ncol(x)
