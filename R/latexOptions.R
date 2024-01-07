@@ -110,7 +110,8 @@ latexOptions <- function(
     vborders_keys = c("leftspace", "rightspace"),
     cells_keys = c("halign", "valign", "wd", "bg", "fg", "font", "mode", "cmd"),
     outer_specs_keys = c("baseline", "long", "tall", "expand"),
-    inner_specs_keys = c("rulesep", "hlines", "vlines", "stretch", "abovesep", "belowsep", "rowsep", "leftsep", "rightsep", "colsep", "hspan", "vspan", "baseline")
+    inner_specs_keys = c("rulesep", "hlines", "vlines", "stretch", "abovesep", "belowsep", "rowsep", "leftsep", "rightsep", "colsep", "hspan", "vspan", "baseline"),
+    span = c("r", "c")
   )
   out <- lapply(out, function(x) intersect(x, names(arguments)))
   out <- lapply(out, function(x) arguments[x])

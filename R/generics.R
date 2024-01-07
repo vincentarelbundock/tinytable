@@ -1,5 +1,5 @@
 #' @export
-style_cell <- function(x, i, j, latex, html) {
+style_cell <- function(x, i, j, color, background, bold, italic, latex, html) {
   UseMethod("style_cell", x)
 }
 
