@@ -14,25 +14,37 @@ customizable tables: `tabularray` for LaTeX/PDF and Bootstrap for HTML.
 
 ## Why?
 
-The core design philosophy rests on three pillars:
+The core design philosophy rests on three pillars.
 
-1.  Data is separate from style.
-2.  Tables should be deeply customizable.
-3.  [Lightweight is the right weight.](https://www.tinyverse.org/)
+First, *data is separate from style*. The code that `tinytable` creates
+keeps the data (characters and numbers in a table) separate from the
+style that should be applied to each cell. This brings important
+benefits: the files produced by the package are human-readable, which
+makes them easy to edit and customize. Moreover, keeping data separate
+from style can be very useful when diagnosing problems.
 
-There are several senses in which `tinytable` is “light,” and this
-brings many benefits to users and developers:
+Second, *tables should be deeply customizable.* Users’ needs are
+incredibly varied, and a table drawing package should be flexible enough
+to accomodate many ideas. To achieve this, `tinytable` builds on the
+work of existing frameworks for table creating in HTML and LaTeX
+formats.
+
+Third, [lightweight is the right weight.](https://www.tinyverse.org/)
+Some of the most popular table-drawing packages in the `R` ecosystem are
+heavy. For instance, `kableExtra` imports 66, `gt` 65, `huxtable` 29,
+and `DT` 43. In contrast, `tinytable` imports no other `R` package by
+default.
+
+There `tinytable` is also “small” along several other dimensions:
 
 -   The user interface is simple, streamlined, consistent, uncluttered.
--   `tinytable` is a thin wrapper around incredibly powerful frameworks:
-    Bootstrap for HTML and `tabularray` for LaTeX/PDF. By providing
-    quick and easy access to those frameworks, `tinytable` allows users
-    to create endlessly customizable tables:.
 -   The `tinytable` code base is very small and easy to maintain.
--   `tinytable` does not rely on any other `R` package. In contrast,
-    `kableExtra` uses 66 dependencies, and `gt` imports 65 other
-    packages every time it is loaded.
--   This package is free. The price is tiny!
+-   `tinytable` is a very thin wrapper around incredibly powerful
+    frameworks: Bootstrap for HTML and `tabularray` for LaTeX/PDF. By
+    staying “close to the metal”, `tinytable` allows users to create
+    endlessly customizable tables:.
+-   `tinytable` imports no 3rd party `R` package.
+-   This package is free. Tiny tables for a tiny price!
 
 ## Installation
 
