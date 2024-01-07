@@ -14,8 +14,7 @@ tt_html <- function(x, caption, settings) {
     fixed = TRUE)
 
   # (pseudo-)unique table IDs
-  id <- sample(c(0:9, letters), 20, replace = TRUE)
-  id <- tools::toTitleCase(paste(id, collapse = ""))
+  id <- get_id("")
   template <- gsub(
     "$TINYTABLE_TABLE_ID",
     paste0(c("tinytable", id), collapse = ""),
@@ -85,6 +84,8 @@ bootstrap_setting <- function(x, new, component = "row") {
     idx <- grep("tinytable columns before this", out)
   } else if (component == "cell") {
     idx <- grep("tinytable cells before this", out)
+  } else if (component == "css") {
+    idx <- grep("tinytable css before this", out)
   }
   out <- c(
     out[1:(idx - 1)],

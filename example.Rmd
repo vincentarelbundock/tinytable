@@ -5,22 +5,20 @@ header-includes: \usepackage{tabularray}
 
 ```{r}
 # library(tinytable)
-devtools::document()
+# devtools::document()
 pkgload::load_all()
 options(tt_latexOptions_placement = "H")
-options(tt_output_default = "markdown")
+options(tt_output_default = "html")
 x <- mtcars[1:4, 1:5]
-tt(x, caption = "Blah blah") |> style_cell()
 ```
 
 ```{r}
-tt(x) |> style_cell(2, 2,
-  background = "pink",
-  latex = latexOptions(r = 2, c = 3, halign = "c"))
+tt(x) |> style_cell(2, 2, background = "pink!important")
 ```
 
 ```{r}
-tt(x) |> style_column(align = "cccrl")
+pkgload::load_all()
+tt(x) |> style_row(italic = TRUE, bold = TRUE, color = "blue", background = "pink!important") |> cat(file = "~/Downloads/trash.html")
 ```
 
 ```{r}

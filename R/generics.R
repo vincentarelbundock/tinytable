@@ -55,6 +55,10 @@ style_row <- function(x,
 }
 
 
+#' @export
+style_row.default <- function(x, ...) return(x)
+
+
 #' Style Columns in a `tinytable`
 #'
 #' @inheritParams style_cell
@@ -73,3 +77,7 @@ style_column <- function(x,
                          html = htmlOptions()) {
   UseMethod("style_column", x)
 }
+
+
+#' @export
+style_column.default <- function(x, ...) return(x)
