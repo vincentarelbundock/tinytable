@@ -1,4 +1,4 @@
-tt_latex <- function(x, caption, settings) {
+tinytable_latex <- function(x, caption, settings) {
 
   template <- settings$template
 

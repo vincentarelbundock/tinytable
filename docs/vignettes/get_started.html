@@ -217,8 +217,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/tt.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">tt</span></a>
+  <a href="../man/tinytable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">tinytable</span></a>
   </div>
 </li>
       </ul>
@@ -261,12 +261,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
+<p>The <code>tinytable</code> package in R offers several key features:</p>
+<ul>
+<li><code>tinytable()</code>: Draws tables.</li>
+</ul>
+<p>Customization options include text alignment, color, font, and background.</p>
+<ul>
+<li><code>style_cell()</code>: Styles individual cells.</li>
+<li><code>style_row()</code>: Styles entire rows.</li>
+<li><code>style_column()</code>: Styles columns.</li>
+</ul>
+<p>Load the Package and Data:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x) <span class="sc">|&gt;</span> <span class="fu">style_row</span>(<span class="dv">2</span>, <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">background =</span> <span class="st">"pink"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytable</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- <!DOCTYPE html> -->
 
@@ -274,13 +284,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable4tc239ew07y7cwuj9e5k</title>
+    <title>tinytablelrdt2gj30s4mfrduxbn8</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   
 
   
     <div class="container mt-4">
-      <table class="table" id="tinytable4tc239ew07y7cwuj9e5k">
+      <table class="table" id="tinytablelrdt2gj30s4mfrduxbn8">
             <thead>
               <tr>
                 <th scope="col">mpg</th>
@@ -321,26 +331,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
                 </tr>
         </tbody>
         <script>
-        function updateRows4tc239ew07y7cwuj9e5k() {
-          var table = document.getElementById("tinytable4tc239ew07y7cwuj9e5k");
+        function updateRowslrdt2gj30s4mfrduxbn8() {
+          var table = document.getElementById("tinytablelrdt2gj30s4mfrduxbn8");
           if (table.rows.length > 1) {
-table.rows[2].classList.add('style__row_1mf6peuv98ckbitytxcf');
           } // tinytable rows before this
         }
-        function updateColumns4tc239ew07y7cwuj9e5k() {
-          var table = document.getElementById("tinytable4tc239ew07y7cwuj9e5k");
+        function updateColumnslrdt2gj30s4mfrduxbn8() {
+          var table = document.getElementById("tinytablelrdt2gj30s4mfrduxbn8");
           for (var i = 0; i < table.rows.length; i++) {
             if (table.rows[i].cells.length > 1) {
             } // tinytable columns before this
           }
         }
-        function updateCells4tc239ew07y7cwuj9e5k() {
-          var table = document.getElementById("tinytable4tc239ew07y7cwuj9e5k");
+        function updateCellslrdt2gj30s4mfrduxbn8() {
+          var table = document.getElementById("tinytablelrdt2gj30s4mfrduxbn8");
           if (table.rows[i].cells.length > 1) {
           } // tinytable cells before this
         }
-        window.addEventListener('load', updateRows4tc239ew07y7cwuj9e5k);
-        window.addEventListener('load', updateColumns4tc239ew07y7cwuj9e5k);
+        window.addEventListener('load', updateRowslrdt2gj30s4mfrduxbn8);
+        window.addEventListener('load', updateColumnslrdt2gj30s4mfrduxbn8);
         </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <style>
@@ -350,7 +359,106 @@ table.rows[2].classList.add('style__row_1mf6peuv98ckbitytxcf');
           margin-left: auto;
           margin-right: auto;
         }
-.table tr.style__row_1mf6peuv98ckbitytxcf td {; color: blue; background-color: pink; }
+        // tinytable css before this
+        </style> 
+      </table>
+    </div>
+  
+
+
+
+</div>
+</div>
+<section id="style_row" class="level2">
+<h2 class="anchored" data-anchor-id="style_row"><code>style_row()</code></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytable</span>(x) <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_row</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="at">background =</span> <span class="st">"black"</span>, <span class="at">color =</span> <span class="st">"white"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<!-- <!DOCTYPE html> -->
+
+
+  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytablenli3ept9vb4vccrosebc</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+
+  
+    <div class="container mt-4">
+      <table class="table" id="tinytablenli3ept9vb4vccrosebc">
+            <thead>
+              <tr>
+                <th scope="col">mpg</th>
+                <th scope="col">cyl</th>
+                <th scope="col">disp</th>
+                <th scope="col">hp</th>
+                <th scope="col">drat</th>
+              </tr>
+            </thead>
+        <tbody>
+                <tr>
+                  <td>21</td>
+                  <td>6</td>
+                  <td>160</td>
+                  <td>110</td>
+                  <td>3.9</td>
+                </tr>
+                <tr>
+                  <td>21</td>
+                  <td>6</td>
+                  <td>160</td>
+                  <td>110</td>
+                  <td>3.9</td>
+                </tr>
+                <tr>
+                  <td>22.8</td>
+                  <td>4</td>
+                  <td>108</td>
+                  <td>93</td>
+                  <td>3.85</td>
+                </tr>
+                <tr>
+                  <td>21.4</td>
+                  <td>6</td>
+                  <td>258</td>
+                  <td>110</td>
+                  <td>3.08</td>
+                </tr>
+        </tbody>
+        <script>
+        function updateRowsnli3ept9vb4vccrosebc() {
+          var table = document.getElementById("tinytablenli3ept9vb4vccrosebc");
+          if (table.rows.length > 1) {
+table.rows[1].classList.add('style__row_0p9f8s1zfonmlip8kjmg');
+table.rows[2].classList.add('style__row_0p9f8s1zfonmlip8kjmg');
+          } // tinytable rows before this
+        }
+        function updateColumnsnli3ept9vb4vccrosebc() {
+          var table = document.getElementById("tinytablenli3ept9vb4vccrosebc");
+          for (var i = 0; i < table.rows.length; i++) {
+            if (table.rows[i].cells.length > 1) {
+            } // tinytable columns before this
+          }
+        }
+        function updateCellsnli3ept9vb4vccrosebc() {
+          var table = document.getElementById("tinytablenli3ept9vb4vccrosebc");
+          if (table.rows[i].cells.length > 1) {
+          } // tinytable cells before this
+        }
+        window.addEventListener('load', updateRowsnli3ept9vb4vccrosebc);
+        window.addEventListener('load', updateColumnsnli3ept9vb4vccrosebc);
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <style>
+            
+        .table {
+          width: auto;
+          margin-left: auto;
+          margin-right: auto;
+        }
+.table tr.style__row_0p9f8s1zfonmlip8kjmg td {; color: white; background-color: black; }
         // tinytable css before this
         </style> 
       </table>
@@ -360,8 +468,319 @@ table.rows[2].classList.add('style__row_1mf6peuv98ckbitytxcf');
 
 </div>
 </div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytable</span>(x) <span class="sc">|&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_row</span>(<span class="at">background =</span> <span class="st">"lightblue"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<!-- <!DOCTYPE html> -->
 
 
+  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytablelehqs0k208ltlcsv3e2v</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+
+  
+    <div class="container mt-4">
+      <table class="table" id="tinytablelehqs0k208ltlcsv3e2v">
+            <thead>
+              <tr>
+                <th scope="col">mpg</th>
+                <th scope="col">cyl</th>
+                <th scope="col">disp</th>
+                <th scope="col">hp</th>
+                <th scope="col">drat</th>
+              </tr>
+            </thead>
+        <tbody>
+                <tr>
+                  <td>21</td>
+                  <td>6</td>
+                  <td>160</td>
+                  <td>110</td>
+                  <td>3.9</td>
+                </tr>
+                <tr>
+                  <td>21</td>
+                  <td>6</td>
+                  <td>160</td>
+                  <td>110</td>
+                  <td>3.9</td>
+                </tr>
+                <tr>
+                  <td>22.8</td>
+                  <td>4</td>
+                  <td>108</td>
+                  <td>93</td>
+                  <td>3.85</td>
+                </tr>
+                <tr>
+                  <td>21.4</td>
+                  <td>6</td>
+                  <td>258</td>
+                  <td>110</td>
+                  <td>3.08</td>
+                </tr>
+        </tbody>
+        <script>
+        function updateRowslehqs0k208ltlcsv3e2v() {
+          var table = document.getElementById("tinytablelehqs0k208ltlcsv3e2v");
+          if (table.rows.length > 1) {
+table.rows[1].classList.add('style__row_1fc0wvthbxopq5p1yyw0');
+table.rows[2].classList.add('style__row_1fc0wvthbxopq5p1yyw0');
+table.rows[3].classList.add('style__row_1fc0wvthbxopq5p1yyw0');
+table.rows[4].classList.add('style__row_1fc0wvthbxopq5p1yyw0');
+          } // tinytable rows before this
+        }
+        function updateColumnslehqs0k208ltlcsv3e2v() {
+          var table = document.getElementById("tinytablelehqs0k208ltlcsv3e2v");
+          for (var i = 0; i < table.rows.length; i++) {
+            if (table.rows[i].cells.length > 1) {
+            } // tinytable columns before this
+          }
+        }
+        function updateCellslehqs0k208ltlcsv3e2v() {
+          var table = document.getElementById("tinytablelehqs0k208ltlcsv3e2v");
+          if (table.rows[i].cells.length > 1) {
+          } // tinytable cells before this
+        }
+        window.addEventListener('load', updateRowslehqs0k208ltlcsv3e2v);
+        window.addEventListener('load', updateColumnslehqs0k208ltlcsv3e2v);
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <style>
+            
+        .table {
+          width: auto;
+          margin-left: auto;
+          margin-right: auto;
+        }
+.table tr.style__row_1fc0wvthbxopq5p1yyw0 td {; background-color: lightblue; }
+        // tinytable css before this
+        </style> 
+      </table>
+    </div>
+  
+
+
+</div>
+</div>
+</section>
+<section id="style_column" class="level2">
+<h2 class="anchored" data-anchor-id="style_column"><code>style_column()</code></h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytable</span>(x) <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_column</span>(<span class="at">align =</span> <span class="st">"c"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<!-- <!DOCTYPE html> -->
+
+
+  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytablepkh84le00o3sgwh5wjk1</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+
+  
+    <div class="container mt-4">
+      <table class="table" id="tinytablepkh84le00o3sgwh5wjk1">
+            <thead>
+              <tr>
+                <th scope="col">mpg</th>
+                <th scope="col">cyl</th>
+                <th scope="col">disp</th>
+                <th scope="col">hp</th>
+                <th scope="col">drat</th>
+              </tr>
+            </thead>
+        <tbody>
+                <tr>
+                  <td>21</td>
+                  <td>6</td>
+                  <td>160</td>
+                  <td>110</td>
+                  <td>3.9</td>
+                </tr>
+                <tr>
+                  <td>21</td>
+                  <td>6</td>
+                  <td>160</td>
+                  <td>110</td>
+                  <td>3.9</td>
+                </tr>
+                <tr>
+                  <td>22.8</td>
+                  <td>4</td>
+                  <td>108</td>
+                  <td>93</td>
+                  <td>3.85</td>
+                </tr>
+                <tr>
+                  <td>21.4</td>
+                  <td>6</td>
+                  <td>258</td>
+                  <td>110</td>
+                  <td>3.08</td>
+                </tr>
+        </tbody>
+        <script>
+        function updateRowspkh84le00o3sgwh5wjk1() {
+          var table = document.getElementById("tinytablepkh84le00o3sgwh5wjk1");
+          if (table.rows.length > 1) {
+          } // tinytable rows before this
+        }
+        function updateColumnspkh84le00o3sgwh5wjk1() {
+          var table = document.getElementById("tinytablepkh84le00o3sgwh5wjk1");
+          for (var i = 0; i < table.rows.length; i++) {
+            if (table.rows[i].cells.length > 1) {
+table.rows[i].cells[0].classList.add('style_column_ozmp1jjpoe02g9ep57re');
+table.rows[i].cells[1].classList.add('style_column_ozmp1jjpoe02g9ep57re');
+table.rows[i].cells[2].classList.add('style_column_ozmp1jjpoe02g9ep57re');
+table.rows[i].cells[3].classList.add('style_column_ozmp1jjpoe02g9ep57re');
+table.rows[i].cells[4].classList.add('style_column_ozmp1jjpoe02g9ep57re');
+            } // tinytable columns before this
+          }
+        }
+        function updateCellspkh84le00o3sgwh5wjk1() {
+          var table = document.getElementById("tinytablepkh84le00o3sgwh5wjk1");
+          if (table.rows[i].cells.length > 1) {
+          } // tinytable cells before this
+        }
+        window.addEventListener('load', updateRowspkh84le00o3sgwh5wjk1);
+        window.addEventListener('load', updateColumnspkh84le00o3sgwh5wjk1);
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <style>
+            
+        .table {
+          width: auto;
+          margin-left: auto;
+          margin-right: auto;
+        }
+.table td.style_column_ozmp1jjpoe02g9ep57re {; }
+        // tinytable css before this
+        </style> 
+      </table>
+    </div>
+  
+
+
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tinytable</span>(x) <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_column</span>(<span class="dv">2</span>, <span class="at">background =</span> <span class="st">"black"</span>, <span class="at">color =</span> <span class="st">"white"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<!-- <!DOCTYPE html> -->
+
+
+  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytable0c9s1c8p4mcxh0h12jyt</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+
+  
+    <div class="container mt-4">
+      <table class="table" id="tinytable0c9s1c8p4mcxh0h12jyt">
+            <thead>
+              <tr>
+                <th scope="col">mpg</th>
+                <th scope="col">cyl</th>
+                <th scope="col">disp</th>
+                <th scope="col">hp</th>
+                <th scope="col">drat</th>
+              </tr>
+            </thead>
+        <tbody>
+                <tr>
+                  <td>21</td>
+                  <td>6</td>
+                  <td>160</td>
+                  <td>110</td>
+                  <td>3.9</td>
+                </tr>
+                <tr>
+                  <td>21</td>
+                  <td>6</td>
+                  <td>160</td>
+                  <td>110</td>
+                  <td>3.9</td>
+                </tr>
+                <tr>
+                  <td>22.8</td>
+                  <td>4</td>
+                  <td>108</td>
+                  <td>93</td>
+                  <td>3.85</td>
+                </tr>
+                <tr>
+                  <td>21.4</td>
+                  <td>6</td>
+                  <td>258</td>
+                  <td>110</td>
+                  <td>3.08</td>
+                </tr>
+        </tbody>
+        <script>
+        function updateRows0c9s1c8p4mcxh0h12jyt() {
+          var table = document.getElementById("tinytable0c9s1c8p4mcxh0h12jyt");
+          if (table.rows.length > 1) {
+          } // tinytable rows before this
+        }
+        function updateColumns0c9s1c8p4mcxh0h12jyt() {
+          var table = document.getElementById("tinytable0c9s1c8p4mcxh0h12jyt");
+          for (var i = 0; i < table.rows.length; i++) {
+            if (table.rows[i].cells.length > 1) {
+table.rows[i].cells[1].classList.add('style_column_c0iqdr6nx8s3i1nio44e');
+            } // tinytable columns before this
+          }
+        }
+        function updateCells0c9s1c8p4mcxh0h12jyt() {
+          var table = document.getElementById("tinytable0c9s1c8p4mcxh0h12jyt");
+          if (table.rows[i].cells.length > 1) {
+          } // tinytable cells before this
+        }
+        window.addEventListener('load', updateRows0c9s1c8p4mcxh0h12jyt);
+        window.addEventListener('load', updateColumns0c9s1c8p4mcxh0h12jyt);
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+        <style>
+            
+        .table {
+          width: auto;
+          margin-left: auto;
+          margin-right: auto;
+        }
+.table td.style_column_c0iqdr6nx8s3i1nio44e {; color: white; background-color: black; }
+        // tinytable css before this
+        </style> 
+      </table>
+    </div>
+  
+
+
+</div>
+</div>
+</section>
+<section id="style_cell" class="level2">
+<h2 class="anchored" data-anchor-id="style_cell"><code>style_cell()</code></h2>
+</section>
+<section id="captions-labels-and-cross-references" class="level2">
+<h2 class="anchored" data-anchor-id="captions-labels-and-cross-references">Captions, labels, and cross-references</h2>
+</section>
+<section id="customizing-pdf-latex-tabularray" class="level2">
+<h2 class="anchored" data-anchor-id="customizing-pdf-latex-tabularray">Customizing PDF / LaTeX: <code>tabularray</code></h2>
+</section>
+<section id="customizing-html-bootstrap" class="level2">
+<h2 class="anchored" data-anchor-id="customizing-html-bootstrap">Customizing HTML: Bootstrap</h2>
+
+
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

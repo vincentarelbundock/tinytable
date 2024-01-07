@@ -17,7 +17,7 @@ LaTeX options
 }
 \section{LaTeX \code{tabularray} options}{
 
-\subsection{Table: \code{tt()}}{
+\subsection{Table: \code{tinytable()}}{
 
 Inner specifications:\tabular{lll}{
    Key \tab Description and Values \tab Initial Value \cr

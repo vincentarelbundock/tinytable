@@ -1,13 +1,13 @@
 #' Style Cells in a `tinytable`
 #'
 #' @description
-#' This function applies styling to specified parts of a table created by the `tt()` function of the `tinytable` package.
+#' This function applies styling to specified parts of a table created by the `tinytable()` function of the `tinytable` package.
 #'
 #' The arguments described below allow users to customize text style and color. The `latex` and `html` arguments allow deep customization using the `tabularray` package for LaTeX, and the Bootstrap framework for HTML. For details, see:
 #' * `?latexOptions`
 #' * `?htmlOptions`
 #'
-#' @param x A table created by the `tt()` function.
+#' @param x A table created by the `tinytable()` function.
 #' @param i Integer vector indicating row positions. If `NULL`, applies to all rows.
 #' @param j Integer vector indicating column positions. If `NULL`, applies to all columns.
 #' @param color String specifying the text color. If `NULL`, no color is applied.

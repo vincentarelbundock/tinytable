@@ -6,12 +6,12 @@
 #' * Otherwise determined by setting a global option: `options(tt_output_default = "markdown")`
 #' @template tabularray
 #' @export
-tt <- function(x,
-               output = NULL,
-               caption = NULL,
-               latex = latexOptions(),   
-               html = htmlOptions()
-               ) {
+tinytable <- function(x,
+                   output = NULL,
+                   caption = NULL,
+                   latex = latexOptions(),   
+                   html = htmlOptions()
+                   ) {
 
   # sanity checks
   output <- sanitize_output(output)
@@ -29,21 +29,13 @@ tt <- function(x,
 
   # build table
   if (output == "latex") {
-    out <- tt_latex(x,
-      caption = caption,
-      settings = latex
-    )
+    out <- tinytable_latex(x, caption = caption, settings = latex)
 
   } else if (output == "html"){
-    out <- tt_html(x,
-      caption = caption,
-      settings = html
-    )
+    out <- tinytable_html(x, caption = caption, settings = html)
 
   } else {
-    out <- tt_markdown(x,
-      caption = caption
-    )
+    out <- tinytable_markdown(x, caption = caption)
   }
 
   return(out)

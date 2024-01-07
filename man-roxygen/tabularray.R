@@ -3,7 +3,7 @@
 #' @section LaTeX `tabularray` options:
 #'
 #'
-#' ## Table: `tt()`
+#' ## Table: `tinytable()`
 #'
 #'
 #' Inner specifications:

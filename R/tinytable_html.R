@@ -1,4 +1,4 @@
-tt_html <- function(x, caption, settings) {
+tinytable_html <- function(x, caption, settings) {
   template <- settings$template
 
   # insert bootstrap class and css

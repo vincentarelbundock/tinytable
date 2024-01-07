@@ -17,7 +17,7 @@ style_cell(
 )
 }
 \arguments{
-\item{x}{A table created by the \code{tt()} function.}
+\item{x}{A table created by the \code{tinytable()} function.}
 
 \item{i}{Integer vector indicating row positions. If \code{NULL}, applies to all rows.}
 
@@ -39,7 +39,7 @@ style_cell(
 Returns the modified table object with the specified cell styles applied.
 }
 \description{
-This function applies styling to specified parts of a table created by the \code{tt()} function of the \code{tinytable} package.
+This function applies styling to specified parts of a table created by the \code{tinytable()} function of the \code{tinytable} package.
 
 The arguments described below allow users to customize text style and color. The \code{latex} and \code{html} arguments allow deep customization using the \code{tabularray} package for LaTeX, and the Bootstrap framework for HTML. For details, see:
 \itemize{
@@ -49,7 +49,7 @@ The arguments described below allow users to customize text style and color. The
 }
 \section{LaTeX \code{tabularray} options}{
 
-\subsection{Table: \code{tt()}}{
+\subsection{Table: \code{tinytable()}}{
 
 Inner specifications:\tabular{lll}{
    Key \tab Description and Values \tab Initial Value \cr

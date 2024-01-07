@@ -22,7 +22,7 @@ print.tinytable_markdown <- function(x, ...) {
     cat(x, sep = "\n")
 }
 
-tt_markdown <- function(tab, caption, ...) {
+tinytable_markdown <- function(tab, caption, ...) {
 
   # fake spans
   colnames(tab) <- gsub("\\|{4}", " / ", colnames(tab))

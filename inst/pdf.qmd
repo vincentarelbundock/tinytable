@@ -10,49 +10,49 @@ x <- mtcars[1:4, 1:5]
 ```
 
 ```{r}
-tt(x) |> style_row(2, color = "blue", background = "pink")
+tinytable(x) |> style_row(2, color = "blue", background = "pink")
 ```
 
 ```{r}
-tt(x) |>
+tinytable(x) |>
   style_column(1:2, color = "white", background = "black", bold = TRUE, italic = TRUE)
 ```
 
 ```{r}
-tt(x) |> style_row(italic = TRUE, bold = TRUE, color = "blue", background = "pink")
+tinytable(x) |> style_row(italic = TRUE, bold = TRUE, color = "blue", background = "pink")
 ```
 
 ```{r}
-tt(x) |> style_column(background = "green", color = "white") |> cat(file = "~/Downloads/trash.html")
+tinytable(x) |> style_column(background = "green", color = "white") |> cat(file = "~/Downloads/trash.html")
 ```
 
 ```{r}
-tt(x) |>
+tinytable(x) |>
   style_row(2, latex = latexOptions(cmd = "\\LARGE\\texttt")) |>
   style_column(2, latex = latexOptions(cmd = "\\footnotesize\\texttt"))
 ```
 
 ```{r}
-tt(x) |> style_column(c(1, 4), italic = TRUE)
+tinytable(x) |> style_column(c(1, 4), italic = TRUE)
 ```
 
 ```{r}
-tt(x) |> style_row(2:3, background = "olive", color = "white")
+tinytable(x) |> style_row(2:3, background = "olive", color = "white")
 ```
 
 ```{r}
-tt(x) |> style_row(2:3,
+tinytable(x) |> style_row(2:3,
   latex = latexOptions(
     cmd = "\\texttt"
     ))
 ```
 
 ```{r}
-tt(x, latex = latexOptions(theme = "grid"))
+tinytable(x, latex = latexOptions(theme = "grid"))
 ```
 
 ```{r}
-tt(x,
+tinytable(x,
   latex = latexOptions(
     theme = "void",
     hlines = "dotted,fg=blue",
@@ -61,7 +61,7 @@ tt(x,
 ```
 
 ```{r}
-tt(x)
+tinytable(x)
 ```
 
 # Themes
@@ -69,21 +69,21 @@ tt(x)
 `tinytable` includes three basic "themes" for LaTeX tables: `"booktabs"` (default), `"grid"`, and `"void"`. The theme can be selected using the `latexOptions()` function.
 
 ```{r}
-tt(x, latex = latexOptions(theme = "booktabs"))
+tinytable(x, latex = latexOptions(theme = "booktabs"))
 ```
 
 ```{r}
-tt(x, latex = latexOptions(theme = "grid"))
+tinytable(x, latex = latexOptions(theme = "grid"))
 ```
 
 ```{r}
-tt(x, latex = latexOptions(theme = "void"))
+tinytable(x, latex = latexOptions(theme = "void"))
 ```
 
 The `"void"` theme can be useful when combined with the `hline*`  and `vline*` arguments. For example:
 
 ```{r}
-tt(x,
+tinytable(x,
   latex = latexOptions(
     theme = "void",
     hline = c("1,6", "fg=orange,wd=2pt"),
