@@ -1,15 +1,16 @@
-tt_html <- function(x, bootstrap_css, bootstrap_class, ...) {
-  template <- readLines(system.file("templates/bootstrap.html", package = "tinytable"))
+tt_html <- function(x, caption, settings) {
+  template <- settings$template
+  browser()
 
   # bootstrap class and css
   template <- gsub(
     "$TINYTABLE_BOOTSTRAP_CLASS",
-    bootstrap_class,
+    settings$class,
     template,
     fixed = TRUE)
   template <- gsub(
     "$TINYTABLE_BOOTSTRAP_CSS",
-    bootstrap_css,
+    settings$css,
     template,
     fixed = TRUE)
 

@@ -4,10 +4,13 @@ title: "`tinytable`"
 
 ```{r}
 # library(tinytable)
+devtools::document()
 pkgload::load_all()
 x <- mtcars[1:4, 1:4]
 tt(x,
   output = "tblr",
+  html = htmlOptions(
+    class = "table .table-striped"),
   latex = latexOptions(
     theme = "plain",
     placement = "H",
