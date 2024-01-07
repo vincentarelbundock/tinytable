@@ -1,5 +1,4 @@
-#' @export
-style_column.tinytable_html <- function(x,
+style_column_tinytable_html <- function(x,
                                         j = NULL,
                                         color = NULL,
                                         background = NULL,

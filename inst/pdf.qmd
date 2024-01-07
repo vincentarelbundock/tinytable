@@ -1,5 +1,8 @@
 ---
 title: "`tinytable`: PDF documents"
+include-headers:
+  - \usepackage{codehigh}
+  - \usepackage{verbatim}
 ---
 
 ```{r}
@@ -91,6 +94,22 @@ tinytable(x,
     vlines = "dotted,fg=olive,wd=1pt",
   )
 )
+```
+
+
+## Verbatim (escape)
+
+
+```{r}
+library(tinytable)
+options(tt_latexOptions_placement = "H")
+options(tt_output_default = "latex")
+k <- data.frame(
+  verbatim = c("a_b", "$a_b$"),
+  evaluated = c("a\\_b", "$a_b$")
+)
+tinytable(k) |> 
+  style_column(1, latex = latexOptions(cmd = "\\fakeverb")) |> cat()
 ```
 
 

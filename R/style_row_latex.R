@@ -1,5 +1,4 @@
-#' @export
-style_row.tinytable_latex <- function(x,
+style_row_tinytable_latex <- function(x,
                                       i = NULL,
                                       color = NULL,
                                       background = NULL,

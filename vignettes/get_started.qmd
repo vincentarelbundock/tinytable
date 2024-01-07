@@ -3,11 +3,15 @@ title: "Get started"
 ---
 
 
+```{r, include=FALSE}
+options("tt_latexOptions_placement" = "H")
+```
+
+
 `tinytable` is easy to use:
 
 ```{r}
-pkgload::load_all()
-# library(tinytable)
+library(tinytable)
 
 x <- mtcars[1:4, 1:5]
 
@@ -23,16 +27,28 @@ tinytable(x, caption = "Data about cars.")
 
 TODO: Cross-references
 
+## Output formats
+
 
 ## Style
 
-Customization options include text alignment, color, font, and background.
 
-- `style_cell()`: Styles individual cells.
-- `style_row()`: Styles entire rows.
-- `style_column()`: Styles columns.
+The `style()` function allows us to apply visual styles to our table. This includes customizing features such as:
 
-These functions all share the same set of arguments:
+* Text color
+* Background color
+* Widths
+* Heights
+* Alignment
+* Text Wrapping
+* Column and Row Spacing
+* Cell Merging
+* Multi-row or column spans
+* Border Styling
+* Font Styling
+* Header Customization
+
+The main arguments of the `style()` function are rather self-explanatory:
 
 * `i` row numbers: integer vector or `NULL` to style all rows.
 * `j` column numbers: integer vector or `NULL` to style all columns.
@@ -41,17 +57,22 @@ These functions all share the same set of arguments:
 * `bold`: bold text
 * `italic`: bold text
 * `align`: horizontal alignment
-* `latex = latexOptions()`: `tabularray` settings for deep customization.
-* `html = htmlOptions()`: `Bootstrap` settings for deep customization.
+
+In addition, `style()` accepts two more arguments which allow unlimited possibilities for customizing every possible aspect of your tables HTMl or LaTeX (PDF) tables:
+
+* `latex = latexOptions()` for tabularray
+* `html = htmlOptions()` for Bootstrap
+
+We discuss these extra arguments in detail in the output format-specific vignettes.
 
 
-### `style_cell()`
+### Cells
 
 To style individual cells, we use the `style_cell()`  function. The first two arguments (`i` and `j`) identify the positions of the cells of interest, by row and column numbers respectively. To style a cell in the 2nd row and 3rd column, we can do:
 
 ```{r}
 tinytable(x) |>
-  style_cell(
+  style(
     i = 2,
     j = 3,
     background = "black",
@@ -63,44 +84,27 @@ tinytable(x) |>
 The `i` and `j` accept vectors of integers to modify several cells at once:
 
 ```{r}
-tinytable(x) |> style_cell(2, c(1, 3), background = "olive")
+tinytable(x) |> style(2, c(1, 3), background = "olive")
 ```
 
-We can style all cells by omitting the `i` and `j` columns altogether:
-
-```{r}
-tinytable(x) |> style_cell(color = "blue")
-```
-
-
-
-### `style_row()`
+We can style all cells in a table by omitting the `i` and `j` arguments:
 
 
 ```{r}
-tinytable(x) |>
-  style_row(1:2, background = "black", color = "white")
+tinytable(x) |> style(background = "black", color = "white", bold = TRUE)
+```
+
+### Rows and columns
+
+We can style entire rows by omitting the `j` argument, or style entire columns by omitting the `i` argument:
+
+```{r}
+tinytable(x) |> style(i = 1:2, color = "blue")
 ```
 
 ```{r}
-tinytable(x) |>
-  style_row(background = "lightblue")
+tinytable(x) |> style(j = c(2, 4), bold = TRUE)
 ```
-
-
-### `style_column()`
-
-```{r}
-tinytable(x) |>
-  style_column(align = "c")
-```
-
-```{r}
-tinytable(x) |>
-  style_column(2, background = "black", color = "white")
-```
-
-
 
 ## Headers
 

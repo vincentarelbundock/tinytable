@@ -1,4 +1,4 @@
-#' Style Cells in a `tinytable`
+#' Style a `tinytable`
 #'
 #' @description
 #' This function applies styling to specified parts of a table created by the `tinytable()` function of the `tinytable` package.
@@ -19,65 +19,18 @@
 #' @return Returns the modified table object with the specified cell styles applied.
 #' @template tabularray
 #' @export
-style_cell <- function(x,
-                       i = NULL,
-                       j = NULL,
-                       color = NULL,
-                       background = NULL,
-                       bold = FALSE,
-                       italic = FALSE,
-                       latex = latexOptions(),
-                       html = htmlOptions()) {
-  UseMethod("style_cell", x)
+style <- function(x,
+                  i,
+                  j,
+                  color = NULL,
+                  background = NULL,
+                  bold = FALSE,
+                  italic = FALSE,
+                  latex = latexOptions(),
+                  html = htmlOptions()) {
+  UseMethod("style", x)
 }
 
 
 #' @export
-style_cell.default <- function(x, ...) return(x)
-
-
-#' Style Rows in a `tinytable`
-#'
-#' @inheritParams style_cell
-#' @inherit style_cell return
-#' @inherit style_cell description
-#' @template tabularray
-#' @export
-style_row <- function(x,
-                      i = NULL,
-                      color = NULL,
-                      background = NULL,
-                      bold = FALSE,
-                      italic = FALSE,
-                      latex = latexOptions(),
-                      html = htmlOptions()) {
-  UseMethod("style_row", x)
-}
-
-
-#' @export
-style_row.default <- function(x, ...) return(x)
-
-
-#' Style Columns in a `tinytable`
-#'
-#' @inheritParams style_cell
-#' @inherit style_cell return
-#' @inherit style_cell description
-#' @template tabularray
-#' @export
-style_column <- function(x,
-                         j = NULL,
-                         color = NULL,
-                         background = NULL,
-                         bold = FALSE,
-                         italic = FALSE,
-                         align = NULL,
-                         latex = latexOptions(),
-                         html = htmlOptions()) {
-  UseMethod("style_column", x)
-}
-
-
-#' @export
-style_column.default <- function(x, ...) return(x)
+style.default <- function(x, ...) return(x)
