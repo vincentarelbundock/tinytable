@@ -10,6 +10,7 @@ tt_latex <- function(x, caption, settings) {
     template <- sub("\\$TINYTABLE_CAPTION", caption, template)
   }
 
+  # body: main
   if (!is.null(colnames(x))) {
     header <- paste(colnames(x), collapse = " & ")
     header <- paste(header, "\\\\")
@@ -19,11 +20,13 @@ tt_latex <- function(x, caption, settings) {
   body <- apply(x, 1, paste, collapse = " & ")
   body <- paste(body, "\\\\")
 
+  # body: theme
   if (isTRUE(settings$theme == "booktabs")) {
     header <- c("\\toprule", header, "\\midrule")
     body <- c(body, "\\bottomrule")
   }
 
+  # body: finish
   idx <- grep("\\$TINYTABLE_BODY", template)
   out <- c(
     template[1:(idx - 1)],
@@ -32,7 +35,6 @@ tt_latex <- function(x, caption, settings) {
     template[(idx + 1):length(template)]
   )
 
-  out <- trimws(out)
   out <- paste(out, collapse = "\n")
 
   if (isTRUE(settings$extendable)) {
@@ -52,7 +54,7 @@ tt_latex <- function(x, caption, settings) {
     out <- tabularray_setting(out, settings$outer_specs_keys, inner = FALSE)
   }
   if (settings$inner_specs_keys != "") {
-    out <- tabularray_setting(out, settings$outer_specs_keys, inner = TRUE)
+    out <- tabularray_setting(out, settings$inner_specs_keys, inner = TRUE)
   }
 
   attr(out, "ncol") <- ncol(x)

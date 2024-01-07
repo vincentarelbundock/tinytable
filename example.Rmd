@@ -5,120 +5,21 @@ title: "`tinytable`"
 ```{r}
 # library(tinytable)
 pkgload::load_all()
-options(tt_placement = "H")
 x <- mtcars[1:4, 1:4]
-tt(x, output = "tblr", latex = latexOptions(hlines = TRUE, valign = "f"))
-```
-
-```{r}
-pkgload::load_all()
-tt(x) |> style_cell(2, 2, bg = "pink !important")
-```
-
-
-# Width
-
-Extendable columns:
-
-```{r}
 tt(x,
-  bootstrap_class = "table table-dark",
-  tabularray_extendable = TRUE,
-  tabularray_inner = "width=.7\\linewidth")
-```
-
-# Transform all entries
-
-By default, all functions transform all cells. For example, calling `style_column()` without specifying column numbers will apply the transformation to all columns:
-
-TODO: HTML Broken
-
-```{r}
-tt(x) |>
-  style_column(bg = "pink")
+  output = "tblr",
+  latex = latexOptions(
+    theme = "plain",
+    placement = "H",
+    hlines = "dotted,fg=blue",
+    vlines = "dashed,fg=red,wd=1pt")
+)
 ```
 
 ```{r}
-tt(x) |>
-  style_row(bg = "pink")
-```
-
-# Columns
-
-```{r}
-tt(x) |>
-  style_column(j = 2:3, fg = "white", bg = "olive", cmd="\\texttt") |>
-  style_row(i = 2:3, fg = "white", bg = "olive", cmd="\\texttt")
-```
-
-# Rows
-
-```{r}
-tt(x) |>
-  style_row(i = 2:3, fg = "blue6", bg = "pink", font="\\bfseries")
-```
-
-# Cells
-
-## Style
-
-```{r}
-tt(x) |>
-  style_column(j = 1, halign = "c") |>
-  style_cell(i = 2:3, j = 1, fg = "red") |>
-  style_cell(i = 4, j = 1, bg = "red")
-```
-
-## Spanning cells
-
-```{r}
-tt(x) |>
-  style_cell(i = 2, j = 1, r = 3, c = 2, bg = "pink")
-```
-
-## Special characters
-
-TODO: this does not work
-
-```{r, eval=FALSE}
-k <- data.frame(a = c("a_b", "d$c"))
-tt(k, tabularray_inner = "cmd=\\fakeverb")
-```
-
-
-# Caption and labels
-
-# Math
-
-```{r}
-tt(x, output = "html") |>
-  style_column(j = 2:3, fg = "white", bg = "olive", cmd="\\texttt") |>
-  style_row(i = 2:3, fg = "white", bg = "pink", cmd="\\texttt")
-```
-
-# HTML-specific features
-
-## Bootstrap classes
-
-<https://getbootstrap.com/docs/5.3/content/tables/>
-
-```{r, eval = knitr::is_html_output()}
-tt(x, bootstrap_class = "table table-dark")
-```
-
-```{r, eval = knitr::is_html_output()}
-tt(x, bootstrap_class = "table table-striped")
-```
-
-## Custom CSS
-
-
-```{r, eval = knitr::is_html_output()}
-css <- "
-.table-custom, .table-custom th, .table-custom td {
-  text-align: right;
-  background-color: pink !important;
-}
-"
-tt(x, bootstrap_css = css, bootstrap_class = "table table-custom")
+# library(tinytable)
+tt(x,
+  output = "tblr",
+  latex = latexOptions(placement = "H")
+)
 ```

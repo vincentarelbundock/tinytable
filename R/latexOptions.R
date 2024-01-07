@@ -16,8 +16,8 @@ latexOptions <- function(
   preto = "",
   appto = "",
   # tblr outer
-  hlines = FALSE,
-  vlines = FALSE,
+  hlines = NULL,
+  vlines = NULL,
   # rows
   ht = "",
   abovesep = "",
@@ -58,7 +58,7 @@ latexOptions <- function(
   } else {
     placement <- sprintf("[%s]", placement)
   }
-  template <- sub("$TINYTABLE_PLACEMENT", placement, template)
+  template <- sub("$TINYTABLE_PLACEMENT", placement, template, fixed = TRUE)
 
   args <- list(wd = wd, fg = fg, bg = bg, halign = halign, valign = valign, font = font, cmd = cmd, preto = preto, appto = appto, ht = ht, abovesep = abovesep, belowsep = belowsep, rowsep = rowsep, leftsep = leftsep, rightsep = rightsep, dash = dash, text = text)
   for (n in names(args)) {
@@ -74,12 +74,10 @@ latexOptions <- function(
     arguments <- c(arguments, list(endpos = "false"))
   }
 
-  assert_flag(hlines)
-  assert_flag(vlines)
-  tmp <- list()
-  if (isTRUE(hlines)) tmp[["hlines"]] <- TRUE
-  if (isTRUE(vlines)) tmp[["vlines"]] <- TRUE
-  arguments <- c(arguments, tmp)
+  assert_string(hlines, null.ok = TRUE)
+  if (!is.null(hlines)) arguments[["hlines"]] <- sprintf("{%s}", hlines)
+  assert_string(vlines, null.ok = TRUE)
+  if (!is.null(vlines)) arguments[["vlines"]] <- sprintf("{%s}", vlines)
   
   args <- list(c = c, r = r, co = co, leftpos = leftpos, rightpos = rightpos)
   for (n in names(args)) {
@@ -105,14 +103,14 @@ latexOptions <- function(
     hborders_keys = c("pagebreak", "abovespace", "belowspace"),
     vborders_keys = c("leftspace", "rightspace"),
     cells_keys = c("halign", "valign", "wd", "bg", "fg", "font", "mode", "cmd"),
-    outer_specs_keys = c("baseline", "long", "tall", "expand", "hlines", "vlines"),
-    inner_specs_keys = c("rulesep", "stretch", "abovesep", "belowsep", "rowsep", "leftsep", "rightsep", "colsep", "hspan", "vspan", "baseline")
+    outer_specs_keys = c("baseline", "long", "tall", "expand"),
+    inner_specs_keys = c("rulesep", "hlines", "vlines", "stretch", "abovesep", "belowsep", "rowsep", "leftsep", "rightsep", "colsep", "hspan", "vspan", "baseline")
   )
   out <- lapply(out, function(x) intersect(x, names(arguments)))
   out <- lapply(out, function(x) arguments[x])
   out <- sapply(out, paste, collapse = ",")
-  out <- lapply(out, function(x) gsub("hlines=TRUE", "hlines", x))
-  out <- lapply(out, function(x) gsub("vlines=TRUE", "vlines", x))
+  out <- lapply(out, function(x) gsub("hlines=TRUE", "hlines={},", x))
+  out <- lapply(out, function(x) gsub("vlines=TRUE", "vlines={},", x))
 
   arguments <- list(
     environment = env,
