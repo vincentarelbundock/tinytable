@@ -27,3 +27,17 @@ knit_print.tinytable_latex <- function(x, ...) {
   class(out) <- "knit_asis"
   return(out)
 }
+
+
+#' @export
+print.tinytable_html <- function(x, ...) {
+  dir <- tempfile()
+  dir.create(dir)
+  htmlFile <- file.path(dir, "index.html")
+  cat(x, file = htmlFile)
+  if (check_dependency("rstudioapi") && rstudioapi::isAvailable()) {
+    rstudioapi::viewer(htmlFile)
+  } else {
+    utils::browseURL(htmlFile)
+  }
+}
