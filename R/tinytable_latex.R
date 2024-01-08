@@ -29,9 +29,9 @@ tinytable_latex <- function(x, caption, settings) {
 
     header <- c("\\toprule", header)
     if (!is.null(colnames(x))) {
-      header <- c(header, "\\midrule")
+      header[length(header)] <- paste(header[length(header)], "\\midrule")
     }
-    body <- c(body, "\\bottomrule")
+    body[length(body)] <- paste(body[length(body)], "\\bottomrule")
   }
 
   # body: finish
