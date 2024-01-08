@@ -1,5 +1,11 @@
 ---
-title: "Get started"
+title: "`tinytable` tutorial"
+format:
+  html: default
+  pdf:
+    toc: true
+    number-sections: true
+    colorlinks: true
 ---
 
 
@@ -20,18 +26,21 @@ tinytable(x)
 ```
 
 
-## Captions and cross-references
+# Output formats
+
+`tinytable` can produce tables in HTML, Markdown, or LaTeX (PDF) format. To choose, we use the `output` argument:
 
 ```{r}
-tinytable(x, caption = "Data about cars.")
+#| eval: false
+tinytable(x, output = "html")
+tinytable(x, output = "latex")
+tinytable(x, output = "markdown")
 ```
 
-TODO: Cross-references
-
-## Output formats
+When calling `tinytable` from a Quarto or Rmarkdown document, `tinytable` detects the output format automatically and generates an HTML or LaTeX table as appropriate. This means that we do not need to explicitly specify the `output` format.
 
 
-## Style
+# Style
 
 
 The `style()` function allows us to apply visual styles to our table. This includes customizing features such as:
@@ -59,15 +68,15 @@ The main arguments of the `style()` function are rather self-explanatory:
 * `italic`: bold text
 * `align`: horizontal alignment
 
-In addition, `style()` accepts two more arguments which allow unlimited possibilities for customizing every possible aspect of your tables HTMl or LaTeX (PDF) tables:
+In addition, `style()` accepts two more arguments which allow unlimited possibilities for customizing every possible aspect of your tables in HTML or LaTeX (PDF):
 
 * `latex = latexOptions()` for tabularray
 * `html = htmlOptions()` for Bootstrap
 
-We discuss these extra arguments in detail in the output format-specific vignettes.
+We discuss these extra arguments near the end of this page.
 
 
-### Cells
+## Cells
 
 To style individual cells, we use the `style_cell()`  function. The first two arguments (`i` and `j`) identify the positions of the cells of interest, by row and column numbers respectively. To style a cell in the 2nd row and 3rd column, we can do:
 
@@ -95,7 +104,7 @@ We can style all cells in a table by omitting the `i` and `j` arguments:
 tinytable(x) |> style(background = "black", color = "white", bold = TRUE)
 ```
 
-### Rows and columns
+## Rows and columns
 
 We can style entire rows by omitting the `j` argument, or style entire columns by omitting the `i` argument:
 
@@ -107,7 +116,7 @@ tinytable(x) |> style(i = 1:2, color = "blue")
 tinytable(x) |> style(j = c(2, 4), bold = TRUE)
 ```
 
-## Headers
+# Headers
 
 The header can be omitted from the table by deleting the column names in the `x` data frame:
 
@@ -118,8 +127,50 @@ tinytable(k)
 ```
 
 
-## More customization
+# Captions and cross-references
 
-### LaTeX with `tabularray`
+```{r}
+tinytable(x, caption = "Data about cars.")
+```
 
-### HTML with `Bootstrap`
+TODO: Cross-references
+
+
+# Customization: HTML with `Bootstrap`
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(eval = knitr::is_html_output())
+```
+
+```{r}
+tinytable(x, html = htmlOptions(class = "table table-dark"))
+```
+
+
+# Customization: LaTeX with `tabularray`
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(eval = knitr::is_latex_output())
+```
+
+```{r}
+tinytable(x, latex = latexOptions(theme = "void", hlines = ""))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(eval = TRUE)
+```
+
+
