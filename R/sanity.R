@@ -101,3 +101,20 @@ assert_data_frame <- function(x, name = as.character(substitute(x))) {
   msg <- sprintf("`%s` must be a data.frame.", name)
   if (!is.data.frame(x)) stop(msg, call. = FALSE)
 }
+
+
+assert_character <- function(x, len = NULL, name = as.character(substitute(x))) {
+  if (!is.character(x)) {
+    msg <- sprintf("`%s` must be character.", name)
+    stop(msg, call. = FALSE)
+  }
+  if (!is.null(len)) {
+    if (length(x) != len) {
+      msg <- sprintf("`%s` must have length %s.", name, len)
+      stop(msg, call. = FALSE)
+    }
+  }
+}
+
+
+
