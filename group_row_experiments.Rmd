@@ -6,11 +6,12 @@ pkgload::load_all()
 options(tt_latexOptions_placement = "H")
 x <- mtcars[1:12, 1:8]
 
+pkgload::load_all()
 IttyBittyTable(x, output = "latex") |> 
 group_row_latex(i = c(
   "I like (fake) hamburgers" = 3,
   "She prefers haloumi" = 4,
-  "They love tofu" = 7))
+  "They love tofu" = 7)) |> cat()
 ```
 
 

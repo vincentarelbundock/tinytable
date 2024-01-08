@@ -1,6 +1,6 @@
 
 <p align="center">
-<img src="man/figures/IttyBittyTable_logo.png" height = "250" class = "center">
+<img src="man/figures/IttyBittyTable_logo.svg" height = "250" class = "center">
 </p>
 
 <br> <!-- badges: start --> <!-- badges: end -->

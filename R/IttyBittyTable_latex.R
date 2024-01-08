@@ -22,7 +22,7 @@ IttyBittyTable_latex <- function(x, caption, settings) {
     header <- NULL
   }
   body <- apply(x, 1, paste, collapse = " & ")
-  body <- paste(body, "\\\\")
+  body <- paste(body, "\\\\    %% IttiBittyTable Data")
 
   # theme: booktabs
   if (isTRUE(settings$theme == "booktabs")) {
@@ -31,6 +31,7 @@ IttyBittyTable_latex <- function(x, caption, settings) {
     if (!is.null(colnames(x))) {
       header[length(header)] <- paste(header[length(header)], "\\midrule")
     }
+    header  <- paste(header, "    %% IttyBittyTable Header")
     body[length(body)] <- paste(body[length(body)], "\\bottomrule")
   }
 
