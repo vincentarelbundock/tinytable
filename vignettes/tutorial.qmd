@@ -8,11 +8,11 @@ format:
     colorlinks: true
 ---
 
+TODO: Link to PDF at top
 
 ```{r, include=FALSE}
 options("tt_latexOptions_placement" = "H")
 ```
-
 
 `tinytable` is easy to use:
 
@@ -136,41 +136,19 @@ tinytable(x, caption = "Data about cars.")
 TODO: Cross-references
 
 
-# Customization: HTML with `Bootstrap`
+# HTML customization
 
-```{r, include=FALSE}
-knitr::opts_chunk$set(eval = knitr::is_html_output())
-```
+_Warning:_ The `html` argument is only used for HTML tables, and it is ignored when `tinytable` creates LaTeX tables for PDF files. You can skip this section if you are reading the PDF version of this tutorial.
 
 ```{r}
 tinytable(x, html = htmlOptions(class = "table table-dark"))
 ```
 
 
-# Customization: LaTeX with `tabularray`
+# LaTeX customization
 
-```{r, include=FALSE}
-knitr::opts_chunk$set(eval = knitr::is_latex_output())
-```
+_Warning:_ The `latex` argument is only used for LaTeX/PDF tables, and it is ignored when `tinytable` creates HTML tables for the web. You can skip this section if you are reading the HTML version of this tutorial.
 
 ```{r}
 tinytable(x, latex = latexOptions(theme = "void", hlines = ""))
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-```{r, include=FALSE}
-knitr::opts_chunk$set(eval = TRUE)
-```
-
-
