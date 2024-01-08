@@ -8,7 +8,9 @@ sanitize_output <- function(output) {
 
   # default output format
   if (is.null(output)) {
-    out <- getOption("tt_output_default", default = "markdown")
+    in_rstudio <- interactive() && check_dependency("rstudioapi") && rstudioapi::isAvailable()
+    out <- getOption("tt_output_default", default = if (in_rstudio) "html" else "markdown")
+
   } else {
     out <- output
   }
