@@ -5,9 +5,13 @@ group_row_latex <- function(x,
                             background = NULL,
                             italic = FALSE,
                             bold = FALSE,
-                            rule = "\\midrule") {
+                            rule = TRUE) {
 
   assert_integerish(i)
+  assert_flag(rule)
+
+  rule <- if (isTRUE(rule)) "\\midrule" else ""
+
   if (is.null(names(i))) {
     msg <- "`i` must be a named integer vector."
   }
@@ -24,7 +28,7 @@ group_row_latex <- function(x,
   top <- tab[1:idx_a]
   mid <- tab[(idx_a + 1):idx_b]
   bot <- tab[(idx_b + 1):length(tab)]
-  new <- paste(label, strrep("&", ncol), "\\\\", post)
+  new <- paste(label, strrep("&", ncol), "\\\\", rule)
   idx <- insert_values(mid, new, i)
   tab <- c(top, idx$vec, bot)
   tab <- paste(tab, collapse = "\n")

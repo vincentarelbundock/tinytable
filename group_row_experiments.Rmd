@@ -1,0 +1,30 @@
+
+```{r}
+# TODO: position should ignore headers
+# rule should accept flags
+pkgload::load_all()
+
+x <- mtcars[1:12, 1:8]
+tinytable(x, output = "latex") |> 
+  group_row_latex(
+    i = c(
+      "I like (fake) hamburgers" = 3,
+      "She prefers haloumi" = 4,
+      "They love tofu" = 7
+     )
+  )
+
+
+tinytable(x, output = "latex") |> 
+  group_row_latex(
+    i = c(
+      "I like (fake) hamburgers" = 3,
+      "She prefers haloumi" = 4,
+      "They love tofu" = 7
+     ),
+    italic = TRUE,
+    color = "blue",
+    background = "black!5!white",
+    rule = FALSE
+  )
+```
