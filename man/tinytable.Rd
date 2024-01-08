@@ -13,12 +13,18 @@ tinytable(
 )
 }
 \arguments{
+\item{x}{A data frame}
+
 \item{output}{"markdown", "latex", or "html". If \code{output} is \code{NULL}, then:
 \itemize{
 \item "html" if \code{knitr::is_html_output()} is \code{TRUE}
 \item "latex" if \code{knitr::is_latex_output()} is \code{TRUE}
 \item Otherwise determined by setting a global option: \code{options(tt_output_default = "markdown")}
 }}
+
+\item{latex}{Options to customize   LaTeX tables. See \code{?latexOptions} and the examples section below.}
+
+\item{html}{Options to customize HTML tables. See \code{?htmlOptions} and the examples section below.}
 }
 \description{
 Draw a table
@@ -90,7 +96,7 @@ Outer specifications:\tabular{lll}{
 
 }
 
-\subsection{Columns: \code{style_column()}}{\tabular{lll}{
+\subsection{Columns: \code{style_col()}}{\tabular{lll}{
    Key \tab Description and Values \tab Initial Value \cr
    \code{halign} \tab horizontal alignment: \code{l} (left), \code{c} (center), \code{r} (right) or \code{j} (justify) \tab \code{j} \cr
    \code{valign} \tab vertical alignment: \code{t} (top), \code{m} (middle), \code{b} (bottom), \code{h} (head) or \code{f} (foot) \tab \code{t} \cr

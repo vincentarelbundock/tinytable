@@ -1,4 +1,4 @@
-style_column_tinytable_latex <- function(x,
+style_col_tinytable_latex <- function(x,
                                          j = NULL,
                                          align = NULL,
                                          color = NULL,

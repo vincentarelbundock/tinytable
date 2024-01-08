@@ -74,7 +74,7 @@
 #' | `appto`    | append text to every cell (like `<` specifier in `rowspec`)                         | None          |
 #'
 #'
-#' ## Columns: `style_column()`
+#' ## Columns: `style_col()`
 #'
 #'
 #' | Key         | Description and Values                                                         | Initial Value |

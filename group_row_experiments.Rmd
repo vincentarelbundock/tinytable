@@ -3,8 +3,9 @@
 # TODO: position should ignore headers
 # rule should accept flags
 pkgload::load_all()
-
+options(tt_latexOptions_placement = "H")
 x <- mtcars[1:12, 1:8]
+
 tinytable(x, output = "latex") |> 
   group_row_latex(
     i = c(
@@ -13,8 +14,10 @@ tinytable(x, output = "latex") |>
       "They love tofu" = 7
      )
   )
+```
 
 
+```{r}
 tinytable(x, output = "latex") |> 
   group_row_latex(
     i = c(

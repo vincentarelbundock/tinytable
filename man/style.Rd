@@ -114,7 +114,7 @@ Outer specifications:\tabular{lll}{
 
 }
 
-\subsection{Columns: \code{style_column()}}{\tabular{lll}{
+\subsection{Columns: \code{style_col()}}{\tabular{lll}{
    Key \tab Description and Values \tab Initial Value \cr
    \code{halign} \tab horizontal alignment: \code{l} (left), \code{c} (center), \code{r} (right) or \code{j} (justify) \tab \code{j} \cr
    \code{valign} \tab vertical alignment: \code{t} (top), \code{m} (middle), \code{b} (bottom), \code{h} (head) or \code{f} (foot) \tab \code{t} \cr

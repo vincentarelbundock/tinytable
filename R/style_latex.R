@@ -22,7 +22,7 @@ style.tinytable_latex <- function(x,
   span <- latex$span
 
   if (is.null(i)) {
-    out <- style_column_tinytable_latex(x = x,
+    out <- style_col_tinytable_latex(x = x,
       j = j,
       color = color,
       background = background,
@@ -69,7 +69,7 @@ style.tinytable_latex <- function(x,
   }
 
   # build and insert keys
-  if (keys != "") {
+  if (keys != "" || span != "") {
     new <- sprintf(
                    "cell{%s}{%s}={%s}{%s},",
                    paste(i, collapse = ","),

@@ -6,6 +6,11 @@
 \usage{
 htmlOptions(class = "table", css = "")
 }
+\arguments{
+\item{class}{TODO}
+
+\item{css}{TODO}
+}
 \description{
 HTML Bootstrap Options
 }

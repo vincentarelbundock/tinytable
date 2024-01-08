@@ -18,7 +18,7 @@ tinytable(x) |> style_row(2, color = "blue", background = "pink")
 
 ```{r}
 tinytable(x) |>
-  style_column(1:2, color = "white", background = "black", bold = TRUE, italic = TRUE)
+  style_col(1:2, color = "white", background = "black", bold = TRUE, italic = TRUE)
 ```
 
 ```{r}
@@ -26,17 +26,17 @@ tinytable(x) |> style_row(italic = TRUE, bold = TRUE, color = "blue", background
 ```
 
 ```{r}
-tinytable(x) |> style_column(background = "green", color = "white") |> cat(file = "~/Downloads/trash.html")
+tinytable(x) |> style_col(background = "green", color = "white") |> cat(file = "~/Downloads/trash.html")
 ```
 
 ```{r}
 tinytable(x) |>
   style_row(2, latex = latexOptions(cmd = "\\LARGE\\texttt")) |>
-  style_column(2, latex = latexOptions(cmd = "\\footnotesize\\texttt"))
+  style_col(2, latex = latexOptions(cmd = "\\footnotesize\\texttt"))
 ```
 
 ```{r}
-tinytable(x) |> style_column(c(1, 4), italic = TRUE)
+tinytable(x) |> style_col(c(1, 4), italic = TRUE)
 ```
 
 ```{r}
@@ -109,7 +109,7 @@ k <- data.frame(
   evaluated = c("a\\_b", "$a_b$")
 )
 tinytable(k) |> 
-  style_column(1, latex = latexOptions(cmd = "\\fakeverb")) |> cat()
+  style_col(1, latex = latexOptions(cmd = "\\fakeverb")) |> cat()
 ```
 
 

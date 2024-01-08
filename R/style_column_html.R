@@ -1,4 +1,4 @@
-style_column_tinytable_html <- function(x,
+style_col_tinytable_html <- function(x,
                                         j = NULL,
                                         color = NULL,
                                         background = NULL,
@@ -18,7 +18,7 @@ style_column_tinytable_html <- function(x,
 
   out <- x
 
-  columnid <- get_id(stem = "style_column_")
+  columnid <- get_id(stem = "style_col_")
 
   css <- sprintf("%s .table td.%s {", strrep(" ", 8), columnid)
   if (!is.null(color)) {

@@ -6,8 +6,8 @@ style.tinytable_html <- function(x,
                                  background = NULL,
                                  bold = FALSE,
                                  italic = FALSE,
-                                 html = htmlOptions(),
-                                 ...) {
+                                 latex = latexOptions(),
+                                 html = htmlOptions()) {
 
   assert_integerish(i, lower = 1, null.ok = TRUE)
   assert_integerish(j, lower = 1, null.ok = TRUE)
@@ -17,7 +17,7 @@ style.tinytable_html <- function(x,
   assert_flag(italic)
 
   if (is.null(i)) {
-    out <- style_column_tinytable_html(x = x,
+    out <- style_col_tinytable_html(x = x,
                                        j = j,
                                        color = color,
                                        background = background,

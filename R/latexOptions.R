@@ -1,4 +1,9 @@
 #' LaTeX options
+#'
+#' @param environment TODO
+#' @param extendable TODO
+#' @param placement TODO
+#' @param theme TODO
 #' @template tabularray
 #' @export
 latexOptions <- function(

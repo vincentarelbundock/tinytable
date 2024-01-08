@@ -1,9 +1,12 @@
 #' Draw a table
 #'
+#' @param x A data frame
 #' @param output "markdown", "latex", or "html". If `output` is `NULL`, then:
 #' * "html" if `knitr::is_html_output()` is `TRUE`
 #' * "latex" if `knitr::is_latex_output()` is `TRUE`
 #' * Otherwise determined by setting a global option: `options(tt_output_default = "markdown")`
+#' @param latex Options to customize   LaTeX tables. See `?latexOptions` and the examples section below.
+#' @param html Options to customize HTML tables. See `?htmlOptions` and the examples section below.
 #' @template tabularray
 #' @export
 tinytable <- function(x,

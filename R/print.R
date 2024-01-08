@@ -1,3 +1,4 @@
+#' Convenience function for Rmarkdown and Quarto documents
 #' @noRd
 #' @export
 knit_print.tinytable_html <- function(x, ...) {
@@ -16,6 +17,7 @@ knit_print.tinytable_html <- function(x, ...) {
 }
 
 
+#' Convenience function for Rmarkdown and Quarto documents
 #' @noRd
 #' @export
 knit_print.tinytable_latex <- function(x, ...) {

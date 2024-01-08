@@ -34,16 +34,19 @@ group_row_latex <- function(x,
   tab <- paste(tab, collapse = "\n")
   attributes(tab) <- att
   class(tab) <- class(x)
-  tab <- tab |>
-    style(
+
+  tab <- style(
+      tab,
       i = idx$new[is.na(idx$old)], j = 1, italic = italic, bold = bold,
       color = color, background = background,
-      latex = latexOptions(c = ncol)) |>
-    style(
+      latex = latexOptions(c = ncol))
+
+  tab <- style(tab,
       i = idx$new[!is.na(idx$old)], j = 1,
       latex = latexOptions(
         preto = "\\hspace{1em}",
       ))
+
   return(tab)
 }
 
