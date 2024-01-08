@@ -26,7 +26,11 @@ tinytable_latex <- function(x, caption, settings) {
 
   # theme: booktabs
   if (isTRUE(settings$theme == "booktabs")) {
-    header <- c("\\toprule", header, "\\midrule")
+
+    header <- c("\\toprule", header)
+    if (!is.null(colnames(x))) {
+      header <- c(header, "\\midrule")
+    }
     body <- c(body, "\\bottomrule")
   }
 

@@ -1,3 +1,5 @@
+#' HTML Bootstrap Options
+#'
 #' @export
 htmlOptions <- function(class = "table",
                         css = "") {
