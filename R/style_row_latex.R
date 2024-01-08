@@ -1,11 +1,11 @@
 style_row_IttyBittyTable_latex <- function(x,
-                                      i = NULL,
-                                      color = NULL,
-                                      background = NULL,
-                                      bold = FALSE,
-                                      italic = FALSE,
-                                      latex = latexOptions(),
-                                      ...) {
+                                           i = NULL,
+                                           color = NULL,
+                                           background = NULL,
+                                           bold = FALSE,
+                                           italic = FALSE,
+                                           latex = latexOptions(),
+                                           ...) {
 
   assert_integerish(i, lower = 1, null.ok = TRUE)
   assert_string(color, null.ok = TRUE)
@@ -17,6 +17,10 @@ style_row_IttyBittyTable_latex <- function(x,
 
   # all rows
   if (is.null(i)) i <- seq_len(attr(x, "nrow"))
+
+  # do not color headers unless there are negative numbers
+  # needed to match indexing behavior of Bootstrap and JS
+  i <- i + attr(x, "nhead")
 
   # color, background, italic, and bold
   if (!is.null(color)) {
@@ -45,9 +49,9 @@ style_row_IttyBittyTable_latex <- function(x,
 
   # build keys
   new <- sprintf(
-    "row{%s}={%s},",
-    paste(i, collapse = ","),
-    keys) 
+                 "row{%s}={%s},",
+                 paste(i, collapse = ","),
+                 keys) 
 
   # insert keys
   out <- tabularray_setting(x, new, inner = TRUE)

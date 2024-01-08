@@ -46,6 +46,10 @@ style.IttyBittyTable_latex <- function(x,
     j <- seq_len(attr(x, "ncol"))
   }
 
+  # do not color headers unless there are negative numbers
+  # needed to match indexing behavior of Bootstrap and JS
+  i <- i + attr(x, "nhead")
+
   # color, background, italic, and bold
   if (!is.null(color)) {
     keys <- paste0(keys, ",fg=", color)
