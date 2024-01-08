@@ -140,9 +140,26 @@ TODO: Cross-references
 
 _Warning:_ The `html` argument is only used for HTML tables, and it is ignored when `tinytable` creates LaTeX tables for PDF files. You can skip this section if you are reading the PDF version of this tutorial.
 
+## Themes
+
+The Bootstrap framework provides a number of built-in themes to style tables. To use them, we call `htmlOptions()` with the `class` argument, and we specify the Bootstrap class. A list of available Bootstrap classes can be found here: <https://getbootstrap.com/docs/5.3/content/tables/>
+
+For example, to produce a "dark" table, we use the `table-dark` class:
+
 ```{r}
 tinytable(x, html = htmlOptions(class = "table table-dark"))
 ```
+
+We can also combine several Bootstrap classes. Here, we get a "striped" table with the "warning" color:
+
+```{r}
+tinytable(x, html = htmlOptions(class = "table table-striped table-warning"))
+```
+
+## CSS
+
+For manual customization, we can also specify our own CSS class.
+
 
 
 # LaTeX customization
