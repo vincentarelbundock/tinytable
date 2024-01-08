@@ -2,30 +2,29 @@
 ```{r}
 # TODO: position should ignore headers
 # rule should accept flags
+devtools::document()
 pkgload::load_all()
 options(tt_latexOptions_placement = "H")
 x <- mtcars[1:12, 1:8]
 
 pkgload::load_all()
 IttyBittyTable(x, output = "latex") |> 
-group_row_latex(i = c(
+group_ibt(i = c(
   "I like (fake) hamburgers" = 3,
-  "She prefers haloumi" = 4,
-  "They love tofu" = 7)) |> cat()
+  "She prefers halloumi" = 4,
+  "They love tofu" = 7))
 ```
 
 
 ```{r}
 IttyBittyTable(x, output = "latex") |> 
-  group_row_latex(
-    i = c(
+  group_ibt(i = c(
       "I like (fake) hamburgers" = 3,
-      "She prefers haloumi" = 4,
-      "They love tofu" = 7
-     ),
+      "She prefers halloumi" = 4,
+      "They love tofu" = 7),
     italic = TRUE,
     color = "blue",
-    background = "black!5!white",
+    background = "pink",
     rule = FALSE
   )
 ```

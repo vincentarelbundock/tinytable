@@ -22,16 +22,16 @@ IttyBittyTable_latex <- function(x, caption, settings) {
     header <- NULL
   }
   body <- apply(x, 1, paste, collapse = " & ")
-  body <- paste(body, "\\\\    %% IttiBittyTable Data")
+  body <- paste(body, "\\\\")
 
   # theme: booktabs
   if (isTRUE(settings$theme == "booktabs")) {
 
     header <- c("\\toprule", header)
     if (!is.null(colnames(x))) {
-      header[length(header)] <- paste(header[length(header)], "\\midrule")
+      header[length(header)] <- paste(header[length(header)], "\\midrule %% IttyBittyHeader")
     }
-    header  <- paste(header, "    %% IttyBittyTable Header")
+    # %% are important to distinguish between potentially redundant data rows
     body[length(body)] <- paste(body[length(body)], "\\bottomrule")
   }
 
@@ -72,8 +72,10 @@ IttyBittyTable_latex <- function(x, caption, settings) {
     out <- tabularray_setting(out, settings$inner_specs_keys, inner = TRUE)
   }
 
+  attr(out, "nhead") <- if (is.null(colnames(x))) 0 else 1
   attr(out, "ncol") <- ncols
   attr(out, "nrow") <- nrows
+  attr(out, "body") <- body
   attr(out, "tabularray_cols") <- tabularray_cols
   class(out) <- c("IttyBittyTable_latex", "knit_asis", class(out))
   return(out)

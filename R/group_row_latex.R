@@ -1,4 +1,3 @@
-#' @export
 group_row_latex <- function(x,
                             i,
                             color = NULL,
@@ -21,15 +20,21 @@ group_row_latex <- function(x,
   att <- attributes(x)
   att$nrow <- att$nrow + length(label)
   tab <- strsplit(x, "\\n")[[1]]
-  # TODO: ignore hlines and midrule
-  # both of these are terrible. We need tags in comments probably.
-  idx_a <- grep("\\toprule", tab, fixed = TRUE)
-  idx_b <- grep("\\bottomrule", tab, fixed = TRUE)
-  top <- tab[1:idx_a]
-  mid <- tab[(idx_a + 1):idx_b]
-  bot <- tab[(idx_b + 1):length(tab)]
+
+  # store the original body lines when creating the table, and use those to guess the boundaries.
+  # a hack, but probably safer than most regex approaches I can think of.
+  body <- which(tab %in% attr(x, "body"))
+  top <- tab[1:(min(body) - 1)]
+  mid <- tab[min(body):max(body)]
+  bot <- tab[(max(body) + 1):length(tab)]
+
+  # separator rows
+  # add separator rows so they are treated as body in future calls
   new <- paste(label, strrep("&", ncol), "\\\\", rule)
+  att$body <- c(att$body, new)
   idx <- insert_values(mid, new, i)
+
+  # rebuild table
   tab <- c(top, idx$vec, bot)
   tab <- paste(tab, collapse = "\n")
   attributes(tab) <- att
@@ -37,12 +42,15 @@ group_row_latex <- function(x,
 
   tab <- style(
       tab,
-      i = idx$new[is.na(idx$old)], j = 1, italic = italic, bold = bold,
+      i = idx$new[is.na(idx$old)] + attr(x, "nhead"), j = 1, italic = italic, bold = bold,
       color = color, background = background,
       latex = latexOptions(c = ncol))
 
+  # we also want to indent the header
+  i <- idx$new[!is.na(idx$old)] + attr(x, "nhead")
+  if (attr(x, "nhead") > 0) i <- c(1:attr(x, "nhead"), i)
   tab <- style(tab,
-      i = idx$new[!is.na(idx$old)], j = 1,
+      i = i, j = 1,
       latex = latexOptions(
         preto = "\\hspace{1em}",
       ))
