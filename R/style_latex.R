@@ -23,19 +23,22 @@ style.tinytable_latex <- function(x,
 
   if (is.null(i)) {
     out <- style_column_tinytable_latex(x = x,
-                                        j = j,
-                                        color = color,
-                                        background = background,
-                                        bold = bold,
-                                        italic = italic)
+      j = j,
+      color = color,
+      background = background,
+      bold = bold,
+      italic = italic,
+      latex = latex
+    )
     return(out)
   } else if (is.null(j)) {
     out <- style_row_tinytable_latex(x = x,
-                                     i = i,
-                                     color = color,
-                                     background = background,
-                                     bold = bold,
-                                     italic = italic)
+      i = i,
+      color = color,
+      background = background,
+      bold = bold,
+      italic = italic,
+      latex = latex)
     return(out)
     # all cells
   } else if (is.null(i) && is.null(j)){

@@ -43,7 +43,7 @@ latexOptions <- function(
       }
       dots[[i]] <- sprintf("%s{%s}={%s}", n, dots[[i]][1], dots[[i]][2])
 
-    } else if (n %in% c("vlines", "hlines")) {
+    } else if (n %in% c("vlines", "hlines", "preto", "appto")) {
       dots[[i]] <- sprintf("%s={%s}", n, dots[[i]])
 
     } else {
@@ -52,11 +52,11 @@ latexOptions <- function(
   }
   
   out <- list(
-    rows_keys = c("halign", "valign", "ht", "bg", "fg", "font", "mode", "cmd", "abovesep", "belowsep", "rowsep", "preto", "appto"),
-    columns_keys = c("halign", "valign", "wd", "co", "bg", "fg", "font", "mode", "cmd", "leftsep", "rightsep", "colsep", "preto", "appto"),
+    rows_keys = c("halign", "valign", "ht", "bg", "fg", "font", "mode", "cmd", "abovesep", "belowsep", "rowsep", "preto", "appto", "indent"),
+    columns_keys = c("halign", "valign", "wd", "co", "bg", "fg", "font", "mode", "cmd", "leftsep", "rightsep", "colsep", "preto", "appto", "indent"),
     hborders_keys = c("pagebreak", "abovespace", "belowspace"),
     vborders_keys = c("leftspace", "rightspace"),
-    cells_keys = c("halign", "valign", "wd", "bg", "fg", "font", "mode", "cmd"),
+    cells_keys = c("halign", "valign", "wd", "bg", "fg", "font", "mode", "cmd", "preto", "appto"),
     outer_specs_keys = c("baseline", "long", "tall", "expand"),
     inner_specs_keys = c("rulesep", "hlines", "vline", "hline", "vlines", "stretch", "abovesep", "belowsep", "rowsep", "leftsep", "rightsep", "colsep", "hspan", "vspan", "baseline"),
     span = c("r", "c")

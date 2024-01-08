@@ -24,18 +24,23 @@ dep_gt <- tools::package_dependencies(c("gt"), recursive=TRUE, db=db)[[1]] |> le
 ```
 The design philosophy of this package rests on three pillars.
 
-First, _data is separate from style_. The code that `tinytable` creates keeps the data (characters and numbers in a table) separate from the style that should be applied to each cell. This brings important benefits: the files produced by the package are human-readable, which makes them easy to edit and customize. Moreover, keeping data separate from style can be very useful when diagnosing problems.
+1. _Data is separate from style_. 
 
-Second, _tables should be deeply customizable._ Users' needs are incredibly varied, and a table drawing package should be flexible enough to accomodate many ideas. To achieve this, `tinytable` builds on the work of existing frameworks for table creating in HTML and LaTeX formats.
+The code that this package creates keeps the content of a table separate from the style sheet that applies to its cells. This is in contrast to other `R` packages that modify the actual text in each cell to style it. Keeping data and style separate allows `tidytable` to create human-readable files which are easy to edit, debug, and extend. It also enables developers to keep a tidy code base, with minimal use of messy regular expressions.
 
-Third, [_lightweight is the right weight._](https://www.tinyverse.org/) Some of the most popular table-drawing packages in the `R` ecosystem are heavy. For instance, `kableExtra` imports `r dep_ke` dependencies, `gt` `r dep_gt`, `huxtable` `r dep_hux`, and `DT` `r dep_dt`. In contrast, `tinytable` imports no other `R`  package by default.
+2. _Flexibility!_ 
 
-`tinytable` is "small" along several dimensions:
+Users' needs are extremely varied, and a table-drawing package must be flexible enough to accomodate different ideas. To achieve this, `tinytable` builds on battle-tested and versatile frameworks like `Bootstrap` (HTML) and `tabularray` (LaTeX).
+
+3. [_Lightweight is the right weight._](https://www.tinyverse.org/) 
+
+Some of the most popular table-drawing packages in the `R` ecosystem are heavy. For instance, `kableExtra` imports `r dep_ke` `R` dependencies, `gt` `r dep_gt`, `DT` `r dep_dt`, and `huxtable` `r dep_hux`. In contrast, `tinytable` imports zero 3rd party `R`  package by default.
+
+`tinytable` is not only lightweight in terms of dependencies, it is also "small" along several other dimensions:
 
 * The user interface is simple, streamlined, consistent, uncluttered.
 * The `tinytable` code base is very small and easy to maintain.
 * `tinytable` is a very thin wrapper around incredibly powerful frameworks: Bootstrap for HTML and `tabularray` for LaTeX.
-* `tinytable` imports no 3rd party `R` package. 
 * This package is free. Tiny tables for a tiny price!
 
 ## Installation
