@@ -1,4 +1,4 @@
-tinytable_latex <- function(x, caption, settings) {
+IttyBittyTable_latex <- function(x, caption, settings) {
 
   template <- settings$template
 
@@ -7,10 +7,10 @@ tinytable_latex <- function(x, caption, settings) {
 
   # caption
   if (is.null(caption)) {
-    idx <- grep("\\$TINYTABLE_CAPTION", template)
+    idx <- grep("\\$IttyBittyTable_CAPTION", template)
     template <- template[-idx]
   } else {
-    template <- sub("\\$TINYTABLE_CAPTION", caption, template)
+    template <- sub("\\$IttyBittyTable_CAPTION", caption, template)
   }
 
   # body: main
@@ -35,7 +35,7 @@ tinytable_latex <- function(x, caption, settings) {
   }
 
   # body: finish
-  idx <- grep("\\$TINYTABLE_BODY", template)
+  idx <- grep("\\$IttyBittyTable_BODY", template)
   out <- c(
     template[1:(idx - 1)],
     header,
@@ -74,7 +74,7 @@ tinytable_latex <- function(x, caption, settings) {
   attr(out, "ncol") <- ncols
   attr(out, "nrow") <- nrows
   attr(out, "tabularray_cols") <- tabularray_cols
-  class(out) <- c("tinytable_latex", "knit_asis", class(out))
+  class(out) <- c("IttyBittyTable_latex", "knit_asis", class(out))
   return(out)
 }
 

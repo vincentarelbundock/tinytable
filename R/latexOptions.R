@@ -21,7 +21,7 @@ latexOptions <- function(
   assert_choice(theme, c("booktabs", "void", "grid"))
 
   if (environment %in% c("table+tblr", "tbrl")) {
-    template <- readLines(system.file("templates/tblr.tex", package = "tinytable"))
+    template <- readLines(system.file("templates/tblr.tex", package = "IttyBittyTable"))
   }
 
   if (is.null(placement)) {
@@ -29,7 +29,7 @@ latexOptions <- function(
   } else {
     placement <- sprintf("[%s]", placement)
   }
-  template <- sub("$TINYTABLE_PLACEMENT", placement, template, fixed = TRUE)
+  template <- sub("$IttyBittyTable_PLACEMENT", placement, template, fixed = TRUE)
 
   # TRUE -> true
   if ("endpos" %in% names(dots)) {
@@ -81,7 +81,7 @@ latexOptions <- function(
     keys = dots
   )
   dots <- c(dots, out)
-  class(dots) <- c("tinytable_latexOptions", class(dots))
+  class(dots) <- c("IttyBittyTable_latexOptions", class(dots))
   
   return(dots)
 

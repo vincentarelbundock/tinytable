@@ -1,5 +1,5 @@
 #' @export
-style.tinytable_html <- function(x,
+style.IttyBittyTable_html <- function(x,
                                  i = NULL,
                                  j = NULL,
                                  color = NULL,
@@ -17,7 +17,7 @@ style.tinytable_html <- function(x,
   assert_flag(italic)
 
   if (is.null(i)) {
-    out <- style_col_tinytable_html(x = x,
+    out <- style_col_IttyBittyTable_html(x = x,
                                        j = j,
                                        color = color,
                                        background = background,
@@ -25,7 +25,7 @@ style.tinytable_html <- function(x,
                                        italic = italic)
     return(out)
   } else if (is.null(j)) {
-    out <- style_row_tinytable_html(x = x,
+    out <- style_row_IttyBittyTable_html(x = x,
                                     i = i,
                                     color = color,
                                     background = background,

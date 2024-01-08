@@ -1,5 +1,5 @@
 ---
-title: "`tinytable` tutorial"
+title: "`IttyBittyTable` tutorial"
 format:
   html: default
   pdf:
@@ -18,30 +18,30 @@ This tutorial is available in two versions:
 * [HTML](tutorial.html)
 
 
-# `tinytable` is easy to use
+# `IttyBittyTable` is easy to use
 
 ```{r}
-# library(tinytable)
+# library(IttyBittyTable)
 pkgload::load_all()
 
 x <- mtcars[1:4, 1:5]
 
-tinytable(x)
+IttyBittyTable(x)
 ```
 
 
 # Output formats
 
-`tinytable` can produce tables in HTML, Markdown, or LaTeX (PDF) format. To choose, we use the `output` argument:
+`IttyBittyTable` can produce tables in HTML, Markdown, or LaTeX (PDF) format. To choose, we use the `output` argument:
 
 ```{r}
 #| eval: false
-tinytable(x, output = "html")
-tinytable(x, output = "latex")
-tinytable(x, output = "markdown")
+IttyBittyTable(x, output = "html")
+IttyBittyTable(x, output = "latex")
+IttyBittyTable(x, output = "markdown")
 ```
 
-When calling `tinytable` from a Quarto or Rmarkdown document, `tinytable` detects the output format automatically and generates an HTML or LaTeX table as appropriate. This means that we do not need to explicitly specify the `output` format.
+When calling `IttyBittyTable` from a Quarto or Rmarkdown document, `IttyBittyTable` detects the output format automatically and generates an HTML or LaTeX table as appropriate. This means that we do not need to explicitly specify the `output` format.
 
 
 # Style
@@ -85,7 +85,7 @@ We discuss these extra arguments near the end of this page.
 To style individual cells, we use the `style_cell()`  function. The first two arguments (`i` and `j`) identify the positions of the cells of interest, by row and column numbers respectively. To style a cell in the 2nd row and 3rd column, we can do:
 
 ```{r}
-tinytable(x) |>
+IttyBittyTable(x) |>
   style(
     i = 2,
     j = 3,
@@ -98,14 +98,14 @@ tinytable(x) |>
 The `i` and `j` accept vectors of integers to modify several cells at once:
 
 ```{r}
-tinytable(x) |> style(2, c(1, 3), background = "olive")
+IttyBittyTable(x) |> style(2, c(1, 3), background = "olive")
 ```
 
 We can style all cells in a table by omitting the `i` and `j` arguments:
 
 
 ```{r}
-tinytable(x) |> style(background = "black", color = "white", bold = TRUE)
+IttyBittyTable(x) |> style(background = "black", color = "white", bold = TRUE)
 ```
 
 ## Rows and columns
@@ -113,11 +113,11 @@ tinytable(x) |> style(background = "black", color = "white", bold = TRUE)
 We can style entire rows by omitting the `j` argument, or style entire columns by omitting the `i` argument:
 
 ```{r}
-tinytable(x) |> style(i = 1:2, color = "blue")
+IttyBittyTable(x) |> style(i = 1:2, color = "blue")
 ```
 
 ```{r}
-tinytable(x) |> style(j = c(2, 4), bold = TRUE)
+IttyBittyTable(x) |> style(j = c(2, 4), bold = TRUE)
 ```
 
 # Headers
@@ -127,14 +127,14 @@ The header can be omitted from the table by deleting the column names in the `x`
 ```{r}
 k <- x
 colnames(k) <- NULL
-tinytable(k)
+IttyBittyTable(k)
 ```
 
 
 # Captions and cross-references
 
 ```{r}
-tinytable(x, caption = "Data about cars.")
+IttyBittyTable(x, caption = "Data about cars.")
 ```
 
 TODO: Cross-references
@@ -142,7 +142,7 @@ TODO: Cross-references
 
 # HTML customization
 
-_Warning:_ The `html` argument is only used for HTML tables, and it is ignored when `tinytable` creates LaTeX tables for PDF files. You can skip this section if you are reading the PDF version of this tutorial.
+_Warning:_ The `html` argument is only used for HTML tables, and it is ignored when `IttyBittyTable` creates LaTeX tables for PDF files. You can skip this section if you are reading the PDF version of this tutorial.
 
 ## Themes
 
@@ -151,13 +151,13 @@ The Bootstrap framework provides a number of built-in themes to style tables. To
 For example, to produce a "dark" table, we use the `table-dark` class:
 
 ```{r}
-tinytable(x, html = htmlOptions(class = "table table-dark"))
+IttyBittyTable(x, html = htmlOptions(class = "table table-dark"))
 ```
 
 We can also combine several Bootstrap classes. Here, we get a "striped" table with the "warning" color:
 
 ```{r}
-tinytable(x, html = htmlOptions(class = "table table-striped table-warning"))
+IttyBittyTable(x, html = htmlOptions(class = "table table-striped table-warning"))
 ```
 
 ## CSS
@@ -168,8 +168,8 @@ For manual customization, we can also specify our own CSS class.
 
 # LaTeX / PDF customization
 
-_Warning:_ The `latex` argument is only used for LaTeX/PDF tables, and it is ignored when `tinytable` creates HTML tables for the web. You can skip this section if you are reading the HTML version of this tutorial.
+_Warning:_ The `latex` argument is only used for LaTeX/PDF tables, and it is ignored when `IttyBittyTable` creates HTML tables for the web. You can skip this section if you are reading the HTML version of this tutorial.
 
 ```{r}
-tinytable(x, latex = latexOptions(theme = "void", hlines = ""))
+IttyBittyTable(x, latex = latexOptions(theme = "void", hlines = ""))
 ```

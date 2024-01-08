@@ -1,7 +1,7 @@
 #' Convenience function for Rmarkdown and Quarto documents
 #' @noRd
 #' @export
-knit_print.tinytable_html <- function(x, ...) {
+knit_print.IttyBittyTable_html <- function(x, ...) {
   # from htmltools:::html_preserve
   # GPL3
   inline <- grepl(x, "\n", fixed = TRUE)
@@ -20,7 +20,7 @@ knit_print.tinytable_html <- function(x, ...) {
 #' Convenience function for Rmarkdown and Quarto documents
 #' @noRd
 #' @export
-knit_print.tinytable_latex <- function(x, ...) {
+knit_print.IttyBittyTable_latex <- function(x, ...) {
   out <- x
   # from knitr::asis_output
   # GPL3
@@ -30,7 +30,7 @@ knit_print.tinytable_latex <- function(x, ...) {
 
 
 #' @export
-print.tinytable_html <- function(x, ...) {
+print.IttyBittyTable_html <- function(x, ...) {
   dir <- tempfile()
   dir.create(dir)
   htmlFile <- file.path(dir, "index.html")

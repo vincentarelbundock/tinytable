@@ -26,7 +26,7 @@ LaTeX options
 }
 \section{LaTeX \code{tabularray} options}{
 
-\subsection{Table: \code{tinytable()}}{
+\subsection{Table: \code{IttyBittyTable()}}{
 
 Inner specifications:\tabular{lll}{
    Key \tab Description and Values \tab Initial Value \cr

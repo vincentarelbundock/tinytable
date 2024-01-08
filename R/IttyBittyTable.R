@@ -9,7 +9,7 @@
 #' @param html Options to customize HTML tables. See `?htmlOptions` and the examples section below.
 #' @template tabularray
 #' @export
-tinytable <- function(x,
+IttyBittyTable <- function(x,
                       output = NULL,
                       caption = NULL,
                       latex = latexOptions(),   
@@ -20,25 +20,25 @@ tinytable <- function(x,
   output <- sanitize_output(output)
   assert_data_frame(x)
   assert_string(caption, null.ok = TRUE)
-  if (!inherits(latex, "tinytable_latexOptions")) {
+  if (!inherits(latex, "IttyBittyTable_latexOptions")) {
     msg <- "The `latex` argument must be a call to the `latexOptions()` function. See `?tt` and `?latexOptions` for details and examples."
     stop(msg, call. = FALSE)
   }
 
-  if (!inherits(html, "tinytable_htmlOptions")) {
+  if (!inherits(html, "IttyBittyTable_htmlOptions")) {
     msg <- "The `html` argument must be a call to the `htmlOptions()` function. See `?tt` and `?htmlOptions` for details and examples."
     stop(msg, call. = FALSE)
   }
 
   # build table
   if (output == "latex") {
-    out <- tinytable_latex(x, caption = caption, settings = latex)
+    out <- IttyBittyTable_latex(x, caption = caption, settings = latex)
 
   } else if (output == "html"){
-    out <- tinytable_html(x, caption = caption, settings = html)
+    out <- IttyBittyTable_html(x, caption = caption, settings = html)
 
   } else {
-    out <- tinytable_markdown(x, caption = caption)
+    out <- IttyBittyTable_markdown(x, caption = caption)
   }
 
   return(out)

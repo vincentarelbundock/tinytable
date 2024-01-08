@@ -1,4 +1,4 @@
-style_col_tinytable_html <- function(x,
+style_col_IttyBittyTable_html <- function(x,
                                         j = NULL,
                                         color = NULL,
                                         background = NULL,

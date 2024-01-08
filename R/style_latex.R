@@ -1,5 +1,5 @@
 #' @export
-style.tinytable_latex <- function(x,
+style.IttyBittyTable_latex <- function(x,
                                   i = NULL,
                                   j = NULL,
                                   color = NULL,
@@ -22,7 +22,7 @@ style.tinytable_latex <- function(x,
   span <- latex$span
 
   if (is.null(i)) {
-    out <- style_col_tinytable_latex(x = x,
+    out <- style_col_IttyBittyTable_latex(x = x,
       j = j,
       color = color,
       background = background,
@@ -32,7 +32,7 @@ style.tinytable_latex <- function(x,
     )
     return(out)
   } else if (is.null(j)) {
-    out <- style_row_tinytable_latex(x = x,
+    out <- style_row_IttyBittyTable_latex(x = x,
       i = i,
       color = color,
       background = background,

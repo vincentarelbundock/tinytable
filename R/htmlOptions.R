@@ -6,12 +6,12 @@
 htmlOptions <- function(class = "table",
                         css = "") {
 
-  template <- readLines(system.file("templates/bootstrap.html", package = "tinytable"))
+  template <- readLines(system.file("templates/bootstrap.html", package = "IttyBittyTable"))
   out <- list(
     template = template,
     class = class,
     css = css
   )
-  class(out) <- c("tinytable_htmlOptions", class(out))
+  class(out) <- c("IttyBittyTable_htmlOptions", class(out))
   return(out)
 }

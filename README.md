@@ -1,15 +1,15 @@
 
 <p align="center">
-<img src="man/figures/tinytable_logo.png" height = "250" class = "center">
+<img src="man/figures/IttyBittyTable_logo.png" height = "250" class = "center">
 </p>
 
 <br> <!-- badges: start --> <!-- badges: end -->
 
 ## What?
 
-`tinytable` is a small but powerful `R` package to draw HTML, LaTeX,
-PDF, Markdown, and Typst tables. The interface is minimalist, but it
-gives users direct and convenient access to powerful frameworks to
+`IttyBittyTable` is a small but powerful `R` package to draw HTML,
+LaTeX, PDF, Markdown, and Typst tables. The interface is minimalist, but
+it gives users direct and convenient access to powerful frameworks to
 create endlessly customizable tables:
 
 -   `tabularray` for LaTeX and PDF
@@ -33,32 +33,32 @@ regular expressions.
 
 Users’ needs are extremely varied, and a table-drawing package must be
 flexible enough to accomodate different ideas. To achieve this,
-`tinytable` builds on battle-tested and versatile frameworks like
+`IttyBittyTable` builds on battle-tested and versatile frameworks like
 `Bootstrap` (HTML) and `tabularray` (LaTeX).
 
 1.  [*Lightweight is the right weight.*](https://www.tinyverse.org/)
 
 Some of the most popular table-drawing packages in the `R` ecosystem are
 heavy. For instance, `kableExtra` imports 66 `R` dependencies, `gt` 65,
-`DT` 43, and `huxtable` 29. In contrast, `tinytable` imports zero 3rd
-party `R` package by default.
+`DT` 43, and `huxtable` 29. In contrast, `IttyBittyTable` imports zero
+3rd party `R` package by default.
 
-`tinytable` is not only lightweight in terms of dependencies, it is also
-“small” along several other dimensions:
+`IttyBittyTable` is not only lightweight in terms of dependencies, it is
+also “small” along several other dimensions:
 
 -   The user interface is simple, streamlined, consistent, uncluttered.
--   The `tinytable` code base is very small and easy to maintain.
--   `tinytable` is a very thin wrapper around incredibly powerful
+-   The `IttyBittyTable` code base is very small and easy to maintain.
+-   `IttyBittyTable` is a very thin wrapper around incredibly powerful
     frameworks: Bootstrap for HTML and `tabularray` for LaTeX.
 -   This package is free. Tiny tables for a tiny price!
 
 ## Installation
 
-You can install the development version of tinytable from
+You can install the development version of IttyBittyTable from
 [GitHub](https://github.com/) with:
 
 ``` r
-remotes::install_github("vincentarelbundock/tinytable")
+remotes::install_github("vincentarelbundock/IttyBittyTable")
 ```
 
 ## Get started

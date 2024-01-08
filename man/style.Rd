@@ -2,7 +2,7 @@
 % Please edit documentation in R/generics.R
 \name{style}
 \alias{style}
-\title{Style a \code{tinytable}}
+\title{Style a \code{IttyBittyTable}}
 \usage{
 style(
   x,
@@ -17,7 +17,7 @@ style(
 )
 }
 \arguments{
-\item{x}{A table created by the \code{tinytable()} function.}
+\item{x}{A table created by the \code{IttyBittyTable()} function.}
 
 \item{i}{Integer vector indicating row positions. If \code{NULL}, applies to all rows.}
 
@@ -39,7 +39,7 @@ style(
 Returns the modified table object with the specified cell styles applied.
 }
 \description{
-This function applies styling to specified parts of a table created by the \code{tinytable()} function of the \code{tinytable} package.
+This function applies styling to specified parts of a table created by the \code{IttyBittyTable()} function of the \code{IttyBittyTable} package.
 
 The arguments described below allow users to customize text style and color. The \code{latex} and \code{html} arguments allow deep customization using the \code{tabularray} package for LaTeX, and the Bootstrap framework for HTML. For details, see:
 \itemize{
@@ -49,7 +49,7 @@ The arguments described below allow users to customize text style and color. The
 }
 \section{LaTeX \code{tabularray} options}{
 
-\subsection{Table: \code{tinytable()}}{
+\subsection{Table: \code{IttyBittyTable()}}{
 
 Inner specifications:\tabular{lll}{
    Key \tab Description and Values \tab Initial Value \cr

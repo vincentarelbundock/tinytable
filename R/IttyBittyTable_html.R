@@ -1,14 +1,14 @@
-tinytable_html <- function(x, caption, settings) {
+IttyBittyTable_html <- function(x, caption, settings) {
   template <- settings$template
 
   # insert bootstrap class and css
   template <- gsub(
-    "$TINYTABLE_BOOTSTRAP_CLASS",
+    "$IttyBittyTable_BOOTSTRAP_CLASS",
     settings$class,
     template,
     fixed = TRUE)
   template <- gsub(
-    "$TINYTABLE_BOOTSTRAP_CSS",
+    "$IttyBittyTable_BOOTSTRAP_CSS",
     settings$css,
     template,
     fixed = TRUE)
@@ -16,14 +16,14 @@ tinytable_html <- function(x, caption, settings) {
   # caption
   if (is.null(caption)) {
     template <- sub(
-      "$TINYTABLE_BOOTSTRAP_CAPTION",
+      "$IttyBittyTable_BOOTSTRAP_CAPTION",
       "",
       template,
       fixed = TRUE
     )
   } else {
     template <- sub(
-      "$TINYTABLE_BOOTSTRAP_CAPTION",
+      "$IttyBittyTable_BOOTSTRAP_CAPTION",
       sprintf("<caption>%s</caption>", caption),
       template,
       fixed = TRUE
@@ -33,8 +33,8 @@ tinytable_html <- function(x, caption, settings) {
   # (pseudo-)unique table IDs
   id <- get_id("")
   template <- gsub(
-    "$TINYTABLE_TABLE_ID",
-    paste0(c("tinytable", id), collapse = ""),
+    "$IttyBittyTable_TABLE_ID",
+    paste0(c("IttyBittyTable", id), collapse = ""),
     template,
     fixed = TRUE)
   template <- gsub(
@@ -54,7 +54,7 @@ tinytable_html <- function(x, caption, settings) {
     fixed = TRUE)
 
   # header
-  idx <- grep("$TINYTABLE_BOOTSTRAP_HEADER", template, fixed = TRUE)
+  idx <- grep("$IttyBittyTable_BOOTSTRAP_HEADER", template, fixed = TRUE)
   if (!is.null(colnames(x))) {
     header <- sprintf('    <th scope="col">%s</th>', colnames(x))
     header <- c("<thead>", "  <tr>", header, "  </tr>", "</thead>")
@@ -76,7 +76,7 @@ tinytable_html <- function(x, caption, settings) {
     return(out)
   }
   body <- apply(x, 1, makerow)
-  idx <- grep("$TINYTABLE_BOOTSTRAP_BODY", template, fixed = TRUE)
+  idx <- grep("$IttyBittyTable_BOOTSTRAP_BODY", template, fixed = TRUE)
   template <- c(
     template[1:(idx - 1)],
     paste(strrep(" ", 13), body),
@@ -86,7 +86,7 @@ tinytable_html <- function(x, caption, settings) {
   out <- paste(template, collapse = "\n")
   attr(out, "ncol") <- ncol(x)
   attr(out, "nrow") <- nrow(x)
-  class(out) <- c("tinytable_html", "knit_asis", class(out))
+  class(out) <- c("IttyBittyTable_html", "knit_asis", class(out))
   return(out)
 }
 
@@ -96,13 +96,13 @@ bootstrap_setting <- function(x, new, component = "row") {
   att <- attributes(x)    
   out <- strsplit(x, "\n")[[1]]
   if (component == "row") {
-    idx <- grep("tinytable rows before this", out)
+    idx <- grep("IttyBittyTable rows before this", out)
   } else if (component == "column") {
-    idx <- grep("tinytable columns before this", out)
+    idx <- grep("IttyBittyTable columns before this", out)
   } else if (component == "cell") {
-    idx <- grep("tinytable cells before this", out)
+    idx <- grep("IttyBittyTable cells before this", out)
   } else if (component == "css") {
-    idx <- grep("tinytable css before this", out)
+    idx <- grep("IttyBittyTable css before this", out)
   }
   out <- c(
     out[1:(idx - 1)],

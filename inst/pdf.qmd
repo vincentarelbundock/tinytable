@@ -1,61 +1,61 @@
 ---
-title: "`tinytable`: PDF documents"
+title: "`IttyBittyTable`: PDF documents"
 include-headers:
   - \usepackage{codehigh}
   - \usepackage{verbatim}
 ---
 
 ```{r}
-library(tinytable)
+library(IttyBittyTable)
 options(tt_latexOptions_placement = "H")
 options(tt_output_default = "latex")
 x <- mtcars[1:4, 1:5]
 ```
 
 ```{r}
-tinytable(x) |> style_row(2, color = "blue", background = "pink")
+IttyBittyTable(x) |> style_row(2, color = "blue", background = "pink")
 ```
 
 ```{r}
-tinytable(x) |>
+IttyBittyTable(x) |>
   style_col(1:2, color = "white", background = "black", bold = TRUE, italic = TRUE)
 ```
 
 ```{r}
-tinytable(x) |> style_row(italic = TRUE, bold = TRUE, color = "blue", background = "pink")
+IttyBittyTable(x) |> style_row(italic = TRUE, bold = TRUE, color = "blue", background = "pink")
 ```
 
 ```{r}
-tinytable(x) |> style_col(background = "green", color = "white") |> cat(file = "~/Downloads/trash.html")
+IttyBittyTable(x) |> style_col(background = "green", color = "white") |> cat(file = "~/Downloads/trash.html")
 ```
 
 ```{r}
-tinytable(x) |>
+IttyBittyTable(x) |>
   style_row(2, latex = latexOptions(cmd = "\\LARGE\\texttt")) |>
   style_col(2, latex = latexOptions(cmd = "\\footnotesize\\texttt"))
 ```
 
 ```{r}
-tinytable(x) |> style_col(c(1, 4), italic = TRUE)
+IttyBittyTable(x) |> style_col(c(1, 4), italic = TRUE)
 ```
 
 ```{r}
-tinytable(x) |> style_row(2:3, background = "olive", color = "white")
+IttyBittyTable(x) |> style_row(2:3, background = "olive", color = "white")
 ```
 
 ```{r}
-tinytable(x) |> style_row(2:3,
+IttyBittyTable(x) |> style_row(2:3,
   latex = latexOptions(
     cmd = "\\texttt"
     ))
 ```
 
 ```{r}
-tinytable(x, latex = latexOptions(theme = "grid"))
+IttyBittyTable(x, latex = latexOptions(theme = "grid"))
 ```
 
 ```{r}
-tinytable(x,
+IttyBittyTable(x,
   latex = latexOptions(
     theme = "void",
     hlines = "dotted,fg=blue",
@@ -64,29 +64,29 @@ tinytable(x,
 ```
 
 ```{r}
-tinytable(x)
+IttyBittyTable(x)
 ```
 
 # Themes
 
-`tinytable` includes three basic "themes" for LaTeX tables: `"booktabs"` (default), `"grid"`, and `"void"`. The theme can be selected using the `latexOptions()` function.
+`IttyBittyTable` includes three basic "themes" for LaTeX tables: `"booktabs"` (default), `"grid"`, and `"void"`. The theme can be selected using the `latexOptions()` function.
 
 ```{r}
-tinytable(x, latex = latexOptions(theme = "booktabs"))
+IttyBittyTable(x, latex = latexOptions(theme = "booktabs"))
 ```
 
 ```{r}
-tinytable(x, latex = latexOptions(theme = "grid"))
+IttyBittyTable(x, latex = latexOptions(theme = "grid"))
 ```
 
 ```{r}
-tinytable(x, latex = latexOptions(theme = "void"))
+IttyBittyTable(x, latex = latexOptions(theme = "void"))
 ```
 
 The `"void"` theme can be useful when combined with the `hline*`  and `vline*` arguments. For example:
 
 ```{r}
-tinytable(x,
+IttyBittyTable(x,
   latex = latexOptions(
     theme = "void",
     hline = c("1,6", "fg=orange,wd=2pt"),
@@ -101,14 +101,14 @@ tinytable(x,
 
 
 ```{r}
-library(tinytable)
+library(IttyBittyTable)
 options(tt_latexOptions_placement = "H")
 options(tt_output_default = "latex")
 k <- data.frame(
   verbatim = c("a_b", "$a_b$"),
   evaluated = c("a\\_b", "$a_b$")
 )
-tinytable(k) |> 
+IttyBittyTable(k) |> 
   style_col(1, latex = latexOptions(cmd = "\\fakeverb")) |> cat()
 ```
 
