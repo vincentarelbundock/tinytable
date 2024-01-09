@@ -9,6 +9,8 @@ ibOptions <- function(color = NULL,
                       width = NULL
                       ) {
 
+  # TODO: cmd needs to be concatenated when there are many
+
   tabularray <- list()
   bootstrap <- list(css = "")
 
