@@ -7,56 +7,56 @@ include-headers:
 
 ```{r}
 library(IttyBittyTable)
-options(tt_latexOptions_placement = "H")
+options(tt_bootstrapOptions_placement = "H")
 options(tt_output_default = "latex")
 x <- mtcars[1:4, 1:5]
 ```
 
 ```{r}
-IttyBittyTable(x) |> style_row(2, color = "blue", background = "pink")
+ibTable(x) |> style_row(2, color = "blue", background = "pink")
 ```
 
 ```{r}
-IttyBittyTable(x) |>
+ibTable(x) |>
   style_col(1:2, color = "white", background = "black", bold = TRUE, italic = TRUE)
 ```
 
 ```{r}
-IttyBittyTable(x) |> style_row(italic = TRUE, bold = TRUE, color = "blue", background = "pink")
+ibTable(x) |> style_row(italic = TRUE, bold = TRUE, color = "blue", background = "pink")
 ```
 
 ```{r}
-IttyBittyTable(x) |> style_col(background = "green", color = "white") |> cat(file = "~/Downloads/trash.html")
+ibTable(x) |> style_col(background = "green", color = "white") |> cat(file = "~/Downloads/trash.html")
 ```
 
 ```{r}
-IttyBittyTable(x) |>
-  style_row(2, latex = latexOptions(cmd = "\\LARGE\\texttt")) |>
-  style_col(2, latex = latexOptions(cmd = "\\footnotesize\\texttt"))
+ibTable(x) |>
+  style_row(2, latex = bootstrapOptions(cmd = "\\LARGE\\texttt")) |>
+  style_col(2, latex = bootstrapOptions(cmd = "\\footnotesize\\texttt"))
 ```
 
 ```{r}
-IttyBittyTable(x) |> style_col(c(1, 4), italic = TRUE)
+ibTable(x) |> style_col(c(1, 4), italic = TRUE)
 ```
 
 ```{r}
-IttyBittyTable(x) |> style_row(2:3, background = "olive", color = "white")
+ibTable(x) |> style_row(2:3, background = "olive", color = "white")
 ```
 
 ```{r}
-IttyBittyTable(x) |> style_row(2:3,
-  latex = latexOptions(
+ibTable(x) |> style_row(2:3,
+  latex = bootstrapOptions(
     cmd = "\\texttt"
     ))
 ```
 
 ```{r}
-IttyBittyTable(x, latex = latexOptions(theme = "grid"))
+ibTable(x, latex = bootstrapOptions(theme = "grid"))
 ```
 
 ```{r}
-IttyBittyTable(x,
-  latex = latexOptions(
+ibTable(x,
+  latex = bootstrapOptions(
     theme = "void",
     hlines = "dotted,fg=blue",
     vlines = "dashed,fg=red,wd=1pt")
@@ -64,30 +64,30 @@ IttyBittyTable(x,
 ```
 
 ```{r}
-IttyBittyTable(x)
+ibTable(x)
 ```
 
 # Themes
 
-`IttyBittyTable` includes three basic "themes" for LaTeX tables: `"booktabs"` (default), `"grid"`, and `"void"`. The theme can be selected using the `latexOptions()` function.
+`IttyBittyTable` includes three basic "themes" for LaTeX tables: `"booktabs"` (default), `"grid"`, and `"void"`. The theme can be selected using the `bootstrapOptions()` function.
 
 ```{r}
-IttyBittyTable(x, latex = latexOptions(theme = "booktabs"))
+ibTable(x, latex = bootstrapOptions(theme = "booktabs"))
 ```
 
 ```{r}
-IttyBittyTable(x, latex = latexOptions(theme = "grid"))
+ibTable(x, latex = bootstrapOptions(theme = "grid"))
 ```
 
 ```{r}
-IttyBittyTable(x, latex = latexOptions(theme = "void"))
+ibTable(x, latex = bootstrapOptions(theme = "void"))
 ```
 
 The `"void"` theme can be useful when combined with the `hline*`  and `vline*` arguments. For example:
 
 ```{r}
-IttyBittyTable(x,
-  latex = latexOptions(
+ibTable(x,
+  latex = bootstrapOptions(
     theme = "void",
     hline = c("1,6", "fg=orange,wd=2pt"),
     hline = c("2", "fg=orange,wd=1pt"),
@@ -102,14 +102,14 @@ IttyBittyTable(x,
 
 ```{r}
 library(IttyBittyTable)
-options(tt_latexOptions_placement = "H")
+options(tt_bootstrapOptions_placement = "H")
 options(tt_output_default = "latex")
 k <- data.frame(
   verbatim = c("a_b", "$a_b$"),
   evaluated = c("a\\_b", "$a_b$")
 )
-IttyBittyTable(k) |> 
-  style_col(1, latex = latexOptions(cmd = "\\fakeverb")) |> cat()
+ibTable(k) |> 
+  style_col(1, latex = bootstrapOptions(cmd = "\\fakeverb")) |> cat()
 ```
 
 

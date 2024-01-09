@@ -3,8 +3,7 @@
 #' @param class TODO
 #' @param css TODO
 #' @export
-htmlOptions <- function(class = "table",
-                        css = "") {
+bootstrapOptions <- function(class = "table", css = "", ...) {
 
   template <- readLines(system.file("templates/bootstrap.html", package = "IttyBittyTable"))
   out <- list(
@@ -12,6 +11,6 @@ htmlOptions <- function(class = "table",
     class = class,
     css = css
   )
-  class(out) <- c("IttyBittyTable_htmlOptions", class(out))
+  class(out) <- c("IttyBittyTable_bootstrapOptions", class(out))
   return(out)
 }

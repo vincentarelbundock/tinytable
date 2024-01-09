@@ -4,11 +4,11 @@
 # rule should accept flags
 devtools::document()
 pkgload::load_all()
-options(tt_latexOptions_placement = "H")
+options(tt_bootstrapOptions_placement = "H")
 x <- mtcars[1:12, 1:8]
 
 pkgload::load_all()
-IttyBittyTable(x, output = "latex") |> 
+ibTable(x, output = "latex") |> 
 group_ibt(i = c(
   "I like (fake) hamburgers" = 3,
   "She prefers halloumi" = 4,
@@ -17,7 +17,7 @@ group_ibt(i = c(
 
 
 ```{r}
-IttyBittyTable(x, output = "latex") |> 
+ibTable(x, output = "latex") |> 
   group_ibt(i = c(
       "I like (fake) hamburgers" = 3,
       "She prefers halloumi" = 4,

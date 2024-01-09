@@ -12,12 +12,12 @@ style(
   background = NULL,
   bold = FALSE,
   italic = FALSE,
-  latex = latexOptions(),
-  html = htmlOptions()
+  latex = tabularrayOptions(),
+  html = bootstrapOptions()
 )
 }
 \arguments{
-\item{x}{A table created by the \code{IttyBittyTable()} function.}
+\item{x}{A table created by the \code{ibTable()} function.}
 
 \item{i}{Integer vector indicating row positions. If \code{NULL}, applies to all rows.}
 
@@ -31,25 +31,25 @@ style(
 
 \item{italic}{Logical; if \code{TRUE}, applies italic styling to the text.}
 
-\item{latex}{sytling options for the \code{tabularray} framework for LaTeX. See \code{?latexOptions} for details.}
+\item{latex}{sytling options for the \code{tabularray} framework for LaTeX. See \code{?tabularrayOptions} for details.}
 
-\item{html}{styling options for the Bootstrap framework for HTML. See \code{?htmlOptions} for details.}
+\item{html}{styling options for the Bootstrap framework for HTML. See \code{?bootstrapOptions} for details.}
 }
 \value{
 Returns the modified table object with the specified cell styles applied.
 }
 \description{
-This function applies styling to specified parts of a table created by the \code{IttyBittyTable()} function of the \code{IttyBittyTable} package.
+This function applies styling to specified parts of a table created by the \code{ibTable()} function of the \code{IttyBittyTable} package.
 
 The arguments described below allow users to customize text style and color. The \code{latex} and \code{html} arguments allow deep customization using the \code{tabularray} package for LaTeX, and the Bootstrap framework for HTML. For details, see:
 \itemize{
-\item \code{?latexOptions}
-\item \code{?htmlOptions}
+\item \code{?tabularrayOptions}
+\item \code{?bootstrapOptions}
 }
 }
 \section{LaTeX \code{tabularray} options}{
 
-\subsection{Table: \code{IttyBittyTable()}}{
+\subsection{Table: \code{ibTable()}}{
 
 Inner specifications:\tabular{lll}{
    Key \tab Description and Values \tab Initial Value \cr

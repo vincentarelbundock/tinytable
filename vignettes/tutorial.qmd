@@ -9,7 +9,7 @@ format:
 ---
 
 ```{r, include=FALSE}
-options("tt_latexOptions_placement" = "H")
+options("tt_bootstrapOptions_placement" = "H")
 ```
 
 This tutorial is available in two versions:
@@ -26,7 +26,7 @@ pkgload::load_all()
 
 x <- mtcars[1:4, 1:5]
 
-IttyBittyTable(x)
+ibTable(x)
 ```
 
 
@@ -36,9 +36,9 @@ IttyBittyTable(x)
 
 ```{r}
 #| eval: false
-IttyBittyTable(x, output = "html")
-IttyBittyTable(x, output = "latex")
-IttyBittyTable(x, output = "markdown")
+ibTable(x, output = "html")
+ibTable(x, output = "latex")
+ibTable(x, output = "markdown")
 ```
 
 When calling `IttyBittyTable` from a Quarto or Rmarkdown document, `IttyBittyTable` detects the output format automatically and generates an HTML or LaTeX table as appropriate. This means that we do not need to explicitly specify the `output` format.
@@ -74,8 +74,8 @@ The main arguments of the `style()` function are rather self-explanatory:
 
 In addition, `style()` accepts two more arguments which allow unlimited possibilities for customizing every possible aspect of your tables in HTML or LaTeX (PDF):
 
-* `latex = latexOptions()` for tabularray
-* `html = htmlOptions()` for Bootstrap
+* `latex = bootstrapOptions()` for tabularray
+* `html = bootstrapOptions()` for Bootstrap
 
 We discuss these extra arguments near the end of this page.
 
@@ -85,7 +85,7 @@ We discuss these extra arguments near the end of this page.
 To style individual cells, we use the `style_cell()`  function. The first two arguments (`i` and `j`) identify the positions of the cells of interest, by row and column numbers respectively. To style a cell in the 2nd row and 3rd column, we can do:
 
 ```{r}
-IttyBittyTable(x) |>
+ibTable(x) |>
   style(
     i = 2,
     j = 3,
@@ -98,14 +98,14 @@ IttyBittyTable(x) |>
 The `i` and `j` accept vectors of integers to modify several cells at once:
 
 ```{r}
-IttyBittyTable(x) |> style(2, c(1, 3), background = "olive")
+ibTable(x) |> style(2, c(1, 3), background = "olive")
 ```
 
 We can style all cells in a table by omitting the `i` and `j` arguments:
 
 
 ```{r}
-IttyBittyTable(x) |> style(background = "black", color = "white", bold = TRUE)
+ibTable(x) |> style(background = "black", color = "white", bold = TRUE)
 ```
 
 ## Rows and columns
@@ -113,11 +113,11 @@ IttyBittyTable(x) |> style(background = "black", color = "white", bold = TRUE)
 We can style entire rows by omitting the `j` argument, or style entire columns by omitting the `i` argument:
 
 ```{r}
-IttyBittyTable(x) |> style(i = 1:2, color = "blue")
+ibTable(x) |> style(i = 1:2, color = "blue")
 ```
 
 ```{r}
-IttyBittyTable(x) |> style(j = c(2, 4), bold = TRUE)
+ibTable(x) |> style(j = c(2, 4), bold = TRUE)
 ```
 
 # Headers
@@ -127,14 +127,14 @@ The header can be omitted from the table by deleting the column names in the `x`
 ```{r}
 k <- x
 colnames(k) <- NULL
-IttyBittyTable(k)
+ibTable(k)
 ```
 
 
 # Captions and cross-references
 
 ```{r}
-IttyBittyTable(x, caption = "Data about cars.")
+ibTable(x, caption = "Data about cars.")
 ```
 
 TODO: Cross-references
@@ -146,18 +146,18 @@ _Warning:_ The `html` argument is only used for HTML tables, and it is ignored w
 
 ## Themes
 
-The Bootstrap framework provides a number of built-in themes to style tables. To use them, we call `htmlOptions()` with the `class` argument, and we specify the Bootstrap class. A list of available Bootstrap classes can be found here: <https://getbootstrap.com/docs/5.3/content/tables/>
+The Bootstrap framework provides a number of built-in themes to style tables. To use them, we call `bootstrapOptions()` with the `class` argument, and we specify the Bootstrap class. A list of available Bootstrap classes can be found here: <https://getbootstrap.com/docs/5.3/content/tables/>
 
 For example, to produce a "dark" table, we use the `table-dark` class:
 
 ```{r}
-IttyBittyTable(x, html = htmlOptions(class = "table table-dark"))
+ibTable(x, html = bootstrapOptions(class = "table table-dark"))
 ```
 
 We can also combine several Bootstrap classes. Here, we get a "striped" table with the "warning" color:
 
 ```{r}
-IttyBittyTable(x, html = htmlOptions(class = "table table-striped table-warning"))
+ibTable(x, html = bootstrapOptions(class = "table table-striped table-warning"))
 ```
 
 ## CSS
@@ -171,5 +171,5 @@ For manual customization, we can also specify our own CSS class.
 _Warning:_ The `latex` argument is only used for LaTeX/PDF tables, and it is ignored when `IttyBittyTable` creates HTML tables for the web. You can skip this section if you are reading the HTML version of this tutorial.
 
 ```{r}
-IttyBittyTable(x, latex = latexOptions(theme = "void", hlines = ""))
+ibTable(x, latex = bootstrapOptions(theme = "void", hlines = ""))
 ```

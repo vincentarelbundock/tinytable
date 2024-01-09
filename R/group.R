@@ -1,5 +1,5 @@
 #' @export
-group_ibt <- function(x,
+ibGroup <- function(x,
                       i = NULL,
                       j = NULL,
                       color = NULL,

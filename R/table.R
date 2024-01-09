@@ -5,28 +5,27 @@
 #' * "html" if `knitr::is_html_output()` is `TRUE`
 #' * "latex" if `knitr::is_latex_output()` is `TRUE`
 #' * Otherwise determined by setting a global option: `options(tt_output_default = "markdown")`
-#' @param latex Options to customize   LaTeX tables. See `?latexOptions` and the examples section below.
-#' @param html Options to customize HTML tables. See `?htmlOptions` and the examples section below.
+#' @param latex Options to customize   LaTeX tables. See `?tabularrayOptions` and the examples section below.
+#' @param html Options to customize HTML tables. See `?bootstrapOptions` and the examples section below.
 #' @template tabularray
 #' @export
-IttyBittyTable <- function(x,
-                      output = NULL,
-                      caption = NULL,
-                      latex = latexOptions(),   
-                      html = htmlOptions()
-                      ) {
+ibTable <- function(x,
+                    output = NULL,
+                    caption = NULL,
+                    options = ibOptions()
+                    ) {
 
   # sanity checks
   output <- sanitize_output(output)
   assert_data_frame(x)
   assert_string(caption, null.ok = TRUE)
-  if (!inherits(latex, "IttyBittyTable_latexOptions")) {
-    msg <- "The `latex` argument must be a call to the `latexOptions()` function. See `?tt` and `?latexOptions` for details and examples."
+  if (!inherits(latex, "IttyBittyTable_tabularrayOptions")) {
+    msg <- "The `options` argument must be a call to the `ibOptions()` or `tabularrayOptions()` function. See `?ibOptions` and `?tabularrayOptions` for details and examples."
     stop(msg, call. = FALSE)
   }
 
-  if (!inherits(html, "IttyBittyTable_htmlOptions")) {
-    msg <- "The `html` argument must be a call to the `htmlOptions()` function. See `?tt` and `?htmlOptions` for details and examples."
+  if (!inherits(html, "IttyBittyTable_bootstrapOptions")) {
+    msg <- "The `html` argument must be a call to `ibOptions()` or `bootstrapOptions()` function. See `?tt` and `?bootstrapOptions` for details and examples."
     stop(msg, call. = FALSE)
   }
 

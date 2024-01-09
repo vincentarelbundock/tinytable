@@ -6,11 +6,11 @@
 #' @param theme TODO
 #' @template tabularray
 #' @export
-latexOptions <- function(
-  environment = getOption("tt_latexOptions_environment", default = "table+tblr"),
-  extendable = getOption("tt_latexOptions_extendable", default = FALSE),
-  placement = getOption("tt_latexOptions_placement", default = NULL),
-  theme = getOption("tt_latexOptions_theme", default = "booktabs"),
+tabularrayOptions <- function(
+  environment = getOption("tt_tabularrayOptions_environment", default = "table+tblr"),
+  extendable = getOption("tt_tabularrayOptions_extendable", default = FALSE),
+  placement = getOption("tt_tabularrayOptions_placement", default = NULL),
+  theme = getOption("tt_tabularrayOptions_theme", default = "booktabs"),
   ...) {
 
   dots <- list(...)
@@ -81,7 +81,7 @@ latexOptions <- function(
     keys = dots
   )
   dots <- c(dots, out)
-  class(dots) <- c("IttyBittyTable_latexOptions", class(dots))
+  class(dots) <- c("IttyBittyTable_tabularrayOptions", class(dots))
   
   return(dots)
 

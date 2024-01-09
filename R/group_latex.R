@@ -44,14 +44,14 @@ group_row_latex <- function(x,
       tab,
       i = idx$new[is.na(idx$old)] + attr(x, "nhead"), j = 1, italic = italic, bold = bold,
       color = color, background = background,
-      latex = latexOptions(c = ncol))
+      latex = tabularrayOptions(c = ncol))
 
   # we also want to indent the header
   i <- idx$new[!is.na(idx$old)] + attr(x, "nhead")
   if (attr(x, "nhead") > 0) i <- c(1:attr(x, "nhead"), i)
   tab <- style(tab,
       i = i, j = 1,
-      latex = latexOptions(
+      latex = tabularrayOptions(
         preto = "\\hspace{1em}",
       ))
 
