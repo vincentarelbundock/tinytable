@@ -4,7 +4,7 @@
 \alias{ibOptions}
 \title{export}
 \usage{
-ibOptions(bold = TRUE, ...)
+ibOptions(bold = TRUE, color = NULL, ...)
 }
 \description{
 export

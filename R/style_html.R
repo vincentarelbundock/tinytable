@@ -1,3 +1,16 @@
+build_bootstrap_css <- function(css_vector, id, type) {
+  if (type == "cell") {
+    out <- sprintf(".table td.%s {", id)
+  } else if (type == "row") {
+    out <- sprintf(".table tr.%s td {", id)
+  }
+  out <- c(out, paste0(css_vector, ";"))
+  out <- paste(out, collapse = " ")
+  out <- paste(out, "}")
+  return(out)
+}
+
+ 
 #' @export
 ibStyle.IttyBittyTable_html <- function(x,
                                  i = NULL,
@@ -47,10 +60,7 @@ ibStyle.IttyBittyTable_html <- function(x,
 
   cellid <- get_id(stem = "style_row_")
 
-  css <- sprintf("%s .table td.%s {", strrep(" ", 8), cellid)
-  css <- c(css, options$css)
-  css <- paste(css, collapse = "; ")
-
+  css <- build_bootstrap_css(css_vector = options$css, id = cellid, type = "cell")
   out <- bootstrap_setting(out, css, component = "css")
 
   for (row in i) {
