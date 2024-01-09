@@ -1,7 +1,7 @@
 build_bootstrap_css <- function(css_vector, id, type = "cell") {
-  if (type == "cell") {
+  if (type == "row") {
     out <- sprintf(".table tr.%s td {", id)
-  } else if (type == "row") {
+  } else if (type == "cell") {
     out <- sprintf(".table td.%s {", id)
   }
   out <- c(out, paste0(css_vector, ";"))
@@ -28,44 +28,47 @@ ibStyle.IttyBittyTable_html <- function(x,
     options <- options$bootstrap
   }
 
+  loop <- "cell"
+
   # all cells
   if (is.null(i) && is.null(j)){
     i <- seq_len(attr(x, "nrow"))
     j <- seq_len(attr(x, "ncol"))
-    loop <- "cell"
 
   # columns
   # we don't need a separate column block because we need to
   # apply styles at the cell level in HTML anyway. 
   } else if (is.null(i)) {
     i <- seq_len(attr(x, "nrow"))
-    loop <- "cell"
 
   # rows
   # css can be applied to whole rows.
   } else if (is.null(j)) {
     loop <- "row"
+
   }
 
   out <- x
 
-  cellid <- get_id(stem = "ibStyle_")
+  id <- get_id(stem = "ibStyle_")
 
-  css <- build_bootstrap_css(css_vector = options$css, id = cellid, type = "cell")
-  out <- bootstrap_setting(out, css, component = "css")
 
   if (loop == "cell") {
+    css <- build_bootstrap_css(css_vector = options$css, id = id, type = "cell")
+    out <- bootstrap_setting(out, css, component = "css")
     for (row in i) {
       for (col in j) {
         # 0-indexing in JS
-        new <- sprintf("table.rows[%s].cells[%s].classList.add('%s');", row, col - 1, cellid)
+        new <- sprintf("table.rows[%s].cells[%s].classList.add('%s');", row, col, id)
         out <- bootstrap_setting(out, new, component = "row")
       }
     }
   } else if (loop == "row") {
+    css <- build_bootstrap_css(css_vector = options$css, id = id, type = "row")
+    out <- bootstrap_setting(out, css, component = "css")
     for (row in i) {
       # 0-indexing in JS
-      new <- sprintf("table.rows[%s].classList.add('%s');", row, rowid)
+      new <- sprintf("table.rows[%s].classList.add('%s');", row, id)
       out <- bootstrap_setting(out, new, component = "row")
     }
   }
