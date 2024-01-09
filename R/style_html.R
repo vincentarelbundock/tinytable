@@ -52,7 +52,6 @@ ibStyle.IttyBittyTable_html <- function(x,
 
   id <- get_id(stem = "ibStyle_")
 
-
   if (loop == "cell") {
     css <- build_bootstrap_css(css_vector = options$css, id = id, type = "cell")
     out <- bootstrap_setting(out, css, component = "css")

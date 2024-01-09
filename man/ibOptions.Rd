@@ -4,7 +4,13 @@
 \alias{ibOptions}
 \title{export}
 \usage{
-ibOptions(bold = TRUE, color = NULL, ...)
+ibOptions(
+  color = NULL,
+  background = NULL,
+  bold = FALSE,
+  italic = FALSE,
+  monospace = FALSE
+)
 }
 \description{
 export

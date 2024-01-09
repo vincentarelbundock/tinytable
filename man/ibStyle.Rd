@@ -4,16 +4,7 @@
 \alias{ibStyle}
 \title{Style a \code{IttyBittyTable}}
 \usage{
-ibStyle(
-  x,
-  i,
-  j,
-  color = NULL,
-  background = NULL,
-  bold = FALSE,
-  italic = FALSE,
-  options = ibOptions()
-)
+ibStyle(x, i, j, options, ...)
 }
 \arguments{
 \item{x}{A table created by the \code{ibTable()} function.}

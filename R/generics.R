@@ -22,11 +22,8 @@
 ibStyle <- function(x,
                   i,
                   j,
-                  color = NULL,
-                  background = NULL,
-                  bold = FALSE,
-                  italic = FALSE,
-                  options = ibOptions()) {
+                  options,
+                  ...) {
   UseMethod("ibStyle", x)
 }
 

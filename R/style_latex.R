@@ -2,11 +2,7 @@
 ibStyle.IttyBittyTable_latex <- function(x,
                                          i = NULL,
                                          j = NULL,
-                                         color = NULL,
-                                         background = NULL,
-                                         bold = FALSE,
-                                         italic = FALSE,
-                                         options = ibOptions(),
+                                         options = NULL,
                                          ...) {
 
   if (inherits(options, "ibOptions")) {
