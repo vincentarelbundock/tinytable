@@ -1,5 +1,5 @@
 #' @export
-style.IttyBittyTable_html <- function(x,
+ibStyle.IttyBittyTable_html <- function(x,
                                  i = NULL,
                                  j = NULL,
                                  color = NULL,
@@ -15,13 +15,18 @@ style.IttyBittyTable_html <- function(x,
   assert_flag(bold)
   assert_flag(italic)
 
+  if (inherits(options, "ibOptions")) {
+    options <- options$bootstrap
+  }
+
   if (is.null(i)) {
     out <- style_col_IttyBittyTable_html(x = x,
                                        j = j,
                                        color = color,
                                        background = background,
                                        bold = bold,
-                                       italic = italic)
+                                       italic = italic,
+                                       options = options)
     return(out)
   } else if (is.null(j)) {
     out <- style_row_IttyBittyTable_html(x = x,
@@ -29,7 +34,8 @@ style.IttyBittyTable_html <- function(x,
                                     color = color,
                                     background = background,
                                     bold = bold,
-                                    italic = italic)
+                                    italic = italic,
+                                    options = options)
     return(out)
     # all cells
   } else if (is.null(i) && is.null(j)){
@@ -42,25 +48,7 @@ style.IttyBittyTable_html <- function(x,
   cellid <- get_id(stem = "style_row_")
 
   css <- sprintf("%s .table td.%s {", strrep(" ", 8), cellid)
-  if (!is.null(color)) {
-    tmp <- sprintf("%s color: %s", strrep(" ", 10), color)
-    css <- c(css, tmp)
-  }
-  if (!is.null(background)) {
-    tmp <- sprintf("%s background-color: %s", strrep(" ", 10), background)
-    css <- c(css, tmp)
-  }
-  if (isTRUE(bold)) {
-    tmp <- sprintf("%s font-weight: bold", strrep(" ", 10))
-    css <- c(css, tmp)
-  }
-  if (isTRUE(italic)) {
-    tmp <- sprintf("%s font-style: italic", strrep(" ", 10))
-    css <- c(css, tmp)
-  }
-  tmp <- sprintf("%s}", strrep(" ", 8))
-  css <- c(css, tmp)
-  css <- trimws(css)
+  css <- c(css, options$css)
   css <- paste(css, collapse = "; ")
 
   out <- bootstrap_setting(out, css, component = "css")
@@ -101,26 +89,7 @@ style_row_IttyBittyTable_html <- function(x,
   rowid <- get_id(stem = "style_row_")
 
   css <- sprintf("%s .table tr.%s td {", strrep(" ", 8), rowid)
-  if (!is.null(color)) {
-    tmp <- sprintf("%s color: %s", strrep(" ", 10), color)
-    css <- c(css, tmp)
-  }
-  if (!is.null(background)) {
-    tmp <- sprintf("%s background-color: %s", strrep(" ", 10), background)
-    css <- c(css, tmp)
-  }
-  if (isTRUE(bold)) {
-    tmp <- sprintf("%s font-weight: bold", strrep(" ", 10))
-    css <- c(css, tmp)
-  }
-  if (isTRUE(italic)) {
-    tmp <- sprintf("%s font-style: italic", strrep(" ", 10))
-    css <- c(css, tmp)
-  }
-  tmp <- sprintf("%s}", strrep(" ", 8))
-  css <- c(css, tmp)
-  css <- trimws(css)
-  css <- paste(css, collapse = "; ")
+  css <- c(css, paste(options$css, collapse = ";"))
 
   out <- bootstrap_setting(out, css, component = "css")
 

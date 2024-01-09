@@ -19,22 +19,17 @@ ibTable <- function(x,
   output <- sanitize_output(output)
   assert_data_frame(x)
   assert_string(caption, null.ok = TRUE)
-  if (!inherits(latex, "IttyBittyTable_tabularrayOptions")) {
+  if (!inherits(options, "ibOptions")) {
     msg <- "The `options` argument must be a call to the `ibOptions()` or `tabularrayOptions()` function. See `?ibOptions` and `?tabularrayOptions` for details and examples."
-    stop(msg, call. = FALSE)
-  }
-
-  if (!inherits(html, "IttyBittyTable_bootstrapOptions")) {
-    msg <- "The `html` argument must be a call to `ibOptions()` or `bootstrapOptions()` function. See `?tt` and `?bootstrapOptions` for details and examples."
     stop(msg, call. = FALSE)
   }
 
   # build table
   if (output == "latex") {
-    out <- IttyBittyTable_latex(x, caption = caption, settings = latex)
+    out <- IttyBittyTable_latex(x, caption = caption, settings = options)
 
   } else if (output == "html"){
-    out <- IttyBittyTable_html(x, caption = caption, settings = html)
+    out <- IttyBittyTable_html(x, caption = caption, settings = options)
 
   } else {
     out <- IttyBittyTable_markdown(x, caption = caption)

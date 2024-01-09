@@ -1,5 +1,9 @@
 IttyBittyTable_latex <- function(x, caption, settings) {
 
+  if (inherits(settings, "ibOptions"))  {
+    settings <- settings$tabularray
+  }
+
   template <- settings$template
 
   ncols <- ncol(x)

@@ -1,5 +1,5 @@
 
-```{r}
+```{r, eval=FALSE}
 # TODO: position should ignore headers
 # rule should accept flags
 devtools::document()
@@ -9,16 +9,16 @@ x <- mtcars[1:12, 1:8]
 
 pkgload::load_all()
 ibTable(x, output = "latex") |> 
-group_ibt(i = c(
+ibGroup(i = c(
   "I like (fake) hamburgers" = 3,
   "She prefers halloumi" = 4,
   "They love tofu" = 7))
 ```
 
 
-```{r}
+```{r, eval = FALSE}
 ibTable(x, output = "latex") |> 
-  group_ibt(i = c(
+  ibGroup(i = c(
       "I like (fake) hamburgers" = 3,
       "She prefers halloumi" = 4,
       "They love tofu" = 7),
@@ -27,4 +27,17 @@ ibTable(x, output = "latex") |>
     background = "pink",
     rule = FALSE
   )
+```
+
+
+```{r}
+pkgload::load_all()
+x = mtcars[1:5, 1:5]
+ibTable(x, output = "html") |> 
+  ibStyle(
+    i = 2, j = 2,
+    options = ibOptions(bold = TRUE)
+  ) |> cat()
+
+
 ```

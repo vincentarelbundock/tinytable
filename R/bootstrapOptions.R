@@ -4,7 +4,6 @@
 #' @param css TODO
 #' @export
 bootstrapOptions <- function(class = "table", css = "", ...) {
-
   template <- readLines(system.file("templates/bootstrap.html", package = "IttyBittyTable"))
   out <- list(
     template = template,

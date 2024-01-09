@@ -4,13 +4,7 @@
 \alias{ibTable}
 \title{Draw a table}
 \usage{
-ibTable(
-  x,
-  output = NULL,
-  caption = NULL,
-  latex = tabularrayOptions(),
-  html = bootstrapOptions()
-)
+ibTable(x, output = NULL, caption = NULL, options = ibOptions())
 }
 \arguments{
 \item{x}{A data frame}

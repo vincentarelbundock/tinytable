@@ -19,18 +19,17 @@
 #' @return Returns the modified table object with the specified cell styles applied.
 #' @template tabularray
 #' @export
-style <- function(x,
+ibStyle <- function(x,
                   i,
                   j,
                   color = NULL,
                   background = NULL,
                   bold = FALSE,
                   italic = FALSE,
-                  latex = tabularrayOptions(),
-                  html = bootstrapOptions()) {
-  UseMethod("style", x)
+                  options = ibOptions()) {
+  UseMethod("ibStyle", x)
 }
 
 
 #' @export
-style.default <- function(x, ...) return(x)
+ibStyle.default <- function(x, ...) return(x)

@@ -1,13 +1,17 @@
 #' @export
-style.IttyBittyTable_latex <- function(x,
-                                       i = NULL,
-                                       j = NULL,
-                                       color = NULL,
-                                       background = NULL,
-                                       bold = FALSE,
-                                       italic = FALSE,
-                                       options = tabularrayOptions(),
-                                       ...) {
+ibStyle.IttyBittyTable_latex <- function(x,
+                                         i = NULL,
+                                         j = NULL,
+                                         color = NULL,
+                                         background = NULL,
+                                         bold = FALSE,
+                                         italic = FALSE,
+                                         options = ibOptions(),
+                                         ...) {
+
+  if (inherits(options, "ibOptions")) {
+    options <- options$tabularray
+  }
 
   out <- x
 

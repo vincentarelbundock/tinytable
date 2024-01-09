@@ -1,4 +1,9 @@
 IttyBittyTable_html <- function(x, caption, settings) {
+
+  if (inherits(settings, "ibOptions")) {
+    settings <- settings$bootstrap
+  }
+
   template <- settings$template
 
   # insert bootstrap class and css
