@@ -29,7 +29,6 @@ x <- mtcars[1:4, 1:5]
 tt(x)
 ```
 
-
 # Output formats
 
 `tinytable` can produce tables in HTML, Markdown, or LaTeX (PDF) format. To choose, we use the `output` argument:
@@ -46,8 +45,16 @@ When calling `tinytable` from a Quarto or Rmarkdown document, `tinytable` detect
 
 # Style
 
+`tinytable` exports three styling functions:
 
-The `style()` function allows us to apply visual styles to our table. This includes customizing features such as:
+1. `style_tt()`: LaTeX, PDF, and HTML 
+  - A general interface to frequently used style choices which works for both HTML and LaTeX (PDF): colors, font style and size, row and column spans, etc.
+2. `style_tabularray()`: LaTeX
+  - A specialized interface which allows users to use the [extraordinarily powerful `tabularray` package](https://ctan.org/pkg/tabularray?lang=en) to customize LaTeX tables.
+2. `style_bootstrap()`: HTML
+  - A specialized interface which allows users to use the [powerful `Bootstrap` framework](https://getbootstrap.com/docs/5.3/content/tables/) to customize HTML tables.
+
+These functions can be used to customize rows, columns, or individual cells. They control many features, including:
 
 * Text color
 * Background color
@@ -62,22 +69,7 @@ The `style()` function allows us to apply visual styles to our table. This inclu
 * Font Styling
 * Header Customization
 
-The main arguments of the `style()` function are rather self-explanatory:
-
-* `i` row numbers: integer vector or `NULL` to style all rows.
-* `j` column numbers: integer vector or `NULL` to style all columns.
-* `color`: text color
-* `background`: background color
-* `bold`: bold text
-* `italic`: bold text
-* `align`: horizontal alignment
-
-In addition, `style()` accepts two more arguments which allow unlimited possibilities for customizing every possible aspect of your tables in HTML or LaTeX (PDF):
-
-* `latex = bootstrapOptions()` for tabularray
-* `html = bootstrapOptions()` for Bootstrap
-
-We discuss these extra arguments near the end of this page.
+The `style_*()` functions can modify individual cells, or entire columns and rows. The portion of the table that is styled is determined by the `i` (rows)  and `j` (columns) arguments.
 
 
 ## Cells
@@ -85,8 +77,9 @@ We discuss these extra arguments near the end of this page.
 To style individual cells, we use the `style_cell()`  function. The first two arguments (`i` and `j`) identify the positions of the cells of interest, by row and column numbers respectively. To style a cell in the 2nd row and 3rd column, we can do:
 
 ```{r}
-tt(x) |>
-  style(
+pkgload::load_all()
+tt(x, output = "html") |>
+  style_tt(
     i = 2,
     j = 3,
     background = "black",
@@ -98,14 +91,14 @@ tt(x) |>
 The `i` and `j` accept vectors of integers to modify several cells at once:
 
 ```{r}
-tt(x) |> style(2, c(1, 3), background = "olive")
+tt(x) |> style_tt(2, c(1, 3), background = "olive")
 ```
 
 We can style all cells in a table by omitting the `i` and `j` arguments:
 
 
 ```{r}
-tt(x) |> style(background = "black", color = "white", bold = TRUE)
+tt(x) |> style_tt(background = "black", color = "white", bold = TRUE)
 ```
 
 ## Rows and columns
@@ -113,11 +106,11 @@ tt(x) |> style(background = "black", color = "white", bold = TRUE)
 We can style entire rows by omitting the `j` argument, or style entire columns by omitting the `i` argument:
 
 ```{r}
-tt(x) |> style(i = 1:2, color = "blue")
+tt(x) |> style_tt(i = 1:2, color = "blue")
 ```
 
 ```{r}
-tt(x) |> style(j = c(2, 4), bold = TRUE)
+tt(x) |> style_tt(j = c(2, 4), bold = TRUE)
 ```
 
 # Headers
@@ -142,22 +135,26 @@ TODO: Cross-references
 
 # HTML customization
 
-_Warning:_ The `html` argument is only used for HTML tables, and it is ignored when `tinytable` creates LaTeX tables for PDF files. You can skip this section if you are reading the PDF version of this tutorial.
+::: {.content-visible when-format="pdf"}
+_Warning:_ The HTML customization options described in this section are not available for LaTeX (or PDF) documents. Please refer to the web documentation to view this tutorial.
+:::
 
+
+::: {.content-visible when-format="html"}
 ## Themes
 
 The Bootstrap framework provides a number of built-in themes to style tables. To use them, we call `bootstrapOptions()` with the `class` argument, and we specify the Bootstrap class. A list of available Bootstrap classes can be found here: <https://getbootstrap.com/docs/5.3/content/tables/>
 
 For example, to produce a "dark" table, we use the `table-dark` class:
 
-```{r}
-tt(x, html = bootstrapOptions(class = "table table-dark"))
+```{r, eval = knitr::is_html_output()}
+tt(x, theme = "table table-dark")
 ```
 
-We can also combine several Bootstrap classes. Here, we get a "striped" table with the "warning" color:
+We can also combine several Bootstrap classes. Here, we get a "striped" table with the "warning" color and hover feature:
 
-```{r}
-tt(x, html = bootstrapOptions(class = "table table-striped table-warning"))
+```{r, eval = knitr::is_html_output()}
+tt(x, theme = "table table-striped table-warning table-hover")
 ```
 
 ## CSS
@@ -166,17 +163,25 @@ For manual customization, we can also specify our own CSS class.
 
 
 
+:::
+
+
+
 # LaTeX / PDF customization
 
-_Warning:_ The `latex` argument is only used for LaTeX/PDF tables, and it is ignored when `tinytable` creates HTML tables for the web. You can skip this section if you are reading the HTML version of this tutorial.
+::: {.content-visible when-format="html"}
+_Warning:_ The LaTeX / PDF customization options described in this section are not available for LaTeX (or PDF) documents. Please refer to the PDF documentation hosted on the website: Click on the tutorial web page and view the PDF link in the sidebar.
+:::
+
+
+::: {.content-visible when-format="pdf"}
 
 ```{r}
-tt(x, latex = bootstrapOptions(theme = "void", hlines = ""))
+tt(x)
 ```
 
 
-```{r}
-pkgload::load_all()
+```{r, eval = knitr::is_latex_output()}
 options(tt_latex_placement = "H")
 inner <- "
  hlines = {white},
@@ -191,3 +196,5 @@ mtcars[1:5, 1:4] |>
   tt(theme = "void") |>
   style_tabularray(inner = inner)
 ```
+
+:::

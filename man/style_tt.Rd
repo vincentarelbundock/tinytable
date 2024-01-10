@@ -17,9 +17,7 @@ style_tt(
   width = NULL,
   align = NULL,
   colspan = NULL,
-  rowspan = NULL,
-  tabularray = NULL,
-  bootstrap = NULL
+  rowspan = NULL
 )
 }
 \description{

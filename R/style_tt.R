@@ -13,9 +13,7 @@ style_tt <- function(
   width = NULL,
   align = NULL,
   colspan = NULL,
-  rowspan = NULL,
-  tabularray = NULL,
-  bootstrap = NULL) {
+  rowspan = NULL) {
 
   # TODO: cmd needs to be concatenated when there are many
 
@@ -93,31 +91,36 @@ style_tt <- function(
   tabularray <- paste0(paste(tabularray, collapse = ","), ",")
 
 
+  # TODO: style_tt probably doesn't work with HTML
   if (inherits(x, "tinytable_bootstrap")) {
-
+    css <- sapply(arguments, function(x) x[["bootstrap"]])
+    css <- paste(css, collapse = ";")
+    out <- style_bootstrap(x, i, j, css)
+    return(out)
   }
 
+  if (inherits(x, "tinytable_tabularray")) {
+    # specified columns or all cells
+    if (missing(i)) {
+      if (missing(j)) {
+        j <- seq_len(attr(x, "ncol"))
+      }
+      colspec <- sprintf("column{%s}={%s},", paste(j, collapse = ","), tabularray)
+      out <- style_tabularray(x, inner = colspec)
 
-  # specified columns or all cells
-  if (missing(i)) {
-    if (missing(j)) {
-      j <- seq_len(attr(x, "ncol"))
+      # specified rows
+    } else if (missing(j)) {
+      rowspec <- sprintf("row{%s}={%s},", paste(i, collapse = ","), tabularray)
+      out <- style_tabularray(x, inner = rowspec)
+
+      # specified cells
+    } else {
+      cellspec <- sprintf("cell{%s}{%s}={%s},",
+                          paste(i, collapse = ","),
+                          paste(j, collapse = ","),
+                          tabularray)
+      out <- style_tabularray(x, inner = cellspec)
     }
-    colspec <- sprintf("column{%s}={%s},", paste(j, collapse = ","), tabularray)
-    out <- style_tabularray(x, inner = colspec)
-
-  # specified rows
-  } else if (missing(j)) {
-    rowspec <- sprintf("row{%s}={%s},", paste(i, collapse = ","), tabularray)
-    out <- style_tabularray(x, inner = rowspec)
-
-  # specified cells
-  } else {
-    cellspec <- sprintf("cell{%s}{%s}={%s},",
-                        paste(i, collapse = ","),
-                        paste(j, collapse = ","),
-                        tabularray)
-    out <- style_tabularray(x, inner = cellspec)
   }
 
   return(out)
