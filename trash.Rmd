@@ -2,7 +2,7 @@
 output: pdf_document
 ---
 
-```{r, eval=FALSE}
+```{r, eval=knitr::is_latex_output()}
 pkgload::load_all()
 # options(tt_latex_placement = "H")
 inner <- "
@@ -25,7 +25,9 @@ mtcars[1:5, 1:4] |>
 ```{r}
 pkgload::load_all()
 x <- mtcars[1:4, 1:4]
-# tt(x, output = "html")
-tt(x, output = "latex", theme = "void") |>
-  style_tt(, 3:4, background = "black", color = "white")
+tt(x, output = "html", theme = "void")
+tt(x, output = "html", theme = "table table-striped-columns")
+
+# tt(x, output = "latex", theme = "void") |>
+  # style_tt(, 3:4, background = "black", color = "white") |> cat()
 ```

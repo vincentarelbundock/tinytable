@@ -2,17 +2,6 @@ tt_bootstrap <- function(x, caption, theme, extendable) {
 
   template <- template_bootstrap(theme)
 
-  # insert bootstrap class and css
-  template <- gsub(
-    "$tinytable_BOOTSTRAP_CLASS",
-    settings$class,
-    template,
-    fixed = TRUE)
-  template <- gsub(
-    "$tinytable_BOOTSTRAP_CSS",
-    settings$css,
-    template,
-    fixed = TRUE)
 
   # caption
   if (is.null(caption)) {
