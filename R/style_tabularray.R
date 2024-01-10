@@ -1,31 +1,40 @@
 #' @export
 style_tabularray <- function(x,
-                             inner = "",
-                             outer = "") {
+                             inner = NULL,
+                             outer = NULL,
+                             placement = getOption("tt_latex_placement", default = NULL)) {
 
-  # TODO: assertion on x when we have figured out which class to assign
-  # TODO: modify style_tabularray() to accept inner, outer, etc. Then, sort the arguments in 
-  # buckets, and feed it to style_tabularray()
-  
-  assert_string(inner)
-  assert_string(outer)
+  if (!inherits(x, "tinytable_tabularray")) return(x)
+  if (is.null(inner) && is.null(outer)) return(x)
+
+  assert_string(inner, null.ok = TRUE)
+  assert_string(outer, null.ok = TRUE)
+  assert_string(placement, null.ok = TRUE)
 
   att <- attributes(x)    
   out <- strsplit(x, "\n")[[1]]
 
-  # inner
-  idx <- grep("% tabularray inner close", out)
-  out <- c(
-    out[1:(idx - 1)],
-    new,
-    out[idx:length(out)])
+  if (!is.null(placement)) {
+    out <- sub("\\begin{table}", sprintf("\\begin{table}[%s]", placement), out, fixed = TRUE)
+  }
 
-  # outer
-  idx <- grep("% tabularray outer close", out)
-  out <- c(
-    out[1:(idx - 1)],
-    new,
-    out[idx:length(out)])
+  if (!is.null(inner)) {
+    idx <- grep("% tabularray inner close", out)
+    out <- c(
+      out[1:(idx - 1)],
+      # empty lines can break latex
+      trimws(inner),
+      out[idx:length(out)])
+  }
+
+  if (!is.null(inner)) {
+    idx <- grep("% tabularray outer close", out)
+    out <- c(
+      out[1:(idx - 1)],
+      # empty lines can break latex
+      trimws(outer),
+      out[idx:length(out)])
+  }
 
   # rebuild
   out <- paste(out, collapse = "\n")

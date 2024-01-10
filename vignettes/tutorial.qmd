@@ -26,7 +26,7 @@ pkgload::load_all()
 
 x <- mtcars[1:4, 1:5]
 
-ibTable(x)
+tt(x)
 ```
 
 
@@ -36,9 +36,9 @@ ibTable(x)
 
 ```{r}
 #| eval: false
-ibTable(x, output = "html")
-ibTable(x, output = "latex")
-ibTable(x, output = "markdown")
+tt(x, output = "html")
+tt(x, output = "latex")
+tt(x, output = "markdown")
 ```
 
 When calling `tinytable` from a Quarto or Rmarkdown document, `tinytable` detects the output format automatically and generates an HTML or LaTeX table as appropriate. This means that we do not need to explicitly specify the `output` format.
@@ -85,7 +85,7 @@ We discuss these extra arguments near the end of this page.
 To style individual cells, we use the `style_cell()`  function. The first two arguments (`i` and `j`) identify the positions of the cells of interest, by row and column numbers respectively. To style a cell in the 2nd row and 3rd column, we can do:
 
 ```{r}
-ibTable(x) |>
+tt(x) |>
   style(
     i = 2,
     j = 3,
@@ -98,14 +98,14 @@ ibTable(x) |>
 The `i` and `j` accept vectors of integers to modify several cells at once:
 
 ```{r}
-ibTable(x) |> style(2, c(1, 3), background = "olive")
+tt(x) |> style(2, c(1, 3), background = "olive")
 ```
 
 We can style all cells in a table by omitting the `i` and `j` arguments:
 
 
 ```{r}
-ibTable(x) |> style(background = "black", color = "white", bold = TRUE)
+tt(x) |> style(background = "black", color = "white", bold = TRUE)
 ```
 
 ## Rows and columns
@@ -113,11 +113,11 @@ ibTable(x) |> style(background = "black", color = "white", bold = TRUE)
 We can style entire rows by omitting the `j` argument, or style entire columns by omitting the `i` argument:
 
 ```{r}
-ibTable(x) |> style(i = 1:2, color = "blue")
+tt(x) |> style(i = 1:2, color = "blue")
 ```
 
 ```{r}
-ibTable(x) |> style(j = c(2, 4), bold = TRUE)
+tt(x) |> style(j = c(2, 4), bold = TRUE)
 ```
 
 # Headers
@@ -127,14 +127,14 @@ The header can be omitted from the table by deleting the column names in the `x`
 ```{r}
 k <- x
 colnames(k) <- NULL
-ibTable(k)
+tt(k)
 ```
 
 
 # Captions and cross-references
 
 ```{r}
-ibTable(x, caption = "Data about cars.")
+tt(x, caption = "Data about cars.")
 ```
 
 TODO: Cross-references
@@ -151,13 +151,13 @@ The Bootstrap framework provides a number of built-in themes to style tables. To
 For example, to produce a "dark" table, we use the `table-dark` class:
 
 ```{r}
-ibTable(x, html = bootstrapOptions(class = "table table-dark"))
+tt(x, html = bootstrapOptions(class = "table table-dark"))
 ```
 
 We can also combine several Bootstrap classes. Here, we get a "striped" table with the "warning" color:
 
 ```{r}
-ibTable(x, html = bootstrapOptions(class = "table table-striped table-warning"))
+tt(x, html = bootstrapOptions(class = "table table-striped table-warning"))
 ```
 
 ## CSS
@@ -171,5 +171,23 @@ For manual customization, we can also specify our own CSS class.
 _Warning:_ The `latex` argument is only used for LaTeX/PDF tables, and it is ignored when `tinytable` creates HTML tables for the web. You can skip this section if you are reading the HTML version of this tutorial.
 
 ```{r}
-ibTable(x, latex = bootstrapOptions(theme = "void", hlines = ""))
+tt(x, latex = bootstrapOptions(theme = "void", hlines = ""))
+```
+
+
+```{r}
+pkgload::load_all()
+options(tt_latex_placement = "H")
+inner <- "
+ hlines = {white},
+ vlines = {white},
+ cell{1,6}{odd} = {teal7},
+ cell{1,6}{even} = {green7},
+ cell{2,4}{1,4} = {red7},
+ cell{3,5}{1,4} = {purple7},
+ cell{2}{2} = {r=4,c=2}{c,azure7},
+"
+mtcars[1:5, 1:4] |>
+  tt(theme = "void") |>
+  style_tabularray(inner = inner)
 ```

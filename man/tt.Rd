@@ -25,7 +25,7 @@ Draw a table
 }
 \section{LaTeX \code{tabularray} options}{
 
-\subsection{Table: \code{ibTable()}}{
+\subsection{Table: \code{tt()}}{
 
 Inner specifications:\tabular{lll}{
    Key \tab Description and Values \tab Initial Value \cr

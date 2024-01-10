@@ -50,7 +50,7 @@ style_bootstrap <- function(x,
 
   out <- x
 
-  id <- get_id(stem = "ibStyle_")
+  id <- get_id(stem = "style_tt_")
 
   if (loop == "cell") {
     css <- build_bootstrap_css(css_vector = options$css, id = id, type = "cell")

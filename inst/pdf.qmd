@@ -13,49 +13,49 @@ x <- mtcars[1:4, 1:5]
 ```
 
 ```{r}
-ibTable(x) |> style_row(2, color = "blue", background = "pink")
+tt(x) |> style_row(2, color = "blue", background = "pink")
 ```
 
 ```{r}
-ibTable(x) |>
+tt(x) |>
   style_col(1:2, color = "white", background = "black", bold = TRUE, italic = TRUE)
 ```
 
 ```{r}
-ibTable(x) |> style_row(italic = TRUE, bold = TRUE, color = "blue", background = "pink")
+tt(x) |> style_row(italic = TRUE, bold = TRUE, color = "blue", background = "pink")
 ```
 
 ```{r}
-ibTable(x) |> style_col(background = "green", color = "white") |> cat(file = "~/Downloads/trash.html")
+tt(x) |> style_col(background = "green", color = "white") |> cat(file = "~/Downloads/trash.html")
 ```
 
 ```{r}
-ibTable(x) |>
+tt(x) |>
   style_row(2, latex = bootstrapOptions(cmd = "\\LARGE\\texttt")) |>
   style_col(2, latex = bootstrapOptions(cmd = "\\footnotesize\\texttt"))
 ```
 
 ```{r}
-ibTable(x) |> style_col(c(1, 4), italic = TRUE)
+tt(x) |> style_col(c(1, 4), italic = TRUE)
 ```
 
 ```{r}
-ibTable(x) |> style_row(2:3, background = "olive", color = "white")
+tt(x) |> style_row(2:3, background = "olive", color = "white")
 ```
 
 ```{r}
-ibTable(x) |> style_row(2:3,
+tt(x) |> style_row(2:3,
   latex = bootstrapOptions(
     cmd = "\\texttt"
     ))
 ```
 
 ```{r}
-ibTable(x, latex = bootstrapOptions(theme = "grid"))
+tt(x, latex = bootstrapOptions(theme = "grid"))
 ```
 
 ```{r}
-ibTable(x,
+tt(x,
   latex = bootstrapOptions(
     theme = "void",
     hlines = "dotted,fg=blue",
@@ -64,7 +64,7 @@ ibTable(x,
 ```
 
 ```{r}
-ibTable(x)
+tt(x)
 ```
 
 # Themes
@@ -72,21 +72,21 @@ ibTable(x)
 `tinytable` includes three basic "themes" for LaTeX tables: `"booktabs"` (default), `"grid"`, and `"void"`. The theme can be selected using the `bootstrapOptions()` function.
 
 ```{r}
-ibTable(x, latex = bootstrapOptions(theme = "booktabs"))
+tt(x, latex = bootstrapOptions(theme = "booktabs"))
 ```
 
 ```{r}
-ibTable(x, latex = bootstrapOptions(theme = "grid"))
+tt(x, latex = bootstrapOptions(theme = "grid"))
 ```
 
 ```{r}
-ibTable(x, latex = bootstrapOptions(theme = "void"))
+tt(x, latex = bootstrapOptions(theme = "void"))
 ```
 
 The `"void"` theme can be useful when combined with the `hline*`  and `vline*` arguments. For example:
 
 ```{r}
-ibTable(x,
+tt(x,
   latex = bootstrapOptions(
     theme = "void",
     hline = c("1,6", "fg=orange,wd=2pt"),
@@ -108,7 +108,7 @@ k <- data.frame(
   verbatim = c("a_b", "$a_b$"),
   evaluated = c("a\\_b", "$a_b$")
 )
-ibTable(k) |> 
+tt(k) |> 
   style_col(1, latex = bootstrapOptions(cmd = "\\fakeverb")) |> cat()
 ```
 
