@@ -35,7 +35,7 @@
 #' | `expand`  | you need this key to use verb commands          | None          |
 #'
 #'
-#' ## Cells: `style_cell()`
+#' ## cell:
 #'
 #'
 #' | Key     | Description and Values                                                         | Initial Value |
@@ -54,7 +54,7 @@
 #' | `c`     | number of columns the cell spans         | 1             |
 #'
 #'
-#' ## Rows: `style_row()`
+#' ## row:
 #'
 #'
 #' | Key        | Description and Values                                                              | Initial Value |
@@ -74,7 +74,7 @@
 #' | `appto`    | append text to every cell (like `<` specifier in `rowspec`)                         | None          |
 #'
 #'
-#' ## Columns: `style_col()`
+#' ## column:
 #'
 #'
 #' | Key         | Description and Values                                                         | Initial Value |

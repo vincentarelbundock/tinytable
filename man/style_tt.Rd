@@ -2,7 +2,7 @@
 % Please edit documentation in R/style_tt.R
 \name{style_tt}
 \alias{style_tt}
-\title{export}
+\title{Style a LaTeX and HTML tables}
 \usage{
 style_tt(
   x,
@@ -23,5 +23,5 @@ style_tt(
 )
 }
 \description{
-export
+Style a LaTeX and HTML tables
 }

@@ -15,18 +15,12 @@ build_bootstrap_css <- function(css_vector, id, type = "cell") {
 style_bootstrap <- function(x,
                             i,
                             j,
-                            options,
-                            ...) {
+                            css) {
 
   if (missing(i)) i <- NULL
   if (missing(j)) j <- NULL
-  if (missing(options)) options <- do.call(style_tt, list(...))
   assert_integerish(i, lower = 1, null.ok = TRUE)
   assert_integerish(j, lower = 1, null.ok = TRUE)
-
-  if (inherits(options, "style_tt")) {
-    options <- options$bootstrap
-  }
 
   loop <- "cell"
 
@@ -53,7 +47,7 @@ style_bootstrap <- function(x,
   id <- get_id(stem = "style_tt_")
 
   if (loop == "cell") {
-    css <- build_bootstrap_css(css_vector = options$css, id = id, type = "cell")
+    css <- build_bootstrap_css(css_vector = css, id = id, type = "cell")
     out <- bootstrap_setting(out, css, component = "css")
     for (row in i) {
       for (col in j) {
@@ -63,7 +57,7 @@ style_bootstrap <- function(x,
       }
     }
   } else if (loop == "row") {
-    css <- build_bootstrap_css(css_vector = options$css, id = id, type = "row")
+    css <- build_bootstrap_css(css_vector = css, id = id, type = "row")
     out <- bootstrap_setting(out, css, component = "css")
     for (row in i) {
       # 0-indexing in JS
@@ -71,6 +65,8 @@ style_bootstrap <- function(x,
       out <- bootstrap_setting(out, new, component = "row")
     }
   }
+
+  class(out) <- class(x)
 
   return(out)
 }

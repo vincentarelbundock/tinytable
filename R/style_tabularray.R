@@ -1,10 +1,12 @@
+#' Style LaTeX tables using tabularray
+#'
+#' @template tabularray
 #' @export
 style_tabularray <- function(x,
                              inner = NULL,
                              outer = NULL,
                              placement = getOption("tt_latex_placement", default = NULL)) {
 
-  if (!inherits(x, "tinytable_tabularray")) return(x)
   if (is.null(inner) && is.null(outer)) return(x)
 
   assert_string(inner, null.ok = TRUE)

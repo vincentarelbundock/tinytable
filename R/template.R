@@ -1,6 +1,8 @@
 template_tabularray <- function(theme = "default") {
-  assert_choice(theme, c("default", "grid", "void"))
+  assert_choice(theme, c("default", "grid", "void", "striped"))
   if (theme == "default") {
+    out <- readLines(system.file("templates/tabularray_default.tex", package = "tinytable"))
+  } else if (theme == "striped") {
     out <- readLines(system.file("templates/tabularray_default.tex", package = "tinytable"))
   } else if (theme == "void") {
     out <- readLines(system.file("templates/tabularray_void.tex", package = "tinytable"))
@@ -33,6 +35,13 @@ template_bootstrap <- function(theme = "default") {
     out <- gsub(
       "$tinytable_BOOTSTRAP_CLASS",
       "table table-bordered",
+      out,
+      fixed = TRUE)
+
+  } else if (theme == "striped") {
+    out <- gsub(
+      "$tinytable_BOOTSTRAP_CLASS",
+      "table table-striped",
       out,
       fixed = TRUE)
 

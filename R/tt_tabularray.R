@@ -25,7 +25,7 @@ tt_tabularray <- function(x, caption, theme, extendable) {
   body <- paste(body, "\\\\")
 
   # theme: booktabs
-  if (isTRUE(theme == "booktabs")) {
+  if (isTRUE(theme %in% c("default", "striped"))) {
     if (!is.null(colnames(x))) {
       # %% are important to distinguish between potentially redundant data rows
       header[length(header)] <- paste(header[length(header)], "\\midrule %% TinyTableHeader")
@@ -54,10 +54,14 @@ tt_tabularray <- function(x, caption, theme, extendable) {
   colspec <- sprintf("colspec={%s},", paste(tabularray_cols, collapse = ""))
   out <- style_tabularray(out, inner = colspec)     
 
-  # theme: grid
+  # themes
   if (theme == "grid") {
     out <- style_tabularray(out, inner = "hlines={},vlines={},")     
+  } else if (theme == "striped") {
+    out <- style_tabularray(out, inner = "row{even}={bg=black!5!white},")
   }
+
+
 
   attr(out, "nhead") <- if (is.null(colnames(x))) 0 else 1
   attr(out, "ncol") <- ncols

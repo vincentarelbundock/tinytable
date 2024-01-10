@@ -1,4 +1,6 @@
-#' export
+#' Style a LaTeX and HTML tables
+#'
+#' @export
 style_tt <- function(
   x,
   i, j,
@@ -90,6 +92,12 @@ style_tt <- function(
   tabularray <- sapply(arguments, function(x) x[["tabularray"]])
   tabularray <- paste0(paste(tabularray, collapse = ","), ",")
 
+
+  if (inherits(x, "tinytable_bootstrap")) {
+
+  }
+
+
   # specified columns or all cells
   if (missing(i)) {
     if (missing(j)) {
@@ -111,8 +119,6 @@ style_tt <- function(
                         tabularray)
     out <- style_tabularray(x, inner = cellspec)
   }
-
-  class(out) <- c("style_tt", class(out))
 
   return(out)
 }

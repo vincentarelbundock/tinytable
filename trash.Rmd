@@ -16,18 +16,15 @@ inner <- "
 "
 mtcars[1:5, 1:4] |>
   #, align = "cccc" tt(theme = "void", align = "cccc", output = "latex") |>
-  tt(theme = "void", align = "cccc", output = "latex") |>
+  tt(theme = "void", align = "cccc") |>
   style_tabularray(inner = inner)
 ```
 
 
 
-```{r}
+```{r, eval = TRUE}
 pkgload::load_all()
 x <- mtcars[1:4, 1:4]
-tt(x, output = "html", theme = "void")
-tt(x, output = "html", theme = "table table-striped-columns")
-
-# tt(x, output = "latex", theme = "void") |>
-  # style_tt(, 3:4, background = "black", color = "white") |> cat()
+tt(x, output = "html", theme = "table table-dark table-hover") 
+  # style_tt(1, 2, background = "red")
 ```

@@ -1,13 +1,13 @@
 #' Draw a table
 #'
-#' @param x A data frame
-#' @param output "markdown", "latex", or "html". If `output` is `NULL`, then:
+#' @param x dataframe
+#' @param output string "markdown", "latex", or "html". If `output` is `NULL`, then:
 #' * "html" if `knitr::is_html_output()` is `TRUE`
 #' * "latex" if `knitr::is_latex_output()` is `TRUE`
 #' * Otherwise determined by setting a global option: `options(tt_output_default = "markdown")`
-#' @param latex Options to customize   LaTeX tables. See `?options_tabularray` and the examples section below.
-#' @param html Options to customize HTML tables. See `?options_bootstrap` and the examples section below.
-#' @template tabularray
+#' @param theme string 
+#' * LaTeX: "default", "striped", "void", or "grid".
+#' * HTML: "default", "striped", "void", "grid", or a (composite) Bootstrap class such as `"table table-dark"` or `"table table-dark table-hover"`. See 
 #' @export
 tt <- function(x,
                output = NULL,
