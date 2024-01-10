@@ -13,7 +13,7 @@ tt <- function(x,
                output = NULL,
                align = NULL,
                caption = NULL,
-               theme = "booktabs",
+               theme = "default",
                extendable = FALSE) {
 
   # sanity checks
@@ -27,7 +27,7 @@ tt <- function(x,
     out <- tinytable_tabularray(x, caption = caption, theme = theme, extendable = extendable)
 
   } else if (output == "html"){
-    out <- tinytable_html(x, caption = caption, settings = options)
+    out <- tinytable_html(x, caption = caption, theme = theme, extendable = extendable)
 
   } else {
     out <- tinytable_markdown(x, caption = caption)

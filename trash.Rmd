@@ -2,7 +2,7 @@
 output: pdf_document
 ---
 
-```{r}
+```{r, eval=FALSE}
 pkgload::load_all()
 # options(tt_latex_placement = "H")
 inner <- "
@@ -18,4 +18,14 @@ mtcars[1:5, 1:4] |>
   #, align = "cccc" tt(theme = "void", align = "cccc", output = "latex") |>
   tt(theme = "void", align = "cccc", output = "latex") |>
   style_tabularray(inner = inner)
+```
+
+
+
+```{r}
+pkgload::load_all()
+x <- mtcars[1:4, 1:4]
+# tt(x, output = "html")
+tt(x, output = "latex", theme = "void") |>
+  style_tt(, 3:4, background = "black", color = "white")
 ```
