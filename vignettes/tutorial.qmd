@@ -1,5 +1,5 @@
 ---
-title: "`IttyBittyTable` tutorial"
+title: "`tinytable` tutorial"
 format:
   html: default
   pdf:
@@ -18,10 +18,10 @@ This tutorial is available in two versions:
 * [HTML](tutorial.html)
 
 
-# `IttyBittyTable` is easy to use
+# `tinytable` is easy to use
 
 ```{r}
-# library(IttyBittyTable)
+# library(tinytable)
 pkgload::load_all()
 
 x <- mtcars[1:4, 1:5]
@@ -32,7 +32,7 @@ ibTable(x)
 
 # Output formats
 
-`IttyBittyTable` can produce tables in HTML, Markdown, or LaTeX (PDF) format. To choose, we use the `output` argument:
+`tinytable` can produce tables in HTML, Markdown, or LaTeX (PDF) format. To choose, we use the `output` argument:
 
 ```{r}
 #| eval: false
@@ -41,7 +41,7 @@ ibTable(x, output = "latex")
 ibTable(x, output = "markdown")
 ```
 
-When calling `IttyBittyTable` from a Quarto or Rmarkdown document, `IttyBittyTable` detects the output format automatically and generates an HTML or LaTeX table as appropriate. This means that we do not need to explicitly specify the `output` format.
+When calling `tinytable` from a Quarto or Rmarkdown document, `tinytable` detects the output format automatically and generates an HTML or LaTeX table as appropriate. This means that we do not need to explicitly specify the `output` format.
 
 
 # Style
@@ -142,7 +142,7 @@ TODO: Cross-references
 
 # HTML customization
 
-_Warning:_ The `html` argument is only used for HTML tables, and it is ignored when `IttyBittyTable` creates LaTeX tables for PDF files. You can skip this section if you are reading the PDF version of this tutorial.
+_Warning:_ The `html` argument is only used for HTML tables, and it is ignored when `tinytable` creates LaTeX tables for PDF files. You can skip this section if you are reading the PDF version of this tutorial.
 
 ## Themes
 
@@ -168,7 +168,7 @@ For manual customization, we can also specify our own CSS class.
 
 # LaTeX / PDF customization
 
-_Warning:_ The `latex` argument is only used for LaTeX/PDF tables, and it is ignored when `IttyBittyTable` creates HTML tables for the web. You can skip this section if you are reading the HTML version of this tutorial.
+_Warning:_ The `latex` argument is only used for LaTeX/PDF tables, and it is ignored when `tinytable` creates HTML tables for the web. You can skip this section if you are reading the HTML version of this tutorial.
 
 ```{r}
 ibTable(x, latex = bootstrapOptions(theme = "void", hlines = ""))

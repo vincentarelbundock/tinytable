@@ -10,4 +10,4 @@ website: ## render vignettes and website
 	Rscript -e "devtools::document();devtools::install()"
 	Rscript -e "altdoc::render_docs(verbose = TRUE)"
 	rm -rf _quarto
-	rm -rf ~/Downloads/IttyBittyTable_website && cp -r docs ~/Downloads/IttyBittyTable_website
+	rm -rf ~/Downloads/tinytable_website && cp -r docs ~/Downloads/tinytable_website

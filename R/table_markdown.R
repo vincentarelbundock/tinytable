@@ -17,12 +17,12 @@ align_str_center <- function(x, pad_n = NULL) {
     paste0(left, x, right)
 }
 
-print.IttyBittyTable_markdown <- function(x, ...) {
+print.tinytable_markdown <- function(x, ...) {
     cat("\n")
     cat(x, sep = "\n")
 }
 
-IttyBittyTable_markdown <- function(tab, caption, ...) {
+tinytable_markdown <- function(tab, caption, ...) {
 
   # fake spans
   colnames(tab) <- gsub("\\|{4}", " / ", colnames(tab))
@@ -82,7 +82,7 @@ IttyBittyTable_markdown <- function(tab, caption, ...) {
   # }
 
   # output
-  class(tab) <- c("IttyBittyTable_markdown", "knitr_kable")
+  class(tab) <- c("tinytable_markdown", "knitr_kable")
   attr(tab, "format") <- "pipe"
 
   # output

@@ -12,19 +12,19 @@ build_bootstrap_css <- function(css_vector, id, type = "cell") {
 
 
 #' @export
-ibStyle.IttyBittyTable_html <- function(x,
-                                        i,
-                                        j,
-                                        options,
-                                        ...) {
+style_bootstrap <- function(x,
+                            i,
+                            j,
+                            options,
+                            ...) {
 
   if (missing(i)) i <- NULL
   if (missing(j)) j <- NULL
-  if (missing(options)) options <- do.call(ibOptions, list(...))
+  if (missing(options)) options <- do.call(style_tt, list(...))
   assert_integerish(i, lower = 1, null.ok = TRUE)
   assert_integerish(j, lower = 1, null.ok = TRUE)
 
-  if (inherits(options, "ibOptions")) {
+  if (inherits(options, "style_tt")) {
     options <- options$bootstrap
   }
 
@@ -35,14 +35,14 @@ ibStyle.IttyBittyTable_html <- function(x,
     i <- seq_len(attr(x, "nrow"))
     j <- seq_len(attr(x, "ncol"))
 
-  # columns
-  # we don't need a separate column block because we need to
-  # apply styles at the cell level in HTML anyway. 
+    # columns
+    # we don't need a separate column block because we need to
+    # apply styles at the cell level in HTML anyway. 
   } else if (is.null(i)) {
     i <- seq_len(attr(x, "nrow"))
 
-  # rows
-  # css can be applied to whole rows.
+    # rows
+    # css can be applied to whole rows.
   } else if (is.null(j)) {
     loop <- "row"
 

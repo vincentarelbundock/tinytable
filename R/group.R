@@ -16,7 +16,7 @@ ibGroup <- function(x,
     stop("At least one of `i` or `j` must be specified.", call. = FALSE)
   }
 
-  if (inherits(x, "IttyBittyTable_latex") && is.null(j)) {
+  if (inherits(x, "tinytable_latex") && is.null(j)) {
     out <- group_row_latex(x,
                            i = i,
                            color = color,

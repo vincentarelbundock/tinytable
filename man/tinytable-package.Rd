@@ -1,10 +1,10 @@
-\name{IttyBittyTable-package}
-\alias{IttyBittyTable-package}
-\alias{IttyBittyTable}
+\name{tinytable-package}
+\alias{tinytable-package}
+\alias{tinytable}
 \docType{package}
-\title{\packageTitle{IttyBittyTable}}
-\description{\packageDescription{IttyBittyTable}}
-\section{Package Content}{\packageIndices{IttyBittyTable}}
-\author{\packageAuthor{IttyBittyTable}}
-\section{Maintainer}{\packageMaintainer{IttyBittyTable}}
+\title{\packageTitle{tinytable}}
+\description{\packageDescription{tinytable}}
+\section{Package Content}{\packageIndices{tinytable}}
+\author{\packageAuthor{tinytable}}
+\section{Maintainer}{\packageMaintainer{tinytable}}
 \keyword{package}

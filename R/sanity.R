@@ -18,6 +18,7 @@ sanitize_output <- function(output) {
   if (isTRUE(check_dependency("knitr")) && isTRUE(check_dependency("rmarkdown"))) {
 
     if (isTRUE(knitr::is_latex_output())) {
+      usepackage_latex("codehigh")
       usepackage_latex("float")
       usepackage_latex("tabularray", extra_lines = "\\UseTblrLibrary{booktabs}")
       if (is.null(output)) out <- "latex"
