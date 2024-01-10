@@ -49,7 +49,7 @@ style_tt <- function(
   }
   if (!is.null(align)) {
     arguments$align <- list(
-      tabularray = paste0("halign=", align),
+      tabularray = sprintf("halign=%s", align),
       bootstrap = paste("text-align:", switch(align, r = "right", l = "left", c = "center"))
     )
   }
@@ -88,10 +88,29 @@ style_tt <- function(
   }
 
   tabularray <- sapply(arguments, function(x) x[["tabularray"]])
-  tabularray <- paste(tabularray, collapse = ",")
-  out <- style_tabularray(x, inner = tabularray)
-  # TODO: use style_tabularray() to apply this if appropriate when we have given it a good class
-  browser()
+  tabularray <- paste0(paste(tabularray, collapse = ","), ",")
+
+  # specified columns or all cells
+  if (missing(i)) {
+    if (missing(j)) {
+      j <- seq_len(attr(x, "ncol"))
+    }
+    colspec <- sprintf("column{%s}={%s},", paste(j, collapse = ","), tabularray)
+    out <- style_tabularray(x, inner = colspec)
+
+  # specified rows
+  } else if (missing(j)) {
+    rowspec <- sprintf("row{%s}={%s},", paste(i, collapse = ","), tabularray)
+    out <- style_tabularray(x, inner = rowspec)
+
+  # specified cells
+  } else {
+    cellspec <- sprintf("cell{%s}{%s}={%s},",
+                        paste(i, collapse = ","),
+                        paste(j, collapse = ","),
+                        tabularray)
+    out <- style_tabularray(x, inner = cellspec)
+  }
 
   class(out) <- c("style_tt", class(out))
 

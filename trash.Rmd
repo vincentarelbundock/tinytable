@@ -4,7 +4,7 @@ output: pdf_document
 
 ```{r}
 pkgload::load_all()
-options(tt_latex_placement = "H")
+# options(tt_latex_placement = "H")
 inner <- "
  hlines = {white},
  vlines = {white},
@@ -15,6 +15,7 @@ inner <- "
  cell{2}{2} = {r=4,c=2}{c,azure7},
 "
 mtcars[1:5, 1:4] |>
-  tt(theme = "void") |>
+  #, align = "cccc" tt(theme = "void", align = "cccc", output = "latex") |>
+  tt(theme = "void", align = "cccc", output = "latex") |>
   style_tabularray(inner = inner)
 ```

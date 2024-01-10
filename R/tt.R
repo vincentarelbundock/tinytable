@@ -11,6 +11,7 @@
 #' @export
 tt <- function(x,
                output = NULL,
+               align = NULL,
                caption = NULL,
                theme = "booktabs",
                extendable = FALSE) {
@@ -19,6 +20,7 @@ tt <- function(x,
   output <- sanitize_output(output)
   assert_data_frame(x)
   assert_string(caption, null.ok = TRUE)
+  assert_string(align, null.ok = TRUE)
 
   # build table
   if (output == "latex") {
@@ -29,6 +31,22 @@ tt <- function(x,
 
   } else {
     out <- tinytable_markdown(x, caption = caption)
+  }
+
+
+  if (!is.null(align)) {
+    if (nchar(align) != ncol(x)) {
+      msg <- sprintf("`align` must have length %s, equal to the number of columns in `x`.", ncol(x))
+      stop(msg, call. = FALSE)
+    }
+    align <- strsplit(align, split = "")[[1]]
+    if (!all(align %in% c("l", "c", "r"))) {
+      msg <- "Elements of `align` must be 'c', 'l', or 'r'."
+      stop(msg, call. = FALSE)
+    }
+    for (j in seq_along(align)) {
+      out <- style_tt(out, j = j, align = align[[j]])
+    }
   }
 
   return(out)

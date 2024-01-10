@@ -14,9 +14,9 @@ style_tabularray <- function(x,
   att <- attributes(x)    
   out <- strsplit(x, "\n")[[1]]
 
-  if (!is.null(placement)) {
-    out <- sub("\\begin{table}", sprintf("\\begin{table}[%s]", placement), out, fixed = TRUE)
-  }
+  # if (!is.null(placement)) {
+  #   out <- sub("\\begin{table}", sprintf("\\begin{table}[%s]", placement), out, fixed = TRUE)
+  # }
 
   if (!is.null(inner)) {
     idx <- grep("% tabularray inner close", out)
