@@ -1,10 +1,6 @@
-tinytable_html <- function(x, caption, settings) {
+tt_bootstrap <- function(x, caption, theme, extendable) {
 
-  if (inherits(settings, "style_tt")) {
-    settings <- settings$bootstrap
-  }
-
-  template <- settings$template
+  template <- template_bootstrap(theme)
 
   # insert bootstrap class and css
   template <- gsub(

@@ -1,4 +1,4 @@
-tinytable_tabularray <- function(x, caption, theme, extendable) {
+tt_tabularray <- function(x, caption, theme, extendable) {
 
   template <- template_tabularray(theme)
 

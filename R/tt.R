@@ -24,13 +24,13 @@ tt <- function(x,
 
   # build table
   if (output == "latex") {
-    out <- tinytable_tabularray(x, caption = caption, theme = theme, extendable = extendable)
+    out <- tt_tabularray(x, caption = caption, theme = theme, extendable = extendable)
 
   } else if (output == "html"){
-    out <- tinytable_html(x, caption = caption, theme = theme, extendable = extendable)
+    out <- tt_bootstrap(x, caption = caption, theme = theme, extendable = extendable)
 
   } else {
-    out <- tinytable_markdown(x, caption = caption)
+    out <- tt_markdown(x, caption = caption)
   }
 
 
