@@ -57,7 +57,7 @@ tt_bootstrap <- function(x, caption, theme, width) {
   idx <- grep("$tinytable_BOOTSTRAP_HEADER", template, fixed = TRUE)
   if (!is.null(colnames(x))) {
     header <- sprintf('    <th scope="col">%s</th>', colnames(x))
-    header <- c("<thead>", "  <tr>", header, "  </tr>", "</thead>")
+    header <- c("  <tr>", header, "  </tr>")
     header <- paste(strrep(" ", 11), header)
   } else {
     header <- NULL

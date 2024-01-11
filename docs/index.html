@@ -122,7 +122,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
     <a class="nav-link active" href="./vignettes/tutorial.html" rel="" target="" aria-current="page">
- <span class="menu-text">Tutorial</span></a>
+ <span class="menu-text">Tutorial (HTML)</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./vignettes/tutorial.pdf" rel="" target="">
+ <span class="menu-text">Tutorial (PDF)</span></a>
   </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/tinytable" rel="" target=""><i class="bi bi-github" role="img" aria-label="tinytable GitHub">
@@ -166,13 +170,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./vignettes/tutorial.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Tutorial</span></a>
+ <span class="menu-text">Tutorial (HTML)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./vignettes/tutorial.pdf" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial (PDF)</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
- <span class="menu-text">Reference</span></a>
+ <span class="menu-text">Functions</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -180,26 +190,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/style_tabularray.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">style_tabularray</span></a>
+  <a href="./man/tt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>tt</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./man/style_tt.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">style_tt</span></a>
+ <span class="menu-text"><code>style_tt</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/tinytable-package.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">tinytable-package</span></a>
+  <a href="./man/style_tabularray.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>style_tabularray</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/tt.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">tt</span></a>
+  <a href="./man/style_bootstrap.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>style_bootstrap</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/group_tt.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>group_tt</code></span></a>
   </div>
 </li>
       </ul>
@@ -254,15 +270,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><em>Simple</em>: A streamlined, consistent, and uncluttered user interface, with few functions to learn.</li>
 <li><em>Flexible</em>: Access to expressive frameworks to customize tables in HTML and LaTeX formats.</li>
 <li><em>Zero-dependency</em>: Do not import any other <code>R</code> package.</li>
-<li><em>Concise</em>: Draw beautiful tables without typing too much code.</li>
+<li><em>Concise</em>: Draw beautiful tables without typing a lot of code.</li>
+<li><em>Safe</em>: User inputs are checked thoroughly, and informative errors are returned early.</li>
 <li><em>Maintainable</em>: A small code base which does not rely on too many complex regular expressions.</li>
-<li><em>Readable</em>: The HTML and LaTeX code underneath the tables should be human-readable and editable.</li>
+<li><em>Readable</em>: HTML and LaTeX code should be human-readable and editable.</li>
 <li><em>Free</em>: This package will always be free. Tiny tables for a tiny price!</li>
 </ul>
 <p>To achieve these goals, the design philosophy of <code>tinytable</code> rests on three pillars:</p>
 <ol type="1">
 <li><p><em>Data is separate from style.</em> The code that this package creates keeps the content of a table separate from the style sheet that applies to its cells. This is in contrast to other <code>R</code> packages that modify the actual text in each cell to style it. Keeping data and style separate allows <code>tidytable</code> to create human-readable files which are easy to edit, debug, and extend. It also enables developers to keep a tidy code base, with minimal use of messy regular expressions.</p></li>
-<li><p><em>Flexibility!</em> Users’ needs are extremely varied, and a table-drawing package must be flexible enough to accomodate different ideas. To achieve this, <code>tinytable</code> builds on battle-tested and versatile frameworks like <code>Bootstrap</code> for HTML and <code>tabularray</code> for LaTeX.</p></li>
+<li><p><em>Flexibility.</em> Users’ needs are extremely varied, and a table-drawing package must be flexible enough to accomodate different ideas. To achieve this, <code>tinytable</code> builds on battle-tested and versatile frameworks like <code>Bootstrap</code> for HTML and <code>tabularray</code> for LaTeX.</p></li>
 <li><p><a href="https://www.tinyverse.org/"><em>Lightweight is the right weight.</em></a> Some of the most popular table-drawing packages in the <code>R</code> ecosystem are very heavy: A single <code>library()</code> call can sometimes load upwards of 65 <code>R</code> packages. In contrast, <code>tinytable</code> imports zero 3rd party <code>R</code> package by default.</p></li>
 </ol>
 </section>
@@ -274,8 +291,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="get-started" class="level2">
 <h2 class="anchored" data-anchor-id="get-started">Get started</h2>
 <ul>
-<li><a href="vignettes/tutorial.html">HTML tutorial</a></li>
-<li><a href="vignettes/tutorial.pdf">PDF tutorial</a></li>
+<li><a href="vignettes/tutorial.html">Tutorial (HTML)</a></li>
+<li><a href="vignettes/tutorial.pdf">Tutorial (PDF)</a></li>
 </ul>
 </section>
 <section id="alternative-packages" class="level2">
@@ -285,6 +302,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><a href="https://haozhu233.github.io/kableExtra/"><code>kableExtra</code></a></li>
 <li><a href="https://gt.rstudio.com"><code>gt</code></a></li>
 <li><a href="https://rstudio.github.io/DT/"><code>DT</code></a></li>
+<li><a href="https://davidgohel.github.io/flextable/"><code>flextable</code></a></li>
 <li><a href="https://hughjonesd.github.io/huxtable/"><code>huxtable</code></a></li>
 </ul>
 <p>Did I miss your favorite package? Drop me a note and I’ll add it to the list.</p>
@@ -594,7 +612,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   </div>
   <div class="nav-page nav-page-next">
       <a href="./vignettes/tutorial.html" class="pagination-link">
-        <span class="nav-page-text">Tutorial</span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text">Tutorial (HTML)</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

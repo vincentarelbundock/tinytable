@@ -1,13 +1,8 @@
-group_row_latex <- function(x,
-                            i,
-                            color = NULL,
-                            background = NULL,
-                            italic = FALSE,
-                            bold = FALSE,
-                            rule = TRUE) {
+group_row_latex <- function(x, i, italic = TRUE, rule = TRUE) {
 
   assert_integerish(i)
   assert_flag(rule)
+  assert_flag(italic)
 
   rule <- if (isTRUE(rule)) "\\midrule" else ""
 

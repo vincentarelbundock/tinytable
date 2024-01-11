@@ -24,11 +24,13 @@ package which was:
 -   *Flexible*: Access to expressive frameworks to customize tables in
     HTML and LaTeX formats.
 -   *Zero-dependency*: Do not import any other `R` package.
--   *Concise*: Draw beautiful tables without typing too much code.
+-   *Concise*: Draw beautiful tables without typing a lot of code.
+-   *Safe*: User inputs are checked thoroughly, and informative errors
+    are returned early.
 -   *Maintainable*: A small code base which does not rely on too many
     complex regular expressions.
--   *Readable*: The HTML and LaTeX code underneath the tables should be
-    human-readable and editable.
+-   *Readable*: HTML and LaTeX code should be human-readable and
+    editable.
 -   *Free*: This package will always be free. Tiny tables for a tiny
     price!
 
@@ -44,7 +46,7 @@ three pillars:
     developers to keep a tidy code base, with minimal use of messy
     regular expressions.
 
-2.  *Flexibility!* Users’ needs are extremely varied, and a
+2.  *Flexibility.* Users’ needs are extremely varied, and a
     table-drawing package must be flexible enough to accomodate
     different ideas. To achieve this, `tinytable` builds on
     battle-tested and versatile frameworks like `Bootstrap` for HTML and
@@ -67,8 +69,8 @@ remotes::install_github("vincentarelbundock/tinytable")
 
 ## Get started
 
--   [HTML tutorial](vignettes/tutorial.html)
--   [PDF tutorial](vignettes/tutorial.pdf)
+-   [Tutorial (HTML)](vignettes/tutorial.html)
+-   [Tutorial (PDF)](vignettes/tutorial.pdf)
 
 ## Alternative packages
 
@@ -78,6 +80,7 @@ like `tinytable`, I recommend you check out some of these:
 -   [`kableExtra`](https://haozhu233.github.io/kableExtra/)
 -   [`gt`](https://gt.rstudio.com)
 -   [`DT`](https://rstudio.github.io/DT/)
+-   [`flextable`](https://davidgohel.github.io/flextable/)
 -   [`huxtable`](https://hughjonesd.github.io/huxtable/)
 
 Did I miss your favorite package? Drop me a note and I’ll add it to the
