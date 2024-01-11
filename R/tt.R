@@ -13,23 +13,24 @@ tt <- function(x,
                output = NULL,
                align = NULL,
                caption = NULL,
-               theme = "default",
-               extendable = FALSE) {
+               width = NULL,
+               theme = "default") {
 
   # sanity checks
   output <- sanitize_output(output)
   assert_data_frame(x)
   assert_string(caption, null.ok = TRUE)
   assert_string(align, null.ok = TRUE)
+  assert_numeric(width, len = 1, lower = 0, upper = 1, null.ok = TRUE)
 
   out <- x
 
   # build table
   if (output == "latex") {
-    out <- tt_tabularray(out, caption = caption, theme = theme, extendable = extendable)
+    out <- tt_tabularray(out, caption = caption, theme = theme, width = width)
 
   } else if (output == "html"){
-    out <- tt_bootstrap(out, caption = caption, theme = theme, extendable = extendable)
+    out <- tt_bootstrap(out, caption = caption, theme = theme, width = width)
 
   } else {
     out <- tt_markdown(out, caption = caption)

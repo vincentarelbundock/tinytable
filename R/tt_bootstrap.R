@@ -1,4 +1,4 @@
-tt_bootstrap <- function(x, caption, theme, extendable) {
+tt_bootstrap <- function(x, caption, theme, width) {
 
   template <- template_bootstrap(theme)
 
@@ -15,6 +15,16 @@ tt_bootstrap <- function(x, caption, theme, extendable) {
     template <- sub(
       "$tinytable_BOOTSTRAP_CAPTION",
       sprintf("<caption>%s</caption>", caption),
+      template,
+      fixed = TRUE
+    )
+  }
+
+  # width
+  if (is.numeric(width)) {
+    template <- sub(
+      "width: auto;",
+      sprintf('width: %s%%;', round(width * 100)),
       template,
       fixed = TRUE
     )

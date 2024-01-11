@@ -30,7 +30,7 @@ style_tabularray <- function(x,
       out[idx:length(out)])
   }
 
-  if (!is.null(inner)) {
+  if (!is.null(outer)) {
     idx <- grep("% tabularray outer close", out)
     out <- c(
       out[1:(idx - 1)],

@@ -93,12 +93,32 @@ check_integerish <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok 
   return(TRUE)
 }
 
+
 assert_integerish <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
   msg <- sprintf("`%s` must be integer-ish", name)
   if (!isTRUE(check_integerish(x, null.ok = null.ok))) {
     stop(msg, call. = FALSE)
   }
 }
+
+
+check_numeric <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok = TRUE) {
+  if (is.null(x) && isTRUE(null.ok)) return(TRUE)
+  if (!is.numeric(x)) return(FALSE)
+  if (!is.null(len) && length(x) != len) return(FALSE)
+  if (!is.null(lower) && any(x < lower)) return(FALSE)
+  if (!is.null(upper) && any(x > upper)) return(FALSE)
+  return(TRUE)
+}
+
+
+assert_numeric <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
+  msg <- sprintf("`%s` must be numeric", name)
+  if (!isTRUE(check_numeric(x, null.ok = null.ok))) {
+    stop(msg, call. = FALSE)
+  }
+}
+
 
 assert_data_frame <- function(x, name = as.character(substitute(x))) {
   msg <- sprintf("`%s` must be a data.frame.", name)

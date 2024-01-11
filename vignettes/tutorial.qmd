@@ -69,6 +69,18 @@ To align columns, we use a single string where each letter represents a column:
 tt(x, align = "ccrrl")
 ```
 
+## Width
+
+The `width` arguments accepts a number between 0 and 1, indicating what proportion of the linewidth the table should cover:
+
+```{r}
+tt(x, width = 0.5)
+```
+
+```{r}
+tt(x, width = 1)
+```
+
 
 ## Captions and cross-references
 
@@ -86,6 +98,8 @@ TODO: Cross-references
 1. `style_tt()` is a general interface to frequently used style choices which works for both HTML and LaTeX (PDF): colors, font style and size, row and column spans, etc. 
 2. `style_tabularray()` is a specialized interface which allows users to use the [extraordinarily powerful `tabularray` package](https://ctan.org/pkg/tabularray?lang=en) to customize LaTeX tables. 
 3. `style_bootstrap()` is a specialized interface which allows users to use the [powerful `Bootstrap` framework](https://getbootstrap.com/docs/5.3/content/tables/) to customize HTML tables.
+
+## Colors, lines, space, font, spans, etc.
 
 These functions can be used to customize rows, columns, or individual cells. They control many features, including:
 
@@ -166,7 +180,6 @@ tt(k)
 _Warning:_ The HTML customization options described in this section are not available for LaTeX (or PDF) documents. Please refer to the web documentation to view this tutorial.
 :::
 
-
 ::: {.content-visible when-format="html"}
 ## Themes
 
@@ -200,10 +213,6 @@ _Warning:_ The LaTeX / PDF customization options described in this section are n
 
 
 ::: {.content-visible when-format="pdf"}
-
-```{r}
-tt(x)
-```
 
 
 ```{r, eval = knitr::is_latex_output()}

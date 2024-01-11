@@ -1,4 +1,4 @@
-tt_tabularray <- function(x, caption, theme, extendable) {
+tt_tabularray <- function(x, caption, theme, width) {
 
   template <- template_tabularray(theme)
 
@@ -44,8 +44,10 @@ tt_tabularray <- function(x, caption, theme, extendable) {
   out <- trimws(out)
   out <- paste(out, collapse = "\n")
 
-  if (isTRUE(extendable)) {
+  if (!is.null(width)) {
     tabularray_cols <- rep("X[]", ncol(x))
+    spec <- sprintf("width={%s\\linewidth},", round(width, 4))
+    out <- style_tabularray(out, inner = spec)
   } else {
     tabularray_cols <- rep("Q[]", ncol(x))
   }
