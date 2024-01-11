@@ -3,12 +3,15 @@ output: pdf_document
 ---
 
 ```{r}
+devtools::document()
 pkgload::load_all()
-options(tt_latex_placement = "H")
-mtcars[1:5, 1:4] |>
-  tt() |>
-  style_tt(2, 2, colspan = 3, align = "c")
-
+options(tt_bootstrapOptions_placement = "H")
+x <- mtcars[1:12, 1:8]
+tt(x, output = "latex") |> 
+group_tt(
+indent = 1,
+i = c(
+"I like (fake) hamburgers" = 3,
+"She prefers halloumi" = 4,
+"They love tofu" = 7))
 ```
-
-

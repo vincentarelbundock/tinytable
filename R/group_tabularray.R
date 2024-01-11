@@ -1,4 +1,4 @@
-group_row_latex <- function(x, i, italic = TRUE, rule = TRUE) {
+group_tabularray <- function(x, i, italic, rule, indent) {
 
   assert_integerish(i)
   assert_flag(rule)
@@ -35,19 +35,21 @@ group_row_latex <- function(x, i, italic = TRUE, rule = TRUE) {
   attributes(tab) <- att
   class(tab) <- class(x)
 
-  tab <- style_tabularray(
-      tab,
-      i = idx$new[is.na(idx$old)] + attr(x, "nhead"), j = 1, italic = italic, bold = bold,
-      color = color, background = background, options = options_tabularray(c = ncol))
+  cellspec <- sprintf("cell{%s}{%s}={%s}{%s},",
+    idx$new[is.na(idx$old)] + attr(x, "nhead"),
+    1,
+    paste0("c=", ncol),
+    if (isTRUE(italic)) "cmd=\\textit" else ""
+  )
+  cellspec <- paste(cellspec, collapse = "")
+  tab <- style_tabularray(tab, inner = cellspec)
 
   # we also want to indent the header
   i <- idx$new[!is.na(idx$old)] + attr(x, "nhead")
   if (attr(x, "nhead") > 0) i <- c(1:attr(x, "nhead"), i)
-  tab <- style_tabularray(tab,
-      i = i, j = 1,
-      options = options_tabularray(
-        preto = "\\hspace{1em}",
-      ))
+  cellspec <- sprintf("cell{%s}{%s}={%s},", i, 1, sprintf("preto={\\hspace{%sem}}", indent))
+  cellspec <- paste(cellspec, collapse = "")
+  tab <- style_tabularray(tab, inner = cellspec)
 
   return(tab)
 }
