@@ -22,17 +22,18 @@ tt <- function(x,
   assert_string(caption, null.ok = TRUE)
   assert_string(align, null.ok = TRUE)
 
+  out <- x
+
   # build table
   if (output == "latex") {
-    out <- tt_tabularray(x, caption = caption, theme = theme, extendable = extendable)
+    out <- tt_tabularray(out, caption = caption, theme = theme, extendable = extendable)
 
   } else if (output == "html"){
-    out <- tt_bootstrap(x, caption = caption, theme = theme, extendable = extendable)
+    out <- tt_bootstrap(out, caption = caption, theme = theme, extendable = extendable)
 
   } else {
-    out <- tt_markdown(x, caption = caption)
+    out <- tt_markdown(out, caption = caption)
   }
-
 
   if (!is.null(align)) {
     if (nchar(align) != ncol(x)) {
@@ -44,8 +45,8 @@ tt <- function(x,
       msg <- "Elements of `align` must be 'c', 'l', or 'r'."
       stop(msg, call. = FALSE)
     }
-    for (j in seq_along(align)) {
-      out <- style_tt(out, j = j, align = align[[j]])
+    for (col in seq_along(align)) {
+      out <- style_tt(out, j = col, align = align[[col]])
     }
   }
 

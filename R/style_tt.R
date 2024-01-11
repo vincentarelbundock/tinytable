@@ -15,7 +15,7 @@ style_tt <- function(
   colspan = NULL,
   rowspan = NULL) {
 
-  # TODO: cmd needs to be concatenated when there are many
+  nhead <- attr(x, "nhead")
 
   assert_string(color, null.ok = TRUE)
   assert_string(background, null.ok = TRUE)
@@ -87,17 +87,15 @@ style_tt <- function(
     )
   }
 
-  tabularray <- sapply(arguments, function(x) x[["tabularray"]])
-  tabularray <- paste0(paste(tabularray, collapse = ","), ",")
-
-
-  # TODO: style_tt probably doesn't work with HTML
   if (inherits(x, "tinytable_bootstrap")) {
     css <- sapply(arguments, function(x) x[["bootstrap"]])
     css <- paste(css, collapse = ";")
     out <- style_bootstrap(x, i, j, css)
     return(out)
   }
+
+  tabularray <- sapply(arguments, function(x) x[["tabularray"]])
+  tabularray <- paste0(paste(tabularray, collapse = ","), ",")
 
   if (inherits(x, "tinytable_tabularray")) {
     # specified columns or all cells
@@ -108,15 +106,17 @@ style_tt <- function(
       colspec <- sprintf("column{%s}={%s},", paste(j, collapse = ","), tabularray)
       out <- style_tabularray(x, inner = colspec)
 
-      # specified rows
+    # specified rows
     } else if (missing(j)) {
-      rowspec <- sprintf("row{%s}={%s},", paste(i, collapse = ","), tabularray)
+      # do not style header by default
+      rowspec <- sprintf("row{%s}={%s},", paste(i + nhead, collapse = ","), tabularray)
       out <- style_tabularray(x, inner = rowspec)
 
-      # specified cells
+    # specified cells
     } else {
       cellspec <- sprintf("cell{%s}{%s}={%s},",
-                          paste(i, collapse = ","),
+                          # do not style header by default
+                          paste(i + nhead, collapse = ","),
                           paste(j, collapse = ","),
                           tabularray)
       out <- style_tabularray(x, inner = cellspec)

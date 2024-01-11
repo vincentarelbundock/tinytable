@@ -42,6 +42,10 @@ style_bootstrap <- function(x,
 
   }
 
+  # JS 0-indexing,
+  j <- j - 1
+  i <- i - 1 + attr(x, "nhead")
+
   out <- x
 
   id <- get_id(stem = "style_tt_")
