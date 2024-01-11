@@ -14,7 +14,10 @@ style_tt <- function(
   align = NULL,
   colspan = NULL) {
  
-  if (!inherits(x, "tinytable_tabularray") && !inherits(x, "tinytable_bootstrap") && !inherits(x, "tinytable_markdown")) {
+  # no markdown styling
+  if (inherits(x, "tinytable_markdown")) return(x)
+
+  if (!inherits(x, "tinytable_tabularray") && !inherits(x, "tinytable_bootstrap")) {
     stop("`x` must be a table produced by `tt()`.", call. = FALSE)
   }
 
@@ -27,7 +30,7 @@ style_tt <- function(
   assert_choice(align, c("c", "l", "r"), null.ok = TRUE)
   assert_flag(bold)
   assert_flag(italic)
-  assert_integerish(colspan, len = 1, null.ok = TRUE)
+  assert_integerish(colspan, len = 1, lower = 2, null.ok = TRUE)
 
   arguments <- list()
 

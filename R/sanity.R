@@ -96,7 +96,10 @@ check_integerish <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok 
 
 assert_integerish <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
   msg <- sprintf("`%s` must be integer-ish", name)
-  if (!isTRUE(check_integerish(x, null.ok = null.ok))) {
+  if (!is.null(len)) msg <- paste0(msg, sprintf("; of length %s", len))
+  if (!is.null(lower)) msg <- paste0(msg, sprintf("; greater than %s", lower - 1))
+  if (!is.null(upper)) msg <- paste0(msg, sprintf("; lower than %s", upper + 1))
+  if (!isTRUE(check_integerish(x, len = len, lower = lower, upper = upper, null.ok = null.ok))) {
     stop(msg, call. = FALSE)
   }
 }
