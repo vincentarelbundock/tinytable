@@ -2,29 +2,13 @@
 output: pdf_document
 ---
 
-```{r, eval=knitr::is_latex_output()}
+```{r}
 pkgload::load_all()
-# options(tt_latex_placement = "H")
-inner <- "
- hlines = {white},
- vlines = {white},
- cell{1,6}{odd} = {teal7},
- cell{1,6}{even} = {green7},
- cell{2,4}{1,4} = {red7},
- cell{3,5}{1,4} = {purple7},
- cell{2}{2} = {r=4,c=2}{c,azure7},
-"
+options(tt_latex_placement = "H")
 mtcars[1:5, 1:4] |>
-  #, align = "cccc" tt(theme = "void", align = "cccc", output = "latex") |>
-  tt(theme = "void", align = "cccc") |>
-  style_tabularray(inner = inner)
+  tt(output = "html") |>
+  style_tt(1, 1, colspan = 2, align = "c")
 ```
 
 
 
-```{r, eval = TRUE}
-pkgload::load_all()
-x <- mtcars[1:4, 1:4]
-tt(x, output = "html", theme = "table table-dark table-hover") 
-  # style_tt(1, 2, background = "red")
-```

@@ -15,7 +15,8 @@ build_bootstrap_css <- function(css_vector, id, type = "cell") {
 style_bootstrap <- function(x,
                             i,
                             j,
-                            css) {
+                            css,
+                            colspan) {
 
   if (missing(i)) i <- NULL
   if (missing(j)) j <- NULL
@@ -58,6 +59,19 @@ style_bootstrap <- function(x,
         # 0-indexing in JS
         new <- sprintf("table.rows[%s].cells[%s].classList.add('%s');", row, col, id)
         out <- bootstrap_setting(out, new, component = "row")
+        if (is.numeric(colspan)) {
+          # TODO: loop over the colspan when there are many
+          new <- sprintf("table.rows[%s].cells[%s].setAttribute('colspan', %s);", row, col, colspan)
+          out <- bootstrap_setting(out, new, component = "row")
+          new <- sprintf("table.rows[%s].deleteCell(%s);", row, col + colspan)
+          out <- bootstrap_setting(out, new, component = "row")
+        }
+        if (is.numeric(rowspan)) {
+          # TODO: loop over the colspan when there are many
+          new <- sprintf("table.rows[%s].cells[%s].setAttribute('colspan', %s);", row, col, colspan)
+          out <- bootstrap_setting(out, new, component = "row")
+          new <- sprintf("table.rows[%s].deleteCell(%s);", row + rowspan, col)
+          out <- bootstrap_setting(out, new, component = "row")
       }
     }
   } else if (loop == "row") {

@@ -139,5 +139,3 @@ assert_character <- function(x, len = NULL, name = as.character(substitute(x))) 
   }
 }
 
-
-

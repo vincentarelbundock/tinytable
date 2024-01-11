@@ -2,33 +2,52 @@
 % Please edit documentation in R/tt.R
 \name{tt}
 \alias{tt}
-\title{Draw a table}
+\title{Draw a Tiny Table}
 \usage{
 tt(
   x,
   output = NULL,
   align = NULL,
   caption = NULL,
-  theme = "default",
-  extendable = FALSE
+  width = NULL,
+  theme = "default"
 )
 }
 \arguments{
-\item{x}{dataframe}
+\item{x}{A data frame or data table to be rendered as a table.}
 
-\item{output}{string "markdown", "latex", or "html". If \code{output} is \code{NULL}, then:
-\itemize{
-\item "html" if \code{knitr::is_html_output()} is \code{TRUE}
-\item "latex" if \code{knitr::is_latex_output()} is \code{TRUE}
-\item Otherwise determined by setting a global option: \code{options(tt_output_default = "markdown")}
-}}
+\item{output}{The format of the output table. Can be "html", "latex", or "markdown". If NULL, the format is automatically detected in Quarto or Rmarkdown documents.}
 
-\item{theme}{string
+\item{align}{A string specifying the alignment of columns. Each character in the string corresponds to a column; 'l' for left, 'c' for center, and 'r' for right alignment. The length of the string must match the number of columns in \code{x}.}
+
+\item{caption}{A string that will be used as the caption of the table.}
+
+\item{width}{A numeric value between 0 and 1 indicating the proportion of the line width that the table should cover.}
+
+\item{theme}{The theme to apply to the table.
 \itemize{
 \item LaTeX: "default", "striped", "void", or "grid".
 \item HTML: "default", "striped", "void", "grid", or a (composite) Bootstrap class such as \code{"table table-dark"} or \code{"table table-dark table-hover"}. See
 }}
 }
+\value{
+An object of class \code{tt} representing the table.
+}
 \description{
-Draw a table
+The \code{tt} function renders a table in different formats (HTML, Markdown, or LaTeX) with various styling options.
+}
+\examples{
+\dontshow{if (getOption("tt_local", default = FALSE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+\dontshow{\}) # examplesIf}
+library(tinytable)
+x <- mtcars[1:4, 1:5]
+
+tt(x)
+
+tt(x,
+  theme = "striped",
+  width = 0.5,
+  align = "ccrrl",
+  caption = "Data about cars.")
+
 }

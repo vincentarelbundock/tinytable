@@ -34,6 +34,19 @@
           if (table.rows[i].cells.length > 1) {
           } // tinytable cells before this
         }
+        function removeCell(rowIndex, cellIndex) {
+            var table = document.getElementById("myTable");
+            if (table.rows.length > rowIndex) {
+                var row = table.rows[rowIndex];
+                if (row.cells.length > cellIndex) {
+                    row.deleteCell(cellIndex);
+                } else {
+                    console.error("Cell index out of range");
+                }
+            } else {
+                console.error("Row index out of range");
+            }
+        }
         window.addEventListener('load', updateRows);
         window.addEventListener('load', updateColumns);
         </script>
@@ -46,6 +59,7 @@
         }
         // tinytable css before this
         </style> 
+
       </table>
     </div>
   </body>

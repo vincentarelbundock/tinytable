@@ -1,13 +1,31 @@
-#' Draw a table
+#' Draw a Tiny Table
 #'
-#' @param x dataframe
-#' @param output string "markdown", "latex", or "html". If `output` is `NULL`, then:
-#' * "html" if `knitr::is_html_output()` is `TRUE`
-#' * "latex" if `knitr::is_latex_output()` is `TRUE`
-#' * Otherwise determined by setting a global option: `options(tt_output_default = "markdown")`
-#' @param theme string 
+#' The `tt` function renders a table in different formats (HTML, Markdown, or LaTeX) with various styling options.
+#' 
+#' @param x A data frame or data table to be rendered as a table.
+#' @param output The format of the output table. Can be "html", "latex", or "markdown". If NULL, the format is automatically detected in Quarto or Rmarkdown documents.
+#' @param align A string specifying the alignment of columns. Each character in the string corresponds to a column; 'l' for left, 'c' for center, and 'r' for right alignment. The length of the string must match the number of columns in `x`.
+#' @param caption A string that will be used as the caption of the table.
+#' @param width A numeric value between 0 and 1 indicating the proportion of the line width that the table should cover.
+#' @param theme The theme to apply to the table.
 #' * LaTeX: "default", "striped", "void", or "grid".
 #' * HTML: "default", "striped", "void", "grid", or a (composite) Bootstrap class such as `"table table-dark"` or `"table table-dark table-hover"`. See 
+#' 
+#' @return An object of class `tt` representing the table.
+#' 
+#' @examplesIf getOption("tt_local", default = FALSE)
+#' @examples
+#' library(tinytable)
+#' x <- mtcars[1:4, 1:5]
+#'
+#' tt(x)
+#' 
+#' tt(x,
+#'   theme = "striped",
+#'   width = 0.5,
+#'   align = "ccrrl",
+#'   caption = "Data about cars.")
+#' 
 #' @export
 tt <- function(x,
                output = NULL,

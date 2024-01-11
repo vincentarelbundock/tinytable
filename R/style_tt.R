@@ -15,6 +15,10 @@ style_tt <- function(
   colspan = NULL,
   rowspan = NULL) {
 
+  if (!inherits(x, "tinytable_tabularray") && !inherits(x, "tinytable_bootstrap") && !inherits(x, "tinytable_markdown")) {
+    stop("`x` must be a table produced by `tt()`.", call. = FALSE)
+  }
+
   nhead <- attr(x, "nhead")
 
   assert_string(color, null.ok = TRUE)
@@ -90,7 +94,7 @@ style_tt <- function(
   if (inherits(x, "tinytable_bootstrap")) {
     css <- sapply(arguments, function(x) x[["bootstrap"]])
     css <- paste(css, collapse = ";")
-    out <- style_bootstrap(x, i, j, css)
+    out <- style_bootstrap(x, i, j, css, colspan = colspan)
     return(out)
   }
 
