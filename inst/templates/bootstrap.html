@@ -24,7 +24,16 @@
           var table = document.getElementById("$tinytable_TABLE_ID");
           table.rows[i].cells[j].classList.add(css_id);
         }
+        function spanCell(i, colspan, content) {
+          var table = document.getElementById('$tinytable_TABLE_ID');
+          var newRow = table.insertRow(i);
+          var newCell = newRow.insertCell(0);
+          newCell.setAttribute("colspan", colspan);
+          newCell.innerText = content;
+        }
+
         // tinytable cells before this
+window.addEventListener('load', function () { spanCell(1, 4, "Blah blah blah") })
         </script>
         <style>
         .table {
