@@ -60,7 +60,8 @@ style_tt <- function(
   }
   if (!is.null(colspan)) {
     arguments$colspan <- list(
-      tabularray <- paste0("c=", colspan)
+      tabularray = paste0("c=", colspan),
+      bootstrap = ""
     )
   }
   if (!is.null(color)) {
@@ -97,6 +98,16 @@ style_tt <- function(
   tabularray <- sapply(arguments, function(x) x[["tabularray"]])
   # important for things like colspan
   tabularray <- Filter(function(x) !is.null(x), tabularray)
+
+ 
+  if (any(c("colspan", "rowspan") %in% names(tabularray))) {
+    span <- tabularray[names(tabularray) %in% c("colspan", "rowspan")]
+    span <- paste(span, collapse = ",")
+    tabularray <- tabularray[!names(tabularray) %in% c("colspan", "rowspan")]
+  } else {
+    span <- ""
+  }
+
   tabularray <- paste0(paste(tabularray, collapse = ","), ",")
 
   if (inherits(x, "tinytable_tabularray")) {
@@ -116,10 +127,11 @@ style_tt <- function(
 
     # specified cells
     } else {
-      cellspec <- sprintf("cell{%s}{%s}={%s},",
+      cellspec <- sprintf("cell{%s}{%s}={%s}{%s},",
                           # do not style header by default
                           paste(i + nhead, collapse = ","),
                           paste(j, collapse = ","),
+                          span,
                           tabularray)
       out <- style_tabularray(x, inner = cellspec)
     }
