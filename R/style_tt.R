@@ -12,9 +12,8 @@ style_tt <- function(
   fontsize = NULL,
   width = NULL,
   align = NULL,
-  colspan = NULL,
-  rowspan = NULL) {
-
+  colspan = NULL) {
+ 
   if (!inherits(x, "tinytable_tabularray") && !inherits(x, "tinytable_bootstrap") && !inherits(x, "tinytable_markdown")) {
     stop("`x` must be a table produced by `tt()`.", call. = FALSE)
   }
@@ -29,7 +28,6 @@ style_tt <- function(
   assert_flag(bold)
   assert_flag(italic)
   assert_integerish(colspan, len = 1, null.ok = TRUE)
-  assert_integerish(rowspan, len = 1, null.ok = TRUE)
 
   arguments <- list()
 
@@ -60,11 +58,6 @@ style_tt <- function(
   if (!is.null(colspan)) {
     arguments$colspan <- list(
       tabularray <- paste0("c=", colspan)
-    )
-  }
-  if (!is.null(rowspan)) {
-    arguments$rowspan <- list(
-      tabularray <- paste0("r=", colspan)
     )
   }
   if (!is.null(color)) {
@@ -99,6 +92,8 @@ style_tt <- function(
   }
 
   tabularray <- sapply(arguments, function(x) x[["tabularray"]])
+  # important for things like colspan
+  tabularray <- Filter(function(x) !is.null(x), tabularray)
   tabularray <- paste0(paste(tabularray, collapse = ","), ",")
 
   if (inherits(x, "tinytable_tabularray")) {

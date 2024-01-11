@@ -56,22 +56,20 @@ style_bootstrap <- function(x,
     out <- bootstrap_setting(out, css, component = "css")
     for (row in i) {
       for (col in j) {
+        # colspan needs to delete cells, otherwise they get pushed
+        if (is.numeric(colspan) && colspan > 1) {
+          new <- sprintf("table.rows[%s].cells[%s].setAttribute('colspan', %s);", row, col, colspan)
+          out <- bootstrap_setting(out, new, component = "row")
+          # reverse is important
+          for (bump in colspan:2) {
+            new <- sprintf("table.rows[%s].deleteCell(%s);", row, col + bump - 1)
+            out <- bootstrap_setting(out, new, component = "row")
+          }
+        }
+
         # 0-indexing in JS
         new <- sprintf("table.rows[%s].cells[%s].classList.add('%s');", row, col, id)
         out <- bootstrap_setting(out, new, component = "row")
-        if (is.numeric(colspan)) {
-          # TODO: loop over the colspan when there are many
-          new <- sprintf("table.rows[%s].cells[%s].setAttribute('colspan', %s);", row, col, colspan)
-          out <- bootstrap_setting(out, new, component = "row")
-          new <- sprintf("table.rows[%s].deleteCell(%s);", row, col + colspan)
-          out <- bootstrap_setting(out, new, component = "row")
-        }
-        if (is.numeric(rowspan)) {
-          # TODO: loop over the colspan when there are many
-          new <- sprintf("table.rows[%s].cells[%s].setAttribute('colspan', %s);", row, col, colspan)
-          out <- bootstrap_setting(out, new, component = "row")
-          new <- sprintf("table.rows[%s].deleteCell(%s);", row + rowspan, col)
-          out <- bootstrap_setting(out, new, component = "row")
       }
     }
   } else if (loop == "row") {
