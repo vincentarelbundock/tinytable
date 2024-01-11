@@ -7,11 +7,11 @@ devtools::document()
 pkgload::load_all()
 options(tt_bootstrapOptions_placement = "H")
 x <- mtcars[1:12, 1:8]
-tt(x, output = "latex") |> 
-group_tt(
+tt(x, output = "html") |> 
+group_bootstrap(
 indent = 1,
 i = c(
 "I like (fake) hamburgers" = 3,
 "She prefers halloumi" = 4,
-"They love tofu" = 7))
+"They love tofu" = 7)) |> cat(file = "~/Downloads/trash.html")
 ```
