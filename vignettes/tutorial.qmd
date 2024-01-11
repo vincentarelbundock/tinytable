@@ -15,11 +15,12 @@ pkgload::load_all()
 
 \clearpage
 
-This tutorial is available in two versions:
+`tinytable` is a small but powerful `R` package to draw HTML, LaTeX, PDF, Markdown, and Typst tables. The interface is minimalist, but it gives users direct and convenient access to powerful frameworks to create endlessly customizable tables.
+
+This tutorial introduces the main functions of the package. It is available in two versions:
 
 * [PDF](tutorial.pdf)
 * [HTML](tutorial.html)
-
 
 
 # Tiny Tables
@@ -58,18 +59,21 @@ tt(x, theme = "striped")
 tt(x, theme = "grid")
 ```
 
+::: {.content-visible when-format="pdf"}
 ```{r}
 tt(x, theme = "void")
 ```
+:::
 
 ## Alignment
 
-To align columns, we use a single string where each letter represents a column:
+To align columns, we use a single string, where each letter represents a column:
 
 ```{r}
 tt(x, align = "ccrrl")
 ```
 
+::: {.content-visible when-format="pdf"}
 ## Width
 
 The `width` arguments accepts a number between 0 and 1, indicating what proportion of the linewidth the table should cover:
@@ -81,6 +85,7 @@ tt(x, width = 0.5)
 ```{r}
 tt(x, width = 1)
 ```
+:::
 
 ## Line breaks and text wrapping
 
@@ -187,7 +192,7 @@ tt(x) |> style_tt(j = c(2, 4), bold = TRUE)
 
 ## Spanning cells
 
-Sometimes, it can be useful to make a cell stretch across multiple colums, for example when we want to insert a label. To achieve this, we can use the `colspan` argument. Here, we make the 2nd cell of the 2nd rows stretch across three columns:
+Sometimes, it can be useful to make a cell stretch across multiple colums, for example when we want to insert a label. To achieve this, we can use the `colspan` argument. Here, we make the 2nd cell of the 2nd row stretch across three columns:
 
 ```{r}
 tt(x)|> style_tt(

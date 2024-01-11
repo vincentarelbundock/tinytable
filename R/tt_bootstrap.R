@@ -24,7 +24,7 @@ tt_bootstrap <- function(x, caption, theme, width) {
   if (is.numeric(width)) {
     template <- sub(
       "width: auto;",
-      sprintf('width: %s%%;', round(width * 100)),
+      sprintf('table-layout: fixed; width: %s%% !important;', round(width * 100)),
       template,
       fixed = TRUE
     )

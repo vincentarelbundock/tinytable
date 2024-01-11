@@ -8,49 +8,53 @@
 ## What?
 
 `tinytable` is a small but powerful `R` package to draw HTML, LaTeX,
-PDF, Markdown, and Typst tables. The interface is minimalist, but it
-gives users direct and convenient access to powerful frameworks to
-create endlessly customizable tables:
-
--   `tabularray` for LaTeX and PDF
--   Bootstrap for HTML.
+PDF, Markdown, and Typst tables. The user interface is minimalist, but
+it gives users access to powerful frameworks to create endlessly
+customizable tables.
 
 ## Why?
 
-The design philosophy of this package rests on three pillars.
+There are already many excellent table-drawing packages in the `R`
+ecosystem. Why release a new one? As [the maintainer of
+`modelsummary`](https://modelsummary.com), I needed a table-drawing
+package which was:
 
-1.  *Data is separate from style*.
+-   *Simple*: A streamlined, consistent, and uncluttered user interface,
+    with few functions to learn.
+-   *Flexible*: Access to expressive frameworks to customize tables in
+    HTML and LaTeX formats.
+-   *Zero-dependency*: Do not import any other `R` package.
+-   *Concise*: Draw beautiful tables without typing too much code.
+-   *Maintainable*: A small code base which does not rely on too many
+    complex regular expressions.
+-   *Readable*: The HTML and LaTeX code underneath the tables should be
+    human-readable and editable.
+-   *Free*: This package will always be free. Tiny tables for a tiny
+    price!
 
-The code that this package creates keeps the content of a table separate
-from the style sheet that applies to its cells. This is in contrast to
-other `R` packages that modify the actual text in each cell to style it.
-Keeping data and style separate allows `tidytable` to create
-human-readable files which are easy to edit, debug, and extend. It also
-enables developers to keep a tidy code base, with minimal use of messy
-regular expressions.
+To achieve these goals, the design philosophy of `tinytable` rests on
+three pillars:
 
-1.  *Flexibility!*
+1.  *Data is separate from style.* The code that this package creates
+    keeps the content of a table separate from the style sheet that
+    applies to its cells. This is in contrast to other `R` packages that
+    modify the actual text in each cell to style it. Keeping data and
+    style separate allows `tidytable` to create human-readable files
+    which are easy to edit, debug, and extend. It also enables
+    developers to keep a tidy code base, with minimal use of messy
+    regular expressions.
 
-Users’ needs are extremely varied, and a table-drawing package must be
-flexible enough to accomodate different ideas. To achieve this,
-`tinytable` builds on battle-tested and versatile frameworks like
-`Bootstrap` (HTML) and `tabularray` (LaTeX).
+2.  *Flexibility!* Users’ needs are extremely varied, and a
+    table-drawing package must be flexible enough to accomodate
+    different ideas. To achieve this, `tinytable` builds on
+    battle-tested and versatile frameworks like `Bootstrap` for HTML and
+    `tabularray` for LaTeX.
 
-1.  [*Lightweight is the right weight.*](https://www.tinyverse.org/)
-
-Some of the most popular table-drawing packages in the `R` ecosystem are
-heavy. For instance, `kableExtra` imports 66 `R` dependencies, `gt` 65,
-`DT` 43, and `huxtable` 29. In contrast, `tinytable` imports zero 3rd
-party `R` package by default.
-
-`tinytable` is not only lightweight in terms of dependencies, it is also
-“small” along several other dimensions:
-
--   The user interface is simple, streamlined, consistent, uncluttered.
--   The `tinytable` code base is very small and easy to maintain.
--   `tinytable` is a very thin wrapper around incredibly powerful
-    frameworks: Bootstrap for HTML and `tabularray` for LaTeX.
--   This package is free. Tiny tables for a tiny price!
+3.  [*Lightweight is the right weight.*](https://www.tinyverse.org/)
+    Some of the most popular table-drawing packages in the `R` ecosystem
+    are very heavy: A single `library()` call can sometimes load upwards
+    of 65 `R` packages. In contrast, `tinytable` imports zero 3rd party
+    `R` package by default.
 
 ## Installation
 
@@ -63,4 +67,18 @@ remotes::install_github("vincentarelbundock/tinytable")
 
 ## Get started
 
-TODO
+-   [HTML tutorial](vignettes/tutorial.html)
+-   [PDF tutorial](vignettes/tutorial.pdf)
+
+## Alternative packages
+
+There are many fantastic table-drawing packages out there. If you don’t
+like `tinytable`, I recommend you check out some of these:
+
+-   [`kableExtra`](https://haozhu233.github.io/kableExtra/)
+-   [`gt`](https://gt.rstudio.com)
+-   [`DT`](https://rstudio.github.io/DT/)
+-   [`huxtable`](https://hughjonesd.github.io/huxtable/)
+
+Did I miss your favorite package? Drop me a note and I’ll add it to the
+list.

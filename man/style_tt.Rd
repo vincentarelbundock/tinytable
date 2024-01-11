@@ -16,8 +16,7 @@ style_tt(
   fontsize = NULL,
   width = NULL,
   align = NULL,
-  colspan = NULL,
-  rowspan = NULL
+  colspan = NULL
 )
 }
 \description{
