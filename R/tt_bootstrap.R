@@ -32,26 +32,10 @@ tt_bootstrap <- function(x, caption, theme, width) {
 
   # (pseudo-)unique table IDs
   id <- get_id("")
-  template <- gsub(
-    "$tinytable_TABLE_ID",
-    paste0(c("tinytable_", id), collapse = ""),
-    template,
-    fixed = TRUE)
-  template <- gsub(
-    "updateRows",
-    paste0("updateRows", id),
-    template,
-    fixed = TRUE)
-  template <- gsub(
-    "updateColumns",
-    paste0("updateColumns", id),
-    template,
-    fixed = TRUE)
-  template <- gsub(
-    "updateCells",
-    paste0("updateCells", id),
-    template,
-    fixed = TRUE)
+
+  # table and styling function in JS must have different names when there is more than one table on a page.
+  template <- gsub("styleCell", paste0("styleCell_", id), template, fixed = TRUE)
+  template <- gsub("$tinytable_TABLE_ID", paste0("tinytable_", id), template, fixed = TRUE)
 
   # header
   idx <- grep("$tinytable_BOOTSTRAP_HEADER", template, fixed = TRUE)

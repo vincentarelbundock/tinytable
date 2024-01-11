@@ -38,10 +38,14 @@ style_bootstrap <- function(x,
   # listener applies the styling to columns
   for (row in i) {
     for (col in j) {
-      listener <- sprintf("window.addEventListener('load', function () { styleCell(%s, %s, '%s') })", row, col, id)
+      listener <- sprintf("window.addEventListener('load', function () { styleCell_blahblahblah(%s, %s, '%s') })", row, col, id)
       out <- bootstrap_setting(out, listener, component = "cell")
     }
   }
+
+  # styling function in JS must have different names when there is more than one table on a page.
+  # we need to change this here AND in the `tt_bootstrap()`, because otherwise the listener calls will not be changed or will not match the styleCell ID.
+  out <- gsub("styleCell_\\w+\\(", paste0("styleCell_", id, "("), out)
 
   class(out) <- class(x)
 
