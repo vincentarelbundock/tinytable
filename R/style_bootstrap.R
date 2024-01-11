@@ -18,30 +18,10 @@ style_bootstrap <- function(x,
                             css,
                             colspan) {
 
-  if (missing(i)) i <- NULL
-  if (missing(j)) j <- NULL
+  if (missing(i)) i <- seq_len(attr(x, "nrow"))
+  if (missing(j)) j <- seq_len(attr(x, "ncol"))
   assert_integerish(i, lower = 1, null.ok = TRUE)
   assert_integerish(j, lower = 1, null.ok = TRUE)
-
-  loop <- "cell"
-
-  # all cells
-  if (is.null(i) && is.null(j)){
-    i <- seq_len(attr(x, "nrow"))
-    j <- seq_len(attr(x, "ncol"))
-
-    # columns
-    # we don't need a separate column block because we need to
-    # apply styles at the cell level in HTML anyway. 
-  } else if (is.null(i)) {
-    i <- seq_len(attr(x, "nrow"))
-
-    # rows
-    # css can be applied to whole rows.
-  } else if (is.null(j)) {
-    loop <- "row"
-
-  }
 
   # JS 0-indexing,
   j <- j - 1
@@ -49,36 +29,17 @@ style_bootstrap <- function(x,
 
   out <- x
 
-  id <- get_id(stem = "style_tt_")
+  id <- get_id(stem = "tinytable_css_")
 
-  if (loop == "cell") {
-    css <- build_bootstrap_css(css_vector = css, id = id, type = "cell")
-    out <- bootstrap_setting(out, css, component = "css")
-    for (row in i) {
-      for (col in j) {
-        # colspan needs to delete cells, otherwise they get pushed
-        if (is.numeric(colspan) && colspan > 1) {
-          new <- sprintf("table.rows[%s].cells[%s].setAttribute('colspan', %s);", row, col, colspan)
-          out <- bootstrap_setting(out, new, component = "row")
-          # reverse is important
-          for (bump in colspan:2) {
-            new <- sprintf("table.rows[%s].deleteCell(%s);", row, col + bump - 1)
-            out <- bootstrap_setting(out, new, component = "row")
-          }
-        }
+  # css style
+  css <- build_bootstrap_css(css_vector = css, id = id, type = "cell")
+  out <- bootstrap_setting(out, css, component = "css")
 
-        # 0-indexing in JS
-        new <- sprintf("table.rows[%s].cells[%s].classList.add('%s');", row, col, id)
-        out <- bootstrap_setting(out, new, component = "row")
-      }
-    }
-  } else if (loop == "row") {
-    css <- build_bootstrap_css(css_vector = css, id = id, type = "row")
-    out <- bootstrap_setting(out, css, component = "css")
-    for (row in i) {
-      # 0-indexing in JS
-      new <- sprintf("table.rows[%s].classList.add('%s');", row, id)
-      out <- bootstrap_setting(out, new, component = "row")
+  # listener applies the styling to columns
+  for (row in i) {
+    for (col in j) {
+      listener <- sprintf("window.addEventListener('load', function () { styleCell(%s, %s, '%s') })", row, col, id)
+      out <- bootstrap_setting(out, listener, component = "cell")
     }
   }
 

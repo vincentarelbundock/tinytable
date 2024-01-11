@@ -34,7 +34,7 @@ tt_bootstrap <- function(x, caption, theme, width) {
   id <- get_id("")
   template <- gsub(
     "$tinytable_TABLE_ID",
-    paste0(c("tinytable", id), collapse = ""),
+    paste0(c("tinytable_", id), collapse = ""),
     template,
     fixed = TRUE)
   template <- gsub(
