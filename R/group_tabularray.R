@@ -1,8 +1,18 @@
-group_tabularray <- function(x, i, italic, indent) {
+group_tabularray <- function(x, i, indent, ...) {
+  if (!missing(i)) {
+    out <- group_tabularray_row(x, i, indent, ...)
+  } else {
+    out <- group_tabularray_col(x, j, ...)
+  }
+  return(out)
+}
 
-  assert_integerish(i)
-  assert_flag(italic)
 
+
+# group_tabularray_col <- function(x, j) {
+
+
+group_tabularray_row <- function(x, i, indent, ...) {
   if (is.null(names(i))) {
     msg <- "`i` must be a named integer vector."
   }
@@ -39,7 +49,7 @@ group_tabularray <- function(x, i, italic, indent) {
     idx$new[is.na(idx$old)] + attr(x, "nhead"),
     1,
     paste0("c=", ncol),
-    if (isTRUE(italic)) "cmd=\\textit" else ""
+    ""
   )
   cellspec <- paste(cellspec, collapse = "")
   tab <- style_tabularray(tab, inner = cellspec)
@@ -50,6 +60,12 @@ group_tabularray <- function(x, i, italic, indent) {
   cellspec <- sprintf("cell{%s}{%s}={%s},", i, 1, sprintf("preto={\\hspace{%sem}}", indent))
   cellspec <- paste(cellspec, collapse = "")
   tab <- style_tabularray(tab, inner = cellspec)
+
+  dots <- list(...)
+  if (length(dots) > 0) {
+    args <- c(list(x = tab, i = idx$new[is.na(idx$old)]), dots)
+    tab <- do.call(style_tt, args)
+  }
 
   return(tab)
 }

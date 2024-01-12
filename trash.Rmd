@@ -4,8 +4,12 @@ output: pdf_document
 
 ```{r}
 pkgload::load_all()
-x <- mtcars[1:12, 1:8]
-tt(x, output = "html") |> 
-  style_tt(1:2, color = "red") |>
-  save_tt("~/Downloads/trash.html", overwrite = TRUE)
+mtcars[1:12, 1:8] |>
+tt(output = "latex") |> 
+group_tt(i = c(
+  "I like (fake) hamburgers" = 3,
+  "She prefers halloumi" = 4,
+  "They love tofu" = 7),
+  italic = TRUE,
+  color = "red")
 ```

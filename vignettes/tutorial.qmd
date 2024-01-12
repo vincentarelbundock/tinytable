@@ -256,15 +256,39 @@ tt(k)
 
 # Groups and labels
 
+The `group_tt()` function can label groups of rows (`i`) or columns (`j`).
+
+## Rows
+
+The `i` argument accepts a named integer vector. The numbers identify the positions where row group labels are to be inserted. The names includes the text that should be inserted:
+
 ```{r}
-mtcars[1:12, 1:8] |>
-  tt() |> 
+k <- mtcars[1:12, 1:8]
+
+tt(k) |> 
   group_tt(i = c(
     "I like (fake) hamburgers" = 3,
     "She prefers halloumi" = 4,
     "They love tofu" = 7))
-  ```
+```
 
+The `group_tt()` function only includes a few arguments: `x`, `i`, `j`, and `indent`. But whenever we call `group_tt()`, the function will automatically apply a `style_tt()` call to all the new group labels, using any extra argument supplied to `group_tt()` (arguments are pushed via `...`). This means that we can apply all the usual stying options to row labels:
+
+
+```{r}
+tt(k) |> 
+  group_tt(
+    align = "c",
+    color = "white",
+    background = "gray",
+    bold = TRUE,
+    i = c(
+      "I like (fake) hamburgers" = 3,
+      "She prefers halloumi" = 4,
+      "They love tofu" = 7))
+```
+
+## Columns
 
 
 # HTML customization

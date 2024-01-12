@@ -1,6 +1,5 @@
-group_bootstrap <- function(x, i, italic = TRUE, indent = 1) {
+group_bootstrap <- function(x, i, indent = 1, ...) {
   assert_integerish(i)
-  assert_flag(italic)
   if (is.null(names(i))) {
     msg <- "`i` must be a named integer vector."
   }
@@ -36,8 +35,11 @@ group_bootstrap <- function(x, i, italic = TRUE, indent = 1) {
   idx_old <- idx$new[!is.na(idx$old)]
   idx_new <- idx$new[is.na(idx$old)]
   out <- style_tt(out, i = idx_old, j = 1, indent = indent)
-  if (isTRUE(italic)) {
-    out <- style_tt(out, i = idx_new, j = 1, italic = italic)
+
+  dots <- list(...)
+  if (length(dots) > 0) {
+    args <- c(list(x = out, i = idx$new[is.na(idx$old)]), dots)
+    out <- do.call(style_tt, args)
   }
 
   return(out)
