@@ -10,9 +10,9 @@
 #'   defaults to all rows in the table.
 #' @param j An integer vector specifying the columns to be styled. If missing, 
 #'   defaults to all columns in the table.
-#' @param css A vector of CSS style specifications to be applied. Each element 
+#' @param css A vector of CSS style declarations to be applied. Each element 
 #'   corresponds to a cell defined by `i` and `j`.
-#' @param colspan Defines the number of columns a cell should span. When this argument is used, `i` and `j` must be single integers.
+#' @param css_rule A string with complete CSS rules that apply to the table class specified using the `theme` argument of the `tt()` function.
 #' 
 #' @return Returns the modified HTML table object with added Bootstrap styling.
 #'
@@ -25,6 +25,7 @@ style_bootstrap <- function(x, i, j, css = NULL, css_rule = NULL) {
   if (missing(j)) j <- seq_len(attr(x, "ncol"))
   assert_integerish(i, lower = 1, null.ok = TRUE)
   assert_integerish(j, lower = 1, null.ok = TRUE)
+  assert_string(css_rule, null.ok = TRUE)
 
   if (!is.null(css_rule)) {
     out <- bootstrap_setting(out, css_rule, component = "css")
