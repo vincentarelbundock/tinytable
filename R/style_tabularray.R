@@ -5,9 +5,10 @@
 style_tabularray <- function(x,
                              inner = NULL,
                              outer = NULL,
+                             body = NULL,
                              placement = getOption("tt_latex_placement", default = NULL)) {
 
-  if (is.null(inner) && is.null(outer)) return(x)
+  if (is.null(inner) && is.null(outer) && is.null(body)) return(x)
 
   assert_string(inner, null.ok = TRUE)
   assert_string(outer, null.ok = TRUE)
@@ -37,6 +38,15 @@ style_tabularray <- function(x,
       # empty lines can break latex
       trimws(outer),
       out[idx:length(out)])
+  }
+
+  if (!is.null(body)) {
+    idx <- grep("% tabularray inner close", out)
+    out <- c(
+      out[1:idx],
+      # empty lines can break latex
+      trimws(body),
+      out[(idx + 1):length(out)])
   }
 
   # rebuild

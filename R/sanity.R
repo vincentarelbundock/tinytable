@@ -20,7 +20,10 @@ sanitize_output <- function(output) {
     if (isTRUE(knitr::is_latex_output())) {
       usepackage_latex("codehigh")
       usepackage_latex("float")
-      usepackage_latex("tabularray", extra_lines = "\\UseTblrLibrary{booktabs}")
+      usepackage_latex("tabularray", extra_lines = c(
+        "\\UseTblrLibrary{booktabs}",
+        "\\NewTableCommand{\\tinytableDefineColor}[3]{\\definecolor{#1}{#2}{#3}}")
+      )
       if (is.null(output)) out <- "latex"
 
     } else if (isTRUE(knitr::is_html_output())) {

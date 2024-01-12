@@ -198,6 +198,32 @@ tt(x) |>
   style_tt(i = 1, j = 3:4, color = "green")
 ```
 
+## Colors
+
+The `color` and `background` arguments in the `style_tt()` function are used for specifying the text color and the background color for cells of a table created by the `tt()` function. This argument plays a crucial role in enhancing the visual appeal and readability of the table, whether it's rendered in LaTeX or HTML format. The way we specify colors differs slightly between the two formats:
+
+For HTML Output:
+
+- Hex Codes: You can specify colors using hexadecimal codes, which consist of a `#` followed by 6 characters (e.g., `#CC79A7`). This allows for a wide range of colors.
+- Keywords: There's also the option to use color keywords for convenience. The supported keywords are basic color names like `black`, `red`, `blue`, etc.
+
+For LaTeX Output:
+
+- Hexadecimal Codes: Similar to HTML, you can use hexadecimal codes. However, in LaTeX, you need to include these codes as strings (e.g., `"#CC79A7"`).
+- Keywords: LaTeX supports a different set of color keywords, which include standard colors like `black`, `red`, `blue`, as well as additional ones like `cyan`, `darkgray`, `lightgray`, etc.
+- Color Blending: An advanced feature in LaTeX is color blending, which can be achieved using the `xcolor` package. You can blend colors by specifying ratios (e.g., `white!80!blue` or `green!20!red`).
+- Luminance Levels: [The `ninecolors` package in LaTeX](https://ctan.org/pkg/ninecolors?lang=en) offers colors with predefined luminance levels, allowing for more nuanced color choices (e.g., "azure4", "magenta8").
+
+Note that the keywords used in LaTeX and HTML are slightly different.
+
+```{r}
+tt(x) |> style_tt(i = 1:4, j = 1, color = "#FF5733")
+```
+
+Note that when using Hex codes in a LaTeX table, we need extra declarations in the LaTeX preamble. See `?tt` for details.
+
+
+
 ## Spanning cells
 
 Sometimes, it can be useful to make a cell stretch across multiple colums, for example when we want to insert a label. To achieve this, we can use the `colspan` argument. Here, we make the 2nd cell of the 2nd row stretch across three columns:

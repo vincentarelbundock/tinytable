@@ -8,7 +8,15 @@
 #' @param bold Logical; if `TRUE`, text is styled in bold.
 #' @param italic Logical; if `TRUE`, text is styled in italic.
 #' @param monospace Logical; if `TRUE`, text is styled in monospace font.
-#' @param color Text color. Specified as a color name or hexadecimal code. Can be `NULL` for default color.
+#' @param color Text color. There are several ways to specify colors, depending on the output format.
+#' + HTML:
+#'   - Hex code composed of # and 6 characters, ex: #CC79A7.
+#'   - Keywords: black, silver, gray, white, maroon, red, purple, fuchsia, green, lime, olive, yellow, navy, blue, teal, aqua
+#' + LaTeX:
+#'   - Hex code composed of # and 6 characters, ex: "#CC79A7". See the section below for instructions to add in LaTeX preambles.
+#'   - Keywords: black, blue, brown, cyan, darkgray, gray, green, lightgray, lime, magenta, olive, orange, pink, purple, red, teal, violet, white, yellow.
+#'   - Color blending using xcolor`, ex: `white!80!blue`, `green!20!red`.
+#'   - Color names with luminance levels from [the `ninecolors` package](https://mirror.quantum5.ca/CTAN/macros/latex/contrib/ninecolors/ninecolors.pdf) (ex: "azure4", "magenta8", "teal2", "gray1", "olive3"). 
 #' @param background Background color. Specified as a color name or hexadecimal code. Can be `NULL` for default color.
 #' @param fontsize Font size. Can be `NULL` for default size.
 #' @param width Width of the cell or column. Can be `NULL` for default width.
@@ -31,6 +39,8 @@ style_tt <- function(
   colspan = NULL,
   indent = 0) {
  
+  out <- x
+
   # no markdown styling
   if (inherits(x, "tinytable_markdown")) return(x)
 
@@ -92,8 +102,18 @@ style_tt <- function(
     )
   }
   if (!is.null(color)) {
+    if (inherits(x, "tinytable_tabularray") && isTRUE(grepl("^#", color))) {
+      color_latex <- sub("^#", "c", color)
+      out <- style_tabularray(out,
+        body = sprintf(
+          "\\tinytableDefineColor{%s}{HTML}{%s}",
+          color_latex, sub("^#", "", color))
+      )
+    } else {
+      color_latex <- color
+    }
     arguments$color <- list(
-      tabularray = paste0("fg=", color),
+      tabularray = paste0("fg=", color_latex),
       bootstrap = paste0("color: ", color)
     )
   }
@@ -123,7 +143,7 @@ style_tt <- function(
   if (inherits(x, "tinytable_bootstrap")) {
     css <- sapply(arguments, function(x) x[["bootstrap"]])
     css <- paste(css, collapse = "; ")
-    out <- style_bootstrap(x, i, j, css, colspan = colspan)
+    out <- style_bootstrap(out, i, j, css, colspan = colspan)
     return(out)
   }
 
@@ -150,13 +170,13 @@ style_tt <- function(
         j <- seq_len(attr(x, "ncol"))
       }
       colspec <- sprintf("column{%s}={%s},", paste(j, collapse = ","), tabularray)
-      out <- style_tabularray(x, inner = colspec)
+      out <- style_tabularray(out, inner = colspec)
 
     # specified rows
     } else if (missing(j)) {
       # do not style header by default
       rowspec <- sprintf("row{%s}={%s},", paste(i + nhead, collapse = ","), tabularray)
-      out <- style_tabularray(x, inner = rowspec)
+      out <- style_tabularray(out, inner = rowspec)
 
     # specified cells
     } else {
@@ -166,7 +186,7 @@ style_tt <- function(
                           paste(j, collapse = ","),
                           span,
                           tabularray)
-      out <- style_tabularray(x, inner = cellspec)
+      out <- style_tabularray(out, inner = cellspec)
     }
   }
 

@@ -30,6 +30,15 @@ knit_print.tinytable_tabularray <- function(x, ...) {
 
 
 #' @export
+print.tinytable_tabularray <- function(x, ...) {
+  out <- x
+  class(out) <- "character"
+  cat(out, "
+")
+}
+
+
+#' @export
 print.tinytable_bootstrap <- function(x, ...) {
   dir <- tempfile()
   dir.create(dir)

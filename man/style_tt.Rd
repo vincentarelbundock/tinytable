@@ -33,7 +33,21 @@ style_tt(
 
 \item{monospace}{Logical; if \code{TRUE}, text is styled in monospace font.}
 
-\item{color}{Text color. Specified as a color name or hexadecimal code. Can be \code{NULL} for default color.}
+\item{color}{Text color. There are several ways to specify colors, depending on the output format.
+\itemize{
+\item HTML:
+\itemize{
+\item Hex code composed of # and 6 characters, ex: #CC79A7.
+\item Keywords: black, silver, gray, white, maroon, red, purple, fuchsia, green, lime, olive, yellow, navy, blue, teal, aqua
+}
+\item LaTeX:
+\itemize{
+\item Hex code composed of # and 6 characters, ex: "#CC79A7". See the section below for instructions to add in LaTeX preambles.
+\item Keywords: black, blue, brown, cyan, darkgray, gray, green, lightgray, lime, magenta, olive, orange, pink, purple, red, teal, violet, white, yellow.
+\item Color blending using xcolor\verb{, ex: }white!80!blue\verb{, }green!20!red`.
+\item Color names with luminance levels from \href{https://mirror.quantum5.ca/CTAN/macros/latex/contrib/ninecolors/ninecolors.pdf}{the \code{ninecolors} package} (ex: "azure4", "magenta8", "teal2", "gray1", "olive3").
+}
+}}
 
 \item{background}{Background color. Specified as a color name or hexadecimal code. Can be \code{NULL} for default color.}
 

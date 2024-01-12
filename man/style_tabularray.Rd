@@ -8,6 +8,7 @@ style_tabularray(
   x,
   inner = NULL,
   outer = NULL,
+  body = NULL,
   placement = getOption("tt_latex_placement", default = NULL)
 )
 }

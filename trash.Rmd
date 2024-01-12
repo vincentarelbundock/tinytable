@@ -5,21 +5,6 @@ output: pdf_document
 ```{r}
 pkgload::load_all()
 x <- mtcars[1:12, 1:8]
-tt(x, output = "html") |> 
-  group_tt(
-    i = c(
-      "I like (fake) hamburgers" = 3,
-      "She prefers halloumi" = 4,
-      "They love tofu" = 7)) |> 
-  cat(file = "~/Downloads/junk.html")
-```
-
-```{r}
-# devtools::document()
-pkgload::load_all()
-x <- mtcars[1:5, 1:5]
-tt(x, output = "html") |> 
-  style_tt(1, 2:4, indent = 1) |>
-  # group_bootstrap(c("blah" = 2)) |> 
-  cat(file = "~/Downloads/junk.html")
+tt(x, output = "latex") |> 
+  style_tt(1:2, color = "red!50!blue")
 ```
