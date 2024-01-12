@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>tinytable – tt</title>
+<title>tinytable – save_tt</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -64,8 +64,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../man/style_tt.html" rel="next">
-<link href="../vignettes/tutorial.pdf" rel="prev">
+<link href="../LICENSE.html" rel="next">
+<link href="../man/group_tt.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -150,7 +150,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/tt.html">Functions</a></li><li class="breadcrumb-item"><a href="../man/tt.html"><code>tt</code></a></li></ol></nav>
+      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/tt.html">Functions</a></li><li class="breadcrumb-item"><a href="../man/save_tt.html"><code>save_tt</code></a></li></ol></nav>
       <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
       </a>
     </div>
@@ -191,7 +191,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/tt.html" class="sidebar-item-text sidebar-link active">
+  <a href="../man/tt.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>tt</code></span></a>
   </div>
 </li>
@@ -209,7 +209,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/save_tt.html" class="sidebar-item-text sidebar-link">
+  <a href="../man/save_tt.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><code>save_tt</code></span></a>
   </div>
 </li>
@@ -237,13 +237,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#draw-a-tiny-table" id="toc-draw-a-tiny-table" class="nav-link active" data-scroll-target="#draw-a-tiny-table">Draw a Tiny Table</a>
+  <li><a href="#save-a-tiny-table-to-file" id="toc-save-a-tiny-table-to-file" class="nav-link active" data-scroll-target="#save-a-tiny-table-to-file">Save a Tiny Table to File</a>
   <ul class="collapse">
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
   <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
-  <li><a href="#latex-preamble" id="toc-latex-preamble" class="nav-link" data-scroll-target="#latex-preamble">LaTeX preamble</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
@@ -254,23 +253,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="draw-a-tiny-table" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="draw-a-tiny-table">Draw a Tiny Table</h2>
+<section id="save-a-tiny-table-to-file" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="save-a-tiny-table-to-file">Save a Tiny Table to File</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>The <code>tt</code> function renders a table in different formats (HTML, Markdown, or LaTeX) with various styling options.</p>
+<p>This function saves an object of class tinytable_bootstrap, tinytable_tabularray, or tinytable_markdown to a specified file, with an option to overwrite existing files.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">tt(
-  x,
-  output = NULL,
-  align = NULL,
-  caption = NULL,
-  width = NULL,
-  theme = "default",
-  placement = getOption("tt_tabularray_placement", default = NULL)
-)
+<pre><code class="language-R">save_tt(x, filename, overwrite = FALSE)
 </code></pre>
 </section>
 <section id="arguments" class="level3">
@@ -278,85 +269,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <table>
 <tbody><tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="tt_:_x">x</code>
+<code id="save_tt_:_x">x</code>
 </td>
 <td>
-A data frame or data table to be rendered as a table.
+The tinytable object to be saved.
 </td>
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="tt_:_output">output</code>
+<code id="save_tt_:_filename">filename</code>
 </td>
 <td>
-The format of the output table. Can be "html", "latex", or "markdown". If NULL, the format is automatically detected in Quarto or Rmarkdown documents.
+A string representing the path to the file where the object should be saved.
 </td>
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="tt_:_align">align</code>
+<code id="save_tt_:_overwrite">overwrite</code>
 </td>
 <td>
-A string specifying the alignment of columns. Each character in the string corresponds to a column; ‘l’ for left, ‘c’ for center, and ‘r’ for right alignment. The length of the string must match the number of columns in <code>x</code>.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="tt_:_caption">caption</code>
-</td>
-<td>
-A string that will be used as the caption of the table.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="tt_:_width">width</code>
-</td>
-<td>
-A numeric value between 0 and 1 indicating the proportion of the line width that the table should cover.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="tt_:_theme">theme</code>
-</td>
-<td>
-<p>The theme to apply to the table.</p>
-<ul>
-<li>
-<p>LaTeX: "default", "striped", "void", or "grid".</p>
-</li>
-<li>
-<p>HTML: "default", "striped", "void", "grid", or a (composite) Bootstrap class such as <code>“table table-dark”</code> or <code>“table table-dark table-hover”</code>. See</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="tt_:_placement">placement</code>
-</td>
-<td>
-A string to control the position of tables in LaTeX. Will be inserted in square brackets like: <code style="white-space: pre;">\begin{table}[H]</code>
+A logical value indicating whether to overwrite an existing file.
 </td>
 </tr>
 </tbody></table>
 </section>
 <section id="value" class="level3">
 <h3 class="anchored" data-anchor-id="value">Value</h3>
-<p>An object of class <code>tt</code> representing the table.</p>
-</section>
-<section id="latex-preamble" class="level3">
-<h3 class="anchored" data-anchor-id="latex-preamble">LaTeX preamble</h3>
-<p>To be able to use all features of <code>tinytable</code> in PDF (LaTeX) documents, these commands need to be placed in your LaTeX preamble:</p>
-<div class="sourceCode latex">
-<pre>\usepackage{float}
-\usepackage{codehigh}
-\usepackage{tabularray}
-\UseTblrLibrary{booktabs}
-\NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
-</pre>
-</div>
+<p>invisible(TRUE)</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
@@ -364,210 +303,9 @@ A string to control the position of tables in LaTeX. Will be inserted in square 
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<!-- <!DOCTYPE html> -->
-
-
-  
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_othdll1yr9qq9n1be3aa</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  
-
-  
-    <div class="container">
-      <table class="table" id="tinytable_othdll1yr9qq9n1be3aa" data-quarto-disable-processing="true">
-        <thead>
-        
-        </thead>
-              <tbody><tr>
-                <th scope="col">mpg</th>
-                <th scope="col">cyl</th>
-                <th scope="col">disp</th>
-                <th scope="col">hp</th>
-                <th scope="col">drat</th>
-              </tr>
-        </tbody><tbody>
-                <tr>
-                  <td>21</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.9</td>
-                </tr>
-                <tr>
-                  <td>21</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.9</td>
-                </tr>
-                <tr>
-                  <td>22.8</td>
-                  <td>4</td>
-                  <td>108</td>
-                  <td>93</td>
-                  <td>3.85</td>
-                </tr>
-                <tr>
-                  <td>21.4</td>
-                  <td>6</td>
-                  <td>258</td>
-                  <td>110</td>
-                  <td>3.08</td>
-                </tr>
-        </tbody>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-        function styleCell_othdll1yr9qq9n1be3aa(i, j, css_id) {
-          var table = document.getElementById("tinytable_othdll1yr9qq9n1be3aa");
-          table.rows[i].cells[j].classList.add(css_id);
-        }
-        function insertSpanRow(i, colspan, content) {
-          var table = document.getElementById('tinytable_othdll1yr9qq9n1be3aa');
-          var newRow = table.insertRow(i);
-          var newCell = newRow.insertCell(0);
-          newCell.setAttribute("colspan", colspan);
-          newCell.innerText = content;
-        }
-        // tinytable cells before this
-        </script>
-        <style>
-        table {
-          width: auto;
-          margin-left: auto;
-          margin-right: auto;
-        }
-        // tinytable css before this
-        </style> 
-
-      </table>
-    </div>
-  
-
-
-
-</div>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x,</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">theme =</span> <span class="st">"striped"</span>,</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="fl">0.5</span>,</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">align =</span> <span class="st">"ccrrl"</span>,</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Data about cars."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<!-- <!DOCTYPE html> -->
-
-
-  
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_anno4oyvtwinak62d737</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  
-
-  
-    <div class="container">
-      <table class="table table-striped" id="tinytable_anno4oyvtwinak62d737" data-quarto-disable-processing="true">
-        <thead>
-        </thead><caption>Data about cars.</caption>
-        
-              <tbody><tr>
-                <th scope="col">mpg</th>
-                <th scope="col">cyl</th>
-                <th scope="col">disp</th>
-                <th scope="col">hp</th>
-                <th scope="col">drat</th>
-              </tr>
-        </tbody><tbody>
-                <tr>
-                  <td>21</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.9</td>
-                </tr>
-                <tr>
-                  <td>21</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.9</td>
-                </tr>
-                <tr>
-                  <td>22.8</td>
-                  <td>4</td>
-                  <td>108</td>
-                  <td>93</td>
-                  <td>3.85</td>
-                </tr>
-                <tr>
-                  <td>21.4</td>
-                  <td>6</td>
-                  <td>258</td>
-                  <td>110</td>
-                  <td>3.08</td>
-                </tr>
-        </tbody>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-        function styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(i, j, css_id) {
-          var table = document.getElementById("tinytable_anno4oyvtwinak62d737");
-          table.rows[i].cells[j].classList.add(css_id);
-        }
-        function insertSpanRow(i, colspan, content) {
-          var table = document.getElementById('tinytable_anno4oyvtwinak62d737');
-          var newRow = table.insertRow(i);
-          var newCell = newRow.insertCell(0);
-          newCell.setAttribute("colspan", colspan);
-          newCell.innerText = content;
-        }
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(1, 0, 'tinytable_css_gi2zjss09wqz30kz84im') })
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(2, 0, 'tinytable_css_gi2zjss09wqz30kz84im') })
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(3, 0, 'tinytable_css_gi2zjss09wqz30kz84im') })
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(4, 0, 'tinytable_css_gi2zjss09wqz30kz84im') })
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(1, 1, 'tinytable_css_76r2g1jp8hijkeuq3vml') })
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(2, 1, 'tinytable_css_76r2g1jp8hijkeuq3vml') })
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(3, 1, 'tinytable_css_76r2g1jp8hijkeuq3vml') })
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(4, 1, 'tinytable_css_76r2g1jp8hijkeuq3vml') })
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(1, 2, 'tinytable_css_vqldr0au1qdjodipwb3w') })
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(2, 2, 'tinytable_css_vqldr0au1qdjodipwb3w') })
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(3, 2, 'tinytable_css_vqldr0au1qdjodipwb3w') })
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(4, 2, 'tinytable_css_vqldr0au1qdjodipwb3w') })
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(1, 3, 'tinytable_css_gsb4pjvx09wnf8n3bo85') })
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(2, 3, 'tinytable_css_gsb4pjvx09wnf8n3bo85') })
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(3, 3, 'tinytable_css_gsb4pjvx09wnf8n3bo85') })
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(4, 3, 'tinytable_css_gsb4pjvx09wnf8n3bo85') })
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(1, 4, 'tinytable_css_f3f8qc6cmcmdctclsmo5') })
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(2, 4, 'tinytable_css_f3f8qc6cmcmdctclsmo5') })
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(3, 4, 'tinytable_css_f3f8qc6cmcmdctclsmo5') })
-window.addEventListener('load', function () { styleCell_tinytable_css_f3f8qc6cmcmdctclsmo5(4, 4, 'tinytable_css_f3f8qc6cmcmdctclsmo5') })
-        // tinytable cells before this
-        </script>
-        <style>
-        table {
-          table-layout: fixed; width: 50% !important;
-          margin-left: auto;
-          margin-right: auto;
-        }
-.table td.tinytable_css_gi2zjss09wqz30kz84im {  text-align: center }
-.table td.tinytable_css_76r2g1jp8hijkeuq3vml {  text-align: center }
-.table td.tinytable_css_vqldr0au1qdjodipwb3w {  text-align: right }
-.table td.tinytable_css_gsb4pjvx09wnf8n3bo85 {  text-align: right }
-.table td.tinytable_css_f3f8qc6cmcmdctclsmo5 {  text-align: left }
-        // tinytable css before this
-        </style> 
-
-      </table>
-    </div>
-  
-
-
-</div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>tab  <span class="ot">&lt;-</span> <span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>])</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">save_tt</span>(tt, <span class="st">"path/to/file.txt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
@@ -873,13 +611,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../vignettes/tutorial.pdf" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Tutorial (PDF)</span>
+      <a href="../man/group_tt.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>group_tt</code></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../man/style_tt.html" class="pagination-link">
-        <span class="nav-page-text"><code>style_tt</code></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../LICENSE.html" class="pagination-link">
+        <span class="nav-page-text">License</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

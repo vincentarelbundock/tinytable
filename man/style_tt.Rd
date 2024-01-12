@@ -20,7 +20,6 @@ style_tt(
   indent = 0,
   tabularray_inner = NULL,
   tabularray_outer = NULL,
-  tabularray_placement = getOption("tt_tabularray_placement", default = NULL),
   bootstrap_css = NULL,
   bootstrap_css_rule = NULL
 )
@@ -69,8 +68,6 @@ style_tt(
 \item{tabularray_inner}{A string that specifies the "inner" settings of a tabularray LaTeX table.}
 
 \item{tabularray_outer}{A string that specifies the "outer" settings of a tabularray LaTeX table.}
-
-\item{tabularray_placement}{A string to control the position of tables in LaTeX. Will be inserted in square brackets like: \verb{\\\\begin\{table\}[H]}}
 
 \item{bootstrap_css}{A vector of CSS style declarations to be applied (ex: \code{"font-weight: bold"}). Each element corresponds to a cell defined by \code{i} and \code{j}.}
 

@@ -27,7 +27,6 @@
 #' @param bootstrap_css_rule A string with complete CSS rules that apply to the table class specified using the `theme` argument of the `tt()` function.
 #' @param tabularray_inner A string that specifies the "inner" settings of a tabularray LaTeX table. 
 #' @param tabularray_outer A string that specifies the "outer" settings of a tabularray LaTeX table.
-#' @param tabularray_placement A string to control the position of tables in LaTeX. Will be inserted in square brackets like: `\\begin{table}[H]`
 #' @return Returns a modified `tinytable` object with the applied styles.
 #' @template latex_preamble
 style_tt <- function(
@@ -45,7 +44,6 @@ style_tt <- function(
   indent = 0,
   tabularray_inner = NULL,
   tabularray_outer = NULL,
-  tabularray_placement = getOption("tt_tabularray_placement", default = NULL),
   bootstrap_css = NULL,
   bootstrap_css_rule = NULL) {
  
@@ -200,12 +198,6 @@ style_tt <- function(
     }
   }
 
-  # placement
-  assert_string(tabularray_placement, null.ok = TRUE)
-  if (!is.null(tabularray_placement)) {
-    # dollar sign to avoid [H][H] when we style multiple times
-    out <- sub("\\\\begin\\{table\\}$", sprintf("\\\\begin{table}[%s]", tabularray_placement), out)
-  }
 
   # Manual settings
   if (!is.null(tabularray_inner) || !is.null(tabularray_outer)) {

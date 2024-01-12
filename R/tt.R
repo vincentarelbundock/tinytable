@@ -11,6 +11,7 @@
 #' * LaTeX: "default", "striped", "void", or "grid".
 #' * HTML: "default", "striped", "void", "grid", or a (composite) Bootstrap class such as `"table table-dark"` or `"table table-dark table-hover"`. See 
 #' 
+#' @param placement A string to control the position of tables in LaTeX. Will be inserted in square brackets like: `\\begin{table}[H]`
 #' @return An object of class `tt` representing the table.
 #' @template latex_preamble
 #' 
@@ -33,7 +34,8 @@ tt <- function(x,
                align = NULL,
                caption = NULL,
                width = NULL,
-               theme = "default") {
+               theme = "default",
+               placement = getOption("tt_tabularray_placement", default = NULL)) {
 
   # sanity checks
   output <- sanitize_output(output)
@@ -68,6 +70,13 @@ tt <- function(x,
     for (col in seq_along(align)) {
       out <- style_tt(out, j = col, align = align[[col]])
     }
+  }
+
+  # placement
+  assert_string(placement, null.ok = TRUE)
+  if (!is.null(placement)) {
+    # dollar sign to avoid [H][H] when we style multiple times
+    out <- sub("\\\\begin\\{table\\}", sprintf("\\\\begin{table}[%s]\n", placement), out)
   }
 
   return(out)

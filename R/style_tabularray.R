@@ -8,7 +8,8 @@ style_tabularray <- function(x,
                              outer = NULL,
                              body = NULL) {
 
-  if (!inherits(x, "tinytable_tabularray")) return(x)
+  # do not select on tabularray because this gets called in tt() before class assignment
+  if (inherits(x, "tinytable_bootstrap") || inherits(x, "tinytable_markdown")) return(x)
   if (is.null(inner) && is.null(outer) && is.null(body)) return(x)
 
   assert_string(inner, null.ok = TRUE)

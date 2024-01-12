@@ -10,7 +10,8 @@ tt(
   align = NULL,
   caption = NULL,
   width = NULL,
-  theme = "default"
+  theme = "default",
+  placement = getOption("tt_tabularray_placement", default = NULL)
 )
 }
 \arguments{
@@ -29,6 +30,8 @@ tt(
 \item LaTeX: "default", "striped", "void", or "grid".
 \item HTML: "default", "striped", "void", "grid", or a (composite) Bootstrap class such as \code{"table table-dark"} or \code{"table table-dark table-hover"}. See
 }}
+
+\item{placement}{A string to control the position of tables in LaTeX. Will be inserted in square brackets like: \verb{\\\\begin\{table\}[H]}}
 }
 \value{
 An object of class \code{tt} representing the table.
