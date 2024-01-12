@@ -20,11 +20,11 @@ ecosystem. Why release a new one? As [the maintainer of
 `modelsummary`](https://modelsummary.com), I needed a table-drawing
 package which was:
 
--   *Simple*: A streamlined, consistent, and uncluttered user interface,
+-   *Simple*: Streamlined, consistent, and uncluttered user interface,
     with few functions to learn.
 -   *Flexible*: Expressive frameworks to customize tables in HTML and
     LaTeX formats.[1]
--   *Zero-dependency*: Do not import any other `R` package.
+-   *Zero-dependency*: Avoid importing any other `R` package.
 -   *Concise*: Draw beautiful tables without typing a lot of code.
 -   *Safe*: User inputs are checked thoroughly, and informative errors
     are returned early.
