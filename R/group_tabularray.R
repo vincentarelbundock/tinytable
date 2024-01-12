@@ -1,5 +1,5 @@
-group_tabularray <- function(x, i, indent, ...) {
-  if (!missing(i)) {
+group_tabularray <- function(x, i, j, indent, ...) {
+  if (!is.null(i)) {
     out <- group_tabularray_row(x, i, indent, ...)
   } else {
     out <- group_tabularray_col(x, j, ...)
@@ -9,7 +9,59 @@ group_tabularray <- function(x, i, indent, ...) {
 
 
 
-# group_tabularray_col <- function(x, j) {
+
+group_tabularray_col <- function(x, j, ...) {
+
+  dots <- list(...)
+
+  att <- attributes(x)
+
+  out <- strsplit(x, split = "\\n")[[1]]
+
+  header <- rep("", attr(x, "ncol"))
+  for (n in names(j)) {
+    header[min(j[[n]])] <- n
+  }
+  header <- paste(header, collapse = " & ")
+
+  # \toprule -> \midrule
+  midr <- sapply(j, function(x) sprintf("\\cmidrule[lr]{%s-%s}", min(x), max(x)))
+  header <- paste(header, "\\\\", paste(midr, collapse = ""))
+
+  idx <- max(c(
+    grep("% tabularray inner close", out),
+    grep("\\toprule", out, fixed = TRUE)
+  ))
+
+  out <- c(out[1:idx],
+           # empty lines can break latex
+           trimws(header),
+           out[(idx + 1):length(out)])
+  out <- paste(out, collapse = "\n")
+
+  attributes(out) <- att
+  class(out) <- class(x)
+
+  for (k in seq_along(j)) {
+    z <- min(j[[k]])
+    idx <- 1 - attr(x, "nhead")
+    args <- list(x = out,
+                 i = idx,
+                 j = z,
+                 colspan = max(j[[k]]) - min(j[[k]]) + 1)
+    if (!"halign" %in% names(dots)) {
+      args["align"] <- "c" 
+    }
+    args <- c(args, dots)
+    out <- do.call(style_tt, args)
+  }
+
+
+
+
+  return(out)
+
+}
 
 
 group_tabularray_row <- function(x, i, indent, ...) {
@@ -18,8 +70,8 @@ group_tabularray_row <- function(x, i, indent, ...) {
   }
   label <- names(i)
 
-  # reverse order is important
-  i <- rev(sort(i))
+  ## we don't appear to need to reverse in tabularray
+  # i <- rev(sort(i))
 
   ncol <- attr(x, "ncol")
   att <- attributes(x)

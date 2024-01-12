@@ -1,8 +1,16 @@
-group_bootstrap <- function(x, i, indent = 1, ...) {
-  assert_integerish(i)
-  if (is.null(names(i))) {
-    msg <- "`i` must be a named integer vector."
+group_bootstrap <- function(x, i, j, indent = 1, ...) {
+  if (!is.null(i)) {
+    out <- group_bootstrap_row(x, i, indent, ...)
+  } else {
+    out <- group_bootstrap_col(x, j, ...)
   }
+  return(out)
+}
+
+
+group_bootstrap_col <- function(x, j, indent, ...) return(x)
+
+group_bootstrap_row <- function(x, i, indent = 1, ...) {
   label <- names(i)
 
   # reverse order is important
@@ -37,6 +45,7 @@ group_bootstrap <- function(x, i, indent = 1, ...) {
   out <- style_tt(out, i = idx_old, j = 1, indent = indent)
 
   dots <- list(...)
+  dots[["j"]] <- NULL
   if (length(dots) > 0) {
     args <- c(list(x = out, i = idx$new[is.na(idx$old)]), dots)
     out <- do.call(style_tt, args)

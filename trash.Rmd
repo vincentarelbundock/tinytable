@@ -4,12 +4,26 @@ output: pdf_document
 
 ```{r}
 pkgload::load_all()
-mtcars[1:12, 1:8] |>
+mtcars[1:4, 1:8] |>
 tt(output = "latex") |> 
-group_tt(i = c(
-  "I like (fake) hamburgers" = 3,
-  "She prefers halloumi" = 4,
-  "They love tofu" = 7),
+group_tt(j = list(
+  "Hamburgers" = 1:3,
+  "Halloumi" = 4:5,
+  "Tofu" = 7),
   italic = TRUE,
-  color = "red")
+  color = "red"
+)
+```
+
+
+```{r}
+mtcars[1:12, 1:8] |>
+tt() |> 
+group_tt(i = list(
+  "Hamburgers" = 3,
+  "Halloumi" = 4,
+  "Tofu" = 5),
+  italic = TRUE,
+  color = "red"
+)
 ```

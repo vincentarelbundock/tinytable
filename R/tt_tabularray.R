@@ -64,7 +64,6 @@ tt_tabularray <- function(x, caption, theme, width) {
   }
 
 
-
   attr(out, "nhead") <- if (is.null(colnames(x))) 0 else 1
   attr(out, "ncol") <- ncols
   attr(out, "nrow") <- nrows

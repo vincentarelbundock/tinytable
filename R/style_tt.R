@@ -73,7 +73,7 @@ style_tt <- function(
         (!missing(j) && length(j) != 1)) {
       stop("`i` and `j` must be of length 1 when using `colspan`.", call. = FALSE)
     }
-    assert_integerish(colspan, len = 1, lower = 2, upper = j + attr(x, "ncol"))
+    assert_integerish(colspan, len = 1, lower = 1, upper = j + attr(x, "ncol"))
   }
 
 
@@ -169,6 +169,8 @@ style_tt <- function(
   }
 
   tabularray <- paste0(paste(tabularray, collapse = ","), ",")
+
+  if (tabularray == ",") tabularray <- ""
 
 
   if (inherits(x, "tinytable_tabularray")) {
