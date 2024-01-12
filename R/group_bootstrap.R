@@ -1,16 +1,44 @@
+
 group_bootstrap <- function(x, i, j, indent = 1, ...) {
   if (!is.null(i)) {
-    out <- group_bootstrap_row(x, i, indent, ...)
+    out <- group_bootstrap_row(x, i = i, j = j, indent = indent, ...)
   } else {
-    out <- group_bootstrap_col(x, j, ...)
+    out <- group_bootstrap_col(x, i = i, j = j, ...)
   }
   return(out)
 }
 
 
-group_bootstrap_col <- function(x, j, indent, ...) return(x)
+group_bootstrap_col <- function(x, i, j, ...) {
 
-group_bootstrap_row <- function(x, i, indent = 1, ...) {
+  att <- attributes(x)
+  out <- strsplit(x, "\\n")[[1]]
+  header <- NULL
+
+
+  miss <- as.list(setdiff(seq_len(attr(x, "ncol")), unlist(j)))
+  miss <- setNames(miss, rep(" ", length(miss)))
+  j <- c(j, miss)
+
+  max_col <- sapply(j, max)
+  idx <- order(max_col)
+  j <- j[idx]
+  j <- lapply(names(j), function(n) sprintf(
+    '<th scope="col" align="center" colspan=%s>%s</th>',
+    max(j[[n]]) - min(j[[n]]) + 1, n))
+  j <- paste(unlist(j), collapse = "\n")
+
+  idx <- grep("<thead>", out, fixed = TRUE)[1]
+  out <- c(out[seq_len(idx)], j, out[(idx + 1):length(out)])
+
+  out <- paste(out, collapse = "\n")
+  attributes(out) <- att
+  class(out) <- class(x)
+  return(out)
+}
+
+
+group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
   label <- names(i)
 
   # reverse order is important
