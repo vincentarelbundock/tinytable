@@ -17,7 +17,12 @@ style_tt(
   width = NULL,
   align = NULL,
   colspan = NULL,
-  indent = 0
+  indent = 0,
+  tabularray_inner = NULL,
+  tabularray_outer = NULL,
+  tabularray_placement = getOption("tt_tabularray_placement", default = NULL),
+  bootstrap_css = NULL,
+  bootstrap_css_rule = NULL
 )
 }
 \arguments{
@@ -60,6 +65,16 @@ style_tt(
 \item{colspan}{Number of columns a cell should span. Can only be used if both \code{i} and \code{j} are of length 1. Must be an integer greater than 1.}
 
 \item{indent}{Text indentation in em units. Positive values only.}
+
+\item{tabularray_inner}{A string that specifies the "inner" settings of a tabularray LaTeX table.}
+
+\item{tabularray_outer}{A string that specifies the "outer" settings of a tabularray LaTeX table.}
+
+\item{tabularray_placement}{A string to control the position of tables in LaTeX. Will be inserted in square brackets like: \verb{\\\\begin\{table\}[H]}}
+
+\item{bootstrap_css}{A vector of CSS style declarations to be applied (ex: \code{"font-weight: bold"}). Each element corresponds to a cell defined by \code{i} and \code{j}.}
+
+\item{bootstrap_css_rule}{A string with complete CSS rules that apply to the table class specified using the \code{theme} argument of the \code{tt()} function.}
 }
 \value{
 Returns a modified \code{tinytable} object with the applied styles.
@@ -67,3 +82,16 @@ Returns a modified \code{tinytable} object with the applied styles.
 \description{
 This function applies styling to a table created by \code{tt()}. It allows customization of text style (bold, italic, monospace), text and background colors, font size, cell width, text alignment, column span, and indentation. The function supports both LaTeX (tabularray) and HTML (bootstrap) formats.
 }
+\section{LaTeX preamble}{
+
+
+To be able to use all features of \code{tinytable} in PDF (LaTeX) documents, these commands need to be placed in your LaTeX preamble:
+
+\if{html}{\out{<div class="sourceCode latex">}}\preformatted{\\usepackage\{float\}
+\\usepackage\{codehigh\}
+\\usepackage\{tabularray\}
+\\UseTblrLibrary\{booktabs\}
+\\NewTableCommand\{\\tinytableDefineColor\}[3]\{\\definecolor\{#1\}\{#2\}\{#3\}\}
+}\if{html}{\out{</div>}}
+}
+

@@ -1,10 +1,7 @@
-group_tabularray <- function(x, i, italic, rule, indent) {
+group_tabularray <- function(x, i, italic, indent) {
 
   assert_integerish(i)
-  assert_flag(rule)
   assert_flag(italic)
-
-  rule <- if (isTRUE(rule)) "\\midrule" else ""
 
   if (is.null(names(i))) {
     msg <- "`i` must be a named integer vector."
@@ -28,7 +25,7 @@ group_tabularray <- function(x, i, italic, rule, indent) {
 
   # separator rows
   # add separator rows so they are treated as body in future calls
-  new <- paste(label, strrep("&", ncol), "\\\\", rule)
+  new <- paste(label, strrep("&", ncol), "\\\\")
   att$body <- c(att$body, new)
   idx <- insert_values(mid, new, i)
 

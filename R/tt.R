@@ -12,6 +12,7 @@
 #' * HTML: "default", "striped", "void", "grid", or a (composite) Bootstrap class such as `"table table-dark"` or `"table table-dark table-hover"`. See 
 #' 
 #' @return An object of class `tt` representing the table.
+#' @template latex_preamble
 #' 
 #' @examplesIf getOption("tt_local", default = FALSE)
 #' @examples

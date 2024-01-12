@@ -15,8 +15,6 @@
 #' @param css_rule A string with complete CSS rules that apply to the table class specified using the `theme` argument of the `tt()` function.
 #' 
 #' @return Returns the modified HTML table object with added Bootstrap styling.
-#'
-#' @export
 style_bootstrap <- function(x, i, j, css = NULL, css_rule = NULL) {
   out <- x
 

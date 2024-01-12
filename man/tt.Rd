@@ -36,6 +36,19 @@ An object of class \code{tt} representing the table.
 \description{
 The \code{tt} function renders a table in different formats (HTML, Markdown, or LaTeX) with various styling options.
 }
+\section{LaTeX preamble}{
+
+
+To be able to use all features of \code{tinytable} in PDF (LaTeX) documents, these commands need to be placed in your LaTeX preamble:
+
+\if{html}{\out{<div class="sourceCode latex">}}\preformatted{\\usepackage\{float\}
+\\usepackage\{codehigh\}
+\\usepackage\{tabularray\}
+\\UseTblrLibrary\{booktabs\}
+\\NewTableCommand\{\\tinytableDefineColor\}[3]\{\\definecolor\{#1\}\{#2\}\{#3\}\}
+}\if{html}{\out{</div>}}
+}
+
 \examples{
 \dontshow{if (getOption("tt_local", default = FALSE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontshow{\}) # examplesIf}

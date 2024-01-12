@@ -23,8 +23,13 @@
 #' @param align Text alignment within the cell. Options are 'c' (center), 'l' (left), or 'r' (right). Can be `NULL` for default alignment.
 #' @param colspan Number of columns a cell should span. Can only be used if both `i` and `j` are of length 1. Must be an integer greater than 1.
 #' @param indent Text indentation in em units. Positive values only.
+#' @param bootstrap_css A vector of CSS style declarations to be applied (ex: `"font-weight: bold"`). Each element corresponds to a cell defined by `i` and `j`.
+#' @param bootstrap_css_rule A string with complete CSS rules that apply to the table class specified using the `theme` argument of the `tt()` function.
+#' @param tabularray_inner A string that specifies the "inner" settings of a tabularray LaTeX table. 
+#' @param tabularray_outer A string that specifies the "outer" settings of a tabularray LaTeX table.
+#' @param tabularray_placement A string to control the position of tables in LaTeX. Will be inserted in square brackets like: `\\begin{table}[H]`
 #' @return Returns a modified `tinytable` object with the applied styles.
-#' @export
+#' @template latex_preamble
 style_tt <- function(
   x,
   i, j,
@@ -37,7 +42,12 @@ style_tt <- function(
   width = NULL,
   align = NULL,
   colspan = NULL,
-  indent = 0) {
+  indent = 0,
+  tabularray_inner = NULL,
+  tabularray_outer = NULL,
+  tabularray_placement = getOption("tt_tabularray_placement", default = NULL),
+  bootstrap_css = NULL,
+  bootstrap_css_rule = NULL) {
  
   out <- x
 
@@ -144,7 +154,6 @@ style_tt <- function(
     css <- sapply(arguments, function(x) x[["bootstrap"]])
     css <- paste(css, collapse = "; ")
     out <- style_bootstrap(out, i, j, css = css)
-    return(out)
   }
 
 
@@ -162,6 +171,7 @@ style_tt <- function(
   }
 
   tabularray <- paste0(paste(tabularray, collapse = ","), ",")
+
 
   if (inherits(x, "tinytable_tabularray")) {
     # specified columns or all cells
@@ -189,6 +199,22 @@ style_tt <- function(
       out <- style_tabularray(out, inner = cellspec)
     }
   }
+
+  # placement
+  assert_string(tabularray_placement, null.ok = TRUE)
+  if (!is.null(tabularray_placement)) {
+    # dollar sign to avoid [H][H] when we style multiple times
+    out <- sub("\\\\begin\\{table\\}$", sprintf("\\\\begin{table}[%s]", tabularray_placement), out)
+  }
+
+  # Manual settings
+  if (!is.null(tabularray_inner) || !is.null(tabularray_outer)) {
+    out <- style_tabularray(out, inner = tabularray_inner, outer = tabularray_outer)
+  }
+  if (!is.null(bootstrap_css) || !is.null(bootstrap_css_rule)) {
+    out <- style_bootstrap(out, i = i, j = j, css = bootstrap_css, css_rule = bootstrap_css_rule)
+  }
+
 
   return(out)
 }

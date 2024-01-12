@@ -8,6 +8,11 @@ format:
     colorlinks: true
 ---
 
+```{r, include = FALSE}
+options("tt_tabularray_placement" = "H")
+```
+
+
 \clearpage
 
 `tinytable` is a small but powerful `R` package to draw HTML, LaTeX, PDF, Markdown, and Typst tables. The interface is minimalist, but it gives users direct and convenient access to powerful frameworks to create endlessly customizable tables.
@@ -30,7 +35,6 @@ tt(x)
 
 ```{r, include=FALSE}
 # after library to override and build with dev version
-options("tt_latex_placement" = "H")
 pkgload::load_all()
 ```
 
@@ -119,11 +123,11 @@ TODO: Cross-references
 
 # Style
 
-`tinytable` exports three styling functions. 
+The main styling function for the `tinytable` package is `style_tt()`. Via this function, you can access three main interfaces to customize tables:
 
-1. `style_tt()` is a general interface to frequently used style choices which works for both HTML and LaTeX (PDF): colors, font style and size, row and column spans, etc. 
-2. `style_tabularray()` is a specialized interface which allows users to use the [extraordinarily powerful `tabularray` package](https://ctan.org/pkg/tabularray?lang=en) to customize LaTeX tables. 
-3. `style_bootstrap()` is a specialized interface which allows users to use the [powerful `Bootstrap` framework](https://getbootstrap.com/docs/5.3/content/tables/) to customize HTML tables.
+1. A general interface to frequently used style choices which works for both HTML and LaTeX (PDF): colors, font style and size, row and column spans, etc. This is accessed through several distinct arguments in the `style_tt()`  function, such as `italic`, `color`, etc.
+2. A specialized interface which allows users to use the [powerful `tabularray` package](https://ctan.org/pkg/tabularray?lang=en) to customize LaTeX tables. This is accessed by passing `tabularray` settings as strings to the `tabularray_inner` and `tabularray_outer` arguments of `style_tt()`.
+3. A specialized interface which allows users to use the [powerful `Bootstrap` framework](https://getbootstrap.com/docs/5.3/content/tables/) to customize HTML tables. This is accessed by passing CSS declarations and rules to the `bootstrap_css` and `bootstrap_css_rule` arguments of `style_tt()`.
 
 ## Colors, lines, space, font, spans, etc.
 
@@ -271,9 +275,9 @@ mtcars[1:12, 1:8] |>
 The HTML customization options described in this section are not available for LaTeX (or PDF) documents. Please refer to the web documentation to read this part of the tutorial.
 :::
 
-::: {.content-visible when-format="html"}
 ## Themes
 
+::: {.content-visible when-format="html"}
 The Bootstrap framework provides a number of built-in themes to style tables. To use them, we call `bootstrapOptions()` with the `class` argument, and we specify the Bootstrap class. A list of available Bootstrap classes can be found here: <https://getbootstrap.com/docs/5.3/content/tables/>
 
 For example, to produce a "dark" table, we use the `table-dark` class:
@@ -288,17 +292,23 @@ We can also combine several Bootstrap classes. Here, we get a "striped" table wi
 tt(x, theme = "table table-striped table-warning table-hover")
 ```
 
+:::
+
 ## CSS declarations
 
-The `style_bootstrap()` function allows us to declare CSS properties and values for individual cells, columns, or rows of a table. For example, if we want to make the first column bold, we could do:
+::: {.content-visible when-format="html"}
+The `style_tt()` function allows us to declare CSS properties and values for individual cells, columns, or rows of a table. For example, if we want to make the first column bold, we could do:
 
 ```{r}
-tt(x) |> style_bootstrap(j = 1, css = "font-weight: bold; color: red;")
+tt(x) |>
+  style_tt(j = 1, bootstrap_css = "font-weight: bold; color: red;")
 ```
+:::
 
 ## CSS rules
 
-For more extensive customization, we can use complete CSS rules. In this example, we define several rules that apply to a new class called `mytable`. Then, we use the `theme` argument of the `tt()` function to ensure that our tiny table is of class `mytable`. Finally, we call `style_bootstrap()` to apply the rules with the `css_rule` argument.
+::: {.content-visible when-format="html"}
+For more extensive customization, we can use complete CSS rules. In this example, we define several rules that apply to a new class called `mytable`. Then, we use the `theme` argument of the `tt()` function to ensure that our tiny table is of class `mytable`. Finally, we call `style_bootstrap()` to apply the rules with the `bootstrap_css_rule` argument.
 
 ```{r, eval = knitr::is_html_output()}
 css_rule <- "
@@ -334,10 +344,8 @@ css_rule <- "
 "
 
 tt(x, theme = "table mytable") |> 
-  style_bootstrap(css_rule = css_rule)
+  style_tt(bootstrap_css_rule = css_rule)
 ```
-
-
 
 :::
 
@@ -350,27 +358,69 @@ The LaTeX / PDF customization options described in this section are not availabl
 :::
 
 
-::: {.content-visible when-format="pdf"}
+## Introduction to `tabularray`
 
+::: {.content-visible when-format="pdf"}
+`tabularray` offers a robust solution for creating and managing tables in LaTeX, standing out for its flexibility and ease of use. It excels in handling complex table layouts and offers enhanced functionality compared to traditional LaTeX table environments. This package is particularly useful for users requiring advanced table features, such as complex cell formatting, color management, and versatile table structures.
+
+A key feature of Tabularray is its separation of style from content. This approach allows users to define the look and feel of their tables (such as color, borders, and text alignment) independently from the actual data within the table. This separation simplifies the process of formatting tables and enhances the clarity and maintainability of LaTeX code. The `tabularray` documentation is fantastic. It will teach you how to customize virtually every aspect of your tables: <https://ctan.org/pkg/tabularray?lang=en>
+
+Tabularray introduces a streamlined interface for specifying table settings. It employs two types of settings blocks: Inner and Outer. The Outer block is used for settings that apply to the entire table, like overall alignment, while the Inner block handles settings for specific elements like columns, rows, and cells. The `style_tt()` function includes `tabularray_inner` and `tabularray_outer` arguments to set these respective features.
+
+Consider this `tabularray` example, which illustrates the use of inner settings:
+
+```latex
+\begin{table}
+\centering
+\begin{tblr}[         %% tabularray outer open
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+column{1-4}={halign=c},
+hlines = {bg=white},
+vlines = {bg=white},
+cell{1,6}{odd} = {bg=teal7},
+cell{1,6}{even} = {bg=green7},
+cell{2,4}{1,4} = {bg=red7},
+cell{3,5}{1,4} = {bg=purple7},
+cell{2}{2} = {r=4,c=2}{bg=azure7},
+}                     %% tabularray inner close
+mpg & cyl & disp & hp \\
+21 & 6 & 160 & 110 \\
+21 & 6 & 160 & 110 \\
+22.8 & 4 & 108 & 93 \\
+21.4 & 6 & 258 & 110 \\
+18.7 & 8 & 360 & 175 \\
+\end{tblr}
+\end{table}
+```
+   
+The Inner block, enclosed in `{}`, defines specific styles like column formats (`column{1-4}={halign=c}`), horizontal and vertical line colors (`hlines={fg=white}`, `vlines={fg=white}`), and cell colorations (`cell{1,6}{odd}={bg=teal7}`, etc.). The last line of the inner block also species that the second cell of row 2 (`cell{2}{2}`) should span 4 rows and 2 columns (`{r=4,c=3}`), be centered (`halign=c`), and with a background color with the 7th luminance level of the azure color (`bg=azure7`).
+
+We can create this code easily by passing a string to the `tabularray_inner` argument of the `style_tt()` function:
 
 ```{r, eval = knitr::is_latex_output()}
 inner <- "
- hlines = {white},
- vlines = {white},
- cell{1,6}{odd} = {teal7},
- cell{1,6}{even} = {green7},
- cell{2,4}{1,4} = {red7},
- cell{3,5}{1,4} = {purple7},
- cell{2}{2} = {r=4,c=2}{c,azure7},
+column{1-4}={halign=c},
+hlines = {fg=white},
+vlines = {fg=white},
+cell{1,6}{odd} = {bg=teal7},
+cell{1,6}{even} = {bg=green7},
+cell{2,4}{1,4} = {bg=red7},
+cell{3,5}{1,4} = {bg=purple7},
+cell{2}{2} = {r=4,c=2}{bg=azure7},
 "
 mtcars[1:5, 1:4] |>
-  tt(theme = "void") |>
-  style_tabularray(inner = inner)
+  tt(output = "latex", theme = "void") |>
+  style_tt(tabularray_inner = inner)
 ```
+
+
+:::
 
 
 ## `tabularray`  keys
 
+::: {.content-visible when-format="pdf"}
 Inner specifications:
 
 | Key       | Description and Values                                    | Initial Value |

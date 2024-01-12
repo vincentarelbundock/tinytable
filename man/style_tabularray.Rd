@@ -4,17 +4,24 @@
 \alias{style_tabularray}
 \title{Style LaTeX tables using tabularray}
 \usage{
-style_tabularray(
-  x,
-  inner = NULL,
-  outer = NULL,
-  body = NULL,
-  placement = getOption("tt_latex_placement", default = NULL)
-)
+style_tabularray(x, inner = NULL, outer = NULL, body = NULL)
 }
 \description{
 Style LaTeX tables using tabularray
 }
+\section{LaTeX preamble}{
+
+
+To be able to use all features of \code{tinytable} in PDF (LaTeX) documents, these commands need to be placed in your LaTeX preamble:
+
+\if{html}{\out{<div class="sourceCode latex">}}\preformatted{\\usepackage\{float\}
+\\usepackage\{codehigh\}
+\\usepackage\{tabularray\}
+\\UseTblrLibrary\{booktabs\}
+\\NewTableCommand\{\\tinytableDefineColor\}[3]\{\\definecolor\{#1\}\{#2\}\{#3\}\}
+}\if{html}{\out{</div>}}
+}
+
 \section{LaTeX \code{tabularray} options}{
 
 \subsection{Table: \code{tt()}}{

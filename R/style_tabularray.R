@@ -1,26 +1,22 @@
 #' Style LaTeX tables using tabularray
 #'
+#' @template latex_preamble
 #' @template tabularray
 #' @export
 style_tabularray <- function(x,
                              inner = NULL,
                              outer = NULL,
-                             body = NULL,
-                             placement = getOption("tt_latex_placement", default = NULL)) {
+                             body = NULL) {
 
+  if (!inherits(x, "tinytable_tabularray")) return(x)
   if (is.null(inner) && is.null(outer) && is.null(body)) return(x)
 
   assert_string(inner, null.ok = TRUE)
   assert_string(outer, null.ok = TRUE)
-  assert_string(placement, null.ok = TRUE)
 
   att <- attributes(x)    
   out <- strsplit(x, "\n")[[1]]
 
-  if (!is.null(placement)) {
-    # dollar sign to avoid [H][H] when we style multiple times
-    out <- sub("\\\\begin\\{table\\}$", sprintf("\\\\begin{table}[%s]", placement), out)
-  }
 
   if (!is.null(inner)) {
     idx <- grep("% tabularray inner close", out)

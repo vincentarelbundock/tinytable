@@ -1,6 +1,5 @@
-group_bootstrap <- function(x, i, italic = TRUE, rule = TRUE, indent = 1) {
+group_bootstrap <- function(x, i, italic = TRUE, indent = 1) {
   assert_integerish(i)
-  assert_flag(rule)
   assert_flag(italic)
   if (is.null(names(i))) {
     msg <- "`i` must be a named integer vector."

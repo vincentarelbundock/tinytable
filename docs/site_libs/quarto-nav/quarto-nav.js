@@ -85,17 +85,6 @@ window.document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  function dashboardOffset() {
-    const dashboardNavEl = window.document.getElementById(
-      "quarto-dashboard-header"
-    );
-    if (dashboardNavEl !== null) {
-      return dashboardNavEl.clientHeight;
-    } else {
-      return 0;
-    }
-  }
-
   function updateDocumentOffsetWithoutAnimation() {
     updateDocumentOffset(false);
   }
@@ -103,7 +92,7 @@ window.document.addEventListener("DOMContentLoaded", function () {
   function updateDocumentOffset(animated) {
     // set body offset
     const topOffset = headerOffset();
-    const bodyOffset = topOffset + footerOffset() + dashboardOffset();
+    const bodyOffset = topOffset + footerOffset();
     const bodyEl = window.document.body;
     bodyEl.setAttribute("data-bs-offset", topOffset);
     bodyEl.style.paddingTop = topOffset + "px";
@@ -127,7 +116,6 @@ window.document.addEventListener("DOMContentLoaded", function () {
       } else {
         sidebar.style.top = topOffset + "px";
         sidebar.style.maxHeight = "calc(100vh - " + topOffset + "px)";
-        sidebar.style.minHeight = "calc(100vh - " + topOffset + "px)";
       }
     });
 
