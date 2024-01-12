@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.151">
+<meta name="generator" content="quarto-1.4.533">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>tinytable – tt</title>
+<title>tinytable</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,7 +22,7 @@ ul.task-list li input[type="checkbox"] {
 }
 /* CSS for syntax highlighting */
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -81,12 +81,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   "collapse-after": 3,
   "panel-placement": "end",
   "type": "overlay",
-  "limit": 20,
+  "limit": 50,
   "keyboard-shortcut": [
     "f",
     "/",
     "s"
   ],
+  "show-item-context": false,
   "language": {
     "search-no-results-text": "No results",
     "search-matching-documents-text": "matching documents",
@@ -95,6 +96,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-more-match-text": "more match in this document",
     "search-more-matches-text": "more matches in this document",
     "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
     "search-detached-cancel-button-title": "Cancel",
     "search-submit-button-title": "Submit",
     "search-label": "Search"
@@ -108,7 +110,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
-    <nav class="navbar navbar-expand-lg navbar-dark ">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
@@ -122,22 +124,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="../vignettes/tutorial.html" rel="" target="" aria-current="page">
- <span class="menu-text">Tutorial (HTML)</span></a>
+    <a class="nav-link active" href="../vignettes/tutorial.html" aria-current="page"> 
+<span class="menu-text">Tutorial (HTML)</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../vignettes/tutorial.pdf" rel="" target="">
- <span class="menu-text">Tutorial (PDF)</span></a>
+    <a class="nav-link" href="../vignettes/tutorial.pdf"> 
+<span class="menu-text">Tutorial (PDF)</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/vincentarelbundock/tinytable" rel="" target=""><i class="bi bi-github" role="img" aria-label="tinytable GitHub">
+    <a class="nav-link" href="https://github.com/vincentarelbundock/tinytable"> <i class="bi bi-github" role="img" aria-label="tinytable GitHub">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com/vincentab" rel="" target=""><i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://twitter.com/vincentab"> <i class="bi bi-twitter" role="img">
 </i> 
- <span class="menu-text"></span></a>
+<span class="menu-text"></span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -147,19 +149,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </nav>
   <nav class="quarto-secondary-nav">
     <div class="container-fluid d-flex">
-      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-      <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/tt.html">Functions</a></li><li class="breadcrumb-item"><a href="../man/tt.html"><code>tt</code></a></li></ol></nav>
-      <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
-      </a>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/tt.html">Functions</a></li><li class="breadcrumb-item"><a href="../man/tt.html"><code>tt</code></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
     </div>
   </nav>
 </header>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal sidebar-navigation floating overflow-auto">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
@@ -209,7 +211,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/style_bootstrap.qmd" class="sidebar-item-text sidebar-link">
+  <a href="../man/style_bootstrap.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>style_bootstrap</code></span></a>
   </div>
 </li>
@@ -236,7 +238,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </ul>
     </div>
 </nav>
-<div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
         <nav id="TOC" role="doc-toc" class="toc-active">
@@ -256,6 +258,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
+
 
 
 
@@ -360,13 +363,13 @@ A numeric value between 0 and 1 indicating the proportion of the line width that
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_obxe74k2blb61byyrnap</title>
+    <title>tinytable_lpgjtpm79ifiego40g29</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   
 
   
     <div class="container mt-4">
-      <table class="table" id="tinytable_obxe74k2blb61byyrnap" data-quarto-disable-processing="true">
+      <table class="table" id="tinytable_lpgjtpm79ifiego40g29" data-quarto-disable-processing="true">
         <thead>
         
         </thead>
@@ -409,9 +412,16 @@ A numeric value between 0 and 1 indicating the proportion of the line width that
         </tbody>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-        function styleCell_obxe74k2blb61byyrnap(i, j, css_id) {
-          var table = document.getElementById("tinytable_obxe74k2blb61byyrnap");
+        function styleCell_lpgjtpm79ifiego40g29(i, j, css_id) {
+          var table = document.getElementById("tinytable_lpgjtpm79ifiego40g29");
           table.rows[i].cells[j].classList.add(css_id);
+        }
+        function insertSpanRow(i, colspan, content) {
+          var table = document.getElementById('tinytable_lpgjtpm79ifiego40g29');
+          var newRow = table.insertRow(i);
+          var newCell = newRow.insertCell(0);
+          newCell.setAttribute("colspan", colspan);
+          newCell.innerText = content;
         }
         // tinytable cells before this
         </script>
@@ -443,13 +453,13 @@ A numeric value between 0 and 1 indicating the proportion of the line width that
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_ewhs4if6k1s2qrwapqtn</title>
+    <title>tinytable_s05vv2ov0qr827dlub0l</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   
 
   
     <div class="container mt-4">
-      <table class="table table-striped" id="tinytable_ewhs4if6k1s2qrwapqtn" data-quarto-disable-processing="true">
+      <table class="table table-striped" id="tinytable_s05vv2ov0qr827dlub0l" data-quarto-disable-processing="true">
         <thead>
         </thead><caption>Data about cars.</caption>
         
@@ -492,30 +502,37 @@ A numeric value between 0 and 1 indicating the proportion of the line width that
         </tbody>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
         <script>
-        function styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(i, j, css_id) {
-          var table = document.getElementById("tinytable_ewhs4if6k1s2qrwapqtn");
+        function styleCell_tinytable_css_xlyuexqrl49h6uti933b(i, j, css_id) {
+          var table = document.getElementById("tinytable_s05vv2ov0qr827dlub0l");
           table.rows[i].cells[j].classList.add(css_id);
         }
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(1, 0, 'tinytable_css_3m217fs35zhu0mvxtrdb') })
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(2, 0, 'tinytable_css_3m217fs35zhu0mvxtrdb') })
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(3, 0, 'tinytable_css_3m217fs35zhu0mvxtrdb') })
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(4, 0, 'tinytable_css_3m217fs35zhu0mvxtrdb') })
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(1, 1, 'tinytable_css_uwc7dvseotfwo5dxuj7y') })
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(2, 1, 'tinytable_css_uwc7dvseotfwo5dxuj7y') })
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(3, 1, 'tinytable_css_uwc7dvseotfwo5dxuj7y') })
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(4, 1, 'tinytable_css_uwc7dvseotfwo5dxuj7y') })
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(1, 2, 'tinytable_css_zlojwfwrq24rkto7s98q') })
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(2, 2, 'tinytable_css_zlojwfwrq24rkto7s98q') })
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(3, 2, 'tinytable_css_zlojwfwrq24rkto7s98q') })
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(4, 2, 'tinytable_css_zlojwfwrq24rkto7s98q') })
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(1, 3, 'tinytable_css_sim9vgvafd19fhnrtjkl') })
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(2, 3, 'tinytable_css_sim9vgvafd19fhnrtjkl') })
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(3, 3, 'tinytable_css_sim9vgvafd19fhnrtjkl') })
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(4, 3, 'tinytable_css_sim9vgvafd19fhnrtjkl') })
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(1, 4, 'tinytable_css_w49kt5kz1piz9mhuqj2i') })
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(2, 4, 'tinytable_css_w49kt5kz1piz9mhuqj2i') })
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(3, 4, 'tinytable_css_w49kt5kz1piz9mhuqj2i') })
-window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1piz9mhuqj2i(4, 4, 'tinytable_css_w49kt5kz1piz9mhuqj2i') })
+        function insertSpanRow(i, colspan, content) {
+          var table = document.getElementById('tinytable_s05vv2ov0qr827dlub0l');
+          var newRow = table.insertRow(i);
+          var newCell = newRow.insertCell(0);
+          newCell.setAttribute("colspan", colspan);
+          newCell.innerText = content;
+        }
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(1, 0, 'tinytable_css_b748cndbtktfjdjn3997') })
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(2, 0, 'tinytable_css_b748cndbtktfjdjn3997') })
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(3, 0, 'tinytable_css_b748cndbtktfjdjn3997') })
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(4, 0, 'tinytable_css_b748cndbtktfjdjn3997') })
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(1, 1, 'tinytable_css_rxjpdzcx757rcaebo49x') })
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(2, 1, 'tinytable_css_rxjpdzcx757rcaebo49x') })
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(3, 1, 'tinytable_css_rxjpdzcx757rcaebo49x') })
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(4, 1, 'tinytable_css_rxjpdzcx757rcaebo49x') })
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(1, 2, 'tinytable_css_yy6usu884opdcqy235sw') })
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(2, 2, 'tinytable_css_yy6usu884opdcqy235sw') })
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(3, 2, 'tinytable_css_yy6usu884opdcqy235sw') })
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(4, 2, 'tinytable_css_yy6usu884opdcqy235sw') })
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(1, 3, 'tinytable_css_c1ra0yzyqgs31u6zbk3o') })
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(2, 3, 'tinytable_css_c1ra0yzyqgs31u6zbk3o') })
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(3, 3, 'tinytable_css_c1ra0yzyqgs31u6zbk3o') })
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(4, 3, 'tinytable_css_c1ra0yzyqgs31u6zbk3o') })
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(1, 4, 'tinytable_css_xlyuexqrl49h6uti933b') })
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(2, 4, 'tinytable_css_xlyuexqrl49h6uti933b') })
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(3, 4, 'tinytable_css_xlyuexqrl49h6uti933b') })
+window.addEventListener('load', function () { styleCell_tinytable_css_xlyuexqrl49h6uti933b(4, 4, 'tinytable_css_xlyuexqrl49h6uti933b') })
         // tinytable cells before this
         </script>
         <style>
@@ -524,11 +541,11 @@ window.addEventListener('load', function () { styleCell_tinytable_css_w49kt5kz1p
           margin-left: auto;
           margin-right: auto;
         }
-.table td.tinytable_css_3m217fs35zhu0mvxtrdb { text-align: center; }
-.table td.tinytable_css_uwc7dvseotfwo5dxuj7y { text-align: center; }
-.table td.tinytable_css_zlojwfwrq24rkto7s98q { text-align: right; }
-.table td.tinytable_css_sim9vgvafd19fhnrtjkl { text-align: right; }
-.table td.tinytable_css_w49kt5kz1piz9mhuqj2i { text-align: left; }
+.table td.tinytable_css_b748cndbtktfjdjn3997 { text-align: center; }
+.table td.tinytable_css_rxjpdzcx757rcaebo49x { text-align: center; }
+.table td.tinytable_css_yy6usu884opdcqy235sw { text-align: right; }
+.table td.tinytable_css_c1ra0yzyqgs31u6zbk3o { text-align: right; }
+.table td.tinytable_css_xlyuexqrl49h6uti933b { text-align: left; }
         // tinytable css before this
         </style> 
 
@@ -663,18 +680,49 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
   const xrefs = window.document.querySelectorAll('a.quarto-xref');
   const processXRef = (id, note) => {
-    if (id.startsWith('sec-')) {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
       // Special case sections, only their first couple elements
       const container = document.createElement("div");
       if (note.children && note.children.length > 2) {
-        for (let i = 0; i < 2; i++) {
-          container.appendChild(note.children[i].cloneNode(true));
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
         }
         return container.innerHTML
       } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
         return note.innerHTML;
       }
     } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
       return note.innerHTML;
     }
   }
@@ -684,27 +732,56 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       instance.disable();
       let url = xref.getAttribute('href');
       let hash = undefined; 
-      try { hash = new URL(url).hash; } catch {}
-      const id = hash.replace(/^#\/?/, "");
-      const note = window.document.getElementById(id);
-      if (note !== null) {
-        try {
-          const html = processXRef(id, note);
-          instance.setContent(html);
-        } finally {
-          instance.enable();
-          instance.show();
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
         }
       } else {
-        // See if we can fetch this
-        fetch(url.split('#')[0])
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
         .then(res => res.text())
         .then(html => {
           const parser = new DOMParser();
           const htmlDoc = parser.parseFromString(html, "text/html");
-          const note = htmlDoc.getElementById(id);
+          const note = htmlDoc.querySelector('main.content');
           if (note !== null) {
-            const html = processXRef(id, note);
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
             instance.setContent(html);
           } 
         }).finally(() => {
@@ -782,6 +859,32 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         });
         selectedAnnoteEl = undefined;
       };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
       // Attach click handler to the DT
       const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
       for (const annoteDlNode of annoteDls) {
@@ -843,12 +946,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../vignettes/tutorial.pdf" class="pagination-link">
+      <a href="../vignettes/tutorial.pdf" class="pagination-link  aria-label=" tutorial="" (pdf)"="">
         <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Tutorial (PDF)</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../man/style_tt.html" class="pagination-link">
+      <a href="../man/style_tt.html" class="pagination-link" aria-label="`style_tt`">
         <span class="nav-page-text"><code>style_tt</code></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>

@@ -1,4 +1,5 @@
 
+
 <p align="center">
 <img src="man/figures/tinytable_logo.svg" height = "250" class = "center">
 </p>
@@ -21,8 +22,8 @@ package which was:
 
 -   *Simple*: A streamlined, consistent, and uncluttered user interface,
     with few functions to learn.
--   *Flexible*: Access to expressive frameworks to customize tables in
-    HTML and LaTeX formats.
+-   *Flexible*: Expressive frameworks to customize tables in HTML and
+    LaTeX formats.[1]
 -   *Zero-dependency*: Do not import any other `R` package.
 -   *Concise*: Draw beautiful tables without typing a lot of code.
 -   *Safe*: User inputs are checked thoroughly, and informative errors
@@ -85,3 +86,6 @@ like `tinytable`, I recommend you check out some of these:
 
 Did I miss your favorite package? Drop me a note and I’ll add it to the
 list.
+
+[1] Other formats like Markdown and Typst are also available, but less
+flexible.

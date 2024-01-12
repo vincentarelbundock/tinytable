@@ -188,6 +188,14 @@ We can style entire columns by omitting the `i` argument:
 
 ```{r}
 tt(x) |> style_tt(j = c(2, 4), bold = TRUE)
+
+```
+Of course, we can also call the `style_tt()` function several times to apply different styles to different parts of the table:
+
+```{r}
+tt(x) |> 
+  style_tt(i = 1, j = 1:2, color = "orange") |>
+  style_tt(i = 1, j = 3:4, color = "green")
 ```
 
 ## Spanning cells
