@@ -2,7 +2,7 @@
 % Please edit documentation in R/style_tt.R
 \name{style_tt}
 \alias{style_tt}
-\title{Style a LaTeX and HTML tables}
+\title{Style a Tiny Table in either LaTeX or HTML format}
 \usage{
 style_tt(
   x,
@@ -16,9 +16,40 @@ style_tt(
   fontsize = NULL,
   width = NULL,
   align = NULL,
-  colspan = NULL
+  colspan = NULL,
+  indent = 0
 )
 }
+\arguments{
+\item{x}{A table object created by \code{tt()}. The function checks if it is a \code{tinytable_tabularray} or \code{tinytable_bootstrap} object.}
+
+\item{i}{Row index or indices where the styling should be applied. Can be a single value or a vector. If \code{colspan} is used, \code{i} must be of length 1.}
+
+\item{j}{Column index or indices where the styling should be applied. Can be a single value or a vector. If \code{colspan} is used, \code{j} must be of length 1.}
+
+\item{bold}{Logical; if \code{TRUE}, text is styled in bold.}
+
+\item{italic}{Logical; if \code{TRUE}, text is styled in italic.}
+
+\item{monospace}{Logical; if \code{TRUE}, text is styled in monospace font.}
+
+\item{color}{Text color. Specified as a color name or hexadecimal code. Can be \code{NULL} for default color.}
+
+\item{background}{Background color. Specified as a color name or hexadecimal code. Can be \code{NULL} for default color.}
+
+\item{fontsize}{Font size. Can be \code{NULL} for default size.}
+
+\item{width}{Width of the cell or column. Can be \code{NULL} for default width.}
+
+\item{align}{Text alignment within the cell. Options are 'c' (center), 'l' (left), or 'r' (right). Can be \code{NULL} for default alignment.}
+
+\item{colspan}{Number of columns a cell should span. Can only be used if both \code{i} and \code{j} are of length 1. Must be an integer greater than 1.}
+
+\item{indent}{Text indentation in em units. Positive values only.}
+}
+\value{
+Returns a modified \code{tinytable} object with the applied styles.
+}
 \description{
-Style a LaTeX and HTML tables
+This function applies styling to a table created by \code{tt()}. It allows customization of text style (bold, italic, monospace), text and background colors, font size, cell width, text alignment, column span, and indentation. The function supports both LaTeX (tabularray) and HTML (bootstrap) formats.
 }

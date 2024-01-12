@@ -3,26 +3,23 @@ output: pdf_document
 ---
 
 ```{r}
-devtools::document()
 pkgload::load_all()
-options(tt_bootstrapOptions_placement = "H")
 x <- mtcars[1:12, 1:8]
 tt(x, output = "html") |> 
-group_bootstrap(
-indent = 1,
-i = c(
-"I like (fake) hamburgers" = 3,
-"She prefers halloumi" = 4,
-"They love tofu" = 7)) |> cat(file = "~/Downloads/trash.html")
+  group_tt(
+    i = c(
+      "I like (fake) hamburgers" = 3,
+      "She prefers halloumi" = 4,
+      "They love tofu" = 7)) |> 
+  cat(file = "~/Downloads/junk.html")
 ```
 
 ```{r}
-devtools::document()
+# devtools::document()
 pkgload::load_all()
 x <- mtcars[1:5, 1:5]
 tt(x, output = "html") |> 
-group_bootstrap(2, )
-# style_tt(i = 1, j = 1:2, italic = TRUE, color = "red", bold = TRUE) |>
-# cat()
- cat(file = "~/Downloads/junk.html")
+  style_tt(1, 2:4, indent = 1) |>
+  # group_bootstrap(c("blah" = 2)) |> 
+  cat(file = "~/Downloads/junk.html")
 ```

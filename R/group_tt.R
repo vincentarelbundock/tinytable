@@ -8,7 +8,9 @@
 group_tt <- function(x, i, j, italic = TRUE, rule = TRUE, indent = 1) {
 
   out <- x
-
+  if (inherits(out, "tinytable_tabularray") && inherits(out, "tinytable_bootstrap")) {
+    return(x)
+  }
   assert_flag(rule)
   assert_integerish(indent, lower = 1)
   if (!missing(i)) assert_integerish(i)
@@ -19,7 +21,11 @@ group_tt <- function(x, i, j, italic = TRUE, rule = TRUE, indent = 1) {
 
   if (inherits(out, "tinytable_tabularray") && missing(j)) {
     out <- group_tabularray(out, i = i, italic = italic, rule = rule, indent = indent)
+  } else if (inherits(out, "tinytable_bootstrap") && missing(j)) {
+    out <- group_bootstrap(out, i = i, italic = italic, rule = rule, indent = indent)
   }
+
+  attr(out, "nrow") <- attr(out, "nrow") + length(i)
 
   return(out)
 }

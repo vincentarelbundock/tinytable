@@ -11,6 +11,9 @@ group_tabularray <- function(x, i, italic, rule, indent) {
   }
   label <- names(i)
 
+  # reverse order is important
+  i <- rev(sort(i))
+
   ncol <- attr(x, "ncol")
   att <- attributes(x)
   att$nrow <- att$nrow + length(label)

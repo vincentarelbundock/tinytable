@@ -1,5 +1,21 @@
-#' Style a LaTeX and HTML tables
+#' Style a Tiny Table in either LaTeX or HTML format
 #'
+#' This function applies styling to a table created by `tt()`. It allows customization of text style (bold, italic, monospace), text and background colors, font size, cell width, text alignment, column span, and indentation. The function supports both LaTeX (tabularray) and HTML (bootstrap) formats.
+#'
+#' @param x A table object created by `tt()`. The function checks if it is a `tinytable_tabularray` or `tinytable_bootstrap` object.
+#' @param i Row index or indices where the styling should be applied. Can be a single value or a vector. If `colspan` is used, `i` must be of length 1.
+#' @param j Column index or indices where the styling should be applied. Can be a single value or a vector. If `colspan` is used, `j` must be of length 1.
+#' @param bold Logical; if `TRUE`, text is styled in bold.
+#' @param italic Logical; if `TRUE`, text is styled in italic.
+#' @param monospace Logical; if `TRUE`, text is styled in monospace font.
+#' @param color Text color. Specified as a color name or hexadecimal code. Can be `NULL` for default color.
+#' @param background Background color. Specified as a color name or hexadecimal code. Can be `NULL` for default color.
+#' @param fontsize Font size. Can be `NULL` for default size.
+#' @param width Width of the cell or column. Can be `NULL` for default width.
+#' @param align Text alignment within the cell. Options are 'c' (center), 'l' (left), or 'r' (right). Can be `NULL` for default alignment.
+#' @param colspan Number of columns a cell should span. Can only be used if both `i` and `j` are of length 1. Must be an integer greater than 1.
+#' @param indent Text indentation in em units. Positive values only.
+#' @return Returns a modified `tinytable` object with the applied styles.
 #' @export
 style_tt <- function(
   x,
@@ -12,7 +28,8 @@ style_tt <- function(
   fontsize = NULL,
   width = NULL,
   align = NULL,
-  colspan = NULL) {
+  colspan = NULL,
+  indent = 0) {
  
   # no markdown styling
   if (inherits(x, "tinytable_markdown")) return(x)
@@ -30,6 +47,7 @@ style_tt <- function(
   assert_choice(align, c("c", "l", "r"), null.ok = TRUE)
   assert_flag(bold)
   assert_flag(italic)
+  assert_numeric(indent, len = 1, lower = 0)
 
   if (!is.null(colspan)) {
     if (missing(j) || missing(i) ||
@@ -96,13 +114,19 @@ style_tt <- function(
       bootstrap = paste("width:%s", width)
     )
   }
-
+  if (indent > 0) {
+    arguments$indent <- list(
+      tabularray = sprintf("preto={\\hspace{%sem}}", indent),
+      bootstrap = sprintf("text-indent: %sem", indent)
+    )
+  }
   if (inherits(x, "tinytable_bootstrap")) {
     css <- sapply(arguments, function(x) x[["bootstrap"]])
     css <- paste(css, collapse = "; ")
     out <- style_bootstrap(x, i, j, css, colspan = colspan)
     return(out)
   }
+
 
   tabularray <- sapply(arguments, function(x) x[["tabularray"]])
   # important for things like colspan

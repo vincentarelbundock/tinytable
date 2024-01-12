@@ -96,10 +96,12 @@ check_integerish <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok 
 
 assert_integerish <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
   msg <- sprintf("`%s` must be integer-ish", name)
-  if (!is.null(len)) msg <- paste0(msg, sprintf("; of length %s", len))
-  if (!is.null(lower)) msg <- paste0(msg, sprintf("; greater than %s", lower - 1))
-  if (!is.null(upper)) msg <- paste0(msg, sprintf("; lower than %s", upper + 1))
   if (!isTRUE(check_integerish(x, len = len, lower = lower, upper = upper, null.ok = null.ok))) {
+    if (!is.numeric(x)) msg <- paste0(msg, "; it is not numeric")
+    if (!is.null(len) && length(x) != len) msg <- paste0(msg, sprintf("; its length must be %s", len))
+    if (!is.null(lower) && any(x < lower)) msg <- paste0(msg, sprintf("; all values must be greater than or equal to %s", lower))
+    if (!is.null(upper) && any(x > upper)) msg <- paste0(msg, sprintf("; all values must be less than or equal to %s", upper))
+    if (any(abs(x - round(x)) > (.Machine$double.eps)^0.5)) msg <- paste0(msg, "; all values must be close to integers")
     stop(msg, call. = FALSE)
   }
 }
@@ -117,7 +119,11 @@ check_numeric <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok = T
 
 assert_numeric <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
   msg <- sprintf("`%s` must be numeric", name)
-  if (!isTRUE(check_numeric(x, null.ok = null.ok))) {
+  if (!isTRUE(check_numeric(x, len = len, lower = lower, upper = upper, null.ok = null.ok))) {
+    if (!is.numeric(x)) msg <- paste0(msg, "; it is not numeric")
+    if (!is.null(len) && length(x) != len) msg <- paste0(msg, sprintf("; its length must be %s", len))
+    if (!is.null(lower) && any(x < lower)) msg <- paste0(msg, sprintf("; all values must be greater than or equal to %s", lower))
+    if (!is.null(upper) && any(x > upper)) msg <- paste0(msg, sprintf("; all values must be less than or equal to %s", upper))
     stop(msg, call. = FALSE)
   }
 }
