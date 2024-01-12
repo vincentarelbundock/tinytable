@@ -143,7 +143,7 @@ style_tt <- function(
   if (inherits(x, "tinytable_bootstrap")) {
     css <- sapply(arguments, function(x) x[["bootstrap"]])
     css <- paste(css, collapse = "; ")
-    out <- style_bootstrap(out, i, j, css, colspan = colspan)
+    out <- style_bootstrap(out, i, j, css = css)
     return(out)
   }
 

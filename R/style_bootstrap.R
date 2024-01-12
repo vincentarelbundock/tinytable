@@ -17,56 +17,44 @@
 #' @return Returns the modified HTML table object with added Bootstrap styling.
 #'
 #' @export
-style_bootstrap <- function(x,
-                            i,
-                            j,
-                            css,
-                            colspan) {
+style_bootstrap <- function(x, i, j, css = NULL, css_rule = NULL) {
+  out <- x
 
+  if (!inherits(x, "tinytable_bootstrap")) return(x)
   if (missing(i)) i <- seq_len(attr(x, "nrow"))
   if (missing(j)) j <- seq_len(attr(x, "ncol"))
   assert_integerish(i, lower = 1, null.ok = TRUE)
   assert_integerish(j, lower = 1, null.ok = TRUE)
 
-  # JS 0-indexing,
+  if (!is.null(css_rule)) {
+    out <- bootstrap_setting(out, css_rule, component = "css")
+  }
+  # after css_rule
+  if (is.null(css)) return(out)
+
+  # JS 0-indexing
   j <- j - 1
   i <- i - 1 + attr(x, "nhead")
 
-  out <- x
-
   id <- get_id(stem = "tinytable_css_")
 
-  # css style
-  css <- build_bootstrap_css(css_vector = css, id = id, type = "cell")
-  out <- bootstrap_setting(out, css, component = "css")
+  # CSS style for cell
+  css_start <- sprintf(".table td.%s { ", id)
+  css_complete <- paste(c(css_start, paste0(css, collapse="; "), "}"), collapse = " ")
+  out <- bootstrap_setting(out, css_complete, component = "css")
 
-  # listener applies the styling to columns
+  # Listener applies the styling to columns
   for (row in i) {
     for (col in j) {
-      listener <- sprintf("window.addEventListener('load', function () { styleCell_blahblahblah(%s, %s, '%s') })", row, col, id)
+      listener <- sprintf("window.addEventListener('load', function () { styleCell_%s(%s, %s, '%s') })", id, row, col, id)
       out <- bootstrap_setting(out, listener, component = "cell")
     }
   }
 
-  # styling function in JS must have different names when there is more than one table on a page.
-  # we need to change this here AND in the `tt_bootstrap()`, because otherwise the listener calls will not be changed or will not match the styleCell ID.
+  # Changing function names for JS
   out <- gsub("styleCell_\\w+\\(", paste0("styleCell_", id, "("), out)
 
   class(out) <- class(x)
-
   return(out)
 }
 
-
-
-build_bootstrap_css <- function(css_vector, id, type = "cell") {
-  if (type == "row") {
-    out <- sprintf(".table tr.%s td {", id)
-  } else if (type == "cell") {
-    out <- sprintf(".table td.%s {", id)
-  }
-  out <- c(out, paste0(css_vector, ";"))
-  out <- paste(out, collapse = " ")
-  out <- paste(out, "}")
-  return(out)
-}

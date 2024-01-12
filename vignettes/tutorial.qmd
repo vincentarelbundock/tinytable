@@ -288,9 +288,56 @@ We can also combine several Bootstrap classes. Here, we get a "striped" table wi
 tt(x, theme = "table table-striped table-warning table-hover")
 ```
 
-## CSS
+## CSS declarations
 
-For manual customization, we can also specify our own CSS class.
+The `style_bootstrap()` function allows us to declare CSS properties and values for individual cells, columns, or rows of a table. For example, if we want to make the first column bold, we could do:
+
+```{r}
+tt(x) |> style_bootstrap(j = 1, css = "font-weight: bold; color: red;")
+```
+
+## CSS rules
+
+For more extensive customization, we can also define complete CSS rules. In this example, we define several rules that should apply to a new class called `mytable`. Then, we use the `theme` argument of the `tt()` function to make sure that the tiny table is of class `mytable`. Finally, we call `style_bootstrap()` with the `css_rule` argument.
+
+```{r, eval = knitr::is_html_output()}
+css_rule <- "
+.mytable {
+  background: linear-gradient(45deg, #EA8D8D, #A890FE);
+  width: 600px;
+  border-collapse: collapse;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.mytable th,
+.mytable td {
+  padding: 5px;
+  background-color: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+.mytable tbody tr:hover {
+  background-color: rgba(255,255,255,0.3);
+}
+
+.mytable tbody td:hover:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -9999px;
+  bottom: -9999px;
+  background-color: rgba(255,255,255,0.2);
+  z-index: -1;
+}
+"
+
+tt(x, theme = "table mytable") |> 
+  style_bootstrap(css_rule = css_rule)
+```
+
+
 
 :::
 
