@@ -355,6 +355,19 @@ tt(x, theme = "table mytable") |>
 The LaTeX / PDF customization options described in this section are not available for HTML documents. Please refer to the PDF documentation hosted on the website to read this part of the tutorial.
 :::
 
+## Preamble
+
+::: {.content-visible when-format="pdf"}
+In Rmarkdown and Quarto documents, `tinytable` will automatically populate your LaTeX preamble with the necessary packages and commands. When creating your own LaTeX documents, you should insert these commands in the preamble:
+
+```latex
+\usepackage{float}
+\usepackage{codehigh}
+\usepackage{tabularray}
+\UseTblrLibrary{booktabs}
+\NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
+```
+:::
 
 ## Introduction to `tabularray`
 
