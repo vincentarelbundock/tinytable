@@ -32,6 +32,7 @@ group_bootstrap_col <- function(x, i, j, ...) {
   out <- c(out[seq_len(idx)], j, out[(idx + 1):length(out)])
 
   out <- paste(out, collapse = "\n")
+
   attributes(out) <- att
   class(out) <- class(x)
   return(out)
@@ -53,11 +54,13 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
   for (g in seq_along(i)) {
     js <- sprintf(
       "window.addEventListener('load', function () { insertSpanRow(%s, %s, '%s') });",
-      i[g],
+      # 0-indexing
+      i[g] + attr(x, "nhead") - 1,
       attr(x, "ncol"),
       names(i)[g])
     out <- bootstrap_setting(out, new = js, component = "cell")
   }
+
 
   # need unique function names in case there are
   # multiple tables in one Rmarkdown document

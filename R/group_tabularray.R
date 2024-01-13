@@ -56,9 +56,6 @@ group_tabularray_col <- function(x, j, ...) {
     out <- do.call(style_tt, args)
   }
 
-
-
-
   return(out)
 
 }

@@ -35,6 +35,10 @@ package which was:
 -   *Free*: This package will always be free. Tiny tables for a tiny
     price!
 
+These are some of the tables that `tinytable` can draw:
+
+![](man/figures/gallery/tinytable_gallery.gif)
+
 To achieve these goals, the design philosophy of `tinytable` rests on
 three pillars:
 
