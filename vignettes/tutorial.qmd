@@ -148,6 +148,23 @@ tt(x, caption = "Blah blah.\\label{tbl-blah}")
 Be aware that this more approach may not work well in Quarto or Rmarkdown documents.
 
 
+## Math
+
+
+You can render equations inside tables using the common `$...$` syntax:
+
+```{r}
+dat <- data.frame(Math = c("$x^2 + y^2 = z^2$", "$\\frac{1}{2}$"))
+tt(dat)
+```
+
+In LaTeX (PDF), you can also use the `mode` inner setting from `tabularray` to math in tables without $ delimiters (see @sec-tabularray):
+
+```{r, eval = knitr::is_latex_output()}
+dat <- data.frame(Math = c("x^2 + y^2 = z^2", "\\frac{1}{2}"))
+tt(dat) |> style_tt(tabularray_inner = "column{1}={mode=math},")
+```
+
 # Style
 
 The main styling function for the `tinytable` package is `style_tt()`. Via this function, you can access three main interfaces to customize tables:
@@ -427,7 +444,7 @@ tt(x, theme = "table mytable") |>
 
 
 
-# LaTeX / PDF customization
+# LaTeX / PDF customization {#sec-tabularray}
 
 ::: {.content-visible when-format="html"}
 The LaTeX / PDF customization options described in this section are not available for HTML documents. Please refer to the PDF documentation hosted on the website to read this part of the tutorial.
