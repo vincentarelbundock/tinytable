@@ -6,12 +6,12 @@ format:
     toc: true
     number-sections: true
     colorlinks: true
+    keep-tex: true
 ---
 
 ```{r, include = FALSE}
 options("tt_tabularray_placement" = "H")
 ```
-
 
 \clearpage
 
@@ -112,12 +112,32 @@ tt(d, width = 1)
 
 ## Captions and cross-references
 
+
+In Quarto, one can specify captions and use cross-references using code like this:
+
+
+````{verbatim}
+@tbl-blah shows that...
+
 ```{r}
-tt(x, caption = "Data about cars.")
+#| label: tbl-blah
+#| tbl-cap: "Blah blah blah"
+library(tinytable)
+tt(mtcars[1:4, 1:4])
 ```
+````
 
-TODO: Cross-references
+And here is the rendered version of the code chunk above:
 
+
+@tbl-blah shows that...
+
+```{r}
+#| label: tbl-blah
+#| tbl-cap: "Blah blah blah"
+library(tinytable)
+tt(mtcars[1:4, 1:4], placement = NULL)
+```
 
 # Style
 
