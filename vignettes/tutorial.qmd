@@ -38,10 +38,6 @@ x <- mtcars[1:4, 1:5]
 tt(x)
 ```
 
-```{r, include=FALSE}
-# after library to override and build with dev version
-pkgload::load_all()
-```
 
 ## Output formats
 
@@ -409,11 +405,11 @@ tt(dat) |>
 We can use the standard `which` function from Base `R` to create indices and apply conditional stying on rows. And we can use a regular expression in `j` to apply conditional styling on columns:
 
 ```{r}
-dat <- mtcars[1:10, 1:5]
+k <- mtcars[1:10, 1:5]
 
-tt(dat) |> 
+tt(k) |> 
   style_tt(
-    i = which(dat$gear > dat$carb),
+    i = which(k$gear > k$carb),
     j = "mpg|hp",
     background = "lightgreen")
 ```
