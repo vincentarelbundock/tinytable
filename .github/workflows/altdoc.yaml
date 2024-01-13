@@ -35,9 +35,17 @@ jobs:
       - name: Dependencies
         run: ./run.sh install_all
 
+      - name: Dependencies
+        run: ./run.sh install future
+
+      - name: Dependencies
+        run: ./run.sh install_github "etiennebacher/altdoc"
+
+      - name: Dependencies
+        run: ./run.sh install_r "future"
+
       - name: Build site
         run: |
-          install.packages("future") # for altdoc
           future::plan(future::multicore)
           install.packages(".", repos = NULL, type = "source")
           install.packages("pkgload")
