@@ -3,8 +3,8 @@
 #' This function applies styling to a table created by `tt()`. It allows customization of text style (bold, italic, monospace), text and background colors, font size, cell width, text alignment, column span, and indentation. The function supports both LaTeX (tabularray) and HTML (bootstrap) formats.
 #'
 #' @param x A table object created by `tt()`. The function checks if it is a `tinytable_tabularray` or `tinytable_bootstrap` object.
-#' @param i Row index or indices where the styling should be applied. Can be a single value or a vector. If `colspan` is used, `i` must be of length 1.
-#' @param j Column index or indices where the styling should be applied. Can be a single value or a vector. If `colspan` is used, `j` must be of length 1.
+#' @param i Row indices where the styling should be applied. Can be a single value or a vector. If `colspan` is used, `i` must be of length 1.
+#' @param j Column indices where the styling should be applied. Can be a single value, a vector, or a Perl-style regular expression applied to column names of the original data frame. If `colspan` is used, `j` must be of length 1.
 #' @param bold Logical; if `TRUE`, text is styled in bold.
 #' @param italic Logical; if `TRUE`, text is styled in italic.
 #' @param monospace Logical; if `TRUE`, text is styled in monospace font.
@@ -20,6 +20,7 @@
 #' @param background Background color. Specified as a color name or hexadecimal code. Can be `NULL` for default color.
 #' @param fontsize Font size. Can be `NULL` for default size.
 #' @param width Width of the cell or column. Can be `NULL` for default width.
+#' @param fontsize Integer Font size in pt units.
 #' @param align Text alignment within the cell. Options are 'c' (center), 'l' (left), or 'r' (right). Can be `NULL` for default alignment.
 #' @param colspan Number of columns a cell should span. Can only be used if both `i` and `j` are of length 1. Must be an integer greater than 1.
 #' @param indent Text indentation in em units. Positive values only.
@@ -60,12 +61,17 @@ style_tt <- function(
 
   assert_string(color, null.ok = TRUE)
   assert_string(background, null.ok = TRUE)
-  assert_string(fontsize, null.ok = TRUE)
   assert_string(width, null.ok = TRUE)
   assert_choice(align, c("c", "l", "r"), null.ok = TRUE)
   assert_flag(bold)
   assert_flag(italic)
   assert_numeric(indent, len = 1, lower = 0)
+  assert_integerish(fontsize, len = 1, null.ok = TRUE)
+
+  # j is a regular expression
+  if (!missing(j) && is.character(j) && length(j) == 1 && is.character(attr(x, "tt_colnames"))) {
+    j <- grep(j, attr(x, "tt_colnames"), perl = TRUE)
+  }
 
   if (!is.null(colspan)) {
     if (missing(j) || missing(i) ||
@@ -95,6 +101,12 @@ style_tt <- function(
     arguments$monospace <- list(
       tabularray = "cmd=\\texttt",
       bootstrap = "font-family: monospace"
+    )
+  }
+  if (is.numeric(fontsize)) {
+    arguments$monospace <- list(
+      tabularray = sprintf("font=\\fontsize{%s}{%s}\\selectfont", fontsize, fontsize + 2),
+      bootstrap = sprintf("font-size: %s;", paste0(1.33333 * fontsize, "px"))
     )
   }
   if (!is.null(align)) {
@@ -129,11 +141,6 @@ style_tt <- function(
     arguments$background <- list(
       tabularray = paste0("bg=", background),
       bootstrap = paste0("background-color: ", background)
-    )
-  }
-  if (!is.null(fontsize)) {
-    arguments$fontsize <- list(
-      bootstrap = paste("font-size:", fontsize)
     )
   }
   if (!is.null(width)) {

@@ -231,28 +231,34 @@ tt(x) |>
     i = 2:3,
     j = c(1, 3, 4),
     italic = TRUE,
-    color = "red")
+    color = "orange")
 ```
 
 We can style all cells in a table by omitting both the `i` and `j` arguments:
 
 
 ```{r}
-tt(x) |> style_tt(color = "blue")
+tt(x) |> style_tt(color = "orange")
 ```
 
 We can style entire rows by omitting the `j` argument:
 
 ```{r}
-tt(x) |> style_tt(i = 1:2, color = "blue")
+tt(x) |> style_tt(i = 1:2, color = "orange")
 ```
 
 We can style entire columns by omitting the `i` argument:
 
 ```{r}
 tt(x) |> style_tt(j = c(2, 4), bold = TRUE)
-
 ```
+
+The `j` argument accepts integer vectors, but also a string with a Perl-style regular expression, which makes it easier to select columns by name:
+
+```{r}
+tt(x) |> style_tt(j = "mpg|drat", color = "orange")
+```
+
 Of course, we can also call the `style_tt()` function several times to apply different styles to different parts of the table:
 
 ```{r}
@@ -286,6 +292,13 @@ tt(x) |> style_tt(i = 1:4, j = 1, color = "#FF5733")
 Note that when using Hex codes in a LaTeX table, we need extra declarations in the LaTeX preamble. See `?tt` for details.
 
 
+## Fonts
+
+The font size is specified in terms of `pt` units, where 1pt=1.333px:
+
+```{r}
+tt(x) |> style_tt(j = "mpg|hp|qsec", fontsize = 18)
+```
 
 ## Spanning cells
 

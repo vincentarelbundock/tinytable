@@ -3,18 +3,8 @@ output: pdf_document
 ---
 
 ```{r}
+devtools::document()
 pkgload::load_all()
-n <- "Fusce id ipsum consequat ante pellentesque iaculis eu a ipsum. Mauris id ex in nulla consectetur aliquam. In nec tempus diam. Aliquam arcu nibh, dapibus id ex vestibulum, feugiat consequat erat. Morbi feugiat dapibus malesuada. Quisque vel ullamcorper felis. Aenean a sem at nisi tempor pretium sit amet quis lacus."
-mtcars[1:4, 1:8] |>
-  tt(output = "html", note = n, width = .75) |>
-  save_tt("~/Downloads/junk.html", overwrite = TRUE)
-```
-
-```{r}
-pkgload::load_all()
-mtcars[1:4, 1:8] |>
-  tt(output = "html", note = list(
-    a = "blah",
-    b = "blah blah"
-  )) |> save_tt("~/Downloads/junk.html", overwrite = TRUE)
+tt(mtcars[1:4, 1:5]) |>
+  style_tt(j = "mpg|hp|qsec", fontsize = 18)
 ```

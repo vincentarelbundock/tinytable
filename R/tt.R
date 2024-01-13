@@ -87,5 +87,7 @@ tt <- function(x,
     out <- sub("\\\\begin\\{table\\}", sprintf("\\\\begin{table}[%s]\n", placement), out)
   }
 
+  attr(out, "tt_colnames") <- names(x)
+
   return(out)
 }
