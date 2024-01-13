@@ -8,6 +8,8 @@
 #' @param bold Logical; if `TRUE`, text is styled in bold.
 #' @param italic Logical; if `TRUE`, text is styled in italic.
 #' @param monospace Logical; if `TRUE`, text is styled in monospace font.
+#' @param underline Logical; if `TRUE`, text is underlined.
+#' @param strikeout Logical; if `TRUE`, text has a strike through line.
 #' @param color Text color. There are several ways to specify colors, depending on the output format.
 #' + HTML:
 #'   - Hex code composed of # and 6 characters, ex: #CC79A7.
@@ -36,6 +38,8 @@ style_tt <- function(
   bold = FALSE,
   italic = FALSE,
   monospace = FALSE,
+  underline = FALSE,
+  strikeout = FALSE,
   color = NULL,
   background = NULL,
   fontsize = NULL,
@@ -84,22 +88,35 @@ style_tt <- function(
 
 
   arguments <- list()
+  tabularray_cmd <- NULL
 
   if (isTRUE(bold)) {
+    tabularray_cmd <- c(tabularray_cmd, "\\bfseries")
     arguments$bold <- list(
-      tabularray = "cmd=\\bfseries",
       bootstrap = "font-weight: bold"
     )
   } 
   if (isTRUE(italic)) {
+    tabularray_cmd <- c(tabularray_cmd, "\\textit")
     arguments$italic <- list(
-      tabularray = "cmd=\\textit",
       bootstrap = "font-style: italic"
     )
   } 
+  if (isTRUE(underline)) {
+    tabularray_cmd <- c(tabularray_cmd, "\\tinytableTabularrayUnderline")
+    arguments$italic <- list(
+      bootstrap = "text-decoration: underline"
+    )
+  } 
+  if (isTRUE(strikeout)) {
+    tabularray_cmd <- c(tabularray_cmd, "\\tinytableTabularrayStrikeout")
+    arguments$italic <- list(
+      bootstrap = "text-decoration: line-through"
+    )
+  } 
   if (isTRUE(monospace)) {
+    tabularray_cmd <- c(tabularray_cmd, "\\texttt")
     arguments$monospace <- list(
-      tabularray = "cmd=\\texttt",
       bootstrap = "font-family: monospace"
     )
   }
@@ -176,6 +193,11 @@ style_tt <- function(
   }
 
   tabularray <- paste0(paste(tabularray, collapse = ","), ",")
+
+  if (length(tabularray_cmd) > 0) {
+    tabularray_cmd <- paste0("cmd=", paste(tabularray_cmd, collapse = ""))
+    tabularray <- paste(tabularray, tabularray_cmd, sep = ",")
+  }
 
   if (tabularray == ",") tabularray <- ""
 

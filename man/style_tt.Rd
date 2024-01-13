@@ -11,6 +11,8 @@ style_tt(
   bold = FALSE,
   italic = FALSE,
   monospace = FALSE,
+  underline = FALSE,
+  strikeout = FALSE,
   color = NULL,
   background = NULL,
   fontsize = NULL,
@@ -36,6 +38,10 @@ style_tt(
 \item{italic}{Logical; if \code{TRUE}, text is styled in italic.}
 
 \item{monospace}{Logical; if \code{TRUE}, text is styled in monospace font.}
+
+\item{underline}{Logical; if \code{TRUE}, text is underlined.}
+
+\item{strikeout}{Logical; if \code{TRUE}, text has a strike through line.}
 
 \item{color}{Text color. There are several ways to specify colors, depending on the output format.
 \itemize{
@@ -82,12 +88,15 @@ This function applies styling to a table created by \code{tt()}. It allows custo
 \section{LaTeX preamble}{
 
 
-To be able to use all features of \code{tinytable} in PDF (LaTeX) documents, these commands need to be placed in your LaTeX preamble:
+When rendering Quarto and Rmarkdown documents, \code{tinytable} will populate the LaTeX preamble automatically with all the required packages. For standalone LaTeX packages, these commands should be inserted in the preamble:
 
-\if{html}{\out{<div class="sourceCode latex">}}\preformatted{\\usepackage\{float\}
+\if{html}{\out{<div class="sourceCode latex">}}\preformatted{\\usepackage\{tabularray\}
+\\usepackage\{float\}
 \\usepackage\{codehigh\}
-\\usepackage\{tabularray\}
+\\usepackage[normalem]\{ulem\}
 \\UseTblrLibrary\{booktabs\}
+\newcommand{\tinytableTabularrayUnderline}[1]\{\\underline\{#1\}\}",
+\newcommand{\tinytableTabularrayStrikeout}[1]\{\\sout\{#1\}\}",
 \\NewTableCommand\{\\tinytableDefineColor\}[3]\{\\definecolor\{#1\}\{#2\}\{#3\}\}
 }\if{html}{\out{</div>}}
 }

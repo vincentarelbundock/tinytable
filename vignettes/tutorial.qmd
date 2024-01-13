@@ -204,7 +204,7 @@ These functions can be used to customize rows, columns, or individual cells. The
 * Cell Merging
 * Multi-row or column spans
 * Border Styling
-* Font Styling
+* Font Styling: size, underline, italic, bold, strikethrough, etc.
 * Header Customization
 
 The `style_*()` functions can modify individual cells, or entire columns and rows. The portion of the table that is styled is determined by the `i` (rows)  and `j` (columns) arguments.
@@ -487,11 +487,14 @@ The LaTeX / PDF customization options described in this section are not availabl
 In Rmarkdown and Quarto documents, `tinytable` will automatically populate your LaTeX preamble with the necessary packages and commands. When creating your own LaTeX documents, you should insert these commands in the preamble:
 
 ```latex
+\usepackage{tabularray}
 \usepackage{float}
 \usepackage{codehigh}
-\usepackage{tabularray}
+\usepackage[normalem]{ulem}
 \UseTblrLibrary{booktabs}
 \NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
+\newcommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}
+\newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
 ```
 :::
 

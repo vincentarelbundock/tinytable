@@ -21,8 +21,12 @@ sanitize_output <- function(output) {
       usepackage_latex("codehigh")
       usepackage_latex("float")
       usepackage_latex("tabularray", extra_lines = c(
+        "\\usepackage[normalem]{ulem}",
         "\\UseTblrLibrary{booktabs}",
-        "\\NewTableCommand{\\tinytableDefineColor}[3]{\\definecolor{#1}{#2}{#3}}")
+        "\\NewTableCommand{\\tinytableDefineColor}[3]{\\definecolor{#1}{#2}{#3}}",
+        "\\newcommand{\\tinytableTabularrayUnderline}[1]{\\underline{#1}}",
+        "\\newcommand{\\tinytableTabularrayStrikeout}[1]{\\sout{#1}}"
+        )
       )
       if (is.null(output)) out <- "latex"
 
