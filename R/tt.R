@@ -59,7 +59,7 @@ tt <- function(x,
     out <- tt_tabularray(out, caption = caption, theme = theme, width = width, note = note)
 
   } else if (output == "html"){
-    out <- tt_bootstrap(out, caption = caption, theme = theme, width = width)
+    out <- tt_bootstrap(out, caption = caption, theme = theme, width = width, note = note)
 
   } else {
     out <- tt_markdown(out, caption = caption)
