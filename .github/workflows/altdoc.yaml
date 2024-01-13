@@ -37,6 +37,7 @@ jobs:
 
       - name: Build site
         run: |
+          install.packages("future") # for altdoc
           future::plan(future::multicore)
           install.packages(".", repos = NULL, type = "source")
           install.packages("pkgload")
