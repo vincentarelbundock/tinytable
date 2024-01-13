@@ -1,8 +1,3 @@
-#' Style LaTeX tables using tabularray
-#'
-#' @template latex_preamble
-#' @template tabularray
-#' @export
 style_tabularray <- function(x,
                              inner = NULL,
                              outer = NULL,

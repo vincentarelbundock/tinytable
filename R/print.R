@@ -1,5 +1,6 @@
-#' Convenience function for Rmarkdown and Quarto documents
-#' @noRd
+#' Print a tinytable object in knitr 
+#'
+#' @keywords internal
 #' @export
 knit_print.tinytable_bootstrap <- function(x, ...) {
   # from htmltools:::html_preserve
@@ -17,8 +18,9 @@ knit_print.tinytable_bootstrap <- function(x, ...) {
 }
 
 
-#' Convenience function for Rmarkdown and Quarto documents
-#' @noRd
+#' Print a tinytable object in knitr 
+#'
+#' @keywords internal
 #' @export
 knit_print.tinytable_tabularray <- function(x, ...) {
   out <- x

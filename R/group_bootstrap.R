@@ -17,7 +17,7 @@ group_bootstrap_col <- function(x, i, j, ...) {
 
 
   miss <- as.list(setdiff(seq_len(attr(x, "ncol")), unlist(j)))
-  miss <- setNames(miss, rep(" ", length(miss)))
+  miss <- stats::setNames(miss, rep(" ", length(miss)))
   j <- c(j, miss)
 
   max_col <- sapply(j, max)
