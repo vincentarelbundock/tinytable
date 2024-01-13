@@ -329,6 +329,11 @@ colnames(k) <- NULL
 tt(k)
 ```
 
+The header is row 0, and can thus be styled as expected:
+
+```{r}
+tt(x) |> style_tt(i = 0, color = "white", background = "black")
+```
 
 # Groups and labels
 
@@ -467,7 +472,7 @@ css_rule <- "
 }
 "
 
-tt(x, theme = "table mytable") |> 
+tt(x, align = "ccccc", theme = "table mytable") |> 
   style_tt(bootstrap_css_rule = css_rule)
 ```
 
@@ -539,6 +544,7 @@ The Inner block, enclosed in `{}`, defines specific styles like column formats (
 We can create this code easily by passing a string to the `tabularray_inner` argument of the `style_tt()` function:
 
 ```{r, eval = knitr::is_latex_output()}
+#| tbl-cap: "\\LaTeX{} table with colors and a spanning cell."
 inner <- "
 column{1-4}={halign=c},
 hlines = {fg=white},

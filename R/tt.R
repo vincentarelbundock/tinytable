@@ -76,7 +76,7 @@ tt <- function(x,
       stop(msg, call. = FALSE)
     }
     for (col in seq_along(align)) {
-      out <- style_tt(out, j = col, align = align[[col]])
+      out <- style_tt(out, i = 0:nrow(x), j = col, align = align[[col]])
     }
   }
 

@@ -275,7 +275,7 @@ A table object created by <code>tt()</code>. The function checks if it is a <cod
 <code id="style_tt_:_i">i</code>
 </td>
 <td>
-Row indices where the styling should be applied. Can be a single value or a vector. If <code>colspan</code> is used, <code>i</code> must be of length 1.
+Row indices where the styling should be applied. Can be a single value or a vector. If <code>colspan</code> is used, <code>i</code> must be of length 1. When i=0, the header is styled.
 </td>
 </tr>
 <tr>
@@ -452,11 +452,11 @@ A string with complete CSS rules that apply to the table class specified using t
 </section>
 <section id="latex-preamble" class="level3">
 <h3 class="anchored" data-anchor-id="latex-preamble">LaTeX preamble</h3>
-<p>To be able to use all features of <code>tinytable</code> in PDF (LaTeX) documents, these commands need to be placed in your LaTeX preamble:</p>
+<p>When rendering Quarto and Rmarkdown documents, <code>tinytable</code> will populate the LaTeX preamble automatically with all the required packages. For standalone LaTeX packages, these commands should be inserted in the preamble:</p>
 <div class="sourceCode latex">
-<pre>\usepackage{float}
+<pre>\usepackage{tabularray}
+\usepackage{float}
 \usepackage{codehigh}
-\usepackage{tabularray}
 \usepackage[normalem]{ulem}
 \UseTblrLibrary{booktabs}
 \newcommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}",

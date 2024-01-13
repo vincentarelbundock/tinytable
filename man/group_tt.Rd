@@ -9,7 +9,7 @@ group_tt(x, i, j, indent = 1, ...)
 \arguments{
 \item{x}{A data frame or data table to be rendered as a table.}
 
-\item{i}{Row indices where the styling should be applied. Can be a single value or a vector. If \code{colspan} is used, \code{i} must be of length 1.}
+\item{i}{Row indices where the styling should be applied. Can be a single value or a vector. If \code{colspan} is used, \code{i} must be of length 1. When i=0, the header is styled.}
 
 \item{j}{Column indices where the styling should be applied. Can be a single value, a vector, or a Perl-style regular expression applied to column names of the original data frame. If \code{colspan} is used, \code{j} must be of length 1.}
 

@@ -21,7 +21,7 @@ style_bootstrap <- function(x, i, j, css = NULL, css_rule = NULL) {
   if (!inherits(x, "tinytable_bootstrap")) return(x)
   if (missing(i)) i <- seq_len(attr(x, "nrow"))
   if (missing(j)) j <- seq_len(attr(x, "ncol"))
-  assert_integerish(i, lower = 1, null.ok = TRUE)
+  assert_integerish(i, lower = 0, null.ok = TRUE)
   assert_integerish(j, lower = 1, null.ok = TRUE)
   assert_string(css_rule, null.ok = TRUE)
 
@@ -38,14 +38,16 @@ style_bootstrap <- function(x, i, j, css = NULL, css_rule = NULL) {
   id <- get_id(stem = "tinytable_css_")
 
   # CSS style for cell
-  css_start <- sprintf(".table td.%s { ", id)
+  css_start <- sprintf(".table td.%s, th.%s { ", id, id)
   css_complete <- paste(c(css_start, paste0(css, collapse="; "), "}"), collapse = " ")
   out <- bootstrap_setting(out, css_complete, component = "css")
 
   # Listener applies the styling to columns
   for (row in i) {
     for (col in j) {
-      listener <- sprintf("window.addEventListener('load', function () { styleCell_%s(%s, %s, '%s') })", id, row, col, id)
+      listener <- sprintf(
+        "window.addEventListener('load', function () { styleCell_%s(%s, %s, '%s') })",
+        id, row, col, id)
       out <- bootstrap_setting(out, listener, component = "cell")
     }
   }
