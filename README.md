@@ -66,11 +66,11 @@ three pillars:
 
 ## Installation
 
-You can install the development version of tinytable from
-[GitHub](https://github.com/) with:
+You can install `tinytable` from [GitHub](https://github.com/) with:
 
 ``` r
-remotes::install_github("vincentarelbundock/tinytable")
+library(remotes)
+install_github("vincentarelbundock/tinytable")
 ```
 
 ## Get started

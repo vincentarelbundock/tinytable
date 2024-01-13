@@ -115,7 +115,7 @@ bootstrap_setting <- function(x, new, component = "row") {
   } else if (component == "cell") {
     idx <- grep("tinytable cells before this", out)
   } else if (component == "css") {
-    idx <- grep("tinytable css before this", out)
+    idx <- grep("</style>", out, fixed = TRUE)
   } else if (component == "newrows") {
     idx <- grep("tinytable new rows before this", out)
   }
