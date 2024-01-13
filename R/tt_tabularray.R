@@ -1,4 +1,4 @@
-tt_tabularray <- function(x, caption, theme, width, note) {
+tt_tabularray <- function(x, caption, theme, width, notes) {
 
   template <- template_tabularray(theme)
 
@@ -63,20 +63,20 @@ tt_tabularray <- function(x, caption, theme, width, note) {
     out <- style_tabularray(out, inner = "row{even}={bg=black!5!white},")
   }
 
-  # note
-  if (!is.null(note)) {
+  # notes
+  if (!is.null(notes)) {
     out <- sub("\\begin{tblr}", "\\begin{talltblr}", out, fixed = TRUE)
     out <- sub("\\end{tblr}", "\\end{talltblr}", out, fixed = TRUE)
     # otherwise an empty caption is created automatically
     out <- style_tabularray(out, outer = "entry=none,label=none")
-    if (is.null(names(note))) {
-      lab <- rep("", length(note))
+    if (is.null(names(notes))) {
+      lab <- rep("", length(notes))
     } else {
-      lab <- names(note)
+      lab <- names(notes)
     }
-    note <- unlist(note)
-    for (k in seq_along(note)) {
-      spec <- sprintf("note{%s}={%s}", lab[k], note[k])
+    notes <- unlist(notes)
+    for (k in seq_along(notes)) {
+      spec <- sprintf("note{%s}={%s}", lab[k], notes[k])
       out <- style_tabularray(out, outer = spec)
     }
   }

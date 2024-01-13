@@ -1,4 +1,4 @@
-tt_bootstrap <- function(x, caption, theme, width, note) {
+tt_bootstrap <- function(x, caption, theme, width, notes) {
 
   template <- template_bootstrap(theme)
 
@@ -21,7 +21,7 @@ tt_bootstrap <- function(x, caption, theme, width, note) {
   }
 
   # note
-  if (is.null(note)) {
+  if (is.null(notes)) {
     template <- sub(
       "$tinytable_BOOTSTRAP_NOTE",
       "",
@@ -30,19 +30,19 @@ tt_bootstrap <- function(x, caption, theme, width, note) {
     )
   } else {
     notes_tmp <- NULL
-    for (k in seq_along(note)) {
-      if (!is.null(names(note))) {
-        tmp <- sprintf("<tr><td colspan='%s'><sup>%s</sup> %s</td></tr>", ncol(x), names(note)[k], note[k])
+    for (k in seq_along(notes)) {
+      if (!is.null(names(notes))) {
+        tmp <- sprintf("<tr><td colspan='%s'><sup>%s</sup> %s</td></tr>", ncol(x), names(notes)[k], notes[k])
       } else {
-        tmp <- sprintf("<tr><td colspan='%s'>%s</td></tr>", ncol(x), note[k])
+        tmp <- sprintf("<tr><td colspan='%s'>%s</td></tr>", ncol(x), notes[k])
       }
       notes_tmp <- c(notes_tmp, tmp)
     }
-    note <- paste(notes_tmp, collapse = "\n")
-    note <- paste0("<tfoot>", note, "</tfoot>")
+    notes <- paste(notes_tmp, collapse = "\n")
+    notes <- paste0("<tfoot>", notes, "</tfoot>")
     template <- sub(
       "$tinytable_BOOTSTRAP_NOTE",
-      note,
+      notes,
       template,
       fixed = TRUE
     )

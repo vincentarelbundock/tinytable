@@ -4,7 +4,7 @@
 #' @inheritParams tt
 #' @inheritParams style_tt
 #' @param indent integer number of `pt` to use when indenting the non-labelled rows.
-#' @param ... All additional arguments (ex: `italic`, `bold`, `color`) are automatically passed to the `style_tt()` function to style the labels.
+#' @param ... All additional arguments (ex: `italic`, `bold`, `color`) are automatically passed to the `style_tt()` function and applied to the labels.
 group_tt <- function(x, i, j, indent = 1, ...) {
 
   out <- x

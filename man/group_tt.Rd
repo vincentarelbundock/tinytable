@@ -15,7 +15,7 @@ group_tt(x, i, j, indent = 1, ...)
 
 \item{indent}{integer number of \code{pt} to use when indenting the non-labelled rows.}
 
-\item{...}{All additional arguments (ex: \code{italic}, \code{bold}, \code{color}) are automatically passed to the \code{style_tt()} function to style the labels.}
+\item{...}{All additional arguments (ex: \code{italic}, \code{bold}, \code{color}) are automatically passed to the \code{style_tt()} function and applied to the labels.}
 }
 \description{
 Spanning labels to identify groups of rows or columns

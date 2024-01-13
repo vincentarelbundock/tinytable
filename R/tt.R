@@ -10,7 +10,7 @@
 #' @param theme The theme to apply to the table.
 #' * LaTeX: "default", "striped", "void", or "grid".
 #' * HTML: "default", "striped", "void", "grid", or a (composite) Bootstrap class such as `"table table-dark"` or `"table table-dark table-hover"`. See 
-#' @param note A single string or a (named) list of strings to append at the bottom of the table.
+#' @param notes A single string or a (named) list of strings to append at the bottom of the table.
 #' 
 #' @param placement A string to control the position of tables in LaTeX. Will be inserted in square brackets like: `\\begin{table}[H]`
 #' @return An object of class `tt` representing the table.
@@ -35,7 +35,7 @@ tt <- function(x,
                align = NULL,
                caption = NULL,
                width = NULL,
-               note = NULL,
+               notes = NULL,
                theme = "default",
                placement = getOption("tt_tabularray_placement", default = NULL)) {
 
@@ -47,19 +47,19 @@ tt <- function(x,
   assert_numeric(width, len = 1, lower = 0, upper = 1, null.ok = TRUE)
 
   # notes can be a single string or a (named) list of strings
-  if (is.character(note) && length(note)) {
-    note <- list(note)
+  if (is.character(notes) && length(notes)) {
+    notes <- list(notes)
   }
-  assert_list(note, null.ok = TRUE)
+  assert_list(notes, null.ok = TRUE)
 
   out <- x
 
   # build table
   if (output == "latex") {
-    out <- tt_tabularray(out, caption = caption, theme = theme, width = width, note = note)
+    out <- tt_tabularray(out, caption = caption, theme = theme, width = width, notes = notes)
 
   } else if (output == "html"){
-    out <- tt_bootstrap(out, caption = caption, theme = theme, width = width, note = note)
+    out <- tt_bootstrap(out, caption = caption, theme = theme, width = width, notes = notes)
 
   } else {
     out <- tt_markdown(out, caption = caption)
