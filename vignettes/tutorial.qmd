@@ -92,11 +92,12 @@ tt(x, width = 1)
 When the `width` argument is specified and a cell includes long text, the text is automatically wrapped to match the table.
 
 ```{r}
-d <- data.frame(
-  a = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae",
-  b = "dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos"
+#| tbl-cap: "A full width table with wrapped text."
+lorem <- data.frame(
+  Lorem = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+  Ipsum = " Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos."
 )
-tt(d, width = 3/4)
+tt(lorem, width = 3/4)
 ```
 
 Manual line breaks work sligthly different in LaTeX (PDF) or HTML. This table shows the two strategies. For HTML, we insert a `<br>` tag. For LaTeX, we wrap the string in curly braces `{}`, and then insert two (escaped) backslashes: `\\\\`
@@ -148,6 +149,24 @@ tt(x, caption = "Blah blah.\\label{tbl-blah}")
 Be aware that this more approach may not work well in Quarto or Rmarkdown documents.
 
 
+## Footnotes
+
+The `note` argument accepts single strings or named lists of strings:
+
+```{r}
+#| tbl-cap: "A full-width table with wrapped text in cells and a footnote."
+n <- "Fusce id ipsum consequat ante pellentesque iaculis eu a ipsum. Mauris id ex in nulla consectetur aliquam. In nec tempus diam. Aliquam arcu nibh, dapibus id ex vestibulum, feugiat consequat erat. Morbi feugiat dapibus malesuada. Quisque vel ullamcorper felis. Aenean a sem at nisi tempor pretium sit amet quis lacus."
+
+tt(lorem, note = n, width = 1)
+```
+
+When `note` is a named list, the names are used as identifiers and displayed as superscripts:
+
+```{r}
+tt(x, note = list(a = "Blah.", b = "Blah blah."))
+```
+
+
 ## Math
 
 
@@ -158,7 +177,7 @@ dat <- data.frame(Math = c("$x^2 + y^2 = z^2$", "$\\frac{1}{2}$"))
 tt(dat)
 ```
 
-In LaTeX (PDF), you can also use the `mode` inner setting from `tabularray` to math in tables without $ delimiters (see @sec-tabularray):
+In LaTeX (PDF), you can also use the `mode` inner setting from `tabularray` to render math in tables without $ delimiters (see @sec-tabularray for details on `tabularray`):
 
 ```{r, eval = knitr::is_latex_output()}
 dat <- data.frame(Math = c("x^2 + y^2 = z^2", "\\frac{1}{2}"))
@@ -172,8 +191,6 @@ The main styling function for the `tinytable` package is `style_tt()`. Via this 
 1. A general interface to frequently used style choices which works for both HTML and LaTeX (PDF): colors, font style and size, row and column spans, etc. This is accessed through several distinct arguments in the `style_tt()`  function, such as `italic`, `color`, etc.
 2. A specialized interface which allows users to use the [powerful `tabularray` package](https://ctan.org/pkg/tabularray?lang=en) to customize LaTeX tables. This is accessed by passing `tabularray` settings as strings to the `tabularray_inner` and `tabularray_outer` arguments of `style_tt()`.
 3. A specialized interface which allows users to use the [powerful `Bootstrap` framework](https://getbootstrap.com/docs/5.3/content/tables/) to customize HTML tables. This is accessed by passing CSS declarations and rules to the `bootstrap_css` and `bootstrap_css_rule` arguments of `style_tt()`.
-
-## Colors, lines, space, font, spans, etc.
 
 These functions can be used to customize rows, columns, or individual cells. They control many features, including:
 

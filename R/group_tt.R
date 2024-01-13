@@ -43,7 +43,7 @@ group_tt <- function(x, i, j, indent = 1, ...) {
 
 sanitize_group_index <- function(idx, hi) {
   if (is.null(idx)) return(idx)
-  assert_named_list(idx)
+  assert_list(idx, named = TRUE)
   for (n in names(idx)) {
     assert_integerish(idx[[n]], lower = 1, upper = hi, name = n)
   }

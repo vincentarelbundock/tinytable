@@ -10,6 +10,7 @@ tt(
   align = NULL,
   caption = NULL,
   width = NULL,
+  note = NULL,
   theme = "default",
   placement = getOption("tt_tabularray_placement", default = NULL)
 )
@@ -24,6 +25,8 @@ tt(
 \item{caption}{A string that will be used as the caption of the table.}
 
 \item{width}{A numeric value between 0 and 1 indicating the proportion of the line width that the table should cover.}
+
+\item{note}{A single string or a (named) list of strings to append at the bottom of the table.}
 
 \item{theme}{The theme to apply to the table.
 \itemize{

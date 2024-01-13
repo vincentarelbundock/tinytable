@@ -20,20 +20,24 @@ style_tabularray <- function(x,
 
 
   if (!is.null(inner)) {
+    inner <- trimws(inner)
+    if (!grepl(",$", inner)) inner <- paste0(inner, ",")
     idx <- grep("% tabularray inner close", out)
     out <- c(
       out[1:(idx - 1)],
       # empty lines can break latex
-      trimws(inner),
+      inner,
       out[idx:length(out)])
   }
 
   if (!is.null(outer)) {
+    outer <- trimws(outer)
+    if (!grepl(",$", outer)) outer <- paste0(outer, ",")
     idx <- grep("% tabularray outer close", out)
     out <- c(
       out[1:(idx - 1)],
       # empty lines can break latex
-      trimws(outer),
+      outer,
       out[idx:length(out)])
   }
 

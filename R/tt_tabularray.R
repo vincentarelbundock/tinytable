@@ -1,4 +1,4 @@
-tt_tabularray <- function(x, caption, theme, width) {
+tt_tabularray <- function(x, caption, theme, width, note) {
 
   template <- template_tabularray(theme)
 
@@ -61,6 +61,24 @@ tt_tabularray <- function(x, caption, theme, width) {
     out <- style_tabularray(out, inner = "hlines={},vlines={},")     
   } else if (theme == "striped") {
     out <- style_tabularray(out, inner = "row{even}={bg=black!5!white},")
+  }
+
+  # note
+  if (!is.null(note)) {
+    out <- sub("\\begin{tblr}", "\\begin{talltblr}", out, fixed = TRUE)
+    out <- sub("\\end{tblr}", "\\end{talltblr}", out, fixed = TRUE)
+    # otherwise an empty caption is created automatically
+    out <- style_tabularray(out, outer = "entry=none,label=none")
+    if (is.null(names(note))) {
+      lab <- rep("", length(note))
+    } else {
+      lab <- names(note)
+    }
+    note <- unlist(note)
+    for (k in seq_along(note)) {
+      spec <- sprintf("note{%s}={%s}", lab[k], note[k])
+      out <- style_tabularray(out, outer = spec)
+    }
   }
 
 

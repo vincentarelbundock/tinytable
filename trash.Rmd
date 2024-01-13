@@ -4,26 +4,16 @@ output: pdf_document
 
 ```{r}
 pkgload::load_all()
+n <- "Fusce id ipsum consequat ante pellentesque iaculis eu a ipsum. Mauris id ex in nulla consectetur aliquam. In nec tempus diam. Aliquam arcu nibh, dapibus id ex vestibulum, feugiat consequat erat. Morbi feugiat dapibus malesuada. Quisque vel ullamcorper felis. Aenean a sem at nisi tempor pretium sit amet quis lacus."
+
 mtcars[1:4, 1:8] |>
-tt(output = "html", caption = "blah blah") |> 
-group_tt(j = list(
-  "Hamburgers" = 1:3,
-  "Halloumi" = 4:5,
-  "Tofu" = 7),
-  italic = TRUE,
-  color = "red"
-)
+  tt(output = "latex", note = n, width = .75)
 ```
 
-
 ```{r}
-mtcars[1:12, 1:8] |>
-tt() |> 
-group_tt(i = list(
-  "Hamburgers" = 3,
-  "Halloumi" = 4,
-  "Tofu" = 5),
-  italic = TRUE,
-  color = "red"
-)
+mtcars[1:4, 1:8] |>
+  tt(output = "latex", note = list(
+    a = "blah",
+    b = "blah blah"
+  ))
 ```

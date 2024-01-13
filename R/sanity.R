@@ -152,18 +152,12 @@ assert_character <- function(x, len = NULL, name = as.character(substitute(x))) 
 }
 
 
-assert_named_list <- function(x) {
-  # Check if x is a list
-  if (!is.list(x)) {
-    stop("Input is not a list.", call. = FALSE)
+assert_list <- function(x, named = FALSE, null.ok = FALSE, name = as.character(substitute(x))) {
+  if (isTRUE(null.ok) && is.null(x)) return(invisible(TRUE))
+  if (!is.list(x)) stop("Input is not a list.", call. = FALSE)
+  if (isTRUE(named)) {
+    if (is.null(names(x))) {
+      stop(sprintf("`%s` should be named list.", name), call. = FALSE)
+    }
   }
-  
-  # Check if all elements in the list have names
-  if (is.null(names(x))) {
-    stop("The argument should be named list.", call. = FALSE)
-  }
-  
-  # consecutive numbers
-
-  TRUE
 }
