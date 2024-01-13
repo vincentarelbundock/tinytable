@@ -401,9 +401,10 @@ tt(dat) |>
 
 We can use the standard `which` function from Base `R` to create indices and apply conditional stying on rows. And we can use a regular expression in `j` to apply conditional styling on columns:
 
-```{r}
-mtcars[1:10, 1:5] |>
-  tt() |> 
+```{r, eval = FALSE}
+dat <- mtcars[1:10, 1:5]
+
+tt(dat) |> 
   style_tt(
     i = which(dat$gear > dat$carb),
     j = "mpg|hp",

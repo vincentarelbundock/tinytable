@@ -1,5 +1,4 @@
 
-
 <p align="center">
 <img src="man/figures/tinytable_logo.svg" height = "250" class = "center">
 </p>
@@ -12,6 +11,8 @@
 PDF, Markdown, and Typst tables. The user interface is minimalist, but
 it gives users access to powerful frameworks to create endlessly
 customizable tables.
+
+<https://vincentarelbundock.github.io/tinytable>
 
 ## Why?
 
@@ -74,8 +75,10 @@ remotes::install_github("vincentarelbundock/tinytable")
 
 ## Get started
 
--   [Tutorial (HTML)](vignettes/tutorial.html)
--   [Tutorial (PDF)](vignettes/tutorial.pdf)
+-   [Tutorial
+    (HTML)](https://vincentarelbundock.github.io/tinytable/vignettes/tutorial.html)
+-   [Tutorial
+    (PDF)](https://vincentarelbundock.github.io/tinytable/vignettes/tutorial.pdf)
 
 ## Alternative packages
 
