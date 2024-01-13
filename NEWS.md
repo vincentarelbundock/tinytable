@@ -1,4 +1,4 @@
-# `tinytable` News
+# News
 
 ## 0.0.1
 
