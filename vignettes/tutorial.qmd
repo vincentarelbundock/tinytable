@@ -172,12 +172,13 @@ tt(x, notes = list(a = "Blah.", b = "Blah blah."))
 
 ## Math
 
+In LaTeX and MathJax (for HTML), there are two main ways to enclose mathematical expressions, either between dollar signs or escaped parentheses: `$...$` or `\(...\)`. The first strategy [is discouraged by MathJax,](https://docs.mathjax.org/en/latest/basic/mathematics.html) because dollar signs are very common in non-mathematical context, which can cause rendering errors. In that spirit, `tinytable` will not render dollar-enclosed expressions as mathematical expressions in HTML. Instead, we recommend that you use the other strategy instead: 
 
 You can render equations inside tables using the common `$...$` syntax:
 
 ```{r}
-dat <- data.frame(Math = c("\\(x^2 + y^2 = z^2\\)", "\\(\\frac{1}{2}\\)"))
-tt(dat)
+dat <- data.frame(Math = c("\\( x^2 + y^2 = z^2 \\)", "\\( \\frac{1}{2} \\)"))
+tt(dat, align = "c")
 ```
 
 In LaTeX (PDF), you can also use the `mode` inner setting from `tabularray` to render math in tables without $ delimiters (see @sec-tabularray for details on `tabularray`):
