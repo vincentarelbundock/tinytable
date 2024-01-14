@@ -105,7 +105,6 @@ style_tt <- function(
   assert_integerish(j, lower = 1, upper = attr(x, "ncol"))
   assert_character(background, null.ok = TRUE)
   assert_character(color, null.ok = TRUE)
-  assert_integerish(fontsize, null.ok = TRUE)
   assert_string(width, null.ok = TRUE)
   assert_choice(align, c("c", "l", "r"), null.ok = TRUE)
   assert_flag(bold)
@@ -174,7 +173,7 @@ style_tt <- function(
     settings$tabularray <- sprintf("%s bg=%s,", settings$tabularray, sub("^#", "c", background))
   }
   if (!is.null(color)) {
-    settings$tabularray <- sprintf("%s bg=%s,", settings$tabularray, sub("^#", "c", color))
+    settings$tabularray <- sprintf("%s fg=%s,", settings$tabularray, sub("^#", "c", color))
   }
 
   # Cruft

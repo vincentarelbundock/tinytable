@@ -342,6 +342,48 @@ The header is row 0, and can thus be styled as expected:
 tt(x) |> style_tt(i = 0, color = "white", background = "black")
 ```
 
+## Conditional styling
+
+We can use the standard `which` function from Base `R` to create indices and apply conditional stying on rows. And we can use a regular expression in `j` to apply conditional styling on columns:
+
+```{r, eval = FALSE}
+k <- mtcars[1:10, 1:5]
+
+tt(k) |> 
+  style_tt(
+    i = which(k$gear > k$carb),
+    j = "mpg|hp",
+    background = "lightgreen")
+```
+
+## Vectorized styling (heatmaps)
+
+The `color`, `background`, and `fontsize` arguments are vectorized. This allows easy specification of different colors in a single call:
+
+```{r}
+tt(x) |> style_tt(i = 1:4, color = c("red", "blue", "green", "orange"))
+```
+
+We can also produce more complex heatmap-like tables:
+
+
+```{r}
+# A table without header
+k <- data.frame(matrix(1:20, ncol = 5))
+colnames(k) <- NULL
+
+# 20 levels of Inferno colors
+bg <- hcl.colors(20, "Inferno")
+fs <- 1:20
+
+tt(k) |>
+  style_tt(
+    color = "white",
+    background = bg,
+    fontsize = fs)
+```
+
+
 # Groups and labels
 
 The `group_tt()` function can label groups of rows (`i`) or columns (`j`).
@@ -402,20 +444,6 @@ tt(dat) |>
     i = list("I like (fake) hamburgers" = 3,
              "She prefers halloumi" = 4,
              "They love tofu" = 7))
-```
-
-## Conditional styling
-
-We can use the standard `which` function from Base `R` to create indices and apply conditional stying on rows. And we can use a regular expression in `j` to apply conditional styling on columns:
-
-```{r, eval = FALSE}
-k <- mtcars[1:10, 1:5]
-
-tt(k) |> 
-  style_tt(
-    i = which(k$gear > k$carb),
-    j = "mpg|hp",
-    background = "lightgreen")
 ```
 
 
