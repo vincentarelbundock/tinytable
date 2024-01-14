@@ -87,7 +87,13 @@ tt <- function(x,
     out <- sub("\\\\begin\\{table\\}", sprintf("\\\\begin{table}[%s]\n", placement), out)
   }
 
-  attr(out, "tt_colnames") <- names(x)
+  out <- meta(out, "colnames", names(x))
+  out <- meta(out, "xdim", dim(x))
+  out <- meta(out, "output", output)
+  out <- meta(out, "id", get_id("tinytable_"))
+  out <- meta(out, "nhead", if (is.null(colnames(x))) 0 else 1)
+  out <- meta(out, "nrows", nrow(x))
+  out <- meta(out, "ncols", ncol(x))
 
   return(out)
 }
