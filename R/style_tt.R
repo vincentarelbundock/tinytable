@@ -78,7 +78,7 @@ style_tt <- function(
   if (missing(i)) i <- seq_len(attr(x, "nrow"))
   if (missing(j)) j <- seq_len(attr(x, "ncol"))
 
-  assert_string(color, null.ok = TRUE)
+  # assert_string(color, null.ok = TRUE)
   assert_string(background, null.ok = TRUE)
   assert_string(width, null.ok = TRUE)
   assert_choice(align, c("c", "l", "r"), null.ok = TRUE)
@@ -109,7 +109,7 @@ style_tt <- function(
     idx$i <- idx$i + attr(x, "nhead")
   }
 
-  bootstrap <- c(
+  bootstrap <- list(
     if (isTRUE(bold)) "font-weight: bold" else NULL,
     if (isTRUE(italic)) "font-style: italic" else NULL,
     if (isTRUE(underline)) "text-decoration: underline" else NULL,
@@ -121,17 +121,28 @@ style_tt <- function(
     if (!is.null(background)) paste0("background-color: ", background) else NULL,
     if (!is.null(width)) paste("width:%s", width) else NULL
   )
-  bootstrap <- paste(bootstrap, collapse = "; ")
+  bootstrap <- do.call("cbind", bootstrap)
+  if (!is.null(bootstrap)) {
+    bootstrap <- apply(bootstrap, 1, paste, collapse = "; ")
+    bootstrap <- paste0(bootstrap, ";")
+  } else {
+    bootstrap <- ""
+  }
 
   bootstrap_css <- c(bootstrap_css, bootstrap)
 
-  if (inherits(x, "tinytable_tabularray") && !is.null(color) && isTRUE(grepl("^#", color))) {
-    color_latex <- sub("^#", "c", color)
-    out <- style_tabularray(out,
-      body = sprintf(
-        "\\tinytableDefineColor{%s}{HTML}{%s}",
-        color_latex, sub("^#", "", color))
-    )
+  if (inherits(x, "tinytable_tabularray") && !is.null(color) && any(grepl("^#", color))) {
+    color_latex <- color
+    for (k in seq_along(color)) {
+      if (grepl("^#", color[k])) {
+        color_latex[k] <- gsub("^#", "c", color[k])
+        out <- style_tabularray(out,
+          body = sprintf(
+            "\\tinytableDefineColor{%s}{HTML}{%s}",
+            color_latex[k], sub("^#", "", color[k]))
+        )
+      }
+    }
   } else {
     color_latex <- color
   }
