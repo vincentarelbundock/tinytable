@@ -52,3 +52,9 @@ print.tinytable_bootstrap <- function(x, ...) {
     utils::browseURL(htmlFile)
   }
 }
+
+#' @export
+print.tinytable_markdown <- function(x, ...) {
+    cat("\n")
+    cat(x, sep = "\n")
+}

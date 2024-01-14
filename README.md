@@ -1,5 +1,4 @@
 
-
 <p align="center">
 <img src="man/figures/tinytable_logo.svg" height = "250" class = "center">
 </p>

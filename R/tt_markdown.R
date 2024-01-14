@@ -17,10 +17,6 @@ align_str_center <- function(x, pad_n = NULL) {
     paste0(left, x, right)
 }
 
-print.tinytable_markdown <- function(x, ...) {
-    cat("\n")
-    cat(x, sep = "\n")
-}
 
 tt_markdown <- function(tab, caption, ...) {
 
