@@ -83,7 +83,13 @@ style_tt <- function(
     }
     assert_integerish(colspan, len = 1, lower = 1, upper = j + attr(x, "ncol"))
   }
-  # assert_string(color, null.ok = TRUE)
+
+  # fill missing indices
+
+  if (missing(i)) i <- seq_len(attr(x, "nrow"))
+  if (missing(j)) j <- seq_len(attr(x, "ncol"))
+  assert_integerish(i, lower = 0, upper = attr(x, "nrow"))
+  assert_integerish(j, lower = 1, upper = attr(x, "ncol"))
   assert_string(background, null.ok = TRUE)
   assert_string(width, null.ok = TRUE)
   assert_choice(align, c("c", "l", "r"), null.ok = TRUE)
@@ -91,56 +97,41 @@ style_tt <- function(
   assert_flag(italic)
   assert_numeric(indent, len = 1, lower = 0)
   assert_integerish(fontsize, len = 1, null.ok = TRUE)
-
-
-  # fill missing indices
-  if (missing(i)) i <- seq_len(attr(x, "nrow"))
-  if (missing(j)) j <- seq_len(attr(x, "ncol"))
-  assert_integerish(i, lower = 0, upper = attr(x, "nrow"))
-  assert_integerish(j, lower = 1, upper = attr(x, "ncol"))
-
+  assert_character(color, null.ok = TRUE)
 
   if (inherits(x, "tinytable_tabularray")) {
     if (component == "cell") {
-      idx <- expand.grid(i = i, j = j)
+      settings <- expand.grid(i = i, j = j)
     } else if (component == "row") {
-      idx <- data.frame(i = i)
+      settings <- data.frame(i = i)
     } else if (component == "col") {
-      idx <- data.frame(j = j)
+      settings <- data.frame(j = j)
     }
   } else {
-    idx <- expand.grid(i = i, j = j)
+    settings <- expand.grid(i = i, j = j)
   }
+  settings$tabularray <- settings$bootstrap <- ""
 
   # do not style header by default. JS index starts at 0
-  if (inherits(x, "tinytable_tabularray") && "i" %in% colnames(idx)) {
-    idx$i <- idx$i + attr(x, "nhead")
+  if (inherits(x, "tinytable_tabularray") && "i" %in% colnames(settings)) {
+    settings$i <- settings$i + attr(x, "nhead")
   }
 
-  bootstrap <- list(
-    if (isTRUE(bold)) "font-weight: bold" else NULL,
-    if (isTRUE(italic)) "font-style: italic" else NULL,
-    if (isTRUE(underline)) "text-decoration: underline" else NULL,
-    if (isTRUE(strikeout)) "text-decoration: line-through" else NULL,
-    if (isTRUE(monospace)) "font-family: monospace" else NULL,
-    if (is.numeric(fontsize)) sprintf("font-size: %s", paste0(1.33333 * fontsize, "px")) else NULL,
-    if (!is.null(align)) paste("text-align:", switch(align, r = "right", l = "left", c = "center")) else NULL,
-    if (!is.null(color)) paste0("color: ", color) else NULL,
-    if (!is.null(background)) paste0("background-color: ", background) else NULL,
-    if (!is.null(width)) paste("width:%s", width) else NULL
-  )
-  bootstrap <- do.call("cbind", bootstrap)
-  if (!is.null(bootstrap)) {
-    bootstrap <- apply(bootstrap, 1, paste, collapse = "; ")
-    bootstrap <- paste0(bootstrap, ";")
-  } else {
-    bootstrap <- ""
-  }
+  if (isTRUE(bold)) settings$bootstrap <- sprintf("%s font-weight: bold;", settings$bootstrap)
+  if (isTRUE(italic)) settings$bootstrap <- sprintf("%s font-style: italic;", settings$bootstrap)
+  if (isTRUE(underline)) settings$bootstrap <- sprintf("%s text-decoration: underline;", settings$bootstrap)
+  if (isTRUE(strikeout)) settings$bootstrap <- sprintf("%s text-decoration: line-through;", settings$bootstrap)
+  if (isTRUE(monospace)) settings$bootstrap <- sprintf("%s font-family: monospace;", settings$bootstrap)
+  if (is.numeric(fontsize)) settings$bootstrap <- sprintf("%s font-size: %s;", settings$bootstrap, paste0(1.33333 * fontsize, "px"))
+  if (!is.null(align)) settings$bootstrap <- sprintf("%s text-align: %s;", settings$bootstrap, switch(align, r = "right", l = "left", c = "center"))
+  if (!is.null(color)) settings$bootstrap <- sprintf("%s color: %s;", settings$bootstrap, color)
+  if (!is.null(background)) settings$bootstrap <- sprintf("%s background-color: %s;", settings$bootstrap, background)
+  if (!is.null(width)) settings$bootstrap <- sprintf("%s width: %s;", settings$bootstrap, width)
 
   # apply style to bootstrap
-  for (k in seq_len(nrow(idx))) {
-    out <- style_bootstrap(out, i = idx$i[k], j = idx$j[k], css = bootstrap_css)
-    out <- style_bootstrap(out, i = idx$i[k], j = idx$j[k], css = bootstrap)
+  for (k in seq_len(nrow(settings))) {
+    out <- style_bootstrap(out, i = settings$i[k], j = settings$j[k], css = bootstrap_css)
+    out <- style_bootstrap(out, i = settings$i[k], j = settings$j[k], css = settings$bootstrap[k])
   }
 
   if (inherits(x, "tinytable_tabularray") && !is.null(color) && any(grepl("^#", color))) {
@@ -195,35 +186,35 @@ style_tt <- function(
 
   # vectorized settings with a unique entry
   if (length(tabularray) == 1) {
-    tabularray <- rep(tabularray, nrow(idx))
+    tabularray <- rep(tabularray, nrow(settings))
   }
 
   # Apply Tabularray command
   span <- if (!is.null(colspan)) paste0("c=", colspan, ",") else ""
 
-  if (inherits(x, "tinytable_tabularray")) {
-    for (k in seq_len(nrow(idx))) {
-      if (component == "cell") {
-        # R is column-major
-        spec <- sprintf("cell{%s}{%s}={%s}{%s},",
-          # do not style header by default
-          idx$i[k],
-          idx$j[k],
-          span,
-          tabularray[k])
-      } else if (component == "row") {
-        spec <- sprintf("row{%s}={%s},",
-          # do not style header by default
-          idx$i[k],
-          tabularray[k])
-      } else if (component == "col") {
-        spec <- sprintf("column{%s}={%s},",
-          idx$j[k],
-          tabularray[k])
-      }
-      out <- style_tabularray(out, inner = spec)
-    }
-  }
+  # if (inherits(x, "tinytable_tabularray")) {
+  #   for (k in seq_len(nrow(settings))) {
+  #     if (all(c("i", "j") %in% colnames(settings))) {
+  #       # R is column-major
+  #       spec <- sprintf("cell{%s}{%s}={%s}{%s},",
+  #         # do not style header by default
+  #         settings$i[k],
+  #         settings$j[k],
+  #         span,
+  #         tabularray[k])
+  #     } else if ("i" %in% colnames(settings))) {
+  #       spec <- sprintf("row{%s}={%s},",
+  #         # do not style header by default
+  #         settings$i[k],
+  #         tabularray[k])
+  #     } else if ("j" %in% colnames(settings))) {
+  #       spec <- sprintf("column{%s}={%s},",
+  #         settings$j[k],
+  #         tabularray[k])
+  #     }
+  #     out <- style_tabularray(out, inner = spec)
+  #   }
+  # }
 
   # Manual settings
   if (!is.null(tabularray_inner) || !is.null(tabularray_outer)) {

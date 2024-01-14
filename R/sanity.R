@@ -142,7 +142,8 @@ assert_data_frame <- function(x, name = as.character(substitute(x))) {
 }
 
 
-assert_character <- function(x, len = NULL, name = as.character(substitute(x))) {
+assert_character <- function(x, len = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
+  if (isTRUE(null.ok) && is.null(x)) return(invisible(TRUE))
   if (!is.character(x)) {
     msg <- sprintf("`%s` must be character.", name)
     stop(msg, call. = FALSE)
