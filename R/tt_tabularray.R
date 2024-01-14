@@ -17,7 +17,6 @@ tt_tabularray <- function(x, caption, theme, width, notes) {
   if (!is.null(colnames(x))) {
     header <- paste(colnames(x), collapse = " & ")
     header <- paste(header, "\\\\")
-    nrows <- nrows + 1
   } else {
     header <- NULL
   }

@@ -53,16 +53,30 @@ style_tt <- function(
   bootstrap_css = NULL,
   bootstrap_css_rule = NULL) {
  
-  out <- x
 
-  # no markdown styling
-  if (inherits(x, "tinytable_markdown")) return(x)
-
-  if (!inherits(x, "tinytable_tabularray") && !inherits(x, "tinytable_bootstrap")) {
+  # supported formats
+  if (inherits(x, "tinytable_markdown")) {
+    return(x)
+  } else if (!inherits(x, "tinytable_tabularray") && !inherits(x, "tinytable_bootstrap")) {
     stop("`x` must be a table produced by `tt()`.", call. = FALSE)
   }
 
-  nhead <- attr(x, "nhead")
+  out <- x
+
+  if (!missing(i) && !missing(j)) {
+    component <- "cell"
+  } else if (missing(i) && !missing(j)) {
+    component <- "col"
+  } else {
+    component <- "row"
+  } 
+
+  # j is a regular expression
+  if (!missing(j) && is.character(j) && length(j) == 1 && is.character(attr(x, "tt_colnames"))) {
+    j <- grep(j, attr(x, "tt_colnames"), perl = TRUE)
+  }
+  if (missing(i)) i <- seq_len(attr(x, "nrow"))
+  if (missing(j)) j <- seq_len(attr(x, "ncol"))
 
   assert_string(color, null.ok = TRUE)
   assert_string(background, null.ok = TRUE)
@@ -73,11 +87,6 @@ style_tt <- function(
   assert_numeric(indent, len = 1, lower = 0)
   assert_integerish(fontsize, len = 1, null.ok = TRUE)
 
-  # j is a regular expression
-  if (!missing(j) && is.character(j) && length(j) == 1 && is.character(attr(x, "tt_colnames"))) {
-    j <- grep(j, attr(x, "tt_colnames"), perl = TRUE)
-  }
-
   if (!is.null(colspan)) {
     if (missing(j) || missing(i) ||
         (!missing(i) && length(i) != 1) ||
@@ -87,104 +96,86 @@ style_tt <- function(
     assert_integerish(colspan, len = 1, lower = 1, upper = j + attr(x, "ncol"))
   }
 
-
-  arguments <- list()
-  tabularray_cmd <- NULL
-
-  if (isTRUE(bold)) {
-    tabularray_cmd <- c(tabularray_cmd, "\\bfseries")
-    arguments$bold <- list(
-      bootstrap = "font-weight: bold"
-    )
-  } 
-  if (isTRUE(italic)) {
-    tabularray_cmd <- c(tabularray_cmd, "\\textit")
-    arguments$italic <- list(
-      bootstrap = "font-style: italic"
-    )
-  } 
-  if (isTRUE(underline)) {
-    tabularray_cmd <- c(tabularray_cmd, "\\tinytableTabularrayUnderline")
-    arguments$italic <- list(
-      bootstrap = "text-decoration: underline"
-    )
-  } 
-  if (isTRUE(strikeout)) {
-    tabularray_cmd <- c(tabularray_cmd, "\\tinytableTabularrayStrikeout")
-    arguments$italic <- list(
-      bootstrap = "text-decoration: line-through"
-    )
-  } 
-  if (isTRUE(monospace)) {
-    tabularray_cmd <- c(tabularray_cmd, "\\texttt")
-    arguments$monospace <- list(
-      bootstrap = "font-family: monospace"
-    )
-  }
-  if (is.numeric(fontsize)) {
-    arguments$monospace <- list(
-      tabularray = sprintf("font=\\fontsize{%s}{%s}\\selectfont", fontsize, fontsize + 2),
-      bootstrap = sprintf("font-size: %s;", paste0(1.33333 * fontsize, "px"))
-    )
-  }
-  if (!is.null(align)) {
-    arguments$align <- list(
-      tabularray = sprintf("halign=%s", align),
-      bootstrap = paste("text-align:", switch(align, r = "right", l = "left", c = "center"))
-    )
-  }
-  if (!is.null(colspan)) {
-    arguments$colspan <- list(
-      tabularray = paste0("c=", colspan),
-      bootstrap = ""
-    )
-  }
-  if (!is.null(color)) {
-    if (inherits(x, "tinytable_tabularray") && isTRUE(grepl("^#", color))) {
-      color_latex <- sub("^#", "c", color)
-      out <- style_tabularray(out,
-        body = sprintf(
-          "\\tinytableDefineColor{%s}{HTML}{%s}",
-          color_latex, sub("^#", "", color))
-      )
-    } else {
-      color_latex <- color
-    }
-    arguments$color <- list(
-      tabularray = paste0("fg=", color_latex),
-      bootstrap = paste0("color: ", color)
-    )
-  }
-  if (!is.null(background)) {
-    arguments$background <- list(
-      tabularray = paste0("bg=", background),
-      bootstrap = paste0("background-color: ", background)
-    )
-  }
-  if (!is.null(width)) {
-    arguments$width <- list(
-      tabularray = sprintf("wd={%s}", width),
-      bootstrap = paste("width:%s", width)
-    )
-  }
-  if (indent > 0) {
-    arguments$indent <- list(
-      tabularray = sprintf("preto={\\hspace{%sem}}", indent),
-      bootstrap = sprintf("text-indent: %sem", indent)
-    )
-  }
-  if (inherits(x, "tinytable_bootstrap")) {
-    css <- sapply(arguments, function(x) x[["bootstrap"]])
-    css <- paste(css, collapse = "; ")
-    out <- style_bootstrap(out, i, j, css = css)
+  if (component == "cell") {
+    idx <- expand.grid(i = i, j = j)
+  } else if (component == "row") {
+    idx <- data.frame(i = i)
+  } else {
+    idx <- data.frame(j = j)
   }
 
+  # do not style header by default. JS index starts at 0
+  if (inherits(x, "tinytable_tabularray") && "i" %in% colnames(idx)) {
+    idx$i <- idx$i + attr(x, "nhead")
+  }
 
-  tabularray <- sapply(arguments, function(x) x[["tabularray"]])
-  # important for things like colspan
-  tabularray <- Filter(function(x) !is.null(x), tabularray)
+  bootstrap <- c(
+    if (isTRUE(bold)) "font-weight: bold" else NULL,
+    if (isTRUE(italic)) "font-style: italic" else NULL,
+    if (isTRUE(underline)) "text-decoration: underline" else NULL,
+    if (isTRUE(strikeout)) "text-decoration: line-through" else NULL,
+    if (isTRUE(monospace)) "font-family: monospace" else NULL,
+    if (is.numeric(fontsize)) sprintf("font-size: %s", paste0(1.33333 * fontsize, "px")) else NULL,
+    if (!is.null(align)) paste("text-align:", switch(align, r = "right", l = "left", c = "center")) else NULL,
+    if (!is.null(color)) paste0("color: ", color) else NULL,
+    if (!is.null(background)) paste0("background-color: ", background) else NULL,
+    if (!is.null(width)) paste("width:%s", width) else NULL
+  )
+  bootstrap <- paste(bootstrap, collapse = "; ")
 
- 
+  bootstrap_css <- c(bootstrap_css, bootstrap)
+
+  if (inherits(x, "tinytable_tabularray") && !is.null(color) && isTRUE(grepl("^#", color))) {
+    color_latex <- sub("^#", "c", color)
+    out <- style_tabularray(out,
+      body = sprintf(
+        "\\tinytableDefineColor{%s}{HTML}{%s}",
+        color_latex, sub("^#", "", color))
+    )
+  } else {
+    color_latex <- color
+  }
+
+  tabularray <- list(
+    if (is.numeric(fontsize)) sprintf("font=\\fontsize{%s}{%s}\\selectfont", fontsize, fontsize + 2) else NULL,
+    if (!is.null(align)) sprintf("halign=%s", align) else NULL,
+    if (!is.null(background)) sprintf("bg=%s", background) else NULL,
+    if (!is.null(color)) sprintf("fg=%s", color_latex) else NULL,
+    if (!is.null(width)) sprintf("wd={%s}", width) else NULL,
+    if (indent > 0) sprintf("preto={\\hspace{%sem}}", indent) else NULL
+  )
+
+  tabularray <- do.call("cbind", tabularray)
+  if (!is.null(tabularray)) {
+    tabularray <- apply(tabularray, 1, paste, collapse = ", ")
+    tabularray <- paste0(tabularray, ",")
+  } else {
+    tabularray <- ""
+  }
+
+  tabularray_cmd <- list(
+    if (isTRUE(bold)) "\\bfseries" else NULL,
+    if (isTRUE(italic)) "\\textit{}" else NULL,
+    if (isTRUE(underline)) "\\tinytableTabularrayUnderline" else NULL,
+    if (isTRUE(strikeout)) "\\tinytableTabularrayStrikeout" else NULL,
+    if (isTRUE(monospace)) "\\texttt{}" else NULL
+  )
+  tabularray_cmd <- do.call("cbind", tabularray_cmd)
+  if (is.null(tabularray_cmd)) {
+    tabularray_cmd <- ""
+  } else {
+    tabularray_cmd <- apply(tabularray_cmd, 1, paste, collapse = "")
+  }
+  if (tabularray_cmd != "") tabularray_cmd <- sprintf("cmd=%s,", tabularray_cmd)
+
+  tabularray <- paste(tabularray, tabularray_cmd)
+
+  # vectorized settings with a unique entry
+  if (length(tabularray) == 1) {
+    tabularray <- rep(tabularray, nrow(idx))
+  }
+
+  # Apply Tabularray command
   if (any(c("colspan", "rowspan") %in% names(tabularray))) {
     span <- tabularray[names(tabularray) %in% c("colspan", "rowspan")]
     span <- paste(span, collapse = ",")
@@ -193,43 +184,29 @@ style_tt <- function(
     span <- ""
   }
 
-  tabularray <- paste0(paste(tabularray, collapse = ","), ",")
-
-  if (length(tabularray_cmd) > 0) {
-    tabularray_cmd <- paste0("cmd=", paste(tabularray_cmd, collapse = ""))
-    tabularray <- paste(tabularray, tabularray_cmd, sep = ",")
-  }
-
-  if (tabularray == ",") tabularray <- ""
-
-
   if (inherits(x, "tinytable_tabularray")) {
-    # specified columns or all cells
-    if (missing(i)) {
-      if (missing(j)) {
-        j <- seq_len(attr(x, "ncol"))
+    for (k in seq_len(nrow(idx))) {
+      if (component == "cell") {
+        # R is column-major
+        spec <- sprintf("cell{%s}{%s}={%s}{%s},",
+          # do not style header by default
+          idx$i[k],
+          idx$j[k],
+          span,
+          tabularray[k])
+      } else if (component == "row") {
+        spec <- sprintf("row{%s}={%s},",
+          # do not style header by default
+          idx$i[k],
+          tabularray[k])
+      } else if (component == "col") {
+        spec <- sprintf("column{%s}={%s},",
+          idx$j[k],
+          tabularray[k])
       }
-      colspec <- sprintf("column{%s}={%s},", paste(j, collapse = ","), tabularray)
-      out <- style_tabularray(out, inner = colspec)
-
-    # specified rows
-    } else if (missing(j)) {
-      # do not style header by default
-      rowspec <- sprintf("row{%s}={%s},", paste(i + nhead, collapse = ","), tabularray)
-      out <- style_tabularray(out, inner = rowspec)
-
-    # specified cells
-    } else {
-      cellspec <- sprintf("cell{%s}{%s}={%s}{%s},",
-                          # do not style header by default
-                          paste(i + nhead, collapse = ","),
-                          paste(j, collapse = ","),
-                          span,
-                          tabularray)
-      out <- style_tabularray(out, inner = cellspec)
+      out <- style_tabularray(out, inner = spec)
     }
   }
-
 
   # Manual settings
   if (!is.null(tabularray_inner) || !is.null(tabularray_outer)) {
@@ -238,7 +215,6 @@ style_tt <- function(
   if (!is.null(bootstrap_css) || !is.null(bootstrap_css_rule)) {
     out <- style_bootstrap(out, i = i, j = j, css = bootstrap_css, css_rule = bootstrap_css_rule)
   }
-
 
   return(out)
 }
