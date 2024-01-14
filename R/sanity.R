@@ -90,11 +90,11 @@ assert_flag <- function(x, null.ok = FALSE, name = as.character(substitute(x))) 
 }
 
 assert_length <- function(x, len = 1, null.ok = FALSE, name = as.character(substitute(x))) {
-  # if (is.null(x) && isTRUE(null.ok)) return(invisible(TRUE))
-  # msg <- sprintf("`%s` must be one of these lengths: %s", name, paste(len, collapse = ", "))
-  # if (length(x) %in% len) {
-  #   stop(msg, call. = FALSE)
-  # }
+  if (is.null(x) && isTRUE(null.ok)) return(invisible(TRUE))
+  msg <- sprintf("`%s` must be one of these lengths: %s", name, paste(len, collapse = ", "))
+  if (!length(x) %in% len) {
+    stop(msg, call. = FALSE)
+  }
 }
 
 assert_logical <- function(x, null.ok = FALSE, name = as.character(substitute(x))) {

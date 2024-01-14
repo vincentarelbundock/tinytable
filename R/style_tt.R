@@ -38,39 +38,33 @@ style_tt <- function (x, i, j, bold = FALSE, italic = FALSE, monospace = FALSE,
                       fontsize = NULL, width = NULL, align = NULL, colspan = NULL, 
                       indent = 0, tabularray_inner = NULL, tabularray_outer = NULL, 
                       bootstrap_css = NULL, bootstrap_css_rule = NULL) {
+
   if (inherits(x, "tinytable_markdown")) {
     return(x)
-  }
-  else if (!inherits(x, "tinytable_tabularray") && !inherits(x, 
-                                                             "tinytable_bootstrap")) {
+  } else if (!inherits(x, "tinytable_tabularray") && !inherits(x, "tinytable_bootstrap")) {
     stop("`x` must be a table produced by `tt()`.", call. = FALSE)
   }
   out <- x
   if (missing(i)) {
     ival <- seq_len(attr(x, "nrow"))
-  }
-  else {
+  } else {
     ival <- i
   }
   if (missing(j)) {
     jval <- seq_len(attr(x, "ncol"))
-  }
-  else {
-    if (is.character(j) && length(j) == 1 && is.character(attr(x, 
-                                                               "tt_colnames"))) {
+  } else {
+    if (is.character(j) && length(j) == 1 && is.character(attr(x, "tt_colnames"))) {
       jval <- grep(j, attr(x, "tt_colnames"), perl = TRUE)
+    } else {
+      jval <- j
     }
-  else {
-    jval <- j
-  }
   }
   ncells <- length(ival) * length(jval)
   ncols <- length(jval)
   nrows <- length(ival)
-  assert_integerish(ival, lower = 0, upper = attr(x, "nrow"), 
-                    name = "i")
-  assert_integerish(jval, lower = 1, upper = attr(x, "ncol"), 
-                    name = "j")
+
+  assert_integerish(ival, lower = 0, upper = attr(x, "nrow"), name = "i")
+  assert_integerish(jval, lower = 1, upper = attr(x, "ncol"), name = "j")
   assert_string(width, null.ok = TRUE)
   assert_choice(align, c("c", "l", "r"), null.ok = TRUE)
   assert_numeric(indent, len = 1, lower = 0)
@@ -91,8 +85,7 @@ style_tt <- function (x, i, j, bold = FALSE, italic = FALSE, monospace = FALSE,
     assert_length(monospace, len = 1)
     assert_length(underline, len = 1)
     assert_length(strikeout, len = 1)
-  }
-  else if (!missing(i) && missing(j)) {
+  } else if (!missing(i) && missing(j)) {
     assert_length(color, len = c(1, nrows), null.ok = TRUE)
     assert_length(background, len = c(1, nrows), null.ok = TRUE)
     assert_length(fontsize, len = c(1, nrows), null.ok = TRUE)
@@ -101,8 +94,7 @@ style_tt <- function (x, i, j, bold = FALSE, italic = FALSE, monospace = FALSE,
     assert_length(monospace, len = c(1, nrows))
     assert_length(underline, len = c(1, nrows))
     assert_length(strikeout, len = c(1, nrows))
-  }
-  else if (missing(i) && !missing(j)) {
+  } else if (missing(i) && !missing(j)) {
     assert_length(color, len = c(1, ncols), null.ok = TRUE)
     assert_length(background, len = c(1, ncols), null.ok = TRUE)
     assert_length(fontsize, len = c(1, ncols), null.ok = TRUE)
@@ -111,8 +103,7 @@ style_tt <- function (x, i, j, bold = FALSE, italic = FALSE, monospace = FALSE,
     assert_length(monospace, len = c(1, ncols))
     assert_length(underline, len = c(1, ncols))
     assert_length(strikeout, len = c(1, ncols))
-  }
-  else if (!missing(i) && !missing(j)) {
+  } else if (!missing(i) && !missing(j)) {
     assert_length(color, len = c(1, ncells), null.ok = TRUE)
     assert_length(background, len = c(1, ncells), null.ok = TRUE)
     assert_length(fontsize, len = c(1, ncells), null.ok = TRUE)
@@ -124,10 +115,8 @@ style_tt <- function (x, i, j, bold = FALSE, italic = FALSE, monospace = FALSE,
   }
 
   if (!is.null(colspan)) {
-    if (missing(j) || missing(i) || (!missing(i) && length(ival) != 
-                                     1) || (!missing(j) && length(jval) != 1)) {
-      stop("`i` and `j` must be of length 1 when using `colspan`.", 
-           call. = FALSE)
+    if (missing(j) || missing(i) || (!missing(i) && length(ival) != 1) || (!missing(j) && length(jval) != 1)) {
+      stop("`i` and `j` must be of length 1 when using `colspan`.", call. = FALSE)
     }
     assert_integerish(colspan, len = 1, lower = 1, upper = jval + attr(x, "ncol"))
   }
@@ -156,29 +145,41 @@ style_tt <- function (x, i, j, bold = FALSE, italic = FALSE, monospace = FALSE,
     settings$i <- settings$i + attr(x, "nhead")
   }
 
-  vectorize_bootstrap <- function(setting, userinput, string) {
-    if (is.null(userinput)) {
-      return(setting)
+  # settings have a different size for latex, so bootstrap breaks
+  if (inherits(x, "tinytable_bootstrap")) {
+    vectorize_bootstrap <- function(setting, userinput, string) {
+      if (is.null(userinput)) {
+        return(setting)
+      }
+      if (check_flag(userinput) && isTRUE(userinput))  {
+        return(paste(setting, string))
+      }
+      if (is.logical(userinput)) {
+        return(ifelse(userinput, paste(setting, string), setting))
+      }
+      return(paste(setting, sprintf(string, userinput)))
     }
-    if (check_flag(userinput) && isTRUE(userinput))  {
-      return(paste(setting, string))
+
+    if (!is.null(align)) {
+      align_bootstrap <- ifelse(align == "c", "center", align_bootstrap)
+      align_bootstrap <- ifelse(align == "l", "left", align_bootstrap)
+      align_bootstrap <- ifelse(align == "r", "right", align_bootstrap)
+    } else {
+      align_bootstrap <- align
     }
-    if (is.logical(userinput)) {
-      return(ifelse(userinput, paste(setting, string), setting))
-    }
-    return(paste(setting, sprintf(string, userinput)))
+
+    settings$bootstrap <- ""
+    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, bold, "font-weight: bold;")
+    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, italic, "font-style: italic;")
+    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, underline, "text-decoration: underline;")
+    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, strikeout, "text-decoration: line-through;")
+    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, monospace, "font-family: monospace;")
+    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, fontsize, "font-size: %s;")
+    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, align_bootstrap, "text-align: %s;")
+    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, color, "color: %s;")
+    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, background, "background-color: %s;")
+    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, width, "width: %s;")
   }
-  settings$bootstrap <- ""
-  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, bold, "font-weight: bold;")
-  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, italic, "font-style: italic;")
-  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, underline, "text-decoration: underline;")
-  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, strikeout, "text-decoration: line-through;")
-  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, monospace, "font-family: monospace;")
-  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, fontsize, "text-align: %s;")
-  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, align, "font-size: %s;")
-  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, color, "color: %s;")
-  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, background, "background-color: %s;")
-  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, width, "width: %s;")
 
   # convert to tabularray now that we've filled the bootstrap settings
   if (is.numeric(fontsize)) settings$tabularray <- sprintf("%s font=\\fontsize{%s}{%s}\\selectfont,", settings$tabularray, fontsize, fontsize + 2) 
