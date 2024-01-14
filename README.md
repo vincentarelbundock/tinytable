@@ -94,5 +94,17 @@ like `tinytable`, I recommend you check out some of these:
 Did I miss your favorite package? Drop me a note and I’ll add it to the
 list.
 
+Of course, there are also many packages to compute statistics and build
+tables (ex: `modelsummary`, `gtsummary`, `table1`). Many of those
+packages delegate the actual drawing of the tables (ie: lines and
+colors) to one of the table-drawing packages listed above. In that
+sense, `tinytable` should be seen as more of a complement than an
+alternative to data summary packages. The goal of `tinytable` is to help
+users and developers convert data frames into beautiful tables easily.
+What people put in those tables is outside the scope of `tinytable`. If
+you are interested in a package to create data summaries and regression
+tables/plots, please check out my `modelsummary` package:
+<https://modelsummary.com>
+
 [1] Other formats like Markdown and Typst are also available, but less
 flexible.
