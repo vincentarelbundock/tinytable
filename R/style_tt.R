@@ -100,12 +100,16 @@ style_tt <- function(
   assert_integerish(j, lower = 1, upper = attr(x, "ncol"))
 
 
-  if (component == "cell") {
+  if (inherits(x, "tinytable_tabularray")) {
+    if (component == "cell") {
+      idx <- expand.grid(i = i, j = j)
+    } else if (component == "row") {
+      idx <- data.frame(i = i)
+    } else if (component == "col") {
+      idx <- data.frame(j = j)
+    }
+  } else {
     idx <- expand.grid(i = i, j = j)
-  } else if (component == "row") {
-    idx <- data.frame(i = i)
-  } else if (component == "col") {
-    idx <- data.frame(j = j)
   }
 
   # do not style header by default. JS index starts at 0
@@ -195,13 +199,7 @@ style_tt <- function(
   }
 
   # Apply Tabularray command
-  if (any(c("colspan", "rowspan") %in% names(tabularray))) {
-    span <- tabularray[names(tabularray) %in% c("colspan", "rowspan")]
-    span <- paste(span, collapse = ",")
-    tabularray <- tabularray[!names(tabularray) %in% c("colspan", "rowspan")]
-  } else {
-    span <- ""
-  }
+  span <- if (!is.null(colspan)) paste0("c=", colspan, ",") else ""
 
   if (inherits(x, "tinytable_tabularray")) {
     for (k in seq_len(nrow(idx))) {
