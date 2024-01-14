@@ -94,6 +94,9 @@ group_tabularray_row <- function(x, i, indent, ...) {
   attributes(tab) <- att
   class(tab) <- class(x)
 
+  # add rows to attributes BEFORE style_tt
+  attr(tab, "nrow") <- attr(tab, "nrow") + length(label)
+
   cellspec <- sprintf("cell{%s}{%s}={%s}{%s},",
     idx$new[is.na(idx$old)] + attr(x, "nhead"),
     1,

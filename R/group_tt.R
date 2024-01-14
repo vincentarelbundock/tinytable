@@ -33,7 +33,6 @@ group_tt <- function(x, i, j, indent = 1, ...) {
     out <- group_bootstrap(out, i = i, j = j, indent = indent, ...)
   }
 
-  attr(out, "nrow") <- attr(out, "nrow") + length(i)
   if (is.list(j)) attr(out, "nhead") <- attr(out, "nhead") + 1
 
   return(out)

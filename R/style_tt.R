@@ -53,7 +53,6 @@ style_tt <- function(
   bootstrap_css = NULL,
   bootstrap_css_rule = NULL) {
  
-
   # supported formats
   if (inherits(x, "tinytable_markdown")) {
     return(x)
@@ -75,17 +74,6 @@ style_tt <- function(
   if (!missing(j) && is.character(j) && length(j) == 1 && is.character(attr(x, "tt_colnames"))) {
     j <- grep(j, attr(x, "tt_colnames"), perl = TRUE)
   }
-  if (missing(i)) i <- seq_len(attr(x, "nrow"))
-  if (missing(j)) j <- seq_len(attr(x, "ncol"))
-
-  # assert_string(color, null.ok = TRUE)
-  assert_string(background, null.ok = TRUE)
-  assert_string(width, null.ok = TRUE)
-  assert_choice(align, c("c", "l", "r"), null.ok = TRUE)
-  assert_flag(bold)
-  assert_flag(italic)
-  assert_numeric(indent, len = 1, lower = 0)
-  assert_integerish(fontsize, len = 1, null.ok = TRUE)
 
   if (!is.null(colspan)) {
     if (missing(j) || missing(i) ||
@@ -95,12 +83,28 @@ style_tt <- function(
     }
     assert_integerish(colspan, len = 1, lower = 1, upper = j + attr(x, "ncol"))
   }
+  # assert_string(color, null.ok = TRUE)
+  assert_string(background, null.ok = TRUE)
+  assert_string(width, null.ok = TRUE)
+  assert_choice(align, c("c", "l", "r"), null.ok = TRUE)
+  assert_flag(bold)
+  assert_flag(italic)
+  assert_numeric(indent, len = 1, lower = 0)
+  assert_integerish(fontsize, len = 1, null.ok = TRUE)
+
+
+  # fill missing indices
+  if (missing(i)) i <- seq_len(attr(x, "nrow"))
+  if (missing(j)) j <- seq_len(attr(x, "ncol"))
+  assert_integerish(i, lower = 0, upper = attr(x, "nrow"))
+  assert_integerish(j, lower = 1, upper = attr(x, "ncol"))
+
 
   if (component == "cell") {
     idx <- expand.grid(i = i, j = j)
   } else if (component == "row") {
     idx <- data.frame(i = i)
-  } else {
+  } else if (component == "col") {
     idx <- data.frame(j = j)
   }
 
@@ -129,7 +133,11 @@ style_tt <- function(
     bootstrap <- ""
   }
 
-  bootstrap_css <- c(bootstrap_css, bootstrap)
+  # apply style to bootstrap
+  for (k in seq_len(nrow(idx))) {
+    out <- style_bootstrap(out, i = idx$i[k], j = idx$j[k], css = bootstrap_css)
+    out <- style_bootstrap(out, i = idx$i[k], j = idx$j[k], css = bootstrap)
+  }
 
   if (inherits(x, "tinytable_tabularray") && !is.null(color) && any(grepl("^#", color))) {
     color_latex <- color

@@ -179,11 +179,11 @@ dat <- data.frame(Math = c("\\( x^2 + y^2 = z^2 \\)", "\\( \\frac{1}{2} \\)"))
 tt(dat, align = "c")
 ```
 
+```{r, eval = knitr::is_latex_output()}
 In LaTeX (PDF), you can also use the `mode` inner setting from `tabularray` to render math in tables without delimiters (see @sec-tabularray for details on `tabularray`):
 
-```{r, eval = knitr::is_latex_output()}
 dat <- data.frame(Math = c("x^2 + y^2 = z^2", "\\frac{1}{2}"))
-tt(dat) |> style_tt(tabularray_inner = "column{1}={mode=math},")
+tt(dat, align = "c") |> style_tt(tabularray_inner = "column{1}={mode=math},")
 ```
 
 # Style
@@ -490,7 +490,7 @@ css_rule <- "
 }
 "
 
-tt(x, align = "ccccc", theme = "table mytable") |> 
+tt(x, align = "ccccc", theme = "table mytable", width = 2/3) |> 
   style_tt(bootstrap_css_rule = css_rule)
 ```
 
