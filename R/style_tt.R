@@ -161,11 +161,17 @@ style_tt <- function (x, i, j, bold = FALSE, italic = FALSE, monospace = FALSE,
     }
 
     if (!is.null(align)) {
-      align_bootstrap <- ifelse(align == "c", "center", align_bootstrap)
+      align_bootstrap <- ifelse(align == "c", "center", align)
       align_bootstrap <- ifelse(align == "l", "left", align_bootstrap)
       align_bootstrap <- ifelse(align == "r", "right", align_bootstrap)
     } else {
       align_bootstrap <- align
+    }
+
+    if (!is.null(fontsize)) {
+      fontsize_bootstrap <- sprintf("%spx", (1 + 1 / 3) * fontsize)
+    } else {
+      fontsize_bootstrap <- fontsize
     }
 
     settings$bootstrap <- ""
@@ -174,7 +180,7 @@ style_tt <- function (x, i, j, bold = FALSE, italic = FALSE, monospace = FALSE,
     settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, underline, "text-decoration: underline;")
     settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, strikeout, "text-decoration: line-through;")
     settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, monospace, "font-family: monospace;")
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, fontsize, "font-size: %s;")
+    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, fontsize_bootstrap, "font-size: %s;")
     settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, align_bootstrap, "text-align: %s;")
     settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, color, "color: %s;")
     settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, background, "background-color: %s;")
