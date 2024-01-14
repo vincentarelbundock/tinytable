@@ -346,14 +346,14 @@ tt(x) |> style_tt(i = 0, color = "white", background = "black")
 
 We can use the standard `which` function from Base `R` to create indices and apply conditional stying on rows. And we can use a regular expression in `j` to apply conditional styling on columns:
 
-```{r, eval = FALSE}
-k <- mtcars[1:10, 1:5]
+```{r}
+k <- mtcars[1:10, c("mpg", "am", "vs")]
 
 tt(k) |> 
   style_tt(
-    i = which(k$gear > k$carb),
-    j = "mpg|hp",
-    background = "lightgreen")
+    i = which(k$am == k$vs),
+    background = "teal",
+    color = "white")
 ```
 
 ## Vectorized styling (heatmaps)
@@ -364,8 +364,17 @@ The `color`, `background`, and `fontsize` arguments are vectorized. This allows 
 tt(x) |> style_tt(i = 1:4, color = c("red", "blue", "green", "orange"))
 ```
 
-We can also produce more complex heatmap-like tables:
+When using a single value for a vectorized argument, it gets applied to all values:
 
+```{r}
+tt(x) |>
+  style_tt(
+    j = 2:3,
+    color = c("orange", "green"),
+    background = "black")
+```
+
+We can also produce more complex heatmap-like tables:
 
 ```{r}
 # A table without header
@@ -376,7 +385,7 @@ colnames(k) <- NULL
 bg <- hcl.colors(20, "Inferno")
 fs <- 1:20
 
-tt(k) |>
+tt(k, width = .5) |>
   style_tt(
     color = "white",
     background = bg,
