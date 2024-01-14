@@ -21,13 +21,21 @@ align_str_center <- function(x, pad_n = NULL) {
 tt_markdown <- function(tab, caption, ...) {
 
   # fake spans
-  colnames(tab) <- gsub("\\|{4}", " / ", colnames(tab))
+  if (!is.null(colnames(tab))) {
+    colnames(tab) <- gsub("\\|{4}", " / ", colnames(tab))
+  }
 
   # align content
   # this is an infrastructure already. Can be used when 
   align <- rep("l", ncol(tab))
   for (i in seq_along(tab)) {
-    pad_n <- max(nchar(colnames(tab)[i]), max(nchar(tab[[i]])))
+
+    # otherwise we can't take nchar()
+    tab[[i]] <- as.character(tab[[i]])
+
+    pad_n <- 0
+    if (!is.null(colnames)) pad_n <- max(pad_n, nchar(colnames(tab)[i]))
+    pad_n <- max(pad_n, max(nchar(as.character(tab[[i]]))))
     if (align[[i]] == "l") {
       tab[[i]] <- align_str_left(tab[[i]], pad_n = pad_n)
     } else if (align[[i]] == "r") {
@@ -38,12 +46,14 @@ tt_markdown <- function(tab, caption, ...) {
   }
 
   # bind centered column names
-  header <- as.data.frame(as.list(colnames(tab)))
-  colnames(header) <- colnames(tab)
-  for (i in seq_along(tab)) {
-    header[[i]] <- align_str_center(header[[i]], nchar(tab[[i]][1]))
+  if (!is.null(colnames(tab))) {
+    header <- as.data.frame(as.list(colnames(tab)))
+    colnames(header) <- colnames(tab)
+    for (i in seq_along(tab)) {
+      header[[i]] <- align_str_center(header[[i]], nchar(tab[[i]][1]))
+    }
+    tab <- rbind(header, tab)
   }
-  tab <- rbind(header, tab)
 
   # pipes
   tab[[1]] <- paste("|", tab[[1]])
@@ -60,7 +70,10 @@ tt_markdown <- function(tab, caption, ...) {
   ruler <- sub("\\|-", "|:", ruler) # only first
   ruler <- gsub("-$", "", ruler) # only first
 
-  hrule <- 1
+  hrule <- NULL
+  if (!is.null(colnames(tab))) {
+    hrule <- 1
+  } 
   for (h in hrule) {
     tab <- append(tab, ruler, after = h)
   }
