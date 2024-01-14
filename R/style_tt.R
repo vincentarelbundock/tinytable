@@ -68,21 +68,22 @@ style_tt <- function(
   }
 
   if (missing(i) && missing(j)) {
-    settings <- expand.grid(
-      i = seq_len(attr(x, "nrow")),
-      j = seq_len(attr(x, "ncol"))
-    )
+    i <- seq_len(attr(x, "nrow"))
+    j <- seq_len(attr(x, "ncol"))
+    settings <- expand.grid(i = i, j = j)
   } else if (missing(i) && !missing(j)) {
+    i <- seq_len(attr(x, "nrow"))
     if (inherits(x, "tinytable_tabularray")) {
       settings <- data.frame(j = j)
     } else {
-      settings <- expand.grid(i = seq_len(attr(x, "nrow")), j = j)
+      settings <- expand.grid(i = i, j = j)
     }
   } else if (!missing(i) && missing(j)) {
+    j <- seq_len(attr(x, "ncol"))
     if (inherits(x, "tinytable_tabularray")) {
       settings <- data.frame(i = i)
     } else {
-      settings <- expand.grid(i = seq_len(attr(x, "nrow")), j = j)
+      settings <- expand.grid(i = i, j = j)
     }
   } else if (!missing(i) && !missing(j)) {
     settings <- expand.grid(i = i, j = j)
@@ -102,14 +103,28 @@ style_tt <- function(
   # fill missing indices
   assert_integerish(i, lower = 0, upper = attr(x, "nrow"))
   assert_integerish(j, lower = 1, upper = attr(x, "ncol"))
-  # assert_string(background, null.ok = TRUE)
-  # assert_character(color, null.ok = TRUE)
-  # assert_integerish(fontsize, len = 1, null.ok = TRUE)
+  assert_character(background, null.ok = TRUE)
+  assert_character(color, null.ok = TRUE)
+  assert_integerish(fontsize, null.ok = TRUE)
   assert_string(width, null.ok = TRUE)
   assert_choice(align, c("c", "l", "r"), null.ok = TRUE)
   assert_flag(bold)
   assert_flag(italic)
   assert_numeric(indent, len = 1, lower = 0)
+
+  # vectorized arguments: length NULL, 1, number of rows, or number of cells. Never columns.
+  if (!is.null(fontsize) && length(fontsize) != 1 && length(fontsize) != length(i) && length(fontsize) != nrow(settings)) {
+    msg <- sprintf("`fontsize` must be `NULL`, or an integer vector of length 1, %s or %s.", length(i), nrow(settings))
+    stop(msg, call. = FALSE)
+  }
+  if (!is.null(color) && length(color) != 1 && length(color) != length(i) && length(color) != nrow(settings)) {
+    msg <- sprintf("`color` must be `NULL`, or a character vector of length 1, %s, or %s.", length(i), nrow(settings))
+    stop(msg, call. = FALSE)
+  }
+  if (!is.null(background) && length(background) != 1 && length(background) != length(i) && length(background) != nrow(settings)) {
+    msg <- sprintf("`background` must be `NULL`, or a character vector of length 1, %s or %s.", length(i), nrow(settings))
+    stop(msg, call. = FALSE)
+  }
 
   # do not style header by default. JS index starts at 0
   if (inherits(x, "tinytable_tabularray") && "i" %in% colnames(settings)) {
@@ -136,13 +151,13 @@ style_tt <- function(
   if (!is.null(width)) settings$tabularray <- sprintf("%s wd={%s},", settings$tabularray, width)
   if (indent > 0) settings$tabularary <- sprintf("%s preto={\\hspace{%sem}},", settings$tabularray, indent)
 
-  settings$tabularray_cmd <- ""
-  if (isTRUE(bold)) settings$tabularray_cmd <- paste0(settings$tabularray_cmd, "\\bfseries")
-  if (isTRUE(italic)) settings$tabularray_cmd <- paste0(settings$tabularray_cmd, "\\textit")
-  if (isTRUE(underline)) settings$tabularray_cmd <- paste0(settings$tabularray_cmd, "\\tinytableTabularrayUnderline")
-  if (isTRUE(strikeout)) settings$tabularray_cmd <- paste0(settings$tabularray_cmd, "\\tinytableTabularrayStrikeout")
-  if (isTRUE(monospace)) settings$tabularray_cmd <- paste0(settings$tabularray_cmd, "\\texttt")
-  settings$tabularray <- sprintf("%s, cmd=%s,", settings$tabularray, settings$tabularray_cmd)
+  cmd <- ""
+  if (isTRUE(bold)) cmd <- paste0(cmd, "\\bfseries")
+  if (isTRUE(italic)) cmd <- paste0(cmd, "\\textit")
+  if (isTRUE(underline)) cmd <- paste0(cmd, "\\tinytableTabularrayUnderline")
+  if (isTRUE(strikeout)) cmd <- paste0(cmd, "\\tinytableTabularrayStrikeout")
+  if (isTRUE(monospace)) cmd <- paste0(cmd, "\\texttt")
+  settings$tabularray <- sprintf("%s, cmd=%s,", settings$tabularray, cmd)
 
   # hex colors need special processing in LaTeX
   cols <- c(color, background)
@@ -155,7 +170,6 @@ style_tt <- function(
       )
     }
   }
-
   if (!is.null(background)) {
     settings$tabularray <- sprintf("%s bg=%s,", settings$tabularray, sub("^#", "c", background))
   }
