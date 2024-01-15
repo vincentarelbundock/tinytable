@@ -62,6 +62,9 @@ group_tabularray_col <- function(x, j, ...) {
 
 
 group_tabularray_row <- function(x, i, indent, ...) {
+
+  m <- meta(x)
+
   if (is.null(names(i))) {
     msg <- "`i` must be a named integer vector."
   }
@@ -70,14 +73,15 @@ group_tabularray_row <- function(x, i, indent, ...) {
   ## we don't appear to need to reverse in tabularray
   # i <- rev(sort(i))
 
-  ncol <- attr(x, "ncol")
+  ncols <- m$ncols
   att <- attributes(x)
+
   att$nrow <- att$nrow + length(label)
   tab <- strsplit(x, "\\n")[[1]]
 
   # store the original body lines when creating the table, and use those to guess the boundaries.
   # a hack, but probably safer than most regex approaches I can think of.
-  body <- which(tab %in% attr(x, "body"))
+  body <- which(tab %in% m[["body"]])
   top <- tab[1:(min(body) - 1)]
   mid <- tab[min(body):max(body)]
   bot <- tab[(max(body) + 1):length(tab)]

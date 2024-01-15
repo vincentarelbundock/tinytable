@@ -50,6 +50,10 @@ style_tabularray <- function(x,
   out <- paste(out, collapse = "\n")
   attributes(out) <- att
   class(out) <- class(x)
+
+  # important for group_tt()
+  out <- meta(out, "body", body)
+
   return(out)
 }  
 
