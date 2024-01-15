@@ -18,19 +18,19 @@
 #' }
 #'
 save_tt <- function(x, filename, overwrite = FALSE) {
-  # Check if x is of the required classes
-  if (!inherits(x, c("tinytable_bootstrap", "tinytable_tabularray", "tinytable_markdown"))) {
-    stop("`x` must be an object produced by the `tinytable::tt()` function.", call. = FALSE)
-  }
+
+  m <- meta(x)
+
+
   assert_string(filename)
   assert_flag(overwrite)
-  
-  # Check for file existence and handle the overwrite parameter
   if (file.exists(filename) && !overwrite) {
     stop("File already exists and overwrite is set to FALSE.", call. = FALSE)
   }
+  if (is.null(m)) {
+    stop("`x` must be an object produced by the `tinytable::tt()` function.", call. = FALSE)
+  }
 
-  # Write x to file
   write(x, file = filename)
 
   return(invisible(TRUE))
