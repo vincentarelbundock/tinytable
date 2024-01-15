@@ -73,7 +73,7 @@ group_tabularray_row <- function(x, i, indent, ...) {
 
   # store the original body lines when creating the table, and use those to guess the boundaries.
   # a hack, but probably safer than most regex approaches I can think of.
-  body <- which(tab %in% m[["body"]])
+  body <- which(tab %in% m$body)
   top <- tab[1:(min(body) - 1)]
   mid <- tab[min(body):max(body)]
   bot <- tab[(max(body) + 1):length(tab)]
@@ -91,7 +91,7 @@ group_tabularray_row <- function(x, i, indent, ...) {
   class(tab) <- class(x)
 
   cellspec <- sprintf("cell{%s}{%s}={%s}{%s},",
-    idx$new[is.na(idx$old)] + m$head,
+    idx$new[is.na(idx$old)] + m$nhead,
     1,
     paste0("c=", m$ncols),
     ""

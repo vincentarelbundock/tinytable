@@ -85,7 +85,9 @@ tt <- function(x,
       stop(msg, call. = FALSE)
     }
     for (col in seq_along(align)) {
-      out <- style_tt(out, i = 0:nrow(x), j = col, align = align[[col]])
+      # cleaner code if we do it in two shots for tabularray
+      out <- style_tt(out, j = col, align = align[[col]])
+      out <- style_tt(out, i = 0, j = col, align = align[[col]])
     }
   }
 

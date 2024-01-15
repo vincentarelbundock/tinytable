@@ -97,7 +97,7 @@ style_tt <- function (x,
 
   if (m$output == "latex") {
     # colspan requires cell level, so we keep the full settings DF
-    if (!is.null(colspan)) {
+    if (is.null(colspan)) {
       if (is.null(i) && is.null(j)) {
         settings <- unique(settings[, "i", drop = FALSE])
       } else if (is.null(i)) {
@@ -242,6 +242,7 @@ style_tt <- function (x,
   }
 
 
+  attr(out, "tinytable_meta") <- m
   return(out)
 }
 

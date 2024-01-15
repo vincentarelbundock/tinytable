@@ -22,8 +22,8 @@ group_tt <- function(x, i, j, indent = 1, ...) {
   if (missing(i)) i <- NULL
   if (missing(j)) j <- NULL
 
-  i <- sanitize_group_index(i, hi = attr(x, "nrow") + 1)
-  j <- sanitize_group_index(j, hi = attr(x, "ncol"))
+  i <- sanitize_group_index(i, hi = attr(x, "nrow") + 1, orientation = "row")
+  j <- sanitize_group_index(j, hi = attr(x, "ncol"), orientation = "column")
 
   # we don't need this as a list, and we use some sorting later
   i <- unlist(i)
@@ -41,11 +41,15 @@ group_tt <- function(x, i, j, indent = 1, ...) {
 
 
 
-sanitize_group_index <- function(idx, hi) {
+sanitize_group_index <- function(idx, hi, orientation) {
   if (is.null(idx)) return(idx)
   assert_list(idx, named = TRUE)
   for (n in names(idx)) {
-    assert_integerish(idx[[n]], lower = 1, upper = hi, name = n)
+    if (orientation == "row") {
+      assert_integerish(idx[[n]], len = 1, lower = 1, upper = hi, name = n)
+    } else {
+      assert_integerish(idx[[n]], lower = 1, upper = hi, name = n)
+    }
   }
   if (anyDuplicated(unlist(idx)) > 0) stop("Duplicate group indices.", call. = FALSE)
   out <- lapply(idx, function(x) min(x):max(x))
