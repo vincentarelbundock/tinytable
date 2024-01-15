@@ -3,6 +3,9 @@ style_tabularray <- function(x,
                              outer = NULL,
                              body = NULL) {
 
+  m <- meta(x)
+  if (m$output != "latex") return(x)
+
   if (is.null(inner) && is.null(outer) && is.null(body)) return(x)
 
   assert_string(inner, null.ok = TRUE)

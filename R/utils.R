@@ -5,17 +5,17 @@ get_id <- function(stem = "id") {
 }
 
 
-meta <- function(x, get = NULL, set = NULL) {
+meta <- function(x, get, set) {
   meta_attr <- attr(x, "tinytable_meta")
 
   # no meta yet
   if (is.null(meta_attr)) meta_attr <- list()
 
   # empty args -> return meta 
-  if (is.null(get) && is.null(set)) return(meta_attr)
+  if (missing(get) && missing(set)) return(meta_attr)
 
   # set new value
-  if (!is.null(set)) {
+  if (!missing(get) && !missing(set)) {
     meta_attr[[get]] <- set
     if (all(c("nrows", "ncols") %in% names(meta_attr))) {
       meta_attr[["ncells"]] <- meta_attr$ncols * meta_attr$nrows
@@ -25,6 +25,6 @@ meta <- function(x, get = NULL, set = NULL) {
   } 
 
   # return requested value
-  return(meta_attr(get))
+  return(meta_attr[[get]])
 }
 

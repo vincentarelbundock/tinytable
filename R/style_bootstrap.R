@@ -17,7 +17,9 @@
 #' @return Returns the modified HTML table object with added Bootstrap styling.
 style_bootstrap <- function(x, i, j, css = NULL, css_rule = NULL) {
   out <- x
+
   m <- meta(x)
+  if (m$output != "html") return(x)
 
   if (!is.null(css_rule)) {
     out <- bootstrap_setting(out, css_rule, component = "css")

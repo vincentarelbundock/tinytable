@@ -43,6 +43,8 @@ tt_tabularray <- function(x, caption, theme, width, notes) {
   out <- trimws(out)
   out <- paste(out, collapse = "\n")
 
+  out <- meta(out, "output", "latex")
+
   if (!is.null(width)) {
     tabularray_cols <- rep("X[]", ncol(x))
     spec <- sprintf("width={%s\\linewidth},", round(width, 4))
