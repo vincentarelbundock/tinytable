@@ -59,7 +59,6 @@ group_tabularray_col <- function(x, j, ...) {
     out <- do.call(style_tt, args)
   }
 
-  attr(out, "tinytable_meta") <- m
   return(out)
 
 }
