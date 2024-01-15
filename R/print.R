@@ -28,19 +28,23 @@ knit_print.tinytable <- function(x, ...) {
 print.tinytable <- function(x, ...) {
   m <- meta(x)
 
-  if (m$output %in% c("markdown", "latex")) {
+  if (m$output == "latex") {
     out <- x
     class(out) <- "character"
     cat("\n")
     cat(out)
     cat("\n")
 
+  } else if (m$output == "markdown") {
+    cat("\n")
+    cat(x, sep = "\n")
+
   } else if (m$output == "html") {
     dir <- tempfile()
     dir.create(dir)
     htmlFile <- file.path(dir, "index.html")
     cat(x, file = htmlFile)
-    if (check_dependency("rstudioapi") && rstudioapi::isAvailable()) {
+    if (isTRUE(check_dependency("rstudioapi")) && rstudioapi::isAvailable()) {
       rstudioapi::viewer(htmlFile)
     } else {
       utils::browseURL(htmlFile)

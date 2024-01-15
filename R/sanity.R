@@ -8,7 +8,7 @@ sanitize_output <- function(output) {
 
   # default output format
   if (is.null(output)) {
-    in_rstudio <- interactive() && check_dependency("rstudioapi") && rstudioapi::isAvailable()
+    in_rstudio <- interactive() && isTRUE(check_dependency("rstudioapi")) && rstudioapi::isAvailable()
     out <- getOption("tt_output_default", default = if (in_rstudio) "html" else "markdown")
 
   } else {
@@ -54,7 +54,7 @@ check_dependency <- function(library_name) {
 }
 
 assert_dependency <- function(library_name){
-  flag <- check_dependency(library_name)
+  flag <- isTRUE(check_dependency(library_name))
   if (!isTRUE(flag)) stop(flag, call. = FALSE)
   return(invisible())
 }

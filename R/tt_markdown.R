@@ -53,6 +53,9 @@ tt_markdown <- function(tab, caption, ...) {
       header[[i]] <- align_str_center(header[[i]], nchar(tab[[i]][1]))
     }
     tab <- rbind(header, tab)
+    hrule <- 1
+  } else {
+    hrule <- NULL
   }
 
   # pipes
@@ -70,10 +73,6 @@ tt_markdown <- function(tab, caption, ...) {
   ruler <- sub("\\|-", "|:", ruler) # only first
   ruler <- gsub("-$", "", ruler) # only first
 
-  hrule <- NULL
-  if (!is.null(colnames(tab))) {
-    hrule <- 1
-  } 
   for (h in hrule) {
     tab <- append(tab, ruler, after = h)
   }
