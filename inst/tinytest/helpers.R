@@ -1,10 +1,6 @@
 options("tinysnapshot_device" = "svglite")
 options("tinysnapshot_tol" = 200)
 
-if (isTRUE(insight::check_if_installed("cmdstanr", quietly = TRUE))) {
-    options("brms.backend" = "cmdstanr")
-}
-
 # libraries
 requiet <- function(package) {
     void <- capture.output(
