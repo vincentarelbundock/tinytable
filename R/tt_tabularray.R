@@ -43,7 +43,10 @@ tt_tabularray <- function(x, caption, theme, width, notes) {
   out <- trimws(out)
   out <- paste(out, collapse = "\n")
 
+  # needed later, apparently
   out <- meta(out, "output", "latex")
+  nhead <- if (is.null(colnames(x))) 1 else 0 
+  out <-  meta(out, "nhead", nhead)
 
   if (!is.null(width)) {
     tabularray_cols <- rep("X[]", ncol(x))
