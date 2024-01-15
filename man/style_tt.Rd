@@ -6,8 +6,8 @@
 \usage{
 style_tt(
   x,
-  i,
-  j,
+  i = NULL,
+  j = NULL,
   bold = FALSE,
   italic = FALSE,
   monospace = FALSE,
@@ -27,7 +27,7 @@ style_tt(
 )
 }
 \arguments{
-\item{x}{A table object created by \code{tt()}. The function checks if it is a \code{tinytable_tabularray} or \code{tinytable_bootstrap} object.}
+\item{x}{A table object created by \code{tt()}.}
 
 \item{i}{Row indices where the styling should be applied. Can be a single value or a vector. If \code{colspan} is used, \code{i} must be of length 1. When i=0, the header is styled.}
 

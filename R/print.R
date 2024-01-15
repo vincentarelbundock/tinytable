@@ -2,59 +2,50 @@
 #'
 #' @keywords internal
 #' @export
-knit_print.tinytable_bootstrap <- function(x, ...) {
-  # from htmltools:::html_preserve
-  # GPL3
-  inline <- grepl(x, "\n", fixed = TRUE)
-  if (inline) {
-    out <- sprintf("`%s`{=html}", x)
-  } else {
-    out <- sprintf("\n```{=html}\n%s\n```\n", x)
+knit_print.tinytable <- function(x, ...) {
+  m <- meta(x)
+
+  if (m$output == "html") {
+    # from htmltools:::html_preserve
+    # GPL3
+    inline <- grepl(x, "\n", fixed = TRUE)
+    if (inline) {
+      out <- sprintf("`%s`{=html}", x)
+    } else {
+      out <- sprintf("\n```{=html}\n%s\n```\n", x)
+    }
+
+  } else if (m$output %in% c("latex", "markdown")) {
+    out <- x
   }
-  # from knitr::asis_output
-  # GPL3
-  class(out) <- "knit_asis"
-  return(out)
-}
 
-
-#' Print a tinytable object in knitr 
-#'
-#' @keywords internal
-#' @export
-knit_print.tinytable_tabularray <- function(x, ...) {
-  out <- x
-  # from knitr::asis_output
-  # GPL3
   class(out) <- "knit_asis"
   return(out)
 }
 
 
 #' @export
-print.tinytable_tabularray <- function(x, ...) {
-  out <- x
-  class(out) <- "character"
-  cat(out, "
-")
-}
+print.tinytable <- function(x, ...) {
+  m <- meta(x)
 
-
-#' @export
-print.tinytable_bootstrap <- function(x, ...) {
-  dir <- tempfile()
-  dir.create(dir)
-  htmlFile <- file.path(dir, "index.html")
-  cat(x, file = htmlFile)
-  if (check_dependency("rstudioapi") && rstudioapi::isAvailable()) {
-    rstudioapi::viewer(htmlFile)
-  } else {
-    utils::browseURL(htmlFile)
-  }
-}
-
-#' @export
-print.tinytable_markdown <- function(x, ...) {
+  if (m$output %in% c("markdown", "latex")) {
+    out <- x
+    class(out) <- "character"
     cat("\n")
-    cat(x, sep = "\n")
+    cat(out)
+    cat("\n")
+
+  } else if (m$output == "html") {
+    dir <- tempfile()
+    dir.create(dir)
+    htmlFile <- file.path(dir, "index.html")
+    cat(x, file = htmlFile)
+    if (check_dependency("rstudioapi") && rstudioapi::isAvailable()) {
+      rstudioapi::viewer(htmlFile)
+    } else {
+      utils::browseURL(htmlFile)
+    }
+  }
+
 }
+

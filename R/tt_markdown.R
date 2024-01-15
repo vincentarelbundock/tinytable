@@ -91,7 +91,9 @@ tt_markdown <- function(tab, caption, ...) {
   # }
 
   # output
-  class(tab) <- c("tinytable_markdown", "knitr_kable")
+  class(tab) <- c("tinytable", "knitr_kable")
+
+  # for knitr compatibility
   attr(tab, "format") <- "pipe"
 
   # output

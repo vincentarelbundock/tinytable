@@ -1,7 +1,6 @@
 #' Save a Tiny Table to File
 #'
-#' This function saves an object of class tinytable_bootstrap, tinytable_tabularray, 
-#' or tinytable_markdown to a specified file, with an option to overwrite existing files.
+#' This function saves an object of class tinytable to a specified file, with an option to overwrite existing files.
 #'
 #' @param x The tinytable object to be saved.
 #' @param filename A string representing the path to the file where the object should be saved.

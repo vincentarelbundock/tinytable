@@ -96,10 +96,8 @@ tt_bootstrap <- function(x, caption, theme, width, notes) {
    )
 
   out <- paste(template, collapse = "\n")
-  attr(out, "nhead") <- if (is.null(colnames(x))) 0 else 1
-  attr(out, "ncol") <- ncol(x)
-  attr(out, "nrow") <- nrow(x)
-  class(out) <- c("tinytable_bootstrap", "knit_asis", class(out))
+
+  class(out) <- c("tinytable", "knit_asis", class(out))
   return(out)
 }
 

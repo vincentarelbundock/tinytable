@@ -17,13 +17,7 @@
 #' @return Returns the modified HTML table object with added Bootstrap styling.
 style_bootstrap <- function(x, i, j, css = NULL, css_rule = NULL) {
   out <- x
-
-  if (!inherits(x, "tinytable_bootstrap")) return(x)
-  if (missing(i)) i <- seq_len(attr(x, "nrow"))
-  if (missing(j)) j <- seq_len(attr(x, "ncol"))
-  assert_integerish(i, lower = 0, null.ok = TRUE)
-  assert_integerish(j, lower = 1, null.ok = TRUE)
-  assert_string(css_rule, null.ok = TRUE)
+  m <- meta(x)
 
   if (!is.null(css_rule)) {
     out <- bootstrap_setting(out, css_rule, component = "css")
@@ -33,7 +27,7 @@ style_bootstrap <- function(x, i, j, css = NULL, css_rule = NULL) {
 
   # JS 0-indexing
   j <- j - 1
-  i <- i - 1 + attr(x, "nhead")
+  i <- i - 1 + m$nhead
 
   id <- get_id(stem = "tinytable_css_")
 

@@ -80,13 +80,7 @@ tt_tabularray <- function(x, caption, theme, width, notes) {
     }
   }
 
-
-  attr(out, "nhead") <- if (is.null(colnames(x))) 0 else 1
-  attr(out, "ncol") <- ncols
-  attr(out, "nrow") <- nrows
-  attr(out, "body") <- body
-  attr(out, "tabularray_cols") <- tabularray_cols
-  class(out) <- c("tinytable_tabularray", "knit_asis", class(out))
+  class(out) <- c("tinytable", "knit_asis", class(out))
   return(out)
 }
 

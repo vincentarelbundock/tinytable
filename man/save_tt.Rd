@@ -17,8 +17,7 @@ save_tt(x, filename, overwrite = FALSE)
 invisible(TRUE)
 }
 \description{
-This function saves an object of class tinytable_bootstrap, tinytable_tabularray,
-or tinytable_markdown to a specified file, with an option to overwrite existing files.
+This function saves an object of class tinytable to a specified file, with an option to overwrite existing files.
 }
 \examples{
 \dontrun{
