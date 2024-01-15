@@ -1,9 +1,12 @@
 
 group_bootstrap <- function(x, i, j, indent = 1, ...) {
+  out <- x
+  # columns first to count headers properly
+  if (!is.null(j)) {
+    out <- group_bootstrap_col(out, i = i, j = j, ...)
+  }
   if (!is.null(i)) {
-    out <- group_bootstrap_row(x, i = i, j = j, indent = indent, ...)
-  } else {
-    out <- group_bootstrap_col(x, i = i, j = j, ...)
+    out <- group_bootstrap_row(out, i = i, j = j, indent = indent, ...)
   }
   return(out)
 }

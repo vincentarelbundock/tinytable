@@ -1,9 +1,12 @@
 group_tabularray <- function(x, i, j, indent, ...) {
-  if (!is.null(i)) {
-    out <- group_tabularray_row(x, i, indent, ...)
-  } else {
-    out <- group_tabularray_col(x, j, ...)
+  out <- x
+  # columns first to count headers properly
+  if (!is.null(j)) {
+    out <- group_tabularray_col(out, j, ...)
   }
+  if (!is.null(i)) {
+    out <- group_tabularray_row(out, i, indent, ...)
+  } 
   return(out)
 }
 
@@ -37,13 +40,16 @@ group_tabularray_col <- function(x, j, ...) {
            out[(idx + 1):length(out)])
   out <- paste(out, collapse = "\n")
 
+  # rebuild including meta before style_tt
   class(out) <- class(x)
+  attr(out, "tinytable_meta") <- m
 
   for (k in seq_along(j)) {
     z <- min(j[[k]])
-    idx <- 1 - m$nhead
     args <- list(x = out,
-                 i = idx,
+                 # the new header is always first row and 
+                 # style_tt always adds nhead to index
+                 i = 1 - meta(out)$nhead,
                  j = z,
                  colspan = max(j[[k]]) - min(j[[k]]) + 1)
     if (!"halign" %in% names(dots)) {

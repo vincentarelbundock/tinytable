@@ -83,7 +83,11 @@ style_tt <- function (x,
     bootstrap_css_rule = bootstrap_css_rule
   )
 
+
   if (!is.null(colspan)) {
+    if (m$output == "html") {
+      warning("`colspan` is not available for HTML tables yet. You can follow progress here: https://github.com/vincentarelbundock/tinytable/issues/43", call. = FALSE )
+    }
     if (is.null(j) || is.null(i) || (!is.null(i) && length(ival) != 1) || (!is.null(j) && length(jval) != 1)) {
       stop("`i` and `j` must be of length 1 when using `colspan`.", call. = FALSE)
     }
@@ -271,7 +275,7 @@ assert_style_tt <- function (x,
 
   m <- meta(x)
 
-  assert_integerish(ival, lower = 0, upper = m$nrows, name = "i")
+  assert_integerish(ival, lower = 1 - m$nhead, upper = m$nrows, name = "i")
   assert_integerish(jval, lower = 1, upper = m$ncols, name = "j")
   assert_string(width, null.ok = TRUE)
   assert_choice(align, c("c", "l", "r"), null.ok = TRUE)

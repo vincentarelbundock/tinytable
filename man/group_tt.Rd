@@ -4,7 +4,7 @@
 \alias{group_tt}
 \title{Spanning labels to identify groups of rows or columns}
 \usage{
-group_tt(x, i, j, indent = 1, ...)
+group_tt(x, i = NULL, j = NULL, indent = 1, ...)
 }
 \arguments{
 \item{x}{A data frame or data table to be rendered as a table.}
