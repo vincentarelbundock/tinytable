@@ -65,7 +65,6 @@ tt <- function(x,
     out <- tt_markdown(out, caption = caption)
   }
 
-
   if (!is.null(align)) {
     if (nchar(align) != ncol(x)) {
       msg <- sprintf("`align` must have length %s, equal to the number of columns in `x`.", ncol(x))

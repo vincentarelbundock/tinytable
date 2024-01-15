@@ -8,17 +8,15 @@ group_tabularray <- function(x, i, j, indent, ...) {
 }
 
 
-
-
 group_tabularray_col <- function(x, j, ...) {
+
+  m <- meta(x)
 
   dots <- list(...)
 
-  att <- attributes(x)
-
   out <- strsplit(x, split = "\\n")[[1]]
 
-  header <- rep("", attr(x, "ncol"))
+  header <- rep("", m$ncols)
   for (n in names(j)) {
     header[min(j[[n]])] <- n
   }
@@ -39,12 +37,11 @@ group_tabularray_col <- function(x, j, ...) {
            out[(idx + 1):length(out)])
   out <- paste(out, collapse = "\n")
 
-  attributes(out) <- att
   class(out) <- class(x)
 
   for (k in seq_along(j)) {
     z <- min(j[[k]])
-    idx <- 1 - attr(x, "nhead")
+    idx <- 1 - m$nhead
     args <- list(x = out,
                  i = idx,
                  j = z,
@@ -56,6 +53,7 @@ group_tabularray_col <- function(x, j, ...) {
     out <- do.call(style_tt, args)
   }
 
+  attr(out, "tinytable_meta") <- m
   return(out)
 
 }
@@ -70,13 +68,7 @@ group_tabularray_row <- function(x, i, indent, ...) {
   }
   label <- names(i)
 
-  ## we don't appear to need to reverse in tabularray
-  # i <- rev(sort(i))
-
-  ncols <- m$ncols
-  att <- attributes(x)
-
-  att$nrow <- att$nrow + length(label)
+  m$nrows <- m$nrows + length(label)
   tab <- strsplit(x, "\\n")[[1]]
 
   # store the original body lines when creating the table, and use those to guess the boundaries.
@@ -88,31 +80,28 @@ group_tabularray_row <- function(x, i, indent, ...) {
 
   # separator rows
   # add separator rows so they are treated as body in future calls
-  new <- paste(label, strrep("&", ncol), "\\\\")
-  att$body <- c(att$body, new)
+  new <- paste(label, strrep("&", m$ncols), "\\\\")
+  m$body <- c(m$body, new)
   idx <- insert_values(mid, new, i)
 
   # rebuild table
   tab <- c(top, idx$vec, bot)
   tab <- paste(tab, collapse = "\n")
-  attributes(tab) <- att
+  attr(tab, "tinytable_meta") <- m
   class(tab) <- class(x)
 
-  # add rows to attributes BEFORE style_tt
-  attr(tab, "nrow") <- attr(tab, "nrow") + length(label)
-
   cellspec <- sprintf("cell{%s}{%s}={%s}{%s},",
-    idx$new[is.na(idx$old)] + attr(x, "nhead"),
+    idx$new[is.na(idx$old)] + m$head,
     1,
-    paste0("c=", ncol),
+    paste0("c=", m$ncols),
     ""
   )
   cellspec <- paste(cellspec, collapse = "")
   tab <- style_tabularray(tab, inner = cellspec)
 
   # we also want to indent the header
-  i <- idx$new[!is.na(idx$old)] + attr(x, "nhead")
-  if (attr(x, "nhead") > 0) i <- c(1:attr(x, "nhead"), i)
+  i <- idx$new[!is.na(idx$old)] + m$nhead 
+  if (m$nhead > 0) i <- c(1:m$nhead, i)
   cellspec <- sprintf("cell{%s}{%s}={%s},", i, 1, sprintf("preto={\\hspace{%sem}}", indent))
   cellspec <- paste(cellspec, collapse = "")
   tab <- style_tabularray(tab, inner = cellspec)

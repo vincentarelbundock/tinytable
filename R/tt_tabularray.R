@@ -83,6 +83,7 @@ tt_tabularray <- function(x, caption, theme, width, notes) {
   }
 
   class(out) <- c("tinytable", "knit_asis", class(out))
+  out <- meta(out, "body", body)
   return(out)
 }
 
