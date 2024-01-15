@@ -96,14 +96,15 @@ style_tt <- function (x,
   }
 
   if (m$output == "latex") {
-    if (is.null(i) && is.null(j)) {
-      settings <- unique(settings[, "i", drop = FALSE])
-    }
-    else if (is.null(i)) {
-      settings <- unique(settings[, "j", drop = FALSE])
-    }
-    else if (is.null(j)) {
-      settings <- unique(settings[, "i", drop = FALSE])
+    # colspan requires cell level, so we keep the full settings DF
+    if (!is.null(colspan)) {
+      if (is.null(i) && is.null(j)) {
+        settings <- unique(settings[, "i", drop = FALSE])
+      } else if (is.null(i)) {
+        settings <- unique(settings[, "j", drop = FALSE])
+      } else if (is.null(j)) {
+        settings <- unique(settings[, "i", drop = FALSE])
+      }
     }
   }
 
