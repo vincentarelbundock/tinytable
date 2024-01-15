@@ -9,6 +9,9 @@ help:  ## Display this help screen
 check:  ## check package
 	Rscript -e "devtools::document();devtools::check()"
 
+install:  ## install package
+	Rscript -e "devtools::document();devtools::install()"
+
 website: ## render vignettes and website
 	Rscript -e "devtools::document();devtools::install()"
 	Rscript -e "altdoc::render_docs(verbose = TRUE)"
