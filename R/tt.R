@@ -65,6 +65,15 @@ tt <- function(x,
     out <- tt_markdown(out, caption = caption)
   }
 
+  # before style_tt() call for align
+  out <- meta(out, "colnames", names(x))
+  out <- meta(out, "xdim", dim(x))
+  out <- meta(out, "output", output)
+  out <- meta(out, "id", get_id("tinytable_"))
+  out <- meta(out, "nhead", if (is.null(colnames(x))) 0 else 1)
+  out <- meta(out, "nrows", nrow(x))
+  out <- meta(out, "ncols", ncol(x))
+
   if (!is.null(align)) {
     if (nchar(align) != ncol(x)) {
       msg <- sprintf("`align` must have length %s, equal to the number of columns in `x`.", ncol(x))
@@ -86,14 +95,6 @@ tt <- function(x,
     # dollar sign to avoid [H][H] when we style multiple times
     out <- sub("\\\\begin\\{table\\}", sprintf("\\\\begin{table}[%s]\n", placement), out)
   }
-
-  out <- meta(out, "colnames", names(x))
-  out <- meta(out, "xdim", dim(x))
-  out <- meta(out, "output", output)
-  out <- meta(out, "id", get_id("tinytable_"))
-  out <- meta(out, "nhead", if (is.null(colnames(x))) 0 else 1)
-  out <- meta(out, "nrows", nrow(x))
-  out <- meta(out, "ncols", ncol(x))
 
   return(out)
 }
