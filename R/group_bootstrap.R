@@ -11,12 +11,12 @@ group_bootstrap <- function(x, i, j, indent = 1, ...) {
 
 group_bootstrap_col <- function(x, i, j, ...) {
 
-  att <- attributes(x)
+  m <- meta(x)
   out <- strsplit(x, "\\n")[[1]]
   header <- NULL
 
 
-  miss <- as.list(setdiff(seq_len(attr(x, "ncol")), unlist(j)))
+  miss <- as.list(setdiff(seq_len(m$ncols), unlist(j)))
   miss <- stats::setNames(miss, rep(" ", length(miss)))
   j <- c(j, miss)
 
@@ -33,8 +33,8 @@ group_bootstrap_col <- function(x, i, j, ...) {
 
   out <- paste(out, collapse = "\n")
 
-  attributes(out) <- att
   class(out) <- class(x)
+  attr(out, "tinytable_meta") <- m
   return(out)
 }
 
@@ -42,12 +42,12 @@ group_bootstrap_col <- function(x, i, j, ...) {
 group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
   label <- names(i)
 
+  m <- meta(x)
+
   # reverse order is important
   i <- rev(sort(i))
 
-  ncol <- attr(x, "ncol")
-  att <- attributes(x)
-  att$nrow <- att$nrow + length(label)
+
   tab <- strsplit(x, "\\n")[[1]]
   out <- x
 
@@ -55,14 +55,14 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
     js <- sprintf(
       "window.addEventListener('load', function () { insertSpanRow(%s, %s, '%s') });",
       # 0-indexing
-      i[g] + attr(x, "nhead") - 1,
-      attr(x, "ncol"),
+      i[g] + m$nhead - 1,
+      m$ncols,
       names(i)[g])
     out <- bootstrap_setting(out, new = js, component = "cell")
   }
 
   # add rows to attributes BEFORE style_tt
-  attr(out, "nrow") <- attr(out, "nrow") + length(label)
+  out <- meta(out, "nrows", m$nrows + length(label))
 
   # need unique function names in case there are
   # multiple tables in one Rmarkdown document
@@ -72,7 +72,7 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
     out,
     fixed = TRUE)
 
-  idx <- insert_values(seq_len(attr(x, "nrow")), rep(NA, length(i)), i)
+  idx <- insert_values(seq_len(m$nrows), rep(NA, length(i)), i)
   idx_old <- idx$new[!is.na(idx$old)]
   idx_new <- idx$new[is.na(idx$old)]
   out <- style_tt(out, i = idx_old, j = 1, indent = indent)
@@ -84,5 +84,6 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
     out <- do.call(style_tt, args)
   }
 
+  # do not override meta since we modified it here above
   return(out)
 }
