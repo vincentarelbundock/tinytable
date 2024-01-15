@@ -73,6 +73,7 @@ tt <- function(x,
   out <- meta(out, "nhead", if (is.null(colnames(x))) 0 else 1)
   out <- meta(out, "nrows", nrow(x))
   out <- meta(out, "ncols", ncol(x))
+  out <- meta(out, "lazy_style", list())
 
   if (!is.null(align)) {
     if (nchar(align) != ncol(x)) {

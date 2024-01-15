@@ -28,3 +28,15 @@ meta <- function(x, get, set) {
   return(meta_attr[[get]])
 }
 
+
+
+# style_tt() stores style calls and we only want to evaluate them at the end because 
+# some rows may be added, which changes how the style is applied
+eval_style <- function(x) {
+  out <- x
+  for (lazy_style in meta(x)$lazy_style) {
+    lazy_style[["x"]] <- out
+    out <- eval(lazy_style)
+  }
+  return(out)
+}
