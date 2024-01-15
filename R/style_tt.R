@@ -206,7 +206,6 @@ style_tt <- function (x,
         "\\tinytableDefineColor{%s}{HTML}{%s}",
         sub("^#", "c", h), sub("^#", "", h))
       cal <- call("style_tabularray", body = b)
-      browser()
       out <- meta(out, "lazy_style", c(meta(out)$lazy_style, list(cal)))
     }
   }

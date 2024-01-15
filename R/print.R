@@ -3,9 +3,10 @@
 #' @keywords internal
 #' @export
 knit_print.tinytable <- function(x, ...) {
-  m <- meta(x)
+  # lazy styles get evaluated here, at the very end
+  x <- eval_style(x)
 
-  if (m$output == "html") {
+  if (meta(x)$output == "html") {
     # from htmltools:::html_preserve
     # GPL3
     inline <- grepl(x, "\n", fixed = TRUE)
@@ -15,7 +16,7 @@ knit_print.tinytable <- function(x, ...) {
       out <- sprintf("\n```{=html}\n%s\n```\n", x)
     }
 
-  } else if (m$output %in% c("latex", "markdown")) {
+  } else if (meta(x)$output %in% c("latex", "markdown")) {
     out <- x
   }
 

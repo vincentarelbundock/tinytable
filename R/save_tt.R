@@ -17,9 +17,7 @@
 #' }
 #'
 save_tt <- function(x, filename, overwrite = FALSE) {
-
   m <- meta(x)
-
 
   assert_string(filename)
   assert_flag(overwrite)
@@ -29,6 +27,9 @@ save_tt <- function(x, filename, overwrite = FALSE) {
   if (is.null(m)) {
     stop("`x` must be an object produced by the `tinytable::tt()` function.", call. = FALSE)
   }
+
+  # evaluate styles at the very end of the pipeline
+  x <- eval_style(x)
 
   write(x, file = filename)
 
