@@ -22,7 +22,7 @@ style_tabularray <- function(x,
   out <- x
 
   ival <- if (is.null(i)) seq_len(meta(x, "nrows")) else i
-  jval <- if (is.null(j)) seq_len(meta(x, "ncols")) else i
+  jval <- if (is.null(j)) seq_len(meta(x, "ncols")) else j
 
   # order may be important for recycling 
   settings <- expand.grid(i = ival, j = jval, tabularray = "")
@@ -33,12 +33,16 @@ style_tabularray <- function(x,
   # colspan requires cell level, so we keep the full settings DF
   if (is.null(colspan)) {
     if (is.null(i) && is.null(j)) {
-      settings <- unique(settings[, "i", drop = FALSE])
+      settings <- unique(settings[, c("i", "tabularray"), drop = FALSE])
     } else if (is.null(i)) {
-      settings <- unique(settings[, "j", drop = FALSE])
+      settings <- unique(settings[, c("j", "tabularray"), drop = FALSE])
     } else if (is.null(j)) {
-      settings <- unique(settings[, "i", drop = FALSE])
+      settings <- unique(settings[, c("i", "tabularray"), drop = FALSE])
     }
+  }
+
+  if (!isTRUE(header) && "i" %in% names(settings)) {
+    settings$i <- settings$i + meta(out, "nhead")
   }
 
   span <- if (!is.null(colspan)) paste0("c=", colspan, ",") else ""
