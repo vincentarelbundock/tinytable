@@ -84,7 +84,7 @@ style_tabularray <- function(x,
       b <- sprintf(
         "\\tinytableDefineColor{%s}{HTML}{%s}",
         sub("^#", "c", h), sub("^#", "", h))
-      cal <- call("insert_tabularray", content = b, type = "body")
+      cal <- call("tabularray_insert", content = b, type = "body")
       out <- meta(out, "lazy_style", c(meta(out)$lazy_style, list(cal)))
     }
   }
@@ -129,7 +129,9 @@ tabularray_insert <- function(x, content = NULL, type = "body") {
   idx <- grep(comment, out)
 
   content <- trimws(content)
-  if (!grepl(",$", content)) content <- paste0(content, ",")
+  if (!grepl(",$", content) && type != "body") {
+    content <- paste0(content, ",")
+  }
 
   if (type == "body") {
     out <- c(out[1:idx], content, out[(idx + 1):length(out)])

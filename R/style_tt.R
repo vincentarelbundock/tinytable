@@ -58,20 +58,14 @@ style_tt <- function (x,
   if (!isTRUE(meta(x)$output %in% c("html", "latex"))) return(x)
 
   out <- x
-  if (is.null(i)) {
-    ival <- seq_len(meta(x)$nrows)
-  } else {
-    ival <- i
+
+  # j is a regular expression
+  if (is.character(j) && !is.null(meta(x, "colnames"))) {
+    j <- grep(j, meta(x, "colnames"), perl = TRUE)
   }
-  if (is.null(j)) {
-    jval <- seq_len(meta(x)$ncols)
-  } else {
-    if (is.character(j) && length(j) == 1 && is.character(meta(x)$colnames)) {
-      jval <- grep(j, meta(x)$colnames, perl = TRUE)
-    } else {
-      jval <- j
-    }
-  }
+
+  if (is.null(i)) ival <- seq_len(meta(x)$nrows)  else ival <- i
+  if (is.null(j)) jval <- seq_len(meta(x)$nrows)  else jval <- j
 
   assert_style_tt(
     x = x, i = i, j = j, ival = ival, jval = jval, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
