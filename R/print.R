@@ -6,9 +6,6 @@ knit_print.tinytable <- function(x, ...) {
   # lazy styles get evaluated here, at the very end
   # not sure why we need to call this twice, but it appears necessary
   out <- eval_style(x)
-if (condition) {
-    
-}
   if (meta(out)$output == "html") {
     # from htmltools:::html_preserve
     # GPL3
