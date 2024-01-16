@@ -54,7 +54,7 @@ check_dependency <- function(library_name) {
 }
 
 assert_dependency <- function(library_name){
-  flag <- isTRUE(check_dependency(library_name))
+  flag <- check_dependency(library_name)
   if (!isTRUE(flag)) stop(flag, call. = FALSE)
   return(invisible())
 }

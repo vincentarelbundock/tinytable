@@ -9,7 +9,7 @@ save_tt(x, filename, overwrite = FALSE)
 \arguments{
 \item{x}{The tinytable object to be saved.}
 
-\item{filename}{A string representing the path to the file where the object should be saved.}
+\item{filename}{A string representing the path to the file where the object should be saved. The supported file formats are: .html, .png, .md, .pdf, and .tex.}
 
 \item{overwrite}{A logical value indicating whether to overwrite an existing file.}
 }
@@ -17,7 +17,7 @@ save_tt(x, filename, overwrite = FALSE)
 invisible(TRUE)
 }
 \description{
-This function saves an object of class tinytable to a specified file, with an option to overwrite existing files.
+This function saves an object of class tinytable to a specified file and format, with an option to overwrite existing files.
 }
 \examples{
 \dontrun{
