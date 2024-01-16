@@ -15,37 +15,106 @@
 #' @param css_rule A string with complete CSS rules that apply to the table class specified using the `theme` argument of the `tt()` function.
 #' 
 #' @return Returns the modified HTML table object with added Bootstrap styling.
-style_bootstrap <- function(x, i, j, css = NULL, css_rule = NULL) {
+style_bootstrap <- function(x,
+                             i = NULL,
+                             j = NULL,
+                             header = FALSE,
+                             bold = FALSE,
+                             italic = FALSE,
+                             monospace = FALSE,
+                             underline = FALSE,
+                             strikeout = FALSE,
+                             color = NULL,
+                             background = NULL,
+                             fontsize = NULL,
+                             width = NULL,
+                             align = NULL,
+                             colspan = NULL,
+                             indent = 0,
+                             bootstrap_css = NULL,
+                             bootstrap_css_rule = NULL) {
+
+
+  if (meta(x, "output") != "html") return(x)
+
   out <- x
 
-  m <- meta(x)
-  if (m$output != "html") return(x)
+  ival <- if (is.null(i)) seq_len(meta(x, "nrows")) else i
+  jval <- if (is.null(j)) seq_len(meta(x, "ncols")) else j
 
-  if (!is.null(css_rule)) {
-    out <- bootstrap_setting(out, css_rule, component = "css")
+  # order may be important for recycling 
+  settings <- expand.grid(i = ival, j = jval, tabularray = "")
+  if (is.null(i) && !is.null(j)) {
+    settings <- settings[order(settings$i, settings$j), ]
   }
-  # after css_rule
-  if (is.null(css)) return(out)
 
   # JS 0-indexing
-  j <- j - 1
-  i <- i - 1 + m$nhead
+  settings$j <- settings$j - 1
+  settings$i <- settings$i - 1 + meta(x, "nhead")
+
+  # settings have a different size for latex, so bootstrap breaks
+  vectorize_bootstrap <- function(setting, userinput, string) {
+    # simple cases
+    if (is.null(userinput) || isFALSE(userinput)) return(setting)
+    if(isTRUE(userinput)) return(paste(setting, string))
+
+    # logical vector
+    if (is.logical(userinput)) {
+      out <- paste(setting, ifelse(userinput, string, ""))
+      return(out)
+    }
+
+    # character vector means the user inputs actual values
+    if (is.character(userinput)) {
+      out <- sprintf(string, userinput)
+      out <- paste(setting, out)
+      return(out)
+    }
+    stop("here be dragons")
+  }
+
+  if (!is.null(align)) {
+    align_bootstrap <- ifelse(align == "c", "center", align)
+    align_bootstrap <- ifelse(align == "l", "left", align_bootstrap)
+    align_bootstrap <- ifelse(align == "r", "right", align_bootstrap)
+  } else {
+    align_bootstrap <- align
+  }
+
+  if (!is.null(fontsize)) {
+    fontsize_bootstrap <- sprintf("%spx", (1 + 1 / 3) * fontsize)
+  } else {
+    fontsize_bootstrap <- fontsize
+  }
+
+  settings$bootstrap <- ""
+  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, bold, "font-weight: bold;")
+  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, italic, "font-style: italic;")
+  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, underline, "text-decoration: underline;")
+  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, strikeout, "text-decoration: line-through;")
+  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, monospace, "font-family: monospace;")
+  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, fontsize_bootstrap, "font-size: %s;")
+  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, align_bootstrap, "text-align: %s;")
+  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, color, "color: %s;")
+  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, background, "background-color: %s;")
+  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, width, "width: %s;")
 
   id <- get_id(stem = "tinytable_css_")
 
   # CSS style for cell
   css_start <- sprintf(".table td.%s, th.%s { ", id, id)
-  css_complete <- paste(c(css_start, paste0(css, collapse="; "), "}"), collapse = " ")
-  out <- bootstrap_setting(out, css_complete, component = "css")
 
   # Listener applies the styling to columns
-  for (row in i) {
-    for (col in j) {
-      listener <- sprintf(
-        "window.addEventListener('load', function () { styleCell_%s(%s, %s, '%s') })",
-        id, row, col, id)
-      out <- bootstrap_setting(out, listener, component = "cell")
-    }
+  for (row in seq_len(nrow(settings))) {
+    listener <- "window.addEventListener('load', function () { styleCell_%s(%s, %s, '%s') })"
+    listener <- sprintf(listener, id, settings$i[row], settings$j[row], id)
+    out <- bootstrap_setting(out, listener, component = "cell")
+    css_complete <- paste(c(css_start, paste0(settings$bootstrap[row], collapse="; "), "}"), collapse = " ")
+    out <- bootstrap_setting(out, css_complete, component = "css")
+  }
+
+  if (!is.null(bootstrap_css_rule)) {
+    out <- bootstrap_setting(out, bootstrap_css_rule, component = "css")
   }
 
   # Changing function names for JS

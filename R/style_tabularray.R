@@ -30,6 +30,11 @@ style_tabularray <- function(x,
     settings <- settings[order(settings$i, settings$j), ]
   }
 
+  # header index
+  if ("i" %in% names(settings)) {
+    settings$i <- settings$i + meta(out, "nhead")
+  }
+
   # colspan requires cell level, so we keep the full settings DF
   if (is.null(colspan)) {
     if (is.null(i) && is.null(j)) {
@@ -39,10 +44,6 @@ style_tabularray <- function(x,
     } else if (is.null(j)) {
       settings <- unique(settings[, c("i", "tabularray"), drop = FALSE])
     }
-  }
-
-  if (!isTRUE(header) && "i" %in% names(settings)) {
-    settings$i <- settings$i + meta(out, "nhead")
   }
 
   span <- if (!is.null(colspan)) paste0("c=", colspan, ",") else ""

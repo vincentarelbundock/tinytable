@@ -46,5 +46,6 @@ eval_style <- function(x) {
     out <- eval(l)
   }
 
+
   return(out)
 }

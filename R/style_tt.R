@@ -109,85 +109,21 @@ style_tt_lazy <- function (x,
     j <- grep(j, meta(x, "colnames"), perl = TRUE)
   }
 
-  if (is.null(i)) ival <- seq_len(meta(x)$nrows)  else ival <- i
-  if (is.null(j)) jval <- seq_len(meta(x)$nrows)  else jval <- j
-
   assert_style_tt(
-                  x = x, i = i, j = j, ival = ival, jval = jval, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
-                  color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, indent = indent,
-                  tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css,
-                  bootstrap_css_rule = bootstrap_css_rule)
-
-  settings <- expand.grid(i = ival, j = jval, bootstrap = "", tabularray = "")
-  if (is.null(i) && !is.null(j)) {
-    settings <- settings[order(settings$i, settings$j), ]
-  }
-
-  # settings have a different size for latex, so bootstrap breaks
-  if (meta(x)$output == "html") {
-    vectorize_bootstrap <- function(setting, userinput, string) {
-
-      # simple cases
-      if (is.null(userinput) || isFALSE(userinput)) return(setting)
-      if(isTRUE(userinput)) return(paste(setting, string))
-
-      # logical vector
-      if (is.logical(userinput)) {
-        out <- paste(setting, ifelse(userinput, string, ""))
-        return(out)
-      }
-
-      # character vector means the user inputs actual values
-      if (is.character(userinput)) {
-        out <- sprintf(string, userinput)
-        out <- paste(setting, out)
-        return(out)
-      }
-      stop("here be dragons")
-    }
-
-    if (!is.null(align)) {
-      align_bootstrap <- ifelse(align == "c", "center", align)
-      align_bootstrap <- ifelse(align == "l", "left", align_bootstrap)
-      align_bootstrap <- ifelse(align == "r", "right", align_bootstrap)
-    } else {
-      align_bootstrap <- align
-    }
-
-    if (!is.null(fontsize)) {
-      fontsize_bootstrap <- sprintf("%spx", (1 + 1 / 3) * fontsize)
-    } else {
-      fontsize_bootstrap <- fontsize
-    }
-
-    settings$bootstrap <- ""
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, bold, "font-weight: bold;")
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, italic, "font-style: italic;")
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, underline, "text-decoration: underline;")
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, strikeout, "text-decoration: line-through;")
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, monospace, "font-family: monospace;")
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, fontsize_bootstrap, "font-size: %s;")
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, align_bootstrap, "text-align: %s;")
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, color, "color: %s;")
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, background, "background-color: %s;")
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, width, "width: %s;")
-  }
+    x = x, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
+    color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, indent = indent,
+    tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css,
+    bootstrap_css_rule = bootstrap_css_rule)
 
   out <- style_tabularray(
     x = x, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
     color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, indent = indent,
     tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer)
 
-  for (k in seq_len(nrow(settings))) {
-    out <- style_bootstrap(x = out, i = settings$i[k], j = settings$j[k], css = bootstrap_css)
-    out <- style_bootstrap(x = out, i = settings$i[k], j = settings$j[k], css = settings$bootstrap[k])
-  }
-
-  if (!is.null(bootstrap_css) || !is.null(bootstrap_css_rule)) {
-    out <- style_bootstrap(
-      x = out, i = ival, j = jval,
-      css = bootstrap_css, css_rule = bootstrap_css_rule)
-  }
+  out <- style_bootstrap(
+    x = x, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
+    color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, indent = indent,
+    bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule)
 
   return(out)
 }
