@@ -33,19 +33,14 @@ meta <- function(x, get, set) {
 # style_tt() stores style calls and we only want to evaluate them at the end because 
 # some rows may be added, which changes how the style is applied
 eval_style <- function(x) {
-  lazy_style <- meta(x)$lazy_style
   out <- x
 
-  # drop lazy styles from output to avoid weirdness
-  m <- meta(x)
-  m$lazy_style <- NULL
-  attr(out, "tinytable_meta") <- m
-
-  for (l in lazy_style) {
+  for (l in meta(x)$lazy_style) {
     l[["x"]] <- out
     out <- eval(l)
   }
 
+  # browser()
 
   return(out)
 }

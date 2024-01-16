@@ -53,7 +53,9 @@ style_tt <- function (x,
                       bootstrap_css = NULL,
                       bootstrap_css_rule = NULL) {
   out <- x
-  cal <- call("style_tt_lazy",
+  # cal <- call("style_tt_lazy",
+  out <- style_tt_lazy(
+              x = out,
               i = i,
               j = j,
               bold = bold,
@@ -72,7 +74,7 @@ style_tt <- function (x,
               tabularray_outer = tabularray_outer,
               bootstrap_css = bootstrap_css,
               bootstrap_css_rule = bootstrap_css_rule)
-  out <- meta(out, "lazy_style", c(meta(out)$lazy_style, list(cal)))
+  # out <- meta(out, "lazy_style", c(meta(out)$lazy_style, list(cal)))
   return(out)
 }
 
