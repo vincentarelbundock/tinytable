@@ -5,18 +5,11 @@ style_tabularray <- function(x,
 
   m <- meta(x)
   if (m$output != "latex") return(x)
+  out <- x
 
-  if (is.null(inner) && is.null(outer) && is.null(body)) return(x)
-
-  assert_string(inner, null.ok = TRUE)
-  assert_string(outer, null.ok = TRUE)
-
-  att <- attributes(x)    
-  out <- strsplit(x, "\n")[[1]]
-
-  out <- style_tabularray_inner(out, inner)
-  out <- style_tabularray_outer(out, outer)
-  out <- style_tabularray_body(out, body)
+  out <- tabularray_insert(out, content = inner, type = "inner")
+  out <- tabularray_insert(out, content = outer, type = "outer")
+  out <- tabularray_insert(out, content = body, type = "body")
 
   # important for group_tt()
   out <- meta(out, "body", body)
@@ -24,57 +17,32 @@ style_tabularray <- function(x,
   return(out)
 }  
 
-style_tabularray_body <- function(x, body = NULL) {
-  if (is.null(body)) return(x)
+tabularray_insert <- function(x, content = NULL, type = "body") {
+  if (is.null(content)) return(x)
+
   m <- meta(x)
   out <- strsplit(x, "\n")[[1]]
-  idx <- grep("% tabularray inner close", out)
-  out <- c(
-    out[1:idx],
-    # empty lines can break latex
-    trimws(body),
-    out[(idx + 1):length(out)])
+  comment <- switch(type,
+                    "body" = "% tabularray inner close",
+                    "outer" = "% tabularray outer close",
+                    "inner" = "% tabularray inner close")
+  idx <- grep(comment, out)
+  
+  content <- trimws(content)
+  if (!grepl(",$", content)) content <- paste0(content, ",")
+  
+  if (type == "body") {
+    out <- c(out[1:idx], content, out[(idx + 1):length(out)])
+  } else {
+    out <- c(out[1:(idx - 1)], content, out[idx:length(out)])
+  }
+
   out <- paste(out, collapse = "\n")
   class(out) <- class(x)
   attr(out, "tinytable_meta") <- m
   return(out)
 }
 
-style_tabularray_outer <- function(x, outer = NULL) {
-  if (is.null(outer)) return(x)
-  m <- meta(x)
-  out <- strsplit(x, "\n")[[1]]
-  outer <- trimws(outer)
-  if (!grepl(",$", outer)) outer <- paste0(outer, ",")
-  idx <- grep("% tabularray outer close", out)
-  out <- c(
-    out[1:(idx - 1)],
-    # empty lines can break latex
-    outer,
-    out[idx:length(out)])
-  out <- paste(out, collapse = "\n")
-  class(out) <- class(x)
-  attr(out, "tinytable_meta") <- m
-  return(out)
-}
-
-style_tabularray_inner <- function(x, inner = NULL) {
-  if (is.null(inner)) return(x)
-  m <- meta(x)
-  out <- strsplit(x, "\n")[[1]]
-  inner <- trimws(inner)
-  if (!grepl(",$", inner)) inner <- paste0(inner, ",")
-  idx <- grep("% tabularray inner close", out)
-  out <- c(
-    out[1:(idx - 1)],
-    # empty lines can break latex
-    inner,
-    out[idx:length(out)])
-  out <- paste(out, collapse = "\n")
-  class(out) <- class(x)
-  attr(out, "tinytable_meta") <- m
-  return(out)
-}
 
 
 ## not longer used, but took a while to collect and might be useful in the future
