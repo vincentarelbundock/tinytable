@@ -52,6 +52,23 @@ tt(x, output = "markdown")
 
 When calling `tinytable` from a Quarto or Rmarkdown document, `tinytable` detects the output format automatically and generates an HTML or LaTeX table as appropriate. This means that we do not need to explicitly specify the `output` format.
 
+With the `save_tt()` function, users can also save tables directly to PNG images or PDF documents, or any of the basic formats. All we need to do is supply a valid file name with the appropriate extension (ex: `.png`, `.html`, `.pdf`, etc.):
+
+```r
+# PNG
+tt(x, output = "html") |> save_tt("path/to/file.png")
+
+# PDF
+tt(x, output = "html") |> save_tt("path/to/file.html")
+
+# PDF
+tt(x, output = "latex") |> save_tt("path/to/file.pdf")
+
+# Text
+tt(x, output = "markdown") |> save_tt("path/to/file.txt")
+```
+
+
 ## Themes
 
 `tinytable` offers a few basic themes out of the box: "default", "striped", "grid", "void." Those themes can be applied with the `theme` argument of the `tt()` function. As we will see below, it is easy to go much beyond those basic settings to customize your own tables. Here we only illustrate a few of the simplest settings:
