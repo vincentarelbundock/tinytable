@@ -43,3 +43,14 @@ expect_snapshot_print(
 expect_snapshot_print(
   tt(x, output = "latex") |> style_tt(i = 1:2, j = 1:4, color = "orange"),
   label = "latex-cell_color")
+
+
+# Lazy style: group after style is respected
+a <- tt(mtcars[1:4, 1:4], "latex") |> 
+  style_tt(color = "orange", background = "black") |>
+  group_tt(j = list("blah" = 1:2, "bar" = 3:4))
+b <- tt(mtcars[1:4, 1:4], "latex") |> 
+  group_tt(j = list("blah" = 1:2, "bar" = 3:4)) |>
+  style_tt(color = "orange", background = "black")
+expect_snapshot_print(a, label = "latex-group_style_order")
+expect_equal(as.character(a), as.character(b))

@@ -35,11 +35,12 @@ meta <- function(x, get, set) {
 eval_style <- function(x) {
   out <- x
 
-  ls <- meta(x)$lazy_style
+  ls <- meta(out)$lazy_style
 
-  for (lazy_style in meta(x)$lazy_style) {
+  for (lazy_style in meta(out)$lazy_style) {
     lazy_style[["x"]] <- out
     out <- eval(lazy_style)
   }
+
   return(out)
 }

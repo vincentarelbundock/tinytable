@@ -4,20 +4,19 @@
 #' @export
 knit_print.tinytable <- function(x, ...) {
   # lazy styles get evaluated here, at the very end
-  x <- eval_style(x)
+  # not sure why we need to call this twice, but it appears necessary
+  out <- eval_style(x)
+  out <- eval_style(out)
 
-  if (meta(x)$output == "html") {
+  if (meta(out)$output == "html") {
     # from htmltools:::html_preserve
     # GPL3
-    inline <- grepl(x, "\n", fixed = TRUE)
+    inline <- grepl(out, "\n", fixed = TRUE)
     if (inline) {
       out <- sprintf("`%s`{=html}", x)
     } else {
       out <- sprintf("\n```{=html}\n%s\n```\n", x)
     }
-
-  } else if (meta(x)$output %in% c("latex", "markdown")) {
-    out <- x
   }
 
   class(out) <- "knit_asis"
@@ -28,24 +27,25 @@ knit_print.tinytable <- function(x, ...) {
 #' @export
 print.tinytable <- function(x, ...) {
   # lazy styles get evaluated here, at the very end
-  x <- eval_style(x)
+  # not sure why we need to call this twice, but it appears necessary
+  out <- eval_style(x)
+  out <- eval_style(out)
 
-  if (meta(x, "output") == "latex") {
-    out <- x
+  if (meta(out, "output") == "latex") {
     class(out) <- "character"
     cat("\n")
     cat(out)
     cat("\n")
 
-  } else if (meta(x, "output") == "markdown") {
+  } else if (meta(out, "output") == "markdown") {
     cat("\n")
-    cat(x, sep = "\n")
+    cat(out, sep = "\n")
 
-  } else if (meta(x, "output") == "html") {
+  } else if (meta(out, "output") == "html") {
     dir <- tempfile()
     dir.create(dir)
     htmlFile <- file.path(dir, "index.html")
-    cat(x, file = htmlFile)
+    cat(out, file = htmlFile)
     if (isTRUE(check_dependency("rstudioapi")) && rstudioapi::isAvailable()) {
       rstudioapi::viewer(htmlFile)
     } else {
