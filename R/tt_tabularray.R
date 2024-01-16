@@ -51,20 +51,20 @@ tt_tabularray <- function(x, caption, theme, width, notes) {
   if (!is.null(width)) {
     tabularray_cols <- rep("X[]", ncol(x))
     spec <- sprintf("width={%s\\linewidth},", round(width, 4))
-    out <- style_tabularray(out, inner = spec)
+    out <- tabularray_insert(out, content = spec, type = "inner")
   } else {
     tabularray_cols <- rep("Q[]", ncol(x))
   }
 
   # colspec (we don't need rowspec)
   colspec <- sprintf("colspec={%s},", paste(tabularray_cols, collapse = ""))
-  out <- style_tabularray(out, inner = colspec)     
+  out <- tabularray_insert(out, content = colspec, type = "inner")     
 
   # themes
   if (theme == "grid") {
-    out <- style_tabularray(out, inner = "hlines={},vlines={},")     
+    out <- tabularray_insert(out, content = "hlines={},vlines={},", type = "inner")
   } else if (theme == "striped") {
-    out <- style_tabularray(out, inner = "row{even}={bg=black!5!white},")
+    out <- tabularray_insert(out, content = "row{even}={bg=black!5!white},", type = "inner")
   }
 
   # notes
@@ -72,7 +72,7 @@ tt_tabularray <- function(x, caption, theme, width, notes) {
     out <- sub("\\begin{tblr}", "\\begin{talltblr}", out, fixed = TRUE)
     out <- sub("\\end{tblr}", "\\end{talltblr}", out, fixed = TRUE)
     # otherwise an empty caption is created automatically
-    out <- style_tabularray(out, outer = "entry=none,label=none")
+    out <- tabularray_insert(out, content = "entry=none,label=none", type = "outer")
     if (is.null(names(notes))) {
       lab <- rep("", length(notes))
     } else {
@@ -81,7 +81,7 @@ tt_tabularray <- function(x, caption, theme, width, notes) {
     notes <- unlist(notes)
     for (k in seq_along(notes)) {
       spec <- sprintf("note{%s}={%s}", lab[k], notes[k])
-      out <- style_tabularray(out, outer = spec)
+      out <- tabularray_insert(out, content = spec, type = "outer")
     }
   }
 

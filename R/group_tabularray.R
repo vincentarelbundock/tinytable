@@ -102,14 +102,14 @@ group_tabularray_row <- function(x, i, indent, ...) {
     ""
   )
   cellspec <- paste(cellspec, collapse = "")
-  tab <- style_tabularray(tab, inner = cellspec)
+  tab <- tabularray_insert(tab, content = cellspec, type = "inner")
 
   # we also want to indent the header
   i <- idx$new[!is.na(idx$old)] + m$nhead 
   if (m$nhead > 0) i <- c(1:m$nhead, i)
   cellspec <- sprintf("cell{%s}{%s}={%s},", i, 1, sprintf("preto={\\hspace{%sem}}", indent))
   cellspec <- paste(cellspec, collapse = "")
-  tab <- style_tabularray(tab, inner = cellspec)
+  tab <- tabularray_insert(tab, content = cellspec, type = "inner")
 
   dots <- list(...)
   if (length(dots) > 0) {

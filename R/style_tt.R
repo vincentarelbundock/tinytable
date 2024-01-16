@@ -72,50 +72,16 @@ style_tt <- function (x,
       jval <- j
     }
   }
-  ncells <- length(ival) * length(jval)
-  ncols <- length(jval)
-  nrows <- length(ival)
+
   assert_style_tt(
     x = x, i = i, j = j, ival = ival, jval = jval, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
     color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, indent = indent,
     tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css,
-    bootstrap_css_rule = bootstrap_css_rule
-  )
+    bootstrap_css_rule = bootstrap_css_rule)
 
-
-  if (!is.null(colspan)) {
-    if (meta(x)$output == "html") {
-      warning("`colspan` is not available for HTML tables yet. You can follow progress here: https://github.com/vincentarelbundock/tinytable/issues/43", call. = FALSE )
-    }
-    if (is.null(j) || is.null(i) || (!is.null(i) && length(ival) != 1) || (!is.null(j) && length(jval) != 1)) {
-      stop("`i` and `j` must be of length 1 when using `colspan`.", call. = FALSE)
-    }
-    assert_integerish(colspan, len = 1, lower = 1, upper = jval + meta(x)$ncols)
-  }
-
-  settings <- expand.grid(i = ival, j = jval)
+  settings <- expand.grid(i = ival, j = jval, bootstrap = "", tabularray = "")
   if (is.null(i) && !is.null(j)) {
     settings <- settings[order(settings$i, settings$j), ]
-  }
-
-  if (meta(x)$output == "latex") {
-    # colspan requires cell level, so we keep the full settings DF
-    if (is.null(colspan)) {
-      if (is.null(i) && is.null(j)) {
-        settings <- unique(settings[, "i", drop = FALSE])
-      } else if (is.null(i)) {
-        settings <- unique(settings[, "j", drop = FALSE])
-      } else if (is.null(j)) {
-        settings <- unique(settings[, "i", drop = FALSE])
-      }
-    }
-  }
-
-  settings$tabularray <- settings$bootstrap <- ""
-
-  # do not style the header. JS 0-indexing
-  if (meta(x)$output == "latex" && "i" %in% colnames(settings)) {
-    settings$i <- settings$i + meta(x)$nhead
   }
 
   # settings have a different size for latex, so bootstrap breaks
@@ -168,84 +134,16 @@ style_tt <- function (x,
     settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, width, "width: %s;")
   }
 
-  # convert to tabularray now that we've filled the bootstrap settings
-  if (is.numeric(fontsize)) settings$tabularray <- sprintf("%s font=\\fontsize{%s}{%s}\\selectfont,", settings$tabularray, fontsize, fontsize + 2) 
-  if (!is.null(align)) settings$tabularray <- sprintf("%s halign=%s,", settings$tabularray, align)
-  if (!is.null(width)) settings$tabularray <- sprintf("%s wd={%s},", settings$tabularray, width)
-  if (indent > 0) settings$tabularary <- sprintf("%s preto={\\hspace{%sem}},", settings$tabularray, indent)
-
-  vectorize_tabularray <- function(z) {
-    if (is.null(z)) {
-      return(rep(FALSE, nrow(settings)))
-    }
-    if (check_flag(z))  {
-      return(rep(z, nrow(settings)))
-    }
-    return(z)
-  }
-
-  bold <- vectorize_tabularray(bold)
-  italic <- vectorize_tabularray(italic)
-  underline <- vectorize_tabularray(underline)
-  strikeout <- vectorize_tabularray(strikeout)
-  monospace <- vectorize_tabularray(monospace)
-  cmd <- rep("", nrow(settings))
-  cmd <- ifelse(bold, paste0(cmd, "\\bfseries"), cmd)
-  cmd <- ifelse(italic, paste0(cmd, "\\textit"), cmd)
-  cmd <- ifelse(underline, paste0(cmd, "\\tinytableTabularrayUnderline"), cmd)
-  cmd <- ifelse(strikeout, paste0(cmd, "\\tinytableTabularrayStrikeout"), cmd)
-  cmd <- ifelse(monospace, paste0(cmd, "\\texttt"), cmd)
-  settings$tabularray <- sprintf("%s, cmd=%s,", settings$tabularray, cmd)
-
-  # hex must be treated differently in LaTeX
-  cols <- c(color, background)
-  if (!is.null(cols)) {
-    hex <- cols[grepl("^#", cols)]
-    for (h in hex) {
-      b <- sprintf(
-        "\\tinytableDefineColor{%s}{HTML}{%s}",
-        sub("^#", "c", h), sub("^#", "", h))
-      cal <- call("style_tabularray", body = b)
-      out <- meta(out, "lazy_style", c(meta(out)$lazy_style, list(cal)))
-    }
-  }
-  if (!is.null(background)) {
-    settings$tabularray <- sprintf("%s bg=%s,", settings$tabularray, sub("^#", "c", background))
-  }
-  if (!is.null(color)) {
-    settings$tabularray <- sprintf("%s fg=%s,", settings$tabularray, sub("^#", "c", color))
-  }
-
-  settings$tabularray <- trimws(gsub("cmd=,", "", settings$tabularray))
-  settings$tabularray <- trimws(gsub("\\s+", "", settings$tabularray))
-  settings$tabularray <- trimws(gsub(",+", ",", settings$tabularray))
+  out <- style_tabularray(
+    x = x, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
+    color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, indent = indent,
+    tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer)
 
   for (k in seq_len(nrow(settings))) {
     out <- style_bootstrap(out, i = settings$i[k], j = settings$j[k], css = bootstrap_css)
     out <- style_bootstrap(out, i = settings$i[k], j = settings$j[k], css = settings$bootstrap[k])
   }
 
-  span <- if (!is.null(colspan)) paste0("c=", colspan, ",") else ""
-
-  if (meta(x)$output == "latex") {
-    for (k in seq_len(nrow(settings))) {
-      if (all(c("i", "j") %in% colnames(settings))) {
-        spec <- sprintf("cell{%s}{%s}={%s}{%s},", settings$i[k], settings$j[k], span, settings$tabularray[k])
-      }
-      else if ("i" %in% colnames(settings)) {
-        spec <- sprintf("row{%s}={%s},", settings$i[k], settings$tabularray[k])
-      }
-      else if ("j" %in% colnames(settings)) {
-        spec <- sprintf("column{%s}={%s},", settings$j[k], settings$tabularray[k])
-      }
-      cal <- call("style_tabularray", inner = spec)
-      out <- meta(out, "lazy_style", c(meta(out)$lazy_style, list(cal)))
-    }
-  }
-  if (!is.null(tabularray_inner) || !is.null(tabularray_outer)) {
-    cal <- call("style_tabularray", inner = tabularray_inner, outer = tabularray_outer)
-    out <- meta(out, "lazy_style", c(meta(out)$lazy_style, list(cal)))
-  }
   if (!is.null(bootstrap_css) || !is.null(bootstrap_css_rule)) {
     cal <- call("style_bootstrap", i = ival, j = jval, css = bootstrap_css, css_rule = bootstrap_css_rule)
     out <- meta(out, "lazy_style", c(meta(out)$lazy_style, list(cal)))
@@ -279,66 +177,67 @@ assert_style_tt <- function (x,
 
   m <- meta(x)
 
-  assert_integerish(ival, lower = 1 - meta(x)$nhead, upper = meta(x)$nrows, name = "i")
-  assert_integerish(jval, lower = 1, upper = meta(x)$ncols, name = "j")
-  assert_string(width, null.ok = TRUE)
-  assert_choice(align, c("c", "l", "r"), null.ok = TRUE)
-  assert_numeric(indent, len = 1, lower = 0)
-  assert_character(background, null.ok = TRUE)
-  assert_character(color, null.ok = TRUE)
-  assert_integerish(fontsize, null.ok = TRUE)
-  assert_logical(bold)
-  assert_logical(italic)
-  assert_logical(monospace)
-  assert_logical(underline)
-  assert_logical(strikeout)
-  assert_character(bootstrap_css, null.ok = TRUE)
-  assert_string(bootstrap_css_rule, null.ok = TRUE)
-
-  # 1
-  if (is.null(i) && is.null(j)) {
-    assert_length(color, len = 1, null.ok = TRUE)
-    assert_length(background, len = 1, null.ok = TRUE)
-    assert_length(fontsize, len = 1, null.ok = TRUE)
-    assert_length(bold, len = 1)
-    assert_length(italic, len = 1)
-    assert_length(monospace, len = 1)
-    assert_length(underline, len = 1)
-    assert_length(strikeout, len = 1)
-
-  # 1 or #rows
-  } else if (!is.null(i) && is.null(j)) {
-    assert_length(color, len = c(1, length(ival)), null.ok = TRUE)
-    assert_length(background, len = c(1, length(ival)), null.ok = TRUE)
-    assert_length(fontsize, len = c(1, length(ival)), null.ok = TRUE)
-    assert_length(bold, len = c(1, length(ival)))
-    assert_length(italic, len = c(1, length(ival)))
-    assert_length(monospace, len = c(1, length(ival)))
-    assert_length(underline, len = c(1, length(ival)))
-    assert_length(strikeout, len = c(1, length(ival)))
-
-  # 1 or #cols
-  } else if (is.null(i) && !is.null(j)) {
-    assert_length(color, len = c(1, length(jval)), null.ok = TRUE)
-    assert_length(background, len = c(1, length(jval)), null.ok = TRUE)
-    assert_length(fontsize, len = c(1, length(jval)), null.ok = TRUE)
-    assert_length(bold, len = c(1, length(jval)))
-    assert_length(italic, len = c(1, length(jval)))
-    assert_length(monospace, len = c(1, length(jval)))
-    assert_length(underline, len = c(1, length(jval)))
-    assert_length(strikeout, len = c(1, length(jval)))
-
-  # 1 or #cells
-  } else if (!is.null(i) && !is.null(j)) {
-    assert_length(color, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
-    assert_length(background, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
-    assert_length(fontsize, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
-    assert_length(bold, len = c(1, length(ival) * length(jval)))
-    assert_length(italic, len = c(1, length(ival) * length(jval)))
-    assert_length(monospace, len = c(1, length(ival) * length(jval)))
-    assert_length(underline, len = c(1, length(ival) * length(jval)))
-    assert_length(strikeout, len = c(1, length(ival) * length(jval)))
-  }
+  # assert_integerish(colspan, len = 1, lower = 1, null.ok = TRUE)
+  # assert_integerish(ival, lower = 1 - meta(x)$nhead, upper = meta(x)$nrows, name = "i")
+  # assert_integerish(jval, lower = 1, upper = meta(x)$ncols, name = "j")
+  # assert_string(width, null.ok = TRUE)
+  # assert_choice(align, c("c", "l", "r"), null.ok = TRUE)
+  # assert_numeric(indent, len = 1, lower = 0)
+  # assert_character(background, null.ok = TRUE)
+  # assert_character(color, null.ok = TRUE)
+  # assert_integerish(fontsize, null.ok = TRUE)
+  # assert_logical(bold)
+  # assert_logical(italic)
+  # assert_logical(monospace)
+  # assert_logical(underline)
+  # assert_logical(strikeout)
+  # assert_character(bootstrap_css, null.ok = TRUE)
+  # assert_string(bootstrap_css_rule, null.ok = TRUE)
+  #
+  # # 1
+  # if (is.null(i) && is.null(j)) {
+  #   assert_length(color, len = 1, null.ok = TRUE)
+  #   assert_length(background, len = 1, null.ok = TRUE)
+  #   assert_length(fontsize, len = 1, null.ok = TRUE)
+  #   assert_length(bold, len = 1)
+  #   assert_length(italic, len = 1)
+  #   assert_length(monospace, len = 1)
+  #   assert_length(underline, len = 1)
+  #   assert_length(strikeout, len = 1)
+  #
+  # # 1 or #rows
+  # } else if (!is.null(i) && is.null(j)) {
+  #   assert_length(color, len = c(1, length(ival)), null.ok = TRUE)
+  #   assert_length(background, len = c(1, length(ival)), null.ok = TRUE)
+  #   assert_length(fontsize, len = c(1, length(ival)), null.ok = TRUE)
+  #   assert_length(bold, len = c(1, length(ival)))
+  #   assert_length(italic, len = c(1, length(ival)))
+  #   assert_length(monospace, len = c(1, length(ival)))
+  #   assert_length(underline, len = c(1, length(ival)))
+  #   assert_length(strikeout, len = c(1, length(ival)))
+  #
+  # # 1 or #cols
+  # } else if (is.null(i) && !is.null(j)) {
+  #   assert_length(color, len = c(1, length(jval)), null.ok = TRUE)
+  #   assert_length(background, len = c(1, length(jval)), null.ok = TRUE)
+  #   assert_length(fontsize, len = c(1, length(jval)), null.ok = TRUE)
+  #   assert_length(bold, len = c(1, length(jval)))
+  #   assert_length(italic, len = c(1, length(jval)))
+  #   assert_length(monospace, len = c(1, length(jval)))
+  #   assert_length(underline, len = c(1, length(jval)))
+  #   assert_length(strikeout, len = c(1, length(jval)))
+  #
+  # # 1 or #cells
+  # } else if (!is.null(i) && !is.null(j)) {
+  #   assert_length(color, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
+  #   assert_length(background, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
+  #   assert_length(fontsize, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
+  #   assert_length(bold, len = c(1, length(ival) * length(jval)))
+  #   assert_length(italic, len = c(1, length(ival) * length(jval)))
+  #   assert_length(monospace, len = c(1, length(ival) * length(jval)))
+  #   assert_length(underline, len = c(1, length(ival) * length(jval)))
+  #   assert_length(strikeout, len = c(1, length(ival) * length(jval)))
+  # }
 }
 
 
