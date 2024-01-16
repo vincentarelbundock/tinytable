@@ -107,19 +107,8 @@ style_tabularray <- function(x,
     out <- meta(out, "lazy_style", c(meta(out)$lazy_style, list(cal)))
   }
 
-  if (!is.null(tabularray_inner) || !is.null(tabularray_outer)) {
-    cal <- call("tabularray_insert", content = tabularray_inner, type = "inner")
-    out <- meta(out, "lazy_style", c(meta(out)$lazy_style, list(cal)))
-    cal <- call("tabularray_insert", content = tabularray_outer, type = "outer")
-    out <- meta(out, "lazy_style", c(meta(out)$lazy_style, list(cal)))
-  }
-
-  out <- tabularray_insert(out, content = inner, type = "inner")
-  out <- tabularray_insert(out, content = outer, type = "outer")
-  out <- tabularray_insert(out, content = body, type = "body")
-
-  # important for group_tt()
-  out <- meta(out, "body", body)
+  out <- tabularray_insert(out, content = tabularray_inner, type = "inner")
+  out <- tabularray_insert(out, content = tabularray_outer, type = "outer")
 
   return(out)
 }  
