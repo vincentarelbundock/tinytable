@@ -179,13 +179,13 @@ style_tt_lazy <- function (x,
     tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer)
 
   for (k in seq_len(nrow(settings))) {
-    out <- style_bootstrap(out, i = settings$i[k], j = settings$j[k], css = bootstrap_css)
-    out <- style_bootstrap(out, i = settings$i[k], j = settings$j[k], css = settings$bootstrap[k])
+    out <- style_bootstrap(x = out, i = settings$i[k], j = settings$j[k], css = bootstrap_css)
+    out <- style_bootstrap(x = out, i = settings$i[k], j = settings$j[k], css = settings$bootstrap[k])
   }
 
   if (!is.null(bootstrap_css) || !is.null(bootstrap_css_rule)) {
     out <- style_bootstrap(
-      i = ival, j = jval,
+      x = out, i = ival, j = jval,
       css = bootstrap_css, css_rule = bootstrap_css_rule)
   }
 
