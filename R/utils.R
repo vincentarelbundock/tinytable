@@ -34,6 +34,9 @@ meta <- function(x, get, set) {
 # some rows may be added, which changes how the style is applied
 eval_style <- function(x) {
   out <- x
+
+  ls <- meta(x)$lazy_style
+
   for (lazy_style in meta(x)$lazy_style) {
     lazy_style[["x"]] <- out
     out <- eval(lazy_style)
