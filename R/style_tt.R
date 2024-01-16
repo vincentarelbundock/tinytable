@@ -112,18 +112,18 @@ style_tt_lazy <- function (x,
   }
 
   assert_style_tt(
-    x = x, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
+    x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
     color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, indent = indent,
     tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css,
     bootstrap_css_rule = bootstrap_css_rule)
 
   out <- style_tabularray(
-    x = x, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
+    x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
     color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, indent = indent,
     tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer)
 
   out <- style_bootstrap(
-    x = x, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
+    x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
     color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, indent = indent,
     bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule)
 

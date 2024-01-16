@@ -85,8 +85,7 @@ style_tabularray <- function(x,
       b <- sprintf(
         "\\tinytableDefineColor{%s}{HTML}{%s}",
         sub("^#", "c", h), sub("^#", "", h))
-      cal <- call("tabularray_insert", content = b, type = "body")
-      out <- meta(out, "lazy_style", c(meta(out)$lazy_style, list(cal)))
+      out <- tabularray_insert(content = b, type = "body")
     }
   }
   if (!is.null(background)) {
@@ -108,8 +107,7 @@ style_tabularray <- function(x,
     } else if ("j" %in% colnames(settings)) {
       spec <- sprintf("column{%s}={%s},", settings$j[k], settings$tabularray[k])
     } 
-    cal <- call("tabularray_insert", content = spec, type = "inner")
-    out <- meta(out, "lazy_style", c(meta(out)$lazy_style, list(cal)))
+    out <- tabularray_insert(out, content = spec, type = "inner")
   }
 
   out <- tabularray_insert(out, content = tabularray_inner, type = "inner")
