@@ -5,6 +5,10 @@ dat <- data.frame(
      y = as.Date(sample(1:1000, N)),
      z = sample(c(TRUE, FALSE), N, replace = TRUE)
 )
+
+# pkgload::load_all()
 dat |> 
   format_tt(digits = 4) |>
   tt()
+
+format_tt(dat$x, digits = 1)

@@ -8,7 +8,7 @@
 #' It allows various formatting options like significant digits, decimal points, and scientific notation.
 #' It also includes custom formatting for date and boolean values.
 #'
-#' @param x A data frame to be formatted.
+#' @param x A data frame or a vector to be formatted.
 #' @param digits Number of significant digits or decimal places.
 #' @param num_fmt The format for numeric values; one of 'significant', 'decimal', or 'scientific'.
 #' @param num_zero Logical; if TRUE, trailing zeros are kept in "decimal" format (but not in "significant" format).
@@ -49,6 +49,19 @@ format_tt <- function(x = NULL,
 
   if (inherits(x, "tinytable")) {
     msg <- "`format_tt()` must be called *before* `tt()`. You must format your dataset before drawing a table."
+  }
+
+  if (isTRUE(check_atomic_vector(x))) {
+    atomic_vector <- TRUE
+    x <- data.frame(tinytable = x)
+    j <- 1
+  } else {
+    atomic_vector <- FALSE
+  }
+
+  if (!inherits(x, "data.frame")) {
+    msg <- "`x` must be a data frame or an atomic vector."
+    stop(msg, call. = FALSE)
   }
 
   assert_data_frame(x)
@@ -107,5 +120,10 @@ format_tt <- function(x = NULL,
 
   }
 
-  return(x)
+  if (isTRUE(atomic_vector)) {
+    return(x[[1]])
+  } else {
+    return(x)
+  }
+
 }

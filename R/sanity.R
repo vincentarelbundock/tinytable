@@ -191,3 +191,15 @@ assert_function <- function(x, null.ok = FALSE, name = as.character(substitute(x
     stop(msg, call. = FALSE)
   }
 }
+
+check_atomic_vector<- function(x, null.ok = FALSE, name = as.character(substitute(x))) {
+  if (isTRUE(null.ok) && is.null(x)) return(invisible(TRUE))
+  flag <- is.atomic(x) && is.vector(x) && !is.list(x)
+  if (flag) {
+    out <- TRUE
+  } else {
+    out <- sprintf("`%s` must be an atomic vector.", name)
+  }
+  return(out)
+}
+

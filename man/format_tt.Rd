@@ -20,7 +20,7 @@ format_tt(
 )
 }
 \arguments{
-\item{x}{A data frame to be formatted.}
+\item{x}{A data frame or a vector to be formatted.}
 
 \item{j}{Column indices where the styling should be applied. Can be a single value, a vector, or a Perl-style regular expression applied to column names of the original data frame. If \code{colspan} is used, \code{j} must be of length 1.}
 
