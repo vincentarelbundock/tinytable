@@ -7,6 +7,7 @@
 tt(
   x,
   output = NULL,
+  digits = NULL,
   align = NULL,
   caption = NULL,
   width = NULL,
@@ -19,6 +20,8 @@ tt(
 \item{x}{A data frame or data table to be rendered as a table.}
 
 \item{output}{The format of the output table. Can be "html", "latex", or "markdown". If NULL, the format is automatically detected in Quarto or Rmarkdown documents.}
+
+\item{digits}{Number of significant digits to keep for numeric variables. When \code{digits} is not \code{NULL}}
 
 \item{align}{A string specifying the alignment of columns. Each character in the string corresponds to a column; 'l' for left, 'c' for center, and 'r' for right alignment. The length of the string must match the number of columns in \code{x}.}
 

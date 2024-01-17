@@ -10,17 +10,19 @@ format_tt(
   output = NULL,
   digits = NULL,
   num_fmt = "significant",
-  num_mark_big = "",
-  num_mark_dec = getOption("OutDec"),
   num_zero = TRUE,
+  num_mark_big = "",
+  num_mark_dec = getOption("OutDec", default = "."),
   url = FALSE,
   date = function(column) format(column, "\%Y-\%m-\%d"),
   bool = function(column) tools::toTitleCase(tolower(column)),
-  ...
+  other = identity
 )
 }
 \arguments{
 \item{x}{A data frame to be formatted.}
+
+\item{j}{Column indices where the styling should be applied. Can be a single value, a vector, or a Perl-style regular expression applied to column names of the original data frame. If \code{colspan} is used, \code{j} must be of length 1.}
 
 \item{output}{The format of the output table. Can be "html", "latex", or "markdown". If NULL, the format is automatically detected in Quarto or Rmarkdown documents.}
 
@@ -28,11 +30,11 @@ format_tt(
 
 \item{num_fmt}{The format for numeric values; one of 'significant', 'decimal', or 'scientific'.}
 
+\item{num_zero}{Logical; if TRUE, trailing zeros are kept in "decimal" format (but not in "significant" format).}
+
 \item{num_mark_big}{Character to use as a thousands separator.}
 
 \item{num_mark_dec}{Decimal mark character. Default is the global option 'OutDec'.}
-
-\item{num_zero}{Logical; if TRUE, trailing zeros are kept.}
 
 \item{url}{Logical; if TRUE, treats the column as a URL.}
 
@@ -40,7 +42,7 @@ format_tt(
 
 \item{bool}{A function to format logical columns. Defaults to title case.}
 
-\item{...}{Additional arguments are ignored.}
+\item{other}{A function to format columns of other types. Defaults to identity (no formatting).}
 }
 \value{
 A data frame with formatted columns.

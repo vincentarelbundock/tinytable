@@ -9,6 +9,9 @@ help:  ## Display this help screen
 check:  ## check
 	Rscript -e "devtools::document();devtools::check()"
 
+document:  ## document
+	Rscript -e "devtools::document()"
+
 test:  ## test
 	Rscript -e "devtools::install();library(tinytable);tinytest::run_test_dir()"
 

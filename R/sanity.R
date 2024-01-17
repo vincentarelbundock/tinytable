@@ -182,3 +182,12 @@ assert_list <- function(x, named = FALSE, null.ok = FALSE, name = as.character(s
     }
   }
 }
+
+
+assert_function <- function(x, null.ok = FALSE, name = as.character(substitute(x))) {
+  if (isTRUE(null.ok) && is.null(x)) return(invisible(TRUE))
+  if (!is.function(x)) {
+    msg <- sprintf("`%s` must be a function.", name)
+    stop(msg, call. = FALSE)
+  }
+}
