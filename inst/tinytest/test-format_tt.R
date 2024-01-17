@@ -6,7 +6,7 @@ dat <- data.frame(
      z = sample(c(TRUE, FALSE), N, replace = TRUE)
 )
 
-pkgload::load_all()
-dat |> 
-  format_tt(digits = 2, num_suffix = TRUE) |>
-  tt()
+# pkgload::load_all()
+# dat |> 
+#   format_tt(digits = 2, num_suffix = TRUE) |>
+#   tt()

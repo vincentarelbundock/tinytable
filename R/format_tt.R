@@ -14,24 +14,15 @@
 #' @param num_zero Logical; if TRUE, trailing zeros are kept in "decimal" format (but not in "significant" format).
 #' @param num_mark_big Character to use as a thousands separator.
 #' @param num_mark_dec Decimal mark character. Default is the global option 'OutDec'.
+#' @param num_suffix Logical; if TRUE display short numbers with `digits` significant digits and K (thousands), M (millions), B (billions), or T (trillions) suffixes.
 #' @param url Logical; if TRUE, treats the column as a URL.
-#' @param date A function to format Date columns. Defaults to ISO format.
+#' @param date A string passed to the `format()` function, such as "%Y-%m-%d". See the "Details" section in `?strptime`
 #' @param bool A function to format logical columns. Defaults to title case.
 #' @param other A function to format columns of other types. Defaults to identity (no formatting).
 #' @inheritParams tt
 #' @inheritParams style_tt
 #'
 #' @return A data frame with formatted columns.
-#'
-#' @examples
-#' # Example usage
-#' data_frame <- data.frame(
-#'   logical_col = c(TRUE, FALSE, TRUE),
-#'   date_col = as.Date(c('2020-01-01', '2021-02-02', '2022-03-03')),
-#'   numeric_col = c(12345.67, 8901.23, 4567.89)
-#' )
-#' formatted_data_frame <- format_tt(data_frame)
-#'
 #' @export
 format_tt <- function(x = NULL,
                       j = NULL,
@@ -43,7 +34,7 @@ format_tt <- function(x = NULL,
                       num_mark_big = "",
                       num_mark_dec = getOption("OutDec", default = "."),
                       url = FALSE,
-                      date = function(column) format(column, "%Y-%m-%d"),
+                      date = "%Y-%m-%d",
                       bool = function(column) tools::toTitleCase(tolower(column)),
                       other = identity
                       ) {
@@ -72,7 +63,7 @@ format_tt <- function(x = NULL,
   assert_string(num_mark_big)
   assert_string(num_mark_dec)
   assert_flag(url)
-  assert_function(date)
+  assert_string(date)
   assert_function(bool)
   assert_function(identity)
 
@@ -96,7 +87,7 @@ format_tt <- function(x = NULL,
 
     # date
     } else if (inherits(x[[col]], "Date")) {
-      x[[col]] <- date(x[[col]])
+      x[[col]] <- format(x[[col]], date)
 
     # numeric
     } else if (is.numeric(x[[col]]) && !is.null(digits)) {

@@ -95,6 +95,48 @@ To align columns, we use a single string, where each letter represents a column:
 tt(x, align = "ccrrl")
 ```
 
+## Formatting (numbers, dates, strings, etc.)
+
+
+The `tt()` function is minimalist; it's inteded purpose is simply to draw nice tables. Users who want to format numbers, dates, strings, and other variables in different ways should process their data *before* supplying it to the `tt()` table-drawing function. To do so, we can use the `format_tt()` function supplied by the `tinytable`. 
+
+In a very simple case---such as printing 2 significant digits of all numeric variables---we can use the `digits` argument of `tt()`:
+
+```{r}
+dat <- data.frame(
+     w = c(1.43002, 201.399, 0.100188),
+     x = c(1.43002, 201.399, 0.100188),
+     y = as.Date(sample(1:1000, 3)),
+     z = c(TRUE, TRUE, FALSE))
+
+tt(dat, digits = 2)
+```
+
+For each numeric column, `tinytable` checked how many numbers after the decimal where necessary for every number to display at least two digits.
+
+We can get more fine-grained control over formatting with calling `format_tt()` before `tt()`:
+
+```{r}
+dat <- data.frame(
+     w = c(143002.2092, 201399.181, 100188.3883),
+     x = c(1.43002, 201.399, 0.100188),
+     y = as.Date(sample(1:1000, 3)),
+     z = c(TRUE, TRUE, FALSE))
+
+dat |>
+  format_tt(
+    j = 2:4,
+    digits = 1,
+    date = "%B %d %Y") |>
+  format_tt(
+    j = 1,
+    digits = 2,
+    num_mark_big = " ",
+    num_mark_dec = ",",
+    num_fmt = "decimal") |>
+  tt()
+```
+
 ## Width
 
 The `width` arguments accepts a number between 0 and 1, indicating what proportion of the linewidth the table should cover:
@@ -288,6 +330,7 @@ tt(x) |>
   style_tt(i = 1, j = 1:2, color = "orange") |>
   style_tt(i = 1, j = 3:4, color = "green")
 ```
+
 
 ## Colors
 

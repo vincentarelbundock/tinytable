@@ -11,10 +11,11 @@ format_tt(
   digits = NULL,
   num_fmt = "significant",
   num_zero = TRUE,
+  num_suffix = FALSE,
   num_mark_big = "",
   num_mark_dec = getOption("OutDec", default = "."),
   url = FALSE,
-  date = function(column) format(column, "\%Y-\%m-\%d"),
+  date = "\%Y-\%m-\%d",
   bool = function(column) tools::toTitleCase(tolower(column)),
   other = identity
 )
@@ -32,13 +33,15 @@ format_tt(
 
 \item{num_zero}{Logical; if TRUE, trailing zeros are kept in "decimal" format (but not in "significant" format).}
 
+\item{num_suffix}{Logical; if TRUE display short numbers with \code{digits} significant digits and K (thousands), M (millions), B (billions), or T (trillions) suffixes.}
+
 \item{num_mark_big}{Character to use as a thousands separator.}
 
 \item{num_mark_dec}{Decimal mark character. Default is the global option 'OutDec'.}
 
 \item{url}{Logical; if TRUE, treats the column as a URL.}
 
-\item{date}{A function to format Date columns. Defaults to ISO format.}
+\item{date}{A string passed to the \code{format()} function, such as "\%Y-\%m-\%d". See the "Details" section in \code{?strptime}}
 
 \item{bool}{A function to format logical columns. Defaults to title case.}
 
@@ -51,14 +54,4 @@ A data frame with formatted columns.
 This function formats the columns of a data frame based on the column type (logical, date, numeric).
 It allows various formatting options like significant digits, decimal points, and scientific notation.
 It also includes custom formatting for date and boolean values.
-}
-\examples{
-# Example usage
-data_frame <- data.frame(
-  logical_col = c(TRUE, FALSE, TRUE),
-  date_col = as.Date(c('2020-01-01', '2021-02-02', '2022-03-03')),
-  numeric_col = c(12345.67, 8901.23, 4567.89)
-)
-formatted_data_frame <- format_tt(data_frame)
-
 }
