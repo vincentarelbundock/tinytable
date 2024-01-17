@@ -37,7 +37,7 @@ eval_style <- function(x) {
 
   for (l in meta(x)$lazy_style) {
     l[["x"]] <- out
-    out <- eval(l)
+    out <- eval(eval(l))
   }
 
   return(out)

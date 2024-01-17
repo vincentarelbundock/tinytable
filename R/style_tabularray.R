@@ -1,7 +1,6 @@
 style_tabularray <- function(x,
                              i = NULL,
                              j = NULL,
-                             header = FALSE,
                              bold = FALSE,
                              italic = FALSE,
                              monospace = FALSE,
@@ -85,7 +84,7 @@ style_tabularray <- function(x,
       b <- sprintf(
         "\\tinytableDefineColor{%s}{HTML}{%s}",
         sub("^#", "c", h), sub("^#", "", h))
-      out <- tabularray_insert(content = b, type = "body")
+      out <- tabularray_insert(out, content = b, type = "body")
     }
   }
   if (!is.null(background)) {

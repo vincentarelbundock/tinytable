@@ -5,14 +5,15 @@
 knit_print.tinytable <- function(x, ...) {
   # lazy styles get evaluated here, at the very end
   out <- eval_style(x)
+
   if (meta(out)$output == "html") {
     # from htmltools:::html_preserve
     # GPL3
     inline <- grepl(out, "\n", fixed = TRUE)
     if (inline) {
-      out <- sprintf("`%s`{=html}", x)
+      out <- sprintf("`%s`{=html}", out)
     } else {
-      out <- sprintf("\n```{=html}\n%s\n```\n", x)
+      out <- sprintf("\n```{=html}\n%s\n```\n", out)
     }
   }
 
