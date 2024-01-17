@@ -40,7 +40,5 @@ eval_style <- function(x) {
     out <- eval(l)
   }
 
-  # browser()
-
   return(out)
 }

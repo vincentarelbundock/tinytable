@@ -1,26 +1,24 @@
-
-
 #' Internal styling function
 #'
 #' @inheritParams style_tt
 style_bootstrap <- function(x,
-                             i = NULL,
-                             j = NULL,
-                             header = FALSE,
-                             bold = FALSE,
-                             italic = FALSE,
-                             monospace = FALSE,
-                             underline = FALSE,
-                             strikeout = FALSE,
-                             color = NULL,
-                             background = NULL,
-                             fontsize = NULL,
-                             width = NULL,
-                             align = NULL,
-                             colspan = NULL,
-                             indent = 0,
-                             bootstrap_css = NULL,
-                             bootstrap_css_rule = NULL) {
+                            i = NULL,
+                            j = NULL,
+                            header = FALSE,
+                            bold = FALSE,
+                            italic = FALSE,
+                            monospace = FALSE,
+                            underline = FALSE,
+                            strikeout = FALSE,
+                            color = NULL,
+                            background = NULL,
+                            fontsize = NULL,
+                            width = NULL,
+                            align = NULL,
+                            colspan = NULL,
+                            indent = 0,
+                            bootstrap_css = NULL,
+                            bootstrap_css_rule = NULL) {
 
 
   if (meta(x, "output") != "html") return(x)
