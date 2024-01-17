@@ -78,13 +78,17 @@ style_tabularray <- function(x,
 
   # hex must be treated differently in LaTeX
   cols <- c(color, background)
+  cols_done <- NULL
   if (!is.null(cols)) {
     hex <- cols[grepl("^#", cols)]
     for (h in hex) {
       b <- sprintf(
         "\\tinytableDefineColor{%s}{HTML}{%s}",
         sub("^#", "c", h), sub("^#", "", h))
-      out <- tabularray_insert(out, content = b, type = "body")
+      if (!b %in% cols_done) {
+        out <- tabularray_insert(out, content = b, type = "body")
+        cols_done <- c(cols_done, b)
+      }
     }
   }
   if (!is.null(background)) {

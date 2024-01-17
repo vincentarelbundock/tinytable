@@ -34,11 +34,16 @@ meta <- function(x, get, set) {
 # some rows may be added, which changes how the style is applied
 eval_style <- function(x) {
   out <- x
+  m <- meta(x)
 
-  for (l in meta(x)$lazy_style) {
+  for (l in m$lazy_style) {
     l[["x"]] <- out
     out <- eval(eval(l))
   }
+
+  m <- meta(x)
+  m$lazy_style <- list()
+  attr(out, "tinytable_meta") <- m
 
   return(out)
 }

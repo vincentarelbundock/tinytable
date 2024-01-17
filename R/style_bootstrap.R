@@ -99,7 +99,7 @@ style_bootstrap <- function(x,
     css_start <- sprintf(".table td.%s, th.%s { ", settings$id[row], settings$id[row])
     css_complete <- paste(c(css_start, paste0(settings$bootstrap[row], collapse="; "), "}"), collapse = " ")
     # hack: avoid css duplication
-    if (css_complete %in% css_done) {
+    if (!css_complete %in% css_done) {
       out <- bootstrap_setting(out, css_complete, component = "css")
       css_done <- c(css_done, css_complete)
     }
