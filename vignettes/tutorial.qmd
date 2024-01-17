@@ -9,10 +9,6 @@ format:
     keep-tex: true
 ---
 
-```{r, include = FALSE}
-options("tt_tabularray_placement" = "H")
-```
-
 \clearpage
 
 `tinytable` is a small but powerful `R` package to draw HTML, LaTeX, PDF, Markdown, and Typst tables. The interface is minimalist, but it gives users direct and convenient access to powerful frameworks to create endlessly customizable tables.
@@ -32,8 +28,18 @@ This tutorial introduces the main functions of the package. It is available in t
 
 # Tiny Tables
 
+Load the library and set some global options:
+
 ```{r}
 library(tinytable)
+
+options(digits = 3) # how many significant digits to print by default
+options("tt_tabularray_placement" = "H") # for LaTeX
+```
+
+Draw a first table:
+
+```{r}
 x <- mtcars[1:4, 1:5]
 tt(x)
 ```
@@ -104,7 +110,7 @@ In a very simple case---such as printing 2 significant digits of all numeric var
 
 ```{r}
 dat <- data.frame(
-     w = c(1.43002, 201.399, 0.100188),
+     w = c(143002.2092, 201399.181, 100188.3883),
      x = c(1.43002, 201.399, 0.100188),
      y = as.Date(sample(1:1000, 3)),
      z = c(TRUE, TRUE, FALSE))
@@ -112,17 +118,9 @@ dat <- data.frame(
 tt(dat, digits = 2)
 ```
 
-For each numeric column, `tinytable` checked how many numbers after the decimal where necessary for every number to display at least two digits.
-
 We can get more fine-grained control over formatting with calling `format_tt()` before `tt()`:
 
 ```{r}
-dat <- data.frame(
-     w = c(143002.2092, 201399.181, 100188.3883),
-     x = c(1.43002, 201.399, 0.100188),
-     y = as.Date(sample(1:1000, 3)),
-     z = c(TRUE, TRUE, FALSE))
-
 dat |>
   format_tt(
     j = 2:4,
@@ -136,6 +134,26 @@ dat |>
     num_fmt = "decimal") |>
   tt()
 ```
+
+We can use a regular expression in `j` to select columns, and the `?sprintf` function to format strings, numbers, and to do [string interpolation:](https://en.wikipedia.org/wiki/String_interpolation)
+
+```{r}
+dat <- data.frame(
+     a = c("Burger", "Halloumi", "Tofu"),
+     b = c(1.43002, 201.399, 0.100188))
+
+dat |>
+  format_tt(j = "a", sprintf = "Food: %s") |>
+  tt()
+```
+
+Finally, if you like the `format_tt()` interface, you can use it with vectors too:
+
+```{r}
+k <- c(98938272783457, 7288839482, 29111727, 93945, 922)
+format_tt(k, digits = 1, num_suffix = TRUE)
+```
+
 
 ## Width
 

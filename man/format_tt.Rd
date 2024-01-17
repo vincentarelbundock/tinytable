@@ -8,12 +8,13 @@ format_tt(
   x = NULL,
   j = NULL,
   output = NULL,
-  digits = NULL,
+  digits = getOption("digits"),
   num_fmt = "significant",
   num_zero = TRUE,
   num_suffix = FALSE,
   num_mark_big = "",
   num_mark_dec = getOption("OutDec", default = "."),
+  sprintf = NULL,
   url = FALSE,
   date = "\%Y-\%m-\%d",
   bool = function(column) tools::toTitleCase(tolower(column)),
@@ -38,6 +39,8 @@ format_tt(
 \item{num_mark_big}{Character to use as a thousands separator.}
 
 \item{num_mark_dec}{Decimal mark character. Default is the global option 'OutDec'.}
+
+\item{sprintf}{String passed to the \code{?sprintf} function to format numbers or interpolate strings with a user-defined pattern (similar to the \code{glue} package, but using Base R).}
 
 \item{url}{Logical; if TRUE, treats the column as a URL.}
 

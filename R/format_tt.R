@@ -15,6 +15,7 @@
 #' @param num_mark_big Character to use as a thousands separator.
 #' @param num_mark_dec Decimal mark character. Default is the global option 'OutDec'.
 #' @param num_suffix Logical; if TRUE display short numbers with `digits` significant digits and K (thousands), M (millions), B (billions), or T (trillions) suffixes.
+#' @param sprintf String passed to the `?sprintf` function to format numbers or interpolate strings with a user-defined pattern (similar to the `glue` package, but using Base R).
 #' @param url Logical; if TRUE, treats the column as a URL.
 #' @param date A string passed to the `format()` function, such as "%Y-%m-%d". See the "Details" section in `?strptime`
 #' @param bool A function to format logical columns. Defaults to title case.
@@ -27,12 +28,13 @@
 format_tt <- function(x = NULL,
                       j = NULL,
                       output = NULL,
-                      digits = NULL,
+                      digits = getOption("digits"),
                       num_fmt = "significant",
                       num_zero = TRUE,
                       num_suffix = FALSE,
                       num_mark_big = "",
                       num_mark_dec = getOption("OutDec", default = "."),
+                      sprintf = NULL,
                       url = FALSE,
                       date = "%Y-%m-%d",
                       bool = function(column) tools::toTitleCase(tolower(column)),
@@ -57,7 +59,7 @@ format_tt <- function(x = NULL,
   }
 
   assert_data_frame(x)
-  assert_integerish(digits, len = 1, null.ok = TRUE)
+  assert_integerish(digits, len = 1)
   assert_choice(num_fmt, c("significant", "decimal", "scientific"))
   assert_flag(num_zero)
   assert_string(num_mark_big)
@@ -66,6 +68,7 @@ format_tt <- function(x = NULL,
   assert_string(date)
   assert_function(bool)
   assert_function(identity)
+  assert_string(sprintf, null.ok = TRUE)
 
   output <- sanitize_output(output)
 
@@ -81,44 +84,63 @@ format_tt <- function(x = NULL,
   # format each column
   for (col in j) {
 
-    # logical 
-    if (is.logical(x[[col]])) {
-      x[[col]] <- bool(x[[col]])
-
-    # date
-    } else if (inherits(x[[col]], "Date")) {
-      x[[col]] <- format(x[[col]], date)
-
-    # numeric
-    } else if (is.numeric(x[[col]]) && !is.null(digits)) {
-
-      if (isTRUE(num_suffix)) {
-        x[[col]] <- format_num_suffix(
-            x[[col]], digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero
-        )
-
-      } else if (num_fmt == "significant") {
-        x[[col]] <- format(x[[col]],
-          digits = digits, drop0trailing = !num_zero,
-          big.mark = num_mark_big, decimal.mark = num_mark_dec,
-          scientific = FALSE)
-
-      } else if (num_fmt == "decimal") {
-        x[[col]] <- formatC(x[[col]],
-          digits = digits, format = "f", drop0trailing = !num_zero,
-          big.mark = num_mark_big, decimal.mark = num_mark_dec)
-
-      } else if (num_fmt == "scientific") {
-        x[[col]] <- formatC(x[[col]],
-          digits = digits, format = "e", drop0trailing = !num_zero,
-          big.mark = num_mark_big, decimal.mark = num_mark_dec)
-      }
+    # sprintf() is self-contained
+    if (!is.null(sprintf)) {
+      x[[col]] <- base::sprintf(sprintf, x[[col]])
 
     } else {
-      x[[col]] <- other(x[[col]])
+
+      # logical 
+      if (is.logical(x[[col]])) {
+        x[[col]] <- bool(x[[col]])
+
+        # date
+      } else if (inherits(x[[col]], "Date")) {
+        x[[col]] <- format(x[[col]], date)
+
+        # numeric
+      } else if (is.numeric(x[[col]]) && !is.null(digits)) {
+
+        # numeric suffix
+        if (isTRUE(num_suffix)) {
+          x[[col]] <- format_num_suffix(x[[col]], digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero)
+
+          # non-integer numeric
+        } else if (is.numeric(x[[col]]) && !isTRUE(check_integerish(x[[col]]))) {
+          if (num_fmt == "significant") {
+            x[[col]] <- format(x[[col]],
+                               digits = digits, drop0trailing = !num_zero,
+                               big.mark = num_mark_big, decimal.mark = num_mark_dec,
+                               scientific = FALSE)
+
+          } else if (num_fmt == "decimal") {
+            x[[col]] <- formatC(x[[col]],
+                                digits = digits, format = "f", drop0trailing = !num_zero,
+                                big.mark = num_mark_big, decimal.mark = num_mark_dec)
+
+            if (num_fmt == "scientific") {
+              x[[col]] <- formatC(x[[col]],
+                                  digits = digits, format = "e", drop0trailing = !num_zero,
+                                  big.mark = num_mark_big, decimal.mark = num_mark_dec)
+            }
+          }
+
+          # integer
+        } else if (isTRUE(check_integerish(x[[col]]))) {
+          if (num_fmt == "scientific") {
+            x[[col]] <- formatC(x[[col]],
+                                digits = digits, format = "e", drop0trailing = !num_zero,
+                                big.mark = num_mark_big, decimal.mark = num_mark_dec)
+          }
+        }
+
+      } else {
+        x[[col]] <- other(x[[col]])
+      }
+
     }
 
-  }
+  } # loop over columns
 
   if (isTRUE(atomic_vector)) {
     return(x[[1]])
@@ -132,16 +154,15 @@ format_tt <- function(x = NULL,
 
 format_num_suffix <- function(x, digits, num_mark_big, num_mark_dec, num_zero) {
   suffix <- number <- rep("", length(x))
-  suffix <- ifelse(x > 1e12, "T", suffix) 
-  suffix <- ifelse(x > 1e9, "B", suffix) 
-  suffix <- ifelse(x > 1e6, "M", suffix) 
   suffix <- ifelse(x > 1e3, "K", suffix) 
+  suffix <- ifelse(x > 1e6, "M", suffix) 
+  suffix <- ifelse(x > 1e9, "B", suffix) 
+  suffix <- ifelse(x > 1e12, "T", suffix) 
   number <- format_tt(x, num_fmt = "decimal", digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero)
-  number <- ifelse(x > 1e12, format_tt(x / 1e12, num_fmt = "decimal", digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero), number)
-  number <- ifelse(x > 1e9, format_tt(x / 1e9, num_fmt = "decimal", digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero), number)
+  number <- ifelse(x > 1e3, format_tt(x / 1e3, num_fmt = "decimal", digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero), number)
   number <- ifelse(x > 1e6, format_tt(x / 1e6, num_fmt = "decimal", digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero), number)
-  number <- ifelse(x > 1e3, format_tt(x / 1e3, num_fmt = "decimal", digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero), number)
-  number <- ifelse(x > 1e3, format_tt(x / 1e3, num_fmt = "decimal", digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero), number)
+  number <- ifelse(x > 1e9, format_tt(x / 1e9, num_fmt = "decimal", digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero), number)
+  number <- ifelse(x > 1e12, format_tt(x / 1e12, num_fmt = "decimal", digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero), number)
   number <- paste0(number, suffix)
   return(number)
 }

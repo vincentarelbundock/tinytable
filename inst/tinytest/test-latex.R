@@ -46,10 +46,10 @@ expect_snapshot_print(
 
 
 # Lazy style: group after style is respected
-a <- tt(mtcars[1:4, 1:4], "latex") |> 
+a <- tt(mtcars[1:4, 1:4], output = "latex") |> 
   style_tt(color = "orange", background = "black") |>
   group_tt(j = list("blah" = 1:2, "bar" = 3:4))
-b <- tt(mtcars[1:4, 1:4], "latex") |> 
+b <- tt(mtcars[1:4, 1:4], output = "latex") |> 
   group_tt(j = list("blah" = 1:2, "bar" = 3:4)) |>
   style_tt(color = "orange", background = "black")
 expect_snapshot_print(a, label = "latex-group_style_order")
