@@ -84,26 +84,33 @@ style_bootstrap <- function(x,
   settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, background, "background-color: %s;")
   settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, width, "width: %s;")
 
-  id <- get_id(stem = "tinytable_css_")
+  # unique IDs for each CSS style combination
+  id <- sapply(unique(settings$bootstrap), function(k) get_id(stem = "tinytable_css_"))
+  settings$id <- id[match(settings$bootstrap, names(id))]
 
-  # CSS style for cell
-  css_start <- sprintf(".table td.%s, th.%s { ", id, id)
-
-  # Listener applies the styling to columns
+  css_done <- NULL
   for (row in seq_len(nrow(settings))) {
+    # Listener applies the styling to columns
     listener <- "window.addEventListener('load', function () { styleCell_%s(%s, %s, '%s') })"
-    listener <- sprintf(listener, id, settings$i[row], settings$j[row], id)
+    listener <- sprintf(listener, settings$id[row], settings$i[row], settings$j[row], settings$id[row])
     out <- bootstrap_setting(out, listener, component = "cell")
+
+    # CSS styling
+    css_start <- sprintf(".table td.%s, th.%s { ", settings$id[row], settings$id[row])
     css_complete <- paste(c(css_start, paste0(settings$bootstrap[row], collapse="; "), "}"), collapse = " ")
-    out <- bootstrap_setting(out, css_complete, component = "css")
+    # hack: avoid css duplication
+    if (css_complete %in% css_done) {
+      out <- bootstrap_setting(out, css_complete, component = "css")
+      css_done <- c(css_done, css_complete)
+    }
   }
 
   if (!is.null(bootstrap_css_rule)) {
     out <- bootstrap_setting(out, bootstrap_css_rule, component = "css")
   }
 
-  # Changing function names for JS
-  out <- gsub("styleCell_\\w+\\(", paste0("styleCell_", id, "("), out)
+  # Changing function names to table ID to avoid conflict with other tables functions 
+  out <- gsub("styleCell_\\w+\\(", paste0("styleCell_", meta(x, "id"), "("), out)
 
   class(out) <- class(x)
   return(out)
