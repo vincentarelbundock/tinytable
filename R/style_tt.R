@@ -136,8 +136,6 @@ style_tt_lazy <- function (x,
 assert_style_tt <- function (x,
                              i,
                              j,
-                             ival,
-                             jval,
                              bold,
                              italic,
                              monospace,
@@ -157,67 +155,68 @@ assert_style_tt <- function (x,
 
   m <- meta(x)
 
-  # assert_integerish(colspan, len = 1, lower = 1, null.ok = TRUE)
-  # assert_integerish(ival, lower = 1 - meta(x)$nhead, upper = meta(x)$nrows, name = "i")
-  # assert_integerish(jval, lower = 1, upper = meta(x)$ncols, name = "j")
-  # assert_string(width, null.ok = TRUE)
-  # assert_choice(align, c("c", "l", "r"), null.ok = TRUE)
-  # assert_numeric(indent, len = 1, lower = 0)
-  # assert_character(background, null.ok = TRUE)
-  # assert_character(color, null.ok = TRUE)
-  # assert_integerish(fontsize, null.ok = TRUE)
-  # assert_logical(bold)
-  # assert_logical(italic)
-  # assert_logical(monospace)
-  # assert_logical(underline)
-  # assert_logical(strikeout)
-  # assert_character(bootstrap_css, null.ok = TRUE)
-  # assert_string(bootstrap_css_rule, null.ok = TRUE)
-  #
-  # # 1
-  # if (is.null(i) && is.null(j)) {
-  #   assert_length(color, len = 1, null.ok = TRUE)
-  #   assert_length(background, len = 1, null.ok = TRUE)
-  #   assert_length(fontsize, len = 1, null.ok = TRUE)
-  #   assert_length(bold, len = 1)
-  #   assert_length(italic, len = 1)
-  #   assert_length(monospace, len = 1)
-  #   assert_length(underline, len = 1)
-  #   assert_length(strikeout, len = 1)
-  #
-  # # 1 or #rows
-  # } else if (!is.null(i) && is.null(j)) {
-  #   assert_length(color, len = c(1, length(ival)), null.ok = TRUE)
-  #   assert_length(background, len = c(1, length(ival)), null.ok = TRUE)
-  #   assert_length(fontsize, len = c(1, length(ival)), null.ok = TRUE)
-  #   assert_length(bold, len = c(1, length(ival)))
-  #   assert_length(italic, len = c(1, length(ival)))
-  #   assert_length(monospace, len = c(1, length(ival)))
-  #   assert_length(underline, len = c(1, length(ival)))
-  #   assert_length(strikeout, len = c(1, length(ival)))
-  #
-  # # 1 or #cols
-  # } else if (is.null(i) && !is.null(j)) {
-  #   assert_length(color, len = c(1, length(jval)), null.ok = TRUE)
-  #   assert_length(background, len = c(1, length(jval)), null.ok = TRUE)
-  #   assert_length(fontsize, len = c(1, length(jval)), null.ok = TRUE)
-  #   assert_length(bold, len = c(1, length(jval)))
-  #   assert_length(italic, len = c(1, length(jval)))
-  #   assert_length(monospace, len = c(1, length(jval)))
-  #   assert_length(underline, len = c(1, length(jval)))
-  #   assert_length(strikeout, len = c(1, length(jval)))
-  #
-  # # 1 or #cells
-  # } else if (!is.null(i) && !is.null(j)) {
-  #   assert_length(color, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
-  #   assert_length(background, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
-  #   assert_length(fontsize, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
-  #   assert_length(bold, len = c(1, length(ival) * length(jval)))
-  #   assert_length(italic, len = c(1, length(ival) * length(jval)))
-  #   assert_length(monospace, len = c(1, length(ival) * length(jval)))
-  #   assert_length(underline, len = c(1, length(ival) * length(jval)))
-  #   assert_length(strikeout, len = c(1, length(ival) * length(jval)))
-  # }
+  assert_integerish(colspan, len = 1, lower = 1, null.ok = TRUE)
+  assert_string(width, null.ok = TRUE)
+  assert_choice(align, c("c", "l", "r"), null.ok = TRUE)
+  assert_numeric(indent, len = 1, lower = 0)
+  assert_character(background, null.ok = TRUE)
+  assert_character(color, null.ok = TRUE)
+  assert_integerish(fontsize, null.ok = TRUE)
+  assert_logical(bold)
+  assert_logical(italic)
+  assert_logical(monospace)
+  assert_logical(underline)
+  assert_logical(strikeout)
+  assert_character(bootstrap_css, null.ok = TRUE)
+  assert_string(bootstrap_css_rule, null.ok = TRUE)
+
+  ival <- if (is.null(i)) meta(x, "nrows") else i
+  jval <- if (is.null(j)) meta(x, "ncols") else j
+
+  # 1
+  if (is.null(i) && is.null(j)) {
+    assert_length(color, len = 1, null.ok = TRUE)
+    assert_length(background, len = 1, null.ok = TRUE)
+    assert_length(fontsize, len = 1, null.ok = TRUE)
+    assert_length(bold, len = 1)
+    assert_length(italic, len = 1)
+    assert_length(monospace, len = 1)
+    assert_length(underline, len = 1)
+    assert_length(strikeout, len = 1)
+
+  # 1 or #rows
+  } else if (!is.null(i) && is.null(j)) {
+    assert_length(color, len = c(1, length(ival)), null.ok = TRUE)
+    assert_length(background, len = c(1, length(ival)), null.ok = TRUE)
+    assert_length(fontsize, len = c(1, length(ival)), null.ok = TRUE)
+    assert_length(bold, len = c(1, length(ival)))
+    assert_length(italic, len = c(1, length(ival)))
+    assert_length(monospace, len = c(1, length(ival)))
+    assert_length(underline, len = c(1, length(ival)))
+    assert_length(strikeout, len = c(1, length(ival)))
+
+  # 1 or #cols
+  } else if (is.null(i) && !is.null(j)) {
+    assert_length(color, len = c(1, length(jval)), null.ok = TRUE)
+    assert_length(background, len = c(1, length(jval)), null.ok = TRUE)
+    assert_length(fontsize, len = c(1, length(jval)), null.ok = TRUE)
+    assert_length(bold, len = c(1, length(jval)))
+    assert_length(italic, len = c(1, length(jval)))
+    assert_length(monospace, len = c(1, length(jval)))
+    assert_length(underline, len = c(1, length(jval)))
+    assert_length(strikeout, len = c(1, length(jval)))
+
+  # 1 or #cells
+  } else if (!is.null(i) && !is.null(j)) {
+    assert_length(color, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
+    assert_length(background, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
+    assert_length(fontsize, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
+    assert_length(bold, len = c(1, length(ival) * length(jval)))
+    assert_length(italic, len = c(1, length(ival) * length(jval)))
+    assert_length(monospace, len = c(1, length(ival) * length(jval)))
+    assert_length(underline, len = c(1, length(ival) * length(jval)))
+    assert_length(strikeout, len = c(1, length(ival) * length(jval)))
+  }
 }
 
 
