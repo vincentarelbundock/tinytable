@@ -8,7 +8,6 @@ style_bootstrap(
   x,
   i = NULL,
   j = NULL,
-  header = FALSE,
   bold = FALSE,
   italic = FALSE,
   monospace = FALSE,
