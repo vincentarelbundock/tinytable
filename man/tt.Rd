@@ -21,7 +21,7 @@ tt(
 
 \item{output}{The format of the output table. Can be "html", "latex", or "markdown". If NULL, the format is automatically detected in Quarto or Rmarkdown documents.}
 
-\item{digits}{Number of significant digits to keep for numeric variables. When \code{digits} is not \code{NULL}}
+\item{digits}{Number of significant digits to keep for numeric variables. When \code{digits} is an integer, \code{tt()} calls \code{format_tt(x, digits = digits)} before proceeding to draw the table. Users who need more control can proceed in two steps: (1) format the data with \code{format_tt()} or other functions, and (2) pass the formatted data to \code{tt()} for drawing. See \code{?format_tt} for more details on formating options (ex: decimal, scientific notation, dates, boolean variables, etc.).}
 
 \item{align}{A string specifying the alignment of columns. Each character in the string corresponds to a column; 'l' for left, 'c' for center, and 'r' for right alignment. The length of the string must match the number of columns in \code{x}.}
 

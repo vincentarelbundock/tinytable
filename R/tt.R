@@ -4,7 +4,7 @@
 #' 
 #' @param x A data frame or data table to be rendered as a table.
 #' @param output The format of the output table. Can be "html", "latex", or "markdown". If NULL, the format is automatically detected in Quarto or Rmarkdown documents.
-#' @param digits Number of significant digits to keep for numeric variables. When `digits` is not `NULL`
+#' @param digits Number of significant digits to keep for numeric variables. When `digits` is an integer, `tt()` calls `format_tt(x, digits = digits)` before proceeding to draw the table. Users who need more control can proceed in two steps: (1) format the data with `format_tt()` or other functions, and (2) pass the formatted data to `tt()` for drawing. See `?format_tt` for more details on formating options (ex: decimal, scientific notation, dates, boolean variables, etc.).
 #' @param align A string specifying the alignment of columns. Each character in the string corresponds to a column; 'l' for left, 'c' for center, and 'r' for right alignment. The length of the string must match the number of columns in `x`.
 #' @param caption A string that will be used as the caption of the table.
 #' @param width A numeric value between 0 and 1 indicating the proportion of the line width that the table should cover.
@@ -47,6 +47,7 @@ tt <- function(x,
   assert_string(caption, null.ok = TRUE)
   assert_string(align, null.ok = TRUE)
   assert_numeric(width, len = 1, lower = 0, upper = 1, null.ok = TRUE)
+  assert_integerish(digits, len = 1, null.ok = TRUE)
 
   # notes can be a single string or a (named) list of strings
   if (is.character(notes) && length(notes)) {
