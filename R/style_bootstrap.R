@@ -88,10 +88,6 @@ style_bootstrap <- function(x,
   id <- sapply(unique(settings$bootstrap), function(k) get_id(stem = "tinytable_css_"))
   settings$id <- id[match(settings$bootstrap, names(id))]
 
-  css_start <- sprintf(".table td.%s, th.%s { ", id, id)
-  css_complete <- paste(c(css_start, paste0(bootstrap_css, collapse="; "), "}"), collapse = " ")
-  out <- bootstrap_setting(out, css_complete, component = "css")
-
   # CSS style for cell
   css_done <- NULL
   for (row in seq_len(nrow(settings))) {
@@ -101,8 +97,9 @@ style_bootstrap <- function(x,
     out <- bootstrap_setting(out, listener, component = "cell")
 
     # CSS styling
+    css <- paste(bootstrap_css, settings$bootstrap[row], collapse = ";")
     css_start <- sprintf(".table td.%s, th.%s { ", settings$id[row], settings$id[row])
-    css_complete <- paste(c(css_start, paste0(settings$bootstrap[row], collapse="; "), "}"), collapse = " ")
+    css_complete <- paste(c(css_start, css, "}"), collapse = " ")
     # hack: avoid css duplication
     if (!css_complete %in% css_done) {
       out <- bootstrap_setting(out, css_complete, component = "css")
