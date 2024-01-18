@@ -13,7 +13,7 @@ PDF, Markdown, and Typst tables. The user interface is minimalist, but
 it gives users access to powerful frameworks to create endlessly
 customizable tables.
 
-<https://vincentarelbundock.github.io/tinytable>
+<https://vincentarelbundock.github.io/tinytable/>
 
 ## Why?
 
