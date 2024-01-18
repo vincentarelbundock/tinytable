@@ -5,7 +5,7 @@
 \title{Format columns of a data frame}
 \usage{
 format_tt(
-  x = NULL,
+  x,
   j = NULL,
   output = NULL,
   digits = getOption("digits"),

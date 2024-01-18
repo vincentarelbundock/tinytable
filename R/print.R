@@ -4,7 +4,7 @@
 #' @export
 knit_print.tinytable <- function(x, ...) {
   # lazy styles get evaluated here, at the very end
-  out <- eval_style(x)
+  out <- build_tt(x)
 
   if (meta(out)$output == "html") {
     # from htmltools:::html_preserve
@@ -25,7 +25,7 @@ knit_print.tinytable <- function(x, ...) {
 #' @export
 print.tinytable <- function(x, ...) {
   # lazy styles get evaluated here, at the very end
-  out <- eval_style(x)
+  out <- build_tt(x)
 
   if (meta(out, "output") == "latex") {
     class(out) <- "character"

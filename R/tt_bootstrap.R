@@ -1,6 +1,7 @@
 tt_bootstrap <- function(x, caption, theme, width, notes) {
 
   template <- template_bootstrap(theme)
+  m <- meta(x)
 
 
   # caption
@@ -98,6 +99,7 @@ tt_bootstrap <- function(x, caption, theme, width, notes) {
   out <- paste(template, collapse = "\n")
 
   class(out) <- c("tinytable", "knit_asis", class(out))
+  attr(out, "tinytable_meta") <- m
   return(out)
 }
 

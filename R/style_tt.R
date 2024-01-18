@@ -30,6 +30,7 @@
 #' @param bootstrap_css_rule A string with complete CSS rules that apply to the table class specified using the `theme` argument of the `tt()` function.
 #' @param tabularray_inner A string that specifies the "inner" settings of a tabularray LaTeX table. 
 #' @param tabularray_outer A string that specifies the "outer" settings of a tabularray LaTeX table.
+#' @param ... extra arguments are ignored
 #' @return Returns a modified `tinytable` object with the applied styles.
 #' @template latex_preamble
 #' @export
@@ -59,7 +60,9 @@ style_tt <- function (x,
                       tabularray_inner = NULL,
                       tabularray_outer = NULL,
                       bootstrap_css = NULL,
-                      bootstrap_css_rule = NULL) {
+                      bootstrap_css_rule = NULL,
+                      ...) {
+
   out <- x
   cal <- call("style_tt_lazy",
   # out <- style_tt_lazy(
@@ -83,7 +86,11 @@ style_tt <- function (x,
               bootstrap_css = bootstrap_css,
               bootstrap_css_rule = bootstrap_css_rule)
 
-  out <- meta(out, "lazy_style", c(meta(out)$lazy_style, list(cal)))
+  if (isTRUE(list(...)[["tt_build_now"]])) {
+    out <- eval(cal)
+  } else {
+    out <- meta(out, "lazy_style", c(meta(out)$lazy_style, list(cal)))
+  }
 
   return(out)
 }
