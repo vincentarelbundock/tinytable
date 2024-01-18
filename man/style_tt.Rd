@@ -23,7 +23,8 @@ style_tt(
   tabularray_inner = NULL,
   tabularray_outer = NULL,
   bootstrap_css = NULL,
-  bootstrap_css_rule = NULL
+  bootstrap_css_rule = NULL,
+  ...
 )
 }
 \arguments{
@@ -78,6 +79,8 @@ style_tt(
 \item{bootstrap_css}{A vector of CSS style declarations to be applied (ex: \code{"font-weight: bold"}). Each element corresponds to a cell defined by \code{i} and \code{j}.}
 
 \item{bootstrap_css_rule}{A string with complete CSS rules that apply to the table class specified using the \code{theme} argument of the \code{tt()} function.}
+
+\item{...}{extra arguments are ignored}
 }
 \value{
 Returns a modified \code{tinytable} object with the applied styles.

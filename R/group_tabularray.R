@@ -44,11 +44,13 @@ group_tabularray_col <- function(x, j) {
 
   for (k in seq_along(j)) {
     z <- min(j[[k]])
-    args <- list(x = out,
+    args <- list(tt_build_now = TRUE,
+                 x = out,
                  # the new header is always first row and 
                  # style_tt always adds nhead to index
                  i = 1 - meta(out)$nhead,
                  j = z,
+                 align = "c",
                  colspan = max(j[[k]]) - min(j[[k]]) + 1)
     out <- do.call(style_tt, args)
   }

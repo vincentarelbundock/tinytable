@@ -7,9 +7,9 @@
 # )
 #
 # Q
-pkgload::load_all()
-k = dat |> tt("latex") |>
-  style_tt(color = "orange") |>
-  format_tt(j = 1, digits = 10, num_fmt = "decimal") |>
-  format_tt(j = 2, date = "%Y")
-print(k)
+# pkgload::load_all()
+# k = dat |> tt("latex") |>
+#   style_tt(color = "orange") |>
+#   format_tt(j = 1, digits = 10, num_fmt = "decimal") |>
+#   format_tt(j = 2, date = "%Y")
+# print(k)
