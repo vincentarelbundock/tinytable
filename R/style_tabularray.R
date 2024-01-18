@@ -37,7 +37,7 @@ style_tabularray <- function(x,
   # colspan requires cell level, so we keep the full settings DF
   if (is.null(colspan)) {
     if (is.null(i) && is.null(j)) {
-      settings <- unique(settings[, c("j", "tabularray"), drop = FALSE])
+      settings <- unique(settings[, c("i", "tabularray"), drop = FALSE])
     } else if (is.null(i)) {
       settings <- unique(settings[, c("j", "tabularray"), drop = FALSE])
     } else if (is.null(j)) {

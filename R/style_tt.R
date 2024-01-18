@@ -115,6 +115,22 @@ style_tt_lazy <- function (x,
 
   # align can be "c" or "clrrlc"takes many possible values
   assert_string(align, null.ok = TRUE)
+
+  if (!is.null(align)) {
+    if (nchar(align) == 1) {
+      assert_choice(align, c("c", "l", "r"))
+    } else {
+      align_split <- strsplit(align, split = "")[[1]]
+      for (align_character in align_split){
+        assert_choice(align_character, c("c", "l", "r"))
+      }
+      if (is.null(j)) {
+        msg <- "Please specify the `j` argument."
+        stop(msg, call. = FALSE)
+      }
+    }
+  }
+    
   nalign <- if (is.null(j)) meta(x, "ncols") else length(j)
   if (!is.null(align)) {
     align <- strsplit(align, split = "")[[1]]

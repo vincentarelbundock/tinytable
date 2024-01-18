@@ -28,7 +28,8 @@ tab <- tt(x, output = "html") |>
 expect_equal_to_reference(clean(tab), "_tinysnapshot/html-vectorized_color_j.rds")
 
 # Issue #58
-tab <- tt(iris[1:10,], output = "html", align = "ccccc") |> 
+tab <- tt(iris[1:10,], output = "html") |> 
+  style_tt(align = "c") |>
   group_tt(j = list("Sepal" = 1:2, "Petal" = 3:4))
 expect_equal_to_reference(clean(tab), "_tinysnapshot/html-issue58.rds")
 

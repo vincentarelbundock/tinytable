@@ -15,7 +15,7 @@ expect_snapshot_print(
 
 # Align
 expect_snapshot_print(
-  tt(x, output = "latex", align = "ccllr"),
+  tt(x, output = "latex") |> style_tt(j = 1:5, align = "ccllr"),
   label = "latex-align")
 
 # Themes
