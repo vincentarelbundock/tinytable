@@ -32,13 +32,14 @@ meta <- function(x, get, set) {
 
 # style_tt() stores style calls and we only want to evaluate them at the end because 
 # some rows may be added, which changes how the style is applied
-eval_style <- function(x) {
-  out <- x
+build_tt <- function(x) {
   m <- meta(x)
+
+  out <- eval(meta(x, "lazy_tt"))
 
   for (l in m$lazy_style) {
     l[["x"]] <- out
-    out <- eval(eval(l))
+    out <- eval(l)
   }
 
   m <- meta(x)

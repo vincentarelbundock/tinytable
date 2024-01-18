@@ -51,6 +51,51 @@ format_tt <- function(x = NULL,
                       other = identity
                       ) {
 
+  out <- x
+  cal <- call("format_tt_lazy", 
+              j = j,
+              output = output,
+              digits = digits,
+              num_fmt = num_fmt,
+              num_zero = num_zero,
+              num_suffix = num_suffix,
+              num_mark_big = num_mark_big,
+              num_mark_dec = num_mark_dec,
+              sprintf = sprintf,
+              url = url,
+              date = date,
+              bool = bool,
+              other = other)
+
+  if (inherits(out, "tinytable")) {
+    out <- meta(out, "lazy_format", c(meta(out)$lazy_format, list(cal)))
+
+  # this should be evaluated immediately for data frames and vectors
+  } else {
+    cal[["x"]] <- x
+    out <- eval(out)
+  }
+
+  return(out)
+}
+
+format_tt_lazy <- function(x = NULL,
+                           j = NULL,
+                           output = NULL,
+                           digits = getOption("digits"),
+                           num_fmt = "significant",
+                           num_zero = TRUE,
+                           num_suffix = FALSE,
+                           num_mark_big = "",
+                           num_mark_dec = getOption("OutDec", default = "."),
+                           sprintf = NULL,
+                           url = FALSE,
+                           date = "%Y-%m-%d",
+                           bool = function(column) tools::toTitleCase(tolower(column)),
+                           other = identity
+                           ) {
+
+ 
   if (inherits(x, "tinytable")) {
     msg <- "`format_tt()` must be called *before* `tt()`. You must format your dataset before drawing a table."
   }

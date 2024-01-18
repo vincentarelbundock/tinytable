@@ -1,6 +1,8 @@
-tt_tabularray <- function(x, caption, theme, width, notes) {
+tt_tabularray <- function(x, caption, theme, width, notes, placement) {
 
   template <- template_tabularray(theme)
+
+  m <- meta(x)
 
   ncols <- ncol(x)
   nrows <- nrow(x)
@@ -13,6 +15,13 @@ tt_tabularray <- function(x, caption, theme, width, notes) {
     template <- sub("\\$tinytable_CAPTION", caption, template)
   }
 
+  # placement
+  assert_string(placement, null.ok = TRUE)
+  if (!is.null(placement)) {
+    # dollar sign to avoid [H][H] when we style multiple times
+    template <- sub("\\\\begin\\{table\\}", sprintf("\\\\begin{table}[%s]\n", placement), template)
+  }
+
   # body: main
   if (!is.null(colnames(x))) {
     header <- paste(colnames(x), collapse = " & ")
@@ -20,7 +29,7 @@ tt_tabularray <- function(x, caption, theme, width, notes) {
   } else {
     header <- NULL
   }
-  body <- apply(x, 1, paste, collapse = " & ")
+  body <- apply(as.data.frame(x), 1, paste, collapse = " & ")
   body <- paste(body, "\\\\")
 
   # theme: booktabs
@@ -44,9 +53,8 @@ tt_tabularray <- function(x, caption, theme, width, notes) {
   out <- paste(out, collapse = "\n")
 
   # needed later, apparently
-  out <- meta(out, "output", "latex")
-  nhead <- if (is.null(colnames(x))) 1 else 0 
-  out <-  meta(out, "nhead", nhead)
+  attr(out, "tinytable_meta") <- m
+  out <-  meta(out, "nhead", if (is.null(colnames(x))) 1 else 0 )
 
   if (!is.null(width)) {
     tabularray_cols <- rep("X[]", ncol(x))

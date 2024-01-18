@@ -33,7 +33,7 @@ file_ext <- tools::file_ext(filename)
 sanity_file_extension(x, file_ext)
 
 # evaluate styles at the very end of the pipeline, just before writing
-x <- eval_style(x)
+x <- build_tt(x)
 
 if (file_ext %in% c("html", "tex", "md", "Rmd", "qmd", "txt")) {
   write(x, file = filename)

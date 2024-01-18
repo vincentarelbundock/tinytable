@@ -60,20 +60,10 @@ tt <- function(x,
   }
   assert_list(notes, null.ok = TRUE)
 
-  out <- x
-
-  # build table
-  if (output == "latex") {
-    out <- tt_tabularray(out, caption = caption, theme = theme, width = width, notes = notes)
-
-  } else if (output == "html"){
-    out <- tt_bootstrap(out, caption = caption, theme = theme, width = width, notes = notes)
-
-  } else {
-    out <- tt_markdown(out, caption = caption)
-  }
-
   # before style_tt() call for align
+  out <- x 
+  out <- meta(out, "x_character", data.frame(lapply(x, as.character)))
+  out <- meta(out, "output", output)
   out <- meta(out, "colnames", names(x))
   out <- meta(out, "xdim", dim(x))
   out <- meta(out, "output", output)
@@ -82,13 +72,21 @@ tt <- function(x,
   out <- meta(out, "nrows", nrow(x))
   out <- meta(out, "ncols", ncol(x))
   out <- meta(out, "lazy_style", list())
+  out <- meta(out, "lazy_format", list())
+  class(out) <- c("tinytable", class(out))
 
-  # placement
-  assert_string(placement, null.ok = TRUE)
-  if (!is.null(placement)) {
-    # dollar sign to avoid [H][H] when we style multiple times
-    out <- sub("\\\\begin\\{table\\}", sprintf("\\\\begin{table}[%s]\n", placement), out)
+  # build table
+  if (output == "latex") {
+    cal <- call("tt_tabularray", x = out, caption = caption, theme = theme, width = width, notes = notes, placement = placement)
+
+  } else if (output == "html"){
+    cal <- call("tt_bootstrap", x = out, caption = caption, theme = theme, width = width, notes = notes)
+
+  } else {
+    cal <- call("tt_markdown", x = out, caption = caption)
   }
+
+  out <- meta(out, "lazy_tt", cal)
 
   return(out)
 }
