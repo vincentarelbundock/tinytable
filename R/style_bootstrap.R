@@ -88,6 +88,11 @@ style_bootstrap <- function(x,
   id <- sapply(unique(settings$bootstrap), function(k) get_id(stem = "tinytable_css_"))
   settings$id <- id[match(settings$bootstrap, names(id))]
 
+  css_start <- sprintf(".table td.%s, th.%s { ", id, id)
+  css_complete <- paste(c(css_start, paste0(bootstrap_css, collapse="; "), "}"), collapse = " ")
+  out <- bootstrap_setting(out, css_complete, component = "css")
+
+  # CSS style for cell
   css_done <- NULL
   for (row in seq_len(nrow(settings))) {
     # Listener applies the styling to columns
