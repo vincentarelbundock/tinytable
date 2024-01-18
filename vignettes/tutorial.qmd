@@ -119,17 +119,17 @@ In a very simple case---such as printing 2 significant digits of all numeric var
 ```{r}
 dat <- data.frame(
      w = c(143002.2092, 201399.181, 100188.3883),
-     x = c(1.43002, 201.399, 0.100188),
+     x = c(1.43402, 201.399, 0.134588),
      y = as.Date(sample(1:1000, 3)),
      z = c(TRUE, TRUE, FALSE))
 
 tt(dat, digits = 2)
 ```
 
-We can get more fine-grained control over formatting with calling `format_tt()` before `tt()`:
+We can get more fine-grained control over formatting by calling `format_tt()` after `tt()`, optionally by specifying the columns to format with `j`:
 
 ```{r}
-dat |>
+tt(dat) |>
   format_tt(
     j = 2:4,
     digits = 1,
@@ -139,27 +139,28 @@ dat |>
     digits = 2,
     num_mark_big = " ",
     num_mark_dec = ",",
-    num_fmt = "decimal") |>
-  tt()
+    num_fmt = "decimal")
 ```
 
 We can use a regular expression in `j` to select columns, and the `?sprintf` function to format strings, numbers, and to do [string interpolation](https://en.wikipedia.org/wiki/String_interpolation) (similar to the `glue` package, but using Base `R`):
 
 ```{r}
 dat <- data.frame(
-     a = c("Burger", "Halloumi", "Tofu"),
-     b = c(1.43002, 201.399, 0.100188))
-
-dat |>
+     a = c("Burger", "Halloumi", "Tofu", "Beans"),
+     b = c(1.43202, 201.399, 0.146188, 0.0031),
+     c = c(98938272783457, 7288839482, 29111727, 93945))
+tt(dat) |>
   format_tt(j = "a", sprintf = "Food: %s") |>
-  tt()
+  format_tt(j = 2, digits = 1) |>
+  format_tt(j = "c", digits = 2, num_suffix = TRUE)
 ```
 
-Finally, if you like the `format_tt()` interface, you can use it with vectors too:
+Finally, if you like the `format_tt()` interface, you can use it directly with numbers, vectors, or data frames:
 
 ```{r}
-k <- c(98938272783457, 7288839482, 29111727, 93945, 922)
-format_tt(k, digits = 1, num_suffix = TRUE)
+format_tt(pi, digits = 1)
+
+format_tt(dat, digits = 1, num_suffix = TRUE)
 ```
 
 
@@ -509,7 +510,7 @@ tt(dat) |>
 ```
 
 
-We can of style group rows in the same way as regular rows:
+We can style group rows in the same way as regular rows:
 
 ```{r}
 tt(dat) |> 
@@ -553,8 +554,10 @@ tt(dat) |>
              "Tofu" = 7)) |>
   style_tt(
     i = c(3, 5, 9),
+    align = "c",
     background = "teal",
-    color = "white")
+    color = "white") |>
+  style_tt(i = -1, color = "teal")
 ```
 
 

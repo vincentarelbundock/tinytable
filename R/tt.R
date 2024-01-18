@@ -35,7 +35,7 @@
 #' @export
 tt <- function(x,
                output = NULL,
-               digits = getOption("digits"),
+               digits = NULL,
                caption = NULL,
                width = NULL,
                notes = NULL,
@@ -49,10 +49,6 @@ tt <- function(x,
   assert_numeric(width, len = 1, lower = 0, upper = 1, null.ok = TRUE)
   assert_integerish(digits, len = 1, null.ok = TRUE)
 
-  # formatting options are limited here
-  if (!is.null(digits)) {
-    x <- format_tt(x, digits = digits)
-  }
   
   # notes can be a single string or a (named) list of strings
   if (is.character(notes) && length(notes)) {
@@ -85,6 +81,12 @@ tt <- function(x,
   }
 
   out <- meta(out, "lazy_tt", cal)
+
+  # formatting options are limited here
+  # after creating the table since the new lazy system
+  if (!is.null(digits)) {
+    out <- format_tt(out, digits = digits)
+  }
 
   return(out)
 }
