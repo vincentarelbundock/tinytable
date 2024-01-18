@@ -58,3 +58,14 @@ This function formats the columns of a data frame based on the column type (logi
 It allows various formatting options like significant digits, decimal points, and scientific notation.
 It also includes custom formatting for date and boolean values.
 }
+\examples{
+dat <- data.frame(
+  a = rnorm(3, mean = 10000),
+  b = rnorm(3, 10000))
+tab <- format_tt(dat,
+ digits = 2,
+ num_mark_dec = ",",
+ num_mark_big = " ")
+tt(tab)
+
+}

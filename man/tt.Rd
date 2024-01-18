@@ -40,7 +40,14 @@ tt(
 An object of class \code{tt} representing the table.
 }
 \description{
-The \code{tt} function renders a table in different formats (HTML, Markdown, or LaTeX) with various styling options.
+The \code{tt} function renders a table in different formats (HTML, Markdown, or LaTeX) with various styling options. The table can be customize with additional functions:
+}
+\details{
+\itemize{
+\item \code{style_tt()} to style fonts, colors, alignment, etc.
+\item \code{format_tt()} to format numbers, dates, strings, etc.
+\item \code{save_tt()} to save the table to a file.
+}
 }
 \section{LaTeX preamble}{
 

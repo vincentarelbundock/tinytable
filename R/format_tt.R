@@ -25,6 +25,16 @@
 #'
 #' @return A data frame with formatted columns.
 #' @export
+#' @examples
+#' dat <- data.frame(
+#'   a = rnorm(3, mean = 10000),
+#'   b = rnorm(3, 10000))
+#' tab <- format_tt(dat,
+#'  digits = 2,
+#'  num_mark_dec = ",",
+#'  num_mark_big = " ")
+#' tt(tab)
+#'
 format_tt <- function(x = NULL,
                       j = NULL,
                       output = NULL,

@@ -1,7 +1,11 @@
 #' Draw a Tiny Table
 #'
-#' The `tt` function renders a table in different formats (HTML, Markdown, or LaTeX) with various styling options.
-#' 
+#' The `tt` function renders a table in different formats (HTML, Markdown, or LaTeX) with various styling options. The table can be customize with additional functions:
+#'
+#' * `style_tt()` to style fonts, colors, alignment, etc.
+#' * `format_tt()` to format numbers, dates, strings, etc.
+#' * `save_tt()` to save the table to a file.
+#'
 #' @param x A data frame or data table to be rendered as a table.
 #' @param output The format of the output table. Can be "html", "latex", or "markdown". If NULL, the format is automatically detected in Quarto or Rmarkdown documents.
 #' @param digits Number of significant digits to keep for numeric variables. When `digits` is an integer, `tt()` calls `format_tt(x, digits = digits)` before proceeding to draw the table. Users who need more control can proceed in two steps: (1) format the data with `format_tt()` or other functions, and (2) pass the formatted data to `tt()` for drawing. See `?format_tt` for more details on formating options (ex: decimal, scientific notation, dates, boolean variables, etc.).

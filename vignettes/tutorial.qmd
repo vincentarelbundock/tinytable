@@ -260,7 +260,10 @@ tt(x, notes = list(a = "Blah.", b = "Blah blah."))
 In LaTeX and MathJax (for HTML), there are two main ways to enclose mathematical expressions, either between dollar signs or escaped parentheses: `$...$` or `\(...\)`. The first strategy [is discouraged by MathJax,](https://docs.mathjax.org/en/latest/basic/mathematics.html) because dollar signs are very common in non-mathematical contexts, which can cause rendering errors. In that spirit, `tinytable` will not render dollar-enclosed strings as mathematical expressions in HTML. Following the default MathJax settings, `tinytable` expects users to employ the escaped parentheses strategy: 
 
 ```{r}
-dat <- data.frame(Math = c("\\( x^2 + y^2 = z^2 \\)", "\\( \\frac{1}{2} \\)"))
+dat <- data.frame(Math = c(
+  "\\( x^2 + y^2 = z^2 \\)",
+  "\\( \\frac{1}{2} \\)"
+))
 tt(dat) |> style_tt(align = "c")
 ```
 
@@ -448,7 +451,10 @@ tt(k) |>
 The `color`, `background`, and `fontsize` arguments are vectorized. This allows easy specification of different colors in a single call:
 
 ```{r}
-tt(x) |> style_tt(i = 1:4, color = c("red", "blue", "green", "orange"))
+tt(x) |>
+  style_tt(
+    i = 1:4,
+    color = c("red", "blue", "green", "orange"))
 ```
 
 When using a single value for a vectorized argument, it gets applied to all values:
