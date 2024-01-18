@@ -44,8 +44,12 @@ print.tinytable <- function(x, ...) {
     cat(out, file = htmlFile)
     if (isTRUE(check_dependency("rstudioapi")) && rstudioapi::isAvailable()) {
       rstudioapi::viewer(htmlFile)
-    } else {
+    } else if (interactive()) {
       utils::browseURL(htmlFile)
+    } else {
+      cat("\n")
+      cat(out, sep = "\n")
+      cat("\n")
     }
   }
 
