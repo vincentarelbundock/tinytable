@@ -23,7 +23,7 @@
 #' @param fontsize Font size. Can be `NULL` for default size.
 #' @param width Width of the cell or column. Can be `NULL` for default width.
 #' @param fontsize Integer Font size in pt units.
-#' @param align Text alignment within the cell. Options are 'c' (center), 'l' (left), or 'r' (right). Can be `NULL` for default alignment.
+#' @param align A single character or a string with a number of characters equal to the number of columns in `j`. Valid characters include 'c' (center), 'l' (left), or 'r' (right).
 #' @param colspan Number of columns a cell should span. Can only be used if both `i` and `j` are of length 1. Must be an integer greater than 1.
 #' @param indent Text indentation in em units. Positive values only.
 #' @param bootstrap_css A vector of CSS style declarations to be applied (ex: `"font-weight: bold"`). Each element corresponds to a cell defined by `i` and `j`.
@@ -113,6 +113,21 @@ style_tt_lazy <- function (x,
     j <- grep(j, meta(x, "colnames"), perl = TRUE)
   }
 
+  # align can be "c" or "clrrlc"takes many possible values
+  assert_string(align, null.ok = TRUE)
+  nalign <- if (is.null(j)) meta(x, "ncols") else length(j)
+  if (!is.null(align)) {
+    align <- strsplit(align, split = "")[[1]]
+    if (length(align) != 1 && length(align) != nalign) {
+      msg <- sprintf("`align` must be a single character or a string of length %s.", nalign)
+      stop(msg, call. = FALSE)
+    }
+    if (any(!align %in% c("c", "l", "r"))) {
+      msg <- "`align` must be characters c, l, or r."
+      stop(msg, call. = FALSE)
+    }
+  }
+
   assert_style_tt(
     x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
     color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, indent = indent,
@@ -157,7 +172,6 @@ assert_style_tt <- function (x,
 
   assert_integerish(colspan, len = 1, lower = 1, null.ok = TRUE)
   assert_string(width, null.ok = TRUE)
-  assert_choice(align, c("c", "l", "r"), null.ok = TRUE)
   assert_numeric(indent, len = 1, lower = 0)
   assert_character(background, null.ok = TRUE)
   assert_character(color, null.ok = TRUE)

@@ -65,7 +65,7 @@ style_tt(
 
 \item{width}{Width of the cell or column. Can be \code{NULL} for default width.}
 
-\item{align}{Text alignment within the cell. Options are 'c' (center), 'l' (left), or 'r' (right). Can be \code{NULL} for default alignment.}
+\item{align}{A single character or a string with a number of characters equal to the number of columns in \code{j}. Valid characters include 'c' (center), 'l' (left), or 'r' (right).}
 
 \item{colspan}{Number of columns a cell should span. Can only be used if both \code{i} and \code{j} are of length 1. Must be an integer greater than 1.}
 

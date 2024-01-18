@@ -95,10 +95,14 @@ tt(x, theme = "void")
 
 ## Alignment
 
-To align columns, we use a single string, where each letter represents a column:
+To align columns, we use a single character, or a string where each letter represents a column:
 
 ```{r}
-tt(x, align = "ccrrl")
+dat <- data.frame(a = c("a", "aa"), b = c("b", "bb"), c = c("c", "cc"))
+
+tt(dat) |> style_tt(align = "c")
+
+tt(dat) |> style_tt(align = "lcr")
 ```
 
 ## Formatting (numbers, dates, strings, etc.)
@@ -253,7 +257,7 @@ In LaTeX and MathJax (for HTML), there are two main ways to enclose mathematical
 
 ```{r}
 dat <- data.frame(Math = c("\\( x^2 + y^2 = z^2 \\)", "\\( \\frac{1}{2} \\)"))
-tt(dat, align = "c")
+tt(dat) |> style_tt(align = "c")
 ```
 
 ::: {.content-visible when-format="pdf"}
@@ -262,7 +266,8 @@ In LaTeX (PDF), you can also use the `mode` inner setting from `tabularray` to r
 ```{r, eval = knitr::is_latex_output()}
 
 dat <- data.frame(Math = c("x^2 + y^2 = z^2", "\\frac{1}{2}"))
-tt(dat, align = "c") |> style_tt(tabularray_inner = "column{1}={mode=math},")
+tt(dat) |>
+  style_tt(align = "c", tabularray_inner = "column{1}={mode=math},")
 ```
 :::
 
@@ -464,7 +469,8 @@ bg <- hcl.colors(20, "Inferno")
 fg <- ifelse(as.matrix(k) < 17, tail(bg, 1), head(bg, 1))
 fs <- 1:20
 
-tt(k, width = .5, theme = "void", align = "ccccc") |>
+tt(k, width = .5, theme = "void") |>
+  style_tt(align = "ccccc") |>
   style_tt(
     i = 1:4,
     j = 1:5,
@@ -625,8 +631,8 @@ css_rule <- "
 }
 "
 
-tt(x, align = "ccccc", theme = "table mytable", width = 2/3) |> 
-  style_tt(bootstrap_css_rule = css_rule)
+tt(x, theme = "table mytable", width = 2/3) |> 
+  style_tt(align = "ccccc", bootstrap_css_rule = css_rule)
 ```
 
 :::
