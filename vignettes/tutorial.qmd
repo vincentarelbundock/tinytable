@@ -508,20 +508,22 @@ tt(dat) |>
     "They love tofu" = 7))
 ```
 
-The `group_tt()` function only includes a few arguments: `x`, `i`, `j`, and `indent`. But whenever we call `group_tt()`, the function will automatically apply a `style_tt()` call to all the new group labels, using any extra argument supplied to `group_tt()` (arguments are pushed via `...`). This means that we can apply all the usual stying options to row labels:
 
+We can of style group rows in the same way as regular rows:
 
 ```{r}
 tt(dat) |> 
   group_tt(
-    align = "c",
-    color = "white",
-    background = "gray",
-    bold = TRUE,
     i = list(
       "I like (fake) hamburgers" = 3,
       "She prefers halloumi" = 4,
-      "They love tofu" = 7))
+      "They love tofu" = 7)) |>
+  style_tt(
+    i = c(3, 5, 9),
+    align = "c",
+    color = "white",
+    background = "gray",
+    bold = TRUE)
 ```
 
 ## Columns
@@ -537,33 +539,22 @@ tt(dat) |>
       "Tofu" = 7))
 ```
 
-As above, we can pass additional styling options to the `style_tt()` function automatically via `...`. This means that all the arguments like `italic`, `bold`, `color` and friends can be used to style spanning column headers:
+Here is a table with both row and column headers, as well as some styling:
 
 ```{r}
 dat <- mtcars[1:9, 1:8]
 tt(dat) |> 
   group_tt(color = "teal", italic = TRUE,
-    j = list("Hamburgers" = 1:3,
-             "Halloumi" = 4:5,
-             "Tofu" = 7),
     i = list("I like (fake) hamburgers" = 3,
              "She prefers halloumi" = 4,
-             "They love tofu" = 7))
-```
-
-Or call twice for different stylings for row and column groups:
-
-```{r}
-dat <- mtcars[1:9, 1:8]
-tt(dat) |> 
-  group_tt(color = "teal", italic = TRUE,
+             "They love tofu" = 7),
     j = list("Hamburgers" = 1:3,
              "Halloumi" = 4:5,
              "Tofu" = 7)) |>
-  group_tt(align = "c", color = "white", background = "teal", bold = TRUE,
-    i = list("I like (fake) hamburgers" = 3,
-             "She prefers halloumi" = 4,
-             "They love tofu" = 7))
+  style_tt(
+    i = c(3, 5, 9),
+    background = "teal",
+    color = "white")
 ```
 
 

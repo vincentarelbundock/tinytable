@@ -54,7 +54,6 @@ tt_tabularray <- function(x, caption, theme, width, notes, placement) {
 
   # needed later, apparently
   attr(out, "tinytable_meta") <- m
-  out <-  meta(out, "nhead", if (is.null(colnames(x))) 1 else 0 )
 
   if (!is.null(width)) {
     tabularray_cols <- rep("X[]", ncol(x))

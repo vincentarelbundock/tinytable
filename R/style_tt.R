@@ -60,6 +60,7 @@ style_tt <- function (x,
                       tabularray_outer = NULL,
                       bootstrap_css = NULL,
                       bootstrap_css_rule = NULL) {
+
   out <- x
   cal <- call("style_tt_lazy",
   # out <- style_tt_lazy(

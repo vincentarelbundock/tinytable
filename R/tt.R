@@ -71,8 +71,6 @@ tt <- function(x,
   out <- meta(out, "nhead", if (is.null(colnames(x))) 0 else 1)
   out <- meta(out, "nrows", nrow(x))
   out <- meta(out, "ncols", ncol(x))
-  out <- meta(out, "lazy_style", list())
-  out <- meta(out, "lazy_format", list())
   class(out) <- c("tinytable", class(out))
 
   # build table
