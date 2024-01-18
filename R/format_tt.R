@@ -79,20 +79,20 @@ format_tt <- function(x = NULL,
   return(out)
 }
 
-format_tt_lazy <- function(x = NULL,
-                           j = NULL,
-                           output = NULL,
-                           digits = getOption("digits"),
-                           num_fmt = "significant",
-                           num_zero = TRUE,
-                           num_suffix = FALSE,
-                           num_mark_big = "",
-                           num_mark_dec = getOption("OutDec", default = "."),
-                           sprintf = NULL,
-                           url = FALSE,
-                           date = "%Y-%m-%d",
-                           bool = function(column) tools::toTitleCase(tolower(column)),
-                           other = identity
+format_tt_lazy <- function(x,
+                           j,
+                           output,
+                           digits,
+                           num_fmt,
+                           num_zero,
+                           num_suffix,
+                           num_mark_big,
+                           num_mark_dec,
+                           sprintf,
+                           url,
+                           date,
+                           bool,
+                           other
                            ) {
 
  

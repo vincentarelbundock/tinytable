@@ -35,8 +35,24 @@ meta <- function(x, get, set) {
 build_tt <- function(x) {
   m <- meta(x)
 
-  out <- eval(meta(x, "lazy_tt"))
+  out <- x
 
+  # format data before drawing the table
+  for (l in m$lazy_format) {
+    tmp <- out
+    class(tmp) <- "data.frame"
+    l[["x"]] <- tmp
+    out <- eval(l)
+  }
+
+  # draw the table
+  lazy_tt <- meta(x, "lazy_tt")
+  lazy_tt[["x"]] <- out
+  out <- eval(lazy_tt)
+
+  # TODO: group the table
+
+  # style the table
   for (l in m$lazy_style) {
     l[["x"]] <- out
     out <- eval(l)
