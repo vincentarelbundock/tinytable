@@ -46,7 +46,9 @@
       var newRow = table.insertRow(i);
       var newCell = newRow.insertCell(0);
       newCell.setAttribute("colspan", colspan);
-      newCell.innerText = content;
+      // newCell.innerText = content;
+      // this may be unsafe, but innerText does not interpret <br>
+      newCell.innerHTML = content;
     }
     </script>
 
