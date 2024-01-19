@@ -48,16 +48,16 @@ tt(x)
 
 ## Output formats
 
-`tinytable` can produce tables in HTML, Markdown, or LaTeX (PDF) format. To choose, we use the `output` argument:
+`tinytable` can produce tables in HTML, Markdown, LaTeX, PDF, or PNG format. An appropriate output format form printing is automatically selected based on (1) whether the function is called interactively, (2) is called within RStudio, and (3) based on the output format of the Rmarkdown or Quarto document. Alternatively, users can specify the print format in `print()` or by setting a global option:
 
 ```{r}
 #| eval: false
 tt(x) |> print("markdown")
 tt(x) |> print("html")
 tt(x) |> print("latex")
-```
 
-When calling `tinytable` from a Quarto or Rmarkdown document, `tinytable` detects the output format automatically and generates an HTML or LaTeX table as appropriate. This means that we do not need to explicitly specify the `output` format.
+options(tinytable_print_output = "markdown")
+```
 
 With the `save_tt()` function, users can also save tables directly to PNG images or PDF documents, or any of the basic formats. All we need to do is supply a valid file name with the appropriate extension (ex: `.png`, `.html`, `.pdf`, etc.):
 
@@ -69,7 +69,7 @@ tt(x) |> save_tt("path/to/file.tex")
 tt(x) |> save_tt("path/to/file.md")
 ```
 
-You can also use `save_tt()` to return a string with the table in it, for further processing in R. In the first case, the table is printed to console with `cat()`. In the second case, it returns as a single string as an `R` object.
+`save_tt()` can also return a string with the table in it, for further processing in `R`. In the first case, the table is printed to console with `cat()`. In the second case, it returns as a single string as an `R` object.
 
 ```{r}
 tt(x) |>

@@ -3,7 +3,9 @@
 #' This function saves an object of class tinytable to a specified file and format, with an option to overwrite existing files.
 #'
 #' @param x The tinytable object to be saved.
-#' @param output A string representing the path to the file where the object should be saved. The supported file formats are: .html, .png, .md, .pdf, and .tex.
+#' @param output String or file path. 
+#' + If `output` is "markdown", "latex", or "html", the table is returned in a string as an `R` object. 
+#' + If `output` is a valid file path, the table is saved to file. The supported extensions are: .html, .png, .pdf, .tex and .md (with aliases .txt, .Rmd and .qmd).
 #' @param overwrite A logical value indicating whether to overwrite an existing file. 
 #' @return invisible(TRUE)
 #' @export

@@ -9,7 +9,11 @@ save_tt(x, output, overwrite = FALSE)
 \arguments{
 \item{x}{The tinytable object to be saved.}
 
-\item{output}{A string representing the path to the file where the object should be saved. The supported file formats are: .html, .png, .md, .pdf, and .tex.}
+\item{output}{String or file path.
+\itemize{
+\item If \code{output} is "markdown", "latex", or "html", the table is returned in a string as an \code{R} object.
+\item If \code{output} is a valid file path, the table is saved to file. The supported extensions are: .html, .png, .pdf, .tex and .md (with aliases .txt, .Rmd and .qmd).
+}}
 
 \item{overwrite}{A logical value indicating whether to overwrite an existing file.}
 }
