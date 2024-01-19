@@ -140,6 +140,7 @@ group_grid_row <- function(x, i, ...) {
   cw <- sum(cw) + length(cw) - 1
   for (idx in rev(seq_along(i))) {
     tmp <- trimws(as.character(tt_grid(matrix(names(i)[idx]), col_widths = cw)))
+    tmp <- strsplit(tmp, split = "\\n")[[1]][2]
     mid <- c(mid[1:(i[idx] - 1)], tmp, mid[i[idx]:length(body)]) 
   }
 
@@ -153,3 +154,17 @@ group_grid_row <- function(x, i, ...) {
 
 
 
+# insert horizontal rules everywhere (important for word)
+grid_hlines <- function(x) {
+  rule_line <- grid_line(meta(x, "col_widths"), "-")
+  lines <- strsplit(x, split = "\\n")[[1]]
+  if (length(lines) > 1) {
+    for (idlines in length(lines):2) {
+      if (!startsWith(lines[idlines - 1], "+") && !startsWith(lines[idlines], "+") && lines[idlines] != "") {
+        lines <- c(lines[1:(idlines - 1)], rule_line, lines[idlines:length(lines)])
+      }
+    }
+  }
+  out <- paste(lines, collapse = "\n")
+  return(out)
+}

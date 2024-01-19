@@ -52,6 +52,12 @@ build_tt <- function(x, output = NULL) {
   }
   out <- meta(out, "output", output)
 
+  # formal grid specification in pandoc includes lines everywhere
+  hlines <- getOption("tinytable_grid_hlines", default = TRUE)
+  if (isTRUE(hlines) && output == "markdown") {
+    out <- grid_hlines(out)
+  }
+
   m <- meta(x)
   m$lazy_style <- list()
   attr(out, "tinytable_meta") <- m

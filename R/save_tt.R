@@ -98,11 +98,9 @@ save_tt <- function(x, output, overwrite = FALSE) {
 
     } else if (file_ext == "docx") {
       assert_dependency("pandoc")
-      tmp <- markdown_hlines(x)
-      fn <- file.path(tempdir(), "temp.md")
-      writeLines(x, fn)
-      writeLines(x, "~/Downloads/trash.md")
-      pandoc::pandoc_convert(file = fn, to = "docx", output = output)
+      # fn <- file.path(tempdir(), "temp.md")
+      # write(x, file = fn)
+      pandoc::pandoc_convert(text = x, to = "docx", output = output)
     }
 
   return(invisible(TRUE))
@@ -110,17 +108,3 @@ save_tt <- function(x, output, overwrite = FALSE) {
 }
 
 
-# insert horizontal rules everywhere (important for word)
-markdown_hlines <- function(x) {
-  rule_line <- grid_line(meta(x, "col_widths"), "-")
-  lines <- strsplit(x, split = "\\n")[[1]]
-  if (length(lines) > 1) {
-    for (idlines in length(lines):2) {
-      if (!startsWith(lines[idlines - 1], "+") && !startsWith(lines[idlines], "+")) {
-        lines <- c(lines[1:(idlines - 1)], rule_line, lines[idlines:length(lines)])
-      }
-    }
-  }
-  out <- paste(lines, collapse = "\n")
-  return(out)
-}
