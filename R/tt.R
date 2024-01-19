@@ -35,7 +35,7 @@
 #' @export
 tt <- function(x,
                output = NULL,
-               digits = getOption("digits"),
+               digits = NULL,
                caption = NULL,
                width = NULL,
                notes = NULL,
@@ -49,10 +49,6 @@ tt <- function(x,
   assert_numeric(width, len = 1, lower = 0, upper = 1, null.ok = TRUE)
   assert_integerish(digits, len = 1, null.ok = TRUE)
 
-  # formatting options are limited here
-  if (!is.null(digits)) {
-    x <- format_tt(x, digits = digits)
-  }
   
   # notes can be a single string or a (named) list of strings
   if (is.character(notes) && length(notes)) {
@@ -60,20 +56,10 @@ tt <- function(x,
   }
   assert_list(notes, null.ok = TRUE)
 
-  out <- x
-
-  # build table
-  if (output == "latex") {
-    out <- tt_tabularray(out, caption = caption, theme = theme, width = width, notes = notes)
-
-  } else if (output == "html"){
-    out <- tt_bootstrap(out, caption = caption, theme = theme, width = width, notes = notes)
-
-  } else {
-    out <- tt_markdown(out, caption = caption)
-  }
-
   # before style_tt() call for align
+  out <- x 
+  out <- meta(out, "x_character", data.frame(lapply(x, as.character)))
+  out <- meta(out, "output", output)
   out <- meta(out, "colnames", names(x))
   out <- meta(out, "xdim", dim(x))
   out <- meta(out, "output", output)
@@ -81,13 +67,25 @@ tt <- function(x,
   out <- meta(out, "nhead", if (is.null(colnames(x))) 0 else 1)
   out <- meta(out, "nrows", nrow(x))
   out <- meta(out, "ncols", ncol(x))
-  out <- meta(out, "lazy_style", list())
+  class(out) <- c("tinytable", class(out))
 
-  # placement
-  assert_string(placement, null.ok = TRUE)
-  if (!is.null(placement)) {
-    # dollar sign to avoid [H][H] when we style multiple times
-    out <- sub("\\\\begin\\{table\\}", sprintf("\\\\begin{table}[%s]\n", placement), out)
+  # build table
+  if (output == "latex") {
+    cal <- call("tt_tabularray", x = out, caption = caption, theme = theme, width = width, notes = notes, placement = placement)
+
+  } else if (output == "html"){
+    cal <- call("tt_bootstrap", x = out, caption = caption, theme = theme, width = width, notes = notes)
+
+  } else {
+    cal <- call("tt_markdown", x = out, caption = caption)
+  }
+
+  out <- meta(out, "lazy_tt", cal)
+
+  # formatting options are limited here
+  # after creating the table since the new lazy system
+  if (!is.null(digits)) {
+    out <- format_tt(out, digits = digits)
   }
 
   return(out)

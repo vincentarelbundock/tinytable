@@ -1,21 +1,19 @@
-group_tabularray <- function(x, i, j, indent, ...) {
+group_tabularray <- function(x, i, j, indent) {
   out <- x
   # columns first to count headers properly
   if (!is.null(j)) {
-    out <- group_tabularray_col(out, j, ...)
+    out <- group_tabularray_col(out, j)
   }
   if (!is.null(i)) {
-    out <- group_tabularray_row(out, i, indent, ...)
+    out <- group_tabularray_row(out, i, indent)
   } 
   return(out)
 }
 
 
-group_tabularray_col <- function(x, j, ...) {
+group_tabularray_col <- function(x, j) {
 
   m <- meta(x)
-
-  dots <- list(...)
 
   out <- strsplit(x, split = "\\n")[[1]]
 
@@ -46,16 +44,14 @@ group_tabularray_col <- function(x, j, ...) {
 
   for (k in seq_along(j)) {
     z <- min(j[[k]])
-    args <- list(x = out,
+    args <- list(tt_build_now = TRUE,
+                 x = out,
                  # the new header is always first row and 
                  # style_tt always adds nhead to index
                  i = 1 - meta(out)$nhead,
                  j = z,
+                 align = "c",
                  colspan = max(j[[k]]) - min(j[[k]]) + 1)
-    if (!"halign" %in% names(dots)) {
-      args["align"] <- "c" 
-    }
-    args <- c(args, dots)
     out <- do.call(style_tt, args)
   }
 
@@ -64,7 +60,7 @@ group_tabularray_col <- function(x, j, ...) {
 }
 
 
-group_tabularray_row <- function(x, i, indent, ...) {
+group_tabularray_row <- function(x, i, indent) {
 
   m <- meta(x)
 
@@ -73,12 +69,13 @@ group_tabularray_row <- function(x, i, indent, ...) {
   }
   label <- names(i)
 
-  m$nrows <- m$nrows + length(label)
   tab <- strsplit(x, "\\n")[[1]]
 
   # store the original body lines when creating the table, and use those to guess the boundaries.
   # a hack, but probably safer than most regex approaches I can think of.
-  body <- which(tab %in% m$body)
+  body_min <- max(grep("TinyTableHeader|toprule|inner close", tab)) + 1
+  body_max <- min(grep("bottomrule|end.tblr", tab))
+  body <- body_min:body_max
   top <- tab[1:(min(body) - 1)]
   mid <- tab[min(body):max(body)]
   bot <- tab[(max(body) + 1):length(tab)]
@@ -107,15 +104,9 @@ group_tabularray_row <- function(x, i, indent, ...) {
   # we also want to indent the header
   i <- idx$new[!is.na(idx$old)] + m$nhead 
   if (m$nhead > 0) i <- c(1:m$nhead, i)
-  cellspec <- sprintf("cell{%s}{%s}={%s},", i, 1, sprintf("preto={\\hspace{%sem}}", indent))
+  cellspec <- sprintf("cell{%s}{%s}={%s},\n", i, 1, sprintf("preto={\\hspace{%sem}}", indent))
   cellspec <- paste(cellspec, collapse = "")
   tab <- tabularray_insert(tab, content = cellspec, type = "inner")
-
-  dots <- list(...)
-  if (length(dots) > 0) {
-    args <- c(list(x = tab, i = idx$new[is.na(idx$old)]), dots)
-    tab <- do.call(style_tt, args)
-  }
 
   return(tab)
 }

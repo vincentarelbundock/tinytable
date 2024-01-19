@@ -4,7 +4,7 @@ using("tinysnapshot")
 x <- mtcars[1:4, 1:5]
 
 expect_snapshot_print(
-  tt(x, output = "latex", theme = "striped"),
+  tt(x, output = "latex"),
   label = "latex-default")
 
 k <- x

@@ -7,7 +7,7 @@
 tt(
   x,
   output = NULL,
-  digits = getOption("digits"),
+  digits = NULL,
   caption = NULL,
   width = NULL,
   notes = NULL,

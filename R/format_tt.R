@@ -35,7 +35,7 @@
 #'  num_mark_big = " ")
 #' tt(tab)
 #'
-format_tt <- function(x = NULL,
+format_tt <- function(x,
                       j = NULL,
                       output = NULL,
                       digits = getOption("digits"),
@@ -51,9 +51,59 @@ format_tt <- function(x = NULL,
                       other = identity
                       ) {
 
-  if (inherits(x, "tinytable")) {
-    msg <- "`format_tt()` must be called *before* `tt()`. You must format your dataset before drawing a table."
+  out <- x
+
+  if (inherits(out, "tinytable")) {
+    cal <- call("format_tt_lazy", 
+                j = j,
+                output = output,
+                digits = digits,
+                num_fmt = num_fmt,
+                num_zero = num_zero,
+                num_suffix = num_suffix,
+                num_mark_big = num_mark_big,
+                num_mark_dec = num_mark_dec,
+                sprintf = sprintf,
+                url = url,
+                date = date,
+                bool = bool,
+                other = other)
+    out <- meta(out, "lazy_format", c(meta(out)$lazy_format, list(cal)))
+  } else {
+
+    out <- format_tt_lazy(out,
+                          j = j,
+                          output = output,
+                          digits = digits,
+                          num_fmt = num_fmt,
+                          num_zero = num_zero,
+                          num_suffix = num_suffix,
+                          num_mark_big = num_mark_big,
+                          num_mark_dec = num_mark_dec,
+                          sprintf = sprintf,
+                          url = url,
+                          date = date,
+                          bool = bool,
+                          other = other)
   }
+  return(out)
+}
+
+format_tt_lazy <- function(x,
+                           j = NULL,
+                           output = NULL ,
+                           digits,
+                           num_fmt = "significant",
+                           num_zero = FALSE,
+                           num_suffix = FALSE,
+                           num_mark_big = "",
+                           num_mark_dec = NULL,
+                           sprintf = NULL,
+                           url = FALSE,
+                           date = "%Y-%m-%d",
+                           bool = identity,
+                           other = identity
+                           ) {
 
   if (isTRUE(check_atomic_vector(x))) {
     atomic_vector <- TRUE
@@ -93,7 +143,6 @@ format_tt <- function(x = NULL,
 
   # format each column
   for (col in j) {
-
     # sprintf() is self-contained
     if (!is.null(sprintf)) {
       x[[col]] <- base::sprintf(sprintf, x[[col]])

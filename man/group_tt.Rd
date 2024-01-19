@@ -4,7 +4,7 @@
 \alias{group_tt}
 \title{Spanning labels to identify groups of rows or columns}
 \usage{
-group_tt(x, i = NULL, j = NULL, indent = 1, ...)
+group_tt(x, i = NULL, j = NULL, indent = 1)
 }
 \arguments{
 \item{x}{A data frame or data table to be rendered as a table.}
@@ -14,8 +14,6 @@ group_tt(x, i = NULL, j = NULL, indent = 1, ...)
 \item{j}{Column indices where the styling should be applied. Can be a single value, a vector, or a Perl-style regular expression applied to column names of the original data frame. If \code{colspan} is used, \code{j} must be of length 1.}
 
 \item{indent}{integer number of \code{pt} to use when indenting the non-labelled rows.}
-
-\item{...}{All additional arguments (ex: \code{italic}, \code{bold}, \code{color}) are automatically passed to the \code{style_tt()} function and applied to the labels.}
 }
 \description{
 Spanning labels to identify groups of rows or columns

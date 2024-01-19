@@ -18,7 +18,10 @@ align_str_center <- function(x, pad_n = NULL) {
 }
 
 
-tt_markdown <- function(tab, caption, ...) {
+tt_markdown <- function(x, caption, ...) {
+
+  m <- meta(x)
+  tab <- x 
 
   # fake spans
   if (!is.null(colnames(tab))) {
@@ -27,14 +30,14 @@ tt_markdown <- function(tab, caption, ...) {
 
   # align content
   # this is an infrastructure already. Can be used when 
-  align <- rep("l", ncol(tab))
+  align <- rep("l", meta(tab, "ncols"))
   for (i in seq_along(tab)) {
 
     # otherwise we can't take nchar()
     tab[[i]] <- as.character(tab[[i]])
 
     pad_n <- 0
-    if (!is.null(colnames)) pad_n <- max(pad_n, nchar(colnames(tab)[i]))
+    if (!is.null(colnames)) pad_n <- max(pad_n, nchar(meta(tab, "colnames")[i]))
     pad_n <- max(pad_n, max(nchar(as.character(tab[[i]]))))
     if (align[[i]] == "l") {
       tab[[i]] <- align_str_left(tab[[i]], pad_n = pad_n)
@@ -91,6 +94,7 @@ tt_markdown <- function(tab, caption, ...) {
 
   # output
   class(tab) <- c("tinytable", "knitr_kable")
+  attr(tab, "tinytable_meta") <- m
 
   # for knitr compatibility
   attr(tab, "format") <- "pipe"
