@@ -6,19 +6,16 @@
 \usage{
 tt(
   x,
-  output = NULL,
   digits = NULL,
   caption = NULL,
   width = NULL,
   notes = NULL,
   theme = "default",
-  placement = getOption("tt_tabularray_placement", default = NULL)
+  placement = getOption("tinytable_tabularray_placement", default = NULL)
 )
 }
 \arguments{
 \item{x}{A data frame or data table to be rendered as a table.}
-
-\item{output}{The format of the output table. Can be "html", "latex", or "markdown". If NULL, the format is automatically detected in Quarto or Rmarkdown documents.}
 
 \item{digits}{Number of significant digits to keep for numeric variables. When \code{digits} is an integer, \code{tt()} calls \code{format_tt(x, digits = digits)} before proceeding to draw the table. Users who need more control can proceed in two steps: (1) format the data with \code{format_tt()} or other functions, and (2) pass the formatted data to \code{tt()} for drawing. See \code{?format_tt} for more details on formating options (ex: decimal, scientific notation, dates, boolean variables, etc.).}
 
@@ -40,14 +37,14 @@ tt(
 An object of class \code{tt} representing the table.
 }
 \description{
-The \code{tt} function renders a table in different formats (HTML, Markdown, or LaTeX) with various styling options. The table can be customize with additional functions:
-}
-\details{
+The \code{tt} function renders a table in different formats (HTML, Markdown, or LaTeX) with various styling options. The table can be customized with additional functions:
 \itemize{
 \item \code{style_tt()} to style fonts, colors, alignment, etc.
 \item \code{format_tt()} to format numbers, dates, strings, etc.
-\item \code{save_tt()} to save the table to a file.
+\item \code{save_tt()} to save the table to a file or return the table as a string.
 }
+
+\code{tinytable} attempts to determine the appropriate way to print the table based on interactive use, RStudio availability, and output format in RMarkdown or Quarto documents. Users can call \code{print(x, output="markdown")} to print the table in a specific format. Alternatively, they can set a global option: \code{options("tinytable_print_output"="markdown")}
 }
 \section{LaTeX preamble}{
 

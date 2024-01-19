@@ -1,13 +1,15 @@
 #' Draw a Tiny Table
 #'
-#' The `tt` function renders a table in different formats (HTML, Markdown, or LaTeX) with various styling options. The table can be customize with additional functions:
+#' @description
+#' The `tt` function renders a table in different formats (HTML, Markdown, or LaTeX) with various styling options. The table can be customized with additional functions:
 #'
 #' * `style_tt()` to style fonts, colors, alignment, etc.
 #' * `format_tt()` to format numbers, dates, strings, etc.
-#' * `save_tt()` to save the table to a file.
+#' * `save_tt()` to save the table to a file or return the table as a string.
+#'
+#' `tinytable` attempts to determine the appropriate way to print the table based on interactive use, RStudio availability, and output format in RMarkdown or Quarto documents. Users can call `print(x, output="markdown")` to print the table in a specific format. Alternatively, they can set a global option: `options("tinytable_print_output"="markdown")`
 #'
 #' @param x A data frame or data table to be rendered as a table.
-#' @param output The format of the output table. Can be "html", "latex", or "markdown". If NULL, the format is automatically detected in Quarto or Rmarkdown documents.
 #' @param digits Number of significant digits to keep for numeric variables. When `digits` is an integer, `tt()` calls `format_tt(x, digits = digits)` before proceeding to draw the table. Users who need more control can proceed in two steps: (1) format the data with `format_tt()` or other functions, and (2) pass the formatted data to `tt()` for drawing. See `?format_tt` for more details on formating options (ex: decimal, scientific notation, dates, boolean variables, etc.).
 #' @param caption A string that will be used as the caption of the table.
 #' @param width A numeric value between 0 and 1 indicating the proportion of the line width that the table should cover.
@@ -34,16 +36,16 @@
 #' 
 #' @export
 tt <- function(x,
-               output = NULL,
                digits = NULL,
                caption = NULL,
                width = NULL,
                notes = NULL,
                theme = "default",
-               placement = getOption("tt_tabularray_placement", default = NULL)) {
+               placement = getOption("tinytable_tabularray_placement", default = NULL)) {
+
+  output <- meta(x, "output")
 
   # sanity checks
-  output <- sanitize_output(output)
   assert_data_frame(x)
   assert_string(caption, null.ok = TRUE)
   assert_numeric(width, len = 1, lower = 0, upper = 1, null.ok = TRUE)
@@ -70,15 +72,18 @@ tt <- function(x,
   class(out) <- c("tinytable", class(out))
 
   # build table
-  if (output == "latex") {
-    cal <- call("tt_tabularray", x = out, caption = caption, theme = theme, width = width, notes = notes, placement = placement)
-
-  } else if (output == "html"){
-    cal <- call("tt_bootstrap", x = out, caption = caption, theme = theme, width = width, notes = notes)
-
-  } else {
-    cal <- call("tt_grid", x = out, caption = caption)
-  }
+  cal <- call("tt_tabularray", x = out, caption = caption, theme = theme, width = width, notes = notes, placement = placement)
+  # if (output == "latex") {
+  #
+  # } else if (output == "html"){
+  #   cal <- call("tt_bootstrap", x = out, caption = caption, theme = theme, width = width, notes = notes)
+  #
+  # } else if (output == "markdown") {
+  #   cal <- call("tt_grid", x = out, caption = caption)
+  #
+  # } else {
+  #   stop("here be dragons")
+  # }
 
   out <- meta(out, "lazy_tt", cal)
 

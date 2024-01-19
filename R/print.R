@@ -2,9 +2,12 @@
 #'
 #' @keywords internal
 #' @export
-knit_print.tinytable <- function(x, ...) {
+knit_print.tinytable <- function(x,
+                                 output = getOption("tinytable_print_output", default = NULL),
+                                 ...) {
+
   # lazy styles get evaluated here, at the very end
-  out <- build_tt(x)
+  out <- build_tt(x, output = output)
 
   if (meta(out)$output == "html") {
     # from htmltools:::html_preserve
@@ -23,9 +26,11 @@ knit_print.tinytable <- function(x, ...) {
 
 
 #' @export
-print.tinytable <- function(x, ...) {
+print.tinytable <- function(x,
+                            output = getOption("tinytable_print_output", default = NULL),
+                            ...){
   # lazy styles get evaluated here, at the very end
-  out <- build_tt(x)
+  out <- build_tt(x, output = output)
 
   if (meta(out, "output") == "latex") {
     class(out) <- "character"

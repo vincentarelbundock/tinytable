@@ -4,12 +4,12 @@
 \alias{save_tt}
 \title{Save a Tiny Table to File}
 \usage{
-save_tt(x, filename, overwrite = FALSE)
+save_tt(x, output, overwrite = FALSE)
 }
 \arguments{
 \item{x}{The tinytable object to be saved.}
 
-\item{filename}{A string representing the path to the file where the object should be saved. The supported file formats are: .html, .png, .md, .pdf, and .tex.}
+\item{output}{A string representing the path to the file where the object should be saved. The supported file formats are: .html, .png, .md, .pdf, and .tex.}
 
 \item{overwrite}{A logical value indicating whether to overwrite an existing file.}
 }

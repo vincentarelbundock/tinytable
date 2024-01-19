@@ -1,6 +1,7 @@
 
 source("helpers.R")
 using("tinysnapshot")
+options(tinytable_print_output = "html")
 
 
 clean <- function(x) {
@@ -12,15 +13,15 @@ clean <- function(x) {
 
 x <- mtcars[1:4, 1:5]
 
-tab <- tt(x, output = "html", theme = "striped")
+tab <- tt(x, theme = "striped")
 expect_equal_to_reference(clean(tab), "_tinysnapshot/html-striped.rds")
 
-tab <- tt(x, output = "html", theme = "striped") |>
+tab <- tt(x, theme = "striped") |>
   style_tt(color = "orange")
 expect_equal_to_reference(clean(tab), "_tinysnapshot/html-striped_orange.rds")
 
 # tutorial.qmd: vectorized settings
-tab <- tt(x, output = "html") |>
+tab <- tt(x) |>
   style_tt(
     j = 2:3,
     color = c("orange", "green"),
@@ -28,7 +29,7 @@ tab <- tt(x, output = "html") |>
 expect_equal_to_reference(clean(tab), "_tinysnapshot/html-vectorized_color_j.rds")
 
 # Issue #58
-tab <- tt(iris[1:10,], output = "html") |> 
+tab <- tt(iris[1:10,]) |> 
   style_tt(align = "c") |>
   group_tt(j = list("Sepal" = 1:2, "Petal" = 3:4))
 expect_equal_to_reference(clean(tab), "_tinysnapshot/html-issue58.rds")
@@ -40,7 +41,7 @@ colnames(k) <- NULL
 bg <- hcl.colors(20, "Inferno")
 fg <- ifelse(as.matrix(k) < 17, tail(bg, 1), head(bg, 1))
 fs <- 1:20
-tab <- tt(k, output = "html", width = .5, theme = "void") |>
+tab <- tt(k, width = .5, theme = "void") |>
   style_tt(
     i = 1:4,
     j = 1:5,
@@ -50,3 +51,4 @@ tab <- tt(k, output = "html", width = .5, theme = "void") |>
 expect_equal_to_reference(clean(tab), "_tinysnapshot/html-heatmap.rds")
 
 
+options(tinytable_print_output = NULL)

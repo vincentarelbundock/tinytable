@@ -1,7 +1,3 @@
-# output is selected automatically if format_tt is called in tt()
-# x is inserted automatically if format_tt is called in tt()
-
-
 #' Format columns of a data frame
 #'
 #' This function formats the columns of a data frame based on the column type (logical, date, numeric). 
@@ -37,7 +33,6 @@
 #'
 format_tt <- function(x,
                       j = NULL,
-                      output = NULL,
                       digits = getOption("digits"),
                       num_fmt = "significant",
                       num_zero = TRUE,
@@ -56,7 +51,6 @@ format_tt <- function(x,
   if (inherits(out, "tinytable")) {
     cal <- call("format_tt_lazy", 
                 j = j,
-                output = output,
                 digits = digits,
                 num_fmt = num_fmt,
                 num_zero = num_zero,
@@ -73,7 +67,6 @@ format_tt <- function(x,
 
     out <- format_tt_lazy(out,
                           j = j,
-                          output = output,
                           digits = digits,
                           num_fmt = num_fmt,
                           num_zero = num_zero,
@@ -91,7 +84,6 @@ format_tt <- function(x,
 
 format_tt_lazy <- function(x,
                            j = NULL,
-                           output = NULL ,
                            digits,
                            num_fmt = "significant",
                            num_zero = FALSE,
@@ -130,7 +122,6 @@ format_tt_lazy <- function(x,
   assert_function(identity)
   assert_string(sprintf, null.ok = TRUE)
 
-  output <- sanitize_output(output)
 
   # column index NULL or regex or integer vector
   if (is.null(j)) {
