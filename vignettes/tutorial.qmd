@@ -52,9 +52,9 @@ tt(x)
 
 ```{r}
 #| eval: false
-tt(x, output = "html")
-tt(x, output = "latex")
-tt(x, output = "markdown")
+tt(x) |> print("markdown")
+tt(x) |> print("html")
+tt(x) |> print("latex")
 ```
 
 When calling `tinytable` from a Quarto or Rmarkdown document, `tinytable` detects the output format automatically and generates an HTML or LaTeX table as appropriate. This means that we do not need to explicitly specify the `output` format.
@@ -62,17 +62,25 @@ When calling `tinytable` from a Quarto or Rmarkdown document, `tinytable` detect
 With the `save_tt()` function, users can also save tables directly to PNG images or PDF documents, or any of the basic formats. All we need to do is supply a valid file name with the appropriate extension (ex: `.png`, `.html`, `.pdf`, etc.):
 
 ```r
-# PNG
-tt(x, output = "html") |> save_tt("path/to/file.png")
+tt(x) |> save_tt("path/to/file.png")
+tt(x) |> save_tt("path/to/file.pdf")
+tt(x) |> save_tt("path/to/file.html")
+tt(x) |> save_tt("path/to/file.tex")
+tt(x) |> save_tt("path/to/file.md")
+```
 
-# HTML
-tt(x, output = "html") |> save_tt("path/to/file.html")
+You can also use `save_tt()` to return a string with the table in it, for further processing in R. In the first case, the table is printed to console with `cat()`. In the second case, it returns as a single string as an `R` object.
 
-# PDF
-tt(x, output = "latex") |> save_tt("path/to/file.pdf")
+```{r}
+tt(x) |>
+  group_tt(j = list("Hello" = 2:3, "World" = 4:5)) |>
+  print("markdown")
+```
 
-# Text
-tt(x, output = "markdown") |> save_tt("path/to/file.txt")
+```{r}
+tt(x) |>
+  group_tt(j = list("Hello" = 2:3, "World" = 4:5)) |>
+  save_tt("markdown")
 ```
 
 
@@ -724,7 +732,7 @@ cell{3,5}{1,4} = {bg=purple7},
 cell{2}{2} = {r=4,c=2}{bg=azure7},
 "
 mtcars[1:5, 1:4] |>
-  tt(output = "latex", theme = "void") |>
+  tt(theme = "void") |>
   style_tt(tabularray_inner = inner)
 ```
 
