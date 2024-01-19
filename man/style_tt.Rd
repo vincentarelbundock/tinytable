@@ -83,7 +83,7 @@ style_tt(
 \item{...}{extra arguments are ignored}
 }
 \value{
-Returns a modified \code{tinytable} object with the applied styles.
+An object of class \code{tt} representing the table.
 }
 \description{
 This function applies styling to a table created by \code{tt()}. It allows customization of text style (bold, italic, monospace), text and background colors, font size, cell width, text alignment, column span, and indentation. The function supports both LaTeX (tabularray) and HTML (bootstrap) formats.

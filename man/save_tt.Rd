@@ -18,18 +18,15 @@ save_tt(x, output, overwrite = FALSE)
 \item{overwrite}{A logical value indicating whether to overwrite an existing file.}
 }
 \value{
-invisible(TRUE)
+A string or \code{TRUE} when the table is written to file.
 }
 \description{
 This function saves an object of class tinytable to a specified file and format, with an option to overwrite existing files.
 }
 \examples{
-\dontrun{
 
 library(tinytable)
-tab  <- tt(mtcars[1:4, 1:4])
-save_tt(tt, "path/to/file.txt")
-
-}
+filename <- file.path(tempfile(), "table.tex")
+tt(mtcars[1:4, 1:4]) |> save_tt(filename)
 
 }

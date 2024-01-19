@@ -7,16 +7,13 @@
 #' + If `output` is "markdown", "latex", or "html", the table is returned in a string as an `R` object. 
 #' + If `output` is a valid file path, the table is saved to file. The supported extensions are: .html, .png, .pdf, .tex and .md (with aliases .txt, .Rmd and .qmd).
 #' @param overwrite A logical value indicating whether to overwrite an existing file. 
-#' @return invisible(TRUE)
+#' @return A string or `TRUE` when the table is written to file.
 #' @export
 #' @examples
-#' \dontrun{
 #'
 #' library(tinytable)
-#' tab  <- tt(mtcars[1:4, 1:4])
-#' save_tt(tt, "path/to/file.txt")
-#'
-#' }
+#' filename <- file.path(tempfile(), "table.tex")
+#' tt(mtcars[1:4, 1:4]) |> save_tt(filename)
 #'
 save_tt <- function(x, output, overwrite = FALSE) {
   m <- meta(x)

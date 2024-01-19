@@ -3,6 +3,7 @@
 #' @export
 #' @inheritParams tt
 #' @inheritParams style_tt
+#' @return An object of class `tt` representing the table.
 #' @param indent integer number of `pt` to use when indenting the non-labelled rows.
 group_tt <- function(x, i = NULL, j = NULL, indent = 1) {
 

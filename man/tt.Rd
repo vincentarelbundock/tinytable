@@ -63,16 +63,14 @@ When rendering Quarto and Rmarkdown documents, \code{tinytable} will populate th
 }
 
 \examples{
-\dontshow{if (getOption("tt_local", default = FALSE)) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
-\dontshow{\}) # examplesIf}
 library(tinytable)
 x <- mtcars[1:4, 1:5]
 
 tt(x)
 
 tt(x,
-  theme = "striped",
-  width = 0.5,
-  caption = "Data about cars.")
+   theme = "striped",
+   width = 0.5,
+   caption = "Data about cars.")
 
 }

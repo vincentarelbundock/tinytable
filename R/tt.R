@@ -22,7 +22,6 @@
 #' @return An object of class `tt` representing the table.
 #' @template latex_preamble
 #' 
-#' @examplesIf getOption("tt_local", default = FALSE)
 #' @examples
 #' library(tinytable)
 #' x <- mtcars[1:4, 1:5]
@@ -30,10 +29,10 @@
 #' tt(x)
 #' 
 #' tt(x,
-#'   theme = "striped",
-#'   width = 0.5,
-#'   caption = "Data about cars.")
-#' 
+#'    theme = "striped",
+#'    width = 0.5,
+#'    caption = "Data about cars.")
+#'
 #' @export
 tt <- function(x,
                digits = NULL,
