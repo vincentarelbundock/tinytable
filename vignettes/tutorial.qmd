@@ -72,14 +72,26 @@ tt(x) |> save_tt("path/to/file.md")
 `save_tt()` can also return a string with the table in it, for further processing in `R`. In the first case, the table is printed to console with `cat()`. In the second case, it returns as a single string as an `R` object.
 
 ```{r}
-tt(x) |>
-  group_tt(j = list("Hello" = 2:3, "World" = 4:5)) |>
+tt(mtcars[1:10, 1:5]) |>
+  group_tt(
+    i = list(
+      "Hello" = 3,
+      "World" = 8),
+    j = list(
+      "Foo" = 2:3,
+      "Bar" = 4:5)) |>
   print("markdown")
 ```
 
 ```{r}
-tt(x) |>
-  group_tt(j = list("Hello" = 2:3, "World" = 4:5)) |>
+tt(mtcars[1:10, 1:5]) |>
+  group_tt(
+    i = list(
+      "Hello" = 3,
+      "World" = 8),
+    j = list(
+      "Foo" = 2:3,
+      "Bar" = 4:5)) |>
   save_tt("markdown")
 ```
 
