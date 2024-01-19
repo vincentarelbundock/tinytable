@@ -100,7 +100,7 @@ group_grid <- function(x, i = NULL, j = NULL, ...) {
 
 
 group_grid_col <- function(x, j, ...) {
-
+  m <- meta(x)
   # columns
   header <- empty_cells(j)
   cw <- meta(x, "col_widths")
@@ -114,6 +114,8 @@ group_grid_col <- function(x, j, ...) {
   x <- x[!x %in% c("\\n", "")]
   out <- out[1:(length(out) - 1)]
   out <- paste(c(out, x), collapse = "\n")
+  attr(out, "tinytable_meta") <- m
+  class(out) <- class(x)
   return(out)
 }
 
@@ -125,7 +127,7 @@ group_grid_row <- function(x, i, ...) {
   # header
   body_min <- utils::head(grep("^\\+==", out), 1) + 1
   # no header
-  if (is.na(body_min)) {
+  if (is.na(body_min) || length(body_min) == 0) {
     body_min <- utils::head(grep("^\\+--", out), 1) + 1
   }
   body_max <- utils::tail(grep("^\\+--", out), 1) - 1
@@ -137,7 +139,7 @@ group_grid_row <- function(x, i, ...) {
   cw <- meta(x, "col_widths")
   cw <- sum(cw) + length(cw) - 1
   for (idx in rev(seq_along(i))) {
-    tmp = trimws(as.character(tt_grid(matrix(names(i)[idx]), col_widths = cw)))
+    tmp <- trimws(as.character(tt_grid(matrix(names(i)[idx]), col_widths = cw)))
     mid <- c(mid[1:(i[idx] - 1)], tmp, mid[i[idx]:length(body)]) 
   }
 
@@ -146,7 +148,6 @@ group_grid_row <- function(x, i, ...) {
 
   attr(out, "tinytable_meta") <- meta(x)
   class(out) <- class(x)
-
   return(out)
 }
 
