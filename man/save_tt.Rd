@@ -26,7 +26,7 @@ This function saves an object of class tinytable to a specified file and format,
 \examples{
 
 library(tinytable)
-filename <- file.path(tempfile(), "table.tex")
+filename <- file.path(tempdir(), "table.tex")
 tt(mtcars[1:4, 1:4]) |> save_tt(filename)
 
 }
