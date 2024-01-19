@@ -4,28 +4,29 @@
 \alias{save_tt}
 \title{Save a Tiny Table to File}
 \usage{
-save_tt(x, filename, overwrite = FALSE)
+save_tt(x, output, overwrite = FALSE)
 }
 \arguments{
 \item{x}{The tinytable object to be saved.}
 
-\item{filename}{A string representing the path to the file where the object should be saved. The supported file formats are: .html, .png, .md, .pdf, and .tex.}
+\item{output}{String or file path.
+\itemize{
+\item If \code{output} is "markdown", "latex", or "html", the table is returned in a string as an \code{R} object.
+\item If \code{output} is a valid file path, the table is saved to file. The supported extensions are: .html, .png, .pdf, .tex and .md (with aliases .txt, .Rmd and .qmd).
+}}
 
 \item{overwrite}{A logical value indicating whether to overwrite an existing file.}
 }
 \value{
-invisible(TRUE)
+A string or \code{TRUE} when the table is written to file.
 }
 \description{
 This function saves an object of class tinytable to a specified file and format, with an option to overwrite existing files.
 }
 \examples{
-\dontrun{
 
 library(tinytable)
-tab  <- tt(mtcars[1:4, 1:4])
-save_tt(tt, "path/to/file.txt")
-
-}
+filename <- file.path(tempdir(), "table.tex")
+tt(mtcars[1:4, 1:4]) |> save_tt(filename)
 
 }

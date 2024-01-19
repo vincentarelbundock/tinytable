@@ -4,7 +4,11 @@
 \alias{knit_print.tinytable}
 \title{Print a tinytable object in knitr}
 \usage{
-knit_print.tinytable(x, ...)
+knit_print.tinytable(
+  x,
+  output = getOption("tinytable_print_output", default = NULL),
+  ...
+)
 }
 \description{
 Print a tinytable object in knitr

@@ -66,12 +66,23 @@ three pillars:
 
 ## Installation
 
-You can install `tinytable` from [GitHub](https://github.com/) with:
+Install the stable version from CRAN:
+
+``` r
+```r
+install.packages("tinytable")
+```
+
+`tinytable` is a relatively new package with rapid development. If you
+want to benefit from the latest features—showcased on the package
+website—you may want to install the development version from Github.
 
 ``` r
 library(remotes)
 install_github("vincentarelbundock/tinytable")
 ```
+
+Restart `R` completely for the installation to take effect.
 
 ## Get started
 

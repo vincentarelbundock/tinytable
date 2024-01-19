@@ -31,7 +31,7 @@
 #' @param tabularray_inner A string that specifies the "inner" settings of a tabularray LaTeX table. 
 #' @param tabularray_outer A string that specifies the "outer" settings of a tabularray LaTeX table.
 #' @param ... extra arguments are ignored
-#' @return Returns a modified `tinytable` object with the applied styles.
+#' @return An object of class `tt` representing the table.
 #' @template latex_preamble
 #' @export
 #' @examples

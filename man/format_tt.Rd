@@ -7,7 +7,6 @@
 format_tt(
   x,
   j = NULL,
-  output = NULL,
   digits = getOption("digits"),
   num_fmt = "significant",
   num_zero = TRUE,
@@ -25,8 +24,6 @@ format_tt(
 \item{x}{A data frame or a vector to be formatted.}
 
 \item{j}{Column indices where the styling should be applied. Can be a single value, a vector, or a Perl-style regular expression applied to column names of the original data frame. If \code{colspan} is used, \code{j} must be of length 1.}
-
-\item{output}{The format of the output table. Can be "html", "latex", or "markdown". If NULL, the format is automatically detected in Quarto or Rmarkdown documents.}
 
 \item{digits}{Number of significant digits or decimal places.}
 

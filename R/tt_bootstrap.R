@@ -1,4 +1,4 @@
-tt_bootstrap <- function(x, caption, theme, width, notes) {
+tt_bootstrap <- function(x, caption, theme, width, notes, ...) {
 
   template <- template_bootstrap(theme)
   m <- meta(x)

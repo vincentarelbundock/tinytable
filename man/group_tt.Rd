@@ -15,6 +15,9 @@ group_tt(x, i = NULL, j = NULL, indent = 1)
 
 \item{indent}{integer number of \code{pt} to use when indenting the non-labelled rows.}
 }
+\value{
+An object of class \code{tt} representing the table.
+}
 \description{
 Spanning labels to identify groups of rows or columns
 }
