@@ -5,7 +5,8 @@
 #' @param x The tinytable object to be saved.
 #' @param output String or file path. 
 #' + If `output` is "markdown", "latex", or "html", the table is returned in a string as an `R` object. 
-#' + If `output` is a valid file path, the table is saved to file. The supported extensions are: .html, .png, .pdf, .tex and .md (with aliases .txt, .Rmd and .qmd).
+#' + If `output` is a valid file path, the table is saved to file. The supported extensions are: .docx, .html, .png, .pdf, .tex and .md (with aliases .txt, .Rmd and .qmd).
+#' + Warning: `style_tt()` does not work for Markdown or Word tables.
 #' @param overwrite A logical value indicating whether to overwrite an existing file. 
 #' @return A string or `TRUE` when the table is written to file.
 #' @export

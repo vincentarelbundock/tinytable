@@ -12,7 +12,7 @@ format:
 
 \clearpage
 
-`tinytable` is a small but powerful `R` package to draw HTML, LaTeX, PDF, Markdown, and Typst tables. The interface is minimalist, but it gives users direct and convenient access to powerful frameworks to create endlessly customizable tables.
+`tinytable` is a small but powerful `R` package to draw HTML, LaTeX, Word, PDF, Markdown, and Typst tables. The interface is minimalist, but it gives users direct and convenient access to powerful frameworks to create endlessly customizable tables.
 
 Install it from Github:
 
@@ -48,7 +48,7 @@ tt(x)
 
 ## Output formats
 
-`tinytable` can produce tables in HTML, Markdown, LaTeX, PDF, or PNG format. An appropriate output format for printing is automatically selected based on (1) whether the function is called interactively, (2) is called within RStudio, and (3) the output format of the Rmarkdown or Quarto document, if applicable. Alternatively, users can specify the print format in `print()` or by setting a global option:
+`tinytable` can produce tables in HTML, Word, Markdown, LaTeX, PDF, or PNG format. An appropriate output format for printing is automatically selected based on (1) whether the function is called interactively, (2) is called within RStudio, and (3) the output format of the Rmarkdown or Quarto document, if applicable. Alternatively, users can specify the print format in `print()` or by setting a global option:
 
 ```{r}
 #| eval: false
@@ -59,11 +59,12 @@ tt(x) |> print("latex")
 options(tinytable_print_output = "markdown")
 ```
 
-With the `save_tt()` function, users can also save tables directly to PNG images or PDF documents, or any of the basic formats. All we need to do is supply a valid file name with the appropriate extension (ex: `.png`, `.html`, `.pdf`, etc.):
+With the `save_tt()` function, users can also save tables directly to PNG (images), PDF or Word documents, and to any of the basic formats. All we need to do is supply a valid file name with the appropriate extension (ex: `.png`, `.html`, `.pdf`, etc.):
 
 ```r
 tt(x) |> save_tt("path/to/file.png")
 tt(x) |> save_tt("path/to/file.pdf")
+tt(x) |> save_tt("path/to/file.docx")
 tt(x) |> save_tt("path/to/file.html")
 tt(x) |> save_tt("path/to/file.tex")
 tt(x) |> save_tt("path/to/file.md")
