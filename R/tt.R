@@ -77,7 +77,7 @@ tt <- function(x,
     cal <- call("tt_bootstrap", x = out, caption = caption, theme = theme, width = width, notes = notes)
 
   } else {
-    cal <- call("tt_markdown", x = out, caption = caption)
+    cal <- call("tt_grid", x = out, caption = caption)
   }
 
   out <- meta(out, "lazy_tt", cal)

@@ -1,4 +1,3 @@
-
 grid_line <- function(col_widths, char = "-") {
   line_sep <- lapply(col_widths, function(k) strrep(char, k))
   line_sep <- paste(line_sep, collapse = "+")
@@ -6,7 +5,14 @@ grid_line <- function(col_widths, char = "-") {
   return(line_sep)
 }
 
-tt_grid <- function(x, col_widths = NULL) {
+
+tt_grid <- function(x, col_widths = NULL, ...) {
+
+  m <- meta(x)
+
+  if (is.null(col_widths)) {
+    col_widths <- m$col_widths
+  }
 
   tab <- as.matrix(x)
   if (!is.null(names(x))) {
@@ -44,12 +50,16 @@ tt_grid <- function(x, col_widths = NULL) {
   }
 
   out <- paste(tab, collapse = "\n")
-  attr(out, "col_widths") <- col_widths
-  out <- meta(out, "output", "grid")
 
+  # rebuild output
+  attr(out, "tinytable_meta") <- m
+  out <- meta(out, "col_widths", col_widths)
+  out <- meta(out, "output", "grid")
+  class(out) <- c("tinytable", "knitr_kable")
+
+  # output
   return(out)
 }
-
 
 
 empty_cells <- function(lst) {
@@ -74,9 +84,9 @@ empty_cells <- function(lst) {
 }
 
 
-group_grid <- function(x, j) {
+group_grid <- function(x, j, ...) {
   header <- empty_cells(j)
-  cw <- attr(x, "col_widths")
+  cw <- meta(x, "col_widths")
   cw <- sapply(header, function(k) sum(cw[k]) + length(cw[k]) - 1)
   txt <- t(matrix(names(cw)))
   out <- tt_grid(txt, cw)
@@ -100,8 +110,3 @@ df <- data.frame(
 )
 
 
-pkgload::load_all()
-x <- tt_grid(df)
-j = list("foo" = 2:3, "bar" = 4:5)
-z = group_grid(x, j)
-cat(z)
