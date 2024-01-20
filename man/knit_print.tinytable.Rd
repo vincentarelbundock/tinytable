@@ -10,6 +10,9 @@ knit_print.tinytable(
   ...
 )
 }
+\value{
+A string with class \code{knit_asis} to be printed in Rmarkdown or Quarto documents.
+}
 \description{
 Print a tinytable object in knitr
 }

@@ -1,6 +1,7 @@
 #' Print a tinytable object in knitr 
 #'
 #' @keywords internal
+#' @return A string with class `knit_asis` to be printed in Rmarkdown or Quarto documents.
 #' @export
 knit_print.tinytable <- function(x,
                                  output = getOption("tinytable_print_output", default = NULL),
