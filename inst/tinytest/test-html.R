@@ -34,6 +34,10 @@ tab <- tt(iris[1:10,]) |>
   group_tt(j = list("Sepal" = 1:2, "Petal" = 3:4))
 expect_equal_to_reference(clean(tab), "_tinysnapshot/html-issue58.rds")
 
+# Issue #88: indent
+tab <- tt(iris[1:10,]) |> 
+  style_tt(i = 2:4, indent = 3)
+expect_equal_to_reference(clean(tab), "_tinysnapshot/html-issue88.rds")
 
 # tutorial.qmd: heatmap
 k <- data.frame(matrix(1:20, ncol = 5))

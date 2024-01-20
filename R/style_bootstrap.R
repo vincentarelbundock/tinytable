@@ -83,6 +83,9 @@ style_bootstrap <- function(x,
   settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, color, "color: %s;")
   settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, background, "background-color: %s;")
   settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, width, "width: %s;")
+  if (indent > 0) {
+    settings$bootstrap <- paste(settings$bootstrap, sprintf("padding-left: %sem;", indent), sep = "")
+  }
 
   # unique IDs for each CSS style combination
   id <- sapply(unique(settings$bootstrap), function(k) get_id(stem = "tinytable_css_"))
