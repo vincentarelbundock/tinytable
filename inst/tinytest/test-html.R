@@ -20,6 +20,14 @@ tab <- tt(x, theme = "striped") |>
   style_tt(color = "orange")
 expect_equal_to_reference(clean(tab), "_tinysnapshot/html-striped_orange.rds")
 
+
+# Issue #92: header alignment
+k <- structure(list(Column1 = c("Some text", "123"), Column2 = c("Some text", 
+"456")), row.names = c(NA, -2L), class = "data.frame")
+tab <- tt(k, width = 1) |> style_tt(j = 2, align = "r")
+expect_equal_to_reference(clean(tab), "_tinysnapshot/html-issue92.rds")
+
+
 # tutorial.qmd: vectorized settings
 tab <- tt(x) |>
   style_tt(

@@ -448,11 +448,18 @@ colnames(k) <- NULL
 tt(k)
 ```
 
-The header is row 0, and can thus be styled as expected:
+The first is row 0, and higher level headers (ex: column spanning labels) have negative indices like -1. They can be styled as expected:
 
 ```{r}
 tt(x) |> style_tt(i = 0, color = "white", background = "black")
 ```
+
+When styling columns without specifying `i`, the headers are styled in accordance with the rest of the column:
+
+```{r}
+tt(x) |> style_tt(j = 2:3, color = "white", background = "black")
+```
+
 
 ## Conditional styling
 

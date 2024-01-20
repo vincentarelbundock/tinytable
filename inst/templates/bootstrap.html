@@ -41,6 +41,14 @@
       var table = document.getElementById("$tinytable_TABLE_ID");
       table.rows[i].cells[j].classList.add(css_id);
     }
+    function styleHeaderCell(i, j, css_id) {
+      var table = document.getElementById("$tinytable_TABLE_ID");
+      var headerRow = table.tHead.rows[i];
+      var headerRow = table.querySelector("thead tr");
+      if (headerRow) {
+        headerRow.cells[j].classList.add(css_id);
+      }
+    }
     function insertSpanRow(i, colspan, content) {
       var table = document.getElementById('$tinytable_TABLE_ID');
       var newRow = table.insertRow(i);

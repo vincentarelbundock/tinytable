@@ -27,6 +27,12 @@ style_bootstrap <- function(x,
   ival <- if (is.null(i)) seq_len(meta(x, "nrows")) else i
   jval <- if (is.null(j)) seq_len(meta(x, "ncols")) else j
 
+  # only columns means we also want to style headers 
+  if (is.null(i) && !is.null(j)) {
+    ival <- c(-1 * rev(seq_len(meta(x)$nhead) - 1), ival)
+  }
+
+
   # order may be important for recycling 
   settings <- expand.grid(i = ival, j = jval, tabularray = "")
   if (is.null(i) && !is.null(j)) {
