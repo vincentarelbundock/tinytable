@@ -8,6 +8,7 @@ clean <- function(x) {
   x <- knitr::knit_print(x)
   x <- gsub("tinytable_\\w+\\b", "tinytable", x)
   x <- gsub("styleCell_\\w+\\b", "tinytable", x)
+  x <- gsub("styleHeaderCell_\\w+\\b", "tinytable", x)
   x
 }
 
