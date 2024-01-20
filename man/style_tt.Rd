@@ -30,7 +30,7 @@ style_tt(
 \arguments{
 \item{x}{A table object created by \code{tt()}.}
 
-\item{i}{Row indices where the styling should be applied. Can be a single value or a vector. If \code{colspan} is used, \code{i} must be of length 1. When i=0, the header is styled.}
+\item{i}{Row indices where the styling should be applied. Can be a single value or a vector. \code{i=0} is the header, and negative values are higher level headers. If \code{colspan} is used, \code{i} must be of length 1.}
 
 \item{j}{Column indices where the styling should be applied. Can be a single value, a vector, or a Perl-style regular expression applied to column names of the original data frame. If \code{colspan} is used, \code{j} must be of length 1.}
 

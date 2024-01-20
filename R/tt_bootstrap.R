@@ -64,9 +64,7 @@ tt_bootstrap <- function(x, caption, theme, width, notes, ...) {
 
   # table and styling function in JS must have different names when there is more than one table on a page.
   template <- gsub("styleCell", paste0("styleCell_", id), template, fixed = TRUE)
-  template <- gsub("styleHeaderCell", paste0("styleHeaderCell_", id), template, fixed = TRUE)
   template <- gsub("$tinytable_TABLE_ID", paste0("tinytable_", id), template, fixed = TRUE)
-  browser()
 
   # header
   idx <- grep("$tinytable_BOOTSTRAP_HEADER", template, fixed = TRUE)

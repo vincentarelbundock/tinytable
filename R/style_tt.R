@@ -6,7 +6,7 @@
 #' Note that Markdown and Word formats are limited to these styles: italic, bold, strikeout.
 #'
 #' @param x A table object created by `tt()`.
-#' @param i Row indices where the styling should be applied. Can be a single value or a vector. If `colspan` is used, `i` must be of length 1. When i=0, the header is styled.
+#' @param i Row indices where the styling should be applied. Can be a single value or a vector. `i=0` is the header, and negative values are higher level headers. If `colspan` is used, `i` must be of length 1.
 #' @param j Column indices where the styling should be applied. Can be a single value, a vector, or a Perl-style regular expression applied to column names of the original data frame. If `colspan` is used, `j` must be of length 1.
 #' @param bold Logical; if `TRUE`, text is styled in bold.
 #' @param italic Logical; if `TRUE`, text is styled in italic.
