@@ -15,6 +15,15 @@ build_tt <- function(x, output = NULL) {
     l[["x"]] <- tmp
     out <- eval(l)
   }
+
+  # markdown styles need to be applied before creating the table, otherwise there's annoying parsing, etc.
+  if (output == "markdown") {
+    for (l in m$lazy_style) {
+      l[["x"]] <- out
+      out <- eval(l)
+    }
+  }
+
   # shouldn't have to add this everywhere, but I'm too lazy to check
   out <- meta(out, "output", output)
 
@@ -46,9 +55,11 @@ build_tt <- function(x, output = NULL) {
   out <- meta(out, "output", output)
 
   # style the table
-  for (l in m$lazy_style) {
-    l[["x"]] <- out
-    out <- eval(l)
+  if (output != "markdown") {
+    for (l in m$lazy_style) {
+      l[["x"]] <- out
+      out <- eval(l)
+    }
   }
   out <- meta(out, "output", output)
 

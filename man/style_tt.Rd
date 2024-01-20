@@ -86,7 +86,12 @@ style_tt(
 An object of class \code{tt} representing the table.
 }
 \description{
+Style a Tiny Table in either LaTeX or HTML format
+}
+\details{
 This function applies styling to a table created by \code{tt()}. It allows customization of text style (bold, italic, monospace), text and background colors, font size, cell width, text alignment, column span, and indentation. The function supports both LaTeX (tabularray) and HTML (bootstrap) formats.
+
+Note that Markdown and Word formats are limited to these styles: italic, bold, strikeout.
 }
 \section{LaTeX preamble}{
 
