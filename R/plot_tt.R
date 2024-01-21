@@ -61,7 +61,10 @@ plot_tt_lazy <- function(x,
     cell <- sprintf(cell, height, path)
 
   } else if (meta(x)$output == "html") {
-    cell <- '<img src="%s" style="height: %sem;">'
+    cell <- ifelse(
+      grepl("^http", trimws(path)),
+      '<img src="%s" style="height: %sem;">',
+      '<img src="./%s" style="height: %sem;">')
     cell <- sprintf(cell, path, height)
 
   } else if (meta(x)$output == "markdown") {

@@ -43,16 +43,16 @@ save_tt <- function(x, output, overwrite = FALSE) {
   file_ext <- tools::file_ext(output)
 
   output_format <- switch(file_ext,
-                          "png" = "html",
-                          "html" = "html",
-                          "pdf" = "latex",
-                          "tex" = "latex",
-                          "md" = "markdown",
-                          "Rmd" = "markdown",
-                          "qmd" = "markdown",
-                          "txt" = "markdown",
-                          "docx" = "markdown",
-                          stop("The supported file extensions are: .png, .html, .pdf, .tex, and .md.", call. = FALSE))
+  "png" = "html",
+  "html" = "html",
+  "pdf" = "latex",
+  "tex" = "latex",
+  "md" = "markdown",
+  "Rmd" = "markdown",
+  "qmd" = "markdown",
+  "txt" = "markdown",
+  "docx" = "markdown",
+  stop("The supported file extensions are: .png, .html, .pdf, .tex, and .md.", call. = FALSE))
 
   # evaluate styles at the very end of the pipeline, just before writing
   x <- build_tt(x, output = output_format)
@@ -60,39 +60,50 @@ save_tt <- function(x, output, overwrite = FALSE) {
   if (file_ext %in% c("html", "tex", "md", "Rmd", "qmd", "txt")) {
     write(x, file = output)
 
-} else if (file_ext == "png") {
-  assert_dependency("webshot2")
-  # this doesn't work in tempdir() for some reason.
-  # probably webshot2's fault. we need to build in `output`
-  id <- get_id()
-  dir.create(id)
-  img <- meta(x)$path_image
-  if (!is.null(img)) {
-    for (a in img) {
-      if (!grepl("http", a)) {
-        file.copy(a, id)
-      }
-    }
-  }
-  f <- paste0(id, ".html")
-  write(x, file = f)
-  webshot2::webshot(f,
-    file = output,
-    selector = "body > div > table",
-    zoom = 4,
-    quiet = TRUE)
-  unlink(f, force = TRUE)
-  unlink(id, force = TRUE, recursive = TRUE)
+  } else if (file_ext == "png") {
+    assert_dependency("webshot2")
+    # this doesn't work in tempdir() for some reason.
+    # probably webshot2's fault. we need to build in `output`
+    tmp <- file.path(dirname(output), paste0(get_id(), ".html"))
+    write(x, file = tmp)
+    webshot2::webshot(tmp,
+      file = output,
+      selector = "body > div > table",
+      zoom = 4,
+      quiet = TRUE)
+    unlink(tmp)
 
   } else if (file_ext == "pdf") {
-    d <- ttempdir()
     assert_dependency("tinytex")
     # \documentclass{standalone} does not support \begin{table}
     tmp <- strsplit(x, "\\n")[[1]]
     tmp <- tmp[!grepl("\\begin{table}", tmp, fixed = TRUE)]
     tmp <- tmp[!grepl("\\end{table}", tmp, fixed = TRUE)]
     tmp <- paste(tmp, collapse = "\n")
-    tmp <- sprintf("
+    tmp <- sprintf(latex_standalone, tmp)
+    # tinytex is fiddly with file paths, so we need to hack 
+    # it by changing the working directory
+    wd <- getwd()
+    setwd(dirname(output))
+    f <- paste0(get_id(), ".tex")
+    write(tmp, f) 
+    tinytex::xelatex(f, pdf_file = output)
+    unlink(f)
+    setwd(wd)
+
+  } else if (file_ext == "docx") {
+    assert_dependency("pandoc")
+    pandoc::pandoc_convert(text = x, to = "docx", output = output)
+  }
+
+  return(invisible(TRUE))
+
+}
+
+
+
+
+latex_standalone <- "
 \\documentclass{standalone}
 \\usepackage{tabularray}
 \\usepackage{graphicx}
@@ -105,24 +116,5 @@ save_tt <- function(x, output, overwrite = FALSE) {
 \\NewTableCommand{\\tinytableDefineColor}[3]{\\definecolor{#1}{#2}{#3}}
 \\begin{document}
 %s
-\\end{document}",
-                         tmp)
-    f <- file.path(d, "index.tex")
-    write(tmp, f) 
-    # tinytex is fiddly with file paths, so we need to hack 
-    # it by changing the working directory
-    wd <- getwd()
-    setwd(d)
-    tinytex::xelatex(f, pdf_file = output)
-    setwd(wd)
-
-    } else if (file_ext == "docx") {
-      assert_dependency("pandoc")
-      pandoc::pandoc_convert(text = x, to = "docx", output = output)
-    }
-
-  return(invisible(TRUE))
-
-}
-
-
+\\end{document}
+"
