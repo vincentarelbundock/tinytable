@@ -4,6 +4,7 @@ plot_tt <- function(x,
                     path = NULL,
                     height = 2,
                     ...) {
+
   assert_integerish(i, null.ok = TRUE)
   assert_integerish(j, null.ok = TRUE)
   assert_integerish(height, len = 1)
@@ -30,6 +31,7 @@ plot_tt <- function(x,
     height = height)
 
   out <- meta(out, "lazy_plot", c(meta(out)$lazy_plot, list(cal)))
+  out <- meta(out, "path_image", path)
 
   return(out)
 }
@@ -45,6 +47,7 @@ plot_tt_lazy <- function(x,
   out <- x
 
   build_dir <- meta(out, "path_dir_build")
+
   if (!is.null(build_dir)) {
     tmp <- file.copy(
       from = path, 
@@ -70,6 +73,7 @@ plot_tt_lazy <- function(x,
   }
 
   out[i, j] <- cell
+
 
   return(out)
 }

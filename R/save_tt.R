@@ -39,9 +39,6 @@ save_tt <- function(x, output, overwrite = FALSE) {
     return(as.character(out))
   }
 
-  d <- ttempdir()
-  x <- meta(x, "path_dir_output", dirname(output))
-  x <- meta(x, "path_dir_build", d)
 
   file_ext <- tools::file_ext(output)
 
@@ -63,19 +60,32 @@ save_tt <- function(x, output, overwrite = FALSE) {
   if (file_ext %in% c("html", "tex", "md", "Rmd", "qmd", "txt")) {
     write(x, file = output)
 
-  } else if (file_ext == "png") {
-    assert_dependency("webshot2")
-    # this doesn't work in tempdir() for some reason.
-    # probably webshot2's fault.
-    f <- file.path(dirname(output), paste0(get_id(), ".html"))
-    write(x, file = f)
-    webshot2::webshot(f,
-                      file = output,
-                      selector = "body > div > table",
-                      zoom = 4)
-    unlink(f)
+} else if (file_ext == "png") {
+  assert_dependency("webshot2")
+  # this doesn't work in tempdir() for some reason.
+  # probably webshot2's fault. we need to build in `output`
+  id <- get_id()
+  dir.create(id)
+  img <- meta(x)$path_image
+  if (!is.null(img)) {
+    for (a in img) {
+      if (!grepl("http", a)) {
+        file.copy(a, id)
+      }
+    }
+  }
+  f <- paste0(id, ".html")
+  write(x, file = f)
+  webshot2::webshot(f,
+    file = output,
+    selector = "body > div > table",
+    zoom = 4,
+    quiet = TRUE)
+  unlink(f, force = TRUE)
+  unlink(id, force = TRUE, recursive = TRUE)
 
   } else if (file_ext == "pdf") {
+    d <- ttempdir()
     assert_dependency("tinytex")
     # \documentclass{standalone} does not support \begin{table}
     tmp <- strsplit(x, "\\n")[[1]]
