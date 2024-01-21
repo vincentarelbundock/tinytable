@@ -9,6 +9,7 @@
 #' @param j Integer vector, the column indices where images are to be inserted. If `NULL`,
 #'    images will be inserted in all columns.
 #' @param height Numeric, the height of the images in the table. Default is 2.
+#' @param plot_asp Numeric, aspect ratio of the plots (height / width). 
 #' @param plot_data Optional, a list of data frames to be used with a custom plotting function.
 #' @param plot_fun Optional, a list of functions to generate plots from the data in `plot_data`. Valid functions include:
 #' - Functions that return `ggplot2` objects.
@@ -20,18 +21,6 @@
 #' @return A modified tinytable object with images or plots inserted.
 #'
 #' @details The `plot_tt()` can insert images and inline plots into tables.
-#'
-#' @examples
-#' # HTML output can load images from the web, but not LaTeX
-#' # See website for tutorials.
-#' fn <- paste0(tempfile(), ".png")
-#' dat <- data.frame("R" = "")
-#' img <- "https://cran.r-project.org/Rlogo.svg"
-#' tt(dat) |>
-#'   plot_tt(i = 1, j = 1, path_img = img, height = 7) |>
-#'   style_tt(j = 1, align = "c") |>
-#'   save_tt(fn)
-#'
 #' @export
 plot_tt <- function(x,
                     i = NULL,
@@ -122,12 +111,12 @@ plot_tt_lazy <- function(x,
 
       # base R
       } else if (is.function(p)) {
-        png(fn_full, width = 1000, height = 1000 * plot_asp)
-        op <- par()
-        par(mar = c(0, 0, 0, 0))
+        grDevices::png(fn_full, width = 1000, height = 1000 * plot_asp)
+        op <- graphics::par()
+        graphics::par(mar = c(0, 0, 0, 0))
         p()
-        par(mar = op$mar)
-        dev.off()
+        graphics::par(mar = op$mar)
+        grDevices::dev.off()
 
       # sanity check
       } else {

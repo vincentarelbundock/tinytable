@@ -27,6 +27,8 @@ images will be inserted in all columns.}
 
 \item{height}{Numeric, the height of the images in the table. Default is 2.}
 
+\item{plot_asp}{Numeric, aspect ratio of the plots (height / width).}
+
 \item{plot_data}{Optional, a list of data frames to be used with a custom plotting function.}
 
 \item{plot_fun}{Optional, a list of functions to generate plots from the data in \code{plot_data}. Valid functions include:
@@ -49,16 +51,4 @@ tinytable objects. This function can handle both local and web-based images. #'
 }
 \details{
 The \code{plot_tt()} can insert images and inline plots into tables.
-}
-\examples{
-# HTML output can load images from the web, but not LaTeX
-# See website for tutorials.
-fn <- paste0(tempfile(), ".png")
-dat <- data.frame("R" = "")
-img <- "https://cran.r-project.org/Rlogo.svg"
-tt(dat) |>
-  plot_tt(i = 1, j = 1, path_img = img, height = 7) |>
-  style_tt(j = 1, align = "c") |>
-  save_tt(fn)
-
 }
