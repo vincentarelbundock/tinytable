@@ -7,6 +7,7 @@
 #' ```latex
 #' \usepackage{tabularray}
 #' \usepackage{float}
+#' \usepackage{graphicx}
 #' \usepackage{codehigh}
 #' \usepackage[normalem]{ulem}
 #' \UseTblrLibrary{booktabs}

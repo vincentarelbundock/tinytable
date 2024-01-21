@@ -103,6 +103,7 @@ When rendering Quarto and Rmarkdown documents, \code{tinytable} will populate th
 
 \if{html}{\out{<div class="sourceCode latex">}}\preformatted{\\usepackage\{tabularray\}
 \\usepackage\{float\}
+\\usepackage\{graphicx\}
 \\usepackage\{codehigh\}
 \\usepackage[normalem]\{ulem\}
 \\UseTblrLibrary\{booktabs\}
