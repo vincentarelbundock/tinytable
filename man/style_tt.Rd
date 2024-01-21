@@ -22,6 +22,7 @@ style_tt(
   indent = 0,
   tabularray_inner = NULL,
   tabularray_outer = NULL,
+  bootstrap_class = "table",
   bootstrap_css = NULL,
   bootstrap_css_rule = NULL,
   ...
@@ -75,6 +76,8 @@ style_tt(
 \item{tabularray_inner}{A string that specifies the "inner" settings of a tabularray LaTeX table.}
 
 \item{tabularray_outer}{A string that specifies the "outer" settings of a tabularray LaTeX table.}
+
+\item{bootstrap_class}{String. A Bootstrap table class such as \code{"table"}, \code{"table table-dark"} or \code{"table table-dark table-hover"}. See the bootstrap documentation.}
 
 \item{bootstrap_css}{A vector of CSS style declarations to be applied (ex: \code{"font-weight: bold"}). Each element corresponds to a cell defined by \code{i} and \code{j}.}
 

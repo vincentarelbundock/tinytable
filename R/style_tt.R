@@ -29,6 +29,7 @@
 #' @param align A single character or a string with a number of characters equal to the number of columns in `j`. Valid characters include 'c' (center), 'l' (left), or 'r' (right).
 #' @param colspan Number of columns a cell should span. Can only be used if both `i` and `j` are of length 1. Must be an integer greater than 1.
 #' @param indent Text indentation in em units. Positive values only.
+#' @param bootstrap_class String. A Bootstrap table class such as `"table"`, `"table table-dark"` or `"table table-dark table-hover"`. See the bootstrap documentation. 
 #' @param bootstrap_css A vector of CSS style declarations to be applied (ex: `"font-weight: bold"`). Each element corresponds to a cell defined by `i` and `j`.
 #' @param bootstrap_css_rule A string with complete CSS rules that apply to the table class specified using the `theme` argument of the `tt()` function.
 #' @param tabularray_inner A string that specifies the "inner" settings of a tabularray LaTeX table. 
@@ -62,6 +63,7 @@ style_tt <- function (x,
                       indent = 0,
                       tabularray_inner = NULL,
                       tabularray_outer = NULL,
+                      bootstrap_class = "table",
                       bootstrap_css = NULL,
                       bootstrap_css_rule = NULL,
                       ...) {
@@ -86,6 +88,7 @@ style_tt <- function (x,
               indent = indent,
               tabularray_inner = tabularray_inner,
               tabularray_outer = tabularray_outer,
+              bootstrap_class = bootstrap_class,
               bootstrap_css = bootstrap_css,
               bootstrap_css_rule = bootstrap_css_rule)
 
@@ -117,6 +120,7 @@ style_tt_lazy <- function (x,
                            indent,
                            tabularray_inner,
                            tabularray_outer,
+                           bootstrap_class,
                            bootstrap_css,
                            bootstrap_css_rule) {
 
@@ -166,7 +170,7 @@ style_tt_lazy <- function (x,
     x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
     color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, indent = indent,
     tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css,
-    bootstrap_css_rule = bootstrap_css_rule)
+    bootstrap_css_rule = bootstrap_css_rule, bootstrap_class = bootstrap_class)
 
   out <- style_tabularray(
     x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
@@ -176,7 +180,7 @@ style_tt_lazy <- function (x,
   out <- style_bootstrap(
     x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
     color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, indent = indent,
-    bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule)
+    bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule, bootstrap_class = bootstrap_class)
 
   out <- style_grid(
     x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
@@ -204,7 +208,8 @@ assert_style_tt <- function (x,
                              indent,
                              tabularray_inner,
                              tabularray_outer,
-                             bootstrap_css,
+                             bootstrap_class = NULL,
+                             bootstrap_css = NULL,
                              bootstrap_css_rule = NULL) {
 
   m <- meta(x)
@@ -220,6 +225,7 @@ assert_style_tt <- function (x,
   assert_logical(monospace)
   assert_logical(underline)
   assert_logical(strikeout)
+  assert_character(bootstrap_class, null.ok = TRUE)
   assert_character(bootstrap_css, null.ok = TRUE)
   assert_string(bootstrap_css_rule, null.ok = TRUE)
 

@@ -61,7 +61,9 @@ build_tt <- function(x, output = NULL) {
       out <- eval(l)
     }
   }
-  out <- meta(out, "output", output)
+
+  # finalize 
+  out <- finalize_bootstrap(out)
 
   # formal grid specification in pandoc includes lines everywhere
   hlines <- getOption("tinytable_grid_hlines", default = TRUE)

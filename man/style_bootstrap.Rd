@@ -20,6 +20,7 @@ style_bootstrap(
   align = NULL,
   colspan = NULL,
   indent = 0,
+  bootstrap_class = "table",
   bootstrap_css = NULL,
   bootstrap_css_rule = NULL
 )
@@ -68,6 +69,8 @@ style_bootstrap(
 \item{colspan}{Number of columns a cell should span. Can only be used if both \code{i} and \code{j} are of length 1. Must be an integer greater than 1.}
 
 \item{indent}{Text indentation in em units. Positive values only.}
+
+\item{bootstrap_class}{String. A Bootstrap table class such as \code{"table"}, \code{"table table-dark"} or \code{"table table-dark table-hover"}. See the bootstrap documentation.}
 
 \item{bootstrap_css}{A vector of CSS style declarations to be applied (ex: \code{"font-weight: bold"}). Each element corresponds to a cell defined by \code{i} and \code{j}.}
 

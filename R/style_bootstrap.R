@@ -16,6 +16,7 @@ style_bootstrap <- function(x,
                             align = NULL,
                             colspan = NULL,
                             indent = 0,
+                            bootstrap_class = "table",
                             bootstrap_css = NULL,
                             bootstrap_css_rule = NULL) {
 
@@ -118,6 +119,14 @@ style_bootstrap <- function(x,
 
   if (!is.null(bootstrap_css_rule)) {
     out <- bootstrap_setting(out, bootstrap_css_rule, component = "css")
+  }
+
+  if (!is.null(bootstrap_class)) {
+    out <- gsub(
+      "$tinytable_BOOTSTRAP_CLASS",
+      bootstrap_class,
+      out,
+      fixed = TRUE)
   }
 
   # Changing function names to table ID to avoid conflict with other tables functions 

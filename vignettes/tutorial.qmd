@@ -598,20 +598,20 @@ The HTML customization options described in this section are not available for L
 ## Themes
 
 ::: {.content-visible when-format="html"}
-The Bootstrap framework provides a number of built-in themes to style tables. To use them, we call `bootstrapOptions()` with the `class` argument, and we specify the Bootstrap class. A list of available Bootstrap classes can be found here: <https://getbootstrap.com/docs/5.3/content/tables/>
+The Bootstrap framework provides a number of built-in themes to style tables, using "classes." To use them, we call `style_tt()` with the `bootstrap_class` argument. A list of available Bootstrap classes can be found here: <https://getbootstrap.com/docs/5.3/content/tables/>
 
 For example, to produce a "dark" table, we use the `table-dark` class:
 
 ```{r, eval = knitr::is_html_output()}
-tt(x, theme = "table table-dark")
+tt(x) |> style_tt(bootstrap_class = "table table-dark")
 ```
 
 We can also combine several Bootstrap classes. Here, we get a "striped" table with the "warning" color and hover feature:
 
 ```{r, eval = knitr::is_html_output()}
-tt(x, theme = "table table-striped table-warning table-hover")
+tt(x) |> style_tt(
+  bootstrap_class = "table table-striped table-warning table-hover")
 ```
-
 :::
 
 ## CSS declarations

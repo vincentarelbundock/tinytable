@@ -15,7 +15,7 @@
 #' @param width A numeric value between 0 and 1 indicating the proportion of the line width that the table should cover.
 #' @param theme The theme to apply to the table.
 #' * LaTeX: "default", "striped", "void", or "grid".
-#' * HTML: "default", "striped", "void", "grid", or a (composite) Bootstrap class such as `"table table-dark"` or `"table table-dark table-hover"`. See 
+#' * HTML: "default", "striped", "void", "grid", or a (composite) 
 #' @param notes A single string or a (named) list of strings to append at the bottom of the table.
 #' 
 #' @param placement A string to control the position of tables in LaTeX. Will be inserted in square brackets like: `\\begin{table}[H]`

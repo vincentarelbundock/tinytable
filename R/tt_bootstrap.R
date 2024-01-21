@@ -1,6 +1,6 @@
 tt_bootstrap <- function(x, caption, theme, width, notes, ...) {
 
-  template <- template_bootstrap(theme)
+  template <- readLines(system.file("templates/bootstrap.html", package = "tinytable"))
   m <- meta(x)
 
 
