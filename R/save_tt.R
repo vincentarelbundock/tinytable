@@ -39,6 +39,9 @@ save_tt <- function(x, output, overwrite = FALSE) {
     return(as.character(out))
   }
 
+  d <- ttempdir()
+  x <- meta(x, "path_dir_output", dirname(output))
+  x <- meta(x, "path_dir_build", d)
 
   file_ext <- tools::file_ext(output)
 
@@ -62,14 +65,15 @@ save_tt <- function(x, output, overwrite = FALSE) {
 
   } else if (file_ext == "png") {
     assert_dependency("webshot2")
-    d <- tempdir()
-    f <- file.path(d, "index.html")
+    # this doesn't work in tempdir() for some reason.
+    # probably webshot2's fault.
+    f <- file.path(dirname(output), paste0(get_id(), ".html"))
     write(x, file = f)
-    webshot2::webshot(
-                      f,
+    webshot2::webshot(f,
                       file = output,
                       selector = "body > div > table",
                       zoom = 4)
+    unlink(f)
 
   } else if (file_ext == "pdf") {
     assert_dependency("tinytex")
@@ -81,6 +85,7 @@ save_tt <- function(x, output, overwrite = FALSE) {
     tmp <- sprintf("
 \\documentclass{standalone}
 \\usepackage{tabularray}
+\\usepackage{graphicx}
 \\usepackage{float}
 \\usepackage{codehigh}
 \\usepackage[normalem]{ulem}
@@ -92,15 +97,17 @@ save_tt <- function(x, output, overwrite = FALSE) {
 %s
 \\end{document}",
                          tmp)
-    d <- tempdir()
     f <- file.path(d, "index.tex")
-    write(tmp, f)
+    write(tmp, f) 
+    # tinytex is fiddly with file paths, so we need to hack 
+    # it by changing the working directory
+    wd <- getwd()
+    setwd(d)
     tinytex::xelatex(f, pdf_file = output)
+    setwd(wd)
 
     } else if (file_ext == "docx") {
       assert_dependency("pandoc")
-      # fn <- file.path(tempdir(), "temp.md")
-      # write(x, file = fn)
       pandoc::pandoc_convert(text = x, to = "docx", output = output)
     }
 

@@ -1,6 +1,8 @@
 # internal function
 # style_tt() stores style calls and we only want to evaluate them at the end because 
 # some rows may be added, which changes how the style is applied
+#
+# THE ORDER MATTERS A LOT!
 build_tt <- function(x, output = NULL) {
   m <- meta(x)
 
@@ -10,6 +12,14 @@ build_tt <- function(x, output = NULL) {
 
   # format data before drawing the table
   for (l in m$lazy_format) {
+    tmp <- out
+    class(tmp) <- "data.frame"
+    l[["x"]] <- tmp
+    out <- eval(l)
+  }
+
+  # plots and images
+  for (l in m$lazy_plot) {
     tmp <- out
     class(tmp) <- "data.frame"
     l[["x"]] <- tmp

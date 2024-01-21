@@ -22,6 +22,7 @@ sanitize_output <- function(output) {
       usepackage_latex("float")
       usepackage_latex("tabularray", extra_lines = c(
         "\\usepackage[normalem]{ulem}",
+        "\\usepackage{graphicx}",
         "\\UseTblrLibrary{booktabs}",
         "\\NewTableCommand{\\tinytableDefineColor}[3]{\\definecolor{#1}{#2}{#3}}",
         "\\newcommand{\\tinytableTabularrayUnderline}[1]{\\underline{#1}}",
@@ -203,3 +204,10 @@ check_atomic_vector<- function(x, null.ok = FALSE, name = as.character(substitut
   return(out)
 }
 
+
+assert_class <- function(x, classname) {
+  if (!inherits(x, classname)) {
+    msg <- sprintf("`x` must be of class `%s`.", classname)
+    stop(msg, call. = FALSE)
+  }
+}

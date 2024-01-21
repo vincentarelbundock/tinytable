@@ -61,6 +61,7 @@ tt <- function(x,
   out <- x 
   out <- meta(out, "x_character", data.frame(lapply(x, as.character)))
   out <- meta(out, "output", output)
+  out <- meta(out, "output_dir", getwd())
   out <- meta(out, "colnames", names(x))
   out <- meta(out, "xdim", dim(x))
   out <- meta(out, "output", output)
