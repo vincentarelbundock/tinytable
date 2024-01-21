@@ -569,23 +569,73 @@ tt(k, width = .5, theme = "void") |>
 # Tiny plots and images
 
 
-```{r, eval = FALSE}
-x <- mtcars[1:3, 1:3]
-p <- rep("assets/spider.png", 3)
-# p[2] <- 'https://user-images.githubusercontent.com/987057/82732352-b9aabf00-9cda-11ea-92a6-26750cf097d0.png'
-d <- list(rnorm(100), rpois(100, 1), runif(100, 0, 1))
-# plot vector as histogram
-k <- function(d) {
+## Inserting images in tables
+
+To insert images in a table, we use the `plot_tt()` function. The `path_img` values must be relative to the main document saved by `save_tt()` or to the Quarto (or Rmarkdown) document in which the code is executed.
+
+```{r}
+dat <- data.frame(
+  Species = c("Spider", "Squirrel"),
+  Image = ""
+)
+
+img <- c(
+  "../man/figures/spider.png",
+  "../man/figures/squirrel.png"
+)
+
+tt(dat) |>
+  plot_tt(j = 2, path_img = img, height = 3)
+```
+
+In HTML tables, it is possible to insert tables directly from a web address, but not in LaTeX.
+
+::: {.content-visible when-format="html"}
+```{r}
+dat <- data.frame("R" = "")
+img <- "https://cran.r-project.org/Rlogo.svg"
+tt(dat) |>
+  plot_tt(i = 1, j = 1, path_img = img, height = 7) |>
+  style_tt(j = 1, align = "c")
+```
+:::
+
+## Inline plots
+
+### Custom plots: Base `R`
+
+```{r}
+f <- function(d) {
+  function() hist(d, axes = FALSE, ann = FALSE)
+}
+
+plot_fun <- rep(list(f), 3)
+plot_data <- list(mtcars$mpg, mtcars$hp, mtcars$qsec)
+
+dat <- data.frame(Variables = c("mpg", "hp", "qsec"), Histogram = "")
+
+tt(dat) |>
+  plot_tt(j = 2, plot_fun = plot_fun, plot_data = plot_data)
+```
+
+
+### Custom plots: `ggplot2`
+
+```{r}
+f <- function(d) {
   d <- data.frame(x = d)
   ggplot2::ggplot(d, ggplot2::aes(x = x)) + 
     ggplot2::geom_histogram(bins = 30) +
+    ggplot2::scale_x_continuous(expand=c(0,0)) +
+    ggplot2::scale_y_continuous(expand=c(0,0)) +
     ggplot2::theme_void()
 }
-k <- function(d) {
-  function() hist(d, axes=FALSE, ann=FALSE)
-}
-tt(x) |>
-  plot_tt(j = 3, fun = list(k, k, k), data = d)
+
+plot_fun <- rep(list(f), 3)
+plot_data <- list(mtcars$mpg, mtcars$hp, mtcars$qsec)
+
+tt(dat) |>
+  plot_tt(j = 2, plot_fun = plot_fun, plot_data = plot_data)
 ```
 
 
