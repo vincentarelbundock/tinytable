@@ -1,14 +1,16 @@
 plot_tt <- function(x,
                     i = NULL,
                     j = NULL,
-                    data = NULL,
-                    path = NULL,
                     height = 2,
+                    data = NULL,
+                    fun = NULL,
+                    path_img = NULL,
+                    path_assets = "tinytable_assets",
                     ...) {
 
   assert_integerish(i, null.ok = TRUE)
   assert_integerish(j, null.ok = TRUE)
-  assert_integerish(height, len = 1)
+  assert_numeric(height, len = 1, lower = 0)
   assert_class(x, "tinytable")
   out <- x
 
@@ -16,24 +18,26 @@ plot_tt <- function(x,
   jval <- if (is.null(j)) seq_len(meta(x, "ncols")) else j
 
   len <- length(ival) * length(jval)
-  assert_character(path, len = len)
-  if (length(path) != len) {
-    msg <- sprintf("`path` must match the dimensions of `i` and `j`: length %s.", len) 
+  assert_character(path_img, len = len)
+  if (length(path_img) != len) {
+    msg <- sprintf("`path_img` must match the dimensions of `i` and `j`: length %s.", len) 
     stop(msg, call. = FALSE)
   }
 
   # needed when rendering in tempdir()
-  out <- meta(out, "path_plot", path)
+  out <- meta(out, "path_plot", path_img)
 
   cal <- call("plot_tt_lazy", 
     i = ival,
     j = jval,
-    path = path,
     data = data,
-    height = height)
+    fun = fun,
+    height = height,
+    path_img = path_img,
+    path_assets = path_assets)
 
   out <- meta(out, "lazy_plot", c(meta(out)$lazy_plot, list(cal)))
-  out <- meta(out, "path_image", path)
+  out <- meta(out, "path_image", path_img)
 
   return(out)
 }
@@ -42,55 +46,70 @@ plot_tt <- function(x,
 plot_tt_lazy <- function(x,
                          i = NULL,
                          j = NULL,
-                         path = NULL,
+                         fun = fun,
+                         path_img = NULL,
+                         path_assets = "tinytable_assets",
                          data = NULL,
                          height = 2,
-                         assets = "tinytable_assets",
                          ...) {
 
   out <- x
 
   if (!is.null(data)) {
     assert_dependency('ggplot2')
-    path <- NULL
+    path_img <- NULL
     if (!is.null(meta(x)$output_dir)) {
-      assets_full <- file.path(meta(x)$output_dir, assets)
+      path_full <- file.path(meta(x)$output_dir, path_assets)
     }
 
-    if (!dir.exists(assets_full)) {
-      dir.create(assets_full)
+    if (!dir.exists(path_full)) {
+      dir.create(path_full)
     }
     for (idx in seq_along(data)) {
       fn <- paste0(get_id(), ".png")
-      fn_full <- file.path(assets_full, fn)
-      fn <- file.path(assets, fn)
-      path[idx] <- fn
-      d <- data.frame(x = data[[idx]])
-      p <- ggplot2::ggplot(d, ggplot2::aes(x = x)) + 
-        ggplot2::geom_histogram(bins = 30) +
-        ggplot2::theme_void()
-      suppressMessages(ggplot2::ggsave(
-        filename = fn_full,
-        height = 100, width = 200,
-        units = "px"
-      ))
+      fn_full <- file.path(path_full, fn)
+      fn <- file.path(path_assets, fn)
+      path_img[idx] <- fn
+      p <- fun[[idx]](data[[idx]])
+
+      # ggplot2
+      if (inherits(p, "ggplot")) {
+        assert_dependency("ggplot2")
+        suppressMessages(ggplot2::ggsave(
+          filename = fn_full,
+          height = 4, width = 5,
+          units = "in"
+        ))
+
+      # base R
+      } else if (is.function(p)) {
+        png(fn_full)
+        p()
+        dev.off()
+
+      # sanity check
+      } else {
+        msg <- "The functions in the `fun` list must return a function or a `ggplot2` object. See the tutorial online for examples: https://vincentarelbundock.github.io/tinytable"
+        stop(msg, call. = FALSE)
+      }
+
     }
   }
 
   if (meta(x)$output == "latex") {
     cell <- "\\includegraphics[height=%sem]{%s}"
-    cell <- sprintf(cell, height, path)
+    cell <- sprintf(cell, height, path_img)
 
   } else if (meta(x)$output == "html") {
     cell <- ifelse(
-      grepl("^http", trimws(path)),
+      grepl("^http", trimws(path_img)),
       '<img src="%s" style="height: %sem;">',
       '<img src="./%s" style="height: %sem;">')
-    cell <- sprintf(cell, path, height)
+    cell <- sprintf(cell, path_img, height)
 
   } else if (meta(x)$output == "markdown") {
     cell <- '![](%s)'
-    cell <- sprintf(cell, path)
+    cell <- sprintf(cell, path_img)
 
   } else {
     stop("here be dragons")

@@ -566,6 +566,28 @@ tt(k, width = .5, theme = "void") |>
     fontsize = fs)
 ```
 
+# Tiny plots and images
+
+
+```{r, eval = FALSE}
+x <- mtcars[1:3, 1:3]
+p <- rep("assets/spider.png", 3)
+# p[2] <- 'https://user-images.githubusercontent.com/987057/82732352-b9aabf00-9cda-11ea-92a6-26750cf097d0.png'
+d <- list(rnorm(100), rpois(100, 1), runif(100, 0, 1))
+# plot vector as histogram
+k <- function(d) {
+  d <- data.frame(x = d)
+  ggplot2::ggplot(d, ggplot2::aes(x = x)) + 
+    ggplot2::geom_histogram(bins = 30) +
+    ggplot2::theme_void()
+}
+k <- function(d) {
+  function() hist(d, axes=FALSE, ann=FALSE)
+}
+tt(x) |>
+  plot_tt(j = 3, fun = list(k, k, k), data = d)
+```
+
 
 # Groups and labels
 
