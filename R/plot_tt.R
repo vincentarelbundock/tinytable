@@ -29,8 +29,11 @@ plot_tt <- function(x,
                     plot_asp = 1/3,
                     plot_data = NULL,
                     plot_fun = NULL,
+                    plot_color = "black",
                     path_img = NULL,
-                    path_assets = "tinytable_assets") {
+                    plot_xlim = NULL,
+                    path_assets = "tinytable_assets",
+                    ...) {
 
   assert_integerish(i, null.ok = TRUE)
   assert_integerish(j, null.ok = TRUE)
@@ -43,26 +46,61 @@ plot_tt <- function(x,
   jval <- if (is.null(j)) seq_len(meta(x, "ncols")) else j
 
   len <- length(ival) * length(jval)
+
   assert_list(plot_data, len = len, null.ok = TRUE)
-  assert_list(plot_fun, len = len, null.ok = TRUE)
   assert_character(path_img, len = len, null.ok = TRUE)
+
   if (!is.null(path_img) && length(path_img) != len) {
     msg <- sprintf("`path_img` must match the dimensions of `i` and `j`: length %s.", len) 
     stop(msg, call. = FALSE)
   }
 
+  if (!is.null(plot_fun) && !is.null(path_img)) {
+    stop("`plot_fun` and `path_img` cannot be used together.", call. = FALSE)
+  }
+
+  if (!is.null(plot_fun) && is.null(plot_data)) {
+    stop("Please specify `plot_data`.", call. = FALSE)
+  }
+
+  if (is.character(plot_fun)) {
+    assert_choice(plot_fun, c("histogram", "density", "bar"))
+  } else {
+    assert_list(plot_data, len = len, null.ok = TRUE)
+  }
+
+  # built-in plots
+  if (identical(plot_fun, "histogram")) {
+    plot_fun <- rep(list(tiny_plot_histogram), length(plot_data))
+
+  } else if (identical(plot_fun, "density")) {
+    plot_fun <- rep(list(tiny_plot_density), length(plot_data))
+
+  } else if (identical(plot_fun, "bar")) {
+    for (idx in seq_along(plot_data)) {
+      assert_numeric(plot_data[[idx]], len = 1, name = "plot_data[[1]]")
+    }
+    plot_xlim <- c(0, max(unlist(plot_data)))
+    plot_fun <- rep(list(tiny_plot_bar), length(plot_data))
+  }
+
   # needed when rendering in tempdir()
   out <- meta(out, "path_plot", path_img)
 
-  cal <- call("plot_tt_lazy", 
+  cal <- list(
+    "plot_tt_lazy", 
     i = ival,
     j = jval,
     plot_asp = plot_asp,
     plot_data = plot_data,
     plot_fun = plot_fun,
+    plot_color = plot_color,
+    plot_xlim = plot_xlim,
     height = height,
     path_img = path_img,
     path_assets = path_assets)
+  cal <- c(cal, list(...))
+  cal <- do.call(call, cal)
 
   out <- meta(out, "lazy_plot", c(meta(out)$lazy_plot, list(cal)))
   out <- meta(out, "path_image", path_img)
@@ -77,9 +115,12 @@ plot_tt_lazy <- function(x,
                          height = 1,
                          plot_asp = 1/3,
                          plot_fun = NULL,
+                         plot_color = NULL,
                          plot_data = NULL,
+                         plot_xlim = NULL,
                          path_img = NULL,
-                         path_assets = "tinytable_assets") {
+                         path_assets = "tinytable_assets",
+                         ...) {
 
   out <- x
 
@@ -98,7 +139,7 @@ plot_tt_lazy <- function(x,
       fn_full <- file.path(path_full, fn)
       fn <- file.path(path_assets, fn)
       path_img[idx] <- fn
-      p <- plot_fun[[idx]](plot_data[[idx]])
+      p <- plot_fun[[idx]](plot_data[[idx]], xlim = plot_xlim, color = plot_color, ...)
 
       # ggplot2
       if (inherits(p, "ggplot")) {
@@ -154,3 +195,23 @@ plot_tt_lazy <- function(x,
 
 
 
+tiny_plot_histogram <- function(d, color = "black", ...) {
+  function() hist(d, col = color, axes = FALSE, ann = FALSE)
+}
+
+
+
+tiny_plot_density <- function(d, color = "black", ...) {
+  function() {
+    d <- density(d)
+    plot(d, axes = FALSE, ann = FALSE, col = color)
+    polygon(d, col = color)
+  }
+}
+
+
+tiny_plot_bar <- function(d, color = "black", xlim = 0:1, ...) {
+  function() {
+    barplot(d, horiz = TRUE, col = color, xlim = xlim)
+  }
+}

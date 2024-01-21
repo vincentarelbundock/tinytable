@@ -602,6 +602,28 @@ tt(dat) |>
 
 ## Inline plots
 
+### Built-in plots
+
+There are several types of inline plots available by default. For example,
+
+```{r}
+
+plot_data <- list(mtcars$mpg, mtcars$hp, mtcars$qsec)
+
+dat <- data.frame(
+  Variables = c("mpg", "hp", "qsec"), 
+  Histogram = "",
+  Density = "",
+  Bar = ""
+)
+
+tt(dat) |>
+  plot_tt(j = 2, plot_fun = "histogram", plot_data = plot_data) |>
+  plot_tt(j = 3, plot_fun = "density", plot_data = plot_data, color = "darkgreen") |>
+  plot_tt(j = 4, plot_fun = "bar", plot_data = list(2, 3, 6), color = "lightblue") |>
+  style_tt(j = 2:4, align = "c")
+```
+
 ### Custom plots: Base `R`
 
 ```{r}
