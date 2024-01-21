@@ -13,11 +13,11 @@ format_tt(
   num_suffix = FALSE,
   num_mark_big = "",
   num_mark_dec = getOption("OutDec", default = "."),
-  sprintf = NULL,
-  url = FALSE,
   date = "\%Y-\%m-\%d",
   bool = function(column) tools::toTitleCase(tolower(column)),
-  other = identity
+  other = as.character,
+  markdown = FALSE,
+  sprintf = NULL
 )
 }
 \arguments{
@@ -37,15 +37,15 @@ format_tt(
 
 \item{num_mark_dec}{Decimal mark character. Default is the global option 'OutDec'.}
 
-\item{sprintf}{String passed to the \code{?sprintf} function to format numbers or interpolate strings with a user-defined pattern (similar to the \code{glue} package, but using Base R).}
-
-\item{url}{Logical; if TRUE, treats the column as a URL.}
-
 \item{date}{A string passed to the \code{format()} function, such as "\%Y-\%m-\%d". See the "Details" section in \code{?strptime}}
 
 \item{bool}{A function to format logical columns. Defaults to title case.}
 
-\item{other}{A function to format columns of other types. Defaults to identity (no formatting).}
+\item{other}{A function to format columns of other types. Defaults to \code{as.character()}.}
+
+\item{markdown}{Logical; if TRUE, render markdown syntax in cells. Ex: \verb{_italicized text_} is properly italicized in HTML and LaTeX.}
+
+\item{sprintf}{String passed to the \code{?sprintf} function to format numbers or interpolate strings with a user-defined pattern (similar to the \code{glue} package, but using Base R).}
 }
 \value{
 A data frame with formatted columns.

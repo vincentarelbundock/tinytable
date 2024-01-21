@@ -11,11 +11,11 @@
 #' @param num_mark_big Character to use as a thousands separator.
 #' @param num_mark_dec Decimal mark character. Default is the global option 'OutDec'.
 #' @param num_suffix Logical; if TRUE display short numbers with `digits` significant digits and K (thousands), M (millions), B (billions), or T (trillions) suffixes.
-#' @param sprintf String passed to the `?sprintf` function to format numbers or interpolate strings with a user-defined pattern (similar to the `glue` package, but using Base R).
-#' @param url Logical; if TRUE, treats the column as a URL.
 #' @param date A string passed to the `format()` function, such as "%Y-%m-%d". See the "Details" section in `?strptime`
 #' @param bool A function to format logical columns. Defaults to title case.
-#' @param other A function to format columns of other types. Defaults to identity (no formatting).
+#' @param other A function to format columns of other types. Defaults to `as.character()`.
+#' @param markdown Logical; if TRUE, render markdown syntax in cells. Ex: `_italicized text_` is properly italicized in HTML and LaTeX.
+#' @param sprintf String passed to the `?sprintf` function to format numbers or interpolate strings with a user-defined pattern (similar to the `glue` package, but using Base R).
 #' @inheritParams tt
 #' @inheritParams style_tt
 #'
@@ -39,11 +39,11 @@ format_tt <- function(x,
                       num_suffix = FALSE,
                       num_mark_big = "",
                       num_mark_dec = getOption("OutDec", default = "."),
-                      sprintf = NULL,
-                      url = FALSE,
                       date = "%Y-%m-%d",
                       bool = function(column) tools::toTitleCase(tolower(column)),
-                      other = identity
+                      other = as.character,
+                      markdown = FALSE,
+                      sprintf = NULL
                       ) {
 
   out <- x
@@ -61,6 +61,7 @@ format_tt <- function(x,
                 url = url,
                 date = date,
                 bool = bool,
+                markdown = markdown,
                 other = other)
     out <- meta(out, "lazy_format", c(meta(out)$lazy_format, list(cal)))
   } else {
@@ -77,7 +78,8 @@ format_tt <- function(x,
                           url = url,
                           date = date,
                           bool = bool,
-                          other = other)
+                          other = other,
+                          markdown = markdown)
   }
   return(out)
 }
@@ -94,7 +96,8 @@ format_tt_lazy <- function(x,
                            url = FALSE,
                            date = "%Y-%m-%d",
                            bool = identity,
-                           other = identity
+                           markdown = FALSE,
+                           other = as.character
                            ) {
 
   if (isTRUE(check_atomic_vector(x))) {
@@ -116,11 +119,11 @@ format_tt_lazy <- function(x,
   assert_flag(num_zero)
   assert_string(num_mark_big)
   assert_string(num_mark_dec)
-  assert_flag(url)
   assert_string(date)
   assert_function(bool)
   assert_function(identity)
   assert_string(sprintf, null.ok = TRUE)
+  assert_flag(markdown)
 
 
   # column index NULL or regex or integer vector
@@ -191,6 +194,25 @@ format_tt_lazy <- function(x,
     }
 
   } # loop over columns
+
+  # markdown at the very end
+  if (isTRUE(markdown)) {
+    assert_dependency("markdown")
+    for (col in j) {
+      if (meta(x)$output == "html") {
+        fun <- function(x) {
+          out <- trimws(markdown::mark_html(text = x, template = FALSE))
+          out <- sub("<p>", "", out, fixed = TRUE)
+          out <- sub("</p>", "", out, fixed = TRUE)
+          return(out)
+        }
+        x[, col] <- sapply(x[, col], fun)
+      } else if (meta(x)$output == "latex") {
+        fun <- function(x) trimws(markdown::mark_latex(text = x, template = FALSE))
+        x[, col] <- sapply(x[, col], fun)
+      }
+    }
+  }
 
   if (isTRUE(atomic_vector)) {
     return(x[[1]])

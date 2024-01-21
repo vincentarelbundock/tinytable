@@ -78,3 +78,14 @@ build_tt <- function(x, output = NULL) {
 
   return(out)
 }
+
+
+finalize_bootstrap <- function(x) {
+    if (meta(x)$output != "html") return(x)
+    out <- gsub(
+      "$tinytable_BOOTSTRAP_CLASS",
+      "table",
+      x,
+      fixed = TRUE)
+    return(out)
+}

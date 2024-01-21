@@ -300,6 +300,42 @@ tt(dat) |>
 ```
 :::
 
+## Markdown
+
+Markdown can be rendered in cells by using the `markdown` argument of the `format_tt()` function (note: this requires installing the `markdown` as an optional dependency). 
+
+```{r}
+dat <- data.frame( markdown = c(
+  "This is _italic_ text.",
+  "This sentence ends with a superscript^2^.")
+)
+
+tt(dat) |>
+  format_tt(j = 1, markdown = TRUE) |>
+  style_tt(j = 1, align = "c")
+```
+
+Markdown syntax can be particularly useful when formatting URL links in a table:
+
+```{r}
+dat <- data.frame(
+  Links = c(
+    "[`marginaleffects`](https://www.marginaleffects.com/)",
+    "[`modelsummary`](https://www.modelsummary.com/)",
+    "[`tinytable`](https://vincentarelbundock.github.io/tinytable/)",
+    "[`countrycode`](https://vincentarelbundock.github.io/countrycode/)",
+    "[`WDI`](https://vincentarelbundock.github.io/WDI/)",
+    "[`altdoc`](https://etiennebacher.github.io/altdoc/)",
+    "[`plot2`](https://grantmcdermott.com/plot2/)",
+    "[`parameters`](https://easystats.github.io/parameters/)",
+    "[`insight`](https://easystats.github.io/insight/)"
+  )
+)
+
+tt(dat) |> format_tt(j = 1, markdown = TRUE)
+```
+
+
 # Style
 
 The main styling function for the `tinytable` package is `style_tt()`. Via this function, you can access three main interfaces to customize tables:
