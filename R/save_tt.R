@@ -39,6 +39,7 @@ save_tt <- function(x, output, overwrite = FALSE) {
     return(as.character(out))
   }
 
+  x <- meta(x, "output_dir", dirname(output))
 
   file_ext <- tools::file_ext(output)
 

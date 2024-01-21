@@ -1,6 +1,7 @@
 plot_tt <- function(x,
                     i = NULL,
                     j = NULL,
+                    data = NULL,
                     path = NULL,
                     height = 2,
                     ...) {
@@ -28,6 +29,7 @@ plot_tt <- function(x,
     i = ival,
     j = jval,
     path = path,
+    data = data,
     height = height)
 
   out <- meta(out, "lazy_plot", c(meta(out)$lazy_plot, list(cal)))
@@ -41,19 +43,38 @@ plot_tt_lazy <- function(x,
                          i = NULL,
                          j = NULL,
                          path = NULL,
+                         data = NULL,
                          height = 2,
+                         assets = "tinytable_assets",
                          ...) {
 
   out <- x
 
-  build_dir <- meta(out, "path_dir_build")
+  if (!is.null(data)) {
+    assert_dependency('ggplot2')
+    path <- NULL
+    if (!is.null(meta(x)$output_dir)) {
+      assets_full <- file.path(meta(x)$output_dir, assets)
+    }
 
-  if (!is.null(build_dir)) {
-    tmp <- file.copy(
-      from = path, 
-      to = build_dir,
-      overwrite = TRUE)
-    path <- sapply(path, basename)
+    if (!dir.exists(assets_full)) {
+      dir.create(assets_full)
+    }
+    for (idx in seq_along(data)) {
+      fn <- paste0(get_id(), ".png")
+      fn_full <- file.path(assets_full, fn)
+      fn <- file.path(assets, fn)
+      path[idx] <- fn
+      d <- data.frame(x = data[[idx]])
+      p <- ggplot2::ggplot(d, ggplot2::aes(x = x)) + 
+        ggplot2::geom_histogram(bins = 30) +
+        ggplot2::theme_void()
+      suppressMessages(ggplot2::ggsave(
+        filename = fn_full,
+        height = 100, width = 200,
+        units = "px"
+      ))
+    }
   }
 
   if (meta(x)$output == "latex") {
