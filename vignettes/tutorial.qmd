@@ -636,6 +636,12 @@ tt(dat) |>
 
 ### Custom plots: Base `R`
 
+Important: Custom functions must have `...` as an argument.
+
+To create a custom inline plot using Base `R` plotting functions, we create a function that returns another function. `tinytable` will then call that second function internally to generate the plot.
+
+This is easier than it sounds! For example:
+
 ```{r}
 f <- function(d, ...) {
   function() hist(d, axes = FALSE, ann = FALSE, col = "lightblue")
@@ -651,6 +657,10 @@ tt(dat) |>
 
 
 ### Custom plots: `ggplot2`
+
+Important: Custom functions must have `...` as an argument.
+
+To create a custom inline plot using `ggplot2`, we create a function that returns a `ggplot` object:
 
 ```{r}
 library(ggplot2)
