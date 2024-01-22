@@ -1,6 +1,8 @@
 #' Internal styling function
 #'
 #' @inheritParams style_tt
+#' @keywords internal
+#' @noRd
 style_bootstrap <- function(x,
                             i = NULL,
                             j = NULL,
