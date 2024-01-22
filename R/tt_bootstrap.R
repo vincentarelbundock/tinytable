@@ -98,8 +98,16 @@ tt_bootstrap <- function(x, caption, theme, width, notes, ...) {
 
   out <- paste(template, collapse = "\n")
 
+  # before style_bootstrap()
   class(out) <- c("tinytable", "knit_asis", class(out))
   attr(out, "tinytable_meta") <- m
+
+  if (theme == "striped") {
+    out <- style_bootstrap(out, bootstrap_class = "table table-striped")
+  } else if (theme == "grid") {
+    out <- style_bootstrap(out, bootstrap_class = "table table-bordered")
+  }
+
   return(out)
 }
 
