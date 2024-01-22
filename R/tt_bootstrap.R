@@ -106,6 +106,8 @@ tt_bootstrap <- function(x, caption, theme, width, notes, ...) {
     out <- style_bootstrap(out, bootstrap_class = "table table-striped")
   } else if (theme == "grid") {
     out <- style_bootstrap(out, bootstrap_class = "table table-bordered")
+  } else if (theme == "void") {
+    out <- style_bootstrap(out, bootstrap_class = "table table-borderless")
   }
 
   return(out)
