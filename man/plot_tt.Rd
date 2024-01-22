@@ -37,6 +37,8 @@ images will be inserted in all columns.}
 
 \item{data}{Optional, a list of data frames to be used with a custom plotting function.}
 
+\item{color}{string Name of color to use for inline plots (passed to the \code{col} argument base \code{graphics} plots in \code{R}).}
+
 \item{xlim}{Numeric vector of length 2.}
 
 \item{height}{Numeric, the height of the images in the table in em units.}
@@ -48,8 +50,6 @@ images will be inserted in all columns.}
 \item{assets}{Character, the directory to store generated assets.}
 
 \item{...}{Extra arguments are passed to the function in \code{fun}. Important: Custom plotting functions must always have \code{...} as an argument.}
-
-\item{string}{Name of color to use for inline plots (passed to the \code{col} argument base \code{graphics} plots in \code{R}).}
 }
 \value{
 A modified tinytable object with images or plots inserted.

@@ -11,7 +11,7 @@
 #' @param height Numeric, the height of the images in the table in em units.
 #' @param asp Numeric, aspect ratio of the plots (height / width). 
 #' @param data Optional, a list of data frames to be used with a custom plotting function.
-#' @param string Name of color to use for inline plots (passed to the `col` argument base `graphics` plots in `R`).
+#' @param color string Name of color to use for inline plots (passed to the `col` argument base `graphics` plots in `R`).
 #' @param xlim Numeric vector of length 2.
 #' @param fun  A function to generate plots from the data in `data`. Valid functions include:
 #' - Functions that return `ggplot2` objects.
