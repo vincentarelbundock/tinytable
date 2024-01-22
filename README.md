@@ -26,7 +26,7 @@ package which was:
     with few functions to learn.
 -   *Flexible*: Expressive frameworks to customize tables in HTML and
     LaTeX formats.[1]
--   *Zero-dependency*: Avoid importing any other `R` package.
+-   *Zero-dependency*: Avoid importing any other `R` package.[2]
 -   *Concise*: Draw beautiful tables without typing a lot of code.
 -   *Safe*: User inputs are checked thoroughly, and informative errors
     are returned early.
@@ -120,3 +120,8 @@ tables/plots, please check out my `modelsummary` package:
 
 [1] Other formats like Markdown and Typst are also available, but less
 flexible.
+
+[2] Some extra packages can be imported to access specific
+functionality, such as integration with Quarto, inserting `ggplot2`
+objects as inline plots, and saving tables to PNG images or PDF
+documents.
