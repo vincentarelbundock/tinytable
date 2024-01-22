@@ -1,7 +1,7 @@
 
 
 <p align="center">
-<img src="man/figures/tinytable_logo.svg" height = "250" class = "center">
+<img src="man/figures/gallery/tinytable_gallery.gif" height = "250" class = "center">
 </p>
 
 <br> <!-- badges: start --> <!-- badges: end -->
@@ -37,10 +37,6 @@ package which was:
     editable.
 -   *Free*: This package will always be free. Tiny tables for a tiny
     price!
-
-These are some of the tables that `tinytable` can draw:
-
-![](man/figures/gallery/tinytable_gallery.gif)
 
 To achieve these goals, the design philosophy of `tinytable` rests on
 three pillars:
