@@ -8,12 +8,15 @@ plot_tt(
   x,
   i = NULL,
   j = NULL,
+  fun = NULL,
+  data = NULL,
+  color = "black",
+  xlim = NULL,
   height = 1,
-  plot_asp = 1/3,
-  plot_data = NULL,
-  plot_fun = NULL,
-  path_img = NULL,
-  path_assets = "tinytable_assets"
+  asp = 1/3,
+  images = NULL,
+  assets = "tinytable_assets",
+  ...
 )
 }
 \arguments{
@@ -25,22 +28,28 @@ images will be inserted in all rows.}
 \item{j}{Integer vector, the column indices where images are to be inserted. If \code{NULL},
 images will be inserted in all columns.}
 
-\item{height}{Numeric, the height of the images in the table. Default is 2.}
-
-\item{plot_asp}{Numeric, aspect ratio of the plots (height / width).}
-
-\item{plot_data}{Optional, a list of data frames to be used with a custom plotting function.}
-
-\item{plot_fun}{Optional, a list of functions to generate plots from the data in \code{plot_data}. Valid functions include:
+\item{fun}{Optional, a list of functions to generate plots from the data in \code{plot_data}. Valid functions include:
 \itemize{
 \item Functions that return \code{ggplot2} objects.
 \item Functions that return another function which generates a base \code{R} plot, ex: \code{function(x) {function() hist(x)}}
 \item See the tutorial on the \code{tinytable} website for more information.
 }}
 
-\item{path_img}{Character vector, the paths to the images to be inserted. Paths are relative to the main table file or Quarto (Rmarkdown) document.}
+\item{data}{Optional, a list of data frames to be used with a custom plotting function.}
 
-\item{path_assets}{Character, the directory to store generated assets.}
+\item{xlim}{Numeric vector of length 2.}
+
+\item{height}{Numeric, the height of the images in the table in em units.}
+
+\item{asp}{Numeric, aspect ratio of the plots (height / width).}
+
+\item{images}{Character vector, the paths to the images to be inserted. Paths are relative to the main table file or Quarto (Rmarkdown) document.}
+
+\item{assets}{Character, the directory to store generated assets.}
+
+\item{...}{Extra arguments are passed to the function in \code{fun}. Important: Custom plotting functions must always have \code{...} as an argument.}
+
+\item{string}{Name of color to use for inline plots (passed to the \code{col} argument base \code{graphics} plots in \code{R}).}
 }
 \value{
 A modified tinytable object with images or plots inserted.

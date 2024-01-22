@@ -574,6 +574,7 @@ tt(k, width = .5, theme = "void") |>
 To insert images in a table, we use the `plot_tt()` function. The `path_img` values must be relative to the main document saved by `save_tt()` or to the Quarto (or Rmarkdown) document in which the code is executed.
 
 ```{r}
+pkgload::load_all()
 dat <- data.frame(
   Species = c("Spider", "Squirrel"),
   Image = ""
@@ -585,7 +586,7 @@ img <- c(
 )
 
 tt(dat) |>
-  plot_tt(j = 2, path_img = img, height = 3)
+  plot_tt(j = 2, images = img, height = 3)
 ```
 
 In HTML tables, it is possible to insert tables directly from a web address, but not in LaTeX.
@@ -595,7 +596,7 @@ In HTML tables, it is possible to insert tables directly from a web address, but
 dat <- data.frame("R" = "")
 img <- "https://cran.r-project.org/Rlogo.svg"
 tt(dat) |>
-  plot_tt(i = 1, j = 1, path_img = img, height = 7) |>
+  plot_tt(i = 1, j = 1, images = img, height = 7) |>
   style_tt(j = 1, align = "c")
 ```
 :::
@@ -607,7 +608,6 @@ tt(dat) |>
 There are several types of inline plots available by default. For example,
 
 ```{r}
-
 plot_data <- list(mtcars$mpg, mtcars$hp, mtcars$qsec)
 
 dat <- data.frame(
@@ -618,17 +618,17 @@ dat <- data.frame(
 )
 
 tt(dat) |>
-  plot_tt(j = 2, plot_fun = "histogram", plot_data = plot_data) |>
-  plot_tt(j = 3, plot_fun = "density", plot_data = plot_data, color = "darkgreen") |>
-  plot_tt(j = 4, plot_fun = "bar", plot_data = list(2, 3, 6), color = "lightblue") |>
+  plot_tt(j = 2, fun = "histogram", data = plot_data) |>
+  plot_tt(j = 3, fun = "density", data = plot_data, color = "darkgreen") |>
+  plot_tt(j = 4, fun = "bar", data = list(2, 3, 6), color = "orange") |>
   style_tt(j = 2:4, align = "c")
 ```
 
 ### Custom plots: Base `R`
 
 ```{r}
-f <- function(d) {
-  function() hist(d, axes = FALSE, ann = FALSE)
+f <- function(d, ...) {
+  function() hist(d, axes = FALSE, ann = FALSE, col = "lightblue")
 }
 
 plot_fun <- rep(list(f), 3)
@@ -637,17 +637,17 @@ plot_data <- list(mtcars$mpg, mtcars$hp, mtcars$qsec)
 dat <- data.frame(Variables = c("mpg", "hp", "qsec"), Histogram = "")
 
 tt(dat) |>
-  plot_tt(j = 2, plot_fun = plot_fun, plot_data = plot_data)
+  plot_tt(j = 2, fun = plot_fun, data = plot_data)
 ```
 
 
 ### Custom plots: `ggplot2`
 
 ```{r}
-f <- function(d) {
+f <- function(d, color = "black", ...) {
   d <- data.frame(x = d)
   ggplot2::ggplot(d, ggplot2::aes(x = x)) + 
-    ggplot2::geom_histogram(bins = 30) +
+    ggplot2::geom_histogram(bins = 30, color = color) +
     ggplot2::scale_x_continuous(expand=c(0,0)) +
     ggplot2::scale_y_continuous(expand=c(0,0)) +
     ggplot2::theme_void()
@@ -657,7 +657,7 @@ plot_fun <- rep(list(f), 3)
 plot_data <- list(mtcars$mpg, mtcars$hp, mtcars$qsec)
 
 tt(dat) |>
-  plot_tt(j = 2, plot_fun = plot_fun, plot_data = plot_data)
+  plot_tt(j = 2, fun = plot_fun, data = plot_data, color = "pink")
 ```
 
 

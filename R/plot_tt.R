@@ -8,15 +8,18 @@
 #'    images will be inserted in all rows.
 #' @param j Integer vector, the column indices where images are to be inserted. If `NULL`,
 #'    images will be inserted in all columns.
-#' @param height Numeric, the height of the images in the table. Default is 2.
-#' @param plot_asp Numeric, aspect ratio of the plots (height / width). 
-#' @param plot_data Optional, a list of data frames to be used with a custom plotting function.
-#' @param plot_fun Optional, a list of functions to generate plots from the data in `plot_data`. Valid functions include:
+#' @param height Numeric, the height of the images in the table in em units.
+#' @param asp Numeric, aspect ratio of the plots (height / width). 
+#' @param data Optional, a list of data frames to be used with a custom plotting function.
+#' @param string Name of color to use for inline plots (passed to the `col` argument base `graphics` plots in `R`).
+#' @param xlim Numeric vector of length 2.
+#' @param fun Optional, a list of functions to generate plots from the data in `plot_data`. Valid functions include:
 #' - Functions that return `ggplot2` objects.
 #' - Functions that return another function which generates a base `R` plot, ex: `function(x) {function() hist(x)}`
 #' - See the tutorial on the `tinytable` website for more information.
-#' @param path_img Character vector, the paths to the images to be inserted. Paths are relative to the main table file or Quarto (Rmarkdown) document.
-#' @param path_assets Character, the directory to store generated assets.
+#' @param images Character vector, the paths to the images to be inserted. Paths are relative to the main table file or Quarto (Rmarkdown) document.
+#' @param assets Character, the directory to store generated assets.
+#' @param ... Extra arguments are passed to the function in `fun`. Important: Custom plotting functions must always have `...` as an argument.
 #'
 #' @return A modified tinytable object with images or plots inserted.
 #'
@@ -25,20 +28,20 @@
 plot_tt <- function(x,
                     i = NULL,
                     j = NULL,
+                    fun = NULL,
+                    data = NULL,
+                    color = "black",
+                    xlim = NULL,
                     height = 1,
-                    plot_asp = 1/3,
-                    plot_data = NULL,
-                    plot_fun = NULL,
-                    plot_color = "black",
-                    path_img = NULL,
-                    plot_xlim = NULL,
-                    path_assets = "tinytable_assets",
+                    asp = 1/3,
+                    images = NULL,
+                    assets = "tinytable_assets",
                     ...) {
 
   assert_integerish(i, null.ok = TRUE)
   assert_integerish(j, null.ok = TRUE)
   assert_numeric(height, len = 1, lower = 0)
-  assert_numeric(plot_asp, len = 1, lower = 0, upper = 1)
+  assert_numeric(asp, len = 1, lower = 0, upper = 1)
   assert_class(x, "tinytable")
   out <- x
 
@@ -47,63 +50,63 @@ plot_tt <- function(x,
 
   len <- length(ival) * length(jval)
 
-  assert_list(plot_data, len = len, null.ok = TRUE)
-  assert_character(path_img, len = len, null.ok = TRUE)
+  assert_list(data, len = len, null.ok = TRUE)
+  assert_character(images, len = len, null.ok = TRUE)
 
-  if (!is.null(path_img) && length(path_img) != len) {
-    msg <- sprintf("`path_img` must match the dimensions of `i` and `j`: length %s.", len) 
+  if (!is.null(images) && length(images) != len) {
+    msg <- sprintf("`images` must match the dimensions of `i` and `j`: length %s.", len) 
     stop(msg, call. = FALSE)
   }
 
-  if (!is.null(plot_fun) && !is.null(path_img)) {
-    stop("`plot_fun` and `path_img` cannot be used together.", call. = FALSE)
+  if (!is.null(fun) && !is.null(images)) {
+    stop("`fun` and `images` cannot be used together.", call. = FALSE)
   }
 
-  if (!is.null(plot_fun) && is.null(plot_data)) {
-    stop("Please specify `plot_data`.", call. = FALSE)
+  if (!is.null(fun) && is.null(data)) {
+    stop("Please specify `data`.", call. = FALSE)
   }
 
-  if (is.character(plot_fun)) {
-    assert_choice(plot_fun, c("histogram", "density", "bar"))
+  if (is.character(fun)) {
+    assert_choice(fun, c("histogram", "density", "bar"))
   } else {
-    assert_list(plot_data, len = len, null.ok = TRUE)
+    assert_list(data, len = len, null.ok = TRUE)
   }
 
   # built-in plots
-  if (identical(plot_fun, "histogram")) {
-    plot_fun <- rep(list(tiny_plot_histogram), length(plot_data))
+  if (identical(fun, "histogram")) {
+    fun <- rep(list(tiny_histogram), length(data))
 
-  } else if (identical(plot_fun, "density")) {
-    plot_fun <- rep(list(tiny_plot_density), length(plot_data))
+  } else if (identical(fun, "density")) {
+    fun <- rep(list(tiny_density), length(data))
 
-  } else if (identical(plot_fun, "bar")) {
-    for (idx in seq_along(plot_data)) {
-      assert_numeric(plot_data[[idx]], len = 1, name = "plot_data[[1]]")
+  } else if (identical(fun, "bar")) {
+    for (idx in seq_along(data)) {
+      assert_numeric(data[[idx]], len = 1, name = "data[[1]]")
     }
-    plot_xlim <- c(0, max(unlist(plot_data)))
-    plot_fun <- rep(list(tiny_plot_bar), length(plot_data))
+    xlim <- c(0, max(unlist(data)))
+    fun <- rep(list(tiny_bar), length(data))
   }
 
   # needed when rendering in tempdir()
-  out <- meta(out, "path_plot", path_img)
+  out <- meta(out, "path_plot", images)
 
   cal <- list(
     "plot_tt_lazy", 
     i = ival,
     j = jval,
-    plot_asp = plot_asp,
-    plot_data = plot_data,
-    plot_fun = plot_fun,
-    plot_color = plot_color,
-    plot_xlim = plot_xlim,
+    asp = asp,
+    data = data,
+    fun = fun,
+    color = color,
+    xlim = xlim,
     height = height,
-    path_img = path_img,
-    path_assets = path_assets)
+    images = images,
+    assets = assets)
   cal <- c(cal, list(...))
   cal <- do.call(call, cal)
 
   out <- meta(out, "lazy_plot", c(meta(out)$lazy_plot, list(cal)))
-  out <- meta(out, "path_image", path_img)
+  out <- meta(out, "path_image", images)
 
   return(out)
 }
@@ -113,46 +116,51 @@ plot_tt_lazy <- function(x,
                          i = NULL,
                          j = NULL,
                          height = 1,
-                         plot_asp = 1/3,
-                         plot_fun = NULL,
-                         plot_color = NULL,
-                         plot_data = NULL,
-                         plot_xlim = NULL,
-                         path_img = NULL,
-                         path_assets = "tinytable_assets",
+                         asp = 1/3,
+                         fun = NULL,
+                         color = NULL,
+                         data = NULL,
+                         xlim = NULL,
+                         images = NULL,
+                         assets = "tinytable_assets",
                          ...) {
 
   out <- x
 
-  if (!is.null(plot_data)) {
+  if (!is.null(data)) {
     assert_dependency('ggplot2')
-    path_img <- NULL
+    images <- NULL
     if (!is.null(meta(x)$output_dir)) {
-      path_full <- file.path(meta(x)$output_dir, path_assets)
+      path_full <- file.path(meta(x)$output_dir, assets)
     }
 
     if (!dir.exists(path_full)) {
       dir.create(path_full)
     }
-    for (idx in seq_along(plot_data)) {
+    for (idx in seq_along(data)) {
       fn <- paste0(get_id(), ".png")
       fn_full <- file.path(path_full, fn)
-      fn <- file.path(path_assets, fn)
-      path_img[idx] <- fn
-      p <- plot_fun[[idx]](plot_data[[idx]], xlim = plot_xlim, color = plot_color, ...)
+      fn <- file.path(assets, fn)
+      images[idx] <- fn
+
+      plot_fun <- fun[[idx]]
+      if (!"..." %in% names(formals(plot_fun))) {
+        stop("Inline plotting function must have `...` as argument. See tutorial on the `tinytable` website for examples.", call. = FALSE)
+      }
+      p <- plot_fun(data[[idx]], xlim = xlim, color = color, ...)
 
       # ggplot2
       if (inherits(p, "ggplot")) {
         assert_dependency("ggplot2")
         suppressMessages(ggplot2::ggsave(
           filename = fn_full,
-          width = 1, height = plot_asp,
+          width = 1, height = asp,
           units = "in"
         ))
 
       # base R
       } else if (is.function(p)) {
-        grDevices::png(fn_full, width = 1000, height = 1000 * plot_asp)
+        grDevices::png(fn_full, width = 1000, height = 1000 * asp)
         op <- graphics::par()
         graphics::par(mar = c(0, 0, 0, 0))
         p()
@@ -161,7 +169,7 @@ plot_tt_lazy <- function(x,
 
       # sanity check
       } else {
-        msg <- "The functions in the `plot_fun` list must return a function or a `ggplot2` object. See the tutorial online for examples: https://vincentarelbundock.github.io/tinytable"
+        msg <- "The functions in the `fun` list must return a function or a `ggplot2` object. See the tutorial online for examples: https://vincentarelbundock.github.io/tinytable"
         stop(msg, call. = FALSE)
       }
 
@@ -170,18 +178,18 @@ plot_tt_lazy <- function(x,
 
   if (meta(x)$output == "latex") {
     cell <- "\\includegraphics[height=%sem]{%s}"
-    cell <- sprintf(cell, height, path_img)
+    cell <- sprintf(cell, height, images)
 
   } else if (meta(x)$output == "html") {
     cell <- ifelse(
-      grepl("^http", trimws(path_img)),
+      grepl("^http", trimws(images)),
       '<img src="%s" style="height: %sem;">',
       '<img src="./%s" style="height: %sem;">')
-    cell <- sprintf(cell, path_img, height)
+    cell <- sprintf(cell, images, height)
 
   } else if (meta(x)$output == "markdown") {
     cell <- '![](%s)'
-    cell <- sprintf(cell, path_img)
+    cell <- sprintf(cell, images)
 
   } else {
     stop("here be dragons")
@@ -189,29 +197,26 @@ plot_tt_lazy <- function(x,
 
   out[i, j] <- cell
 
-
   return(out)
 }
 
 
-
-tiny_plot_histogram <- function(d, color = "black", ...) {
-  function() hist(d, col = color, axes = FALSE, ann = FALSE)
+tiny_histogram <- function(d, color = "black", ...) {
+  function() graphics::hist(d, col = color, axes = FALSE, ann = FALSE)
 }
 
 
-
-tiny_plot_density <- function(d, color = "black", ...) {
+tiny_density <- function(d, color = "black", ...) {
   function() {
-    d <- density(d)
-    plot(d, axes = FALSE, ann = FALSE, col = color)
-    polygon(d, col = color)
+    d <- stats::density(d)
+    graphics::plot(d, axes = FALSE, ann = FALSE, col = color)
+    graphics::polygon(d, col = color)
   }
 }
 
 
-tiny_plot_bar <- function(d, color = "black", xlim = 0:1, ...) {
+tiny_bar <- function(d, color = "black", xlim = 0:1, ...) {
   function() {
-    barplot(d, horiz = TRUE, col = color, xlim = xlim)
+    graphics::barplot(d, horiz = TRUE, col = color, xlim = xlim)
   }
 }
