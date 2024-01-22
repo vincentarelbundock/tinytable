@@ -83,7 +83,9 @@ plot_tt <- function(x,
     for (idx in seq_along(data)) {
       assert_numeric(data[[idx]], len = 1, name = "data[[1]]")
     }
-    xlim <- c(0, max(unlist(data)))
+    if (is.null(xlim)) {
+      xlim <- c(0, max(unlist(data)))
+    }
     fun <- rep(list(tiny_bar), length(data))
   } else {
     fun <- rep(list(fun), length(data))

@@ -74,7 +74,7 @@ style_bootstrap <- function(x,
   }
 
   if (!is.null(fontsize)) {
-    fontsize_bootstrap <- sprintf("%spx", (1 + 1 / 3) * fontsize)
+    fontsize_bootstrap <- sprintf("%sem", fontsize)
   } else {
     fontsize_bootstrap <- fontsize
   }

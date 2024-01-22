@@ -48,7 +48,7 @@ style_tabularray <- function(x,
   span <- if (!is.null(colspan)) paste0("c=", colspan, ",") else ""
 
   # convert to tabularray now that we've filled the bootstrap settings
-  if (is.numeric(fontsize)) settings$tabularray <- sprintf("%s font=\\fontsize{%s}{%s}\\selectfont,", settings$tabularray, fontsize, fontsize + 2) 
+  if (is.numeric(fontsize)) settings$tabularray <- sprintf("%s font=\\fontsize{%sem}{%sem}\\selectfont,", settings$tabularray, fontsize, fontsize + 0.3) 
   if (!is.null(align)) settings$tabularray <- sprintf("%s halign=%s,", settings$tabularray, align)
   if (!is.null(width)) settings$tabularray <- sprintf("%s wd={%s},", settings$tabularray, width)
   if (indent > 0) settings$tabularary <- sprintf("%s preto={\\hspace{%sem}},", settings$tabularray, indent)

@@ -318,7 +318,7 @@ tt(dat) |>
 Markdown syntax can be particularly useful when formatting URL links in a table:
 
 ```{r}
-#| fig-cap: "Vincent contributes to these packages."
+#| tbl-cap: "Vincent sometimes contributes to these R packages."
 dat <- data.frame(
   `Package (link)` = c(
     "[`marginaleffects`](https://www.marginaleffects.com/)",
@@ -459,10 +459,10 @@ Note that when using Hex codes in a LaTeX table, we need extra declarations in t
 
 ## Fonts
 
-The font size is specified in terms of `pt` units, where 1pt=1.333px:
+The font size is specified in em units. 
 
 ```{r}
-tt(x) |> style_tt(j = "mpg|hp|qsec", fontsize = 18)
+tt(x) |> style_tt(j = "mpg|hp|qsec", fontsize = 1.5)
 ```
 
 ::: {.content-visible when-format="pdf"}
@@ -544,18 +544,22 @@ tt(x) |>
     background = "black")
 ```
 
-We can also produce more complex heatmap-like tables:
+We can also produce more complex heatmap-like tables to illustrate different font sizes in em units:
 
 ```{r}
-# A table without header
-k <- data.frame(matrix(1:20, ncol = 5))
+#| fig-asp: .4
+# font sizes
+fs <- seq(.1, 2, length.out = 20)
+
+# headless table
+k <- data.frame(matrix(fs, ncol = 5))
 colnames(k) <- NULL
 
-# 20 levels of Inferno colors
+# colors
 bg <- hcl.colors(20, "Inferno")
-fg <- ifelse(as.matrix(k) < 17, tail(bg, 1), head(bg, 1))
-fs <- 1:20
+fg <- ifelse(as.matrix(k) < 1.7, tail(bg, 1), head(bg, 1))
 
+# table
 tt(k, width = .5, theme = "void") |>
   style_tt(j = 1:5, align = "ccccc") |>
   style_tt(

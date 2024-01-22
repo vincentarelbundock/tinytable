@@ -23,7 +23,7 @@
 #'   - Color blending using xcolor`, ex: `white!80!blue`, `green!20!red`.
 #'   - Color names with luminance levels from [the `ninecolors` package](https://mirror.quantum5.ca/CTAN/macros/latex/contrib/ninecolors/ninecolors.pdf) (ex: "azure4", "magenta8", "teal2", "gray1", "olive3"). 
 #' @param background Background color. Specified as a color name or hexadecimal code. Can be `NULL` for default color.
-#' @param fontsize Font size. Can be `NULL` for default size.
+#' @param fontsize Font size in em units. Can be `NULL` for default size.
 #' @param width Width of the cell or column. Can be `NULL` for default width.
 #' @param fontsize Integer Font size in pt units.
 #' @param align A single character or a string with a number of characters equal to the number of columns in `j`. Valid characters include 'c' (center), 'l' (left), or 'r' (right).
@@ -219,7 +219,7 @@ assert_style_tt <- function (x,
   assert_numeric(indent, len = 1, lower = 0)
   assert_character(background, null.ok = TRUE)
   assert_character(color, null.ok = TRUE)
-  assert_integerish(fontsize, null.ok = TRUE)
+  assert_numeric(fontsize, null.ok = TRUE)
   assert_logical(bold)
   assert_logical(italic)
   assert_logical(monospace)
