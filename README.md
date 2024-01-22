@@ -4,7 +4,16 @@
 <img src="man/figures/gallery/tinytable_gallery.gif" height = "250" class = "center">
 </p>
 
-<br> <!-- badges: start --> <!-- badges: end -->
+<br> <!-- badges: start -->
+[![](https://www.r-pkg.org/badges/version/tinytable?color=orange.png)](https://cran.r-project.org/package=tinytable)
+[![](https://img.shields.io/badge/license-GPLv3-blue.png)](https://github.com/vincentarelbundock/tinytable/blob/main/LICENSE.md)
+<!-- 
+[![](http://cranlogs.r-pkg.org/badges/grand-total/tinytable?color=green)](https://cran.r-project.org/package=tinytable)
+[![](http://cranlogs.r-pkg.org/badges/last-month/tinytable?color=green)](https://cran.r-project.org/package=tinytable)
+[![](http://cranlogs.r-pkg.org/badges/last-week/tinytable?color=green)](https://cran.r-project.org/package=tinytable)
+-->
+
+<!-- badges: end -->
 
 ## What?
 
