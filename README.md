@@ -72,7 +72,6 @@ three pillars:
 Install the stable version from CRAN:
 
 ``` r
-```r
 install.packages("tinytable")
 ```
 
