@@ -13,7 +13,7 @@
 #' @param data Optional, a list of data frames to be used with a custom plotting function.
 #' @param string Name of color to use for inline plots (passed to the `col` argument base `graphics` plots in `R`).
 #' @param xlim Numeric vector of length 2.
-#' @param fun Optional, a list of functions to generate plots from the data in `plot_data`. Valid functions include:
+#' @param fun  A function to generate plots from the data in `data`. Valid functions include:
 #' - Functions that return `ggplot2` objects.
 #' - Functions that return another function which generates a base `R` plot, ex: `function(x) {function() hist(x)}`
 #' - See the tutorial on the `tinytable` website for more information.
@@ -69,7 +69,7 @@ plot_tt <- function(x,
   if (is.character(fun)) {
     assert_choice(fun, c("histogram", "density", "bar"))
   } else {
-    assert_list(data, len = len, null.ok = TRUE)
+    assert_function(fun, null.ok = TRUE)
   }
 
   # built-in plots
@@ -85,6 +85,8 @@ plot_tt <- function(x,
     }
     xlim <- c(0, max(unlist(data)))
     fun <- rep(list(tiny_bar), length(data))
+  } else {
+    fun <- rep(list(fun), length(data))
   }
 
   # needed when rendering in tempdir()
@@ -153,6 +155,7 @@ plot_tt_lazy <- function(x,
       if (inherits(p, "ggplot")) {
         assert_dependency("ggplot2")
         suppressMessages(ggplot2::ggsave(
+          p,
           filename = fn_full,
           width = 1, height = asp,
           units = "in"
@@ -208,7 +211,7 @@ tiny_histogram <- function(d, color = "black", ...) {
 
 tiny_density <- function(d, color = "black", ...) {
   function() {
-    d <- stats::density(d)
+    d <- stats::density(stats::na.omit(d))
     graphics::plot(d, axes = FALSE, ann = FALSE, col = color)
     graphics::polygon(d, col = color)
   }
