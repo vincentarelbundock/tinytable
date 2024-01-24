@@ -50,7 +50,7 @@ three pillars:
     keeps the content of a table separate from the style sheet that
     applies to its cells. This is in contrast to other `R` packages that
     modify the actual text in each cell to style it. Keeping data and
-    style separate allows `tidytable` to create human-readable files
+    style separate allows `tinytable` to create human-readable files
     which are easy to edit, debug, and extend. It also enables
     developers to keep a tidy code base, with minimal use of messy
     regular expressions.
