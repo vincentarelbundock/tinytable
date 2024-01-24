@@ -54,7 +54,8 @@ group_grid_row <- function(x, i, ...) {
   cw <- sum(cw) + length(cw) - 1
   for (idx in rev(seq_along(i))) {
     tmp <- as.character(tt_grid(matrix(names(i)[idx]), col_widths = cw))
-    tmp <- strsplit(tmp, split = "\\n")[[1]][2]
+    tmp <- strsplit(tmp, split = "\\n")[[1]]
+    tmp <- tmp[tmp != ""][2]
     mid <- c(mid[1:(i[idx] - 1)], tmp, mid[i[idx]:length(body)]) 
   }
 
