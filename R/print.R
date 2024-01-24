@@ -31,20 +31,24 @@ print.tinytable <- function(x,
                             output = getOption("tinytable_print_output", default = NULL),
                             ...){
 
+  assert_choice(output, c("latex", "markdown", "html"), null.ok = TRUE)
+
+  if (is.null(output)) output <- meta(x, "output")
+
   # lazy styles get evaluated here by build_tt(), at the very end
-  if (meta(x, "output") == "latex") {
+  if (output == "latex") {
     out <- build_tt(x, output = "latex")
     class(out) <- "character"
     cat("\n")
     cat(out)
     cat("\n")
 
-  } else if (meta(x, "output") == "markdown") {
+  } else if (output == "markdown") {
     out <- build_tt(x, output = "markdown")
     cat("\n")
     cat(out, sep = "\n")
 
-  } else if (meta(x, "output") == "html") {
+  } else if (output == "html") {
     # need to change the output directory to a temporary directory 
     # for plot_tt() inline plots to show up in RStudio
     dir <- tempfile()
