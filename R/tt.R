@@ -60,11 +60,10 @@ tt <- function(x,
   # before style_tt() call for align
   out <- x 
   out <- meta(out, "x_character", data.frame(lapply(x, as.character)))
-  out <- meta(out, "output", output)
+  out <- meta(out, "output", sanitize_output(output))
   out <- meta(out, "output_dir", getwd())
   out <- meta(out, "colnames", names(x))
   out <- meta(out, "xdim", dim(x))
-  out <- meta(out, "output", output)
   out <- meta(out, "id", get_id("tinytable_"))
   out <- meta(out, "nhead", if (is.null(colnames(x))) 0 else 1)
   out <- meta(out, "nrows", nrow(x))
