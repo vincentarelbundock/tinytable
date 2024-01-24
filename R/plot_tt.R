@@ -1,7 +1,7 @@
 #' Insert images and inline plots into tinytable objects
 #'
 #' The `plot_tt()` function allows for the insertion of images and inline plots into 
-#' tinytable objects. This function can handle both local and web-based images. #'
+#' tinytable objects. This function can handle both local and web-based images.
 #'
 #' @param x A tinytable object.
 #' @param i Integer vector, the row indices where images are to be inserted. If `NULL`, 
@@ -10,15 +10,15 @@
 #'    images will be inserted in all columns.
 #' @param height Numeric, the height of the images in the table in em units.
 #' @param asp Numeric, aspect ratio of the plots (height / width). 
-#' @param data Optional, a list of data frames to be used with a custom plotting function.
 #' @param color string Name of color to use for inline plots (passed to the `col` argument base `graphics` plots in `R`).
 #' @param xlim Numeric vector of length 2.
 #' @param fun  A function to generate plots from the data in `data`. Valid functions include:
 #' - Functions that return `ggplot2` objects.
 #' - Functions that return another function which generates a base `R` plot, ex: `function(x) {function() hist(x)}`
 #' - See the tutorial on the `tinytable` website for more information.
+#' @param data a list of data frames or vectors to be used by the plotting functions in `fun`.
 #' @param images Character vector, the paths to the images to be inserted. Paths are relative to the main table file or Quarto (Rmarkdown) document.
-#' @param assets Character, the directory to store generated assets.
+#' @param assets Path to the directory where generated assets are stored. This path is relative to the location where a table is saved.
 #' @param ... Extra arguments are passed to the function in `fun`. Important: Custom plotting functions must always have `...` as an argument.
 #'
 #' @return A modified tinytable object with images or plots inserted.
