@@ -94,6 +94,10 @@ save_tt <- function(x, output, overwrite = FALSE) {
 
   } else if (file_ext == "docx") {
     assert_dependency("pandoc")
+    if (pandoc::pandoc_version() < "3.0.0.0") {
+      msg <- "A version of `pandoc` greater than 3.0.0.0 is highly recommended to use this feature."
+      warning(msg, call. = FALSE)
+    }
     pandoc::pandoc_convert(text = x, to = "docx", output = output)
   }
 
