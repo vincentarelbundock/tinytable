@@ -1,6 +1,6 @@
 
 finalize_bootstrap <- function(x) {
-    if (meta(x)$output != "html") return(x)
+    if (!isTRUE(meta(x)$output == "html")) return(x)
     out <- gsub(
       "$tinytable_BOOTSTRAP_CLASS",
       "table",

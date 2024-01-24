@@ -1,6 +1,6 @@
 
 finalize_grid <- function(x) {
-    if (meta(x)$output != "markdown") return(x)
+    if (!isTRUE(meta(x)$output == "markdown")) return(x)
 
     out <- x
 

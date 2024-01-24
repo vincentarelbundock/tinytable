@@ -199,7 +199,7 @@ format_tt_lazy <- function(x,
   if (isTRUE(markdown)) {
     assert_dependency("markdown")
     for (col in j) {
-      if (meta(x)$output == "html") {
+      if (isTRUE(meta(x)$output == "html")) {
         fun <- function(x) {
           out <- trimws(markdown::mark_html(text = x, template = FALSE))
           out <- sub("<p>", "", out, fixed = TRUE)
@@ -207,7 +207,7 @@ format_tt_lazy <- function(x,
           return(out)
         }
         x[, col] <- sapply(x[, col], fun)
-      } else if (meta(x)$output == "latex") {
+      } else if (isTRUE(meta(x)$output == "latex")) {
         fun <- function(x) trimws(markdown::mark_latex(text = x, template = FALSE))
         x[, col] <- sapply(x[, col], fun)
       }

@@ -188,18 +188,18 @@ plot_tt_lazy <- function(x,
     }
   }
 
-  if (meta(x)$output == "latex") {
+  if (isTRUE(meta(x)$output == "latex")) {
     cell <- "\\includegraphics[height=%sem]{%s}"
     cell <- sprintf(cell, height, images)
 
-  } else if (meta(x)$output == "html") {
+  } else if (isTRUE(meta(x)$output == "html")) {
     cell <- ifelse(
       grepl("^http", trimws(images)),
       '<img src="%s" style="height: %sem;">',
       '<img src="./%s" style="height: %sem;">')
     cell <- sprintf(cell, images, height)
 
-  } else if (meta(x)$output == "markdown") {
+  } else if (isTRUE(meta(x)$output == "markdown")) {
     cell <- '![](%s)'
     cell <- sprintf(cell, images)
 
