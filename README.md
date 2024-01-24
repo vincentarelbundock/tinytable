@@ -2,13 +2,9 @@
 <p align="center">
 <img src="man/figures/gallery/tinytable_gallery.gif" height = "250" class = "center">
 <br> <!-- badges: start -->
-[![](https://www.r-pkg.org/badges/version/tinytable?color=green.png)](https://cran.r-project.org/package=tinytable)
-[![](https://img.shields.io/badge/license-GPLv3-blue.png)](https://github.com/vincentarelbundock/tinytable/blob/main/LICENSE.md)
-<!-- 
-[![](http://cranlogs.r-pkg.org/badges/grand-total/tinytable?color=green)](https://cran.r-project.org/package=tinytable)
-[![](http://cranlogs.r-pkg.org/badges/last-month/tinytable?color=green)](https://cran.r-project.org/package=tinytable)
-[![](http://cranlogs.r-pkg.org/badges/last-week/tinytable?color=green)](https://cran.r-project.org/package=tinytable)
---> <!-- badges: end -->
+<a href = "https://github.com/vincentarelbundock/tinytable/blob/main/LICENSE.md" target = "_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a>
+<a href = "https://vincentarelbundock.github.io/tinytable/" target = "_blank"><img src="https://img.shields.io/static/v1?label=Website&message=Visit&color=blue"></a>
+<!-- badges: end -->
 </p>
 
 ## What?
@@ -52,7 +48,7 @@ three pillars:
     modify the actual text in each cell to style it. Keeping data and
     style separate allows `tinytable` to create human-readable files
     which are easy to edit, debug, and extend. It also enables
-    developers to keep a tidy code base, with minimal use of messy
+    developers to keep a simpler code base, with minimal use of messy
     regular expressions.
 
 2.  *Flexibility.* Users’ needs are extremely varied, and a
