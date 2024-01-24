@@ -74,12 +74,7 @@ build_tt <- function(x, output = NULL) {
 
   # finalize 
   out <- finalize_bootstrap(out)
-
-  # formal grid specification in pandoc includes lines everywhere
-  hlines <- getOption("tinytable_grid_hlines", default = TRUE)
-  if (isTRUE(hlines) && output == "markdown") {
-    out <- grid_hlines(out)
-  }
+  out <- finalize_grid(out)
 
   m <- meta(x)
   m$lazy_style <- list()
@@ -90,18 +85,5 @@ build_tt <- function(x, output = NULL) {
 }
 
 
-finalize_bootstrap <- function(x) {
-    if (meta(x)$output != "html") return(x)
-    out <- gsub(
-      "$tinytable_BOOTSTRAP_CLASS",
-      "table",
-      x,
-      fixed = TRUE)
-    # Rmarkdown and Quarto load their own bootstrap, which we probably don't want to override
-    if (isTRUE(getOption('knitr.in.progress'))) {
-      out <- strsplit(out, split = "\n")[[1]]
-      out <- out[!grepl("https://cdn.jsdelivr.net/npm/bootstrap", out, fixed = TRUE)]
-      out <- paste(out, collapse = "\n")
-    }
-    return(out)
-}
+
+
