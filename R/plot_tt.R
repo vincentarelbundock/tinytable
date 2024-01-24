@@ -38,15 +38,22 @@ plot_tt <- function(x,
                     assets = "tinytable_assets",
                     ...) {
 
+  out <- x
+
+  # j is a regular expression
+  # before assertions
+  if (is.character(j) && !is.null(meta(x, "colnames"))) {
+    j <- grep(j, meta(x, "colnames"), perl = TRUE)
+  }
+
   assert_integerish(i, null.ok = TRUE)
   assert_integerish(j, null.ok = TRUE)
   assert_numeric(height, len = 1, lower = 0)
   assert_numeric(asp, len = 1, lower = 0, upper = 1)
   assert_class(x, "tinytable")
-  out <- x
 
-  ival <- if (is.null(i)) seq_len(meta(x, "nrows")) else i
   jval <- if (is.null(j)) seq_len(meta(x, "ncols")) else j
+  ival <- if (is.null(i)) seq_len(meta(x, "nrows")) else i
 
   len <- length(ival) * length(jval)
 
