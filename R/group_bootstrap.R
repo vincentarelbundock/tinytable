@@ -78,7 +78,11 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
   idx <- insert_values(seq_len(m$nrows), rep(NA, length(i)), i)
   idx_old <- idx$new[!is.na(idx$old)]
   idx_new <- idx$new[is.na(idx$old)]
-  # cannot be style_tt, because we already have a string bootstrap table at this stage
+
+  # limit index ot number of rows to avoid styling header or footer
+  idx_old <- idx_old[idx_old <= meta(x)$nrows]
+
+  # should not be style_tt, because we already have a string bootstrap table at this stage
   out <- style_bootstrap(out, i = idx_old, j = 1, indent = indent)
 
   # if there's a two-level header column multi-span, we want it centered.

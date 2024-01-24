@@ -6,13 +6,12 @@ group_tabularray <- function(x, i, j, indent) {
   }
   if (!is.null(i)) {
     out <- group_tabularray_row(out, i, indent)
-  } 
+  }
   return(out)
 }
 
 
 group_tabularray_col <- function(x, j) {
-
   m <- meta(x)
 
   out <- strsplit(x, split = "\\n")[[1]]
@@ -32,10 +31,11 @@ group_tabularray_col <- function(x, j) {
     grep("\\toprule", out, fixed = TRUE)
   ))
 
-  out <- c(out[1:idx],
-           # empty lines can break latex
-           trimws(header),
-           out[(idx + 1):length(out)])
+  out <- c(
+    out[1:idx],
+    # empty lines can break latex
+    trimws(header),
+    out[(idx + 1):length(out)])
   out <- paste(out, collapse = "\n")
 
   # rebuild including meta before style_tt
@@ -44,24 +44,23 @@ group_tabularray_col <- function(x, j) {
 
   for (k in seq_along(j)) {
     z <- min(j[[k]])
-    args <- list(tt_build_now = TRUE,
-                 x = out,
-                 # the new header is always first row and 
-                 # style_tt always adds nhead to index
-                 i = 1 - meta(out)$nhead,
-                 j = z,
-                 align = "c",
-                 colspan = max(j[[k]]) - min(j[[k]]) + 1)
+    args <- list(
+      tt_build_now = TRUE,
+      x = out,
+      # the new header is always first row and
+      # style_tt always adds nhead to index
+      i = 1 - meta(out)$nhead,
+      j = z,
+      align = "c",
+      colspan = max(j[[k]]) - min(j[[k]]) + 1)
     out <- do.call(style_tt, args)
   }
 
   return(out)
-
 }
 
 
 group_tabularray_row <- function(x, i, indent) {
-
   m <- meta(x)
 
   if (is.null(names(i))) {
@@ -92,7 +91,8 @@ group_tabularray_row <- function(x, i, indent) {
   attr(tab, "tinytable_meta") <- m
   class(tab) <- class(x)
 
-  cellspec <- sprintf("cell{%s}{%s}={%s}{%s},",
+  cellspec <- sprintf(
+    "cell{%s}{%s}={%s}{%s},",
     idx$new[is.na(idx$old)] + m$nhead,
     1,
     paste0("c=", m$ncols),
@@ -102,8 +102,8 @@ group_tabularray_row <- function(x, i, indent) {
   tab <- tabularray_insert(tab, content = cellspec, type = "inner")
 
   # we also want to indent the header
-  i <- idx$new[!is.na(idx$old)] + m$nhead 
-  if (m$nhead > 0) i <- c(1:m$nhead, i)
+  i <- idx$new[!is.na(idx$old)] + m$nhead
+  # if (m$nhead > 0) i <- c(1:m$nhead, i)
   cellspec <- sprintf("cell{%s}{%s}={%s},\n", i, 1, sprintf("preto={\\hspace{%sem}}", indent))
   cellspec <- paste(cellspec, collapse = "")
   tab <- tabularray_insert(tab, content = cellspec, type = "inner")
@@ -117,12 +117,12 @@ insert_values <- function(vec, values, positions) {
   if (length(values) != length(positions)) {
     stop("The length of values and positions must be the same")
   }
-  
+
   # Sort the positions in decreasing order along with their corresponding values
   ord <- order(positions, decreasing = TRUE)
   values <- values[ord]
   positions <- positions[ord]
-  
+
   # Create a vector of indices for the original vector
   original_indices <- 1:length(vec)
 
@@ -132,7 +132,7 @@ insert_values <- function(vec, values, positions) {
     vec <- append(vec, values[i], after = positions[i] - 1)
     original_indices <- append(original_indices, NA, after = positions[i] - 1)
   }
-  
+
   # Return the extended vector and the original indices vector
   return(data.frame(vec = vec, old = original_indices, new = seq_along(vec)))
 }
