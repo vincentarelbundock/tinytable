@@ -35,7 +35,7 @@ images will be inserted in all columns.}
 \item See the tutorial on the \code{tinytable} website for more information.
 }}
 
-\item{data}{Optional, a list of data frames to be used with a custom plotting function.}
+\item{data}{a list of data frames or vectors to be used by the plotting functions in \code{fun}.}
 
 \item{color}{string Name of color to use for inline plots (passed to the \code{col} argument base \code{graphics} plots in \code{R}).}
 
@@ -47,7 +47,7 @@ images will be inserted in all columns.}
 
 \item{images}{Character vector, the paths to the images to be inserted. Paths are relative to the main table file or Quarto (Rmarkdown) document.}
 
-\item{assets}{Character, the directory to store generated assets.}
+\item{assets}{Path to the directory where generated assets are stored. This path is relative to the location where a table is saved.}
 
 \item{...}{Extra arguments are passed to the function in \code{fun}. Important: Custom plotting functions must always have \code{...} as an argument.}
 }
@@ -56,7 +56,7 @@ A modified tinytable object with images or plots inserted.
 }
 \description{
 The \code{plot_tt()} function allows for the insertion of images and inline plots into
-tinytable objects. This function can handle both local and web-based images. #'
+tinytable objects. This function can handle both local and web-based images.
 }
 \details{
 The \code{plot_tt()} can insert images and inline plots into tables.

@@ -130,22 +130,26 @@ style_tabularray <- function(x,
     iline <- unique(iline)
     jline <- unique(jline)
     line_width <- paste0(line_width, "em")
-    tmp <- sprintf(
-      "hline{%s}={%s}{solid, %s, %s},",
-      paste(iline, collapse = ","),
-      paste(jval, collapse = ","),
-      line_width,
-      line_color
-    )
-    out <- tabularray_insert(out, content = tmp, type = "inner")
-    tmp <- sprintf(
-      "vline{%s}={%s}{solid, %s, %s},",
-      paste(jline, collapse = ","),
-      paste(ival + meta(x, "nhead"), collapse = ","),
-      line_width,
-      line_color
-    )
-    out <- tabularray_insert(out, content = tmp, type = "inner")
+    if (!is.null(iline)) {
+      tmp <- sprintf(
+        "hline{%s}={%s}{solid, %s, %s},",
+        paste(iline, collapse = ","),
+        paste(jval, collapse = ","),
+        line_width,
+        line_color
+      )
+      out <- tabularray_insert(out, content = tmp, type = "inner")
+    }
+    if (!is.null(jline)) {
+      tmp <- sprintf(
+        "vline{%s}={%s}{solid, %s, %s},",
+        paste(jline, collapse = ","),
+        paste(ival + meta(x, "nhead"), collapse = ","),
+        line_width,
+        line_color
+      )
+      out <- tabularray_insert(out, content = tmp, type = "inner")
+    }
   }
 
   out <- tabularray_insert(out, content = tabularray_inner, type = "inner")
