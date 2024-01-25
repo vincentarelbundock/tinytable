@@ -21,7 +21,7 @@ style_bootstrap <- function(x,
                             line_width = .1,
                             colspan = NULL,
                             indent = 0,
-                            bootstrap_class = "table",
+                            bootstrap_class = NULL,
                             bootstrap_css = NULL,
                             bootstrap_css_rule = NULL,
                             ...) {
@@ -135,7 +135,9 @@ style_bootstrap <- function(x,
     out <- bootstrap_setting(out, bootstrap_css_rule, component = "css")
   }
 
-  out <- meta(out, "bootstrap_class", bootstrap_class)
+  if (!is.null(bootstrap_class)) {
+    out <- meta(out, "bootstrap_class", bootstrap_class)
+  }
 
   # Changing function names to table ID to avoid conflict with other tables functions 
   out <- gsub("styleCell_\\w+\\(", paste0("styleCell_", meta(x, "id"), "("), out)
