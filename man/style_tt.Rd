@@ -20,6 +20,9 @@ style_tt(
   align = NULL,
   colspan = NULL,
   indent = 0,
+  line = NULL,
+  line_color = "black",
+  line_width = 0.1,
   tabularray_inner = NULL,
   tabularray_outer = NULL,
   bootstrap_class = "table",
@@ -72,6 +75,19 @@ style_tt(
 \item{colspan}{Number of columns a cell should span. Can only be used if both \code{i} and \code{j} are of length 1. Must be an integer greater than 1.}
 
 \item{indent}{Text indentation in em units. Positive values only.}
+
+\item{line}{String determines if solid lines (rules or borders) should be drawn around the cell, row, or column.
+\itemize{
+\item "t": top
+\item "b": bottom
+\item "l": left
+\item "r": right
+\item Can be combined such as: "lbt" to draw borders at the left, bottom, and top.
+}}
+
+\item{line_color}{Color of the line. See the \code{color} argument for details.}
+
+\item{line_width}{Width of the line in em units (default: 0.1).}
 
 \item{tabularray_inner}{A string that specifies the "inner" settings of a tabularray LaTeX table.}
 

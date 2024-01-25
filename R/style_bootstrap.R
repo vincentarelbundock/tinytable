@@ -16,11 +16,15 @@ style_bootstrap <- function(x,
                             fontsize = NULL,
                             width = NULL,
                             align = NULL,
+                            line = NULL,
+                            line_color = "black",
+                            line_width = .1,
                             colspan = NULL,
                             indent = 0,
                             bootstrap_class = "table",
                             bootstrap_css = NULL,
-                            bootstrap_css_rule = NULL) {
+                            bootstrap_css_rule = NULL,
+                            ...) {
 
 
   if (meta(x, "output") != "html") return(x)
@@ -94,6 +98,14 @@ style_bootstrap <- function(x,
   settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, width, "width: %s;")
   if (indent > 0) {
     settings$bootstrap <- paste(settings$bootstrap, sprintf("padding-left: %sem;", indent), sep = "")
+  }
+
+  if (!is.null(line)) {
+    tmp <- sprintf(": solid %s %s;", paste0(line_width, "em"), line_color)
+    if (grepl("t", line)) settings$bootstrap <- paste0(settings$bootstrap, " border-top", tmp)
+    if (grepl("b", line)) settings$bootstrap <- paste0(settings$bootstrap, " border-bottom", tmp)
+    if (grepl("l", line)) settings$bootstrap <- paste0(settings$bootstrap, " border-left", tmp)
+    if (grepl("r", line)) settings$bootstrap <- paste0(settings$bootstrap, " border-right", tmp)
   }
 
   # unique IDs for each CSS style combination

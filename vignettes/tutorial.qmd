@@ -574,6 +574,42 @@ tt(k, width = .7, theme = "void") |>
     fontsize = fs)
 ```
 
+
+## Lines (borders)
+
+The `style_tt` function allows us to customize the borders that surround eacell of a table, as well horizontal and vertical rules. To control these lines, we use the `line`, `line_width`, and `line_color` arguments. Here's a brief overview of each of these arguments:
+
+- `line`: This argument specifies where solid lines should be drawn. It is a string that can consist of the following characters:
+  - `"t"`: Draw a line at the top of the cell, row, or column.
+  - `"b"`: Draw a line at the bottom of the cell, row, or column.
+  - `"l"`: Draw a line at the left side of the cell, row, or column.
+  - `"r"`: Draw a line at the right side of the cell, row, or column.
+  - You can combine these characters to draw lines on multiple sides, such as `"tbl"` to draw lines at the top, bottom, and left sides of a cell.
+- `line_width`: This argument controls the width of the solid lines in em units (default: 0.1 em). You can adjust this value to make the lines thicker or thinner.
+- `line_color`: Specifies the color of the solid lines. You can use color names, hexadecimal codes, or other color specifications to define the line color.
+
+Here is an example where we draw lines around every border ("t", "b", "l", and "r") of specified cells.
+
+```{r}
+tt(x, theme = "void") |>
+    style_tt(
+        i = 0:3,
+        j = 1:3,
+        line = "tblr",
+        line_width = 0.4,
+        line_color = "orange")
+```
+
+And here is an example with horizontal rules:
+
+```{r}
+tt(x, theme = "void") |>
+    style_tt(i = 0, line = "t", line_color = "orange", line_width = 0.4) |>
+    style_tt(i = 0, line = "b", line_color = "purple", line_width = 0.2) |>
+    style_tt(i = 4, line = "b", line_color = "orange", line_width = 0.4)
+```
+
+
 # Tiny plots and images
 
 The `plot_tt()` function can embed images and plots in a `tinytable`. We can insert images by specifying their paths and positions (`i`/`j`). 
