@@ -11,6 +11,9 @@ style_tabularray <- function(x,
                              fontsize = NULL,
                              width = NULL,
                              align = NULL,
+                             line = NULL,
+                             line_color = "black",
+                             line_width = .1,
                              colspan = NULL,
                              indent = 0,
                              tabularray_inner = NULL,
@@ -103,6 +106,7 @@ style_tabularray <- function(x,
   settings$tabularray <- trimws(gsub("\\s+", "", settings$tabularray))
   settings$tabularray <- trimws(gsub(",+", ",", settings$tabularray))
 
+
   for (k in seq_len(nrow(settings))) {
     if (all(c("i", "j") %in% colnames(settings))) {
       spec <- sprintf("cell{%s}{%s}={%s}{%s},", settings$i[k], settings$j[k], span, settings$tabularray[k])
@@ -112,6 +116,36 @@ style_tabularray <- function(x,
       spec <- sprintf("column{%s}={%s},", settings$j[k], settings$tabularray[k])
     } 
     out <- tabularray_insert(out, content = spec, type = "inner")
+  }
+
+  # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
+  if (!is.null(line)) {
+    # TODO: handle hex colors
+    # browser()
+    iline <- jline <- NULL
+    if (grepl("t", line)) iline <- c(iline, ival + meta(x, "nhead"))
+    if (grepl("b", line)) iline <- c(iline, ival + meta(x, "nhead") + 1)
+    if (grepl("l", line)) jline <- c(jline, jval)
+    if (grepl("r", line)) jline <- c(jline, jval + 1)
+    iline <- unique(iline)
+    jline <- unique(jline)
+    line_width <- paste0(line_width, "em")
+    tmp <- sprintf(
+      "hline{%s}={%s}{solid, %s, %s},",
+      paste(iline, collapse = ","),
+      paste(jval, collapse = ","),
+      line_width,
+      line_color
+    )
+    out <- tabularray_insert(out, content = tmp, type = "inner")
+    tmp <- sprintf(
+      "vline{%s}={%s}{solid, %s, %s},",
+      paste(jline, collapse = ","),
+      paste(ival + meta(x, "nhead"), collapse = ","),
+      line_width,
+      line_color
+    )
+    out <- tabularray_insert(out, content = tmp, type = "inner")
   }
 
   out <- tabularray_insert(out, content = tabularray_inner, type = "inner")

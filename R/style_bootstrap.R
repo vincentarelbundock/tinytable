@@ -101,13 +101,12 @@ style_bootstrap <- function(x,
   }
 
   if (!is.null(line)) {
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, line_color, "border-color: %s;")
+    tmp <- sprintf(": solid %s %s;", paste0(line_width, "em"), line_color)
+    if (grepl("t", line)) settings$bootstrap <- paste0(settings$bootstrap, " border-top", tmp)
+    if (grepl("b", line)) settings$bootstrap <- paste0(settings$bootstrap, " border-bottom", tmp)
+    if (grepl("l", line)) settings$bootstrap <- paste0(settings$bootstrap, " border-left", tmp)
+    if (grepl("r", line)) settings$bootstrap <- paste0(settings$bootstrap, " border-right", tmp)
   }
-
-  if (grepl("t", line)) settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, ".1em", "border-top: %s solid;")
-  if (grepl("b", line)) settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, ".1em", "border-bottom: %s solid;")
-  if (grepl("l", line)) settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, ".1em", "border-left: %s solid;")
-  if (grepl("r", line)) settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, ".1em", "border-right: %s solid;")
 
   # unique IDs for each CSS style combination
   id <- sapply(unique(settings$bootstrap), function(k) get_id(stem = "tinytable_css_"))
