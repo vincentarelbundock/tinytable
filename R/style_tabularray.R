@@ -81,7 +81,7 @@ style_tabularray <- function(x,
   settings$tabularray <- sprintf("%s, cmd=%s,", settings$tabularray, cmd)
 
   # hex must be treated differently in LaTeX
-  cols <- c(color, background)
+  cols <- c(color, background, line_color)
   cols_done <- NULL
   if (!is.null(cols)) {
     hex <- cols[grepl("^#", cols)]
@@ -138,7 +138,7 @@ style_tabularray <- function(x,
         paste(iline, collapse = ","),
         paste(jval, collapse = ","),
         line_width,
-        line_color
+        sub("^#", "c", line_color)
       )
       out <- tabularray_insert(out, content = tmp, type = "inner")
     }
@@ -148,7 +148,7 @@ style_tabularray <- function(x,
         paste(jline, collapse = ","),
         paste(ival + meta(x, "nhead"), collapse = ","),
         line_width,
-        line_color
+        sub("^#", "c", line_color)
       )
       out <- tabularray_insert(out, content = tmp, type = "inner")
     }
