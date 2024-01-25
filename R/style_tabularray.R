@@ -122,8 +122,6 @@ style_tabularray <- function(x,
 
   # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
   if (!is.null(line)) {
-    # TODO: handle hex colors
-    # browser()
     iline <- jline <- NULL
     if (grepl("t", line)) iline <- c(iline, ival + meta(x, "nhead"))
     if (grepl("b", line)) iline <- c(iline, ival + meta(x, "nhead") + 1)

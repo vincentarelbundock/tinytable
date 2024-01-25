@@ -38,6 +38,7 @@ group_grid_col <- function(x, j, ...) {
 group_grid_row <- function(x, i, ...) {
   out <- x
   out <- strsplit(x, split = "\\n")[[1]]
+  out <- out[out != ""]
   # header
   body_min <- utils::head(grep("^\\+==", out), 1) + 1
   # no header
@@ -56,7 +57,12 @@ group_grid_row <- function(x, i, ...) {
     tmp <- as.character(tt_grid(matrix(names(i)[idx]), col_widths = cw))
     tmp <- strsplit(tmp, split = "\\n")[[1]]
     tmp <- tmp[tmp != ""][2]
-    mid <- c(mid[1:(i[idx] - 1)], tmp, mid[i[idx]:length(body)]) 
+    lo <- i[idx] - 1
+    if (lo > 0) {
+      mid <- c(mid[1:lo], tmp, mid[i[idx]:length(mid)]) 
+    } else {
+      mid <- c(tmp, mid[i[idx]:length(mid)]) 
+    }
   }
 
   out <- c(top, mid, bot)

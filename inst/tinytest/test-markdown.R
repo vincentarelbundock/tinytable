@@ -24,6 +24,12 @@ tab <- tt(mtcars[1:3, 1:3], caption = "Blah blah blah")
 expect_snapshot_print(tab, label = "markdown-caption")
 
 
+# Issue #105
+x <- mtcars[1:15,]
+i <- list("blah" = 1, "blah" = 3, "blah" = 10)
+tab <- tt(x) |> group_tt(i)
+expect_snapshot_print(tab, label = "markdown-issue105")
+
 
 
 options(tinytable_print_output = NULL)
