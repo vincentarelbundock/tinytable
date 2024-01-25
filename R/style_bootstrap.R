@@ -16,11 +16,15 @@ style_bootstrap <- function(x,
                             fontsize = NULL,
                             width = NULL,
                             align = NULL,
+                            line = NULL,
+                            line_color = "black",
+                            line_width = .1,
                             colspan = NULL,
                             indent = 0,
                             bootstrap_class = "table",
                             bootstrap_css = NULL,
-                            bootstrap_css_rule = NULL) {
+                            bootstrap_css_rule = NULL,
+                            ...) {
 
 
   if (meta(x, "output") != "html") return(x)
@@ -95,6 +99,15 @@ style_bootstrap <- function(x,
   if (indent > 0) {
     settings$bootstrap <- paste(settings$bootstrap, sprintf("padding-left: %sem;", indent), sep = "")
   }
+
+  if (!is.null(line)) {
+    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, line_color, "border-color: %s;")
+  }
+
+  if (grepl("t", line)) settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, ".1em", "border-top: %s solid;")
+  if (grepl("b", line)) settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, ".1em", "border-bottom: %s solid;")
+  if (grepl("l", line)) settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, ".1em", "border-left: %s solid;")
+  if (grepl("r", line)) settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, ".1em", "border-right: %s solid;")
 
   # unique IDs for each CSS style combination
   id <- sapply(unique(settings$bootstrap), function(k) get_id(stem = "tinytable_css_"))

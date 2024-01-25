@@ -14,7 +14,8 @@ style_tabularray <- function(x,
                              colspan = NULL,
                              indent = 0,
                              tabularray_inner = NULL,
-                             tabularray_outer = NULL) {
+                             tabularray_outer = NULL,
+                             ...) {
 
   if (meta(x, "output") != "latex") return(x)
 
