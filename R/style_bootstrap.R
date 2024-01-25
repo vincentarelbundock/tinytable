@@ -135,13 +135,7 @@ style_bootstrap <- function(x,
     out <- bootstrap_setting(out, bootstrap_css_rule, component = "css")
   }
 
-  if (!is.null(bootstrap_class)) {
-    out <- gsub(
-      "$tinytable_BOOTSTRAP_CLASS",
-      bootstrap_class,
-      out,
-      fixed = TRUE)
-  }
+  out <- meta(out, "bootstrap_class", bootstrap_class)
 
   # Changing function names to table ID to avoid conflict with other tables functions 
   out <- gsub("styleCell_\\w+\\(", paste0("styleCell_", meta(x, "id"), "("), out)

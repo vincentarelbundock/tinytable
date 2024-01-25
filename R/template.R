@@ -1,7 +1,8 @@
 template_tabularray <- function(theme = "default") {
-  assert_choice(theme, c("default", "grid", "void", "striped"))
   if (theme == "default") {
     out <- readLines(system.file("templates/tabularray_default.tex", package = "tinytable"))
+  } else if (theme == "bootstrap") {
+    out <- readLines(system.file("templates/tabularray_bootstrap.tex", package = "tinytable"))
   } else if (theme == "striped") {
     out <- readLines(system.file("templates/tabularray_default.tex", package = "tinytable"))
   } else if (theme == "void") {

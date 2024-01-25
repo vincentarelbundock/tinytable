@@ -74,7 +74,7 @@ style_tt <- function (x,
                       line_width = 0.1,
                       tabularray_inner = NULL,
                       tabularray_outer = NULL,
-                      bootstrap_class = "table",
+                      bootstrap_class = NULL,
                       bootstrap_css = NULL,
                       bootstrap_css_rule = NULL,
                       ...) {
