@@ -1,7 +1,7 @@
 ---
 title: "`tinytable`"
 subtitle: "Easy, beautiful, and customizable tables in R"
-format:
+format: 
   html: default
   pdf:
     toc: true
@@ -852,19 +852,21 @@ The HTML customization options described in this section are not available for L
 ::: {.content-visible when-format="html"}
 The Bootstrap framework provides a number of built-in themes to style tables, using "classes." To use them, we call `style_tt()` with the `bootstrap_class` argument. A list of available Bootstrap classes can be found here: <https://getbootstrap.com/docs/5.3/content/tables/>
 
-For example, to produce a "dark" table, we use the `table-dark` class:
+For example, to produce a "bordered" table, we use the `table-bordered` class:
+
 
 ```{r, eval = knitr::is_html_output()}
-tt(x) |> style_tt(bootstrap_class = "table table-dark")
+tt(x) |> style_tt(bootstrap_class = "table table-bordered")
 ```
 
-We can also combine several Bootstrap classes. Here, we get a table with the "warning" color and hover feature:
+We can also combine several Bootstrap classes. Here, we get a table with the "hover" feature:
 
 ```{r, eval = knitr::is_html_output()}
 tt(x) |> style_tt(
-  bootstrap_class = "table table-warning table-hover")
+  bootstrap_class = "table table-hover")
 ```
 :::
+
 
 ## CSS declarations
 
