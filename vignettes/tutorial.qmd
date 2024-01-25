@@ -72,7 +72,7 @@ tt(x) |> save_tt("path/to/file.md")
 
 `save_tt()` can also return a string with the table in it, for further processing in `R`. In the first case, the table is printed to console with `cat()`. In the second case, it returns as a single string as an `R` object.
 
-```{r, eval = FALSE}
+```{r}
 tt(mtcars[1:10, 1:5]) |>
   group_tt(
     i = list(
@@ -590,7 +590,7 @@ The `style_tt` function allows us to customize the borders that surround eacell 
 
 Here is an example where we draw lines around every border ("t", "b", "l", and "r") of specified cells.
 
-```{r, eval = FALSE}
+```{r}
 tt(x, theme = "void") |>
     style_tt(
         i = 0:3,
@@ -598,6 +598,15 @@ tt(x, theme = "void") |>
         line = "tblr",
         line_width = 0.4,
         line_color = "orange")
+```
+
+And here is an example with horizontal rules:
+
+```{r}
+tt(x, theme = "void") |>
+    style_tt(i = 0, line = "t", line_color = "orange", line_width = 0.4) |>
+    style_tt(i = 0, line = "b", line_color = "purple", line_width = 0.2) |>
+    style_tt(i = 4, line = "b", line_color = "orange", line_width = 0.4)
 ```
 
 

@@ -107,15 +107,17 @@ style_tabularray <- function(x,
   settings$tabularray <- trimws(gsub(",+", ",", settings$tabularray))
 
 
-  for (k in seq_len(nrow(settings))) {
-    if (all(c("i", "j") %in% colnames(settings))) {
-      spec <- sprintf("cell{%s}{%s}={%s}{%s},", settings$i[k], settings$j[k], span, settings$tabularray[k])
-    } else if ("i" %in% colnames(settings)) {
-      spec <- sprintf("row{%s}={%s},", settings$i[k], settings$tabularray[k])
-    } else if ("j" %in% colnames(settings)) {
-      spec <- sprintf("column{%s}={%s},", settings$j[k], settings$tabularray[k])
-    } 
-    out <- tabularray_insert(out, content = spec, type = "inner")
+  if (!all(settings$tabularray == ",")) {
+    for (k in seq_len(nrow(settings))) {
+      if (all(c("i", "j") %in% colnames(settings))) {
+        spec <- sprintf("cell{%s}{%s}={%s}{%s},", settings$i[k], settings$j[k], span, settings$tabularray[k])
+      } else if ("i" %in% colnames(settings)) {
+        spec <- sprintf("row{%s}={%s},", settings$i[k], settings$tabularray[k])
+      } else if ("j" %in% colnames(settings)) {
+        spec <- sprintf("column{%s}={%s},", settings$j[k], settings$tabularray[k])
+      }
+      out <- tabularray_insert(out, content = spec, type = "inner")
+    }
   }
 
   # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
