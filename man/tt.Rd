@@ -25,11 +25,7 @@ tt(
 
 \item{notes}{A single string or a (named) list of strings to append at the bottom of the table.}
 
-\item{theme}{The theme to apply to the table.
-\itemize{
-\item LaTeX: "default", "striped", "void", or "grid".
-\item HTML: "default", "striped", "void", "grid", or a (composite)
-}}
+\item{theme}{The theme to apply to the table: "default", "striped", "bootstrap", "void", or "grid".}
 
 \item{placement}{A string to control the position of tables in LaTeX. Will be inserted in square brackets like: \verb{\\\\begin\{table\}[H]}}
 }
