@@ -27,7 +27,7 @@ This tutorial introduces the main functions of the package. It is available in t
 * [HTML](tutorial.html)
 
 
-# Tiny Tables
+# Tiny Tables: `tt()`
 
 Load the library and set some global options:
 
@@ -45,56 +45,6 @@ x <- mtcars[1:4, 1:5]
 tt(x)
 ```
 
-
-## Output formats
-
-`tinytable` can produce tables in HTML, Word, Markdown, LaTeX, PDF, or PNG format. An appropriate output format for printing is automatically selected based on (1) whether the function is called interactively, (2) is called within RStudio, and (3) the output format of the Rmarkdown or Quarto document, if applicable. Alternatively, users can specify the print format in `print()` or by setting a global option:
-
-```{r}
-#| eval: false
-tt(x) |> print("markdown")
-tt(x) |> print("html")
-tt(x) |> print("latex")
-
-options(tinytable_print_output = "markdown")
-```
-
-With the `save_tt()` function, users can also save tables directly to PNG (images), PDF or Word documents, and to any of the basic formats. All we need to do is supply a valid file name with the appropriate extension (ex: `.png`, `.html`, `.pdf`, etc.):
-
-```r
-tt(x) |> save_tt("path/to/file.png")
-tt(x) |> save_tt("path/to/file.pdf")
-tt(x) |> save_tt("path/to/file.docx")
-tt(x) |> save_tt("path/to/file.html")
-tt(x) |> save_tt("path/to/file.tex")
-tt(x) |> save_tt("path/to/file.md")
-```
-
-`save_tt()` can also return a string with the table in it, for further processing in `R`. In the first case, the table is printed to console with `cat()`. In the second case, it returns as a single string as an `R` object.
-
-```{r}
-tt(mtcars[1:10, 1:5]) |>
-  group_tt(
-    i = list(
-      "Hello" = 3,
-      "World" = 8),
-    j = list(
-      "Foo" = 2:3,
-      "Bar" = 4:5)) |>
-  print("markdown")
-```
-
-```{r}
-tt(mtcars[1:10, 1:5]) |>
-  group_tt(
-    i = list(
-      "Hello" = 3,
-      "World" = 8),
-    j = list(
-      "Foo" = 2:3,
-      "Bar" = 4:5)) |>
-  save_tt("markdown")
-```
 
 
 ## Themes
@@ -119,75 +69,6 @@ tt(x, theme = "void")
 ```
 :::
 
-## Alignment
-
-To align columns, we use a single character, or a string where each letter represents a column:
-
-```{r}
-dat <- data.frame(
-  a = c("a", "aa", "aaa"),
-  b = c("b", "bb", "bbb"),
-  c = c("c", "cc", "ccc"))
-
-tt(dat) |> style_tt(j = 1:3, align = "c")
-
-tt(dat) |> style_tt(j = 1:3, align = "lcr")
-```
-
-## Formatting (numbers, dates, strings, etc.)
-
-
-The `tt()` function is minimalist; it's inteded purpose is simply to draw nice tables. Users who want to format numbers, dates, strings, and other variables in different ways should process their data *before* supplying it to the `tt()` table-drawing function. To do so, we can use the `format_tt()` function supplied by the `tinytable`. 
-
-In a very simple case---such as printing 2 significant digits of all numeric variables---we can use the `digits` argument of `tt()`:
-
-```{r}
-dat <- data.frame(
-     w = c(143002.2092, 201399.181, 100188.3883),
-     x = c(1.43402, 201.399, 0.134588),
-     y = as.Date(sample(1:1000, 3)),
-     z = c(TRUE, TRUE, FALSE))
-
-tt(dat, digits = 2)
-```
-
-We can get more fine-grained control over formatting by calling `format_tt()` after `tt()`, optionally by specifying the columns to format with `j`:
-
-```{r}
-tt(dat) |>
-  format_tt(
-    j = 2:4,
-    digits = 1,
-    date = "%B %d %Y") |>
-  format_tt(
-    j = 1,
-    digits = 2,
-    num_mark_big = " ",
-    num_mark_dec = ",",
-    num_fmt = "decimal")
-```
-
-We can use a regular expression in `j` to select columns, and the `?sprintf` function to format strings, numbers, and to do [string interpolation](https://en.wikipedia.org/wiki/String_interpolation) (similar to the `glue` package, but using Base `R`):
-
-```{r}
-dat <- data.frame(
-     a = c("Burger", "Halloumi", "Tofu", "Beans"),
-     b = c(1.43202, 201.399, 0.146188, 0.0031),
-     c = c(98938272783457, 7288839482, 29111727, 93945))
-tt(dat) |>
-  format_tt(j = "a", sprintf = "Food: %s") |>
-  format_tt(j = 2, digits = 1) |>
-  format_tt(j = "c", digits = 2, num_suffix = TRUE)
-```
-
-Finally, if you like the `format_tt()` interface, you can use it directly with numbers, vectors, or data frames:
-
-```{r}
-format_tt(pi, digits = 1)
-
-format_tt(dat, digits = 1, num_suffix = TRUE)
-```
-
 
 ## Width
 
@@ -201,32 +82,8 @@ tt(x, width = 0.5)
 tt(x, width = 1)
 ```
 
-## Line breaks and text wrapping
-
-When the `width` argument is specified and a cell includes long text, the text is automatically wrapped to match the table.
-
-```{r}
-#| tbl-cap: "A full width table with wrapped text."
-lorem <- data.frame(
-  Lorem = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
-  Ipsum = " Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos."
-)
-tt(lorem, width = 3/4)
-```
-
-Manual line breaks work sligthly different in LaTeX (PDF) or HTML. This table shows the two strategies. For HTML, we insert a `<br>` tag. For LaTeX, we wrap the string in curly braces `{}`, and then insert two (escaped) backslashes: `\\\\`
-
-```{r}
-d <- data.frame(
-  "{Sed ut \\\\ perspiciatis unde}",
-  "dicta sunt<br> explicabo. Nemo"
-) |> setNames(c("LaTeX line break", "HTML line break"))
-tt(d, width = 1)
-```
-
 
 ## Captions and cross-references
-
 
 In Quarto, one can specify captions and use cross-references using code like this:
 
@@ -304,6 +161,137 @@ tt(dat) |>
 ```
 :::
 
+
+## Line breaks and text wrapping
+
+When the `width` argument is specified and a cell includes long text, the text is automatically wrapped to match the table.
+
+```{r}
+#| tbl-cap: "A full width table with wrapped text."
+lorem <- data.frame(
+  Lorem = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+  Ipsum = " Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos."
+)
+tt(lorem, width = 3/4)
+```
+
+Manual line breaks work sligthly different in LaTeX (PDF) or HTML. This table shows the two strategies. For HTML, we insert a `<br>` tag. For LaTeX, we wrap the string in curly braces `{}`, and then insert two (escaped) backslashes: `\\\\`
+
+```{r}
+d <- data.frame(
+  "{Sed ut \\\\ perspiciatis unde}",
+  "dicta sunt<br> explicabo. Nemo"
+) |> setNames(c("LaTeX line break", "HTML line break"))
+tt(d, width = 1)
+```
+
+# Output formats: `save_tt()`
+
+`tinytable` can produce tables in HTML, Word, Markdown, LaTeX, PDF, or PNG format. An appropriate output format for printing is automatically selected based on (1) whether the function is called interactively, (2) is called within RStudio, and (3) the output format of the Rmarkdown or Quarto document, if applicable. Alternatively, users can specify the print format in `print()` or by setting a global option:
+
+```{r}
+#| eval: false
+tt(x) |> print("markdown")
+tt(x) |> print("html")
+tt(x) |> print("latex")
+
+options(tinytable_print_output = "markdown")
+```
+
+With the `save_tt()` function, users can also save tables directly to PNG (images), PDF or Word documents, and to any of the basic formats. All we need to do is supply a valid file name with the appropriate extension (ex: `.png`, `.html`, `.pdf`, etc.):
+
+```r
+tt(x) |> save_tt("path/to/file.png")
+tt(x) |> save_tt("path/to/file.pdf")
+tt(x) |> save_tt("path/to/file.docx")
+tt(x) |> save_tt("path/to/file.html")
+tt(x) |> save_tt("path/to/file.tex")
+tt(x) |> save_tt("path/to/file.md")
+```
+
+`save_tt()` can also return a string with the table in it, for further processing in `R`. In the first case, the table is printed to console with `cat()`. In the second case, it returns as a single string as an `R` object.
+
+```{r}
+tt(mtcars[1:10, 1:5]) |>
+  group_tt(
+    i = list(
+      "Hello" = 3,
+      "World" = 8),
+    j = list(
+      "Foo" = 2:3,
+      "Bar" = 4:5)) |>
+  print("markdown")
+```
+
+```{r}
+tt(mtcars[1:10, 1:5]) |>
+  group_tt(
+    i = list(
+      "Hello" = 3,
+      "World" = 8),
+    j = list(
+      "Foo" = 2:3,
+      "Bar" = 4:5)) |>
+  save_tt("markdown")
+```
+
+
+# Formatting content: `format_tt()`
+
+## Numbers, dates, strings, etc.
+
+The `tt()` function is minimalist; it's inteded purpose is simply to draw nice tables. Users who want to format numbers, dates, strings, and other variables in different ways should process their data *before* supplying it to the `tt()` table-drawing function. To do so, we can use the `format_tt()` function supplied by the `tinytable`. 
+
+In a very simple case---such as printing 2 significant digits of all numeric variables---we can use the `digits` argument of `tt()`:
+
+```{r}
+dat <- data.frame(
+     w = c(143002.2092, 201399.181, 100188.3883),
+     x = c(1.43402, 201.399, 0.134588),
+     y = as.Date(sample(1:1000, 3)),
+     z = c(TRUE, TRUE, FALSE))
+
+tt(dat, digits = 2)
+```
+
+We can get more fine-grained control over formatting by calling `format_tt()` after `tt()`, optionally by specifying the columns to format with `j`:
+
+```{r}
+tt(dat) |>
+  format_tt(
+    j = 2:4,
+    digits = 1,
+    date = "%B %d %Y") |>
+  format_tt(
+    j = 1,
+    digits = 2,
+    num_mark_big = " ",
+    num_mark_dec = ",",
+    num_fmt = "decimal")
+```
+
+We can use a regular expression in `j` to select columns, and the `?sprintf` function to format strings, numbers, and to do [string interpolation](https://en.wikipedia.org/wiki/String_interpolation) (similar to the `glue` package, but using Base `R`):
+
+```{r}
+dat <- data.frame(
+     a = c("Burger", "Halloumi", "Tofu", "Beans"),
+     b = c(1.43202, 201.399, 0.146188, 0.0031),
+     c = c(98938272783457, 7288839482, 29111727, 93945))
+tt(dat) |>
+  format_tt(j = "a", sprintf = "Food: %s") |>
+  format_tt(j = 2, digits = 1) |>
+  format_tt(j = "c", digits = 2, num_suffix = TRUE)
+```
+
+Finally, if you like the `format_tt()` interface, you can use it directly with numbers, vectors, or data frames:
+
+```{r}
+format_tt(pi, digits = 1)
+
+format_tt(dat, digits = 1, num_suffix = TRUE)
+```
+
+
 ## Markdown
 
 Markdown can be rendered in cells by using the `markdown` argument of the `format_tt()` function (note: this requires installing the `markdown` as an optional dependency). 
@@ -357,7 +345,7 @@ tt(dat) |> format_tt(j = 1, markdown = TRUE)
 ```
 
 
-# Style
+# Style: `style_tt()`
 
 The main styling function for the `tinytable` package is `style_tt()`. Via this function, you can access three main interfaces to customize tables:
 
@@ -464,6 +452,22 @@ tt(x) |> style_tt(i = 1:4, j = 1, color = "#FF5733")
 ```
 
 Note that when using Hex codes in a LaTeX table, we need extra declarations in the LaTeX preamble. See `?tt` for details.
+
+
+## Alignment
+
+To align columns, we use a single character, or a string where each letter represents a column:
+
+```{r}
+dat <- data.frame(
+  a = c("a", "aa", "aaa"),
+  b = c("b", "bb", "bbb"),
+  c = c("c", "cc", "ccc"))
+
+tt(dat) |> style_tt(j = 1:3, align = "c")
+
+tt(dat) |> style_tt(j = 1:3, align = "lcr")
+```
 
 
 ## Fonts
@@ -614,7 +618,7 @@ tt(x, theme = "void") |>
 ```
 
 
-# Tiny plots and images
+# Plots and images: `plot_tt()`
 
 The `plot_tt()` function can embed images and plots in a `tinytable`. We can insert images by specifying their paths and positions (`i`/`j`). 
 
@@ -771,7 +775,7 @@ tt(tab) |>
 
 
 
-# Groups and labels
+# Groups and labels: `group_tt()`
 
 The `group_tt()` function can label groups of rows (`i`) or columns (`j`).
 
