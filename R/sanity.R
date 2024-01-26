@@ -15,9 +15,9 @@ sanitize_output <- function(output) {
     out <- output
   }
 
-  if (isTRUE(check_dependency("knitr")) && isTRUE(check_dependency("rmarkdown"))) {
+  if (isTRUE(check_dependency("knitr"))) {
 
-    if (isTRUE(knitr::is_latex_output())) {
+    if (isTRUE(knitr::pandoc_to() == "latex")) {
       usepackage_latex("codehigh")
       usepackage_latex("float")
       usepackage_latex("tabularray", extra_lines = c(
@@ -31,8 +31,20 @@ sanitize_output <- function(output) {
       )
       if (is.null(output)) out <- "latex"
 
-    } else if (isTRUE(knitr::is_html_output())) {
+    } else if (isTRUE(knitr::pandoc_to() == "html")) {
       if (is.null(output)) out <- "html"
+
+    } else if (isTRUE(knitr::pandoc_to() == "typst")) {
+      if (is.null(output)) out <- "typst"
+
+    } else if (isTRUE(knitr::pandoc_to() == "docx")) {
+      if (is.null(output)) out <- "markdown"
+
+    } else if (isTRUE(knitr::pandoc_to() == "commonmark")) {
+      if (is.null(output)) out <- "markdown"
+
+    } else {
+      if (is.null(output)) out <- "markdown"
     }
 
   }
