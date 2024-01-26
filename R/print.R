@@ -26,6 +26,9 @@ knit_print.tinytable <- function(x,
 }
 
 
+#' Print a tinytable to console or viewer pane
+#' 
+#' @return launch a browser window or cat() the table to console.
 #' @export
 print.tinytable <- function(x,
                             output = getOption("tinytable_print_output", default = NULL),
