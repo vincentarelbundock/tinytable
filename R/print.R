@@ -28,6 +28,9 @@ knit_print.tinytable <- function(x,
 
 #' Print a tinytable to console or viewer pane
 #' 
+#' @inheritParams tt
+#' @param output One of "latex", "markdown", "html". If NULL, will guess the output based on the environment (interactive, RStudio, etc.).
+#' @param ... Other arguments are ignored.
 #' @return launch a browser window or cat() the table to console.
 #' @export
 print.tinytable <- function(x,

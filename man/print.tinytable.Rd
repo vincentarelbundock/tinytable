@@ -6,6 +6,13 @@
 \usage{
 \method{print}{tinytable}(x, output = getOption("tinytable_print_output", default = NULL), ...)
 }
+\arguments{
+\item{x}{A data frame or data table to be rendered as a table.}
+
+\item{output}{One of "latex", "markdown", "html". If NULL, will guess the output based on the environment (interactive, RStudio, etc.).}
+
+\item{...}{Other arguments are ignored.}
+}
 \value{
 launch a browser window or cat() the table to console.
 }
