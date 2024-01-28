@@ -3,20 +3,24 @@
 #let nrow = $TINYTABLE_TYPST_NROW;
 #let ncol = $TINYTABLE_TYPST_NCOL;
 
-#tablex(
-  columns: ncol,
-  header-rows: nhead,
-  align: left + horizon,
-  auto-lines: false,
+#figure(
+  $TINYTABLE_TYPST_CAPTION
+  tablex(
+    columns: ncol,
+    header-rows: nhead,
+    align: left + horizon,
+    auto-lines: false,
 
-  // tinytable lines before
+    // tinytable lines before
 
-  map-cells: cell => {
+    map-cells: cell => {
 
-    // tinytable cell style before
-    return cell;
-  },
+      // tinytable cell style before
+      return cell;
+    },
 
-  // tinytable cell content after
+    // tinytable cell content after
 
-)
+  ) // end tablex
+) // end figure
+

@@ -26,6 +26,7 @@ tt_typst <- function(x, caption, theme, width, notes, ...) {
     out <- style_typst(out, i = seq(1, meta(out)$nrows, by = 2), background = "#ededed")
   } 
 
+
   class(out) <- c("tinytable", "knit_asis", class(out))
   return(out)
 }
