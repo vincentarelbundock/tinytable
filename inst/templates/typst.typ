@@ -13,7 +13,7 @@
 
   map-cells: cell => {
 
-    // tinytable cell settings before
+    // tinytable cell style before
 
     return cell;
   },

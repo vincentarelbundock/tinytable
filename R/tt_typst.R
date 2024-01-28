@@ -30,16 +30,12 @@ typst_insert <- function(x, content = NULL, type = "body") {
   out <- strsplit(x, "\n")[[1]]
   comment <- switch(type,
       "lines" = "tinytable lines before",
-      "settings" = "tinytable cell settings before",
+      "style" = "tinytable cell style before",
       "body" = "tinytable cell content before"
   )
   idx <- grep(comment, out)
 
-  if (type == "body") {
-    out <- c(out[1:idx], content, out[(idx + 1):length(out)])
-  } else {
-    out <- c(out[1:(idx - 1)], content, out[idx:length(out)])
-  }
+  out <- c(out[1:(idx - 1)], content, out[idx:length(out)])
 
   out <- paste(out, collapse = "\n")
   class(out) <- class(x)
