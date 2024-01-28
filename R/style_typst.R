@@ -37,6 +37,10 @@ style_typst <- function(x,
     ival <- c(-1 * rev(seq_len(meta(x)$nhead) - 1), ival)
   }
 
+  if (isTRUE(grepl("^#", color))) color <- sprintf("rgb(%s)", color)
+  if (isTRUE(grepl("^#", background))) background <- sprintf("rgb(%s)", background)
+  if (isTRUE(grepl("^#", line_color))) line_color <- sprintf("rgb(%s)", line_color)
+
   style <- ""
 
   if (!is.null(fontsize)) {
@@ -86,6 +90,53 @@ let j = (%s,);",
           paste(ival, collapse = ","),
           paste(jval, collapse = ","))
     style <- paste0(idx, "\n", style)
+  }
+
+
+  # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
+  if (!is.null(line)) {
+    iline <- jline <- NULL
+    if (grepl("t", line)) iline <- c(iline, ival + meta(x, "nhead"))
+    if (grepl("b", line)) iline <- c(iline, ival + meta(x, "nhead"))
+    if (grepl("l", line)) jline <- c(jline, jval)
+    if (grepl("r", line)) jline <- c(jline, jval)
+    iline <- unique(iline)
+    jline <- unique(jline)
+    line_width <- paste0(line_width, "em")
+    if (!is.null(iline)) {
+      for (i in iline) {
+        if (!is.null(jline)) {
+          tmp <- sprintf(
+            "hlinex(y: %s, start = %s, end = %s, stroke: %s + %s),",
+            i,
+            min(jval) - 1,
+            max(jval),
+            line_width,
+            line_color)
+        } else {
+          tmp <- sprintf(
+            "hlinex(y: %s, stroke: %s + %s),",
+            i,
+            line_width,
+            line_color)
+        }
+        out <- typst_insert(out, content = tmp, type = "lines")
+      }
+    }
+    # if (!is.null(jline)) {
+    #   tmp <- sprintf(
+    #     "vline{%s}={%s}{solid, %s, %s},",
+    #     paste(jline, collapse = ","),
+    #     paste(ival + meta(x, "nhead"), collapse = ","),
+    #     line_width,
+    #     sub("^#", "c", line_color)
+    #   )
+    #   out <- typst_insert(out, content = tmp, type = "lines")
+    # }
+  }
+  if (!is.null(line)) {
+    # hlinex(y: 0, stroke: black + .1em),
+    # hlinex(y: nhead, stroke: black + .05em),
   }
 
   out <- typst_insert(out, style, type = "style")
