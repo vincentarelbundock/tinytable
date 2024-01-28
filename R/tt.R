@@ -15,14 +15,10 @@
 #' @param width A numeric value between 0 and 1 indicating the proportion of the line width that the table should cover.
 #' @param theme The theme to apply to the table: "default", "striped", "bootstrap", "void", or "grid".
 #' @param notes Notes to append to the bottom of the table. This argument accepts several different inputs:
-#' * Single string insert a single note: 
-#'    - `notes = "blah blah"`
-#' * Multiple strings insert multiple notes sequentially: 
-#'    - `notes = list("Hello world", "Foo bar")`
-#' * A named list inserts a list with the name as superscript: 
-#'    - `notes = list("a" = list("Hello World"))`
-#' * A named list with positions inserts markers as superscripts inside table cells:
-#'    - `notes = list("a" = list(i = 0:1, j = 2, text = "Hello World"))`
+#' * Single string insert a single note: `"blah blah"`
+#' * Multiple strings insert multiple notes sequentially: `list("Hello world", "Foo bar")`
+#' * A named list inserts a list with the name as superscript: `list("a" = list("Hello World"))`
+#' * A named list with positions inserts markers as superscripts inside table cells: `list("a" = list(i = 0:1, j = 2, text = "Hello World"))`
 #' @param placement A string to control the position of tables in LaTeX. Will be inserted in square brackets like: `\\begin{table}[H]`
 #' @return An object of class `tt` representing the table.
 #' @template latex_preamble

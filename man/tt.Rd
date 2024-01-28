@@ -25,22 +25,10 @@ tt(
 
 \item{notes}{Notes to append to the bottom of the table. This argument accepts several different inputs:
 \itemize{
-\item Single string insert a single note:
-\itemize{
-\item \code{notes = "blah blah"}
-}
-\item Multiple strings insert multiple notes sequentially:
-\itemize{
-\item \code{notes = list("Hello world", "Foo bar")}
-}
-\item A named list inserts a list with the name as superscript:
-\itemize{
-\item \code{notes = list("a" = list("Hello World"))}
-}
-\item A named list with positions inserts markers as superscripts inside table cells:
-\itemize{
-\item \code{notes = list("a" = list(i = 0:1, j = 2, text = "Hello World"))}
-}
+\item Single string insert a single note: \code{"blah blah"}
+\item Multiple strings insert multiple notes sequentially: \code{list("Hello world", "Foo bar")}
+\item A named list inserts a list with the name as superscript: \code{list("a" = list("Hello World"))}
+\item A named list with positions inserts markers as superscripts inside table cells: \code{list("a" = list(i = 0:1, j = 2, text = "Hello World"))}
 }}
 
 \item{theme}{The theme to apply to the table: "default", "striped", "bootstrap", "void", or "grid".}
