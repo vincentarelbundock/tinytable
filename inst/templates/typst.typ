@@ -14,9 +14,9 @@
   map-cells: cell => {
 
     // tinytable cell style before
-
     return cell;
   },
 
-  // tinytable cell content before
+  // tinytable cell content after
+
 )
