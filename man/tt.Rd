@@ -17,7 +17,7 @@ tt(
 \arguments{
 \item{x}{A data frame or data table to be rendered as a table.}
 
-\item{digits}{Number of significant digits to keep for numeric variables. When \code{digits} is an integer, \code{tt()} calls \code{format_tt(x, digits = digits)} before proceeding to draw the table. Users who need more control can proceed in two steps: (1) format the data with \code{format_tt()} or other functions, and (2) pass the formatted data to \code{tt()} for drawing. See \code{?format_tt} for more details on formating options (ex: decimal, scientific notation, dates, boolean variables, etc.).}
+\item{digits}{Number of significant digits to keep for numeric variables. When \code{digits} is an integer, \code{tt()} calls \code{format_tt(x, digits = digits)} before proceeding to draw the table. Users who need more control can proceed in two steps: (1) format the data with \code{format_tt()} or other functions, and (2) pass the formatted data to \code{tt()} for drawing. See \code{?format_tt} for more details on formatting options (ex: decimal, scientific notation, dates, boolean variables, etc.).}
 
 \item{caption}{A string that will be used as the caption of the table.}
 
@@ -78,6 +78,6 @@ tt(x,
 
 tt(x, notes = "Hello World!")
 
-tt(x, notes = list("*" = list(i = 0:1, j = 2, text = "Hello World!"))
+tt(x, notes = list("*" = list(i = 0:1, j = 2, text = "Hello World!")))
 
 }

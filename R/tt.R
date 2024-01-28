@@ -10,7 +10,7 @@
 #' `tinytable` attempts to determine the appropriate way to print the table based on interactive use, RStudio availability, and output format in RMarkdown or Quarto documents. Users can call `print(x, output="markdown")` to print the table in a specific format. Alternatively, they can set a global option: `options("tinytable_print_output"="markdown")`
 #'
 #' @param x A data frame or data table to be rendered as a table.
-#' @param digits Number of significant digits to keep for numeric variables. When `digits` is an integer, `tt()` calls `format_tt(x, digits = digits)` before proceeding to draw the table. Users who need more control can proceed in two steps: (1) format the data with `format_tt()` or other functions, and (2) pass the formatted data to `tt()` for drawing. See `?format_tt` for more details on formating options (ex: decimal, scientific notation, dates, boolean variables, etc.).
+#' @param digits Number of significant digits to keep for numeric variables. When `digits` is an integer, `tt()` calls `format_tt(x, digits = digits)` before proceeding to draw the table. Users who need more control can proceed in two steps: (1) format the data with `format_tt()` or other functions, and (2) pass the formatted data to `tt()` for drawing. See `?format_tt` for more details on formatting options (ex: decimal, scientific notation, dates, boolean variables, etc.).
 #' @param caption A string that will be used as the caption of the table.
 #' @param width A numeric value between 0 and 1 indicating the proportion of the line width that the table should cover.
 #' @param theme The theme to apply to the table: "default", "striped", "bootstrap", "void", or "grid".
@@ -36,7 +36,7 @@
 #' 
 #' tt(x, notes = "Hello World!")
 #'
-#' tt(x, notes = list("*" = list(i = 0:1, j = 2, text = "Hello World!"))
+#' tt(x, notes = list("*" = list(i = 0:1, j = 2, text = "Hello World!")))
 #' 
 #' @export
 tt <- function(x,
