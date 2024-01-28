@@ -37,7 +37,7 @@ print.tinytable <- function(x,
                             output = getOption("tinytable_print_output", default = NULL),
                             ...){
 
-  assert_choice(output, c("latex", "markdown", "html"), null.ok = TRUE)
+  assert_choice(output, c("latex", "markdown", "html", "typst"), null.ok = TRUE)
 
   if (is.null(output)) output <- meta(x, "output")
 
@@ -72,7 +72,18 @@ print.tinytable <- function(x,
       cat(out, sep = "\n")
       cat("\n")
     }
+
+  } else if (output == "typst") {
+    out <- build_tt(x, output = "typst")
+    class(out) <- "character"
+    cat("\n")
+    cat(out)
+    cat("\n")
+
+  } else {
+    stop("here be dragons")
   }
+
 
 }
 

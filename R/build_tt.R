@@ -49,6 +49,8 @@ build_tt <- function(x, output = NULL) {
     lazy_tt[[1]] <- quote(tt_tabularray)
   } else if (output == "markdown") {
     lazy_tt[[1]] <- quote(tt_grid)
+  } else if (output == "typst") {
+    lazy_tt[[1]] <- quote(tt_typst)
   }
   out <- eval(lazy_tt)
   out <- meta(out, "output", output)
@@ -77,6 +79,7 @@ build_tt <- function(x, output = NULL) {
 
   # finalize 
   out <- finalize_bootstrap(out)
+  out <- finalize_typst(out)
   out <- finalize_grid(out)
 
   m <- meta(x)

@@ -53,12 +53,13 @@ save_tt <- function(x, output, overwrite = FALSE) {
   "qmd" = "markdown",
   "txt" = "markdown",
   "docx" = "markdown",
+  "typ" = "typst",
   stop("The supported file extensions are: .png, .html, .pdf, .tex, and .md.", call. = FALSE))
 
   # evaluate styles at the very end of the pipeline, just before writing
   x <- build_tt(x, output = output_format)
 
-  if (file_ext %in% c("html", "tex", "md", "Rmd", "qmd", "txt")) {
+  if (file_ext %in% c("html", "tex", "md", "Rmd", "qmd", "txt", "typ")) {
     write(x, file = output)
 
   } else if (file_ext == "png") {
