@@ -23,7 +23,25 @@ tt(
 
 \item{width}{A numeric value between 0 and 1 indicating the proportion of the line width that the table should cover.}
 
-\item{notes}{A single string or a (named) list of strings to append at the bottom of the table.}
+\item{notes}{Notes to append to the bottom of the table. This argument accepts several different inputs:
+\itemize{
+\item Single string insert a single note:
+\itemize{
+\item \code{notes = "blah blah"}
+}
+\item Multiple strings insert multiple notes sequentially:
+\itemize{
+\item \code{notes = list("Hello world", "Foo bar")}
+}
+\item A named list inserts a list with the name as superscript:
+\itemize{
+\item \code{notes = list("a" = list("Hello World"))}
+}
+\item A named list with positions inserts markers as superscripts inside table cells:
+\itemize{
+\item \code{notes = list("a" = list(i = 0:1, j = 2, text = "Hello World"))}
+}
+}}
 
 \item{theme}{The theme to apply to the table: "default", "striped", "bootstrap", "void", or "grid".}
 
@@ -69,5 +87,9 @@ tt(x,
    theme = "striped",
    width = 0.5,
    caption = "Data about cars.")
+
+tt(x, notes = "Hello World!")
+
+tt(x, notes = list("*" = list(i = 0:1, j = 2, text = "Hello World!"))
 
 }

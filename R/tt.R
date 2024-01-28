@@ -14,8 +14,15 @@
 #' @param caption A string that will be used as the caption of the table.
 #' @param width A numeric value between 0 and 1 indicating the proportion of the line width that the table should cover.
 #' @param theme The theme to apply to the table: "default", "striped", "bootstrap", "void", or "grid".
-#' @param notes A single string or a (named) list of strings to append at the bottom of the table.
-#' 
+#' @param notes Notes to append to the bottom of the table. This argument accepts several different inputs:
+#' * Single string insert a single note: 
+#'    - `notes = "blah blah"`
+#' * Multiple strings insert multiple notes sequentially: 
+#'    - `notes = list("Hello world", "Foo bar")`
+#' * A named list inserts a list with the name as superscript: 
+#'    - `notes = list("a" = list("Hello World"))`
+#' * A named list with positions inserts markers as superscripts inside table cells:
+#'    - `notes = list("a" = list(i = 0:1, j = 2, text = "Hello World"))`
 #' @param placement A string to control the position of tables in LaTeX. Will be inserted in square brackets like: `\\begin{table}[H]`
 #' @return An object of class `tt` representing the table.
 #' @template latex_preamble
@@ -30,7 +37,11 @@
 #'    theme = "striped",
 #'    width = 0.5,
 #'    caption = "Data about cars.")
+#' 
+#' tt(x, notes = "Hello World!")
 #'
+#' tt(x, notes = list("*" = list(i = 0:1, j = 2, text = "Hello World!"))
+#' 
 #' @export
 tt <- function(x,
                digits = NULL,
@@ -51,10 +62,7 @@ tt <- function(x,
 
   
   # notes can be a single string or a (named) list of strings
-  if (is.character(notes) && length(notes)) {
-    notes <- list(notes)
-  }
-  assert_list(notes, null.ok = TRUE)
+  sanity_notes(notes)
 
   # before style_tt() call for align
   out <- x 
@@ -67,22 +75,13 @@ tt <- function(x,
   out <- meta(out, "nhead", if (is.null(colnames(x))) 0 else 1)
   out <- meta(out, "nrows", nrow(x))
   out <- meta(out, "ncols", ncol(x))
+  out <- meta(out, "notes", notes)
   out <- meta(out, "caption", caption)
   class(out) <- c("tinytable", class(out))
 
   # build table
+  # tt_tabularray wil be substituted in build_tt by the appropriate on based on output
   cal <- call("tt_tabularray", x = out, caption = caption, theme = theme, width = width, notes = notes, placement = placement)
-  # if (output == "latex") {
-  #
-  # } else if (output == "html"){
-  #   cal <- call("tt_bootstrap", x = out, caption = caption, theme = theme, width = width, notes = notes)
-  #
-  # } else if (output == "markdown") {
-  #   cal <- call("tt_grid", x = out, caption = caption)
-  #
-  # } else {
-  #   stop("here be dragons")
-  # }
 
   out <- meta(out, "lazy_tt", cal)
 

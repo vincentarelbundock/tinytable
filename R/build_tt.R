@@ -18,6 +18,9 @@ build_tt <- function(x, output = NULL) {
     out <- eval(l)
   }
 
+  # add footnote markers just after formatting, otherwise appending converts to string
+  out <- footnote_markers(out)
+
   # plots and images
   for (l in m$lazy_plot) {
     tmp <- out

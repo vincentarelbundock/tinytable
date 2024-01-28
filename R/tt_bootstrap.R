@@ -33,7 +33,18 @@ tt_bootstrap <- function(x, caption, theme, width, notes, ...) {
     notes_tmp <- NULL
     for (k in seq_along(notes)) {
       if (!is.null(names(notes))) {
-        tmp <- sprintf("<tr><td colspan='%s'><sup>%s</sup> %s</td></tr>", ncol(x), names(notes)[k], notes[k])
+        if (is.list(notes[[k]])) {
+          tmp <- sprintf("<tr><td colspan='%s'><sup>%s</sup> %s</td></tr>",
+            ncol(x),
+            names(notes)[k],
+            notes[[k]]$text)
+        # note is a string
+        } else {
+          tmp <- sprintf("<tr><td colspan='%s'><sup>%s</sup> %s</td></tr>",
+            ncol(x),
+            names(notes)[k],
+            notes[k])
+        }
       } else {
         tmp <- sprintf("<tr><td colspan='%s'>%s</td></tr>", ncol(x), notes[k])
       }

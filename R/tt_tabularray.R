@@ -85,7 +85,7 @@ tt_tabularray <- function(x, caption, theme, width, notes, placement) {
     } else {
       lab <- names(notes)
     }
-    notes <- unlist(notes)
+    notes <- sapply(notes, function(n) if (is.list(n)) n$text else n)
     for (k in seq_along(notes)) {
       spec <- sprintf("note{%s}={%s}", lab[k], notes[k])
       out <- tabularray_insert(out, content = spec, type = "outer")

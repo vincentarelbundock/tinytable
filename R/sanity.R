@@ -228,3 +228,28 @@ assert_class <- function(x, classname) {
     stop(msg, call. = FALSE)
   }
 }
+
+
+sanity_notes <- function(notes) {
+  if (is.character(notes) && length(notes) > 0) {
+    notes <- as.list(notes)
+  }
+  assert_list(notes, null.ok = TRUE)
+  for (idx in seq_along(notes)) {
+    n <- notes[[idx]]
+    bad <- FALSE
+    if (is.list(n)) {
+      if (is.null(names(notes)[idx])) {
+        bad <- TRUE
+      }
+      if (!all(c("i", "j", "text") %in% names(n))) {
+        bad <- TRUE
+      }
+    } else if (!is.character(n) || length(n) != 1) {
+      bad <- TRUE
+    }
+    if (isTRUE(bad)) {
+      stop("`notes` includes invalid elements. Please refer to the documentation for details.", call. = FALSE)
+    }
+  }
+}
