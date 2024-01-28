@@ -51,8 +51,8 @@
 #' x <- mtcars[1:5, 1:5]
 #' tab <- tt(x)
 #' tab <- style_tt(tab, j = 1:5, align = "lcccr")
-#' tab <- style_tt(tab, i = 2:3,
-#'  background = "black", color = "orange", bold = TRUE)
+#' tab <- style_tt(tab, i = 2:3, background = "black", color = "orange", bold = TRUE)
+#' tab
 #'
 style_tt <- function (x,
                       i = NULL,

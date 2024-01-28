@@ -1,5 +1,12 @@
 # News
 
+## Development
+
+New:
+
+- `notes` argument in `tt()` can insert superscript markers inside cells to refer to notes at the bottom of the page.
+  - `tt(x, notes = list("*" = list(i = 0:1, j = 2, text = "Hello world)))`
+
 ## 0.0.2
 
 Improvements:

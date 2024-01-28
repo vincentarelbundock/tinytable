@@ -25,11 +25,11 @@
 #' dat <- data.frame(
 #'   a = rnorm(3, mean = 10000),
 #'   b = rnorm(3, 10000))
-#' tab <- format_tt(dat,
+#' tab <- tt(dat)
+#' format_tt(tab,
 #'  digits = 2,
 #'  num_mark_dec = ",",
 #'  num_mark_big = " ")
-#' tt(tab)
 #'
 format_tt <- function(x,
                       j = NULL,
