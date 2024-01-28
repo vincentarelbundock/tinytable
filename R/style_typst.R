@@ -22,9 +22,9 @@ style_typst <- function(x,
                         colspan = NULL,
                         indent = 0,
                         ...) {
-
-
-  if (meta(x, "output") != "typst") return(x)
+  if (meta(x, "output") != "typst") {
+    return(x)
+  }
 
   out <- x
 
@@ -32,115 +32,105 @@ style_typst <- function(x,
   jval <- if (is.null(j)) seq_len(meta(x, "ncols")) else j
   jval <- jval - 1
 
-  # only columns means we also want to style headers 
+  # only columns means we also want to style headers
   if (is.null(i) && !is.null(j)) {
     ival <- c(-1 * rev(seq_len(meta(x)$nhead) - 1), ival)
   }
 
-  if (isTRUE(grepl("^#", color))) color <- sprintf("rgb(%s)", color)
-  if (isTRUE(grepl("^#", background))) background <- sprintf("rgb(%s)", background)
-  if (isTRUE(grepl("^#", line_color))) line_color <- sprintf("rgb(%s)", line_color)
+  if (isTRUE(grepl("^#", color))) color <- sprintf('rgb("%s")', color)
+  if (isTRUE(grepl("^#", background))) background <- sprintf('rgb("%s")', background)
+  if (isTRUE(grepl("^#", line_color))) line_color <- sprintf('rgb("%s")', line_color)
 
   style <- ""
 
   if (!is.null(fontsize)) {
-    tmp <- sprintf( "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = { set text(%sem); cell.content } };", fontsize)
-    style <- paste0(style, "\n", tmp) 
+    tmp <- sprintf("if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = { set text(%sem); cell.content } };", fontsize)
+    style <- paste0(style, "\n", tmp)
   }
 
   if (isTRUE(monospace)) {
     tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = math.mono(cell.content) };"
-    style <- paste0(style, "\n", tmp) 
+    style <- paste0(style, "\n", tmp)
   }
 
   if (isTRUE(italic)) {
     tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = emph(cell.content) };"
-    style <- paste0(style, "\n", tmp) 
+    style <- paste0(style, "\n", tmp)
   }
 
   if (isTRUE(bold)) {
     tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = strong(cell.content) };"
-    style <- paste0(style, "\n", tmp) 
+    style <- paste0(style, "\n", tmp)
   }
 
   if (isTRUE(underline)) {
     tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = underline(cell.content) };"
-    style <- paste0(style, "\n", tmp) 
+    style <- paste0(style, "\n", tmp)
   }
 
   if (isTRUE(strikeout)) {
     tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = strike(cell.content) };"
-    style <- paste0(style, "\n", tmp) 
+    style <- paste0(style, "\n", tmp)
   }
 
   if (!is.null(background)) {
-    tmp <- sprintf( "if (i.contains(cell.y) and j.contains(cell.x)) { cell.fill = %s };", background)
-    style <- paste0(style, "\n", tmp) 
+    tmp <- sprintf("if (i.contains(cell.y) and j.contains(cell.x)) { cell.fill = %s };", background)
+    style <- paste0(style, "\n", tmp)
   }
 
   if (!is.null(color)) {
-    tmp <- sprintf( "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = { set text(%s); cell.content } };", color)
-    style <- paste0(style, "\n", tmp) 
+    tmp <- sprintf("if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = { set text(%s); cell.content } };", color)
+    style <- paste0(style, "\n", tmp)
   }
 
   if (style != "") {
     idx <- sprintf(
-    "let i = (%s,);
+      "let i = (%s,);
 let j = (%s,);",
-          paste(ival, collapse = ","),
-          paste(jval, collapse = ","))
+      paste(ival, collapse = ","),
+      paste(jval, collapse = ","))
     style <- paste0(idx, "\n", style)
-  }
-
-
-  # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
-  if (!is.null(line)) {
-    iline <- jline <- NULL
-    if (grepl("t", line)) iline <- c(iline, ival + meta(x, "nhead"))
-    if (grepl("b", line)) iline <- c(iline, ival + meta(x, "nhead"))
-    if (grepl("l", line)) jline <- c(jline, jval)
-    if (grepl("r", line)) jline <- c(jline, jval)
-    iline <- unique(iline)
-    jline <- unique(jline)
-    line_width <- paste0(line_width, "em")
-    if (!is.null(iline)) {
-      for (i in iline) {
-        if (!is.null(jline)) {
-          tmp <- sprintf(
-            "hlinex(y: %s, start = %s, end = %s, stroke: %s + %s),",
-            i,
-            min(jval) - 1,
-            max(jval),
-            line_width,
-            line_color)
-        } else {
-          tmp <- sprintf(
-            "hlinex(y: %s, stroke: %s + %s),",
-            i,
-            line_width,
-            line_color)
-        }
-        out <- typst_insert(out, content = tmp, type = "lines")
-      }
-    }
-    # if (!is.null(jline)) {
-    #   tmp <- sprintf(
-    #     "vline{%s}={%s}{solid, %s, %s},",
-    #     paste(jline, collapse = ","),
-    #     paste(ival + meta(x, "nhead"), collapse = ","),
-    #     line_width,
-    #     sub("^#", "c", line_color)
-    #   )
-    #   out <- typst_insert(out, content = tmp, type = "lines")
-    # }
-  }
-  if (!is.null(line)) {
-    # hlinex(y: 0, stroke: black + .1em),
-    # hlinex(y: nhead, stroke: black + .05em),
   }
 
   out <- typst_insert(out, style, type = "style")
 
-  return(out)
+  # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
+  if (!is.null(line)) {
+    iline <- NULL
+    if (grepl("b", line)) iline <- c(iline, ival + 1)
+    if (grepl("t", line)) iline <- c(iline, ival)
+    iline <- unique(iline)
+    for (i in iline) {
+      tmp <- sprintf(
+        "hlinex(y: %s, start: %s, end: %s, stroke: %sem + %s),",
+        i,
+        min(jval),
+        max(jval) + 1,
+        line_width,
+        line_color)
+      out <- typst_insert(out, tmp, type = "lines")
+    }
 
+    jline <- NULL
+    if (grepl("r", line)) jline <- c(jline, jval + 1)
+    if (grepl("l", line)) jline <- c(jline, jval)
+    jline <- unique(jline)
+    for (j in jline) {
+      tmp <- sprintf(
+        "vlinex(x: %s, start: %s, end: %s, stroke: %sem + %s),",
+        j,
+        min(ival),
+        max(ival) + 1,
+        line_width,
+        line_color)
+      out <- typst_insert(out, tmp, type = "lines")
+    }
+
+    # if (grepl("t", line)) iline <- c(iline, ival + meta(x, "nhead"))
+    # if (grepl("l", line)) jline <- c(jline, jval)
+    # if (grepl("r", line)) jline <- c(jline, jval)
+  }
+
+
+  return(out)
 }
