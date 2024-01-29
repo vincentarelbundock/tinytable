@@ -156,7 +156,6 @@ check_numeric <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok = T
 assert_numeric <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
   msg <- sprintf("`%s` must be numeric", name)
   if (!isTRUE(check_numeric(x, len = len, lower = lower, upper = upper, null.ok = null.ok))) {
-    if (!is.numeric(x)) msg <- paste0(msg, "; it is not numeric")
     if (!is.null(len) && length(x) != len) msg <- paste0(msg, sprintf("; its length must be %s", len))
     if (!is.null(lower) && any(x < lower)) msg <- paste0(msg, sprintf("; all values must be greater than or equal to %s", lower))
     if (!is.null(upper) && any(x > upper)) msg <- paste0(msg, sprintf("; all values must be less than or equal to %s", upper))

@@ -10,7 +10,7 @@ knit_print.tinytable <- function(x,
   # lazy styles get evaluated here, at the very end
   out <- build_tt(x, output = output)
 
-  if (meta(out)$output == "html") {
+  if (isTRUE(meta(out)$output == "html")) {
     # from htmltools:::html_preserve
     # GPL3
     inline <- grepl(out, "\n", fixed = TRUE)
@@ -21,7 +21,7 @@ knit_print.tinytable <- function(x,
     }
   }
 
-  if (meta(out)$output == "typst") {
+  if (isTRUE(meta(out)$output == "typst")) {
     # from htmltools:::html_preserve
     # GPL3
     inline <- grepl(out, "\n", fixed = TRUE)

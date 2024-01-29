@@ -68,7 +68,7 @@ style_tt(
 
 \item{fontsize}{Integer Font size in pt units.}
 
-\item{width}{Width of the cell or column. Can be \code{NULL} for default width.}
+\item{width}{Width of column in em units. Can be \code{NULL} for default width.}
 
 \item{align}{A single character or a string with a number of characters equal to the number of columns in \code{j}. Valid characters include 'c' (center), 'l' (left), or 'r' (right).}
 

@@ -24,7 +24,7 @@
 #'   - Color names with luminance levels from [the `ninecolors` package](https://mirror.quantum5.ca/CTAN/macros/latex/contrib/ninecolors/ninecolors.pdf) (ex: "azure4", "magenta8", "teal2", "gray1", "olive3"). 
 #' @param background Background color. Specified as a color name or hexadecimal code. Can be `NULL` for default color.
 #' @param fontsize Font size in em units. Can be `NULL` for default size.
-#' @param width Width of the cell or column. Can be `NULL` for default width.
+#' @param width Width of column in em units. Can be `NULL` for default width.
 #' @param fontsize Integer Font size in pt units.
 #' @param align A single character or a string with a number of characters equal to the number of columns in `j`. Valid characters include 'c' (center), 'l' (left), or 'r' (right).
 #' @param colspan Number of columns a cell should span. Can only be used if both `i` and `j` are of length 1. Must be an integer greater than 1.
@@ -190,6 +190,10 @@ style_tt_lazy <- function (x,
     tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css,
     bootstrap_css_rule = bootstrap_css_rule, bootstrap_class = bootstrap_class)
 
+  if (!is.null(width)) {
+    width <- paste0(width, "em")
+  }
+
   out <- style_tabularray(
     x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
     color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, indent = indent,
@@ -244,8 +248,13 @@ assert_style_tt <- function (x,
 
   m <- meta(x)
 
+  if (!is.null(width) && !is.null(i)) {
+    msg <- "The `width` argument cannot be used with `i`."
+    stop(msg, call. = FALSE)
+  }
+
   assert_integerish(colspan, len = 1, lower = 1, null.ok = TRUE)
-  assert_string(width, null.ok = TRUE)
+  assert_numeric(width, len = 1, lower = 0, null.ok = FALSE)
   assert_numeric(indent, len = 1, lower = 0)
   assert_character(background, null.ok = TRUE)
   assert_character(color, null.ok = TRUE)
