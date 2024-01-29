@@ -1,9 +1,9 @@
 group_typst <- function(x, i = NULL, j = NULL, ...) {
   out <- x
 
-  if (!is.null(i)) {
-    out <- group_typst_row(out, i)
-  }
+  # if (!is.null(i)) {
+  #   out <- group_typst_row(out, i)
+  # }
 
   if (!is.null(j)) {
     out <- group_typst_col(out, j)

@@ -4,11 +4,12 @@
 
 New:
 
-- Support for `Typst` tables using `tablex`: 
+- `Typst` tables are now supported using the `tablex` extension: 
   - https://typst.app/
   - https://github.com/PgBiel/typst-tablex
 - `notes` argument in `tt()` can insert superscript markers inside cells to refer to notes at the bottom of the page.
   - `tt(x, notes = list("*" = list(i = 0:1, j = 2, text = "Hello world)))`
+- `notes` agument in `tt()` now works wth Markdown and Word, but must be a single string.
 
 ## 0.0.2
 

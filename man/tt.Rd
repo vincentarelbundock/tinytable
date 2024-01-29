@@ -82,6 +82,8 @@ tt(x,
 
 tt(x, notes = "Hello World!")
 
-tt(x, notes = list("*" = list(i = 0:1, j = 2, text = "Hello World!")))
+fn <- list(i = 0:1, j = 2, text = "Hello World!")
+tab <- tt(x, notes = list("*" = fn))
+print(tab, "latex")
 
 }

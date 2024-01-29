@@ -10,7 +10,7 @@ document:  ## document
 	Rscript -e "devtools::document()"
 
 check:  document ## check
-	Rscript -e "devtools::check"
+	Rscript -e "devtools::check()"
 
 install: document  ## install
 	Rscript -e "devtools::install(dependencies = TRUE)"

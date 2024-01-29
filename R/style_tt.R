@@ -254,7 +254,7 @@ assert_style_tt <- function (x,
   }
 
   assert_integerish(colspan, len = 1, lower = 1, null.ok = TRUE)
-  assert_numeric(width, len = 1, lower = 0, null.ok = FALSE)
+  assert_numeric(width, len = 1, lower = 0, null.ok = TRUE)
   assert_numeric(indent, len = 1, lower = 0)
   assert_character(background, null.ok = TRUE)
   assert_character(color, null.ok = TRUE)
