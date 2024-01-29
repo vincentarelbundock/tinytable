@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -223,6 +257,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
   <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -260,7 +295,7 @@ A data frame or data table to be rendered as a table.
 <code id="group_tt_:_i">i</code>
 </td>
 <td>
-Row indices where the styling should be applied. Can be a single value or a vector. <code>i=0</code> is the header, and negative values are higher level headers. If <code>colspan</code> is used, <code>i</code> must be of length 1.
+A named list of row indices to group. The names of the list will be used as labels.
 </td>
 </tr>
 <tr>
@@ -268,7 +303,7 @@ Row indices where the styling should be applied. Can be a single value or a vect
 <code id="group_tt_:_j">j</code>
 </td>
 <td>
-Column indices where the styling should be applied. Can be a single value, a vector, or a Perl-style regular expression applied to column names of the original data frame. If <code>colspan</code> is used, <code>j</code> must be of length 1.
+A named list of column indices to group. The names of the list will be used as labels. See examples below..
 </td>
 </tr>
 <tr>
@@ -284,6 +319,182 @@ integer number of <code>pt</code> to use when indenting the non-labelled rows.
 <section id="value" class="level3">
 <h3 class="anchored" data-anchor-id="value">Value</h3>
 <p>An object of class <code>tt</code> representing the table.</p>
+</section>
+<section id="examples" class="level3">
+<h3 class="anchored" data-anchor-id="examples">Examples</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]) <span class="sc">|&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_tt</span>(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">i =</span> <span class="fu">list</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Hello"</span> <span class="ot">=</span> <span class="dv">3</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>      <span class="st">"World"</span> <span class="ot">=</span> <span class="dv">8</span>),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">j =</span> <span class="fu">list</span>(</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Foo"</span> <span class="ot">=</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Bar"</span> <span class="ot">=</span> <span class="dv">4</span><span class="sc">:</span><span class="dv">5</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+ 
+
+  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytable_hfd2od7u1fb6b57rmx0b</title>
+    <style>
+.table td.tinytable_css_zol5xhyx0kf7bn7d80h8, .table th.tinytable_css_zol5xhyx0kf7bn7d80h8 {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_u4yfl6ms85u9k7wbkbai, .table th.tinytable_css_u4yfl6ms85u9k7wbkbai {   padding-left: 1em; }
+.table td.tinytable_css_fsmrpknb7iln5enzuwfb, .table th.tinytable_css_fsmrpknb7iln5enzuwfb {    text-align: center; }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+  
+
+  
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_hfd2od7u1fb6b57rmx0b" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+<tr><th scope="col" align="center" colspan="1"> </th>
+<th scope="col" align="center" colspan="2">Foo</th>
+<th scope="col" align="center" colspan="2">Bar</th>
+        
+              </tr><tr>
+                <th scope="col">mpg</th>
+                <th scope="col">cyl</th>
+                <th scope="col">disp</th>
+                <th scope="col">hp</th>
+                <th scope="col">drat</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td>21</td>
+                  <td>6</td>
+                  <td>160</td>
+                  <td>110</td>
+                  <td>3.9</td>
+                </tr>
+                <tr>
+                  <td>21</td>
+                  <td>6</td>
+                  <td>160</td>
+                  <td>110</td>
+                  <td>3.9</td>
+                </tr>
+                <tr>
+                  <td>22.8</td>
+                  <td>4</td>
+                  <td>108</td>
+                  <td>93</td>
+                  <td>3.85</td>
+                </tr>
+                <tr>
+                  <td>21.4</td>
+                  <td>6</td>
+                  <td>258</td>
+                  <td>110</td>
+                  <td>3.08</td>
+                </tr>
+                <tr>
+                  <td>18.7</td>
+                  <td>8</td>
+                  <td>360</td>
+                  <td>175</td>
+                  <td>3.15</td>
+                </tr>
+                <tr>
+                  <td>18.1</td>
+                  <td>6</td>
+                  <td>225</td>
+                  <td>105</td>
+                  <td>2.76</td>
+                </tr>
+                <tr>
+                  <td>14.3</td>
+                  <td>8</td>
+                  <td>360</td>
+                  <td>245</td>
+                  <td>3.21</td>
+                </tr>
+                <tr>
+                  <td>24.4</td>
+                  <td>4</td>
+                  <td>146.7</td>
+                  <td>62</td>
+                  <td>3.69</td>
+                </tr>
+                <tr>
+                  <td>22.8</td>
+                  <td>4</td>
+                  <td>140.8</td>
+                  <td>95</td>
+                  <td>3.92</td>
+                </tr>
+                <tr>
+                  <td>19.2</td>
+                  <td>6</td>
+                  <td>167.6</td>
+                  <td>123</td>
+                  <td>3.92</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+    function styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(i, j, css_id) {
+      var table = document.getElementById("tinytable_hfd2od7u1fb6b57rmx0b");
+      table.rows[i].cells[j].classList.add(css_id);
+    }
+    function insertSpanRow_if97gngm8d9h8jkaoj7t(i, colspan, content) {
+      var table = document.getElementById('tinytable_hfd2od7u1fb6b57rmx0b');
+      var newRow = table.insertRow(i);
+      var newCell = newRow.insertCell(0);
+      newCell.setAttribute("colspan", colspan);
+      // newCell.innerText = content;
+      // this may be unsafe, but innerText does not interpret <br>
+      newCell.innerHTML = content;
+    }
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(1, 0, 'tinytable_css_zol5xhyx0kf7bn7d80h8') })
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(1, 1, 'tinytable_css_zol5xhyx0kf7bn7d80h8') })
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(1, 2, 'tinytable_css_zol5xhyx0kf7bn7d80h8') })
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(1, 3, 'tinytable_css_zol5xhyx0kf7bn7d80h8') })
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(1, 4, 'tinytable_css_zol5xhyx0kf7bn7d80h8') })
+window.addEventListener('load', function () { insertSpanRow_if97gngm8d9h8jkaoj7t(9, 5, 'World') });
+window.addEventListener('load', function () { insertSpanRow_if97gngm8d9h8jkaoj7t(4, 5, 'Hello') });
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(2, 0, 'tinytable_css_u4yfl6ms85u9k7wbkbai') })
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(3, 0, 'tinytable_css_u4yfl6ms85u9k7wbkbai') })
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(5, 0, 'tinytable_css_u4yfl6ms85u9k7wbkbai') })
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(6, 0, 'tinytable_css_u4yfl6ms85u9k7wbkbai') })
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(7, 0, 'tinytable_css_u4yfl6ms85u9k7wbkbai') })
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(8, 0, 'tinytable_css_u4yfl6ms85u9k7wbkbai') })
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(9, 0, 'tinytable_css_u4yfl6ms85u9k7wbkbai') })
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(11, 0, 'tinytable_css_u4yfl6ms85u9k7wbkbai') })
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(12, 0, 'tinytable_css_u4yfl6ms85u9k7wbkbai') })
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(13, 0, 'tinytable_css_u4yfl6ms85u9k7wbkbai') })
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(0, 0, 'tinytable_css_fsmrpknb7iln5enzuwfb') })
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(0, 1, 'tinytable_css_fsmrpknb7iln5enzuwfb') })
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(0, 2, 'tinytable_css_fsmrpknb7iln5enzuwfb') })
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(0, 3, 'tinytable_css_fsmrpknb7iln5enzuwfb') })
+window.addEventListener('load', function () { styleCell_tinytable_gsks4ya9tlsdjwg9wi4z(0, 4, 'tinytable_css_fsmrpknb7iln5enzuwfb') })
+    </script>
+
+  
+
+
+</div>
+</div>
 
 
 </section>
