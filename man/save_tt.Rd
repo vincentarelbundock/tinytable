@@ -11,9 +11,8 @@ save_tt(x, output, overwrite = FALSE)
 
 \item{output}{String or file path.
 \itemize{
-\item If \code{output} is "markdown", "latex", or "html", the table is returned in a string as an \code{R} object.
-\item If \code{output} is a valid file path, the table is saved to file. The supported extensions are: .docx, .html, .png, .pdf, .tex and .md (with aliases .txt, .Rmd and .qmd).
-\item Warning: \code{style_tt()} does not work for Markdown or Word tables.
+\item If \code{output} is "markdown", "latex", "html", or "typst", the table is returned in a string as an \code{R} object.
+\item If \code{output} is a valid file path, the table is saved to file. The supported extensions are: .docx, .html, .png, .pdf, .tex, .typ, and .md (with aliases .txt, .Rmd and .qmd).
 }}
 
 \item{overwrite}{A logical value indicating whether to overwrite an existing file.}
