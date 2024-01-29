@@ -7,6 +7,8 @@
 #' @param j A named list of column indices to group. The names of the list will be used as labels. See examples below..
 #' @return An object of class `tt` representing the table.
 #' @param indent integer number of `pt` to use when indenting the non-labelled rows.
+#' @details 
+#' Warning: The `style_tt()` can normally be used to style the group headers, as expected, but that feature is not available for Markdown and Word tables.
 #' @examples 
 #' 
 #' tt(mtcars[1:10, 1:5]) |>

@@ -21,6 +21,9 @@ An object of class \code{tt} representing the table.
 \description{
 Spanning labels to identify groups of rows or columns
 }
+\details{
+Warning: The \code{style_tt()} can normally be used to style the group headers, as expected, but that feature is not available for Markdown and Word tables.
+}
 \examples{
 
 tt(mtcars[1:10, 1:5]) |>
