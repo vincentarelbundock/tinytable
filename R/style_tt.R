@@ -1,9 +1,9 @@
-#' Style a Tiny Table in either LaTeX or HTML format
+#' Style a Tiny Table
 #'
 #' @details
-#' This function applies styling to a table created by `tt()`. It allows customization of text style (bold, italic, monospace), text and background colors, font size, cell width, text alignment, column span, and indentation. The function supports both LaTeX (tabularray) and HTML (bootstrap) formats.
+#' This function applies styling to a table created by `tt()`. It allows customization of text style (bold, italic, monospace), text and background colors, font size, cell width, text alignment, column span, and indentation. The function also supports passing native instructions to LaTeX (tabularray) and HTML (bootstrap) formats.
 #'
-#' Note that Markdown and Word formats are limited to these styles: italic, bold, strikeout.
+#' Warning: Markdown and Word formats are limited to these styles: italic, bold, strikeout. This is because there is no markdown syntax for the other options, and because we create Word documents by converting a markdown table to .docx via the Pandoc software.
 #'
 #' @param x A table object created by `tt()`.
 #' @param i Row indices where the styling should be applied. Can be a single value or a vector. `i=0` is the header, and negative values are higher level headers. If `colspan` is used, `i` must be of length 1.
