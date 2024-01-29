@@ -4,6 +4,9 @@
 
 New:
 
+- Support for `Typst` tables using `tablex`: 
+  - https://typst.app/
+  - https://github.com/PgBiel/typst-tablex
 - `notes` argument in `tt()` can insert superscript markers inside cells to refer to notes at the bottom of the page.
   - `tt(x, notes = list("*" = list(i = 0:1, j = 2, text = "Hello world)))`
 

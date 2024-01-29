@@ -37,13 +37,17 @@ tt(
 }
 \value{
 An object of class \code{tt} representing the table.
+
+The table object has an attribute which holds information about the structure of the table. This metadata can be accessed with \code{attr(x,"tinytable_meta")}. In general, modifying the content of this attribute is not recommended, but it can be useful to some developers, such as those who want to force print to a specific output format without calling \code{print()}.
 }
 \description{
-The \code{tt} function renders a table in different formats (HTML, Markdown, or LaTeX) with various styling options. The table can be customized with additional functions:
+The \code{tt} function renders a table in different formats with various styling options: HTML, Markdown, LaTeX, Word, PDF, PNG, or Typst. The table can be customized with additional functions:
 \itemize{
 \item \code{style_tt()} to style fonts, colors, alignment, etc.
 \item \code{format_tt()} to format numbers, dates, strings, etc.
+\item \code{group_tt()} for row or column group labels.
 \item \code{save_tt()} to save the table to a file or return the table as a string.
+\item \code{print()} to print to a specific format, ex: \code{print(x, "latex")}
 }
 
 \code{tinytable} attempts to determine the appropriate way to print the table based on interactive use, RStudio availability, and output format in RMarkdown or Quarto documents. Users can call \code{print(x, output="markdown")} to print the table in a specific format. Alternatively, they can set a global option: \code{options("tinytable_print_output"="markdown")}
