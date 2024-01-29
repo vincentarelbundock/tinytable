@@ -64,12 +64,18 @@ build_tt <- function(x, output = NULL) {
       l[[1]] <- quote(group_tabularray)
     } else if (output == "markdown") {
       l[[1]] <- quote(group_grid)
+    } else if (output == "typst") {
+      l[[1]] <- quote(group_typst)
     }
     out <- eval(l)
   }
   out <- meta(out, "output", output)
 
   # style the table
+  if (output == "typst") {
+    # rules of precedence appear to differ
+    m$lazy_style <- rev(m$lazy_style)
+  }
   if (output != "markdown") {
     for (l in m$lazy_style) {
       l[["x"]] <- out

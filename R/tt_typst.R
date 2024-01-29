@@ -15,7 +15,7 @@ tt_typst <- function(x, caption, theme, width, notes, ...) {
 
   # themes ("void" needs nothing)
   if (isTRUE(theme %in% c("default", "striped"))) {
-    out <- style_typst(out, i = 0, line = "t", line_width = .1)
+    out <- style_typst(out, i = 1 - meta(out, "nhead"), line = "t", line_width = .1)
     out <- style_typst(out, i = 0, line = "b", line_width = .05)
     out <- style_typst(out, i = meta(out)$nrows, line = "b", line_width = .1)
   } else if (isTRUE(theme == "grid")) {

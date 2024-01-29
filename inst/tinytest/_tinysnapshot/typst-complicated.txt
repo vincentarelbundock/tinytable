@@ -1,0 +1,57 @@
+
+#import "@preview/tablex:0.0.8": tablex, hlinex, vlinex, colspanx
+#let nhead = 2;
+#let nrow = 4;
+#let ncol = 5;
+
+#figure(
+  caption: [Hello World],
+  tablex(
+    columns: ncol,
+    header-rows: nhead,
+    align: left + horizon,
+    auto-lines: false,
+
+hlinex(y: 0, start: 0, end: 5, stroke: 0.1em + black),
+hlinex(y: 2, start: 0, end: 5, stroke: 0.05em + black),
+hlinex(y: 6, start: 0, end: 5, stroke: 0.1em + black),
+    // tinytable lines before
+
+    map-cells: cell => {
+
+
+
+
+let i = (0,1,2,3,4,5,);
+let j = (0,);
+
+if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = emph(cell.content) };
+if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = { set text(red); cell.content } };
+let i = (3,);
+let j = (0,1,2,);
+
+if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = strong(cell.content) };
+if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = strike(cell.content) };
+if (i.contains(cell.y) and j.contains(cell.x)) { cell.fill = black };
+if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = { set text(white); cell.content } };
+
+if (cell.x == 0) { cell.align = left };
+if (cell.x == 1) { cell.align = center };
+if (cell.x == 2) { cell.align = center };
+if (cell.x == 3) { cell.align = center };
+if (cell.x == 4) { cell.align = right };
+      // tinytable cell style before
+      return cell;
+    },
+
+    // tinytable cell content after
+colspanx(1, align: center)[ ],colspanx(2, align: center)[Group 2],colspanx(2, align: center)[Group 1],
+[mpg], [cyl], [disp], [hp], [drat],
+[21], [6], [160], [110], [3.9],
+[21], [6], [160], [110], [3.9],
+[22.8], [4], [108], [93], [3.85],
+[21.4], [6], [258], [110], [3.08],
+
+
+  ) // end tablex
+) // end figure

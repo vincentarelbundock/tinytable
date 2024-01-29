@@ -22,20 +22,22 @@ style_typst <- function(x,
                         colspan = NULL,
                         indent = 0,
                         ...) {
-  if (meta(x, "output") != "typst") {
-    return(x)
-  }
+
+  if (meta(x, "output") != "typst") return(x)
 
   out <- x
 
   ival <- if (is.null(i)) seq_len(meta(x, "nrows")) else i
   jval <- if (is.null(j)) seq_len(meta(x, "ncols")) else j
-  jval <- jval - 1
 
   # only columns means we also want to style headers
   if (is.null(i) && !is.null(j)) {
     ival <- c(-1 * rev(seq_len(meta(x)$nhead) - 1), ival)
   }
+
+  # 0- & header-indexing
+  jval <- jval - 1
+  ival <- ival - 1 + meta(x, "nhead")
 
   if (isTRUE(grepl("^#", color))) color <- sprintf('rgb("%s")', color)
   if (isTRUE(grepl("^#", background))) background <- sprintf('rgb("%s")', background)
@@ -113,7 +115,7 @@ let j = (%s,);",
   # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
   if (!is.null(line)) {
     iline <- NULL
-    if (grepl("b", line)) iline <- c(iline, ival + 1)
+    if (grepl("b", line)) iline <- c(iline, ival + 1) # -1 for 0-indexing
     if (grepl("t", line)) iline <- c(iline, ival)
     iline <- unique(iline)
     for (i in iline) {
@@ -136,15 +138,12 @@ let j = (%s,);",
         "vlinex(x: %s, start: %s, end: %s, stroke: %sem + %s),",
         j,
         min(ival),
-        max(ival) + 1,
+        max(ival),
         line_width,
         line_color)
       out <- typst_insert(out, tmp, type = "lines")
     }
 
-    # if (grepl("t", line)) iline <- c(iline, ival + meta(x, "nhead"))
-    # if (grepl("l", line)) jline <- c(jline, jval)
-    # if (grepl("r", line)) jline <- c(jline, jval)
   }
 
 
