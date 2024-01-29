@@ -21,6 +21,17 @@ knit_print.tinytable <- function(x,
     }
   }
 
+  if (meta(out)$output == "typst") {
+    # from htmltools:::html_preserve
+    # GPL3
+    inline <- grepl(out, "\n", fixed = TRUE)
+    if (inline) {
+      out <- sprintf("`%s`{=typst}", out)
+    } else {
+      out <- sprintf("\n```{=typst}\n%s\n```\n", out)
+    }
+  }
+
   class(out) <- "knit_asis"
   return(out)
 }
@@ -42,8 +53,8 @@ print.tinytable <- function(x,
   if (is.null(output)) output <- meta(x, "output")
 
   # lazy styles get evaluated here by build_tt(), at the very end
-  if (output == "latex") {
-    out <- build_tt(x, output = "latex")
+  if (output %in% c("latex", "typst")) {
+    out <- build_tt(x, output = output)
     class(out) <- "character"
     cat("\n")
     cat(out)
@@ -72,13 +83,6 @@ print.tinytable <- function(x,
       cat(out, sep = "\n")
       cat("\n")
     }
-
-  } else if (output == "typst") {
-    out <- build_tt(x, output = "typst")
-    class(out) <- "character"
-    cat("\n")
-    cat(out)
-    cat("\n")
 
   } else {
     stop("here be dragons")
