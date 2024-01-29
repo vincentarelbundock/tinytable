@@ -83,6 +83,7 @@ style_typst <- function(x,
     style <- paste0(style, "\n", tmp)
   }
 
+
   if (style != "") {
     idx <- sprintf(
       "let i = (%s,);
@@ -93,6 +94,21 @@ let j = (%s,);",
   }
 
   out <- typst_insert(out, style, type = "style")
+
+  # align
+  if (!is.null(align)) {
+    for (idx in seq_along(jval)) {
+      k <- switch(
+        align[idx],
+        c = "center",
+        r = "right",
+        l = "left"
+      )
+      tmp <- sprintf("if (cell.x == %s) { cell.align = %s };", jval[idx], k)
+      out <- typst_insert(out, tmp, type = "style")
+    }
+  }
+
 
   # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
   if (!is.null(line)) {
