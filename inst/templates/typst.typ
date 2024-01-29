@@ -14,7 +14,6 @@
     // tinytable lines before
 
     map-cells: cell => {
-
       // tinytable cell style before
       return cell;
     },
