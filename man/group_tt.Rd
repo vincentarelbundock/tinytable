@@ -4,7 +4,7 @@
 \alias{group_tt}
 \title{Spanning labels to identify groups of rows or columns}
 \usage{
-group_tt(x, i = NULL, j = NULL, indent = 1)
+group_tt(x, i = NULL, j = NULL, indent = 1, ...)
 }
 \arguments{
 \item{x}{A data frame or data table to be rendered as a table.}
@@ -14,6 +14,8 @@ group_tt(x, i = NULL, j = NULL, indent = 1)
 \item{j}{A named list of column indices to group. The names of the list will be used as labels. See examples below. Note: empty labels must be a space: " ".}
 
 \item{indent}{integer number of \code{pt} to use when indenting the non-labelled rows.}
+
+\item{...}{Other arguments are ignored.}
 }
 \value{
 An object of class \code{tt} representing the table.
