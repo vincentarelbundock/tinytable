@@ -57,6 +57,8 @@ build_tt <- function(x, output = NULL) {
 
   # group the table (before style)
   for (l in m$lazy_group) {
+    # nhead needs to be changed insider the loop so that we have indices for each new row
+    out <- meta(out, "nhead", meta(out, "nhead") + 1)
     l[["x"]] <- out
     if (output == "html") {
       l[[1]] <- quote(group_bootstrap)
@@ -77,7 +79,6 @@ build_tt <- function(x, output = NULL) {
     m$lazy_style <- rev(m$lazy_style)
   }
   if (output != "markdown") {
-      browser()
     for (l in m$lazy_style) {
       l[["x"]] <- out
       out <- eval(l)

@@ -15,11 +15,6 @@ group_grid <- function(x, i = NULL, j = NULL, ...) {
 
 group_grid_col <- function(x, j, ...) {
   m <- meta(x)
-
-  # nhead needs to be changed insider the loop so that we have indices for each new row
-  m$nhead <- m$nhead + 1
-
-  # columns
   header <- empty_cells(j)
   cw <- meta(x, "col_widths")
   cw <- sapply(header, function(k) sum(cw[k]) + length(cw[k]) - 1)

@@ -31,9 +31,9 @@ group_tt <- function(x, i = NULL, j = NULL, indent = 1) {
   j <- sanitize_group_index(j, hi = attr(x, "ncol"), orientation = "column")
 
   if (!is.null(i)) out <- meta(out, "nrows", meta(out, "nrows") + length(i))
-  # nhead needs to be changed insider the loop so that we have indices for each new row
-  # if (!is.null(j)) out <- meta(out, "nhead", meta(out, "nhead") + 1)
-
+  # nhead needs to be changed in build_tt() so that we have indices for each new
+  # row when in the process of cashing in the lazy eval groups.
+  
   # we don't need this as a list, and we use some sorting later
   i <- unlist(i)
 

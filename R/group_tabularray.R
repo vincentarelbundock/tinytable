@@ -13,8 +13,6 @@ group_tabularray <- function(x, i, j, indent) {
 
 group_tabularray_col <- function(x, j, i) {
   m <- meta(x)
-  # nhead needs to be changed insider the loop so that we have indices for each new row
-  m$nhead <- m$nhead + 1
 
   out <- strsplit(x, split = "\\n")[[1]]
 
@@ -55,7 +53,7 @@ group_tabularray_col <- function(x, j, i) {
       j = z,
       align = "c",
       colspan = max(j[[k]]) - min(j[[k]]) + 1)
-    out <- do.call(style_tt, args)
+    out <- do.call(style_tabularray, args)
   }
 
   return(out)
