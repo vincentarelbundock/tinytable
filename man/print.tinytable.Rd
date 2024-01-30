@@ -2,14 +2,21 @@
 % Please edit documentation in R/print.R
 \name{print.tinytable}
 \alias{print.tinytable}
-\title{Print a tinytable to console or viewer pane}
+\title{Print a tinytable to console or in an HTML viewer pane}
 \usage{
 \method{print}{tinytable}(x, output = getOption("tinytable_print_output", default = NULL), ...)
 }
 \arguments{
 \item{x}{A data frame or data table to be rendered as a table.}
 
-\item{output}{One of "latex", "markdown", "html". If NULL, will guess the output based on the environment (interactive, RStudio, etc.).}
+\item{output}{format in which a Tiny Table is printed: \code{NULL} or one of \code{"latex"}, \code{"markdown"}, \code{"html"}, \code{"typst"}. If \code{NULL}, the output is chosen based on these rules:
+\itemize{
+\item When called from a script in non-interactive mode, the default is "markdown" (\code{interactive() == FALSE}).
+\item When called interactively in RStudio, the default is to display an HTML table in the viewer pane.
+\item When called interactively in another development environment, the default is "markdown".
+\item The default print output can be changed for an entire R session by calling: \code{options(tinytable_print_output = "html")}
+\item The default print output can be changed for a single \code{tinytable} object by modifying the \code{output} element of the meta data attribute: \code{attr(x,"tinytable_meta")}
+}}
 
 \item{...}{Other arguments are ignored.}
 }
@@ -17,5 +24,5 @@
 launch a browser window or cat() the table to console.
 }
 \description{
-Print a tinytable to console or viewer pane
+This function is called automatically by \code{R} whenever a \code{tinytable} object is anprinted to the console or in an HTML viewer pane.
 }
