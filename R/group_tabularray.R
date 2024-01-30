@@ -1,8 +1,8 @@
-group_tabularray <- function(x, i, j, indent) {
+group_tabularray <- function(x, i, j, indent, ...) {
   out <- x
   # columns first to count headers properly
   if (!is.null(j)) {
-    out <- group_tabularray_col(out, j)
+    out <- group_tabularray_col(out, j, ...)
   }
   if (!is.null(i)) {
     out <- group_tabularray_row(out, i, indent)
@@ -11,7 +11,8 @@ group_tabularray <- function(x, i, j, indent) {
 }
 
 
-group_tabularray_col <- function(x, j, i) {
+group_tabularray_col <- function(x, j, ihead, ...) {
+
   m <- meta(x)
 
   out <- strsplit(x, split = "\\n")[[1]]
@@ -47,9 +48,7 @@ group_tabularray_col <- function(x, j, i) {
     args <- list(
       tt_build_now = TRUE,
       x = out,
-      # the new header is always first row and
-      # style_tt always adds nhead to index
-      i = eval(1 - meta(out)$nhead),
+      i = ihead,
       j = z,
       align = "c",
       colspan = max(j[[k]]) - min(j[[k]]) + 1)

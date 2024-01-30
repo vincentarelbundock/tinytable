@@ -55,11 +55,10 @@ build_tt <- function(x, output = NULL) {
   out <- eval(lazy_tt)
   out <- meta(out, "output", output)
 
-  # group the table (before style)
-  for (l in m$lazy_group) {
-    # nhead needs to be changed insider the loop so that we have indices for each new row
-    out <- meta(out, "nhead", meta(out, "nhead") + 1)
+  for (idx in seq_along(m$lazy_group)) {
+    l <- m$lazy_group[[idx]]
     l[["x"]] <- out
+    l[["ihead"]] <- -1 * idx
     if (output == "html") {
       l[[1]] <- quote(group_bootstrap)
     } else if (output == "latex") {
