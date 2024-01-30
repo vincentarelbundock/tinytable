@@ -36,6 +36,9 @@ save_tt <- function(x, output, overwrite = FALSE) {
   } else if (identical(output, "latex")) {
     out <- build_tt(x, output = "latex")
     return(as.character(out))
+  } else if (identical(output, "typst")) {
+    out <- build_tt(x, output = "typst")
+    return(as.character(out))
   }
 
   x <- meta(x, "output_dir", dirname(output))

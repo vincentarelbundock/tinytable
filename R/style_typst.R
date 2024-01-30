@@ -21,6 +21,7 @@ style_typst <- function(x,
                         line_width = .1,
                         colspan = NULL,
                         indent = 0,
+                        midrule = FALSE, # undocumented, only used by `group_tt()`
                         ...) {
 
   if (meta(x, "output") != "typst") return(x)
@@ -119,8 +120,12 @@ let j = (%s,);",
     if (grepl("t", line)) iline <- c(iline, ival)
     iline <- unique(iline)
     for (i in iline) {
-      tmp <- sprintf(
-        "hlinex(y: %s, start: %s, end: %s, stroke: %sem + %s),",
+      if (isTRUE(midrule)) {
+        tmp <- "hlinex(y: %s, start: %s, end: %s, stroke: %sem + %s, expand: -1.5pt),"
+      } else {
+        tmp <- "hlinex(y: %s, start: %s, end: %s, stroke: %sem + %s),"
+      }
+      tmp <- sprintf(tmp,
         i,
         min(jval),
         max(jval) + 1,

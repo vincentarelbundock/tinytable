@@ -95,6 +95,6 @@ print.tinytable <- function(x,
     stop("here be dragons")
   }
 
-  return(invisible(x))
+  return(invisible(out))
 }
 

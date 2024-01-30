@@ -6,14 +6,14 @@ group_typst <- function(x, i = NULL, j = NULL, ...) {
   # }
 
   if (!is.null(j)) {
-    out <- group_typst_col(out, j)
+    out <- group_typst_col(out, j, ...)
   }
 
   return(out)
 }
 
 
-group_typst_col <- function(x, j, ...) {
+group_typst_col <- function(x, j, ihead, ...) {
   m <- meta(x)
   out <- x
   miss <- as.list(setdiff(seq_len(m$ncols), unlist(j)))
@@ -27,6 +27,12 @@ group_typst_col <- function(x, j, ...) {
   col <- sprintf("colspanx(%s, align: center)[%s],", len, lab)
   col <- paste(col, collapse = "")
   out <- typst_insert(out, col, type = "body")
+
+  # midrule
+  jrule <- lapply(names(j), function(n) if (trimws(n) != "") j[[n]])
+  jrule <- Filter(function(x) !is.null(x), jrule)
+  for (jr in jrule) {
+    out <- style_typst(out, i = ihead, j = jr, line = "b", line_width = .05, midrule = TRUE)
+  }
   return(out)
 }
-
