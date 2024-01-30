@@ -11,7 +11,7 @@ group_tt(x, i = NULL, j = NULL, indent = 1)
 
 \item{i}{A named list of row indices to group. The names of the list will be used as labels.}
 
-\item{j}{A named list of column indices to group. The names of the list will be used as labels. See examples below..}
+\item{j}{A named list of column indices to group. The names of the list will be used as labels. See examples below. Note: empty labels must be a space: " ".}
 
 \item{indent}{integer number of \code{pt} to use when indenting the non-labelled rows.}
 }

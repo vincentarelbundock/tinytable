@@ -77,6 +77,7 @@ build_tt <- function(x, output = NULL) {
     m$lazy_style <- rev(m$lazy_style)
   }
   if (output != "markdown") {
+      browser()
     for (l in m$lazy_style) {
       l[["x"]] <- out
       out <- eval(l)

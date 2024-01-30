@@ -15,6 +15,10 @@ group_grid <- function(x, i = NULL, j = NULL, ...) {
 
 group_grid_col <- function(x, j, ...) {
   m <- meta(x)
+
+  # nhead needs to be changed insider the loop so that we have indices for each new row
+  m$nhead <- m$nhead + 1
+
   # columns
   header <- empty_cells(j)
   cw <- meta(x, "col_widths")
@@ -24,10 +28,11 @@ group_grid_col <- function(x, j, ...) {
   out <- strsplit(out, split = "\\n")[[1]]
   out <- out[out != "\\n"]
   out <- out[!out %in% c("\\n", "")]
+  out <- out[2]
   x <- strsplit(x, split = "\\n")[[1]]
   x <- x[!x %in% c("\\n", "")]
-  out <- out[1:(length(out) - 1)]
-  out <- paste(c(out, x), collapse = "\n")
+  x <- c(x[1], out, x)
+  out <- paste(x, collapse = "\n")
   attr(out, "tinytable_meta") <- m
   class(out) <- class(x)
   return(out)

@@ -15,6 +15,10 @@ group_typst <- function(x, i = NULL, j = NULL, ...) {
 
 group_typst_col <- function(x, j, ...) {
   m <- meta(x)
+
+  # nhead needs to be changed insider the loop so that we have indices for each new row
+  m$nhead <- m$nhead + 1
+
   out <- x
   miss <- as.list(setdiff(seq_len(m$ncols), unlist(j)))
   miss <- stats::setNames(miss, rep(" ", length(miss)))

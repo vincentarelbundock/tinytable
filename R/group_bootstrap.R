@@ -15,6 +15,10 @@ group_bootstrap <- function(x, i, j, indent = 1, ...) {
 group_bootstrap_col <- function(x, i, j, ...) {
 
   m <- meta(x)
+
+  # nhead needs to be changed insider the loop so that we have indices for each new row
+  m$nhead <- m$nhead + 1
+
   out <- strsplit(x, "\\n")[[1]]
   header <- NULL
 
