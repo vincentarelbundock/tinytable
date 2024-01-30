@@ -191,6 +191,12 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="../man/print.tyinytable.qmd" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>print</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="../man/save_tt.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>save_tt</code></span></a>
   </div>
@@ -225,7 +231,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#print-a-tinytable-to-console-or-viewer-pane" id="toc-print-a-tinytable-to-console-or-viewer-pane" class="nav-link active" data-scroll-target="#print-a-tinytable-to-console-or-viewer-pane">Print a tinytable to console or viewer pane</a>
+  <li><a href="#print-a-tinytable-to-console-or-in-an-html-viewer-pane" id="toc-print-a-tinytable-to-console-or-in-an-html-viewer-pane" class="nav-link active" data-scroll-target="#print-a-tinytable-to-console-or-in-an-html-viewer-pane">Print a tinytable to console or in an HTML viewer pane</a>
   <ul class="collapse">
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
@@ -241,11 +247,11 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="print-a-tinytable-to-console-or-viewer-pane" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="print-a-tinytable-to-console-or-viewer-pane">Print a tinytable to console or viewer pane</h2>
+<section id="print-a-tinytable-to-console-or-in-an-html-viewer-pane" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="print-a-tinytable-to-console-or-in-an-html-viewer-pane">Print a tinytable to console or in an HTML viewer pane</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Print a tinytable to console or viewer pane</p>
+<p>This function is called automatically by <code>R</code> whenever a <code>tinytable</code> object is anprinted to the console or in an HTML viewer pane.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
@@ -269,7 +275,24 @@ A data frame or data table to be rendered as a table.
 <code id="print.tinytable_:_output">output</code>
 </td>
 <td>
-One of "latex", "markdown", "html". If NULL, will guess the output based on the environment (interactive, RStudio, etc.).
+<p>format in which a Tiny Table is printed: <code>NULL</code> or one of <code>“latex”</code>, <code>“markdown”</code>, <code>“html”</code>, <code>“typst”</code>. If <code>NULL</code>, the output is chosen based on these rules:</p>
+<ul>
+<li>
+<p>When called from a script in non-interactive mode, the default is "markdown" (<code>interactive() == FALSE</code>).</p>
+</li>
+<li>
+<p>When called interactively in RStudio, the default is to display an HTML table in the viewer pane.</p>
+</li>
+<li>
+<p>When called interactively in another development environment, the default is "markdown".</p>
+</li>
+<li>
+<p>The default print output can be changed for an entire R session by calling: <code>options(tinytable_print_output = “html”)</code></p>
+</li>
+<li>
+<p>The default print output can be changed for a single <code>tinytable</code> object by modifying the <code>output</code> element of the meta data attribute: <code>attr(x,“tinytable_meta”)</code></p>
+</li>
+</ul>
 </td>
 </tr>
 <tr>
