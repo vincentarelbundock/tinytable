@@ -37,10 +37,17 @@ knit_print.tinytable <- function(x,
 }
 
 
-#' Print a tinytable to console or viewer pane
+#' Print a tinytable to console or in an HTML viewer pane
+#' 
+#' This function is called automatically by `R` whenever a `tinytable` object is anprinted to the console or in an HTML viewer pane.
 #' 
 #' @inheritParams tt
-#' @param output One of "latex", "markdown", "html". If NULL, will guess the output based on the environment (interactive, RStudio, etc.).
+#' @param output format in which a Tiny Table is printed: `NULL` or one of `"latex"`, `"markdown"`, `"html"`, `"typst"`. If `NULL`, the output is chosen based on these rules:
+#' + When called from a script in non-interactive mode, the default is "markdown" (`interactive() == FALSE`).
+#' + When called interactively in RStudio, the default is to display an HTML table in the viewer pane.
+#' + When called interactively in another development environment, the default is "markdown". 
+#' + The default print output can be changed for an entire R session by calling: `options(tinytable_print_output = "html")`
+#' + The default print output can be changed for a single `tinytable` object by modifying the `output` element of the meta data attribute: `attr(x,"tinytable_meta")`
 #' @param ... Other arguments are ignored.
 #' @return launch a browser window or cat() the table to console.
 #' @export
@@ -88,6 +95,6 @@ print.tinytable <- function(x,
     stop("here be dragons")
   }
 
-
+  return(invisible(x))
 }
 
