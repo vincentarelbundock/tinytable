@@ -50,6 +50,7 @@ style_bootstrap <- function(x,
   settings$j <- settings$j - 1
   settings$i <- settings$i - 1 + meta(x, "nhead")
 
+
   # settings have a different size for latex, so bootstrap breaks
   vectorize_bootstrap <- function(setting, userinput, string) {
     # simple cases
