@@ -14,6 +14,7 @@
 #' @param date A string passed to the `format()` function, such as "%Y-%m-%d". See the "Details" section in `?strptime`
 #' @param bool A function to format logical columns. Defaults to title case.
 #' @param other A function to format columns of other types. Defaults to `as.character()`.
+#' @param escape Logical or String; if TRUE, escape special characters to display them as text in the format of the output of a `tt()` table. If `format_tt()` is called as a standalone function instead of on a `tt()` table, the `escape` argument accepts strings to specify the escaping method: "latex" or "html".
 #' @param markdown Logical; if TRUE, render markdown syntax in cells. Ex: `_italicized text_` is properly italicized in HTML and LaTeX.
 #' @param sprintf String passed to the `?sprintf` function to format numbers or interpolate strings with a user-defined pattern (similar to the `glue` package, but using Base R).
 #' @inheritParams tt
@@ -42,6 +43,7 @@ format_tt <- function(x,
                       date = "%Y-%m-%d",
                       bool = function(column) tools::toTitleCase(tolower(column)),
                       other = as.character,
+                      escape = FALSE,
                       markdown = FALSE,
                       sprintf = NULL
                       ) {
@@ -61,6 +63,7 @@ format_tt <- function(x,
                 url = url,
                 date = date,
                 bool = bool,
+                escape = escape,
                 markdown = markdown,
                 other = other)
     out <- meta(out, "lazy_format", c(meta(out)$lazy_format, list(cal)))
@@ -79,6 +82,7 @@ format_tt <- function(x,
                           date = date,
                           bool = bool,
                           other = other,
+                          escape = escape,
                           markdown = markdown)
   }
   return(out)
@@ -96,6 +100,7 @@ format_tt_lazy <- function(x,
                            url = FALSE,
                            date = "%Y-%m-%d",
                            bool = identity,
+                           escape = FALSE,
                            markdown = FALSE,
                            other = as.character
                            ) {
@@ -194,6 +199,20 @@ format_tt_lazy <- function(x,
     }
 
   } # loop over columns
+
+  # escape latex characters
+  if (!isFALSE(escape)) {
+    if (isTRUE(escape == "latex")) {
+      o <- "latex"
+    } else if (isTRUE(escape == "html")) {
+      o <- "html"
+    } else {
+      o <- meta(x)$output
+    }
+    for (col in j) {
+      x[[col]] <- escape_text(x[[col]], output = o)
+    }
+  }
 
   # markdown at the very end
   if (isTRUE(markdown)) {

@@ -324,6 +324,25 @@ format_tt(dat, digits = 1, num_suffix = TRUE)
 ```
 
 
+## Escape special characters
+
+LaTeX and HTML use special characters to indicate strings which should be interpreted rather than displayed as text. For example, including underscores or dollar signs in LaTeX can cause compilation errors in some documents. To display those special characters, we need to substitute or escape them with backslashes, depending on the output format. The `escape` argument of `format_tt()` can be used to do this automatically:
+
+```{r}
+dat <- data.frame(
+    "LaTeX" = c("Dollars $", "Percent %", "Underscore _"),
+    "HTML" = c("<br>", "<sup>4</sup>", "<emph>blah</emph>")
+)
+
+tt(dat) |> format_tt(escape = TRUE)
+```
+
+When applied to a `tt()` table, `format_tt()` will determine the type of escaping to do automatically. When applied to a string or vector, we must specify the type of escaping to apply:
+
+```{r}
+format_tt("_ Dollars $", escape = "latex")
+```
+
 ## Markdown
 
 Markdown can be rendered in cells by using the `markdown` argument of the `format_tt()` function (note: this requires installing the `markdown` as an optional dependency). 

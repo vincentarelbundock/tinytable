@@ -16,6 +16,7 @@ format_tt(
   date = "\%Y-\%m-\%d",
   bool = function(column) tools::toTitleCase(tolower(column)),
   other = as.character,
+  escape = FALSE,
   markdown = FALSE,
   sprintf = NULL
 )
@@ -42,6 +43,8 @@ format_tt(
 \item{bool}{A function to format logical columns. Defaults to title case.}
 
 \item{other}{A function to format columns of other types. Defaults to \code{as.character()}.}
+
+\item{escape}{Logical or String; if TRUE, escape special characters to display them as text in the format of the output of a \code{tt()} table. If \code{format_tt()} is called as a standalone function instead of on a \code{tt()} table, the \code{escape} argument accepts strings to specify the escaping method: "latex" or "html".}
 
 \item{markdown}{Logical; if TRUE, render markdown syntax in cells. Ex: \verb{_italicized text_} is properly italicized in HTML and LaTeX.}
 
