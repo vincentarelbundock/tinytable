@@ -1,6 +1,6 @@
 # News
 
-## Development
+## 0.0.3
 
 New:
 
