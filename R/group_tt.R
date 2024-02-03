@@ -58,6 +58,7 @@ sanitize_group_index <- function(idx, hi, orientation) {
       assert_integerish(idx[[n]], lower = 1, upper = hi, name = n)
     }
   }
+  browser()
   if (anyDuplicated(unlist(idx)) > 0) stop("Duplicate group indices.", call. = FALSE)
   out <- lapply(idx, function(x) min(x):max(x))
   return(out)
