@@ -7,7 +7,11 @@
 #'
 #' @param x A table object created by `tt()`.
 #' @param i Row indices where the styling should be applied. Can be a single value or a vector. `i=0` is the header, and negative values are higher level headers. If `colspan` is used, `i` must be of length 1.
-#' @param j Column indices where the styling should be applied. Can be a single value, a vector, or a Perl-style regular expression applied to column names of the original data frame. If `colspan` is used, `j` must be of length 1.
+#' @param j Column indices where the styling should be applied. Can be:
+#' + Integer vectors indicating column positions.
+#' + Character vector indicating column names.
+#' + A single string specifying a Perl-style regular expression used to match column names. 
+#' + Note: If `colspan` is used, `j` must be of length 1.
 #' @param bold Logical; if `TRUE`, text is styled in bold.
 #' @param italic Logical; if `TRUE`, text is styled in italic.
 #' @param monospace Logical; if `TRUE`, text is styled in monospace font.
@@ -48,11 +52,20 @@
 #' @export
 #' @examples
 #' library(tinytable)
-#' x <- mtcars[1:5, 1:5]
+#' x <- mtcars[1:5, 1:6]
 #' tab <- tt(x)
-#' tab <- style_tt(tab, j = 1:5, align = "lcccr")
-#' tab <- style_tt(tab, i = 2:3, background = "black", color = "orange", bold = TRUE)
+#' 
+#' # Alignment
+#' style_tt(tab, j = 1:5, align = "lcccr")
+#' style_tt(tab, i = 2:3, background = "black", color = "orange", bold = TRUE)
 #' tab
+#' 
+#' # column selection with `j``
+#' x <- mtcars[1:5, 1:6]
+#' tab <- tt(x)
+#' style_tt(tab, j = 5:6, background = "pink")
+#' style_tt(tab, j = "drat|wt", background = "pink")
+#' style_tt(tab, j = c("drat", "wt"), background = "pink")
 #'
 style_tt <- function (x,
                       i = NULL,
@@ -147,10 +160,7 @@ style_tt_lazy <- function (x,
 
   out <- x
 
-  # j is a regular expression
-  if (is.character(j) && !is.null(meta(x, "colnames"))) {
-    j <- grep(j, meta(x, "colnames"), perl = TRUE)
-  }
+  j <- sanitize_j(j, x)
 
   # align can be "c" or "clrrlc"takes many possible values
   assert_string(align, null.ok = TRUE)

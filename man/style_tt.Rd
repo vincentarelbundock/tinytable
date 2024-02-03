@@ -36,7 +36,13 @@ style_tt(
 
 \item{i}{Row indices where the styling should be applied. Can be a single value or a vector. \code{i=0} is the header, and negative values are higher level headers. If \code{colspan} is used, \code{i} must be of length 1.}
 
-\item{j}{Column indices where the styling should be applied. Can be a single value, a vector, or a Perl-style regular expression applied to column names of the original data frame. If \code{colspan} is used, \code{j} must be of length 1.}
+\item{j}{Column indices where the styling should be applied. Can be:
+\itemize{
+\item Integer vectors indicating column positions.
+\item Character vector indicating column names.
+\item A single string specifying a Perl-style regular expression used to match column names.
+\item Note: If \code{colspan} is used, \code{j} must be of length 1.
+}}
 
 \item{bold}{Logical; if \code{TRUE}, text is styled in bold.}
 
@@ -131,10 +137,19 @@ When rendering Quarto and Rmarkdown documents, \code{tinytable} will populate th
 
 \examples{
 library(tinytable)
-x <- mtcars[1:5, 1:5]
+x <- mtcars[1:5, 1:6]
 tab <- tt(x)
-tab <- style_tt(tab, j = 1:5, align = "lcccr")
-tab <- style_tt(tab, i = 2:3, background = "black", color = "orange", bold = TRUE)
+
+# Alignment
+style_tt(tab, j = 1:5, align = "lcccr")
+style_tt(tab, i = 2:3, background = "black", color = "orange", bold = TRUE)
 tab
+
+# column selection with `j``
+x <- mtcars[1:5, 1:6]
+tab <- tt(x)
+style_tt(tab, j = 5:6, background = "pink")
+style_tt(tab, j = "drat|wt", background = "pink")
+style_tt(tab, j = c("drat", "wt"), background = "pink")
 
 }

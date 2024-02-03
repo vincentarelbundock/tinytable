@@ -465,10 +465,18 @@ We can style entire columns by omitting the `i` argument:
 tt(x) |> style_tt(j = c(2, 4), bold = TRUE)
 ```
 
-The `j` argument accepts integer vectors, but also a string with a Perl-style regular expression, which makes it easier to select columns by name:
+The `j` argument accepts integer vectors, character vectors, but also a string with a Perl-style regular expression, which makes it easier to select columns by name:
 
 ```{r}
+tt(x) |> style_tt(j = c("mpg", "drat"), color = "orange")
+
 tt(x) |> style_tt(j = "mpg|drat", color = "orange")
+```
+
+Here we use a "negative lookahead" to exclude certain columns:
+
+```{r}
+tt(x) |> style_tt(j = "^(?!drat|mpg)", color = "orange")
 ```
 
 Of course, we can also call the `style_tt()` function several times to apply different styles to different parts of the table:

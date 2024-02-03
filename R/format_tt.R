@@ -129,16 +129,12 @@ format_tt_lazy <- function(x,
   assert_function(identity)
   assert_string(sprintf, null.ok = TRUE)
   assert_flag(markdown)
+  j <- sanitize_j(j, x)
 
-
-  # column index NULL or regex or integer vector
-  if (is.null(j)) {
-    j <- seq_len(ncol(x))
-  } else if (is.character(j) && length(j) == 1 && !is.null(names(x))) {
-    j <- grep(j, colnames(x), perl = TRUE)
-  } else {
-    assert_integerish(j, lower = 1, upper = ncol(x))
-  }
+  # In sanity_tt(), we fill in missing NULL `j` in the format-specific versions,
+  # because tabularray can do whole column styling. Here, we need to fill in
+  # NULL for all formats since this is applied before creating the table.
+  if (is.null(j)) j <- seq_len(ncol(x))
 
   # format each column
   for (col in j) {
