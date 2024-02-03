@@ -131,6 +131,11 @@ format_tt_lazy <- function(x,
   assert_flag(markdown)
   j <- sanitize_j(j, x)
 
+  # In sanity_tt(), we fill in missing NULL `j` in the format-specific versions,
+  # because tabularray can do whole column styling. Here, we need to fill in
+  # NULL for all formats since this is applied before creating the table.
+  if (is.null(j)) j <- seq_len(ncol(x))
+
   # format each column
   for (col in j) {
     # sprintf() is self-contained
