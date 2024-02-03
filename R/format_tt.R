@@ -129,16 +129,7 @@ format_tt_lazy <- function(x,
   assert_function(identity)
   assert_string(sprintf, null.ok = TRUE)
   assert_flag(markdown)
-
-
-  # column index NULL or regex or integer vector
-  if (is.null(j)) {
-    j <- seq_len(ncol(x))
-  } else if (is.character(j) && length(j) == 1 && !is.null(names(x))) {
-    j <- grep(j, colnames(x), perl = TRUE)
-  } else {
-    assert_integerish(j, lower = 1, upper = ncol(x))
-  }
+  j <- sanitize_j(j, x)
 
   # format each column
   for (col in j) {

@@ -24,7 +24,13 @@ format_tt(
 \arguments{
 \item{x}{A data frame or a vector to be formatted.}
 
-\item{j}{Column indices where the styling should be applied. Can be a single value, a vector, or a Perl-style regular expression applied to column names of the original data frame. If \code{colspan} is used, \code{j} must be of length 1.}
+\item{j}{Column indices where the styling should be applied. Can be:
+\itemize{
+\item Integer vectors indicating column positions.
+\item Character vector indicating column names.
+\item A single string specifying a Perl-style regular expression used to match column names.
+\item Note: If \code{colspan} is used, \code{j} must be of length 1.
+}}
 
 \item{digits}{Number of significant digits or decimal places.}
 

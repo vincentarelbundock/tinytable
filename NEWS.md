@@ -1,5 +1,12 @@
 # News
 
+## Development
+
+New:
+
+- `j` argument in `style_tt()` and `format_tt()` now accepts a string vector to match columns. Issue #122
+
+
 ## 0.0.3
 
 New:
@@ -12,6 +19,7 @@ New:
   - `tt(x, notes = list("*" = list(i = 0:1, j = 2, text = "Hello world)))`
 - `notes` agument in `tt()` now works wth Markdown and Word, but must be a single string.
 - `group_tt()` can be called multiple times to create mult-row headers.
+
 
 ## 0.0.2
 
@@ -36,7 +44,8 @@ Documentation:
 
 - Improved vignette on the package website. 
 - Various documentation updates.
-- Math in $$ is new recommendation.
+- Math in $$ is the new recommendation.
+
 
 ## 0.0.1
 

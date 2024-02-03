@@ -3,6 +3,24 @@ usepackage_latex <- function(name, options = NULL, extra_lines = NULL) {
 }
 
 
+sanitize_j <- function(j, x) {
+  # regex
+  if (is.character(j) && length(j) == 1 && !is.null(meta(x, "colnames"))) {
+    j <- grep(j, meta(x, "colnames"), perl = TRUE)
+  # full names
+  } else if (is.character(j) && length(j) > 1 && !is.null(meta(x, "colnames"))) {
+    bad <- setdiff(j, meta(x, "colnames"))
+    if (length(bad) > 0) {
+      msg <- sprintf("Missing columns: %s", paste(bad, collapse = ", "))
+      stop(msg, call. = FALSE)
+    }
+    j <- which(meta(x, "colnames") %in% j)
+  } else {
+    assert_integerish(j, lower = 1, upper = meta(x, "ncols"), null.ok = TRUE)
+  }
+  return(j)
+}
+
 sanitize_output <- function(output) {
   assert_choice(output, choice = c("markdown", "latex", "html", "typst"), null.ok = TRUE)
 
