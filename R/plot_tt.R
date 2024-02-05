@@ -69,7 +69,7 @@ plot_tt <- function(x,
   }
 
   if (is.character(fun)) {
-    assert_choice(fun, c("histogram", "density", "bar"))
+    assert_choice(fun, c("histogram", "density", "bar", "line"))
   } else {
     assert_function(fun, null.ok = TRUE)
   }
@@ -80,6 +80,9 @@ plot_tt <- function(x,
 
   } else if (identical(fun, "density")) {
     fun <- rep(list(tiny_density), length(data))
+
+  } else if (identical(fun, "line")) {
+    fun <- rep(list(tiny_line), length(data))
 
   } else if (identical(fun, "bar")) {
     for (idx in seq_along(data)) {
@@ -225,5 +228,15 @@ tiny_density <- function(d, color = "black", ...) {
 tiny_bar <- function(d, color = "black", xlim = 0:1, ...) {
   function() {
     graphics::barplot(d, horiz = TRUE, col = color, xlim = xlim)
+  }
+}
+
+
+tiny_line <- function(d, xlim = 0:1, color = "black", ...) {
+  function() {
+    if (!inherits(d, "data.frame") || !"x" %in% names(d) || !"y" %in% names(d)) {
+      stop("The data to plot a `line` must be a data frame with columns `x` and `y`.", call. = FALSE)
+    }
+    plot(d$x, d$y, type = "l", col = color, axes = FALSE, ann = FALSE, lwd = 50)
   }
 }

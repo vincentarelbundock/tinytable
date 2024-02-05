@@ -5,6 +5,7 @@
 New:
 
 - `j` argument in `style_tt()` and `format_tt()` now accepts a string vector to match columns. Issue #122
+- Line plots: `plot_tt(fun = "line")`
 
 
 ## 0.0.3
