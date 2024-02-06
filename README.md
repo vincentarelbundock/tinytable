@@ -92,29 +92,88 @@ Restart `R` completely for the installation to take effect.
 
 ## Alternative packages
 
-There are many fantastic table-drawing packages out there. If you don’t
-like `tinytable`, I recommend you check out some of these:
+Someone on Twitter asked me to make more explicit comparisons to
+alternatives. So here are a few totally biased (and possibly unfair)
+comments.
 
--   [`kableExtra`](https://haozhu233.github.io/kableExtra/)
+There are many fantastic table-drawing packages out there. Most
+alternative packages have features that `tinytable` does not (yet)
+support. The ones I will focus on in this section are the ones I
+recommend you try if you don’t find the features you like in
+`tinytable`:
+
 -   [`gt`](https://gt.rstudio.com)
+-   [`kableExtra`](https://haozhu233.github.io/kableExtra/)
+-   [`huxtable`](https://hughjonesd.github.io/huxtable/)
 -   [`DT`](https://rstudio.github.io/DT/)
 -   [`flextable`](https://davidgohel.github.io/flextable/)
--   [`huxtable`](https://hughjonesd.github.io/huxtable/)
+
+The first difference between `tinytable` and other table-drawing package
+is that `tinytable` covers much of the same functionality without
+loading any other `R` package by default. I think it is very important
+for `R` package developers to have a table-drawing package that does not
+force them to import the whole `tidyverse`. In my view, this service to
+developers alone justifies writing a new package.
+
+`gt` (65 dependencies) is an amazingly powerful table-drawing package;
+possibly the most powerful in R. I like it *a lot*, and it is the first
+package that I recommend you try if you don’t like `tinytable`. The
+reasons I don’t personally use `gt` on a day-to-day basis are entirely
+subjective. First, and least important, I find its syntax very verbose:
+customizing any aspect of a table always seems to take *many*
+keystrokes. Second, and this is obviously a reflection of my own
+limitations, but I have never quite figured out `gt` actually works; it
+has so many exported functions (180+!) that I get lost. `gt` is more
+powerful than `tinytable`, but that power comes at the price of
+complexity. One goal of `tinytable` is to let you do 98% of what you
+need by learning 4 simple functions (and maybe some CSS).
+
+`kableExtra` (49 dependencies) is a very flexible package [with amazing
+documentation.](http://haozhu233.github.io/kableExtra/) Before write
+`tinytable`, I actually made a few (very minor contributions and bug
+fixes)\[https://github.com/haozhu233/kableExtra/graphs/contributors\] to
+`kableExtra`. In the end, I concluded that the package was great and
+drew beautiful table, but that the code base was too hard to maintain
+and extend. This is inside baseball, but the problem I see is that
+`kableExtra` takes tables drawn **as raw strings** by the `knitr`
+package, and then applies a series of complex regular expressions to
+modify those tables. The author has done amazing work here, but it’s
+just a really difficult strategy to implement, scale, and maintain
+(incidentally, `kableExtra` is not very actively developed anymore).
+Finally, I really like the concept of separating styling from data, and
+`kableExtra` modifies the content of every cell to style its content.
+
+`huxtable` (29 dependencies) is an interesting and powerful-looking
+package, but I know it less well than the others. The key design
+decision of that package is that each feature is associated with a
+distinct function. I understand that design impulse, because going
+through the documentation of a function with 50 arguments can be
+daunting. But for me, at least, sifting through a manual with 300+
+exported functions also makes for a steep learning curve. Also, I like
+HTML and LaTeX code to be readable and editable, in case I need to make
+micro-modifications before publication in a journal or website;
+`huxtable` code is not designed to be human-readable.
+
+`DT` (43 dependencies) is nice, but it only draws HTML table, so that
+was a non starter for me.
+
+`flextable` (43 dependencies) is nice, but it does not support LaTeX,
+and I need that format for my “real job.”
+
+At this point, it’s useful to point out that there are also many
+packages to compute statistics and build tables (ex: `modelsummary`,
+`gtsummary`, `table1`). Many of those packages delegate the actual
+drawing of the tables (ie: lines and colors) to one of the table-drawing
+packages listed above. In that sense, `tinytable` should be seen as more
+of a complement than an alternative to data summary packages. The goal
+of `tinytable` is to help users and developers convert data frames into
+beautiful tables easily. What people put in those tables is outside the
+scope of `tinytable`. If you are interested in a package to create data
+summaries and regression tables/plots, please check out my
+`modelsummary` package: <https://modelsummary.com>
 
 Did I miss your favorite package? Drop me a note and I’ll add it to the
 list.
-
-Of course, there are also many packages to compute statistics and build
-tables (ex: `modelsummary`, `gtsummary`, `table1`). Many of those
-packages delegate the actual drawing of the tables (ie: lines and
-colors) to one of the table-drawing packages listed above. In that
-sense, `tinytable` should be seen as more of a complement than an
-alternative to data summary packages. The goal of `tinytable` is to help
-users and developers convert data frames into beautiful tables easily.
-What people put in those tables is outside the scope of `tinytable`. If
-you are interested in a package to create data summaries and regression
-tables/plots, please check out my `modelsummary` package:
-<https://modelsummary.com>
 
 [1] Other formats like Markdown and Typst are also available, but less
 flexible.
