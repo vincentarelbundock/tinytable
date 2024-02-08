@@ -31,6 +31,7 @@ finalize_grid <- function(x) {
       out <- paste(out, collapse = "\n")
     }
 
+
     # caption
     cap <- meta(x, "caption")
     if (is.character(cap) && length(cap) == 1) {

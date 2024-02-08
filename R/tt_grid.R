@@ -26,19 +26,27 @@ tt_grid <- function(x, col_widths = NULL, ...) {
   padded <- sprintf(" %s ", tab)
   tab <- matrix(padded, ncol = ncol(tab))
 
-  col_widths_auto <- NULL
-  for (j in 1:ncol(x)) {
-    if (is.null(col_widths)) {
-      nc <- nchar(tab[, j])
-      col_widths_auto[j] <- max(nc)
-      tab[, j] <- paste0(tab[, j], strrep(" ", max(nc) - nc))
-    } else {
-      nc <- nchar(tab[, j])
-      tab[, j] <- paste0(tab[, j], strrep(" ", col_widths[j] - nc))
+  if (is.null(col_widths)) {
+    for (j in 1:ncol(x)) {
+      col_widths[j] <- max(nchar(tab[, j]))
     }
   }
 
-  if (is.null(col_widths)) col_widths <- col_widths_auto
+  # groups are longer than col-widths
+  for (g in meta(x, "lazy_group")) {
+    for (idx in seq_along(g$j)) {
+      g_len <- nchar(names(g$j)[idx]) + 2
+      c_len <- sum(col_widths[g$j[[idx]]])
+      if (g_len > c_len) {
+        col_widths[g$j[[idx]]] <- col_widths[g$j[[idx]]] + ceiling((g_len - c_len) / length(g$j[[idx]]))
+      }
+    }
+  }
+
+  for (j in 1:ncol(x)) {
+    nc <- nchar(tab[, j])
+    tab[, j] <- paste0(tab[, j], strrep(" ", max(c(0, col_widths[j] - nc))))
+  }
 
   rule_head <- grid_line(col_widths, "=")
   rule_line <- grid_line(col_widths, "-")

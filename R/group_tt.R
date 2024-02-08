@@ -34,7 +34,7 @@ group_tt <- function(x, i = NULL, j = NULL, indent = 1, ...) {
 
   if (!is.null(i)) out <- meta(out, "nrows", meta(out, "nrows") + length(i))
   if (!is.null(j)) out <- meta(out, "nhead", meta(out, "nhead") + 1)
-  
+
   # we don't need this as a list, and we use some sorting later
   i <- unlist(i)
 

@@ -27,6 +27,12 @@ group_grid_col <- function(x, j, ...) {
   x <- strsplit(x, split = "\\n")[[1]]
   x <- x[!x %in% c("\\n", "")]
   x <- c(x[1], out, x)
+
+  # missing cell at the end
+  nc <- nchar(x)
+  idx <- nchar(x) < max(nc)
+  x[idx] <- paste0(x[idx], strrep(" ", max(nc) - nchar(x[idx]) - 1), "|")
+
   out <- paste(x, collapse = "\n")
   attr(out, "tinytable_meta") <- m
   class(out) <- class(x)
