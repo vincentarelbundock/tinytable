@@ -8,6 +8,9 @@ New:
 - Line plots: `plot_tt(fun = "line")`
 - `format_tt(j=NULL, escape=TRUE)` now escapes column headers in addition to all cells.
 
+Bugfix:
+
+- Markdown group columns when labels are wider than columns. Thanks to @etiennebacher for report #127.
 
 ## 0.0.3
 
