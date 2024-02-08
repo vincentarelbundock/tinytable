@@ -129,6 +129,7 @@ format_tt_lazy <- function(x,
   assert_function(identity)
   assert_string(sprintf, null.ok = TRUE)
   assert_flag(markdown)
+  if (is.null(j)) jnull <- TRUE else jnull <- FALSE
   j <- sanitize_j(j, x)
 
   # In sanity_tt(), we fill in missing NULL `j` in the format-specific versions,
@@ -206,7 +207,7 @@ format_tt_lazy <- function(x,
       o <- meta(x)$output
     }
     # if j includes all columns, the user wants to escape the full table, including the column headers
-    if (all(j %in% seq_len(meta(x, "ncols")))) {
+    if (jnull) {
       colnames(x) <- escape_text(colnames(x), output = o)
     }
     for (col in j) {
