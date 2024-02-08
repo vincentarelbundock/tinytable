@@ -6,6 +6,7 @@ New:
 
 - `j` argument in `style_tt()` and `format_tt()` now accepts a string vector to match columns. Issue #122
 - Line plots: `plot_tt(fun = "line")`
+- `format_tt(j=NULL, escape=TRUE)` now escapes column headers in addition to all cells.
 
 
 ## 0.0.3

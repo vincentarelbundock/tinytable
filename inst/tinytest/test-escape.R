@@ -12,3 +12,8 @@ expect_snapshot_print(tab, "escape-latex")
 
 tab <- tt(dat) |> format_tt(escape = TRUE) |> save_tt("html")
 expect_snapshot_print(tab, "escape-html")
+
+# escape columns
+dat <- data.frame("blah_blah" = 1:2)
+tab <- tt(dat) |> format_tt(escape = TRUE) |> save_tt("latex")
+expect_snapshot_print(tab, "escape-latex_colnames")

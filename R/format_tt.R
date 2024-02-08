@@ -205,6 +205,10 @@ format_tt_lazy <- function(x,
     } else {
       o <- meta(x)$output
     }
+    # if j includes all columns, the user wants to escape the full table, including the column headers
+    if (all(j %in% seq_len(meta(x, "ncols")))) {
+      colnames(x) <- escape_text(colnames(x), output = o)
+    }
     for (col in j) {
       x[[col]] <- escape_text(x[[col]], output = o)
     }
