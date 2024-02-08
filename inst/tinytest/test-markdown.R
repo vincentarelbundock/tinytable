@@ -35,15 +35,14 @@ expect_snapshot_print(tab, label = "markdown-issue105")
 test <- data.frame(a = 1, b = 2, c = 3)
 tab <- tt(test) |>
   group_tt(j = list("foobar" = 1:2, "hello world" = 3)) |>
-  group_tt(j = list("foobar and hello world" = 2:3)) |>
-  print("markdown")
+  group_tt(j = list("foobar and hello world" = 2:3))
 expect_snapshot_print(tab, label = "markdown-group_j_wider_1")
+
 
 test <- data.frame(a = 1, b = 2, c = 3)
 tab <- tt(test) |>
-  group_tt(j = list("foobar" = 1:2, "hello world" = 3)) |>
-  print("markdown")
-expect_snapshot_print(tab, label = "markdown-group_j_wider_1")
+  group_tt(j = list("foobar" = 1:2, "hello world" = 3))
+expect_snapshot_print(tab, label = "markdown-group_j_wider_2")
 
 
 
