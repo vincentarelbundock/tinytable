@@ -1,4 +1,5 @@
 usepackage_latex <- function(name, options = NULL, extra_lines = NULL) {
+  assert_dependency("rmarkdown")
   invisible(knitr::knit_meta_add(list(rmarkdown::latex_dependency(name, options, extra_lines))))
 }
 
