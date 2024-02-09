@@ -15,6 +15,7 @@ style_tabularray <- function(x,
                              line_color = "black",
                              line_width = .1,
                              colspan = NULL,
+                             rowspan = NULL,
                              indent = 0,
                              tabularray_inner = NULL,
                              tabularray_outer = NULL,
@@ -38,8 +39,9 @@ style_tabularray <- function(x,
     settings$i <- settings$i + meta(out, "nhead")
   }
 
-  # colspan requires cell level, so we keep the full settings DF
-  if (is.null(colspan)) {
+  # colspan and rowspan require cell level, so we keep the full settings DF, even
+  # in tabularray, where we can sometimes use rowspec or colspec when one is empty
+  if (is.null(colspan) && is.null(rowspan)) {
     if (is.null(i) && is.null(j)) {
       settings <- unique(settings[, c("i", "tabularray"), drop = FALSE])
     } else if (is.null(i)) {
@@ -49,7 +51,9 @@ style_tabularray <- function(x,
     }
   }
 
-  span <- if (!is.null(colspan)) paste0("c=", colspan, ",") else ""
+  span <- ""
+  span <- if (!is.null(colspan)) paste0(span, "c=", colspan, ",") else span
+  span <- if (!is.null(rowspan)) paste0(span, "r=", rowspan, ",") else span
 
   # convert to tabularray now that we've filled the bootstrap settings
   if (is.numeric(fontsize)) settings$tabularray <- sprintf("%s font=\\fontsize{%sem}{%sem}\\selectfont,", settings$tabularray, fontsize, fontsize + 0.3) 
@@ -107,7 +111,7 @@ style_tabularray <- function(x,
   settings$tabularray <- trimws(gsub(",+", ",", settings$tabularray))
 
 
-  if (!all(settings$tabularray == ",")) {
+  if (!all(settings$tabularray == ",") || span != "") {
     for (k in seq_len(nrow(settings))) {
       if (all(c("i", "j") %in% colnames(settings))) {
         spec <- sprintf("cell{%s}{%s}={%s}{%s},", settings$i[k], settings$j[k], span, settings$tabularray[k])

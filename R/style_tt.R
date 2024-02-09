@@ -11,7 +11,6 @@
 #' + Integer vectors indicating column positions.
 #' + Character vector indicating column names.
 #' + A single string specifying a Perl-style regular expression used to match column names. 
-#' + Note: If `colspan` is used, `j` must be of length 1.
 #' @param bold Logical; if `TRUE`, text is styled in bold.
 #' @param italic Logical; if `TRUE`, text is styled in italic.
 #' @param monospace Logical; if `TRUE`, text is styled in monospace font.
@@ -31,7 +30,8 @@
 #' @param width Width of column in em units. Can be `NULL` for default width.
 #' @param fontsize Integer Font size in pt units.
 #' @param align A single character or a string with a number of characters equal to the number of columns in `j`. Valid characters include 'c' (center), 'l' (left), or 'r' (right).
-#' @param colspan Number of columns a cell should span. Can only be used if both `i` and `j` are of length 1. Must be an integer greater than 1.
+#' @param colspan Number of columns a cell should span. `i` and `j` must be of length 1.
+#' @param rowspan Number of rows a cell should span. `i` and `j` must be of length 1.
 #' @param indent Text indentation in em units. Positive values only.
 #' @param line String determines if solid lines (rules or borders) should be drawn around the cell, row, or column. 
 #' + "t": top
@@ -81,6 +81,7 @@ style_tt <- function (x,
                       width = NULL,
                       align = NULL,
                       colspan = NULL,
+                      rowspan = NULL,
                       indent = 0,
                       line = NULL,
                       line_color = "black",
@@ -109,6 +110,7 @@ style_tt <- function (x,
               width = width,
               align = align,
               colspan = colspan,
+              rowspan = rowspan,
               indent = indent,
               line = line,
               line_color = line_color,
@@ -144,6 +146,7 @@ style_tt_lazy <- function (x,
                            width,
                            align,
                            colspan,
+                           rowspan,
                            indent,
                            line,
                            line_color,
@@ -195,7 +198,7 @@ style_tt_lazy <- function (x,
 
   assert_style_tt(
     x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
-    color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, indent = indent,
+    color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, rowspan = rowspan, indent = indent,
     line = line, line_color = line_color, line_width = line_width,
     tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css,
     bootstrap_css_rule = bootstrap_css_rule, bootstrap_class = bootstrap_class)
@@ -206,25 +209,25 @@ style_tt_lazy <- function (x,
 
   out <- style_tabularray(
     x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
-    color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, indent = indent,
+    color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, rowspan = rowspan, indent = indent,
     tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer,
     line = line, line_color = line_color, line_width = line_width)
 
   out <- style_bootstrap(
     x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
-    color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, indent = indent,
+    color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, rowspan = rowspan, indent = indent,
     bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule, bootstrap_class = bootstrap_class,
     line = line, line_color = line_color, line_width = line_width)
 
   out <- style_grid(
     x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
-    color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, indent = indent,
+    color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, rowspan = rowspan, indent = indent,
     bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule,
     line = line, line_color = line_color, line_width = line_width)
 
   out <- style_typst(
     x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
-    color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, indent = indent,
+    color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, rowspan = rowspan, indent = indent,
     bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule,
     line = line, line_color = line_color, line_width = line_width)
 
@@ -246,6 +249,7 @@ assert_style_tt <- function (x,
                              width,
                              align,
                              colspan,
+                             rowspan,
                              indent,
                              line,
                              line_color,
@@ -263,7 +267,8 @@ assert_style_tt <- function (x,
     stop(msg, call. = FALSE)
   }
 
-  assert_integerish(colspan, len = 1, lower = 1, null.ok = TRUE)
+  assert_integerish(colspan, len = 1, lower = 2, null.ok = TRUE)
+  assert_integerish(rowspan, len = 1, lower = 2, null.ok = TRUE)
   assert_numeric(width, len = 1, lower = 0, null.ok = TRUE)
   assert_numeric(indent, len = 1, lower = 0)
   assert_character(background, null.ok = TRUE)
@@ -280,6 +285,11 @@ assert_style_tt <- function (x,
   assert_character(bootstrap_class, null.ok = TRUE)
   assert_character(bootstrap_css, null.ok = TRUE)
   assert_string(bootstrap_css_rule, null.ok = TRUE)
+
+  if ((!is.null(colspan) || !is.null(rowspan)) && (length(j) != 1 || length(i) != 1)) {
+    msg <- "When using `colspan` or `rowspan`, `i` and `j` must both be of length 1."
+    stop(msg, call. = FALSE)
+  }
 
   if (is.character(line)) {
     line <- strsplit(line, split = "")[[1]]
