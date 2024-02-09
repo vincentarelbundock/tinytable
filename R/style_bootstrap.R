@@ -20,6 +20,7 @@ style_bootstrap <- function(x,
                             line_color = "black",
                             line_width = .1,
                             colspan = NULL,
+                            rowspan = NULL,
                             indent = 0,
                             bootstrap_class = NULL,
                             bootstrap_css = NULL,
@@ -112,6 +113,14 @@ style_bootstrap <- function(x,
   # unique IDs for each CSS style combination
   id <- sapply(unique(settings$bootstrap), function(k) get_id(stem = "tinytable_css_"))
   settings$id <- id[match(settings$bootstrap, names(id))]
+
+  if (!is.null(rowspan) || !is.null(colspan)) {
+    if (is.null(rowspan)) rowspan <- 1
+    if (is.null(colspan)) colspan <- 1
+    listener <- "window.addEventListener('load', function () { spanCell_%s(%s, %s, %s, %s) })"
+    listener <- sprintf(listener, settings$id[1], settings$i[1], settings$j[1], rowspan, colspan)
+    out <- bootstrap_setting(out, listener, component = "cell")
+  }
 
   # CSS style for cell
   css_done <- NULL
