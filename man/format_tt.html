@@ -337,9 +337,6 @@ A data frame or a vector to be formatted.
 <li>
 <p>A single string specifying a Perl-style regular expression used to match column names.</p>
 </li>
-<li>
-<p>Note: If <code>colspan</code> is used, <code>j</code> must be of length 1.</p>
-</li>
 </ul>
 </td>
 </tr>
@@ -464,9 +461,9 @@ String passed to the <code>?sprintf</code> function to format numbers or interpo
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_m59sh23woz6mp60du2pd</title>
+    <title>tinytable_adosiexk7rwim635ptbr</title>
     <style>
-.table td.tinytable_css_4tcqnubv00xa1ms7xsxg, .table th.tinytable_css_4tcqnubv00xa1ms7xsxg {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_bzerl8khbipluh33kgxl, .table th.tinytable_css_bzerl8khbipluh33kgxl {    border-bottom: solid 0.1em #d3d8dc; }
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -484,7 +481,7 @@ String passed to the <code>?sprintf</code> function to format numbers or interpo
 
   
     <div class="container">
-      <table class="table table-borderless" id="tinytable_m59sh23woz6mp60du2pd" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_adosiexk7rwim635ptbr" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -496,36 +493,55 @@ String passed to the <code>?sprintf</code> function to format numbers or interpo
         <tbody>
                 <tr>
                   <td>10 000</td>
+                  <td>10 000</td>
+                </tr>
+                <tr>
+                  <td> 9 998</td>
                   <td>10 001</td>
                 </tr>
                 <tr>
                   <td> 9 999</td>
                   <td>10 000</td>
                 </tr>
-                <tr>
-                  <td>10 001</td>
-                  <td>10 001</td>
-                </tr>
         </tbody>
       </table>
     </div>
 
     <script>
-    function styleCell_tinytable_3tfou56qnbtnfrja0w13(i, j, css_id) {
-      var table = document.getElementById("tinytable_m59sh23woz6mp60du2pd");
-      table.rows[i].cells[j].classList.add(css_id);
-    }
-    function insertSpanRow(i, colspan, content) {
-      var table = document.getElementById('tinytable_m59sh23woz6mp60du2pd');
-      var newRow = table.insertRow(i);
-      var newCell = newRow.insertCell(0);
-      newCell.setAttribute("colspan", colspan);
-      // newCell.innerText = content;
-      // this may be unsafe, but innerText does not interpret <br>
-      newCell.innerHTML = content;
-    }
-window.addEventListener('load', function () { styleCell_tinytable_3tfou56qnbtnfrja0w13(0, 0, 'tinytable_css_4tcqnubv00xa1ms7xsxg') })
-window.addEventListener('load', function () { styleCell_tinytable_3tfou56qnbtnfrja0w13(0, 1, 'tinytable_css_4tcqnubv00xa1ms7xsxg') })
+      function styleCell_tinytable_fb6d5cjdyr4rs08qcrd6(i, j, css_id) {
+        var table = document.getElementById("tinytable_adosiexk7rwim635ptbr");
+        table.rows[i].cells[j].classList.add(css_id);
+      }
+      function spanCell_tinytable_fb6d5cjdyr4rs08qcrd6(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_adosiexk7rwim635ptbr");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+
+window.addEventListener('load', function () { styleCell_tinytable_fb6d5cjdyr4rs08qcrd6(0, 0, 'tinytable_css_bzerl8khbipluh33kgxl') })
+window.addEventListener('load', function () { styleCell_tinytable_fb6d5cjdyr4rs08qcrd6(0, 1, 'tinytable_css_bzerl8khbipluh33kgxl') })
     </script>
 
   
