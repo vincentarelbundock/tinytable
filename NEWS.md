@@ -7,7 +7,7 @@ New:
 - `j` argument in `style_tt()` and `format_tt()` now accepts a string vector to match columns. Issue #122
 - Line plots: `plot_tt(fun = "line")`
 - `format_tt(j=NULL, escape=TRUE)` now escapes column headers in addition to all cells.
-- `style_tt()`: `rowspan` and `colspan` arguments are now supported for LaTeX and HTML tables.
+- `style_tt()`: `rowspan` and `colspan` arguments are now supported in all formats except Typst. In markdown and Word, we get "pseudo-spans" with empty cells around the main cell, instead of true merged cells.
 - `style_tt()`: `alignv` argument is now supported for LaTeX and HTML
 
 Bugfix:

@@ -37,7 +37,7 @@ style_grid <- function(x,
 
   if (!is.null(rowspan) || !is.null(colspan)) {
     idx_row <- if (isTRUE(rowspan > 1)) i + seq_len(rowspan) - 1 else i
-    idx_col <- if (isTRUE(colspan > 1)) i + seq_len(colspan) - 1 else j
+    idx_col <- if (isTRUE(colspan > 1)) j + seq_len(colspan) - 1 else j
     backup <- out[i, j]
     for (w in idx_row) {
       for (z in idx_col) {

@@ -1,20 +1,17 @@
+source("helpers.R")
+using("tinysnapshot")
+options(tinytable_print_output = "markdown")
+requiet("dplyr")
 
 
-x <- mtcars[1:3, 1:3]
 
-# pkgload::load_all()
-# tt(x, placement = "H") |> 
-#     style_tt(1, 1, rowspan = 2, colspan = 2, align = "l", alignv = "t") |>
-#     print("latex")
-
-# pkgload::load_all()
-# tt(x, placement = "H") |> 
-#     style_tt(1, 1, rowspan = 2, colspan = 2, align = "r", alignv = "b") |>
-#     save_tt("~/Downloads/trash.html", overwrite = TRUE)
-
-# Q
-# pkgload::load_all()
-# tt(x) |> 
-#     style_tt(2, 2, rowspan = 2, colspan = 2) |>
-#     print('markdown')
-
+options(tinytable_print_output = "markdown")
+tab <- mtcars |>
+    summarize(mpg = mean(mpg), .by = c("cyl", "am")) |>
+    arrange(cyl, am)
+tab <- tt(tab, digits = 2) |>
+    style_tt(i = 1, j = 1, rowspan = 2, colspan = 2) |>
+    style_tt(i = 3, j = 1, rowspan = 2, colspan = 2) |>
+    style_tt(i = 5, j = 1, rowspan = 2, colspan = 2)
+expect_snapshot_print(tab, "colrowspan-markdown_multiple")
+options(tinytable_print_output = NULL)
