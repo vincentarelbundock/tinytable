@@ -121,6 +121,10 @@ style_bootstrap <- function(x,
     listener <- sprintf(listener, settings$id[row], settings$i[row], settings$j[row], settings$id[row])
     out <- bootstrap_setting(out, listener, component = "cell")
 
+    # listener <- "window.addEventListener('load', function () { spanCell_%s(%s, %s, '%s', '%s') })"
+    # listener <- sprintf(listener, settings$id[row], settings$i[row], settings$j[row], settings$id[row])
+    # out <- bootstrap_setting(out, listener, component = "cell")
+
     # CSS styling
     css <- paste(bootstrap_css, settings$bootstrap[row], collapse = ";")
     css_start <- sprintf(".table td.%s, .table th.%s { ", settings$id[row], settings$id[row])
@@ -142,6 +146,7 @@ style_bootstrap <- function(x,
 
   # Changing function names to table ID to avoid conflict with other tables functions 
   out <- gsub("styleCell_\\w+\\(", paste0("styleCell_", meta(x, "id"), "("), out)
+  out <- gsub("spanCell_\\w+\\(", paste0("spanCell_", meta(x, "id"), "("), out)
 
   class(out) <- class(x)
   return(out)
