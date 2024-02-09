@@ -20,6 +20,7 @@ style_bootstrap <- function(x,
                             line_color = "black",
                             line_width = .1,
                             colspan = NULL,
+                            rowspan = NULL,
                             indent = 0,
                             bootstrap_class = NULL,
                             bootstrap_css = NULL,
@@ -113,6 +114,14 @@ style_bootstrap <- function(x,
   id <- sapply(unique(settings$bootstrap), function(k) get_id(stem = "tinytable_css_"))
   settings$id <- id[match(settings$bootstrap, names(id))]
 
+  if (!is.null(rowspan) || !is.null(colspan)) {
+    if (is.null(rowspan)) rowspan <- 1
+    if (is.null(colspan)) colspan <- 1
+    listener <- "window.addEventListener('load', function () { spanCell_%s(%s, %s, %s, %s) })"
+    listener <- sprintf(listener, settings$id[1], settings$i[1], settings$j[1], rowspan, colspan)
+    out <- bootstrap_setting(out, listener, component = "cell")
+  }
+
   # CSS style for cell
   css_done <- NULL
   for (row in seq_len(nrow(settings))) {
@@ -120,6 +129,10 @@ style_bootstrap <- function(x,
     listener <- "window.addEventListener('load', function () { styleCell_%s(%s, %s, '%s') })"
     listener <- sprintf(listener, settings$id[row], settings$i[row], settings$j[row], settings$id[row])
     out <- bootstrap_setting(out, listener, component = "cell")
+
+    # listener <- "window.addEventListener('load', function () { spanCell_%s(%s, %s, '%s', '%s') })"
+    # listener <- sprintf(listener, settings$id[row], settings$i[row], settings$j[row], settings$id[row])
+    # out <- bootstrap_setting(out, listener, component = "cell")
 
     # CSS styling
     css <- paste(bootstrap_css, settings$bootstrap[row], collapse = ";")
@@ -142,6 +155,7 @@ style_bootstrap <- function(x,
 
   # Changing function names to table ID to avoid conflict with other tables functions 
   out <- gsub("styleCell_\\w+\\(", paste0("styleCell_", meta(x, "id"), "("), out)
+  out <- gsub("spanCell_\\w+\\(", paste0("spanCell_", meta(x, "id"), "("), out)
 
   class(out) <- class(x)
   return(out)
