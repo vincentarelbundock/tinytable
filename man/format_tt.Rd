@@ -29,7 +29,6 @@ format_tt(
 \item Integer vectors indicating column positions.
 \item Character vector indicating column names.
 \item A single string specifying a Perl-style regular expression used to match column names.
-\item Note: If \code{colspan} is used, \code{j} must be of length 1.
 }}
 
 \item{digits}{Number of significant digits or decimal places.}

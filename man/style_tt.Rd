@@ -19,6 +19,7 @@ style_tt(
   width = NULL,
   align = NULL,
   colspan = NULL,
+  rowspan = NULL,
   indent = 0,
   line = NULL,
   line_color = "black",
@@ -41,7 +42,6 @@ style_tt(
 \item Integer vectors indicating column positions.
 \item Character vector indicating column names.
 \item A single string specifying a Perl-style regular expression used to match column names.
-\item Note: If \code{colspan} is used, \code{j} must be of length 1.
 }}
 
 \item{bold}{Logical; if \code{TRUE}, text is styled in bold.}
@@ -78,7 +78,9 @@ style_tt(
 
 \item{align}{A single character or a string with a number of characters equal to the number of columns in \code{j}. Valid characters include 'c' (center), 'l' (left), or 'r' (right).}
 
-\item{colspan}{Number of columns a cell should span. Can only be used if both \code{i} and \code{j} are of length 1. Must be an integer greater than 1.}
+\item{colspan}{Number of columns a cell should span. \code{i} and \code{j} must be of length 1.}
+
+\item{rowspan}{Number of rows a cell should span. \code{i} and \code{j} must be of length 1.}
 
 \item{indent}{Text indentation in em units. Positive values only.}
 
