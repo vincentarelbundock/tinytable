@@ -30,6 +30,7 @@
 #' @param width Width of column in em units. Can be `NULL` for default width.
 #' @param fontsize Integer Font size in pt units.
 #' @param align A single character or a string with a number of characters equal to the number of columns in `j`. Valid characters include 'c' (center), 'l' (left), or 'r' (right).
+#' @param alignv A single character specifying vertical alignment. Valid characters include 't' (top), 'm' (middle), 'b' (bottom).
 #' @param colspan Number of columns a cell should span. `i` and `j` must be of length 1.
 #' @param rowspan Number of rows a cell should span. `i` and `j` must be of length 1.
 #' @param indent Text indentation in em units. Positive values only.
@@ -80,6 +81,7 @@ style_tt <- function (x,
                       fontsize = NULL,
                       width = NULL,
                       align = NULL,
+                      alignv = NULL,
                       colspan = NULL,
                       rowspan = NULL,
                       indent = 0,
@@ -109,6 +111,7 @@ style_tt <- function (x,
               fontsize = fontsize,
               width = width,
               align = align,
+              alignv = alignv,
               colspan = colspan,
               rowspan = rowspan,
               indent = indent,
@@ -145,6 +148,7 @@ style_tt_lazy <- function (x,
                            fontsize,
                            width,
                            align,
+                           alignv,
                            colspan,
                            rowspan,
                            indent,
@@ -165,7 +169,10 @@ style_tt_lazy <- function (x,
 
   j <- sanitize_j(j, x)
 
-  # align can be "c" or "clrrlc"takes many possible values
+  # alignv can only be a single character for now
+  assert_choice(alignv, c("t", "m", "b"), null.ok = TRUE)
+
+  # align can be "c" or "clrrlc" takes many possible values
   assert_string(align, null.ok = TRUE)
 
   if (!is.null(align)) {
@@ -198,7 +205,8 @@ style_tt_lazy <- function (x,
 
   assert_style_tt(
     x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
-    color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, rowspan = rowspan, indent = indent,
+    color = color, background = background, fontsize = fontsize, width = width, align = align, alignv = alignv, 
+    colspan = colspan, rowspan = rowspan, indent = indent,
     line = line, line_color = line_color, line_width = line_width,
     tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css,
     bootstrap_css_rule = bootstrap_css_rule, bootstrap_class = bootstrap_class)
@@ -209,25 +217,25 @@ style_tt_lazy <- function (x,
 
   out <- style_tabularray(
     x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
-    color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, rowspan = rowspan, indent = indent,
+    color = color, background = background, fontsize = fontsize, width = width, align = align, alignv = alignv, colspan = colspan, rowspan = rowspan, indent = indent,
     tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer,
     line = line, line_color = line_color, line_width = line_width)
 
   out <- style_bootstrap(
     x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
-    color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, rowspan = rowspan, indent = indent,
+    color = color, background = background, fontsize = fontsize, width = width, align = align, alignv = alignv, colspan = colspan, rowspan = rowspan, indent = indent,
     bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule, bootstrap_class = bootstrap_class,
     line = line, line_color = line_color, line_width = line_width)
 
   out <- style_grid(
     x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
-    color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, rowspan = rowspan, indent = indent,
+    color = color, background = background, fontsize = fontsize, width = width, align = align, alignv = alignv, colspan = colspan, rowspan = rowspan, indent = indent,
     bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule,
     line = line, line_color = line_color, line_width = line_width)
 
   out <- style_typst(
     x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
-    color = color, background = background, fontsize = fontsize, width = width, align = align, colspan = colspan, rowspan = rowspan, indent = indent,
+    color = color, background = background, fontsize = fontsize, width = width, align = align, alignv = alignv, colspan = colspan, rowspan = rowspan, indent = indent,
     bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule,
     line = line, line_color = line_color, line_width = line_width)
 
@@ -248,6 +256,7 @@ assert_style_tt <- function (x,
                              fontsize,
                              width,
                              align,
+                             alignv,
                              colspan,
                              rowspan,
                              indent,

@@ -16,6 +16,7 @@ style_bootstrap <- function(x,
                             fontsize = NULL,
                             width = NULL,
                             align = NULL,
+                            alignv = NULL,
                             line = NULL,
                             line_color = "black",
                             line_width = .1,
@@ -81,6 +82,15 @@ style_bootstrap <- function(x,
     align_bootstrap <- align
   }
 
+  if (!is.null(alignv)) {
+    alignv_bootstrap <- switch(alignv,
+                              "t" = "top",
+                              "m" = "middle",
+                              "b" = "bottom")
+  } else {
+    alignv_bootstrap <- alignv
+  }
+
   if (!is.null(fontsize)) {
     fontsize_bootstrap <- sprintf("%sem", fontsize)
   } else {
@@ -95,6 +105,7 @@ style_bootstrap <- function(x,
   settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, monospace, "font-family: monospace;")
   settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, fontsize_bootstrap, "font-size: %s;")
   settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, align_bootstrap, "text-align: %s;")
+  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, alignv_bootstrap, "vertical-align: %s;")
   settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, color, "color: %s;")
   settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, background, "background-color: %s;")
   settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, width, "width: %s;")
@@ -120,6 +131,7 @@ style_bootstrap <- function(x,
     listener <- "window.addEventListener('load', function () { spanCell_%s(%s, %s, %s, %s) })"
     listener <- sprintf(listener, settings$id[1], settings$i[1], settings$j[1], rowspan, colspan)
     out <- bootstrap_setting(out, listener, component = "cell")
+    listener <- "window.addEventListener('load', function () { styleCell_%s(%s, %s, %s, %s) })"
   }
 
   # CSS style for cell

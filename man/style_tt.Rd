@@ -18,6 +18,7 @@ style_tt(
   fontsize = NULL,
   width = NULL,
   align = NULL,
+  alignv = NULL,
   colspan = NULL,
   rowspan = NULL,
   indent = 0,
@@ -77,6 +78,8 @@ style_tt(
 \item{width}{Width of column in em units. Can be \code{NULL} for default width.}
 
 \item{align}{A single character or a string with a number of characters equal to the number of columns in \code{j}. Valid characters include 'c' (center), 'l' (left), or 'r' (right).}
+
+\item{alignv}{A single character specifying vertical alignment. Valid characters include 't' (top), 'm' (middle), 'b' (bottom).}
 
 \item{colspan}{Number of columns a cell should span. \code{i} and \code{j} must be of length 1.}
 

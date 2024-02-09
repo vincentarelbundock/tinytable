@@ -11,6 +11,7 @@ style_tabularray <- function(x,
                              fontsize = NULL,
                              width = NULL,
                              align = NULL,
+                             alignv = NULL,
                              line = NULL,
                              line_color = "black",
                              line_width = .1,
@@ -54,6 +55,15 @@ style_tabularray <- function(x,
   span <- ""
   span <- if (!is.null(colspan)) paste0(span, "c=", colspan, ",") else span
   span <- if (!is.null(rowspan)) paste0(span, "r=", rowspan, ",") else span
+
+  if (!is.null(alignv)) {
+    alignv_tabularray <- switch(alignv,
+      "b" = "f",
+      "t" = "h",
+      "m" = "m"
+    )
+    settings$tabularray <- sprintf("%s valign=%s,", settings$tabularray, alignv_tabularray)
+  }
 
   # convert to tabularray now that we've filled the bootstrap settings
   if (is.numeric(fontsize)) settings$tabularray <- sprintf("%s font=\\fontsize{%sem}{%sem}\\selectfont,", settings$tabularray, fontsize, fontsize + 0.3) 

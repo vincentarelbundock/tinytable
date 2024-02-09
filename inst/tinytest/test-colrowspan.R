@@ -2,10 +2,12 @@
 
 # x <- mtcars[1:3, 1:3]
 
+# pkgload::load_all()
 # tt(x, placement = "H") |> 
-#     style_tt(1, 1, rowspan = 2, colspan = 2, align = "c") |>
+#     style_tt(1, 1, rowspan = 2, colspan = 2, align = "l", alignv = "t") |>
 #     print("latex")
 
+# pkgload::load_all()
 # tt(x, placement = "H") |> 
-#     style_tt(1, 1, rowspan = 2, colspan = 2, align = "c") |>
+#     style_tt(1, 1, rowspan = 2, colspan = 2, align = "r", alignv = "b") |>
 #     save_tt("~/Downloads/trash.html", overwrite = TRUE)
