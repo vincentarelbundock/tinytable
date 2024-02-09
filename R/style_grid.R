@@ -6,6 +6,8 @@ style_grid <- function(x,
                        monospace = FALSE,
                        underline = FALSE,
                        strikeout = FALSE,
+                       rowspan = NULL,
+                       colspan = NULL,
                        ...) {
 
   if (meta(x, "output") != "markdown") return(x)
@@ -31,6 +33,20 @@ style_grid <- function(x,
         out[row, col] <- sprintf("~~%s~~", out[row, col])
       }
     }
+  }
+
+  if (!is.null(rowspan) || !is.null(colspan)) {
+    idx_row <- if (isTRUE(rowspan > 1)) i + seq_len(rowspan) - 1 else i
+    idx_col <- if (isTRUE(colspan > 1)) i + seq_len(colspan) - 1 else j
+    backup <- out[i, j]
+    for (w in idx_row) {
+      for (z in idx_col) {
+        if (z <= meta(x, "ncols")) {
+          out[w, z] <- ""
+        }
+      }
+    }
+    out[i, j] <- backup
   }
 
   attr(out, "tinytable_meta") <- meta(x)

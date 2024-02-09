@@ -11,6 +11,25 @@ finalize_grid <- function(x) {
       out <- grid_hlines(out)
     }
 
+    out <- strsplit(out, split = "\\n")[[1]]
+    idx_data <- grep("[^+=-]", out)
+
+    for (l in meta(x, "lazy_style")) {
+      rs <- l$rowspan
+      cs <- l$colspan
+      if (length(idx_data) > 0 && (!is.null(rs) || !is.null(cs))) {
+        i <- idx_data[l$i + meta(x, "nhead") + seq_len(rs) - 1]
+        j <- setdiff(l$j + seq_len(cs) - 1, l$j)
+        for (w in i) {
+          # rev matters a lot here
+          for (z in rev(j)) {
+            pipe_loc <- gregexpr("\\|", out[[w]])[[1]][z]
+            out[[w]] <- replace_char_at_position(out[[w]], pipe_loc, " ")
+          }
+        }
+      }
+    }
+
     # notes
     no <- meta(x, "notes")
     if (!is.null(no)) {
@@ -39,4 +58,13 @@ finalize_grid <- function(x) {
     }
 
     return(out)
+}
+
+
+
+replace_char_at_position <- function(input_string, position, replacement_char) {
+  before <- substr(input_string, 1, position - 1)
+  after <- substr(input_string, position + 1, nchar(input_string))
+  result <- paste0(before, replacement_char, after)
+  return(result)
 }
