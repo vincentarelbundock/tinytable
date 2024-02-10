@@ -559,6 +559,21 @@ Here is the original table for comparison:
 tt(x)
 ```
 
+Spanning cells can be particularly useful when we want to suppress redundant labels:
+
+```{r}
+library(dplyr)
+
+tab <- mtcars |>
+    summarize(mpg = mean(mpg), .by = c("cyl", "am")) |>
+    arrange(cyl, am)
+tab
+
+tt(tab, digits = 2) |>
+  style_tt(i = c(1, 3, 5), j = 1, rowspan = 2, alignv = "t")
+```
+
+
 ## Headers
 
 The header can be omitted from the table by deleting the column names in the `x` data frame:
