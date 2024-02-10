@@ -14,6 +14,7 @@
 #' @param date A string passed to the `format()` function, such as "%Y-%m-%d". See the "Details" section in `?strptime`
 #' @param bool A function to format logical columns. Defaults to title case.
 #' @param other A function to format columns of other types. Defaults to `as.character()`.
+#' @param replace_na String to display for missing values.
 #' @param escape Logical or String; if TRUE, escape special characters to display them as text in the format of the output of a `tt()` table. If `format_tt()` is called as a standalone function instead of on a `tt()` table, the `escape` argument accepts strings to specify the escaping method: "latex" or "html".
 #' @param markdown Logical; if TRUE, render markdown syntax in cells. Ex: `_italicized text_` is properly italicized in HTML and LaTeX.
 #' @param sprintf String passed to the `?sprintf` function to format numbers or interpolate strings with a user-defined pattern (similar to the `glue` package, but using Base R).
@@ -43,6 +44,7 @@ format_tt <- function(x,
                       date = "%Y-%m-%d",
                       bool = function(column) tools::toTitleCase(tolower(column)),
                       other = as.character,
+                      replace_na = "",
                       escape = FALSE,
                       markdown = FALSE,
                       sprintf = NULL
@@ -59,6 +61,7 @@ format_tt <- function(x,
                 num_suffix = num_suffix,
                 num_mark_big = num_mark_big,
                 num_mark_dec = num_mark_dec,
+                replace_na = replace_na,
                 sprintf = sprintf,
                 url = url,
                 date = date,
@@ -77,6 +80,7 @@ format_tt <- function(x,
                           num_suffix = num_suffix,
                           num_mark_big = num_mark_big,
                           num_mark_dec = num_mark_dec,
+                          replace_na = replace_na,
                           sprintf = sprintf,
                           url = url,
                           date = date,
@@ -96,6 +100,7 @@ format_tt_lazy <- function(x,
                            num_suffix = FALSE,
                            num_mark_big = "",
                            num_mark_dec = NULL,
+                           replace_na = "",
                            sprintf = NULL,
                            url = FALSE,
                            date = "%Y-%m-%d",
@@ -113,6 +118,8 @@ format_tt_lazy <- function(x,
     atomic_vector <- FALSE
   }
 
+  out <- x
+
   if (!inherits(x, "data.frame")) {
     msg <- "`x` must be a data frame or an atomic vector."
     stop(msg, call. = FALSE)
@@ -124,6 +131,7 @@ format_tt_lazy <- function(x,
   assert_flag(num_zero)
   assert_string(num_mark_big)
   assert_string(num_mark_dec)
+  assert_string(replace_na)
   assert_string(date)
   assert_function(bool)
   assert_function(identity)
@@ -141,59 +149,63 @@ format_tt_lazy <- function(x,
   for (col in j) {
     # sprintf() is self-contained
     if (!is.null(sprintf)) {
-      x[[col]] <- base::sprintf(sprintf, x[[col]])
+      out[[col]] <- base::sprintf(sprintf, out[[col]])
 
     } else {
 
       # logical 
-      if (is.logical(x[[col]])) {
-        x[[col]] <- bool(x[[col]])
+      if (is.logical(out[[col]])) {
+        out[[col]] <- bool(out[[col]])
 
         # date
-      } else if (inherits(x[[col]], "Date")) {
-        x[[col]] <- format(x[[col]], date)
+      } else if (inherits(out[[col]], "Date")) {
+        out[[col]] <- format(out[[col]], date)
 
         # numeric
-      } else if (is.numeric(x[[col]]) && !is.null(digits)) {
+      } else if (is.numeric(out[[col]]) && !is.null(digits)) {
 
         # numeric suffix
         if (isTRUE(num_suffix)) {
-          x[[col]] <- format_num_suffix(x[[col]], digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero)
+          out[[col]] <- format_num_suffix(out[[col]], digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero)
 
           # non-integer numeric
-        } else if (is.numeric(x[[col]]) && !isTRUE(check_integerish(x[[col]]))) {
+        } else if (is.numeric(out[[col]]) && !isTRUE(check_integerish(out[[col]]))) {
           if (num_fmt == "significant") {
-            x[[col]] <- format(x[[col]],
+            out[[col]] <- format(out[[col]],
                                digits = digits, drop0trailing = !num_zero,
                                big.mark = num_mark_big, decimal.mark = num_mark_dec,
                                scientific = FALSE)
 
           } else if (num_fmt == "decimal") {
-            x[[col]] <- formatC(x[[col]],
+            out[[col]] <- formatC(out[[col]],
                                 digits = digits, format = "f", drop0trailing = !num_zero,
                                 big.mark = num_mark_big, decimal.mark = num_mark_dec)
 
             if (num_fmt == "scientific") {
-              x[[col]] <- formatC(x[[col]],
+              out[[col]] <- formatC(out[[col]],
                                   digits = digits, format = "e", drop0trailing = !num_zero,
                                   big.mark = num_mark_big, decimal.mark = num_mark_dec)
             }
           }
 
           # integer
-        } else if (isTRUE(check_integerish(x[[col]]))) {
+        } else if (isTRUE(check_integerish(out[[col]]))) {
           if (num_fmt == "scientific") {
-            x[[col]] <- formatC(x[[col]],
+            out[[col]] <- formatC(out[[col]],
                                 digits = digits, format = "e", drop0trailing = !num_zero,
                                 big.mark = num_mark_big, decimal.mark = num_mark_dec)
           }
         }
 
       } else {
-        x[[col]] <- other(x[[col]])
+        out[[col]] <- other(out[[col]])
       }
 
     }
+
+    # replace missing values by `na`
+    out[, col] <- as.character(out[, col])
+    out[is.na(x[, col]), col] <- replace_na
 
   } # loop over columns
 
@@ -204,14 +216,14 @@ format_tt_lazy <- function(x,
     } else if (isTRUE(escape == "html")) {
       o <- "html"
     } else {
-      o <- meta(x)$output
+      o <- meta(out)$output
     }
     # if j includes all columns, the user wants to escape the full table, including the column headers
     if (jnull) {
-      colnames(x) <- escape_text(colnames(x), output = o)
+      colnames(out) <- escape_text(colnames(out), output = o)
     }
     for (col in j) {
-      x[[col]] <- escape_text(x[[col]], output = o)
+      out[[col]] <- escape_text(out[[col]], output = o)
     }
   }
 
@@ -219,25 +231,25 @@ format_tt_lazy <- function(x,
   if (isTRUE(markdown)) {
     assert_dependency("markdown")
     for (col in j) {
-      if (isTRUE(meta(x)$output == "html")) {
-        fun <- function(x) {
-          out <- trimws(markdown::mark_html(text = x, template = FALSE))
+      if (isTRUE(meta(out)$output == "html")) {
+        fun <- function(out) {
+          out <- trimws(markdown::mark_html(text = out, template = FALSE))
           out <- sub("<p>", "", out, fixed = TRUE)
           out <- sub("</p>", "", out, fixed = TRUE)
           return(out)
         }
-        x[, col] <- sapply(x[, col], fun)
-      } else if (isTRUE(meta(x)$output == "latex")) {
-        fun <- function(x) trimws(markdown::mark_latex(text = x, template = FALSE))
-        x[, col] <- sapply(x[, col], fun)
+        out[, col] <- sapply(out[, col], fun)
+      } else if (isTRUE(meta(out)$output == "latex")) {
+        fun <- function(out) trimws(markdown::mark_latex(text = out, template = FALSE))
+        out[, col] <- sapply(out[, col], fun)
       }
     }
   }
 
   if (isTRUE(atomic_vector)) {
-    return(x[[1]])
+    return(out[[1]])
   } else {
-    return(x)
+    return(out)
   }
 
 }

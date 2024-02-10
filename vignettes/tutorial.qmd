@@ -324,6 +324,21 @@ format_tt(dat, digits = 1, num_suffix = TRUE)
 ```
 
 
+## Missing values
+
+Missing values can be replaced by a custom string using the `replace_na` argument (default `""`):
+
+```{r}
+tab <- data.frame(a = c(NA, 1, 2), b = c(3, NA, 5))
+
+tt(tab)
+
+tt(tab) |> format_tt()
+
+tt(tab) |> format_tt(replace_na = "-")
+```
+
+
 ## Escape special characters
 
 LaTeX and HTML use special characters to indicate strings which should be interpreted rather than displayed as text. For example, including underscores or dollar signs in LaTeX can cause compilation errors in some documents. To display those special characters, we need to substitute or escape them with backslashes, depending on the output format. The `escape` argument of `format_tt()` can be used to do this automatically:

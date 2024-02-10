@@ -139,6 +139,7 @@ assert_logical <- function(x, null.ok = FALSE, name = as.character(substitute(x)
 check_integerish <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok = TRUE) {
   if (is.null(x) && isTRUE(null.ok)) return(TRUE)
   if (!is.numeric(x)) return(FALSE)
+  x <- stats::na.omit(x)
   if (!is.null(len) && length(x) != len) return(FALSE)
   if (!is.null(lower) && any(x < lower)) return(FALSE)
   if (!is.null(upper) && any(x > upper)) return(FALSE)
