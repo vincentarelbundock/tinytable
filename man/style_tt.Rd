@@ -121,7 +121,7 @@ Style a Tiny Table
 \details{
 This function applies styling to a table created by \code{tt()}. It allows customization of text style (bold, italic, monospace), text and background colors, font size, cell width, text alignment, column span, and indentation. The function also supports passing native instructions to LaTeX (tabularray) and HTML (bootstrap) formats.
 
-Warning: Markdown and Word formats are limited to these styles: italic, bold, strikeout. This is because there is no markdown syntax for the other options, and because we create Word documents by converting a markdown table to .docx via the Pandoc software.
+Note: Markdown and Word tables only support these styles: italic, bold, strikeout. Moreover, the \code{style_tt()} function cannot be used to style headers inserted by the \code{group_tt()} function; instead, you should style the headers directly in the header definition using markdown syntax: \code{group_tt(i = list("*italic header*" = 2))}. These limitations are due to the fact that there is no markdown syntax for the other options, and that we create Word documents by converting a markdown table to .docx via the Pandoc software.
 }
 \section{LaTeX preamble}{
 

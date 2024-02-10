@@ -701,6 +701,24 @@ tt(dat, theme = "void") |>
 ```
 
 
+## Markdown and Word
+
+Styling for Markdown and Word tables is more limited than for the other formats. In particular:
+
+* The only supported arguments are: `bold`, `italic`, and `strikeout`.
+* Headers inserted by `group_tt()` cannot be styled using the `style_tt()` function.
+
+These limitations are due to the fact that there is no markdown syntax for the other options (ex: colors and background), and that we create Word documents by converting a markdown table to .docx via the Pandoc software.
+
+One workaround is to style the group headers directly in their definition by using markdown syntax:
+
+```{r}
+mtcars[1:4, 1:4] |>
+  tt() |>
+  group_tt(i = list("*Hello*" = 1, "__World__" = 3)) |>
+  print("markdown")
+```
+
 
 # Plots and images
 
