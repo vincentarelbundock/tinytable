@@ -295,11 +295,6 @@ assert_style_tt <- function (x,
   assert_character(bootstrap_css, null.ok = TRUE)
   assert_string(bootstrap_css_rule, null.ok = TRUE)
 
-  if ((!is.null(colspan) || !is.null(rowspan)) && (length(j) != 1 || length(i) != 1)) {
-    msg <- "When using `colspan` or `rowspan`, `i` and `j` must both be of length 1."
-    stop(msg, call. = FALSE)
-  }
-
   if (is.character(line)) {
     line <- strsplit(line, split = "")[[1]]
     if (!all(line %in% c("t", "b", "l", "r"))) {

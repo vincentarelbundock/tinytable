@@ -125,14 +125,8 @@ style_bootstrap <- function(x,
   id <- sapply(unique(settings$bootstrap), function(k) get_id(stem = "tinytable_css_"))
   settings$id <- id[match(settings$bootstrap, names(id))]
 
-  if (!is.null(rowspan) || !is.null(colspan)) {
-    if (is.null(rowspan)) rowspan <- 1
-    if (is.null(colspan)) colspan <- 1
-    listener <- "window.addEventListener('load', function () { spanCell_%s(%s, %s, %s, %s) })"
-    listener <- sprintf(listener, settings$id[1], settings$i[1], settings$j[1], rowspan, colspan)
-    out <- bootstrap_setting(out, listener, component = "cell")
-    listener <- "window.addEventListener('load', function () { styleCell_%s(%s, %s, %s, %s) })"
-  }
+  if (is.null(rowspan)) rowspan <- 1
+  if (is.null(colspan)) colspan <- 1
 
   # CSS style for cell
   css_done <- NULL
@@ -142,9 +136,11 @@ style_bootstrap <- function(x,
     listener <- sprintf(listener, settings$id[row], settings$i[row], settings$j[row], settings$id[row])
     out <- bootstrap_setting(out, listener, component = "cell")
 
-    # listener <- "window.addEventListener('load', function () { spanCell_%s(%s, %s, '%s', '%s') })"
-    # listener <- sprintf(listener, settings$id[row], settings$i[row], settings$j[row], settings$id[row])
-    # out <- bootstrap_setting(out, listener, component = "cell")
+    if (rowspan != 1 || colspan != 1) {
+      listener <- "window.addEventListener('load', function () { spanCell_%s(%s, %s, %s, %s) })"
+      listener <- sprintf(listener, settings$id[row], settings$i[row], settings$j[row], rowspan, colspan)
+      out <- bootstrap_setting(out, listener, component = "cell")
+    }
 
     # CSS styling
     css <- paste(bootstrap_css, settings$bootstrap[row], collapse = ";")
