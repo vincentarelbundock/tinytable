@@ -17,6 +17,20 @@ style_grid <- function(x,
   ival <- if (is.null(i)) seq_len(meta(x, "nrows")) else i
   jval <- if (is.null(j)) seq_len(meta(x, "ncols")) else j
 
+  # Unlike other formats, Markdown inserts `group_tt()` row labels after styling. This aligns the `i` index to the full columns.
+  gr <- meta(x, "lazy_group")
+  gr <- Filter(function(k) !is.null(k$i), gr)
+  # do not style spanning row labels
+  lab_idx <- drop(unlist(lapply(gr, function(k) k$i)))
+  lab_idx <- lab_idx + cumsum(rep(1, length(lab_idx))) - 1
+  ival <- setdiff(ival, lab_idx) 
+  for (g in gr) {
+    for (lab in g$i) {
+      ival[ival > lab - 1] <- ival[ival > lab - 1] - 1
+    }
+    lab_idx <- c(lab_idx, g$i)
+  }
+
   for (col in seq_along(out)) {
     out[[col]] <- as.character(out[[col]])
   }
