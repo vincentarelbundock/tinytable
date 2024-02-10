@@ -562,11 +562,8 @@ tt(x)
 Spanning cells can be particularly useful when we want to suppress redundant labels:
 
 ```{r}
-library(dplyr)
-
-tab <- mtcars |>
-    summarize(mpg = mean(mpg), .by = c("cyl", "am")) |>
-    arrange(cyl, am)
+tab <- aggregate(mpg ~ cyl + am, FUN = mean, data = mtcars)
+tab <- tab[order(tab$cyl, tab$am),]
 tab
 
 tt(tab, digits = 2) |>
@@ -829,7 +826,9 @@ We can insert arbitrarily complex plots by customizing the `ggplot2` call:
 ```{r}
 #| message: false
 #| warning: false
-library(palmerpenguins)
+penguins <- read.csv(
+  "https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv",
+  na.strings = "") |> na.omit()
 
 # split data by species
 dat <- split(penguins, penguins$species)
@@ -861,7 +860,7 @@ tt(tab) |>
   plot_tt(j = 2, fun = "histogram", data = body, height = 2) |>
   plot_tt(j = 3, fun = "density", data = flip, height = 2) |>
   plot_tt(j = 4, fun = f, data = dat, height = 2) |>
-  style_tt(j = 2:4, align = "c")
+  style_tt(j = 2:4, align = "c") 
 ```
 
 
