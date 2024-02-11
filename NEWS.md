@@ -1,6 +1,6 @@
 # News
 
-## Development
+## 0.0.4
 
 New:
 
@@ -15,6 +15,7 @@ Bugfix:
 
 - Markdown group columns when labels are wider than columns. Thanks to @etiennebacher for report #127.
 - Markdown group rows broke indexing when using `style_tt()`. Thanks to @strengejacke for report #133.
+
 
 ## 0.0.3
 
