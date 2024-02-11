@@ -215,6 +215,8 @@ format_tt_lazy <- function(x,
       o <- "latex"
     } else if (isTRUE(escape == "html")) {
       o <- "html"
+    } else if (isTRUE(escape == "typst")) {
+      o <- "typst"
     } else {
       o <- meta(out)$output
     }

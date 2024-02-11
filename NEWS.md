@@ -1,5 +1,9 @@
 # News
 
+## Development
+
+* `format_tt()` escapes <> tags in Typst.
+
 ## 0.0.4
 
 New:

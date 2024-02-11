@@ -30,8 +30,13 @@ escape_text <- function(x, output = "latex") {
             latex_special_chars[x]
         })
         regmatches(out[!na_out], m) <- escaped_chars
+
     } else if (isTRUE(output == "html")) {
         out <- htmlEscape(out)
+
+    } else if (isTRUE(output == "typst")) {
+        out <- gsub("<", "\\<", out, fixed = TRUE)
+        out <- gsub(">", "\\>", out, fixed = TRUE)
     }
 
     return(out)
