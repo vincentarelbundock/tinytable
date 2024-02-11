@@ -154,26 +154,6 @@ tt(x, notes = list(
 )
 ```
 
-## Line breaks and text wrapping
-
-When the `width` argument is specified and a cell includes long text, the text is automatically wrapped to match the table.
-
-```{r}
-#| tbl-cap: "A full width table with wrapped text."
-tt(lorem, width = 3/4)
-```
-
-Manual line breaks work sligthly different in LaTeX (PDF) or HTML. This table shows the two strategies. For HTML, we insert a `<br>` tag. For LaTeX, we wrap the string in curly braces `{}`, and then insert two (escaped) backslashes: `\\\\`
-
-```{r}
-d <- data.frame(
-  "{Sed ut \\\\ perspiciatis unde}",
-  "dicta sunt<br> explicabo. Nemo"
-) |> setNames(c("LaTeX line break", "HTML line break"))
-tt(d, width = 1)
-```
-
-
 ## Math
 
 To insert LaTeX-style mathematical expressions in a `tinytable`, we enclose the expression in dollar signs: `$...$`. The expression will then rendered as a mathematical expression by MathJax (for HTML), LaTeX, or Pandoc. Do not forget to double escape any backslashes.
