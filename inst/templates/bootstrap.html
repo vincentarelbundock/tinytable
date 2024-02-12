@@ -41,6 +41,15 @@
         var table = document.getElementById("$tinytable_TABLE_ID");
         table.rows[i].cells[j].classList.add(css_id);
       }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('$tinytable_TABLE_ID');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
       function spanCell(i, j, rowspan, colspan) {
         var table = document.getElementById("$tinytable_TABLE_ID");
         const targetRow = table.rows[i];
