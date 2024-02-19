@@ -1,5 +1,9 @@
 # News
 
+## Development
+
+* `format_tt()` gains an `i` argument to format subsets of rows.
+
 ## 0.0.5
 
 * `format_tt()` escapes <> tags in Typst.

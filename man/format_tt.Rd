@@ -6,6 +6,7 @@
 \usage{
 format_tt(
   x,
+  i = NULL,
   j = NULL,
   digits = getOption("digits"),
   num_fmt = "significant",
@@ -24,6 +25,8 @@ format_tt(
 }
 \arguments{
 \item{x}{A data frame or a vector to be formatted.}
+
+\item{i}{Row indices where the styling should be applied. Can be a single value or a vector. \code{i=0} is the header, and negative values are higher level headers. If \code{colspan} is used, \code{i} must be of length 1.}
 
 \item{j}{Column indices where the styling should be applied. Can be:
 \itemize{

@@ -34,6 +34,7 @@
 #'  num_mark_big = " ")
 #'
 format_tt <- function(x,
+                      i = NULL,
                       j = NULL,
                       digits = getOption("digits"),
                       num_fmt = "significant",
@@ -54,6 +55,7 @@ format_tt <- function(x,
 
   if (inherits(out, "tinytable")) {
     cal <- call("format_tt_lazy", 
+                i = i,
                 j = j,
                 digits = digits,
                 num_fmt = num_fmt,
@@ -73,6 +75,7 @@ format_tt <- function(x,
   } else {
 
     out <- format_tt_lazy(out,
+                          i = i,
                           j = j,
                           digits = digits,
                           num_fmt = num_fmt,
@@ -93,6 +96,7 @@ format_tt <- function(x,
 }
 
 format_tt_lazy <- function(x,
+                           i = NULL,
                            j = NULL,
                            digits,
                            num_fmt = "significant",
@@ -118,7 +122,13 @@ format_tt_lazy <- function(x,
     atomic_vector <- FALSE
   }
 
-  out <- x
+  # if no other format_tt() call has been applied, we can have numeric values
+  ori <- meta(x, "x_original")
+  if (!all(sapply(x, is.character))) {
+    out <- meta(x, "x_character")
+  } else {
+    out <- x
+  }
 
   if (!inherits(x, "data.frame")) {
     msg <- "`x` must be a data frame or an atomic vector."
@@ -127,6 +137,7 @@ format_tt_lazy <- function(x,
 
   assert_data_frame(x)
   assert_integerish(digits, len = 1)
+  assert_integerish(i, null.ok = TRUE)
   assert_choice(num_fmt, c("significant", "decimal", "scientific"))
   assert_flag(num_zero)
   assert_string(num_mark_big)
@@ -143,71 +154,66 @@ format_tt_lazy <- function(x,
   # In sanity_tt(), we fill in missing NULL `j` in the format-specific versions,
   # because tabularray can do whole column styling. Here, we need to fill in
   # NULL for all formats since this is applied before creating the table.
+  if (is.null(i)) i <- seq_len(nrow(x))
   if (is.null(j)) j <- seq_len(ncol(x))
+
 
   # format each column
   for (col in j) {
     # sprintf() is self-contained
     if (!is.null(sprintf)) {
-      out[[col]] <- base::sprintf(sprintf, out[[col]])
-
+      out[i, col] <- base::sprintf(sprintf, ori[i, col])
     } else {
-
-      # logical 
-      if (is.logical(out[[col]])) {
-        out[[col]] <- bool(out[[col]])
+      # logical
+      if (is.logical(ori[i, col])) {
+        out[i, col] <- bool(ori[i, col])
 
         # date
-      } else if (inherits(out[[col]], "Date")) {
-        out[[col]] <- format(out[[col]], date)
+      } else if (inherits(ori[i, col], "Date")) {
+        out[i, col] <- format(ori[i, col], date)
 
         # numeric
-      } else if (is.numeric(out[[col]]) && !is.null(digits)) {
-
+      } else if (is.numeric(ori[i, col]) && !is.null(digits)) {
         # numeric suffix
         if (isTRUE(num_suffix)) {
-          out[[col]] <- format_num_suffix(out[[col]], digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero)
+          out[i, col] <- format_num_suffix(ori[i, col], digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero)
 
           # non-integer numeric
-        } else if (is.numeric(out[[col]]) && !isTRUE(check_integerish(out[[col]]))) {
+        } else if (is.numeric(ori[i, col]) && !isTRUE(check_integerish(ori[i, col]))) {
           if (num_fmt == "significant") {
-            out[[col]] <- format(out[[col]],
-                               digits = digits, drop0trailing = !num_zero,
-                               big.mark = num_mark_big, decimal.mark = num_mark_dec,
-                               scientific = FALSE)
-
+            out[i, col] <- format(ori[i, col],
+              digits = digits, drop0trailing = !num_zero,
+              big.mark = num_mark_big, decimal.mark = num_mark_dec,
+              scientific = FALSE)
           } else if (num_fmt == "decimal") {
-            out[[col]] <- formatC(out[[col]],
-                                digits = digits, format = "f", drop0trailing = !num_zero,
-                                big.mark = num_mark_big, decimal.mark = num_mark_dec)
+            out[i, col] <- formatC(ori[i, col],
+              digits = digits, format = "f", drop0trailing = !num_zero,
+              big.mark = num_mark_big, decimal.mark = num_mark_dec)
 
             if (num_fmt == "scientific") {
-              out[[col]] <- formatC(out[[col]],
-                                  digits = digits, format = "e", drop0trailing = !num_zero,
-                                  big.mark = num_mark_big, decimal.mark = num_mark_dec)
+              out[i, col] <- formatC(ori[i, col],
+                digits = digits, format = "e", drop0trailing = !num_zero,
+                big.mark = num_mark_big, decimal.mark = num_mark_dec)
             }
           }
 
           # integer
-        } else if (isTRUE(check_integerish(out[[col]]))) {
+        } else if (isTRUE(check_integerish(ori[i, col]))) {
           if (num_fmt == "scientific") {
-            out[[col]] <- formatC(out[[col]],
-                                digits = digits, format = "e", drop0trailing = !num_zero,
-                                big.mark = num_mark_big, decimal.mark = num_mark_dec)
+            out[i, col] <- formatC(ori[i, col],
+              digits = digits, format = "e", drop0trailing = !num_zero,
+              big.mark = num_mark_big, decimal.mark = num_mark_dec)
           }
         }
-
       } else {
-        out[[col]] <- other(out[[col]])
+        out[i, col] <- other(ori[i, col])
       }
-
     }
 
     # replace missing values by `na`
-    out[, col] <- as.character(out[, col])
-    out[is.na(x[, col]), col] <- replace_na
-
+    out[i, col][is.na(ori[i, col])] <- replace_na
   } # loop over columns
+
 
   # escape latex characters
   if (!isFALSE(escape)) {
@@ -225,7 +231,7 @@ format_tt_lazy <- function(x,
       colnames(out) <- escape_text(colnames(out), output = o)
     }
     for (col in j) {
-      out[[col]] <- escape_text(out[[col]], output = o)
+      out[i, col] <- escape_text(out[i, col], output = o)
     }
   }
 
@@ -234,16 +240,19 @@ format_tt_lazy <- function(x,
     assert_dependency("markdown")
     for (col in j) {
       if (isTRUE(meta(out)$output == "html")) {
-        fun <- function(out) {
-          out <- trimws(markdown::mark_html(text = out, template = FALSE))
-          out <- sub("<p>", "", out, fixed = TRUE)
-          out <- sub("</p>", "", out, fixed = TRUE)
-          return(out)
+        fun <- function(x, i) {
+          x[i] <- trimws(markdown::mark_html(text = x[i], template = FALSE))
+          x[i] <- sub("<p>", "", x[i], fixed = TRUE)
+          x[i] <- sub("</p>", "", x[i], fixed = TRUE)
+          return(x)
         }
-        out[, col] <- sapply(out[, col], fun)
+        out[, col] <- sapply(out[, col], function(x) fun(x, i))
       } else if (isTRUE(meta(out)$output == "latex")) {
-        fun <- function(out) trimws(markdown::mark_latex(text = out, template = FALSE))
-        out[, col] <- sapply(out[, col], fun)
+        fun <- function(x, i) {
+          x[i] <- trimws(markdown::mark_latex(text = x[i], template = FALSE))
+          return(x)
+        }
+        out[, col] <- sapply(out[, col], function(x) fun(x, i))
       }
     }
   }
