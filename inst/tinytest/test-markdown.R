@@ -54,6 +54,25 @@ tab <- tt(mtcars[1:8, 1:3]) |>
   style_tt(i = 8, bold = TRUE)
 expect_snapshot_print(tab, label = "markdown-group_i_style_tt")
 
+# Striped theme
+x <- mtcars[1:4, 1:5]
+x<-tt(x, theme = "striped")
+expect_snapshot_print(x, label = "markdown-striped")
+
+# Grid theme
+x <- mtcars[1:4, 1:5]
+x<-tt(x, theme = "grid")
+expect_snapshot_print(x, label = "markdown-grid")
+
+# Boostrap theme
+x <- mtcars[1:4, 1:5]
+x<-tt(x, theme = "bootstrap")
+expect_snapshot_print(x, label = "markdown-boostrap")
+
+# Void theme
+x <- mtcars[1:4, 1:5]
+x<-tt(x, theme = "void")
+expect_snapshot_print(x, label = "markdown-void")
 
 
 
