@@ -11,10 +11,10 @@ build_tt <- function(x, output = NULL) {
   out <- meta(out, "output", output)
 
   # strip ANSI from `tibble`/`pillar`
-  if (isTRUE(check_dependency("tibble")) && isTRUE(check_dependency("fansi"))) {
+  if (isTRUE(check_dependency("fansi"))) {
     for (col in seq_along(out)) {
       if (isTRUE(output == "html")) {
-        out[[col]] <- as.character(fansi::to_html(out[[col]]))
+        out[[col]] <- as.character(fansi::to_html(out[[col]], warn = FALSE))
       } else {
         out[[col]] <- as.character(fansi::strip_ctl(out[[col]]))
       }
@@ -24,7 +24,6 @@ build_tt <- function(x, output = NULL) {
   # format data before drawing the table
   for (l in m$lazy_format) {
     tmp <- out
-    # class(tmp) <- "data.frame"
     l[["x"]] <- tmp
     out <- eval(l)
   }
