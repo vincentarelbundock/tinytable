@@ -3,6 +3,7 @@
 ## Development
 
 * `format_tt()` gains an `i` argument to format subsets of rows.
+* ANSI characters (ex: fancy `tibble` or `pillar` formatting) are stripped automatically or converted to HTML when the `fansi` package is installed. `fansi` is a dependency of `tibble`, so it should often be installed.
 
 ## 0.0.5
 
