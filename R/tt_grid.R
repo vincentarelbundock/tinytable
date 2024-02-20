@@ -50,8 +50,6 @@ tt_grid <- function(x, col_widths = NULL, ...) {
     tab[[j]] <- paste0(tab[[j]], pad)
   }
 
-  browser()
-
   rule_head <- grid_line(col_widths, "=")
   rule_line <- grid_line(col_widths, "-")
 
