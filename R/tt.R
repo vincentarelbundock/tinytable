@@ -72,7 +72,6 @@ tt <- function(x,
   # baseline character format
   # twice because format() leaves Date type, which cannot be partially reasigned with indexed format_tt(i)
   out <- data.frame(lapply(out, format))
-  # out <- data.frame(lapply(out, as.character))
   colnames(out) <- colnames(x)
 
   out <- meta(out, "x_character", out)
