@@ -224,7 +224,7 @@ format_tt_lazy <- function(x,
     } else if (isTRUE(escape == "typst")) {
       o <- "typst"
     } else {
-      o <- meta(out)$output
+      o <- meta(x)$output
     }
     # if j includes all columns, the user wants to escape the full table, including the column headers
     if (jnull) {
@@ -239,7 +239,7 @@ format_tt_lazy <- function(x,
   if (isTRUE(markdown)) {
     assert_dependency("markdown")
     for (col in j) {
-      if (isTRUE(meta(out)$output == "html")) {
+      if (isTRUE(meta(x)$output == "html")) {
         fun <- function(x, i) {
           x[i] <- trimws(markdown::mark_html(text = x[i], template = FALSE))
           x[i] <- sub("<p>", "", x[i], fixed = TRUE)
@@ -247,7 +247,7 @@ format_tt_lazy <- function(x,
           return(x)
         }
         out[, col] <- sapply(out[, col], function(x) fun(x, i))
-      } else if (isTRUE(meta(out)$output == "latex")) {
+      } else if (isTRUE(meta(x)$output == "latex")) {
         fun <- function(x, i) {
           x[i] <- trimws(markdown::mark_latex(text = x[i], template = FALSE))
           return(x)
@@ -260,6 +260,7 @@ format_tt_lazy <- function(x,
   if (isTRUE(atomic_vector)) {
     return(out[[1]])
   } else {
+    attr(out, "tinytable_meta") <- meta(x)
     return(out)
   }
 
