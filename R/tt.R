@@ -68,7 +68,14 @@ tt <- function(x,
 
   # before style_tt() call for align
   out <- x 
-  out <- meta(out, "x_character", data.frame(lapply(x, format)))
+
+  # baseline character format
+  # twice because format() leaves Date type, which cannot be partially reasigned with indexed format_tt(i)
+  out <- data.frame(lapply(out, format))
+  # out <- data.frame(lapply(out, as.character))
+  colnames(out) <- colnames(x)
+
+  out <- meta(out, "x_character", out)
   out <- meta(out, "x_original", x) 
   out <- meta(out, "output", sanitize_output(output))
   out <- meta(out, "output_dir", getwd())

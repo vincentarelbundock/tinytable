@@ -13,7 +13,7 @@ build_tt <- function(x, output = NULL) {
   # format data before drawing the table
   for (l in m$lazy_format) {
     tmp <- out
-    class(tmp) <- "data.frame"
+    # class(tmp) <- "data.frame"
     l[["x"]] <- tmp
     out <- eval(l)
   }

@@ -52,6 +52,7 @@ format_tt <- function(x,
                       sprintf = NULL
                       ) {
 
+
   out <- x
 
   if (inherits(out, "tinytable")) {
@@ -119,6 +120,9 @@ format_tt_lazy <- function(x,
     atomic_vector <- TRUE
     ori <- out <- x <- data.frame(tinytable = x)
     j <- 1
+  } else if (!inherits(x, "tinytable") && is.data.frame(x)) {
+    atomic_vector <- FALSE
+    ori <- out <- x
   } else {
     atomic_vector <- FALSE
     # if no other format_tt() call has been applied, we can have numeric values
@@ -156,7 +160,6 @@ format_tt_lazy <- function(x,
   # NULL for all formats since this is applied before creating the table.
   if (is.null(i)) i <- seq_len(nrow(x))
   if (is.null(j)) j <- seq_len(ncol(x))
-
 
   # format each column
   for (col in j) {
@@ -262,6 +265,7 @@ format_tt_lazy <- function(x,
     return(out[[1]])
   } else {
     attr(out, "tinytable_meta") <- meta(x)
+    class(out) <- c("tinytable", "data.frame")
     return(out)
   }
 
