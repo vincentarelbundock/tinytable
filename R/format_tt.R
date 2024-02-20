@@ -117,18 +117,17 @@ format_tt_lazy <- function(x,
 
   if (isTRUE(check_atomic_vector(x))) {
     atomic_vector <- TRUE
-    x <- data.frame(tinytable = x)
+    ori <- out <- x <- data.frame(tinytable = x)
     j <- 1
   } else {
     atomic_vector <- FALSE
-  }
-
-  # if no other format_tt() call has been applied, we can have numeric values
-  ori <- meta(x, "x_original")
-  if (!all(sapply(x, is.character))) {
-    out <- meta(x, "x_character")
-  } else {
-    out <- x
+    # if no other format_tt() call has been applied, we can have numeric values
+    ori <- meta(x, "x_original")
+    if (!all(sapply(x, is.character))) {
+      out <- meta(x, "x_character")
+    } else {
+      out <- x
+    }
   }
 
   if (!inherits(x, "data.frame")) {
@@ -257,6 +256,7 @@ format_tt_lazy <- function(x,
       }
     }
   }
+
 
   if (isTRUE(atomic_vector)) {
     return(out[[1]])
