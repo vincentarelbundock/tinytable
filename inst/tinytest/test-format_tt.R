@@ -50,7 +50,6 @@ expect_snapshot_print(
 
 
 # bug: duplicated columns with markdown html
-options(tinytable_print_output = "html")
 dat <- data.frame( markdown = c(
   "This is _italic_ text.",
   "This sentence ends with a superscript.^2^")
@@ -58,8 +57,7 @@ dat <- data.frame( markdown = c(
 tab <- tt(dat) |>
   format_tt(j = 1, markdown = TRUE) |>
   style_tt(j = 1, align = "c")
-expect_equal_to_reference(clean_html(tab), "_tinysnapshot/format_tt-vignette_html_markdown.rds")
-options(tinytable_print_output = NULL)
+expect_snapshot_print(print_html(tab), "format_tt-vignette_html_markdown")
 
 
 
