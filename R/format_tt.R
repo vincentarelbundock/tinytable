@@ -5,6 +5,7 @@
 #' It also includes custom formatting for date and boolean values.
 #'
 #' @param x A data frame or a vector to be formatted.
+#' @param i Row indices where the formatting should be applied.
 #' @param digits Number of significant digits or decimal places.
 #' @param num_fmt The format for numeric values; one of 'significant', 'decimal', or 'scientific'.
 #' @param num_zero Logical; if TRUE, trailing zeros are kept in "decimal" format (but not in "significant" format).
