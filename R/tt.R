@@ -68,7 +68,7 @@ tt <- function(x,
 
   # before style_tt() call for align
   out <- x 
-  out <- meta(out, "x_character", data.frame(lapply(x, as.character)))
+  out <- meta(out, "x_character", data.frame(lapply(x, format)))
   out <- meta(out, "x_original", x) 
   out <- meta(out, "output", sanitize_output(output))
   out <- meta(out, "output_dir", getwd())
