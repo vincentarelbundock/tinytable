@@ -28,7 +28,7 @@ tt_grid <- function(x, col_widths = NULL, ...) {
 
   if (is.null(col_widths)) {
     for (j in 1:ncol(x)) {
-      col_widths[j] <- max(nchar(tab[, j]))
+      col_widths[j] <- max(nchar(tab[[j]]))
     }
   }
 
@@ -44,11 +44,13 @@ tt_grid <- function(x, col_widths = NULL, ...) {
   }
 
   for (j in 1:ncol(x)) {
-    nc <- nchar(tab[, j])
+    nc <- nchar(tab[[j]])
     pad <- col_widths[j] - nc
     pad <- sapply(pad, function(k) strrep(" ", k))
-    tab[, j] <- paste0(tab[, j], pad)
+    tab[[j]] <- paste0(tab[[j]], pad)
   }
+
+  browser()
 
   rule_head <- grid_line(col_widths, "=")
   rule_line <- grid_line(col_widths, "-")
