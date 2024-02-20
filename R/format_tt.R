@@ -243,19 +243,19 @@ format_tt_lazy <- function(x,
     assert_dependency("markdown")
     for (col in j) {
       if (isTRUE(meta(x)$output == "html")) {
-        fun <- function(x, i) {
-          x[i] <- trimws(markdown::mark_html(text = x[i], template = FALSE))
-          x[i] <- sub("<p>", "", x[i], fixed = TRUE)
-          x[i] <- sub("</p>", "", x[i], fixed = TRUE)
-          return(x)
+        fun <- function(k) {
+          k <- trimws(markdown::mark_html(text = k, template = FALSE))
+          k <- sub("<p>", "", k, fixed = TRUE)
+          k <- sub("</p>", "", k, fixed = TRUE)
+          return(k)
         }
-        out[, col] <- sapply(out[, col], function(x) fun(x, i))
+        out[i, col] <- sapply(out[i, col], function(k) fun(k))
       } else if (isTRUE(meta(x)$output == "latex")) {
-        fun <- function(x, i) {
-          x[i] <- trimws(markdown::mark_latex(text = x[i], template = FALSE))
-          return(x)
+        fun <- function(k) {
+          k <- trimws(markdown::mark_latex(text = k, template = FALSE))
+          return(k)
         }
-        out[, col] <- sapply(out[, col], function(x) fun(x, i))
+        out[i, col] <- sapply(out[i, col], function(k) fun(k))
       }
     }
   }
@@ -263,6 +263,8 @@ format_tt_lazy <- function(x,
 
   if (isTRUE(atomic_vector)) {
     return(out[[1]])
+  } else if (!inherits(out, "tinytable")) {
+    return(out)
   } else {
     attr(out, "tinytable_meta") <- meta(x)
     class(out) <- c("tinytable", "data.frame")

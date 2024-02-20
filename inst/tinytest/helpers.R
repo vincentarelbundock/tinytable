@@ -23,3 +23,4 @@ clean_html <- function(x) {
   x <- gsub("styleHeaderCell_\\w+\\b", "tinytable", x)
   x
 }
+clean <- clean_html

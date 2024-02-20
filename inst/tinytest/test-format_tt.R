@@ -43,4 +43,24 @@ tab <- tt(dat) |>
     num_fmt = "decimal")
 expect_snapshot_print(tab, label = "format_tt-vignette_misc")
 
-options(tinytable_print_output = "markdown")
+expect_snapshot_print(
+  format_tt(dat, digits = 1, num_suffix = TRUE),
+  label = "format_tt-dataframe")
+
+
+
+# bug: duplicated columns with markdown html
+options(tinytable_print_output = "html")
+dat <- data.frame( markdown = c(
+  "This is _italic_ text.",
+  "This sentence ends with a superscript.^2^")
+)
+tab <- tt(dat) |>
+  format_tt(j = 1, markdown = TRUE) |>
+  style_tt(j = 1, align = "c")
+expect_equal_to_reference(clean_html(tab), "_tinysnapshot/format_tt-vignette_html_markdown.rds")
+options(tinytable_print_output = NULL)
+
+
+
+options(tinytable_print_output = NULL)
