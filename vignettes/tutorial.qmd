@@ -417,6 +417,36 @@ dat <- data.frame(
 tt(dat) |> format_tt(j = 1, markdown = TRUE)
 ```
 
+## Custom functions
+
+On top of the built-in features of `format_tt`, a custom formatting function can be specified via the `fn` argument. The `fn` argument takes a function that accepts a single vector and returns a string (or something that coerces to a string like a number).  
+
+```{r}
+tt(x) |> 
+  format_tt(j = "mpg", fn = function(x) paste0(x, " mpg")) |>
+  format_tt(j = "drat", fn = \(x) signif(x, 2))
+```
+
+For example, the [`scales` package](https://scales.r-lib.org/index.html) which is used internally by `ggplot2` provides a bunch of useful tools for formatting (e.g. dates, numbers, percents, logs, currencies, etc.). The `label_*()` functions can be passed to the `fn` argument.
+
+```{r}
+# Fake data
+thumbdrives <- data.frame(
+  date_lookup = as.Date(c("2024-01-15", "2024-01-18", "2024-01-14", "2024-01-16")),
+  price = c(18.49, 19.99, 24.99, 24.99),
+  price_rank = c(1, 2, 3, 3),
+  memory = c(16e9, 12e9, 10e9, 8e9),
+  speed_benchmark = c(0.6, 0.73, 0.82, 0.99)
+)
+
+tt(thumbdrives) |>
+  format_tt(j = 1, fn = scales::label_date("%e %b", locale = "fr")) |>
+  format_tt(j = 2, fn = scales::label_currency()) |>
+  format_tt(j = 3, fn = scales::label_ordinal()) |> 
+  format_tt(j = 4, fn = scales::label_bytes()) |> 
+  format_tt(j = 5, fn = scales::label_percent()) 
+```
+
 
 # Style
 
