@@ -62,6 +62,8 @@ tt <- function(x,
   assert_integerish(digits, len = 1, null.ok = TRUE)
   assert_choice(theme, c("default", "grid", "void", "striped", "bootstrap"))
 
+  # tibbles are annoying
+  if (inherits(x, "tbl_df")) x <- as.data.frame(x, check.names = FALSE)
   
   # notes can be a single string or a (named) list of strings
   sanity_notes(notes)
