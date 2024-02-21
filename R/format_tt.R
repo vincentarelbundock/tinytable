@@ -231,6 +231,13 @@ format_tt_lazy <- function(x,
     out[i, col][is.na(ori[i, col])] <- replace_na
   } # loop over columns
 
+  # Custom functions overwrite all the other formatting, but is before markdown
+  # before escaping
+  if (is.function(fn)) {
+    for (col in j) {
+      out[i, col] <- fn(ori[i, col])
+    }
+  }
 
   # escape latex characters
   if (!isFALSE(escape)) {
@@ -252,12 +259,6 @@ format_tt_lazy <- function(x,
     }
   }
 
-  # Custom functions overwrite all the other formatting, but is before markdown
-  if (is.function(fn)) {
-    for (col in j) {
-      out[i, col] <- fn(ori[i, col])
-    }
-  }
 
   # markdown at the very end
   if (isTRUE(markdown)) {
