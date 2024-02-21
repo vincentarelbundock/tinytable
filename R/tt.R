@@ -76,7 +76,6 @@ tt <- function(x,
   out <- data.frame(lapply(out, format))
   colnames(out) <- colnames(x)
 
-  out <- meta(out, "x_character", out)
   out <- meta(out, "x_original", x) 
   out <- meta(out, "output", sanitize_output(output))
   out <- meta(out, "output_dir", getwd())

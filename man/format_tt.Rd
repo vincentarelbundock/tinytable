@@ -8,7 +8,7 @@ format_tt(
   x,
   i = NULL,
   j = NULL,
-  digits = getOption("tinytable_format_digits", default = getOption("digits")),
+  digits = getOption("tinytable_format_digits", default = NULL),
   num_fmt = getOption("tinytable_format_num_fmt", default = "significant"),
   num_zero = getOption("tinytable_format_num_zero", default = TRUE),
   num_suffix = getOption("tinytable_format_num_suffix", default = FALSE),

@@ -74,4 +74,24 @@ tab <- tt(k) |> format_tt(digits = 2, num_fmt = "significant_cell")
 expect_snapshot_print(tab, "format_tt-issue142_02")
 
 
+# Issue #147: format_tt(escape = TRUE) zaps previous formattinglibrary(tinytable)
+options(tinytable_print_output = "latex")
+x <- data.frame(num = c(pi, pi), char = c("10$", "blah_blah"))
+tab <- tt(x) |>
+  format_tt(i = 1, j = 1, digits = 2) |>
+  format_tt(i = 1, j = 1, digits = 3) # overwrite
+expect_snapshot_print(tab, "format_tt-issue147_01")
+tab <- tt(x) |>
+  format_tt(i = 1, j = 1, digits = 2) |>
+  format_tt(i = 2, j = 1, digits = 3) # different cell
+expect_snapshot_print(tab, "format_tt-issue147_02")
+tab <- tt(x) |>
+  format_tt(i = 1, j = 1, digits = 2) |>
+  format_tt(i = 2, j = 1, digits = 3) |>
+  format_tt(escape = TRUE) # do not zap
+expect_snapshot_print(tab, "format_tt-issue147_03")
+options(tinytable_print_output = NULL)
+
+
+
 options(tinytable_print_output = NULL)

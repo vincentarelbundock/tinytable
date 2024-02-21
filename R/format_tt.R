@@ -38,7 +38,7 @@
 format_tt <- function(x,
                       i = NULL,
                       j = NULL,
-                      digits = getOption("tinytable_format_digits", default = getOption("digits")),
+                      digits = getOption("tinytable_format_digits", default = NULL),
                       num_fmt = getOption("tinytable_format_num_fmt", default = "significant"),
                       num_zero = getOption("tinytable_format_num_zero", default = TRUE),
                       num_suffix = getOption("tinytable_format_num_suffix", default = FALSE),
@@ -132,11 +132,7 @@ format_tt_lazy <- function(x,
     atomic_vector <- FALSE
     # if no other format_tt() call has been applied, we can have numeric values
     ori <- meta(x, "x_original")
-    if (!all(sapply(x, is.character))) {
-      out <- meta(x, "x_character")
-    } else {
-      out <- x
-    }
+    out <- x
   }
 
   if (!inherits(x, "data.frame")) {
@@ -145,7 +141,7 @@ format_tt_lazy <- function(x,
   }
 
   assert_data_frame(x)
-  assert_integerish(digits, len = 1)
+  assert_integerish(digits, len = 1, null.ok = TRUE)
   assert_integerish(i, null.ok = TRUE)
   assert_choice(num_fmt, c("significant", "significant_cell", "decimal", "scientific"))
   assert_flag(num_zero)
@@ -177,18 +173,20 @@ format_tt_lazy <- function(x,
       if (is.logical(ori[i, col])) {
         out[i, col] <- bool(ori[i, col])
 
-        # date
+      # date
       } else if (inherits(ori[i, col], "Date")) {
         out[i, col] <- format(ori[i, col], date)
 
-        # numeric
-      } else if (is.numeric(ori[i, col]) && !is.null(digits)) {
+      # numeric
+      } else if (is.numeric(ori[i, col])) {
+        # digits check needs to be done here to avoid the other() formatting from ori, which zaps the original setting
+
         # numeric suffix
-        if (isTRUE(num_suffix)) {
+        if (isTRUE(num_suffix) && !is.null(digits)) {
           out[i, col] <- format_num_suffix(ori[i, col], digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero)
 
-          # non-integer numeric
-        } else if (is.numeric(ori[i, col]) && !isTRUE(check_integerish(ori[i, col]))) {
+        # non-integer numeric
+        } else if (is.numeric(ori[i, col]) && !isTRUE(check_integerish(ori[i, col])) && !is.null(digits)) {
           if (num_fmt == "significant") {
             out[i, col] <- format(ori[i, col],
               digits = digits, drop0trailing = !num_zero,
@@ -214,14 +212,15 @@ format_tt_lazy <- function(x,
             }
           }
 
-          # integer
-        } else if (isTRUE(check_integerish(ori[i, col]))) {
+        # integer
+        } else if (isTRUE(check_integerish(ori[i, col])) && !is.null(digits)) {
           if (num_fmt == "scientific") {
             out[i, col] <- formatC(ori[i, col],
               digits = digits, format = "e", drop0trailing = !num_zero,
               big.mark = num_mark_big, decimal.mark = num_mark_dec)
           }
         }
+        
       } else {
         out[i, col] <- other(ori[i, col])
       }
@@ -238,6 +237,7 @@ format_tt_lazy <- function(x,
       out[i, col] <- fn(ori[i, col])
     }
   }
+
 
   # escape latex characters
   if (!isFALSE(escape)) {
