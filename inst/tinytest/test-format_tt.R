@@ -66,4 +66,12 @@ tab <- tt(x) |> format_tt(fn = function(x) paste("Ya", x))
 expect_snapshot_print(tab, "format_tt-fn")
 
 
+# Issue #142
+k <- data.frame(x = c(0.000123456789, 12.4356789))
+tab <- tt(k, digits = 2)
+expect_snapshot_print(tab, "format_tt-issue142_01")
+tab <- tt(k) |> format_tt(digits = 2, num_fmt = "significant_cell")
+expect_snapshot_print(tab, "format_tt-issue142_02")
+
+
 options(tinytable_print_output = NULL)

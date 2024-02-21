@@ -304,6 +304,33 @@ format_tt(dat, digits = 1, num_suffix = TRUE)
 ```
 
 
+## Significant digits and decimals
+
+By default, `format_tt()` formats numbers to ensure that the smallest value in a vector (column) has at least a certain number of significant digits. For example,
+
+```{r}
+k <- data.frame(x = c(0.000123456789, 12.4356789))
+tt(k, digits = 2)
+```
+
+We can alter this behavior to ensure to apply the significant rounding digits on a per-cell basis using the `num_fmt` argument in `format_tt()`:
+
+```{r}
+tt(k) |> format_tt(digits = 2, num_fmt = "significant_cell")
+```
+
+The numeric formatting options in `format_tt()` can also be controlled using global options:
+
+```{r}
+options("tinytable_format_num_fmt" = "significant_cell")
+tt(k, digits = 2)
+```
+
+```{r, include = FALSE}
+options("tinytable_format_num_fmt" = NULL)
+```
+
+
 ## Missing values
 
 Missing values can be replaced by a custom string using the `replace_na` argument (default `""`):

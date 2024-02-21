@@ -2,9 +2,16 @@
 
 ## Development
 
-* `format_tt()` gains an `i` argument to format subsets of rows.
-* `format_tt()` gains a `fn` argument which accepts an arbitrary function to format table content.
-* ANSI characters (ex: fancy `tibble` or `pillar` formatting) are stripped automatically or converted to HTML when the `fansi` package is installed. `fansi` is a dependency of `tibble`, so it should often be installed.
+`format_tt()` improvements:
+
+* New `i` argument to format subsets of rows.
+* New `fn` argument which accepts an arbitrary function to format table content.
+* `num_fmt="significant_cell"` rounds significant digits on a cell-by-cell basis rather than for full columns (as is default in base R `format()`).
+* Numeric formatting options can be set via global options, defined in the function signature.
+
+Misc:
+
+* Improved support for `tibble`. ANSI characters (ex: fancy `pillar` formatting) are stripped automatically or converted to HTML when the `fansi` package is installed. `fansi` is a dependency of `tibble`, so it should often be installed.
 
 ## 0.0.5
 
