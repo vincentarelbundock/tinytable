@@ -60,5 +60,10 @@ tab <- tt(dat) |>
 expect_snapshot_print(print_html(tab), "format_tt-vignette_html_markdown")
 
 
+# custom formatting
+x <- mtcars[1:3, 1:3]
+tab <- tt(x) |> format_tt(fn = function(x) paste("Ya", x))
+expect_snapshot_print(tab, "format_tt-fn")
+
 
 options(tinytable_print_output = NULL)

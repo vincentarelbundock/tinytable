@@ -18,6 +18,7 @@
 #' @param replace_na String to display for missing values.
 #' @param escape Logical or String; if TRUE, escape special characters to display them as text in the format of the output of a `tt()` table. If `format_tt()` is called as a standalone function instead of on a `tt()` table, the `escape` argument accepts strings to specify the escaping method: "latex" or "html".
 #' @param markdown Logical; if TRUE, render markdown syntax in cells. Ex: `_italicized text_` is properly italicized in HTML and LaTeX.
+#' @param fn Function for custom formatting. Accepts a vector and returns a character vector of the same length.
 #' @param sprintf String passed to the `?sprintf` function to format numbers or interpolate strings with a user-defined pattern (similar to the `glue` package, but using Base R).
 #' @inheritParams tt
 #' @inheritParams style_tt
@@ -49,6 +50,7 @@ format_tt <- function(x,
                       replace_na = "",
                       escape = FALSE,
                       markdown = FALSE,
+                      fn = NULL,
                       sprintf = NULL
                       ) {
 
@@ -66,6 +68,7 @@ format_tt <- function(x,
                 num_mark_big = num_mark_big,
                 num_mark_dec = num_mark_dec,
                 replace_na = replace_na,
+                fn = fn,
                 sprintf = sprintf,
                 url = url,
                 date = date,
@@ -86,6 +89,7 @@ format_tt <- function(x,
                           num_mark_big = num_mark_big,
                           num_mark_dec = num_mark_dec,
                           replace_na = replace_na,
+                          fn = fn,
                           sprintf = sprintf,
                           url = url,
                           date = date,
@@ -107,6 +111,7 @@ format_tt_lazy <- function(x,
                            num_mark_big = "",
                            num_mark_dec = NULL,
                            replace_na = "",
+                           fn = NULL,
                            sprintf = NULL,
                            url = FALSE,
                            date = "%Y-%m-%d",
@@ -150,6 +155,7 @@ format_tt_lazy <- function(x,
   assert_string(date)
   assert_function(bool)
   assert_function(identity)
+  assert_function(fn, null.ok = TRUE)
   assert_string(sprintf, null.ok = TRUE)
   assert_flag(markdown)
   if (is.null(j)) jnull <- TRUE else jnull <- FALSE
@@ -235,6 +241,13 @@ format_tt_lazy <- function(x,
     }
     for (col in j) {
       out[i, col] <- escape_text(out[i, col], output = o)
+    }
+  }
+
+  # Custom functions overwrite all the other formatting, but is before markdown
+  if (is.function(fn)) {
+    for (col in j) {
+      out[i, col] <- fn(ori[i, col])
     }
   }
 

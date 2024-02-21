@@ -20,6 +20,7 @@ format_tt(
   replace_na = "",
   escape = FALSE,
   markdown = FALSE,
+  fn = NULL,
   sprintf = NULL
 )
 }
@@ -58,6 +59,8 @@ format_tt(
 \item{escape}{Logical or String; if TRUE, escape special characters to display them as text in the format of the output of a \code{tt()} table. If \code{format_tt()} is called as a standalone function instead of on a \code{tt()} table, the \code{escape} argument accepts strings to specify the escaping method: "latex" or "html".}
 
 \item{markdown}{Logical; if TRUE, render markdown syntax in cells. Ex: \verb{_italicized text_} is properly italicized in HTML and LaTeX.}
+
+\item{fn}{Function for custom formatting. Accepts a vector and returns a character vector of the same length.}
 
 \item{sprintf}{String passed to the \code{?sprintf} function to format numbers or interpolate strings with a user-defined pattern (similar to the \code{glue} package, but using Base R).}
 }
