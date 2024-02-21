@@ -3,6 +3,7 @@
 #' This function formats the columns of a data frame based on the column type (logical, date, numeric). 
 #' It allows various formatting options like significant digits, decimal points, and scientific notation.
 #' It also includes custom formatting for date and boolean values.
+#' If this function is applied several times to the same cell, the last transformation is retained and the previous calls are ignored, except for the `escape` argument which can be applied to previously transformed data.
 #'
 #' @param x A data frame or a vector to be formatted.
 #' @param i Row indices where the formatting should be applied.
