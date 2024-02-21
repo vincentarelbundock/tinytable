@@ -8,12 +8,13 @@ format_tt(
   x,
   i = NULL,
   j = NULL,
-  digits = getOption("digits"),
-  num_fmt = "significant",
-  num_zero = TRUE,
-  num_suffix = FALSE,
-  num_mark_big = "",
-  num_mark_dec = getOption("OutDec", default = "."),
+  digits = getOption("tinytable_format_digits", default = getOption("digits")),
+  num_fmt = getOption("tinytable_format_num_fmt", default = "significant"),
+  num_zero = getOption("tinytable_format_num_zero", default = TRUE),
+  num_suffix = getOption("tinytable_format_num_suffix", default = FALSE),
+  num_mark_big = getOption("tinytable_format_num_mark_big", default = ""),
+  num_mark_dec = getOption("tinytable_format_num_mark_dec", default = getOption("OutDec",
+    default = ".")),
   date = "\%Y-\%m-\%d",
   bool = function(column) tools::toTitleCase(tolower(column)),
   other = as.character,
@@ -38,7 +39,7 @@ format_tt(
 
 \item{digits}{Number of significant digits or decimal places.}
 
-\item{num_fmt}{The format for numeric values; one of 'significant', 'decimal', or 'scientific'.}
+\item{num_fmt}{The format for numeric values; one of 'significant', 'significant_cell', 'decimal', or 'scientific'.}
 
 \item{num_zero}{Logical; if TRUE, trailing zeros are kept in "decimal" format (but not in "significant" format).}
 

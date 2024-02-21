@@ -7,7 +7,7 @@
 #' @param x A data frame or a vector to be formatted.
 #' @param i Row indices where the formatting should be applied.
 #' @param digits Number of significant digits or decimal places.
-#' @param num_fmt The format for numeric values; one of 'significant', 'decimal', or 'scientific'.
+#' @param num_fmt The format for numeric values; one of 'significant', 'significant_cell', 'decimal', or 'scientific'.
 #' @param num_zero Logical; if TRUE, trailing zeros are kept in "decimal" format (but not in "significant" format).
 #' @param num_mark_big Character to use as a thousands separator.
 #' @param num_mark_dec Decimal mark character. Default is the global option 'OutDec'.
@@ -38,12 +38,12 @@
 format_tt <- function(x,
                       i = NULL,
                       j = NULL,
-                      digits = getOption("digits"),
-                      num_fmt = "significant",
-                      num_zero = TRUE,
-                      num_suffix = FALSE,
-                      num_mark_big = "",
-                      num_mark_dec = getOption("OutDec", default = "."),
+                      digits = getOption("tinytable_format_digits", default = getOption("digits")),
+                      num_fmt = getOption("tinytable_format_num_fmt", default = "significant"),
+                      num_zero = getOption("tinytable_format_num_zero", default = TRUE),
+                      num_suffix = getOption("tinytable_format_num_suffix", default = FALSE),
+                      num_mark_big = getOption("tinytable_format_num_mark_big", default = ""),
+                      num_mark_dec = getOption("tinytable_format_num_mark_dec", default = getOption("OutDec", default = ".")),
                       date = "%Y-%m-%d",
                       bool = function(column) tools::toTitleCase(tolower(column)),
                       other = as.character,
@@ -147,7 +147,7 @@ format_tt_lazy <- function(x,
   assert_data_frame(x)
   assert_integerish(digits, len = 1)
   assert_integerish(i, null.ok = TRUE)
-  assert_choice(num_fmt, c("significant", "decimal", "scientific"))
+  assert_choice(num_fmt, c("significant", "significant_cell", "decimal", "scientific"))
   assert_flag(num_zero)
   assert_string(num_mark_big)
   assert_string(num_mark_dec)
@@ -194,6 +194,14 @@ format_tt_lazy <- function(x,
               digits = digits, drop0trailing = !num_zero,
               big.mark = num_mark_big, decimal.mark = num_mark_dec,
               scientific = FALSE)
+          } else if (num_fmt == "significant_cell") {
+            zzz <- function(z) {
+              format(z,
+                digits = digits, drop0trailing = !num_zero,
+                big.mark = num_mark_big, decimal.mark = num_mark_dec,
+                scientific = FALSE)
+            }
+            out[i, col] <- sapply(ori[i, col], zzz)
           } else if (num_fmt == "decimal") {
             out[i, col] <- formatC(ori[i, col],
               digits = digits, format = "f", drop0trailing = !num_zero,
