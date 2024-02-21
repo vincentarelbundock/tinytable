@@ -296,12 +296,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   x,
   i = NULL,
   j = NULL,
-  digits = getOption("digits"),
-  num_fmt = "significant",
-  num_zero = TRUE,
-  num_suffix = FALSE,
-  num_mark_big = "",
-  num_mark_dec = getOption("OutDec", default = "."),
+  digits = getOption("tinytable_format_digits", default = getOption("digits")),
+  num_fmt = getOption("tinytable_format_num_fmt", default = "significant"),
+  num_zero = getOption("tinytable_format_num_zero", default = TRUE),
+  num_suffix = getOption("tinytable_format_num_suffix", default = FALSE),
+  num_mark_big = getOption("tinytable_format_num_mark_big", default = ""),
+  num_mark_dec = getOption("tinytable_format_num_mark_dec", default = getOption("OutDec",
+    default = ".")),
   date = "%Y-%m-%d",
   bool = function(column) tools::toTitleCase(tolower(column)),
   other = as.character,
@@ -364,7 +365,7 @@ Number of significant digits or decimal places.
 <code id="format_tt_:_num_fmt">num_fmt</code>
 </td>
 <td>
-The format for numeric values; one of ‘significant’, ‘decimal’, or ‘scientific’.
+The format for numeric values; one of ‘significant’, ‘significant_cell’, ‘decimal’, or ‘scientific’.
 </td>
 </tr>
 <tr>
@@ -488,9 +489,9 @@ String passed to the <code>?sprintf</code> function to format numbers or interpo
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_d3c9nv562mm4xpjcldkv</title>
+    <title>tinytable_p59g7xvso0j4xwnsydm3</title>
     <style>
-.table td.tinytable_css_c2jqx4bngrpmqj6x6dbm, .table th.tinytable_css_c2jqx4bngrpmqj6x6dbm {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_o57ritso1u0ibg7k76jj, .table th.tinytable_css_o57ritso1u0ibg7k76jj {    border-bottom: solid 0.1em #d3d8dc; }
     </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -508,7 +509,7 @@ String passed to the <code>?sprintf</code> function to format numbers or interpo
 
   
     <div class="container">
-      <table class="table table-borderless" id="tinytable_d3c9nv562mm4xpjcldkv" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_p59g7xvso0j4xwnsydm3" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -523,24 +524,24 @@ String passed to the <code>?sprintf</code> function to format numbers or interpo
                   <td> 9 999</td>
                 </tr>
                 <tr>
-                  <td>10 001</td>
-                  <td>10 001</td>
+                  <td> 9 999</td>
+                  <td>10 000</td>
                 </tr>
                 <tr>
-                  <td>10 000</td>
                   <td>10 001</td>
+                  <td> 9 998</td>
                 </tr>
         </tbody>
       </table>
     </div>
 
     <script>
-      function styleCell_tinytable_mbin1yx0nezdqmii7fpr(i, j, css_id) {
-        var table = document.getElementById("tinytable_d3c9nv562mm4xpjcldkv");
+      function styleCell_tinytable_67wn5376seilc4pr844b(i, j, css_id) {
+        var table = document.getElementById("tinytable_p59g7xvso0j4xwnsydm3");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_d3c9nv562mm4xpjcldkv');
+        var table = document.getElementById('tinytable_p59g7xvso0j4xwnsydm3');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -548,8 +549,8 @@ String passed to the <code>?sprintf</code> function to format numbers or interpo
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_mbin1yx0nezdqmii7fpr(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_d3c9nv562mm4xpjcldkv");
+      function spanCell_tinytable_67wn5376seilc4pr844b(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_p59g7xvso0j4xwnsydm3");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -576,8 +577,8 @@ String passed to the <code>?sprintf</code> function to format numbers or interpo
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_mbin1yx0nezdqmii7fpr(0, 0, 'tinytable_css_c2jqx4bngrpmqj6x6dbm') })
-window.addEventListener('load', function () { styleCell_tinytable_mbin1yx0nezdqmii7fpr(0, 1, 'tinytable_css_c2jqx4bngrpmqj6x6dbm') })
+window.addEventListener('load', function () { styleCell_tinytable_67wn5376seilc4pr844b(0, 0, 'tinytable_css_o57ritso1u0ibg7k76jj') })
+window.addEventListener('load', function () { styleCell_tinytable_67wn5376seilc4pr844b(0, 1, 'tinytable_css_o57ritso1u0ibg7k76jj') })
     </script>
 
   

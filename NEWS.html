@@ -255,10 +255,16 @@ ul.task-list li input[type="checkbox"] {
 <h1>News</h1>
 <section id="development" class="level2">
 <h2 class="anchored" data-anchor-id="development">Development</h2>
+<p><code>format_tt()</code> improvements:</p>
 <ul>
-<li><code>format_tt()</code> gains an <code>i</code> argument to format subsets of rows.</li>
-<li><code>format_tt()</code> gains a <code>fn</code> argument which accepts an arbitrary function to format table content.</li>
-<li>ANSI characters (ex: fancy <code>tibble</code> or <code>pillar</code> formatting) are stripped automatically or converted to HTML when the <code>fansi</code> package is installed. <code>fansi</code> is a dependency of <code>tibble</code>, so it should often be installed.</li>
+<li>New <code>i</code> argument to format subsets of rows.</li>
+<li>New <code>fn</code> argument which accepts an arbitrary function to format table content.</li>
+<li><code>num_fmt="significant_cell"</code> rounds significant digits on a cell-by-cell basis rather than for full columns (as is default in base R <code>format()</code>).</li>
+<li>Numeric formatting options can be set via global options, defined in the function signature.</li>
+</ul>
+<p>Misc:</p>
+<ul>
+<li>Improved support for <code>tibble</code>. ANSI characters (ex: fancy <code>pillar</code> formatting) are stripped automatically or converted to HTML when the <code>fansi</code> package is installed. <code>fansi</code> is a dependency of <code>tibble</code>, so it should often be installed.</li>
 </ul>
 </section>
 <section id="section" class="level2">
