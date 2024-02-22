@@ -201,6 +201,10 @@ plot_tt_lazy <- function(x,
     cell <- '![](%s)'
     cell <- sprintf(cell, images)
 
+  } else if (isTRUE(meta(x)$output == "typst")) {
+    cell <- '#image("%s")'
+    cell <- sprintf(cell, images)
+
   } else {
     stop("here be dragons")
   }
