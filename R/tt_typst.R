@@ -1,4 +1,4 @@
-tt_typst <- function(x, caption, theme, width, notes, ...) {
+tt_typst <- function(x, caption, theme, width, notes, repeat_head = FALSE, ...) {
   out <- readLines(system.file("templates/typst.typ", package = "tinytable"))
   out <- paste(out, collapse = "\n")
   attr(out, "tinytable_meta") <- meta(x)
@@ -24,7 +24,10 @@ tt_typst <- function(x, caption, theme, width, notes, ...) {
   # striped = default + background
   if (isTRUE(theme == "striped")) {
     out <- style_typst(out, i = seq(1, meta(out)$nrows, by = 2), background = "#ededed")
-  } 
+  }
+  if(repeat_head){
+    out <- sub("repeat-header: false,", "repeat-header: true,", out)
+  }
 
 
   class(out) <- c("tinytable", "knit_asis", class(out))
