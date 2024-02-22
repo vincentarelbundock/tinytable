@@ -46,12 +46,12 @@
 #' 
 #' @export
 tt <- function(x,
-               digits = NULL,
+               digits = getOption("tinytable_tt_digits", default = NULL),
                caption = NULL,
                width = NULL,
                notes = NULL,
                theme = "default",
-               placement = getOption("tinytable_tabularray_placement", default = NULL)) {
+               placement = getOption("tinytable_tt_placement", default = NULL)) {
 
   output <- meta(x, "output")
 

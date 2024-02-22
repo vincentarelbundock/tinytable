@@ -10,7 +10,7 @@ format_tt(
   j = NULL,
   digits = getOption("tinytable_format_digits", default = NULL),
   num_fmt = getOption("tinytable_format_num_fmt", default = "significant"),
-  num_zero = getOption("tinytable_format_num_zero", default = TRUE),
+  num_zero = getOption("tinytable_format_num_zero", default = FALSE),
   num_suffix = getOption("tinytable_format_num_suffix", default = FALSE),
   num_mark_big = getOption("tinytable_format_num_mark_big", default = ""),
   num_mark_dec = getOption("tinytable_format_num_mark_dec", default = getOption("OutDec",

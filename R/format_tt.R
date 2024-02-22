@@ -41,7 +41,7 @@ format_tt <- function(x,
                       j = NULL,
                       digits = getOption("tinytable_format_digits", default = NULL),
                       num_fmt = getOption("tinytable_format_num_fmt", default = "significant"),
-                      num_zero = getOption("tinytable_format_num_zero", default = TRUE),
+                      num_zero = getOption("tinytable_format_num_zero", default = FALSE),
                       num_suffix = getOption("tinytable_format_num_suffix", default = FALSE),
                       num_mark_big = getOption("tinytable_format_num_mark_big", default = ""),
                       num_mark_dec = getOption("tinytable_format_num_mark_dec", default = getOption("OutDec", default = ".")),
@@ -184,7 +184,13 @@ format_tt_lazy <- function(x,
 
         # numeric suffix
         if (isTRUE(num_suffix) && !is.null(digits)) {
-          out[i, col] <- format_num_suffix(ori[i, col], digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero)
+          out[i, col] <- format_num_suffix(
+            ori[i, col],
+            digits = digits,
+            num_mark_big = num_mark_big,
+            num_mark_dec = num_mark_dec,
+            num_zero = num_zero,
+            num_fmt = num_fmt)
 
         # non-integer numeric
         } else if (is.numeric(ori[i, col]) && !isTRUE(check_integerish(ori[i, col])) && !is.null(digits)) {
@@ -298,17 +304,25 @@ format_tt_lazy <- function(x,
 
 
 
-format_num_suffix <- function(x, digits, num_mark_big, num_mark_dec, num_zero) {
+format_num_suffix <- function(x, digits, num_mark_big, num_mark_dec, num_zero, num_fmt) {
   suffix <- number <- rep("", length(x))
-  suffix <- ifelse(x > 1e3, "K", suffix) 
-  suffix <- ifelse(x > 1e6, "M", suffix) 
-  suffix <- ifelse(x > 1e9, "B", suffix) 
-  suffix <- ifelse(x > 1e12, "T", suffix) 
-  number <- format_tt(x, num_fmt = "decimal", digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero)
-  number <- ifelse(x > 1e3, format_tt(x / 1e3, num_fmt = "decimal", digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero), number)
-  number <- ifelse(x > 1e6, format_tt(x / 1e6, num_fmt = "decimal", digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero), number)
-  number <- ifelse(x > 1e9, format_tt(x / 1e9, num_fmt = "decimal", digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero), number)
-  number <- ifelse(x > 1e12, format_tt(x / 1e12, num_fmt = "decimal", digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero), number)
+  suffix <- ifelse(x > 1e3, "K", suffix)
+  suffix <- ifelse(x > 1e6, "M", suffix)
+  suffix <- ifelse(x > 1e9, "B", suffix)
+  suffix <- ifelse(x > 1e12, "T", suffix)
+  fun <- function(x) {
+    out <- sapply(x, function(k) {
+      format(k,
+        digits = digits, drop0trailing = !num_zero, type = "f",
+        big.mark = num_mark_big, decimal.mark = num_mark_dec,
+        scientific = FALSE)
+    })
+  }
+  number <- fun(x)
+  number <- ifelse(x > 1e3, fun(x / 1e3), number)
+  number <- ifelse(x > 1e6, fun(x / 1e6), number)
+  number <- ifelse(x > 1e9, fun(x / 1e9), number)
+  number <- ifelse(x > 1e12, fun(x / 1e12), number)
   number <- paste0(number, suffix)
   return(number)
 }
