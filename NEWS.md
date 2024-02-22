@@ -13,6 +13,10 @@ Misc:
 
 * Improved support for `tibble`. ANSI characters (ex: fancy `pillar` formatting) are stripped automatically or converted to HTML when the `fansi` package is installed. `fansi` is a dependency of `tibble`, so it should often be installed.
 
+Breaking changes:
+
+* In some cases, `format_tt()` could previously be applied sequentially to apply two formats to the same cell. Now, multiple calls to `format_tt()` can still be make chained with pipes, but they must apply to different cells with `i`, `j`, otherwise only the last change is respected. One exception is the `escape` argument which can be applied to pre-formatted cells.
+
 ## 0.0.5
 
 * `format_tt()` escapes <> tags in Typst.
