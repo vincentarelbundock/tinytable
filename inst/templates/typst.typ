@@ -10,7 +10,6 @@
     header-rows: nhead,
     align: left + horizon,
     auto-lines: false,
-    repeat-header: false,
 
     // tinytable lines before
 
