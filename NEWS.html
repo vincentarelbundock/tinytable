@@ -265,10 +265,12 @@ ul.task-list li input[type="checkbox"] {
 <p>Misc:</p>
 <ul>
 <li>Improved support for <code>tibble</code>. ANSI characters (ex: fancy <code>pillar</code> formatting) are stripped automatically or converted to HTML when the <code>fansi</code> package is installed. <code>fansi</code> is a dependency of <code>tibble</code>, so it should often be installed.</li>
+<li>New <code>tinytable_tt_digits</code> global option can set the default number of digits in the <code>tt()</code> function.</li>
 </ul>
 <p>Breaking changes:</p>
 <ul>
 <li>In some cases, <code>format_tt()</code> could previously be applied sequentially to apply two formats to the same cell. Now, multiple calls to <code>format_tt()</code> can still be make chained with pipes, but they must apply to different cells with <code>i</code>, <code>j</code>, otherwise only the last change is respected. One exception is the <code>escape</code> argument which can be applied to pre-formatted cells.</li>
+<li>The “tinytable_tabularray_placement” global option is renamed to “tabularray_tt_placement”.</li>
 </ul>
 </section>
 <section id="section" class="level2">
