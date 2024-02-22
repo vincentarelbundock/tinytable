@@ -11,8 +11,7 @@ tt(
   width = NULL,
   notes = NULL,
   theme = "default",
-  placement = getOption("tinytable_tt_placement", default = NULL),
-  repeat_head = FALSE
+  placement = getOption("tinytable_tt_placement", default = NULL)
 )
 }
 \arguments{
@@ -35,9 +34,6 @@ tt(
 \item{theme}{The theme to apply to the table: "default", "striped", "bootstrap", "void", or "grid".}
 
 \item{placement}{A string to control the position of tables in LaTeX. Will be inserted in square brackets like: \verb{\\\\begin\{table\}[H]}}
-}
-
-\item{repeat_head}{Logical defining whether the header should be repeated on each page when printing to PDF via typst.}
 }
 \value{
 An object of class \code{tt} representing the table.
