@@ -14,12 +14,17 @@ requiet <- function(package) {
 requiet("tinytest")
 requiet("tinysnapshot")
 
+print.custom_html_string <- function(x, ...) {
+    cat(x, "\n", sep = "", ...)
+    invisible(x)
+}
 
-
-clean_html <- function(x) {
+print_html <- function(x) {
+  x <- tinytable::save_tt(x, output = "html")
   x <- gsub("tinytable_\\w+\\b", "tinytable", x)
   x <- gsub("styleCell_\\w+\\b", "tinytable", x)
   x <- gsub("insertSpanRow\\w+\\b", "tinytable", x)
   x <- gsub("styleHeaderCell_\\w+\\b", "tinytable", x)
+  class(x) <- c("custom_html_string", "character")
   x
 }

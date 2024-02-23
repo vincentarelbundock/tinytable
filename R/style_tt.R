@@ -28,7 +28,6 @@
 #' @param background Background color. Specified as a color name or hexadecimal code. Can be `NULL` for default color.
 #' @param fontsize Font size in em units. Can be `NULL` for default size.
 #' @param width Width of column in em units. Can be `NULL` for default width.
-#' @param fontsize Integer Font size in pt units.
 #' @param align A single character or a string with a number of characters equal to the number of columns in `j`. Valid characters include 'c' (center), 'l' (left), or 'r' (right).
 #' @param alignv A single character specifying vertical alignment. Valid characters include 't' (top), 'm' (middle), 'b' (bottom).
 #' @param colspan Number of columns a cell should span. `i` and `j` must be of length 1.

@@ -37,7 +37,6 @@ expect_snapshot_print(tab, label = "group_tt-3level_typ")
 
 
 
-options(tinytable_print_output = "html")
 tab <- tt(mtcars[1:10, 1:5]) |>
   group_tt(
     i = list(
@@ -45,8 +44,5 @@ tab <- tt(mtcars[1:10, 1:5]) |>
       "World" = 8),
     j = list(
       "Foo" = 2:3,
-      "Bar" = 4:5)) |>
-    save_tt("html") |>
-    clean_html()
-expect_equal_to_reference(clean_html(tab), "_tinysnapshot/group_tt-html_tutorial_01.rds")
-options(tinytable_print_output = NULL)
+      "Bar" = 4:5))
+expect_snapshot_print(print_html(tab), "group_tt-html_tutorial_01")

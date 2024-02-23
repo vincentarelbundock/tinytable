@@ -46,12 +46,12 @@
 #' 
 #' @export
 tt <- function(x,
-               digits = NULL,
+               digits = getOption("tinytable_tt_digits", default = NULL),
                caption = NULL,
                width = NULL,
                notes = NULL,
                theme = "default",
-               placement = getOption("tinytable_tabularray_placement", default = NULL)) {
+               placement = getOption("tinytable_tt_placement", default = NULL)) {
 
   output <- meta(x, "output")
 
@@ -62,13 +62,21 @@ tt <- function(x,
   assert_integerish(digits, len = 1, null.ok = TRUE)
   assert_choice(theme, c("default", "grid", "void", "striped", "bootstrap"))
 
+  # tibbles are annoying
+  if (inherits(x, "tbl_df")) x <- as.data.frame(x, check.names = FALSE)
   
   # notes can be a single string or a (named) list of strings
   sanity_notes(notes)
 
   # before style_tt() call for align
   out <- x 
-  out <- meta(out, "x_character", data.frame(lapply(x, as.character)))
+
+  # baseline character format
+  # twice because format() leaves Date type, which cannot be partially reasigned with indexed format_tt(i)
+  out <- data.frame(lapply(out, format))
+  colnames(out) <- colnames(x)
+
+  out <- meta(out, "x_original", x) 
   out <- meta(out, "output", sanitize_output(output))
   out <- meta(out, "output_dir", getwd())
   out <- meta(out, "colnames", names(x))

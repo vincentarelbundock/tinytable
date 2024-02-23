@@ -73,7 +73,7 @@ style_tt(
 
 \item{background}{Background color. Specified as a color name or hexadecimal code. Can be \code{NULL} for default color.}
 
-\item{fontsize}{Integer Font size in pt units.}
+\item{fontsize}{Font size in em units. Can be \code{NULL} for default size.}
 
 \item{width}{Width of column in em units. Can be \code{NULL} for default width.}
 

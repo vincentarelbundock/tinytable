@@ -6,24 +6,29 @@
 \usage{
 format_tt(
   x,
+  i = NULL,
   j = NULL,
-  digits = getOption("digits"),
-  num_fmt = "significant",
-  num_zero = TRUE,
-  num_suffix = FALSE,
-  num_mark_big = "",
-  num_mark_dec = getOption("OutDec", default = "."),
+  digits = getOption("tinytable_format_digits", default = NULL),
+  num_fmt = getOption("tinytable_format_num_fmt", default = "significant"),
+  num_zero = getOption("tinytable_format_num_zero", default = FALSE),
+  num_suffix = getOption("tinytable_format_num_suffix", default = FALSE),
+  num_mark_big = getOption("tinytable_format_num_mark_big", default = ""),
+  num_mark_dec = getOption("tinytable_format_num_mark_dec", default = getOption("OutDec",
+    default = ".")),
   date = "\%Y-\%m-\%d",
   bool = function(column) tools::toTitleCase(tolower(column)),
   other = as.character,
   replace_na = "",
   escape = FALSE,
   markdown = FALSE,
+  fn = NULL,
   sprintf = NULL
 )
 }
 \arguments{
 \item{x}{A data frame or a vector to be formatted.}
+
+\item{i}{Row indices where the formatting should be applied.}
 
 \item{j}{Column indices where the styling should be applied. Can be:
 \itemize{
@@ -34,7 +39,7 @@ format_tt(
 
 \item{digits}{Number of significant digits or decimal places.}
 
-\item{num_fmt}{The format for numeric values; one of 'significant', 'decimal', or 'scientific'.}
+\item{num_fmt}{The format for numeric values; one of 'significant', 'significant_cell', 'decimal', or 'scientific'.}
 
 \item{num_zero}{Logical; if TRUE, trailing zeros are kept in "decimal" format (but not in "significant" format).}
 
@@ -56,6 +61,8 @@ format_tt(
 
 \item{markdown}{Logical; if TRUE, render markdown syntax in cells. Ex: \verb{_italicized text_} is properly italicized in HTML and LaTeX.}
 
+\item{fn}{Function for custom formatting. Accepts a vector and returns a character vector of the same length.}
+
 \item{sprintf}{String passed to the \code{?sprintf} function to format numbers or interpolate strings with a user-defined pattern (similar to the \code{glue} package, but using Base R).}
 }
 \value{
@@ -65,6 +72,7 @@ A data frame with formatted columns.
 This function formats the columns of a data frame based on the column type (logical, date, numeric).
 It allows various formatting options like significant digits, decimal points, and scientific notation.
 It also includes custom formatting for date and boolean values.
+If this function is applied several times to the same cell, the last transformation is retained and the previous calls are ignored, except for the \code{escape} argument which can be applied to previously transformed data.
 }
 \examples{
 dat <- data.frame(

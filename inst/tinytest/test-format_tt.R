@@ -1,15 +1,97 @@
-# pkgload::load_all()
-# N <- 10
-# dat <- data.frame(
-#      x = c(1.430, rnorm(N - 1, mean = 100000)),
-#      y = as.Date(sample(1:1000, N)),
-#      z = sample(c(TRUE, FALSE), N, replace = TRUE)
-# )
-#
-# Q
-# pkgload::load_all()
-# k = dat |> tt("latex") |>
-#   style_tt(color = "orange") |>
-#   format_tt(j = 1, digits = 10, num_fmt = "decimal") |>
-#   format_tt(j = 2, date = "%Y")
-# print(k)
+source("helpers.R")
+using("tinysnapshot")
+
+
+# numeric vector input
+a <- c(98938272783457, 7288839482, 29111727, 93945)
+b <- format_tt(a, num_suffix = TRUE, digits = 2)
+expect_equivalent(b, c("99T", "7.3B", "29M", "94K"))
+
+
+# num_suffix (vignette)
+options(tinytable_print_output = "markdown")
+
+dat <- data.frame(
+     a = c("Burger", "Halloumi", "Tofu", "Beans"),
+     b = c(1.43202, 201.399, 0.146188, 0.0031),
+     c = c(98938272783457, 7288839482, 29111727, 93945))
+tab <- tt(dat) |>
+  format_tt(j = "a", sprintf = "Food: %s") |>
+  format_tt(j = 2, digits = 1) |>
+  format_tt(j = "c", digits = 2, num_suffix = TRUE)
+expect_snapshot_print(tab, label = "format_tt-num_suffix_vignette")
+
+set.seed(1024)
+dat <- data.frame(
+     w = c(143002.2092, 201399.181, 100188.3883),
+     x = c(1.43402, 201.399, 0.134588),
+     y = as.Date(sample(1:1000, 3)),
+     z = c(TRUE, TRUE, FALSE))
+tab <- tt(dat, digits = 2)
+expect_snapshot_print(tab, label = "format_tt-vignette_digits")
+
+tab <- tt(dat) |> 
+  format_tt(
+    j = 2:4,
+    digits = 1,
+    date = "%B %d %Y") |>
+  format_tt(
+    j = 1,
+    digits = 2,
+    num_mark_big = " ",
+    num_mark_dec = ",",
+    num_fmt = "decimal")
+expect_snapshot_print(tab, label = "format_tt-vignette_misc")
+
+expect_snapshot_print(
+  format_tt(dat, digits = 1, num_suffix = TRUE),
+  label = "format_tt-dataframe")
+
+
+
+# bug: duplicated columns with markdown html
+dat <- data.frame( markdown = c(
+  "This is _italic_ text.",
+  "This sentence ends with a superscript.^2^")
+)
+tab <- tt(dat) |>
+  format_tt(j = 1, markdown = TRUE) |>
+  style_tt(j = 1, align = "c")
+expect_snapshot_print(print_html(tab), "format_tt-vignette_html_markdown")
+
+
+# custom formatting
+x <- mtcars[1:3, 1:3]
+tab <- tt(x) |> format_tt(fn = function(x) paste("Ya", x))
+expect_snapshot_print(tab, "format_tt-fn")
+
+
+# Issue #142
+k <- data.frame(x = c(0.000123456789, 12.4356789))
+tab <- tt(k, digits = 2)
+expect_snapshot_print(tab, "format_tt-issue142_01")
+tab <- tt(k) |> format_tt(digits = 2, num_fmt = "significant_cell")
+expect_snapshot_print(tab, "format_tt-issue142_02")
+
+
+# Issue #147: format_tt(escape = TRUE) zaps previous formattinglibrary(tinytable)
+options(tinytable_print_output = "latex")
+x <- data.frame(num = c(pi, pi), char = c("10$", "blah_blah"))
+tab <- tt(x) |>
+  format_tt(i = 1, j = 1, digits = 2) |>
+  format_tt(i = 1, j = 1, digits = 3) # overwrite
+expect_snapshot_print(tab, "format_tt-issue147_01")
+tab <- tt(x) |>
+  format_tt(i = 1, j = 1, digits = 2) |>
+  format_tt(i = 2, j = 1, digits = 3) # different cell
+expect_snapshot_print(tab, "format_tt-issue147_02")
+tab <- tt(x) |>
+  format_tt(i = 1, j = 1, digits = 2) |>
+  format_tt(i = 2, j = 1, digits = 3) |>
+  format_tt(escape = TRUE) # do not zap
+expect_snapshot_print(tab, "format_tt-issue147_03")
+options(tinytable_print_output = NULL)
+
+
+
+options(tinytable_print_output = NULL)

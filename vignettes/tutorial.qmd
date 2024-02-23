@@ -269,7 +269,7 @@ tt(dat, digits = 2)
 We can get more fine-grained control over formatting by calling `format_tt()` after `tt()`, optionally by specifying the columns to format with `j`:
 
 ```{r}
-tt(dat) |>
+tt(dat) |> 
   format_tt(
     j = 2:4,
     digits = 1,
@@ -301,6 +301,35 @@ Finally, if you like the `format_tt()` interface, you can use it directly with n
 format_tt(pi, digits = 1)
 
 format_tt(dat, digits = 1, num_suffix = TRUE)
+```
+
+
+## Significant digits and decimals
+
+By default, `format_tt()` formats numbers to ensure that the smallest value in a vector (column) has at least a certain number of significant digits. For example,
+
+```{r}
+k <- data.frame(x = c(0.000123456789, 12.4356789))
+tt(k, digits = 2)
+```
+
+We can alter this behavior to ensure to round significant digits on a per-cell basis, using the `num_fmt` argument in `format_tt()`:
+
+```{r}
+tt(k) |> format_tt(digits = 2, num_fmt = "significant_cell")
+```
+
+The numeric formatting options in `format_tt()` can also be controlled using global options:
+
+```{r}
+options("tinytable_tt_digits" = 2)
+options("tinytable_format_num_fmt" = "significant_cell")
+tt(k)
+```
+
+```{r, include = FALSE}
+options("tinytable_tt_digits" = NULL)
+options("tinytable_format_num_fmt" = NULL)
 ```
 
 
@@ -388,6 +417,38 @@ dat <- data.frame(
 )
 
 tt(dat) |> format_tt(j = 1, markdown = TRUE)
+```
+
+## Custom functions
+
+On top of the built-in features of `format_tt`, a custom formatting function can be specified via the `fn` argument. The `fn` argument takes a function that accepts a single vector and returns a string (or something that coerces to a string like a number).  
+
+```{r}
+tt(x) |> 
+  format_tt(j = "mpg", fn = function(x) paste0(x, " mpg")) |>
+  format_tt(j = "drat", fn = \(x) signif(x, 2))
+```
+
+For example, the [`scales` package](https://scales.r-lib.org/index.html) which is used internally by `ggplot2` provides a bunch of useful tools for formatting (e.g. dates, numbers, percents, logs, currencies, etc.). The `label_*()` functions can be passed to the `fn` argument.
+
+Note that we call `format_tt(escape = TRUE)` at the end of the pipeline because the column names and cells include characters that need to be escaped in LaTeX: `_`, `%`, and `$`. This last call is superfluous in HTML.
+
+```{r}
+thumbdrives <- data.frame(
+  date_lookup = as.Date(c("2024-01-15", "2024-01-18", "2024-01-14", "2024-01-16")),
+  price = c(18.49, 19.99, 24.99, 24.99),
+  price_rank = c(1, 2, 3, 3),
+  memory = c(16e9, 12e9, 10e9, 8e9),
+  speed_benchmark = c(0.6, 0.73, 0.82, 0.99)
+)
+
+tt(thumbdrives) |>
+  format_tt(j = 1, fn = scales::label_date("%e %b", locale = "fr")) |>
+  format_tt(j = 2, fn = scales::label_currency()) |>
+  format_tt(j = 3, fn = scales::label_ordinal()) |> 
+  format_tt(j = 4, fn = scales::label_bytes()) |> 
+  format_tt(j = 5, fn = scales::label_percent())  |>
+  format_tt(escape = TRUE)
 ```
 
 
