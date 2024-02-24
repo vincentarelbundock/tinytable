@@ -11,6 +11,7 @@
 
 Misc:
 
+* Support RevealJS slides in Quarto documents.
 * Typst now supports images and inline plots with `plot_tt()`. Thanks to @aghaynes for contribution #155.
 * Improved support for `tibble`. ANSI characters (ex: fancy `pillar` formatting) are stripped automatically or converted to HTML when the `fansi` package is installed. `fansi` is a dependency of `tibble`, so it should often be installed.
 * New `tinytable_tt_digits` global option can set the default number of digits in the `tt()` function.

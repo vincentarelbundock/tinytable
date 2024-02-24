@@ -137,6 +137,7 @@ format_tt_lazy <- function(x,
   }
 
   if (!inherits(x, "data.frame")) {
+    return(x) # hard to track down issue with NULL value here in datasummary_balance. Returning NULL is magic I can't explain.
     msg <- "`x` must be a data frame or an atomic vector."
     stop(msg, call. = FALSE)
   }
