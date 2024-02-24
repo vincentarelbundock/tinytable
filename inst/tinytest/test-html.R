@@ -56,5 +56,22 @@ tab <- tt(k, width = .5, theme = "void") |>
     fontsize = fs)
 expect_snapshot_print(print_html(tab), "html-heatmap")
 
+#Caption
+tab <- tt(mtcars[1:3, 1:3],caption = "Blah blah")
+expect_snapshot_print(print_html(tab), "html-caption")
+
+# Footnote
+tab <- tt(mtcars[1:3, 1:3],notes = list(a = "Blah.", b = "Blah blah."))
+expect_snapshot_print(print_html(tab), "html-footnote")
+
+# Style individual cells
+tab <- tt(mtcars[1:4, 1:4]) |>
+  style_tt(
+    i = 2:3,
+    j = c(1, 3, 4),
+    italic = TRUE,
+    background = "pink",
+    color = "orange")
+expect_snapshot_print(print_html(tab), "html-individual_cells")
 
 options(tinytable_print_output = NULL)
