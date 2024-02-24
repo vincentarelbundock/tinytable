@@ -50,7 +50,7 @@ sanitize_output <- function(output) {
       )
       if (is.null(output)) out <- "latex"
 
-    } else if (isTRUE(knitr::pandoc_to() == "html")) {
+    } else if (isTRUE(knitr::pandoc_to() %in% c("html", "revealjs"))) {
       if (is.null(output)) out <- "html"
 
     } else if (isTRUE(knitr::pandoc_to() == "typst")) {
