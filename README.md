@@ -1,4 +1,5 @@
 
+
 <p align="center">
 <img src="man/figures/gallery/tinytable_gallery.gif" height = "250" class = "center">
 <br> <!-- badges: start -->
