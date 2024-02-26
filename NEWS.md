@@ -19,7 +19,7 @@ Misc:
 Breaking changes:
 
 * In some cases, `format_tt()` could previously be applied sequentially to apply two formats to the same cell. Now, multiple calls to `format_tt()` can still be make chained with pipes, but they must apply to different cells with `i`, `j`, otherwise only the last change is respected. One exception is the `escape` argument which can be applied to pre-formatted cells.
-* The "tinytable_tabularray_placement" global option is renamed to "tabularray_tt_placement".
+* The "tinytable_tabularray_placement" global option is renamed to "tinytable_tt_placement".
 
 ## 0.0.5
 
