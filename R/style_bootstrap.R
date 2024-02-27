@@ -29,7 +29,7 @@ style_bootstrap <- function(x,
                             ...) {
 
 
-  if (meta(x, "output") != "html") return(x)
+  if (x@output != "html") return(x)
 
   out <- x
 

@@ -55,39 +55,40 @@ print.tinytable <- function(x,
                             output = getOption("tinytable_print_output", default = NULL),
                             ...){
 
-  assert_choice(output, c("latex", "markdown", "html", "typst"), null.ok = TRUE)
+  if (is.null(output)) {
+    output <- x@output
+  } else {
+    assert_choice(output, c("latex", "markdown", "html", "typst"))
+  }
 
-  if (is.null(output)) output <- meta(x, "output")
+  if (output == "html") {
+    dir <- tempfile()
+    dir.create(dir)
+    x@output_dir <- dir
+  }
+
+  x <- build_tt(x, output = output)
+
+  tab <- x@table_string
 
   # lazy styles get evaluated here by build_tt(), at the very end
-  if (output %in% c("latex", "typst")) {
-    out <- build_tt(x, output = output)
-    class(out) <- "character"
+  if (output %in% c("latex", "typst", "markdown")) {
     cat("\n")
-    cat(out)
+    cat(tab)
     cat("\n")
-
-  } else if (output == "markdown") {
-    out <- build_tt(x, output = "markdown")
-    cat("\n")
-    cat(out, sep = "\n")
 
   } else if (output == "html") {
     # need to change the output directory to a temporary directory 
     # for plot_tt() inline plots to show up in RStudio
-    dir <- tempfile()
-    x <- meta(x, "output_dir", dir)
-    dir.create(dir)
-    out <- build_tt(x, output = "html")
     htmlFile <- file.path(dir, "index.html")
-    cat(out, file = htmlFile)
+    cat(tab, file = htmlFile)
     if (isTRUE(check_dependency("rstudioapi")) && rstudioapi::isAvailable()) {
       rstudioapi::viewer(htmlFile)
     } else if (interactive()) {
       utils::browseURL(htmlFile)
     } else {
       cat("\n")
-      cat(out, sep = "\n")
+      cat(tab, sep = "\n")
       cat("\n")
     }
 
@@ -95,6 +96,6 @@ print.tinytable <- function(x,
     stop("here be dragons")
   }
 
-  return(invisible(out))
+  return(invisible(x))
 }
 

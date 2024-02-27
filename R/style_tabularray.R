@@ -22,7 +22,7 @@ style_tabularray <- function(x,
                              tabularray_outer = NULL,
                              ...) {
 
-  if (meta(x, "output") != "latex") return(x)
+  if (x@output != "latex") return(x)
 
   out <- x
 

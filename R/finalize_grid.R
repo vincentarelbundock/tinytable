@@ -2,7 +2,7 @@
 finalize_grid <- function(x) {
     if (!isTRUE(meta(x)$output == "markdown")) return(x)
 
-    out <- x
+    out <- x@table_string
 
     # formal grid specification in pandoc includes lines everywhere
     # important for docx output
@@ -12,7 +12,7 @@ finalize_grid <- function(x) {
     }
 
     # notes
-    no <- meta(x, "notes")
+    no <- x@notes
     if (!is.null(no)) {
       if (!is.character(no) || length(no) != 1) {
         msg <- "For Markdown or Word tables, the `notes` argument must be a single string."
@@ -33,12 +33,14 @@ finalize_grid <- function(x) {
 
 
     # caption
-    cap <- meta(x, "caption")
-    if (is.character(cap) && length(cap) == 1) {
+    cap <- x@caption
+    if (is.character(cap) && length(cap) == 1 && nchar(cap) > 0) {
         out <- paste0(out, "\n", "Table: ", cap, "\n")
     }
 
-    return(out)
+    x@table_string <- out
+
+    return(x)
 }
 
 

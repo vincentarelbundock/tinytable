@@ -24,7 +24,7 @@ style_typst <- function(x,
                         midrule = FALSE, # undocumented, only used by `group_tt()`
                         ...) {
 
-  if (meta(x, "output") != "typst") return(x)
+  if (x@output != "typst") return(x)
 
   out <- x
 

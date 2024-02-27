@@ -96,7 +96,8 @@ tt <- function(x,
 setClass(
     Class = "tinytable",
     slots = representation(
-        table = "data.frame",
+        table_dataframe = "data.frame",
+        table_string = "character",
         data = "data.frame",
         caption = "character",
         width = "numeric",
@@ -107,6 +108,8 @@ setClass(
         ncol = "numeric",
         nhead = "numeric",
         names = "character",
+        output = "character",
+        output_dir = "character",
         id = "character",
         lazy_format = "list",
         lazy_group = "list",
@@ -117,7 +120,7 @@ setClass(
 setMethod("initialize", "tinytable", function(.Object, data, table, caption, notes, theme, placement, width) {
   # explicit
   .Object@data <- data
-  .Object@table <- table
+  .Object@table_dataframe <- table
   .Object@theme <- theme
   # dynamic
   .Object@nrow <- nrow(.Object@data)
