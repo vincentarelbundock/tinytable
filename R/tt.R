@@ -110,7 +110,8 @@ setClass(
         id = "character",
         lazy_format = "list",
         lazy_group = "list",
-        lazy_style = "list")
+        lazy_style = "list",
+        lazy_plot = "list")
 )
 
 setMethod("initialize", "tinytable", function(.Object, data, table, caption, notes, theme, placement, width) {

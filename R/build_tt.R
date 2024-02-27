@@ -4,11 +4,8 @@
 #
 # THE ORDER MATTERS A LOT!
 build_tt <- function(x, output = NULL) {
-  m <- meta(x)
-
   output <- sanitize_output(output)
-  out <- x
-  out <- meta(out, "output", output)
+  out <- x@table
 
   # strip ANSI from `tibble`/`pillar`
   if (isTRUE(check_dependency("fansi"))) {
@@ -22,7 +19,7 @@ build_tt <- function(x, output = NULL) {
   }
 
   # format data before drawing the table
-  for (l in m$lazy_format) {
+  for (l in x@lazy_format) {
     tmp <- out
     l[["x"]] <- tmp
     out <- eval(l)
@@ -32,7 +29,7 @@ build_tt <- function(x, output = NULL) {
   out <- footnote_markers(out)
 
   # plots and images
-  for (l in m$lazy_plot) {
+  for (l in x@lazy_plot) {
     tmp <- out
     class(tmp) <- "data.frame"
     l[["x"]] <- tmp
@@ -41,32 +38,24 @@ build_tt <- function(x, output = NULL) {
 
   # markdown styles need to be applied before creating the table, otherwise there's annoying parsing, etc.
   if (output == "markdown") {
-    for (l in m$lazy_style) {
+    for (l in x@lazy_style) {
       l[["x"]] <- out
       out <- eval(l)
     }
   }
 
-  # shouldn't have to add this everywhere, but I'm too lazy to check
-  out <- meta(out, "output", output)
-
   # draw the table
-  lazy_tt <- meta(x, "lazy_tt")
-  lazy_tt[["x"]] <- out
-  if (output == "html") {
-    lazy_tt[[1]] <- quote(tt_bootstrap)
-  } else if (output == "latex") {
-    lazy_tt[[1]] <- quote(tt_tabularray)
-  } else if (output == "markdown") {
-    lazy_tt[[1]] <- quote(tt_grid)
-  } else if (output == "typst") {
-    lazy_tt[[1]] <- quote(tt_typst)
-  }
-  out <- eval(lazy_tt)
-  out <- meta(out, "output", output)
+  args <- list(x = out, caption = x@caption, theme = x@theme, width = x@width, notes = x@notes, placement = x@placement)
+  fun <- switch(output,
+    html = tt_bootstrap,
+    latex = tt_tabularray,
+    markdown = tt_grid,
+    typst = tt_typst
+  )
+  out <- do.call(fun, args)
 
-  for (idx in seq_along(m$lazy_group)) {
-    l <- m$lazy_group[[idx]]
+  for (idx in seq_along(x@lazy_group)) {
+    l <- x@lazy_group[[idx]]
     l[["x"]] <- out
     l[["ihead"]] <- -1 * idx
     if (output == "html") {
@@ -80,15 +69,14 @@ build_tt <- function(x, output = NULL) {
     }
     out <- eval(l)
   }
-  out <- meta(out, "output", output)
 
   # style the table
   if (output == "typst") {
     # rules of precedence appear to differ
-    m$lazy_style <- rev(m$lazy_style)
+    x@lazy_style <- rev(x@lazy_style)
   }
   if (output != "markdown") {
-    for (l in m$lazy_style) {
+    for (l in x@lazy_style) {
       l[["x"]] <- out
       out <- eval(l)
     }
@@ -99,12 +87,9 @@ build_tt <- function(x, output = NULL) {
   out <- finalize_typst(out)
   out <- finalize_grid(out)
 
-  m <- meta(x)
-  m$lazy_style <- list()
-  attr(out, "tinytable_meta") <- m
-  out <- meta(out, "output", output)
+  x@table <- out
 
-  return(out)
+  return(x)
 }
 
 
