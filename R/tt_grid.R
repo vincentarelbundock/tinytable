@@ -67,7 +67,6 @@ tt_grid <- function(x, col_widths = NULL, ...) {
   attr(out, "tinytable_meta") <- m
   out <- meta(out, "col_widths", col_widths)
   out <- meta(out, "output", "grid")
-  class(out) <- c("tinytable", "knitr_kable")
 
   # output
   return(out)

@@ -87,6 +87,7 @@ build_tt <- function(x, output = NULL) {
   out <- finalize_typst(out)
   out <- finalize_grid(out)
 
+  attributes(out) <- NULL
   x@table <- out
 
   return(x)
