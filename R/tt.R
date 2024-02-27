@@ -101,6 +101,7 @@ setClass(
         data = "data.frame",
         caption = "character",
         width = "numeric",
+        width_cols = "numeric",
         notes = "list",
         theme = "character",
         placement = "character",

@@ -16,7 +16,7 @@ group_grid <- function(x, i = NULL, j = NULL, ...) {
 group_grid_col <- function(x, j, ...) {
   m <- meta(x)
   header <- empty_cells(j)
-  cw <- meta(x, "col_widths")
+  cw <- meta(x, "width_cols")
   cw <- sapply(header, function(k) sum(cw[k]) + length(cw[k]) - 1)
   txt <- t(matrix(names(cw)))
   out <- tt_grid(txt, cw)
@@ -57,10 +57,10 @@ group_grid_row <- function(x, i, ...) {
   mid <- out[min(body):max(body)]
   bot <- out[(max(body) + 1):length(out)]
 
-  cw <- meta(x, "col_widths")
+  cw <- meta(x, "width_cols")
   cw <- sum(cw) + length(cw) - 1
   for (idx in rev(seq_along(i))) {
-    tmp <- as.character(tt_grid(matrix(names(i)[idx]), col_widths = cw))
+    tmp <- as.character(tt_grid(matrix(names(i)[idx]), width_cols = cw))
     tmp <- strsplit(tmp, split = "\\n")[[1]]
     tmp <- tmp[tmp != ""][2]
     lo <- i[idx] - 1

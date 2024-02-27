@@ -1,24 +1,25 @@
-grid_line <- function(col_widths, char = "-") {
-  line_sep <- lapply(col_widths, function(k) strrep(char, k))
+grid_line <- function(width_cols, char = "-") {
+  line_sep <- lapply(width_cols, function(k) strrep(char, k))
   line_sep <- paste(line_sep, collapse = "+")
   line_sep <- paste0("+", line_sep, "+")
   return(line_sep)
 }
 
 
-tt_grid <- function(x, col_widths = NULL, ...) {
+tt_grid <- function(x, width_cols = NULL, ...) {
 
-  m <- meta(x)
-
-  if (is.null(col_widths)) {
-    col_widths <- m$col_widths
+  if (is.null(width_cols)) {
+    width_cols <- x@width_cols
   }
 
-  tab <- as.matrix(x)
-  if (!is.null(names(x))) {
-    header <- TRUE
+  tab <- x@table_dataframe
+
+  if (!is.null(names(tab))) {
+    tab <- as.matrix(tab)
     tab <- rbind(colnames(x), tab)
+    header <- TRUE
   } else {
+    tab <- as.matrix(tab)
     header <- FALSE
   }
 
@@ -26,32 +27,33 @@ tt_grid <- function(x, col_widths = NULL, ...) {
   padded <- sprintf(" %s ", tab)
   tab <- matrix(padded, ncol = ncol(tab))
 
-  if (is.null(col_widths)) {
+  if (is.null(width_cols) || length(width_cols) == 0) {
     for (j in 1:ncol(x)) {
-      col_widths[j] <- max(nchar(tab[, j]))
+      width_cols[j] <- max(nchar(tab[, j]))
     }
   }
 
   # groups are longer than col-widths
-  for (g in meta(x, "lazy_group")) {
+  for (g in x@lazy_group) {
     for (idx in seq_along(g$j)) {
       g_len <- nchar(names(g$j)[idx]) + 2
-      c_len <- sum(col_widths[g$j[[idx]]])
+      c_len <- sum(width_cols[g$j[[idx]]])
       if (g_len > c_len) {
-        col_widths[g$j[[idx]]] <- col_widths[g$j[[idx]]] + ceiling((g_len - c_len) / length(g$j[[idx]]))
+        width_cols[g$j[[idx]]] <- width_cols[g$j[[idx]]] + ceiling((g_len - c_len) / length(g$j[[idx]]))
       }
     }
   }
 
   for (j in 1:ncol(x)) {
     nc <- nchar(tab[, j])
-    pad <- col_widths[j] - nc
+    pad <- width_cols[j] - nc
     pad <- sapply(pad, function(k) strrep(" ", k))
     tab[, j] <- paste0(tab[, j], pad)
   }
 
-  rule_head <- grid_line(col_widths, "=")
-  rule_line <- grid_line(col_widths, "-")
+
+  rule_head <- grid_line(width_cols, "=")
+  rule_line <- grid_line(width_cols, "-")
 
   body <- apply(tab, 1, paste, collapse = "|")
   body <- paste0("|", body, "|")
@@ -64,12 +66,11 @@ tt_grid <- function(x, col_widths = NULL, ...) {
   out <- paste(tab, collapse = "\n")
 
   # rebuild output
-  attr(out, "tinytable_meta") <- m
-  out <- meta(out, "col_widths", col_widths)
-  out <- meta(out, "output", "grid")
+  x@width_cols <- width_cols
+  x@table_string <- out
 
   # output
-  return(out)
+  return(x)
 }
 
 
@@ -103,7 +104,7 @@ empty_cells <- function(lst) {
 
 # insert horizontal rules everywhere (important for word)
 grid_hlines <- function(x) {
-  rule_line <- grid_line(meta(x, "col_widths"), "-")
+  rule_line <- grid_line(meta(x, "width_cols"), "-")
   lines <- strsplit(x, split = "\\n")[[1]]
   if (length(lines) > 1) {
     for (idlines in length(lines):2) {
