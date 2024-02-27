@@ -184,9 +184,13 @@ assert_numeric <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok = 
 }
 
 
-assert_data_frame <- function(x, name = as.character(substitute(x))) {
+assert_data_frame <- function(x, min_rows = 0, min_cols = 0, name = as.character(substitute(x))) {
   msg <- sprintf("`%s` must be a data.frame.", name)
   if (!is.data.frame(x)) stop(msg, call. = FALSE)
+  msg <- sprintf("Number of rows in `%s` must be at least `%s`", name, min_rows)
+  if (nrow(x) <= min_rows) stop(msg, call. = FALSE)
+  msg <- sprintf("Number of columns in `%s` must be at least `%s`", name, min_cols)
+  if (ncol(x) <= min_cols) stop(msg, call. = FALSE)
 }
 
 
@@ -249,7 +253,7 @@ assert_class <- function(x, classname) {
 }
 
 
-sanity_notes <- function(notes) {
+sanitize_notes <- function(notes) {
   if (is.character(notes) && length(notes) > 0) {
     notes <- as.list(notes)
   }
@@ -271,4 +275,5 @@ sanity_notes <- function(notes) {
       stop("`notes` includes invalid elements. Please refer to the documentation for details.", call. = FALSE)
     }
   }
+  return(notes)
 }

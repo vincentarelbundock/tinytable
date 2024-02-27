@@ -53,53 +53,87 @@ tt <- function(x,
                theme = "default",
                placement = getOption("tinytable_tt_placement", default = NULL)) {
 
-  output <- meta(x, "output")
-
   # sanity checks
-  assert_data_frame(x)
   assert_string(caption, null.ok = TRUE)
   assert_numeric(width, len = 1, lower = 0, upper = 1, null.ok = TRUE)
   assert_integerish(digits, len = 1, null.ok = TRUE)
   assert_choice(theme, c("default", "grid", "void", "striped", "bootstrap"))
+  notes <- sanitize_notes(notes)
 
-  # tibbles are annoying
-  if (inherits(x, "tbl_df")) x <- as.data.frame(x, check.names = FALSE)
-  
-  # notes can be a single string or a (named) list of strings
-  sanity_notes(notes)
-
-  # before style_tt() call for align
-  out <- x 
-
-  # baseline character format
-  # twice because format() leaves Date type, which cannot be partially reasigned with indexed format_tt(i)
-  out <- data.frame(lapply(out, format))
-  colnames(out) <- colnames(x)
-
-  out <- meta(out, "x_original", x) 
-  out <- meta(out, "output", sanitize_output(output))
-  out <- meta(out, "output_dir", getwd())
-  out <- meta(out, "colnames", names(x))
-  out <- meta(out, "xdim", dim(x))
-  out <- meta(out, "id", get_id("tinytable_"))
-  out <- meta(out, "nhead", if (is.null(colnames(x))) 0 else 1)
-  out <- meta(out, "nrows", nrow(x))
-  out <- meta(out, "ncols", ncol(x))
-  out <- meta(out, "notes", notes)
-  out <- meta(out, "caption", caption)
-  class(out) <- c("tinytable", class(out))
-
-  # build table
-  # tt_tabularray wil be substituted in build_tt by the appropriate on based on output
-  cal <- call("tt_tabularray", x = out, caption = caption, theme = theme, width = width, notes = notes, placement = placement)
-
-  out <- meta(out, "lazy_tt", cal)
+  # x should be a data frame, not a tibble, for indexing convenience
+  assert_data_frame(x, min_rows = 1, min_cols = 1)
+  if (inherits(x, "tbl_df")) {
+    cn <- colnames(x)
+    x <- as.data.frame(x, check.names = FALSE)
+    colnames(x) <- cn
+  }
 
   # formatting options are limited here
   # after creating the table since the new lazy system
+  tab <- x
   if (!is.null(digits)) {
-    out <- format_tt(out, digits = digits)
+    tab <- format_tt(tab, digits = digits)
   }
+
+  # baseline character format
+  # twice because format() leaves Date type, which cannot be partially reasigned
+  # with indexed format_tt(i)
+  tab <- data.frame(lapply(tab, format))
+  colnames(tab) <- colnames(x)
+
+  out <- new("tinytable",
+    data = x,
+    table = tab,
+    caption = caption,
+    notes = notes,
+    theme = theme,
+    placement = placement,
+    width = width)
 
   return(out)
 }
+
+setClass(
+    Class = "tinytable",
+    slots = representation(
+        table = "data.frame",
+        data = "data.frame",
+        caption = "character",
+        width = "numeric",
+        notes = "list",
+        theme = "character",
+        placement = "character",
+        nrow = "numeric",
+        ncol = "numeric",
+        nhead = "numeric",
+        names = "character",
+        id = "character",
+        lazy_format = "list",
+        lazy_group = "list",
+        lazy_style = "list")
+)
+
+setMethod("initialize", "tinytable", function(.Object, data, table, caption, notes, theme, placement, width) {
+  # explicit
+  .Object@data <- data
+  .Object@table <- table
+  .Object@theme <- theme
+  # dynamic
+  .Object@nrow <- nrow(.Object@data)
+  .Object@ncol <- ncol(.Object@data)
+  .Object@nhead <- if (is.null(colnames(data))) 0 else 1
+  .Object@names <- colnames(.Object@data)
+  .Object@id <- get_id("tinytable_")
+  # conditional: allows NULL user input
+  if (!is.null(placement)) .Object@placement <- placement
+  if (!is.null(caption)) .Object@caption <- caption
+  if (!is.null(width)) .Object@width <- width
+  if (!is.null(notes)) .Object@notes <- notes
+  return(.Object)
+})
+
+setMethod("nrow", "tinytable", function(x) return(x@nrow))
+setMethod("ncol", "tinytable", function(x) return(x@ncol))
+setMethod("dim", "tinytable", function(x) return(c(x@nrow, x@ncol)))
+setMethod("names", "tinytable", function(x) return(x@names))
+setMethod("colnames", "tinytable", function(x) return(x@names))
