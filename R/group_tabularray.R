@@ -1,17 +1,15 @@
 group_tabularray <- function(x, i, j, indent, ...) {
-  out <- x
+  if (!is.null(i)) x@nrow <- x@nrow + length(i)
+  if (!is.null(j)) x@nhead <- x@nhead + 1
   # columns first to count headers properly
-  if (!is.null(j)) {
-    out <- group_tabularray_col(out, j, ...)
-  }
-  if (!is.null(i)) {
-    out <- group_tabularray_row(out, i, indent)
-  }
-  return(out)
+  x <- group_tabularray_col(x, j, ...)
+  x <- group_tabularray_row(x, i, indent)
+  return(x)
 }
 
 
 group_tabularray_col <- function(x, j, ihead, ...) {
+  if (is.null(j)) return(x)
 
   m <- meta(x)
 
@@ -60,6 +58,8 @@ group_tabularray_col <- function(x, j, ihead, ...) {
 
 
 group_tabularray_row <- function(x, i, indent) {
+  if (is.null(i)) return(x)
+
   m <- meta(x)
 
   if (is.null(names(i))) {

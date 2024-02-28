@@ -188,9 +188,9 @@ assert_data_frame <- function(x, min_rows = 0, min_cols = 0, name = as.character
   msg <- sprintf("`%s` must be a data.frame.", name)
   if (!is.data.frame(x)) stop(msg, call. = FALSE)
   msg <- sprintf("Number of rows in `%s` must be at least `%s`", name, min_rows)
-  if (nrow(x) <= min_rows) stop(msg, call. = FALSE)
+  if (nrow(x) < min_rows) stop(msg, call. = FALSE)
   msg <- sprintf("Number of columns in `%s` must be at least `%s`", name, min_cols)
-  if (ncol(x) <= min_cols) stop(msg, call. = FALSE)
+  if (ncol(x) < min_cols) stop(msg, call. = FALSE)
 }
 
 

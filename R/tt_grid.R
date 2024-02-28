@@ -8,11 +8,16 @@ grid_line <- function(width_cols, char = "-") {
 
 tt_grid <- function(x, width_cols = NULL, ...) {
 
-  if (is.null(width_cols)) {
-    width_cols <- x@width_cols
+  is_matrix <- is.matrix(x)
+  if (is_matrix) {
+    tab <- x
+  } else {
+    tab <- x@table_dataframe
   }
 
-  tab <- x@table_dataframe
+  if (is.null(width_cols)) {
+      width_cols <- x@width_cols
+  }
 
   if (!is.null(names(tab))) {
     tab <- as.matrix(tab)
@@ -28,18 +33,20 @@ tt_grid <- function(x, width_cols = NULL, ...) {
   tab <- matrix(padded, ncol = ncol(tab))
 
   if (is.null(width_cols) || length(width_cols) == 0) {
-    for (j in 1:ncol(x)) {
+    for (j in 1:ncol(tab)) {
       width_cols[j] <- max(nchar(tab[, j]))
     }
   }
 
   # groups are longer than col-widths
-  for (g in x@lazy_group) {
-    for (idx in seq_along(g$j)) {
-      g_len <- nchar(names(g$j)[idx]) + 2
-      c_len <- sum(width_cols[g$j[[idx]]])
-      if (g_len > c_len) {
-        width_cols[g$j[[idx]]] <- width_cols[g$j[[idx]]] + ceiling((g_len - c_len) / length(g$j[[idx]]))
+  if (inherits(x, "tinytable")) {
+    for (g in x@lazy_group) {
+      for (idx in seq_along(g$j)) {
+        g_len <- nchar(names(g$j)[idx]) + 2
+        c_len <- sum(width_cols[g$j[[idx]]])
+        if (g_len > c_len) {
+          width_cols[g$j[[idx]]] <- width_cols[g$j[[idx]]] + ceiling((g_len - c_len) / length(g$j[[idx]]))
+        }
       }
     }
   }
@@ -64,6 +71,8 @@ tt_grid <- function(x, width_cols = NULL, ...) {
   }
 
   out <- paste(tab, collapse = "\n")
+
+  if (is_matrix) return(out)
 
   # rebuild output
   x@width_cols <- width_cols

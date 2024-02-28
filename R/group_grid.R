@@ -1,66 +1,64 @@
 group_grid <- function(x, i = NULL, j = NULL, ...) {
-  out <- x
-
-  if (!is.null(i)) {
-    out <- group_grid_row(out, i)
-  }
-
-  if (!is.null(j)) {
-    out <- group_grid_col(out, j)
-  }
-
-  return(out)
+  # add here because this is where lazy gets executed
+  if (!is.null(i)) x@nrow <- x@nrow + length(i)
+  if (!is.null(j)) x@nhead <- x@nhead + 1
+  x <- group_grid_row(x, i)
+  x <- group_grid_col(x, j)
+  return(x)
 }
 
 
 group_grid_col <- function(x, j, ...) {
-  m <- meta(x)
+  if (is.null(j)) return(x)
+  tab <- x@table_string
   header <- empty_cells(j)
-  cw <- meta(x, "width_cols")
+  cw <- x@width_cols
   cw <- sapply(header, function(k) sum(cw[k]) + length(cw[k]) - 1)
-  txt <- t(matrix(names(cw)))
-  out <- tt_grid(txt, cw)
-  out <- strsplit(out, split = "\\n")[[1]]
-  out <- out[out != "\\n"]
-  out <- out[!out %in% c("\\n", "")]
-  out <- out[2]
-  x <- strsplit(x, split = "\\n")[[1]]
-  x <- x[!x %in% c("\\n", "")]
-  x <- c(x[1], out, x)
+  header <- t(matrix(names(cw)))
+  header <- tt_grid(header, cw)
+  header <- strsplit(header, split = "\\n")[[1]]
+  header <- header[header != "\\n"]
+  header <- header[!header %in% c("\\n", "")]
+  header <- header[2]
+  z <- strsplit(tab, split = "\\n")[[1]]
+  z <- z[!z %in% c("\\n", "")]
+  z <- c(z[1], header, z)
 
   # missing cell at the end
-  nc <- nchar(x)
-  idx <- nchar(x) < max(nc)
-  x[idx] <- paste0(x[idx], strrep(" ", max(nc) - nchar(x[idx]) - 1), "|")
+  nc <- nchar(z)
+  idx <- nchar(z) < max(nc)
+  z[idx] <- paste0(z[idx], strrep(" ", max(nc) - nchar(z[idx]) - 1), "|")
 
-  out <- paste(x, collapse = "\n")
-  attr(out, "tinytable_meta") <- m
-  class(out) <- class(x)
-  return(out)
+  tab <- paste(z, collapse = "\n")
+
+  x@table_string <- tab
+
+  return(x)
 }
 
 
-
 group_grid_row <- function(x, i, ...) {
-  out <- x
-  out <- strsplit(x, split = "\\n")[[1]]
-  out <- out[out != ""]
+  if (is.null(i)) return(x)
+  tab <- x@table_string
+  tab <- strsplit(tab, split = "\\n")[[1]]
+  tab <- tab[tab != ""]
   # header
-  body_min <- utils::head(grep("^\\+==", out), 1) + 1
+  body_min <- utils::head(grep("^\\+==", tab), 1) + 1
   # no header
   if (is.na(body_min) || length(body_min) == 0) {
-    body_min <- utils::head(grep("^\\+--", out), 1) + 1
+    body_min <- utils::head(grep("^\\+--", tab), 1) + 1
   }
-  body_max <- utils::tail(grep("^\\+--", out), 1) - 1
+  body_max <- utils::tail(grep("^\\+--", tab), 1) - 1
   body <- body_min:body_max
-  top <- out[1:(min(body) - 1)]
-  mid <- out[min(body):max(body)]
-  bot <- out[(max(body) + 1):length(out)]
+  top <- tab[1:(min(body) - 1)]
+  mid <- tab[min(body):max(body)]
+  bot <- tab[(max(body) + 1):length(tab)]
 
-  cw <- meta(x, "width_cols")
+  cw <- x@width_cols
   cw <- sum(cw) + length(cw) - 1
   for (idx in rev(seq_along(i))) {
-    tmp <- as.character(tt_grid(matrix(names(i)[idx]), width_cols = cw))
+    tmp <- matrix(names(i)[idx])
+    tmp <- as.character(tt_grid(tmp, width_cols = cw))
     tmp <- strsplit(tmp, split = "\\n")[[1]]
     tmp <- tmp[tmp != ""][2]
     lo <- i[idx] - 1
@@ -71,11 +69,11 @@ group_grid_row <- function(x, i, ...) {
     }
   }
 
-  out <- c(top, mid, bot)
-  out <- paste(out, collapse = "\n")
+  tab <- c(top, mid, bot)
+  tab <- paste(tab, collapse = "\n")
 
-  attr(out, "tinytable_meta") <- meta(x)
-  class(out) <- class(x)
-  return(out)
+  x@table_string <- tab
+
+  return(x)
 }
 
