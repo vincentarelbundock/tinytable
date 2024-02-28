@@ -1,25 +1,23 @@
-tt_tabularray <- function(x, caption, theme, width, notes, placement) {
+tt_tabularray <- function(x) {
 
-  template <- template_tabularray(theme)
-
-  m <- meta(x)
+  template <- template_tabularray(x@theme)
 
   ncols <- ncol(x)
   nrows <- nrow(x)
 
   # caption
-  if (is.null(caption)) {
+  if (length(x@caption) > 0) {
+    template <- sub("\\$tinytable_CAPTION", x@caption, template)
+  } else {
     idx <- grep("\\$tinytable_CAPTION", template)
     template <- template[-idx]
-  } else {
-    template <- sub("\\$tinytable_CAPTION", caption, template)
   }
 
   # placement
-  assert_string(placement, null.ok = TRUE)
-  if (!is.null(placement)) {
+  if (length(x@placement) == 1) {
+    assert_string(x@placement)
     # dollar sign to avoid [H][H] when we style multiple times
-    template <- sub("\\\\begin\\{table\\}", sprintf("\\\\begin{table}[%s]\n", placement), template)
+    template <- sub("\\\\begin\\{table\\}", sprintf("\\\\begin{table}[%s]\n", x@placement), template)
   }
 
   # body: main
@@ -29,11 +27,11 @@ tt_tabularray <- function(x, caption, theme, width, notes, placement) {
   } else {
     header <- NULL
   }
-  body <- apply(as.data.frame(x), 1, paste, collapse = " & ")
+  body <- apply(as.data.frame(x@table_dataframe), 1, paste, collapse = " & ")
   body <- paste(body, "\\\\")
 
   # theme: booktabs
-  if (isTRUE(theme %in% c("default", "striped"))) {
+  if (isTRUE(x@theme %in% c("default", "striped"))) {
     if (!is.null(colnames(x))) {
       # %% are important to distinguish between potentially redundant data rows
       header[length(header)] <- paste(header[length(header)], "\\midrule %% TinyTableHeader")
@@ -52,12 +50,9 @@ tt_tabularray <- function(x, caption, theme, width, notes, placement) {
   out <- trimws(out)
   out <- paste(out, collapse = "\n")
 
-  # needed later, apparently
-  attr(out, "tinytable_meta") <- m
-
-  if (!is.null(width)) {
+  if (!is.null(x@width)) {
     tabularray_cols <- rep("X[]", ncol(x))
-    spec <- sprintf("width={%s\\linewidth},", round(width, 4))
+    spec <- sprintf("width={%s\\linewidth},", round(x@width, 4))
     out <- tabularray_insert(out, content = spec, type = "inner")
   } else {
     tabularray_cols <- rep("Q[]", ncol(x))
@@ -68,33 +63,34 @@ tt_tabularray <- function(x, caption, theme, width, notes, placement) {
   out <- tabularray_insert(out, content = colspec, type = "inner")     
 
   # themes
-  if (theme == "grid") {
+  if (x@theme == "grid") {
     out <- tabularray_insert(out, content = "hlines={},vlines={},", type = "inner")
-  } else if (theme == "striped") {
+  } else if (x@theme == "striped") {
     out <- tabularray_insert(out, content = "row{even}={bg=black!5!white},", type = "inner")
   }
 
   # notes
-  if (!is.null(notes)) {
+  if (length(x@notes) > 0) {
     out <- sub("\\begin{tblr}", "\\begin{talltblr}", out, fixed = TRUE)
     out <- sub("\\end{tblr}", "\\end{talltblr}", out, fixed = TRUE)
     # otherwise an empty caption is created automatically
     out <- tabularray_insert(out, content = "entry=none,label=none", type = "outer")
-    if (is.null(names(notes))) {
-      lab <- rep("", length(notes))
+    if (is.null(names(x@notes))) {
+      lab <- rep("", length(x@notes))
     } else {
-      lab <- names(notes)
+      lab <- names(x@notes)
     }
-    notes <- sapply(notes, function(n) if (is.list(n)) n$text else n)
+    notes <- sapply(x@notes, function(n) if (is.list(n)) n$text else n)
     for (k in seq_along(notes)) {
       spec <- sprintf("note{%s}={%s}", lab[k], notes[k])
       out <- tabularray_insert(out, content = spec, type = "outer")
     }
   }
 
-  class(out) <- c("tinytable", "knit_asis", class(out))
-  out <- meta(out, "body", body)
-  return(out)
+  x@table_string <- out
+  x@body <- body
+
+  return(x)
 }
 
 

@@ -173,10 +173,11 @@ style_tabularray <- function(x,
 }  
 
 tabularray_insert <- function(x, content = NULL, type = "body") {
-  if (is.null(content)) return(x)
+  if (!inherits(x, "tinytable")) return(x)
 
-  m <- meta(x)
-  out <- strsplit(x, "\n")[[1]]
+  out <- x@table_string
+
+  out <- strsplit(out, "\n")[[1]]
   comment <- switch(type,
   "body" = "% tabularray inner close",
   "outer" = "% tabularray outer close",
@@ -195,8 +196,9 @@ tabularray_insert <- function(x, content = NULL, type = "body") {
   }
 
   out <- paste(out, collapse = "\n")
-  class(out) <- class(x)
-  attr(out, "tinytable_meta") <- m
+
+  x@table_string <- out
+
   return(out)
 }
 

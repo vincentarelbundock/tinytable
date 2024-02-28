@@ -10,7 +10,7 @@ knit_print.tinytable <- function(x,
   # lazy styles get evaluated here, at the very end
   out <- build_tt(x, output = output)
 
-  if (isTRUE(meta(out)$output == "html")) {
+  if (isTRUE(x@output == "html")) {
     # from htmltools:::html_preserve
     # GPL3
     inline <- grepl(out, "\n", fixed = TRUE)
@@ -21,7 +21,7 @@ knit_print.tinytable <- function(x,
     }
   }
 
-  if (isTRUE(meta(out)$output == "typst")) {
+  if (isTRUE(x@output == "typst")) {
     # from htmltools:::html_preserve
     # GPL3
     inline <- grepl(out, "\n", fixed = TRUE)
@@ -73,9 +73,7 @@ print.tinytable <- function(x,
 
   # lazy styles get evaluated here by build_tt(), at the very end
   if (output %in% c("latex", "typst", "markdown")) {
-    cat("\n")
-    cat(tab)
-    cat("\n")
+    cat(tab, "\n")
 
   } else if (output == "html") {
     # need to change the output directory to a temporary directory 
@@ -87,9 +85,7 @@ print.tinytable <- function(x,
     } else if (interactive()) {
       utils::browseURL(htmlFile)
     } else {
-      cat("\n")
-      cat(tab, sep = "\n")
-      cat("\n")
+      cat(tab, "\n")
     }
 
   } else {
@@ -99,3 +95,7 @@ print.tinytable <- function(x,
   return(invisible(x))
 }
 
+
+setMethod("show", "tinytable", function(object) {
+  print.tinytable(object, output = object@output)
+})

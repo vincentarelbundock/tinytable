@@ -105,6 +105,7 @@ setClass(
         notes = "list",
         theme = "character",
         placement = "character",
+        body = "character",
         nrow = "numeric",
         ncol = "numeric",
         nhead = "numeric",
@@ -129,6 +130,7 @@ setMethod("initialize", "tinytable", function(.Object, data, table, caption, not
   .Object@nhead <- if (is.null(colnames(data))) 0 else 1
   .Object@names <- colnames(.Object@data)
   .Object@id <- get_id("tinytable_")
+  .Object@output <- "markdown"
   # conditional: allows NULL user input
   if (!is.null(placement)) .Object@placement <- placement
   if (!is.null(caption)) .Object@caption <- caption

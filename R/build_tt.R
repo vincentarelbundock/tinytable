@@ -45,14 +45,13 @@ build_tt <- function(x, output = NULL) {
   }
 
   # draw the table
-  args <- list(x = x, caption = x@caption, theme = x@theme, width = x@width, notes = x@notes, placement = x@placement)
   fun <- switch(x@output,
     html = tt_bootstrap,
     latex = tt_tabularray,
     markdown = tt_grid,
     typst = tt_typst
   )
-  x <- do.call(fun, args)
+  x <- fun(x)
 
   for (idx in seq_along(x@lazy_group)) {
     l <- x@lazy_group[[idx]]
