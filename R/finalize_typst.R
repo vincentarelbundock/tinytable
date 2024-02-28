@@ -1,17 +1,19 @@
 finalize_typst <- function(x) {
-  if (!isTRUE(meta(x)$output == "typst")) return(x)
+  if (!isTRUE(x@output == "typst")) return(x)
 
-  out <- x
+  out <- x@table_string
   out <- sub("$TINYTABLE_TYPST_NROW", meta(x, "nrows"), out, fixed = TRUE)
   out <- sub("$TINYTABLE_TYPST_NCOL", meta(x, "ncols"), out, fixed = TRUE)
   out <- sub("$TINYTABLE_TYPST_NHEAD", meta(x, "nhead"), out, fixed = TRUE)
 
-  cap <- meta(x, "caption")
-  if (!is.null(cap)) {
+  cap <- x@caption
+  if (length(cap) == 1) {
     out <- sub("$TINYTABLE_TYPST_CAPTION", sprintf("caption: [%s],", cap), out, fixed = TRUE)
   } else {
     out <- sub("$TINYTABLE_TYPST_CAPTION", "", out, fixed = TRUE)
   }
 
-  return(out)
+  x@table_string <- out
+
+  return(x)
 }

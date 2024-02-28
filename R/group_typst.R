@@ -14,9 +14,8 @@ group_typst <- function(x, i = NULL, j = NULL, ...) {
 
 
 group_typst_col <- function(x, j, ihead, ...) {
-  m <- meta(x)
-  out <- x
-  miss <- as.list(setdiff(seq_len(m$ncols), unlist(j)))
+  out <- x@table_string
+  miss <- as.list(setdiff(seq_len(ncol(x)), unlist(j)))
   miss <- stats::setNames(miss, rep(" ", length(miss)))
   j <- c(j, miss)
   max_col <- sapply(j, max)
@@ -28,11 +27,14 @@ group_typst_col <- function(x, j, ihead, ...) {
   col <- paste(col, collapse = "")
   out <- typst_insert(out, col, type = "body")
 
+  x@table_string <- out
+
   # midrule
   jrule <- lapply(names(j), function(n) if (trimws(n) != "") j[[n]])
-  jrule <- Filter(function(x) !is.null(x), jrule)
+  jrule <- Filter(function(k) !is.null(k), jrule)
   for (jr in jrule) {
-    out <- style_typst(out, i = ihead, j = jr, line = "b", line_width = .05, midrule = TRUE)
+    x <- style_typst(x, i = ihead, j = jr, line = "b", line_width = .05, midrule = TRUE)
   }
-  return(out)
+
+  return(x)
 }
