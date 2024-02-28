@@ -1,18 +1,18 @@
 
 finalize_bootstrap <- function(x) {
-  if (!isTRUE(meta(x)$output == "html")) {
+  if (!isTRUE(x@output == "html")) {
     return(x)
   }
 
   # class
-  cl <- meta(x, "bootstrap_class")
+  cl <- x@bootstrap_class
   if (is.null(cl)) {
     cl <- "table table-borderless"
   }
   out <- sub(
     "$tinytable_BOOTSTRAP_CLASS",
     cl,
-    x,
+    x@table_string,
     fixed = TRUE)
 
   # Rmarkdown and Quarto load their own bootstrap, which we probably don't want to override
@@ -22,5 +22,7 @@ finalize_bootstrap <- function(x) {
     out <- paste(out, collapse = "\n")
   }
 
-  return(out)
+  x@table_string <- out
+
+  return(x)
 }

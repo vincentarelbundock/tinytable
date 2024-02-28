@@ -113,6 +113,7 @@ setClass(
         output = "character",
         output_dir = "character",
         id = "character",
+        bootstrap_class = "character",
         lazy_format = "list",
         lazy_group = "list",
         lazy_style = "list",

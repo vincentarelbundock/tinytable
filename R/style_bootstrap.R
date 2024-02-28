@@ -31,14 +31,14 @@ style_bootstrap <- function(x,
 
   if (x@output != "html") return(x)
 
-  out <- x
+  out <- x@table_string
 
-  ival <- if (is.null(i)) seq_len(meta(x, "nrows")) else i
-  jval <- if (is.null(j)) seq_len(meta(x, "ncols")) else j
+  ival <- if (is.null(i)) seq_len(nrow(x)) else i
+  jval <- if (is.null(j)) seq_len(ncol(x)) else j
 
   # only columns means we also want to style headers 
   if (is.null(i) && !is.null(j)) {
-    ival <- c(-1 * rev(seq_len(meta(x)$nhead) - 1), ival)
+    ival <- c(-1 * rev(seq_len(x@nhead) - 1), ival)
   }
 
 
@@ -50,7 +50,7 @@ style_bootstrap <- function(x,
 
   # JS 0-indexing
   settings$j <- settings$j - 1
-  settings$i <- settings$i - 1 + meta(x, "nhead")
+  settings$i <- settings$i - 1 + x@nhead
 
 
   # settings have a different size for latex, so bootstrap breaks
@@ -157,15 +157,16 @@ style_bootstrap <- function(x,
     out <- bootstrap_setting(out, bootstrap_css_rule, component = "css")
   }
 
-  if (!is.null(bootstrap_class)) {
-    out <- meta(out, "bootstrap_class", bootstrap_class)
-  }
-
   # Changing function names to table ID to avoid conflict with other tables functions 
   out <- gsub("styleCell_\\w+\\(", paste0("styleCell_", meta(x, "id"), "("), out)
   out <- gsub("spanCell_\\w+\\(", paste0("spanCell_", meta(x, "id"), "("), out)
 
-  class(out) <- class(x)
-  return(out)
+  x@table_string <- out
+
+  if (!is.null(bootstrap_class)) {
+    x@bootstrap_class <- bootstrap_class
+  }
+
+  return(x)
 }
 
