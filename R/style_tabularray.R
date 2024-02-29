@@ -24,7 +24,7 @@ style_tabularray <- function(x,
 
   if (x@output != "latex") return(x)
 
-  out <- x
+  out <- x@table_string
 
   ival <- if (is.null(i)) seq_len(nrow(x)) else i
   jval <- if (is.null(j)) seq_len(ncol(x)) else j
@@ -169,7 +169,9 @@ style_tabularray <- function(x,
   out <- tabularray_insert(out, content = tabularray_inner, type = "inner")
   out <- tabularray_insert(out, content = tabularray_outer, type = "outer")
 
-  return(out)
+  x@table_string <- out
+
+  return(x)
 }  
 
 tabularray_insert <- function(x, content = NULL, type = "body") {

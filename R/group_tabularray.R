@@ -1,6 +1,4 @@
 group_tabularray <- function(x, i, j, indent, ...) {
-  if (!is.null(i)) x@nrow <- x@nrow + length(i)
-  if (!is.null(j)) x@nhead <- x@nhead + 1
   # columns first to count headers properly
   x <- group_tabularray_col(x, j, ...)
   x <- group_tabularray_row(x, i, indent)
@@ -96,7 +94,6 @@ group_tabularray_row <- function(x, i, indent) {
 
   # we also want to indent the header
   i <- idx$new[!is.na(idx$old)] + x@nhead
-  # if (m$nhead > 0) i <- c(1:m$nhead, i)
   cellspec <- sprintf("cell{%s}{%s}={%s},\n", i, 1, sprintf("preto={\\hspace{%sem}}", indent))
   cellspec <- paste(cellspec, collapse = "")
   tab <- tabularray_insert(tab, content = cellspec, type = "inner")

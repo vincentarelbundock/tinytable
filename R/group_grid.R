@@ -1,7 +1,5 @@
 group_grid <- function(x, i = NULL, j = NULL, ...) {
   # add here because this is where lazy gets executed
-  if (!is.null(i)) x@nrow <- x@nrow + length(i)
-  if (!is.null(j)) x@nhead <- x@nhead + 1
   x <- group_grid_row(x, i)
   x <- group_grid_col(x, j)
   return(x)

@@ -73,7 +73,7 @@ print.tinytable <- function(x,
 
   # lazy styles get evaluated here by build_tt(), at the very end
   if (output %in% c("latex", "typst", "markdown")) {
-    cat("\n", tab, "\n")
+    cat(tab, "\n")
 
   } else if (output == "html") {
     # need to change the output directory to a temporary directory 

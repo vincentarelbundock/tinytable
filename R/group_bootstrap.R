@@ -19,7 +19,6 @@ group_bootstrap_col <- function(x, j, ihead, ...) {
   out <- strsplit(out, "\\n")[[1]]
   header <- NULL
 
-
   miss <- as.list(setdiff(seq_len(ncol(x)), unlist(j)))
   miss <- stats::setNames(miss, rep(" ", length(miss)))
   j <- c(j, miss)
