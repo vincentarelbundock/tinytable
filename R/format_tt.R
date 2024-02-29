@@ -159,8 +159,9 @@ format_tt_lazy <- function(x,
   # In sanity_tt(), we fill in missing NULL `j` in the format-specific versions,
   # because tabularray can do whole column styling. Here, we need to fill in
   # NULL for all formats since this is applied before creating the table.
-  if (is.null(i)) i <- seq_len(nrow(x))
-  if (is.null(j)) j <- seq_len(ncol(x))
+  # nrow(out) because nrow(x) sometimes includes rows that will be added **in the lazy future** by group_tt()
+  if (is.null(i)) i <- seq_len(nrow(out))
+  if (is.null(j)) j <- seq_len(ncol(out))
 
   # format each column
   for (col in j) {
