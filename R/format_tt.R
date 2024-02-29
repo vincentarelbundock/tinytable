@@ -139,7 +139,6 @@ format_tt_lazy <- function(x,
     stop("`x` must be a `tinytable` object, a data frame, or an atomic vector.", call. = FALSE)
   }
 
-
   assert_integerish(digits, len = 1, null.ok = TRUE)
   assert_integerish(i, null.ok = TRUE)
   assert_choice(num_fmt, c("significant", "significant_cell", "decimal", "scientific"))
@@ -155,6 +154,11 @@ format_tt_lazy <- function(x,
   assert_flag(markdown)
   if (is.null(j)) jnull <- TRUE else jnull <- FALSE
   j <- sanitize_j(j, ori)
+
+  if (is.null(digits)) {
+    if (num_mark_big != "") stop("`num_mark_big` requires a `digits` value.", call. = FALSE)
+    if (num_mark_dec != ".") stop("`num_mark_dec` requires a `digits` value.", call. = FALSE)
+  }
 
   # In sanity_tt(), we fill in missing NULL `j` in the format-specific versions,
   # because tabularray can do whole column styling. Here, we need to fill in

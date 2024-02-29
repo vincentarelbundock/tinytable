@@ -8,6 +8,7 @@
 * New `fn` argument which accepts an arbitrary function to format table content.
 * `num_fmt="significant_cell"` rounds significant digits on a cell-by-cell basis rather than for full columns (as is default in base R `format()`).
 * Numeric formatting options can be set via global options, defined in the function signature.
+* `num_mark_big` and `num_mark_dec` require an explicit `digits`. We now raise an informative error.
 
 Typst format:
 

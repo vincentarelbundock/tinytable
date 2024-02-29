@@ -93,5 +93,11 @@ expect_snapshot_print(tab, "format_tt-issue147_03")
 options(tinytable_print_output = NULL)
 
 
+# Issue #149: num_mark_big requires digits
+x <- data.frame(x = c(pi * 1e6, pi * 1e9))
+tab <- format_tt(tt(x), digits = 1, num_mark_big = " ")
+expect_snapshot_print(tab, "format_tt-issue149")
+# expect_error(format_tt(tt(x), num_mark_big = " "))
+
 
 options(tinytable_print_output = NULL)
