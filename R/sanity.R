@@ -6,18 +6,18 @@ usepackage_latex <- function(name, options = NULL, extra_lines = NULL) {
 
 sanitize_j <- function(j, x) {
   # regex
-  if (is.character(j) && length(j) == 1 && !is.null(meta(x, "colnames"))) {
-    j <- grep(j, meta(x, "colnames"), perl = TRUE)
+  if (is.character(j) && length(j) == 1 && !is.null(colnames(x))) {
+    j <- grep(j, colnames(x), perl = TRUE)
   # full names
-  } else if (is.character(j) && length(j) > 1 && !is.null(meta(x, "colnames"))) {
-    bad <- setdiff(j, meta(x, "colnames"))
+  } else if (is.character(j) && length(j) > 1 && !is.null(colnames(x))) {
+    bad <- setdiff(j, colnames(x))
     if (length(bad) > 0) {
       msg <- sprintf("Missing columns: %s", paste(bad, collapse = ", "))
       stop(msg, call. = FALSE)
     }
-    j <- which(meta(x, "colnames") %in% j)
+    j <- which(colnames(x) %in% j)
   } else {
-    assert_integerish(j, lower = 1, upper = meta(x, "ncols"), null.ok = TRUE)
+    assert_integerish(j, lower = 1, upper = ncol(x), null.ok = TRUE)
   }
   return(j)
 }
