@@ -13,25 +13,28 @@ finalize_grid <- function(x) {
     out <- x@table_string
 
     # notes
-    no <- x@notes
-    if (length(no) > 0) {
-      if (!is.character(no) || length(no) != 1) {
-        msg <- "For Markdown or Word tables, the `notes` argument must be a single string."
-        stop(msg, call. = FALSE)
-      }
+    for (i in seq_along(x@notes)) {
       lines <- strsplit(out, split = "\\n")[[1]]
       target <- max(nchar(lines)) - 4
-      no <- strwrap(no, width = target)
-      no <- format(no, width = target)
-      no <- sprintf("| %s |", no)
+      no <- x@notes[[i]]
+      if (is.list(no)) {
+        txt <- no$text
+      } else {
+        txt <- no
+      }
+      if (names(x@notes)[i] != "") {
+        txt <- sprintf("^%s^ %s", names(x@notes)[i], txt)
+      }
+      txt <- strwrap(txt, width = target)
+      txt <- format(txt, width = target)
+      txt <- sprintf("| %s |", txt)
       idx <- utils::tail(grep("^+", lines), 1)
       bot <- lines[idx]
       bot <- gsub("-", "=", bot)
       lines[idx] <- bot
-      out <- c(lines, no, bot)
+      out <- c(lines, txt, bot)
       out <- paste(out, collapse = "\n")
     }
-
 
     # caption
     cap <- x@caption

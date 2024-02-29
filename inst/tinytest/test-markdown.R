@@ -68,9 +68,11 @@ tab<-tt(tab)|>
 expect_snapshot_print(tab, label = "markdown-missing_value")
 
 
-exit_file("TODO: footnotes are broken")
 # Test footnote
-tab <- tt(mtcars[1:8, 1:5], notes = "Footnote")
+x <- mtcars[1:3, 1:3]
+n <- list("Blah blah", "*" = list(i = 0:1, j = 2, text = "foo bar"))
+tab <- tt(x, notes = n)
+
 expect_snapshot_print(tab, label = "markdown-footnote")
 
 
