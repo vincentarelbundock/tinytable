@@ -253,7 +253,7 @@ format_tt_lazy <- function(x,
     } else if (isTRUE(escape == "typst")) {
       o <- "typst"
     } else {
-      o <- meta(x)$output
+      o <- x@output
     }
     # if j includes all columns, the user wants to escape the full table, including the column headers
     if (jnull) {

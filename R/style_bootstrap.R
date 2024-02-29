@@ -158,8 +158,8 @@ style_bootstrap <- function(x,
   }
 
   # Changing function names to table ID to avoid conflict with other tables functions 
-  out <- gsub("styleCell_\\w+\\(", paste0("styleCell_", meta(x, "id"), "("), out)
-  out <- gsub("spanCell_\\w+\\(", paste0("spanCell_", meta(x, "id"), "("), out)
+  out <- gsub("styleCell_\\w+\\(", paste0("styleCell_", x@id, "("), out)
+  out <- gsub("spanCell_\\w+\\(", paste0("spanCell_", x@id, "("), out)
 
   x@table_string <- out
 

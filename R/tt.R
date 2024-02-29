@@ -24,7 +24,7 @@
 #' @param placement A string to control the position of tables in LaTeX. Will be inserted in square brackets like: `\\begin{table}[H]`
 #' @return An object of class `tt` representing the table.
 #' 
-#' The table object has an attribute which holds information about the structure of the table. This metadata can be accessed with `attr(x,"tinytable_meta")`. In general, modifying the content of this attribute is not recommended, but it can be useful to some developers, such as those who want to force print to a specific output format without calling `print()`.
+#' The table object has S4 slots which hold information about the structure of the table. This meta-data can be accessed with the usual `@` accessor. In general, modifying the content of these slots is not recommended, but it can be useful to some developers, such as those who want to force print to a specific output format without calling `print()`.
 #' @template latex_preamble
 #' 
 #' @examples

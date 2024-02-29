@@ -47,7 +47,7 @@ knit_print.tinytable <- function(x,
 #' + When called interactively in RStudio, the default is to display an HTML table in the viewer pane.
 #' + When called interactively in another development environment, the default is "markdown". 
 #' + The default print output can be changed for an entire R session by calling: `options(tinytable_print_output = "html")`
-#' + The default print output can be changed for a single `tinytable` object by modifying the `output` element of the meta data attribute: `attr(x,"tinytable_meta")`
+#' + The default print output can be changed for a single `tinytable` object by modifying the `output` S4 slot.
 #' @param ... Other arguments are ignored.
 #' @return launch a browser window or cat() the table to console.
 #' @export
