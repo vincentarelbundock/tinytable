@@ -82,6 +82,45 @@ tt(x, width = 0.5)
 tt(x, width = 1)
 ```
 
+When specifying a table `width`, the text is automatically wrapped to appropriate size:
+
+```{r}
+lorem <- data.frame(
+  Lorem = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+  Ipsum = " Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos."
+)
+
+tt(lorem, width = 3/4)
+```
+
+
+## Footnotes
+
+The `notes` argument accepts single strings or named lists of strings:
+
+```{r}
+#| tbl-cap: "A full-width table with wrapped text in cells and a footnote."
+n <- "Fusce id ipsum consequat ante pellentesque iaculis eu a ipsum. Mauris id ex in nulla consectetur aliquam. In nec tempus diam. Aliquam arcu nibh, dapibus id ex vestibulum, feugiat consequat erat. Morbi feugiat dapibus malesuada. Quisque vel ullamcorper felis. Aenean a sem at nisi tempor pretium sit amet quis lacus."
+
+tt(lorem, notes = n, width = 1)
+```
+
+When `notes` is a named list, the names are used as identifiers and displayed as superscripts:
+
+```{r}
+tt(x, notes = list(a = "Blah.", b = "Blah blah."))
+```
+
+We can also add markers in individual cells by providing coordinates:
+
+```{r}
+tt(x, notes = list(
+    a = list(i = 0:1, j = 1, text = "Blah."),
+    b = "Blah blah."
+  )
+)
+```
+
 
 ## Captions and cross-references
 
@@ -108,7 +147,7 @@ And here is the rendered version of the code chunk above:
 #| label: tbl-blah
 #| tbl-cap: "Blah blah blah"
 library(tinytable)
-tt(mtcars[1:4, 1:4], placement = NULL)
+tt(mtcars[1:4, 1:4])
 ```
 
 For standalone LaTeX tables, you can use the `caption` argument like so:
@@ -119,40 +158,6 @@ tt(x, caption = "Blah blah.\\label{tbl-blah}")
 
 Be aware that this more approach may not work well in Quarto or Rmarkdown documents.
 
-
-## Footnotes
-
-The `notes` argument accepts single strings or named lists of strings:
-
-```{r}
-#| tbl-cap: "A full-width table with wrapped text in cells and a footnote."
-n <- "Fusce id ipsum consequat ante pellentesque iaculis eu a ipsum. Mauris id ex in nulla consectetur aliquam. In nec tempus diam. Aliquam arcu nibh, dapibus id ex vestibulum, feugiat consequat erat. Morbi feugiat dapibus malesuada. Quisque vel ullamcorper felis. Aenean a sem at nisi tempor pretium sit amet quis lacus."
-
-lorem <- data.frame(
-  Lorem = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
-  Ipsum = " Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos."
-)
-
-tt(lorem, width = 3/4)
-
-tt(lorem, notes = n, width = 1)
-```
-
-When `notes` is a named list, the names are used as identifiers and displayed as superscripts:
-
-```{r}
-tt(x, notes = list(a = "Blah.", b = "Blah blah."))
-```
-
-We can also add markers in individual cells by providing coordinates:
-
-```{r}
-tt(x, notes = list(
-    a = list(i = 0:1, j = 1, text = "Blah."),
-    b = "Blah blah."
-  )
-)
-```
 
 ## Math
 
@@ -179,13 +184,6 @@ tt(dat) |>
 
 
 ## Line breaks and text wrapping
-
-When the `width` argument is specified and a cell includes long text, the text is automatically wrapped to match the table.
-
-```{r}
-#| tbl-cap: "A full width table with wrapped text."
-tt(lorem, width = 3/4)
-```
 
 Manual line breaks work sligthly different in LaTeX (PDF) or HTML. This table shows the two strategies. For HTML, we insert a `<br>` tag. For LaTeX, we wrap the string in curly braces `{}`, and then insert two (escaped) backslashes: `\\\\`
 

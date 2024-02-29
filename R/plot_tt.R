@@ -134,10 +134,7 @@ plot_tt_lazy <- function(x,
   if (!is.null(data)) {
     assert_dependency('ggplot2')
     images <- NULL
-    if (!is.null(x@output_dir)) {
-      path_full <- file.path(x@output_dir, assets)
-    }
-
+    path_full <- file.path(x@output_dir, assets)
     if (!dir.exists(path_full)) {
       dir.create(path_full)
     }

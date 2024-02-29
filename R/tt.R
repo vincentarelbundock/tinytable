@@ -136,6 +136,7 @@ setMethod("initialize", "tinytable", function(.Object, data, table, caption, not
   .Object@names <- if (is.null(colnames(data))) character() else colnames(data)
   .Object@id <- get_id("tinytable_")
   .Object@output <- "markdown"
+  .Object@output_dir <- getwd()
   # conditional: allows NULL user input
   if (!is.null(placement)) .Object@placement <- placement
   if (!is.null(caption)) .Object@caption <- caption
