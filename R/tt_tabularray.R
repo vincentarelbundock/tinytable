@@ -21,7 +21,7 @@ tt_tabularray <- function(x) {
   }
 
   # body: main
-  if (!is.null(colnames(x))) {
+  if (length(colnames(x)) > 0) {
     header <- paste(colnames(x), collapse = " & ")
     header <- paste(header, "\\\\")
   } else {
@@ -32,7 +32,7 @@ tt_tabularray <- function(x) {
 
   # theme: booktabs
   if (isTRUE(x@theme %in% c("default", "striped"))) {
-    if (!is.null(colnames(x))) {
+    if (length(colnames(x)) > 0) {
       # %% are important to distinguish between potentially redundant data rows
       header[length(header)] <- paste(header[length(header)], "\\midrule %% TinyTableHeader")
     }

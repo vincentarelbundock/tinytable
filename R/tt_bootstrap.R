@@ -20,7 +20,7 @@ tt_bootstrap <- function(x, ...) {
   }
 
   # note
-  if (length(x@notes) > 0) {
+  if (length(x@notes) == 0) {
     template <- sub(
       "$tinytable_BOOTSTRAP_NOTE",
       "",

@@ -133,7 +133,7 @@ setMethod("initialize", "tinytable", function(.Object, data, table, caption, not
   .Object@nrow <- nrow(.Object@data)
   .Object@ncol <- ncol(.Object@data)
   .Object@nhead <- if (is.null(colnames(data))) 0 else 1
-  .Object@names <- colnames(.Object@data)
+  .Object@names <- if (is.null(colnames(data))) character() else colnames(data)
   .Object@id <- get_id("tinytable_")
   .Object@output <- "markdown"
   # conditional: allows NULL user input
