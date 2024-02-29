@@ -91,10 +91,10 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
   x@table_string <- out
 
   # should not be style_tt, because we already have a string bootstrap table at this stage
-  out <- style_bootstrap(x, i = idx_old, j = 1, indent = indent)
+  x <- style_bootstrap(x, i = idx_old, j = 1, indent = indent)
 
   # if there's a two-level header column multi-span, we want it centered.
-  out <- style_bootstrap(x, i = -1, align = "c")
+  x <- style_bootstrap(x, i = -1, align = "c")
 
   dots <- list(...)
   dots[["j"]] <- NULL

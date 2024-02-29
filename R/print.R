@@ -8,7 +8,8 @@ knit_print.tinytable <- function(x,
                                  ...) {
 
   # lazy styles get evaluated here, at the very end
-  out <- build_tt(x, output = output)
+  x <- build_tt(x, output = output)
+  out <- x@table_string
 
   if (isTRUE(x@output == "html")) {
     # from htmltools:::html_preserve
