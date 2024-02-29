@@ -1,44 +1,50 @@
 
 finalize_grid <- function(x) {
-    if (!isTRUE(meta(x)$output == "markdown")) return(x)
+    if (!isTRUE(x@output == "markdown")) return(x)
 
-    out <- x
 
     # formal grid specification in pandoc includes lines everywhere
     # important for docx output
     hlines <- getOption("tinytable_grid_hlines", default = TRUE)
     if (isTRUE(hlines)) {
-      out <- grid_hlines(out)
+      x <- grid_hlines(x)
     }
 
+    out <- x@table_string
+
     # notes
-    no <- meta(x, "notes")
-    if (!is.null(no)) {
-      if (!is.character(no) || length(no) != 1) {
-        msg <- "For Markdown or Word tables, the `notes` argument must be a single string."
-        stop(msg, call. = FALSE)
-      }
+    for (i in seq_along(x@notes)) {
       lines <- strsplit(out, split = "\\n")[[1]]
       target <- max(nchar(lines)) - 4
-      no <- strwrap(no, width = target)
-      no <- format(no, width = target)
-      no <- sprintf("| %s |", no)
+      no <- x@notes[[i]]
+      if (is.list(no)) {
+        txt <- no$text
+      } else {
+        txt <- no
+      }
+      if (isTRUE(names(x@notes)[i] != "")) {
+        txt <- sprintf("^%s^ %s", names(x@notes)[i], txt)
+      }
+      txt <- strwrap(txt, width = target)
+      txt <- format(txt, width = target)
+      txt <- sprintf("| %s |", txt)
       idx <- utils::tail(grep("^+", lines), 1)
       bot <- lines[idx]
       bot <- gsub("-", "=", bot)
       lines[idx] <- bot
-      out <- c(lines, no, bot)
+      out <- c(lines, txt, bot)
       out <- paste(out, collapse = "\n")
     }
 
-
     # caption
-    cap <- meta(x, "caption")
-    if (is.character(cap) && length(cap) == 1) {
+    cap <- x@caption
+    if (is.character(cap) && length(cap) == 1 && nchar(cap) > 0) {
         out <- paste0(out, "\n", "Table: ", cap, "\n")
     }
 
-    return(out)
+    x@table_string <- out
+
+    return(x)
 }
 
 

@@ -38,17 +38,14 @@ plot_tt <- function(x,
                     assets = "tinytable_assets",
                     ...) {
 
-  out <- x
-
-
   j <- sanitize_j(j, x)
   assert_integerish(i, null.ok = TRUE)
   assert_numeric(height, len = 1, lower = 0)
   assert_numeric(asp, len = 1, lower = 0, upper = 1)
   assert_class(x, "tinytable")
 
-  jval <- if (is.null(j)) seq_len(meta(x, "ncols")) else j
-  ival <- if (is.null(i)) seq_len(meta(x, "nrows")) else i
+  jval <- if (is.null(j)) seq_len(ncol(x)) else j
+  ival <- if (is.null(i)) seq_len(nrow(x)) else i
 
   len <- length(ival) * length(jval)
 
@@ -97,10 +94,9 @@ plot_tt <- function(x,
   }
 
   # needed when rendering in tempdir()
-  out <- meta(out, "path_plot", images)
-
   cal <- list(
     "plot_tt_lazy", 
+    x = x,
     i = ival,
     j = jval,
     asp = asp,
@@ -114,10 +110,9 @@ plot_tt <- function(x,
   cal <- c(cal, list(...))
   cal <- do.call(call, cal)
 
-  out <- meta(out, "lazy_plot", c(meta(out)$lazy_plot, list(cal)))
-  out <- meta(out, "path_image", images)
+  x@lazy_plot <- c(x@lazy_plot, list(cal))
 
-  return(out)
+  return(x)
 }
 
 
@@ -134,15 +129,12 @@ plot_tt_lazy <- function(x,
                          assets = "tinytable_assets",
                          ...) {
 
-  out <- x
+  out <- x@table_dataframe
 
   if (!is.null(data)) {
     assert_dependency('ggplot2')
     images <- NULL
-    if (!is.null(meta(x)$output_dir)) {
-      path_full <- file.path(meta(x)$output_dir, assets)
-    }
-
+    path_full <- file.path(x@output_dir, assets)
     if (!dir.exists(path_full)) {
       dir.create(path_full)
     }
@@ -186,22 +178,22 @@ plot_tt_lazy <- function(x,
     }
   }
 
-  if (isTRUE(meta(x)$output == "latex")) {
+  if (isTRUE(x@output == "latex")) {
     cell <- "\\includegraphics[height=%sem]{%s}"
     cell <- sprintf(cell, height, images)
 
-  } else if (isTRUE(meta(x)$output == "html")) {
+  } else if (isTRUE(x@output == "html")) {
     cell <- ifelse(
       grepl("^http", trimws(images)),
       '<img src="%s" style="height: %sem;">',
       '<img src="./%s" style="height: %sem;">')
     cell <- sprintf(cell, images, height)
 
-  } else if (isTRUE(meta(x)$output == "markdown")) {
+  } else if (isTRUE(x@output == "markdown")) {
     cell <- '![](%s)'
     cell <- sprintf(cell, images)
 
-  } else if (isTRUE(meta(x)$output == "typst")) {
+  } else if (isTRUE(x@output == "typst")) {
     cell <- '#image("%s")'
     cell <- sprintf(cell, images)
 
@@ -211,7 +203,9 @@ plot_tt_lazy <- function(x,
 
   out[i, j] <- cell
 
-  return(out)
+  x@table_dataframe <- out
+
+  return(x)
 }
 
 

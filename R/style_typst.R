@@ -24,21 +24,21 @@ style_typst <- function(x,
                         midrule = FALSE, # undocumented, only used by `group_tt()`
                         ...) {
 
-  if (meta(x, "output") != "typst") return(x)
+  if (x@output != "typst") return(x)
 
-  out <- x
+  out <- x@table_string
 
-  ival <- if (is.null(i)) seq_len(meta(x, "nrows")) else i
-  jval <- if (is.null(j)) seq_len(meta(x, "ncols")) else j
+  ival <- if (is.null(i)) seq_len(nrow(x)) else i
+  jval <- if (is.null(j)) seq_len(ncol(x)) else j
 
   # only columns means we also want to style headers
   if (is.null(i) && !is.null(j)) {
-    ival <- c(-1 * rev(seq_len(meta(x)$nhead) - 1), ival)
+    ival <- c(-1 * rev(seq_len(x@nhead) - 1), ival)
   }
 
   # 0- & header-indexing
   jval <- jval - 1
-  ival <- ival - 1 + meta(x, "nhead")
+  ival <- ival - 1 + x@nhead
 
   if (isTRUE(grepl("^#", color))) color <- sprintf('rgb("%s")', color)
   if (isTRUE(grepl("^#", background))) background <- sprintf('rgb("%s")', background)
@@ -151,6 +151,7 @@ let j = (%s,);",
 
   }
 
+  x@table_string <- out
 
-  return(out)
+  return(x)
 }

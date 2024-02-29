@@ -10,15 +10,15 @@ style_grid <- function(x,
                        colspan = NULL,
                        ...) {
 
-  if (meta(x, "output") != "markdown") return(x)
+  if (x@output != "markdown") return(x)
 
-  out <- x
+  out <- x@table_dataframe
 
-  ival <- if (is.null(i)) seq_len(meta(x, "nrows")) else i
-  jval <- if (is.null(j)) seq_len(meta(x, "ncols")) else j
+  ival <- if (is.null(i)) seq_len(nrow(x)) else i
+  jval <- if (is.null(j)) seq_len(ncol(x)) else j
 
   # Unlike other formats, Markdown inserts `group_tt()` row labels after styling. This aligns the `i` index to the full columns.
-  gr <- meta(x, "lazy_group")
+  gr <- x@lazy_group
   gr <- Filter(function(k) !is.null(k$i), gr)
   # do not style spanning row labels
   lab_idx <- drop(unlist(lapply(gr, function(k) k$i)))
@@ -53,7 +53,7 @@ style_grid <- function(x,
         backup <- out[row, col]
         for (w in idx_row) {
           for (z in idx_col) {
-            if (z <= meta(x, "ncols")) {
+            if (z <= x@ncol) {
               out[w, z] <- ""
             }
           }
@@ -63,9 +63,7 @@ style_grid <- function(x,
     }
   }
 
-
-  attr(out, "tinytable_meta") <- meta(x)
-  class(out) <- class(x)
-  return(out)
+  x@table_dataframe <- out
+  return(x)
 }  
 

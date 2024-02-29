@@ -77,7 +77,7 @@ format_tt <- function(x,
                 escape = escape,
                 markdown = markdown,
                 other = other)
-    out <- meta(out, "lazy_format", c(meta(out)$lazy_format, list(cal)))
+    out@lazy_format <- c(out@lazy_format, list(cal))
   } else {
 
     out <- format_tt_lazy(out,
@@ -99,6 +99,7 @@ format_tt <- function(x,
                           escape = escape,
                           markdown = markdown)
   }
+
   return(out)
 }
 
@@ -126,23 +127,19 @@ format_tt_lazy <- function(x,
     atomic_vector <- TRUE
     ori <- out <- x <- data.frame(tinytable = x)
     j <- 1
-  } else if (!inherits(x, "tinytable") && is.data.frame(x)) {
+  } else if (is.data.frame(x)) {
     atomic_vector <- FALSE
     ori <- out <- x
-  } else {
+  } else if (inherits(x, "tinytable")){
     atomic_vector <- FALSE
     # if no other format_tt() call has been applied, we can have numeric values
-    ori <- meta(x, "x_original")
-    out <- x
+    out <- x@table_dataframe
+    ori <- x@data
+  } else {
+    stop("`x` must be a `tinytable` object, a data frame, or an atomic vector.", call. = FALSE)
   }
 
-  if (!inherits(x, "data.frame")) {
-    return(x) # hard to track down issue with NULL value here in datasummary_balance. Returning NULL is magic I can't explain.
-    msg <- "`x` must be a data frame or an atomic vector."
-    stop(msg, call. = FALSE)
-  }
 
-  assert_data_frame(x)
   assert_integerish(digits, len = 1, null.ok = TRUE)
   assert_integerish(i, null.ok = TRUE)
   assert_choice(num_fmt, c("significant", "significant_cell", "decimal", "scientific"))
@@ -157,13 +154,14 @@ format_tt_lazy <- function(x,
   assert_string(sprintf, null.ok = TRUE)
   assert_flag(markdown)
   if (is.null(j)) jnull <- TRUE else jnull <- FALSE
-  j <- sanitize_j(j, x)
+  j <- sanitize_j(j, ori)
 
   # In sanity_tt(), we fill in missing NULL `j` in the format-specific versions,
   # because tabularray can do whole column styling. Here, we need to fill in
   # NULL for all formats since this is applied before creating the table.
-  if (is.null(i)) i <- seq_len(nrow(x))
-  if (is.null(j)) j <- seq_len(ncol(x))
+  # nrow(out) because nrow(x) sometimes includes rows that will be added **in the lazy future** by group_tt()
+  if (is.null(i)) i <- seq_len(nrow(out))
+  if (is.null(j)) j <- seq_len(ncol(out))
 
   # format each column
   for (col in j) {
@@ -256,23 +254,25 @@ format_tt_lazy <- function(x,
     } else if (isTRUE(escape == "typst")) {
       o <- "typst"
     } else {
-      o <- meta(x)$output
+      o <- x@output
     }
     # if j includes all columns, the user wants to escape the full table, including the column headers
     if (jnull) {
       colnames(out) <- escape_text(colnames(out), output = o)
+      if (inherits(x, "tinytable")) {
+        x@names <- escape_text(x@names, output = o)
+      }
     }
     for (col in j) {
       out[i, col] <- escape_text(out[i, col], output = o)
     }
   }
 
-
   # markdown at the very end
   if (isTRUE(markdown)) {
     assert_dependency("markdown")
     for (col in j) {
-      if (isTRUE(meta(x)$output == "html")) {
+      if (isTRUE(x@output == "html")) {
         fun <- function(k) {
           k <- trimws(markdown::mark_html(text = k, template = FALSE))
           k <- sub("<p>", "", k, fixed = TRUE)
@@ -280,7 +280,7 @@ format_tt_lazy <- function(x,
           return(k)
         }
         out[i, col] <- sapply(out[i, col], function(k) fun(k))
-      } else if (isTRUE(meta(x)$output == "latex")) {
+      } else if (isTRUE(x@output == "latex")) {
         fun <- function(k) {
           k <- trimws(markdown::mark_latex(text = k, template = FALSE))
           return(k)
@@ -290,15 +290,13 @@ format_tt_lazy <- function(x,
     }
   }
 
-
   if (isTRUE(atomic_vector)) {
     return(out[[1]])
-  } else if (!inherits(out, "tinytable")) {
+  } else if (!inherits(x, "tinytable")) {
     return(out)
   } else {
-    attr(out, "tinytable_meta") <- meta(x)
-    class(out) <- c("tinytable", "data.frame")
-    return(out)
+    x@table_dataframe <- out
+    return(x)
   }
 
 }

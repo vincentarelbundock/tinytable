@@ -1,23 +1,17 @@
 group_tabularray <- function(x, i, j, indent, ...) {
-  out <- x
   # columns first to count headers properly
-  if (!is.null(j)) {
-    out <- group_tabularray_col(out, j, ...)
-  }
-  if (!is.null(i)) {
-    out <- group_tabularray_row(out, i, indent)
-  }
-  return(out)
+  x <- group_tabularray_col(x, j, ...)
+  x <- group_tabularray_row(x, i, indent)
+  return(x)
 }
 
 
 group_tabularray_col <- function(x, j, ihead, ...) {
+  if (is.null(j)) return(x)
 
-  m <- meta(x)
+  out <- strsplit(x@table_string, split = "\\n")[[1]]
 
-  out <- strsplit(x, split = "\\n")[[1]]
-
-  header <- rep("", m$ncols)
+  header <- rep("", ncol(x))
   for (n in names(j)) {
     header[min(j[[n]])] <- n
   }
@@ -40,34 +34,34 @@ group_tabularray_col <- function(x, j, ihead, ...) {
   out <- paste(out, collapse = "\n")
 
   # rebuild including meta before style_tt
-  class(out) <- class(x)
-  attr(out, "tinytable_meta") <- m
+  x@table_string <- out
 
   for (k in seq_along(j)) {
     z <- min(j[[k]])
     args <- list(
       tt_build_now = TRUE,
-      x = out,
+      x = x,
       i = ihead,
       j = z,
       align = "c",
       colspan = max(j[[k]]) - min(j[[k]]) + 1)
-    out <- do.call(style_tabularray, args)
+    x <- do.call(style_tabularray, args)
   }
 
-  return(out)
+  return(x)
 }
 
 
 group_tabularray_row <- function(x, i, indent) {
-  m <- meta(x)
+  if (is.null(i)) return(x)
 
   if (is.null(names(i))) {
     msg <- "`i` must be a named integer vector."
+    stop(msg, call. = FALSE)
   }
   label <- names(i)
 
-  tab <- strsplit(x, "\\n")[[1]]
+  tab <- strsplit(x@table_string, "\\n")[[1]]
 
   # store the original body lines when creating the table, and use those to guess the boundaries.
   # a hack, but probably safer than most regex approaches I can think of.
@@ -80,34 +74,33 @@ group_tabularray_row <- function(x, i, indent) {
 
   # separator rows
   # add separator rows so they are treated as body in future calls
-  new <- paste(label, strrep("&", m$ncols), "\\\\")
-  m$body <- c(m$body, new)
+  new <- paste(label, strrep("&", ncol(x)), "\\\\")
+  x@body <- c(x@body, new)
   idx <- insert_values(mid, new, i)
 
   # rebuild table
   tab <- c(top, idx$vec, bot)
   tab <- paste(tab, collapse = "\n")
-  attr(tab, "tinytable_meta") <- m
-  class(tab) <- class(x)
 
   cellspec <- sprintf(
     "cell{%s}{%s}={%s}{%s},",
-    idx$new[is.na(idx$old)] + m$nhead,
+    idx$new[is.na(idx$old)] + x@nhead,
     1,
-    paste0("c=", m$ncols),
+    paste0("c=", ncol(x)),
     ""
   )
   cellspec <- paste(cellspec, collapse = "")
   tab <- tabularray_insert(tab, content = cellspec, type = "inner")
 
   # we also want to indent the header
-  i <- idx$new[!is.na(idx$old)] + m$nhead
-  # if (m$nhead > 0) i <- c(1:m$nhead, i)
+  i <- idx$new[!is.na(idx$old)] + x@nhead
   cellspec <- sprintf("cell{%s}{%s}={%s},\n", i, 1, sprintf("preto={\\hspace{%sem}}", indent))
   cellspec <- paste(cellspec, collapse = "")
   tab <- tabularray_insert(tab, content = cellspec, type = "inner")
 
-  return(tab)
+  x@table_string <- tab
+
+  return(x)
 }
 
 

@@ -8,9 +8,10 @@ knit_print.tinytable <- function(x,
                                  ...) {
 
   # lazy styles get evaluated here, at the very end
-  out <- build_tt(x, output = output)
+  x <- build_tt(x, output = output)
+  out <- x@table_string
 
-  if (isTRUE(meta(out)$output == "html")) {
+  if (isTRUE(x@output == "html")) {
     # from htmltools:::html_preserve
     # GPL3
     inline <- grepl(out, "\n", fixed = TRUE)
@@ -21,7 +22,7 @@ knit_print.tinytable <- function(x,
     }
   }
 
-  if (isTRUE(meta(out)$output == "typst")) {
+  if (isTRUE(x@output == "typst")) {
     # from htmltools:::html_preserve
     # GPL3
     inline <- grepl(out, "\n", fixed = TRUE)
@@ -47,7 +48,7 @@ knit_print.tinytable <- function(x,
 #' + When called interactively in RStudio, the default is to display an HTML table in the viewer pane.
 #' + When called interactively in another development environment, the default is "markdown". 
 #' + The default print output can be changed for an entire R session by calling: `options(tinytable_print_output = "html")`
-#' + The default print output can be changed for a single `tinytable` object by modifying the `output` element of the meta data attribute: `attr(x,"tinytable_meta")`
+#' + The default print output can be changed for a single `tinytable` object by modifying the `output` S4 slot.
 #' @param ... Other arguments are ignored.
 #' @return launch a browser window or cat() the table to console.
 #' @export
@@ -55,46 +56,47 @@ print.tinytable <- function(x,
                             output = getOption("tinytable_print_output", default = NULL),
                             ...){
 
-  assert_choice(output, c("latex", "markdown", "html", "typst"), null.ok = TRUE)
+  if (is.null(output)) {
+    output <- x@output
+  } else {
+    assert_choice(output, c("latex", "markdown", "html", "typst"))
+  }
 
-  if (is.null(output)) output <- meta(x, "output")
+  if (output == "html") {
+    dir <- tempfile()
+    dir.create(dir)
+    x@output_dir <- dir
+  }
+
+  x <- build_tt(x, output = output)
+
+  tab <- x@table_string
 
   # lazy styles get evaluated here by build_tt(), at the very end
-  if (output %in% c("latex", "typst")) {
-    out <- build_tt(x, output = output)
-    class(out) <- "character"
-    cat("\n")
-    cat(out)
-    cat("\n")
-
-  } else if (output == "markdown") {
-    out <- build_tt(x, output = "markdown")
-    cat("\n")
-    cat(out, sep = "\n")
+  if (output %in% c("latex", "typst", "markdown")) {
+    cat(tab, "\n")
 
   } else if (output == "html") {
     # need to change the output directory to a temporary directory 
     # for plot_tt() inline plots to show up in RStudio
-    dir <- tempfile()
-    x <- meta(x, "output_dir", dir)
-    dir.create(dir)
-    out <- build_tt(x, output = "html")
     htmlFile <- file.path(dir, "index.html")
-    cat(out, file = htmlFile)
+    cat(tab, file = htmlFile)
     if (isTRUE(check_dependency("rstudioapi")) && rstudioapi::isAvailable()) {
       rstudioapi::viewer(htmlFile)
     } else if (interactive()) {
       utils::browseURL(htmlFile)
     } else {
-      cat("\n")
-      cat(out, sep = "\n")
-      cat("\n")
+      cat(tab, "\n")
     }
 
   } else {
     stop("here be dragons")
   }
 
-  return(invisible(out))
+  return(invisible(x))
 }
 
+
+setMethod("show", "tinytable", function(object) {
+  print.tinytable(object, output = object@output)
+})

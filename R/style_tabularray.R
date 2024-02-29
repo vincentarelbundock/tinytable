@@ -22,12 +22,12 @@ style_tabularray <- function(x,
                              tabularray_outer = NULL,
                              ...) {
 
-  if (meta(x, "output") != "latex") return(x)
+  if (x@output != "latex") return(x)
 
-  out <- x
+  out <- x@table_string
 
-  ival <- if (is.null(i)) seq_len(meta(x, "nrows")) else i
-  jval <- if (is.null(j)) seq_len(meta(x, "ncols")) else j
+  ival <- if (is.null(i)) seq_len(nrow(x)) else i
+  jval <- if (is.null(j)) seq_len(ncol(x)) else j
 
   # order may be important for recycling 
   settings <- expand.grid(i = ival, j = jval, tabularray = "")
@@ -37,7 +37,7 @@ style_tabularray <- function(x,
 
   # header index
   if ("i" %in% names(settings)) {
-    settings$i <- settings$i + meta(out, "nhead")
+    settings$i <- settings$i + x@nhead
   }
 
   # colspan and rowspan require cell level, so we keep the full settings DF, even
@@ -137,8 +137,8 @@ style_tabularray <- function(x,
   # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
   if (!is.null(line)) {
     iline <- jline <- NULL
-    if (grepl("t", line)) iline <- c(iline, ival + meta(x, "nhead"))
-    if (grepl("b", line)) iline <- c(iline, ival + meta(x, "nhead") + 1)
+    if (grepl("t", line)) iline <- c(iline, ival + x@nhead)
+    if (grepl("b", line)) iline <- c(iline, ival + x@nhead + 1)
     if (grepl("l", line)) jline <- c(jline, jval)
     if (grepl("r", line)) jline <- c(jline, jval + 1)
     iline <- unique(iline)
@@ -158,7 +158,7 @@ style_tabularray <- function(x,
       tmp <- sprintf(
         "vline{%s}={%s}{solid, %s, %s},",
         paste(jline, collapse = ","),
-        paste(ival + meta(x, "nhead"), collapse = ","),
+        paste(ival + x@nhead, collapse = ","),
         line_width,
         sub("^#", "c", line_color)
       )
@@ -169,34 +169,36 @@ style_tabularray <- function(x,
   out <- tabularray_insert(out, content = tabularray_inner, type = "inner")
   out <- tabularray_insert(out, content = tabularray_outer, type = "outer")
 
-  return(out)
+  x@table_string <- out
+
+  return(x)
 }  
 
 tabularray_insert <- function(x, content = NULL, type = "body") {
-  if (is.null(content)) return(x)
 
-  m <- meta(x)
-  out <- strsplit(x, "\n")[[1]]
+  out <- x
+
+  out <- strsplit(out, "\n")[[1]]
   comment <- switch(type,
   "body" = "% tabularray inner close",
   "outer" = "% tabularray outer close",
   "inner" = "% tabularray inner close")
   idx <- grep(comment, out)
 
-  content <- trimws(content)
-  if (!grepl(",$", content) && type != "body") {
-    content <- paste0(content, ",")
-  }
-
-  if (type == "body") {
-    out <- c(out[1:idx], content, out[(idx + 1):length(out)])
-  } else {
-    out <- c(out[1:(idx - 1)], content, out[idx:length(out)])
+  if (length(content) > 0) {
+    content <- trimws(content)
+    if (!grepl(",$", content) && type != "body") {
+      content <- paste0(content, ",")
+    }
+    if (type == "body") {
+      out <- c(out[1:idx], content, out[(idx + 1):length(out)])
+    } else {
+      out <- c(out[1:(idx - 1)], content, out[idx:length(out)])
+    }
   }
 
   out <- paste(out, collapse = "\n")
-  class(out) <- class(x)
-  attr(out, "tinytable_meta") <- m
+
   return(out)
 }
 

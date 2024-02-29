@@ -57,4 +57,10 @@ tab <- tt(k, width = .5, theme = "void") |>
 expect_snapshot_print(print_html(tab), "html-heatmap")
 
 
+# Issue #432: S4 refactor broke bootstrap_css argument
+x <- mtcars[1:4, 1:5]
+tab <- tt(x) |> style_tt(j = 1, bootstrap_css = "font-weight: bold; color: red;")
+expect_snapshot_print(print_html(tab), "html-bootstrap_css")
+
+
 options(tinytable_print_output = NULL)

@@ -54,7 +54,7 @@ b <- tt(mtcars[1:4, 1:4]) |>
   group_tt(j = list("blah" = 1:2, "bar" = 3:4)) |>
   style_tt(color = "orange", background = "black")
 expect_snapshot_print(a, label = "latex-group_style_order")
-expect_equal(as.character(a), as.character(b))
+expect_equal(as.character(a@table_string), as.character(b@table_string))
 
 
 
