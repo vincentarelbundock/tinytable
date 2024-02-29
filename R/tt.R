@@ -81,7 +81,7 @@ tt <- function(x,
   tab <- data.frame(lapply(tab, format))
   colnames(tab) <- colnames(x)
 
-  out <- new("tinytable",
+  out <- methods::new("tinytable",
     data = x,
     table = tab,
     caption = caption,
