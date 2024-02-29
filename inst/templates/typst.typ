@@ -19,7 +19,6 @@
     },
 
     // tinytable cell content after
-
   ) // end tablex
 ) // end figure
 

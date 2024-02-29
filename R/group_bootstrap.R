@@ -70,9 +70,6 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
     out <- bootstrap_setting(out, new = js, component = "cell")
   }
 
-  # add rows to attributes BEFORE style_tt
-  x@nrow <- x@nrow + length(label)
-
   # need unique function names in case there are
   # multiple tables in one Rmarkdown document
   out <- gsub(

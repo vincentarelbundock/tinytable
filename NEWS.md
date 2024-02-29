@@ -9,10 +9,14 @@
 * `num_fmt="significant_cell"` rounds significant digits on a cell-by-cell basis rather than for full columns (as is default in base R `format()`).
 * Numeric formatting options can be set via global options, defined in the function signature.
 
+Typst format:
+
+* Support for row headers with `group_tt(i)`
+* Supports images and inline plots with `plot_tt()`. Thanks to @aghaynes for contribution #155.
+
 Misc:
 
 * Support RevealJS slides in Quarto documents.
-* Typst now supports images and inline plots with `plot_tt()`. Thanks to @aghaynes for contribution #155.
 * Improved support for `tibble`. ANSI characters (ex: fancy `pillar` formatting) are stripped automatically or converted to HTML when the `fansi` package is installed. `fansi` is a dependency of `tibble`, so it should often be installed.
 * New `tinytable_tt_digits` global option can set the default number of digits in the `tt()` function.
 * Refactor: `tinytable` objects are now S4 class objects, with slots to hold data about the content and structure.
@@ -21,6 +25,8 @@ Breaking changes:
 
 * In some cases, `format_tt()` could previously be applied sequentially to apply two formats to the same cell. Now, multiple calls to `format_tt()` can still be make chained with pipes, but they must apply to different cells with `i`, `j`, otherwise only the last change is respected. One exception is the `escape` argument which can be applied to pre-formatted cells.
 * The "tinytable_tabularray_placement" global option is renamed to "tinytable_tt_placement".
+* `tinytable` objects no longer have a `meta_tinytable` attribute. Use S4 slots instead.
+
 
 ## 0.0.5
 

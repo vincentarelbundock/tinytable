@@ -27,9 +27,8 @@ group_tt <- function(x, i = NULL, j = NULL, indent = 1, ...) {
   if (is.null(i) && is.null(j)) stop("At least one of `i` or `j` must be specified.", call. = FALSE)
   assert_integerish(indent, lower = 0)
 
-  i <- sanitize_group_index(i, hi = attr(x, "nrow") + 1, orientation = "row")
-  j <- sanitize_group_index(j, hi = attr(x, "ncol"), orientation = "column")
-
+  i <- sanitize_group_index(i, hi = nrow(x) + 1, orientation = "row")
+  j <- sanitize_group_index(j, hi = ncol(x), orientation = "column")
 
   # we don't need this as a list, and we use some sorting later
   i <- unlist(i)

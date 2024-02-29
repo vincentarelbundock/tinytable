@@ -1,0 +1,53 @@
+#import "@preview/tablex:0.0.8": tablex, hlinex, vlinex, colspanx
+#let nhead = 2;
+#let nrow = 12;
+#let ncol = 5;
+
+#figure(
+  
+  tablex(
+    columns: ncol,
+    header-rows: nhead,
+    align: left + horizon,
+    auto-lines: false,
+
+hlinex(y: 0, start: 0, end: 5, stroke: 0.1em + black),
+hlinex(y: 2, start: 0, end: 5, stroke: 0.05em + black),
+hlinex(y: 14, start: 0, end: 5, stroke: 0.1em + black),
+hlinex(y: 1, start: 1, end: 3, stroke: 0.05em + black, expand: -1.5pt),
+hlinex(y: 1, start: 3, end: 5, stroke: 0.05em + black, expand: -1.5pt),
+    // tinytable lines before
+
+    map-cells: cell => {
+
+
+
+
+
+let i = (3,8,);
+let j = (0,1,2,3,4,);
+
+if (i.contains(cell.y) and j.contains(cell.x)) { cell.fill = blue };
+if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = { set text(white); cell.content } };
+if (cell.x == 0) { cell.align = center };
+      // tinytable cell style before
+      return cell;
+    },
+
+    // tinytable cell content after
+colspanx(1, align: center)[ ],colspanx(2, align: center)[First],colspanx(2, align: center)[Second],
+[mpg], [cyl], [disp], [hp], [drat],
+[21.0], [6], [160.0], [110], [3.90],
+colspanx(5)[Feta],
+[21.0], [6], [160.0], [110], [3.90],
+[22.8], [4], [108.0], [ 93], [3.85],
+[21.4], [6], [258.0], [110], [3.08],
+[18.7], [8], [360.0], [175], [3.15],
+colspanx(5)[Brie],
+[18.1], [6], [225.0], [105], [2.76],
+[14.3], [8], [360.0], [245], [3.21],
+[24.4], [4], [146.7], [ 62], [3.69],
+[22.8], [4], [140.8], [ 95], [3.92],
+[19.2], [6], [167.6], [123], [3.92],
+  ) // end tablex
+) // end figure 

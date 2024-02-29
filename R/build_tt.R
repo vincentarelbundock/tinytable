@@ -62,10 +62,14 @@ build_tt <- function(x, output = NULL) {
   )
   x <- fun(x)
 
+  ihead <- 0
   for (idx in seq_along(x@lazy_group)) {
     l <- x@lazy_group[[idx]]
     l[["x"]] <- x
-    l[["ihead"]] <- -1 * idx
+    if (length(l[["j"]]) > 0) {
+      ihead <- ihead - 1
+      l[["ihead"]] <- ihead
+    }
     if (x@output == "html") {
       l[[1]] <- quote(group_bootstrap)
     } else if (x@output == "latex") {
