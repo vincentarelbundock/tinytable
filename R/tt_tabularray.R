@@ -50,7 +50,7 @@ tt_tabularray <- function(x) {
   out <- trimws(out)
   out <- paste(out, collapse = "\n")
 
-  if (!is.null(x@width)) {
+  if (length(x@width) > 0) {
     tabularray_cols <- rep("X[]", ncol(x))
     spec <- sprintf("width={%s\\linewidth},", round(x@width, 4))
     out <- tabularray_insert(out, content = spec, type = "inner")

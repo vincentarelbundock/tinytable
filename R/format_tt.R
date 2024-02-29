@@ -258,6 +258,9 @@ format_tt_lazy <- function(x,
     # if j includes all columns, the user wants to escape the full table, including the column headers
     if (jnull) {
       colnames(out) <- escape_text(colnames(out), output = o)
+      if (inherits(x, "tinytable")) {
+        x@names <- escape_text(x@names, output = o)
+      }
     }
     for (col in j) {
       out[i, col] <- escape_text(out[i, col], output = o)
@@ -285,7 +288,6 @@ format_tt_lazy <- function(x,
       }
     }
   }
-
 
   if (isTRUE(atomic_vector)) {
     return(out[[1]])

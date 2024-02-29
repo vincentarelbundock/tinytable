@@ -173,9 +173,8 @@ style_tabularray <- function(x,
 }  
 
 tabularray_insert <- function(x, content = NULL, type = "body") {
-  if (!inherits(x, "tinytable")) return(x)
 
-  out <- x@table_string
+  out <- x
 
   out <- strsplit(out, "\n")[[1]]
   comment <- switch(type,
@@ -198,9 +197,7 @@ tabularray_insert <- function(x, content = NULL, type = "body") {
 
   out <- paste(out, collapse = "\n")
 
-  x@table_string <- out
-
-  return(x)
+  return(out)
 }
 
 
