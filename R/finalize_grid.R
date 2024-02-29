@@ -8,7 +8,7 @@ finalize_grid <- function(x) {
     # important for docx output
     hlines <- getOption("tinytable_grid_hlines", default = TRUE)
     if (isTRUE(hlines)) {
-      out <- grid_hlines(out)
+      out <- grid_hlines(x)
     }
 
     # notes

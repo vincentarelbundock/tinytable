@@ -93,6 +93,10 @@ tt <- function(x,
   return(out)
 }
 
+
+#' tinytable S4 class
+#' 
+#' @export
 setClass(
     Class = "tinytable",
     slots = representation(
