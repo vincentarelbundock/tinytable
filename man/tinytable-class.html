@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -64,8 +30,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../man/style_tt.html" rel="next">
-<link href="../man/tt.html" rel="prev">
 <link href="../favicon.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -156,7 +120,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/tt.html">Functions</a></li><li class="breadcrumb-item"><a href="../man/format_tt.html"><code>format_tt</code></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -188,13 +152,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/tt.html" class="sidebar-item-text sidebar-link">
@@ -203,7 +167,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/format_tt.html" class="sidebar-item-text sidebar-link active">
+  <a href="../man/format_tt.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>format_tt</code></span></a>
   </div>
 </li>
@@ -267,13 +231,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#format-columns-of-a-data-frame" id="toc-format-columns-of-a-data-frame" class="nav-link active" data-scroll-target="#format-columns-of-a-data-frame">Format columns of a data frame</a>
+  <li><a href="#tinytable-s4-class" id="toc-tinytable-s4-class" class="nav-link active" data-scroll-target="#tinytable-s4-class">tinytable S4 class</a>
   <ul class="collapse">
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
-  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
-  <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
-  <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
-  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -284,308 +244,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="format-columns-of-a-data-frame" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="format-columns-of-a-data-frame">Format columns of a data frame</h2>
+<section id="tinytable-s4-class" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="tinytable-s4-class">tinytable S4 class</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>This function formats the columns of a data frame based on the column type (logical, date, numeric). It allows various formatting options like significant digits, decimal points, and scientific notation. It also includes custom formatting for date and boolean values. If this function is applied several times to the same cell, the last transformation is retained and the previous calls are ignored, except for the <code>escape</code> argument which can be applied to previously transformed data.</p>
-</section>
-<section id="usage" class="level3">
-<h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">format_tt(
-  x,
-  i = NULL,
-  j = NULL,
-  digits = getOption("tinytable_format_digits", default = NULL),
-  num_fmt = getOption("tinytable_format_num_fmt", default = "significant"),
-  num_zero = getOption("tinytable_format_num_zero", default = FALSE),
-  num_suffix = getOption("tinytable_format_num_suffix", default = FALSE),
-  num_mark_big = getOption("tinytable_format_num_mark_big", default = ""),
-  num_mark_dec = getOption("tinytable_format_num_mark_dec", default = getOption("OutDec",
-    default = ".")),
-  date = "%Y-%m-%d",
-  bool = function(column) tools::toTitleCase(tolower(column)),
-  other = as.character,
-  replace_na = "",
-  escape = FALSE,
-  markdown = FALSE,
-  fn = NULL,
-  sprintf = NULL
-)
-</code></pre>
-</section>
-<section id="arguments" class="level3">
-<h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
-<table>
-<tbody><tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="format_tt_:_x">x</code>
-</td>
-<td>
-A data frame or a vector to be formatted.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="format_tt_:_i">i</code>
-</td>
-<td>
-Row indices where the formatting should be applied.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="format_tt_:_j">j</code>
-</td>
-<td>
-<p>Column indices where the styling should be applied. Can be:</p>
-<ul>
-<li>
-<p>Integer vectors indicating column positions.</p>
-</li>
-<li>
-<p>Character vector indicating column names.</p>
-</li>
-<li>
-<p>A single string specifying a Perl-style regular expression used to match column names.</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="format_tt_:_digits">digits</code>
-</td>
-<td>
-Number of significant digits or decimal places.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="format_tt_:_num_fmt">num_fmt</code>
-</td>
-<td>
-The format for numeric values; one of ‘significant’, ‘significant_cell’, ‘decimal’, or ‘scientific’.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="format_tt_:_num_zero">num_zero</code>
-</td>
-<td>
-Logical; if TRUE, trailing zeros are kept in "decimal" format (but not in "significant" format).
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="format_tt_:_num_suffix">num_suffix</code>
-</td>
-<td>
-Logical; if TRUE display short numbers with <code>digits</code> significant digits and K (thousands), M (millions), B (billions), or T (trillions) suffixes.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="format_tt_:_num_mark_big">num_mark_big</code>
-</td>
-<td>
-Character to use as a thousands separator.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="format_tt_:_num_mark_dec">num_mark_dec</code>
-</td>
-<td>
-Decimal mark character. Default is the global option ‘OutDec’.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="format_tt_:_date">date</code>
-</td>
-<td>
-A string passed to the <code>format()</code> function, such as "%Y-%m-%d". See the "Details" section in <code>?strptime</code>
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="format_tt_:_bool">bool</code>
-</td>
-<td>
-A function to format logical columns. Defaults to title case.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="format_tt_:_other">other</code>
-</td>
-<td>
-A function to format columns of other types. Defaults to <code>as.character()</code>.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="format_tt_:_replace_na">replace_na</code>
-</td>
-<td>
-String to display for missing values.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="format_tt_:_escape">escape</code>
-</td>
-<td>
-Logical or String; if TRUE, escape special characters to display them as text in the format of the output of a <code>tt()</code> table. If <code>format_tt()</code> is called as a standalone function instead of on a <code>tt()</code> table, the <code>escape</code> argument accepts strings to specify the escaping method: "latex" or "html".
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="format_tt_:_markdown">markdown</code>
-</td>
-<td>
-Logical; if TRUE, render markdown syntax in cells. Ex: <code style="white-space: pre;"><em>italicized text</em></code> is properly italicized in HTML and LaTeX.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="format_tt_:_fn">fn</code>
-</td>
-<td>
-Function for custom formatting. Accepts a vector and returns a character vector of the same length.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="format_tt_:_sprintf">sprintf</code>
-</td>
-<td>
-String passed to the <code>?sprintf</code> function to format numbers or interpolate strings with a user-defined pattern (similar to the <code>glue</code> package, but using Base R).
-</td>
-</tr>
-</tbody></table>
-</section>
-<section id="value" class="level3">
-<h3 class="anchored" data-anchor-id="value">Value</h3>
-<p>A data frame with formatted columns.</p>
-</section>
-<section id="examples" class="level3">
-<h3 class="anchored" data-anchor-id="examples">Examples</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">a =</span> <span class="fu">rnorm</span>(<span class="dv">3</span>, <span class="at">mean =</span> <span class="dv">10000</span>),</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">b =</span> <span class="fu">rnorm</span>(<span class="dv">3</span>, <span class="dv">10000</span>))</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">tt</span>(dat)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">format_tt</span>(tab,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a> <span class="at">digits =</span> <span class="dv">2</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a> <span class="at">num_mark_dec =</span> <span class="st">","</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a> <span class="at">num_mark_big =</span> <span class="st">" "</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
- 
-
-  
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_4bv80pf48xamb8ysq5i7</title>
-    <style>
-.table td.tinytable_css_t7vn3u5xvuilnqfikurp, .table th.tinytable_css_t7vn3u5xvuilnqfikurp {    border-bottom: solid 0.1em #d3d8dc; }
-    </style>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-    <script>
-    MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']]
-      },
-      svg: {
-        fontCache: 'global'
-      }
-    };
-    </script>
-  
-
-  
-    <div class="container">
-      <table class="table table-borderless" id="tinytable_4bv80pf48xamb8ysq5i7" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
-        <thead>
-        
-              <tr>
-                <th scope="col">a</th>
-                <th scope="col">b</th>
-              </tr>
-        </thead>
-        
-        <tbody>
-                <tr>
-                  <td>10 002</td>
-                  <td>10 000</td>
-                </tr>
-                <tr>
-                  <td>10 001</td>
-                  <td> 9 999</td>
-                </tr>
-                <tr>
-                  <td>10 000</td>
-                  <td>10 001</td>
-                </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <script>
-      function styleCell_tinytable_qur5rg0tzuqb0ltquj8p(i, j, css_id) {
-        var table = document.getElementById("tinytable_4bv80pf48xamb8ysq5i7");
-        table.rows[i].cells[j].classList.add(css_id);
-      }
-      function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_4bv80pf48xamb8ysq5i7');
-        var newRow = table.insertRow(i);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_tinytable_qur5rg0tzuqb0ltquj8p(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_4bv80pf48xamb8ysq5i7");
-        const targetRow = table.rows[i];
-        const targetCell = targetRow.cells[j];
-        for (let r = 0; r < rowspan; r++) {
-          // Only start deleting cells to the right for the first row (r == 0)
-          if (r === 0) {
-            // Delete cells to the right of the target cell in the first row
-            for (let c = colspan - 1; c > 0; c--) {
-              if (table.rows[i + r].cells[j + c]) {
-                table.rows[i + r].deleteCell(j + c);
-              }
-            }
-          }
-          // For rows below the first, delete starting from the target column
-          if (r > 0) {
-            for (let c = colspan - 1; c >= 0; c--) {
-              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
-                table.rows[i + r].deleteCell(j);
-              }
-            }
-          }
-        }
-        // Set rowspan and colspan of the target cell
-        targetCell.rowSpan = rowspan;
-        targetCell.colSpan = colspan;
-      }
-
-window.addEventListener('load', function () { styleCell_tinytable_qur5rg0tzuqb0ltquj8p(0, 0, 'tinytable_css_t7vn3u5xvuilnqfikurp') })
-window.addEventListener('load', function () { styleCell_tinytable_qur5rg0tzuqb0ltquj8p(0, 1, 'tinytable_css_t7vn3u5xvuilnqfikurp') })
-    </script>
-
-  
-
-
-</div>
-</div>
+<p>tinytable S4 class</p>
 
 
 </section>
@@ -979,18 +642,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-      <a href="../man/tt.html" class="pagination-link" aria-label="`tt`">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>tt</code></span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../man/style_tt.html" class="pagination-link" aria-label="`style_tt`">
-        <span class="nav-page-text"><code>style_tt</code></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 
