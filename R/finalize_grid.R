@@ -22,7 +22,7 @@ finalize_grid <- function(x) {
       } else {
         txt <- no
       }
-      if (names(x@notes)[i] != "") {
+      if (isTRUE(names(x@notes)[i] != "")) {
         txt <- sprintf("^%s^ %s", names(x@notes)[i], txt)
       }
       txt <- strwrap(txt, width = target)
