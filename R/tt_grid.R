@@ -114,7 +114,8 @@ empty_cells <- function(lst) {
 # insert horizontal rules everywhere (important for word)
 grid_hlines <- function(x) {
   rule_line <- grid_line(x@width_cols, "-")
-  lines <- strsplit(x, split = "\\n")[[1]]
+  out <- x@table_string
+  lines <- strsplit(out, split = "\\n")[[1]]
   if (length(lines) > 1) {
     for (idlines in length(lines):2) {
       if (!startsWith(lines[idlines - 1], "+") && !startsWith(lines[idlines], "+") && lines[idlines] != "") {
@@ -122,6 +123,6 @@ grid_hlines <- function(x) {
       }
     }
   }
-  out <- paste(lines, collapse = "\n")
-  return(out)
+  x@table_string <- paste(lines, collapse = "\n")
+  return(x)
 }

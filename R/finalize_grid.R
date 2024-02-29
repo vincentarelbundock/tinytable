@@ -2,18 +2,19 @@
 finalize_grid <- function(x) {
     if (!isTRUE(x@output == "markdown")) return(x)
 
-    out <- x@table_string
 
     # formal grid specification in pandoc includes lines everywhere
     # important for docx output
     hlines <- getOption("tinytable_grid_hlines", default = TRUE)
     if (isTRUE(hlines)) {
-      out <- grid_hlines(x)
+      x <- grid_hlines(x)
     }
+
+    out <- x@table_string
 
     # notes
     no <- x@notes
-    if (!is.null(no)) {
+    if (length(no) > 0) {
       if (!is.character(no) || length(no) != 1) {
         msg <- "For Markdown or Word tables, the `notes` argument must be a single string."
         stop(msg, call. = FALSE)
