@@ -131,7 +131,7 @@ style_bootstrap <- function(x,
   # CSS style for cell
   css_done <- NULL
   for (row in seq_len(nrow(settings))) {
-    if (settings$bootstrap[row] != "") {
+    if (settings$bootstrap[row] != "" || !is.null(bootstrap_css)) {
       # Listener applies the styling to columns
       listener <- "window.addEventListener('load', function () { styleCell_%s(%s, %s, '%s') })"
       listener <- sprintf(listener, settings$id[row], settings$i[row], settings$j[row], settings$id[row])
