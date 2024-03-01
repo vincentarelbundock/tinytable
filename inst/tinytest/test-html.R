@@ -173,22 +173,24 @@ dat<-tt(dat) |>
   plot_tt(j = 2, images = img, height = 3)
 expect_snapshot_print(print_html(dat), "html-images")
 
-# Built-in plots
-plot_data <- list(mtcars$mpg, mtcars$hp, mtcars$qsec)
-dat <- data.frame(
-  Variables = c("mpg", "hp", "qsec"),
-  Histogram = "",
-  Density = "",
-  Bar = "",
-  Line = ""
-)
-lines <- lapply(1:3, \(x) data.frame(x = 1:10, y = rnorm(10)))
-dat<-tt(dat) |>
-  plot_tt(j = 2, fun = "histogram", data = plot_data) |>
-  plot_tt(j = 3, fun = "density", data = plot_data, color = "darkgreen") |>
-  plot_tt(j = 4, fun = "bar", data = list(2, 3, 6), color = "orange") |>
-  plot_tt(j = 5, fun = "line", data = lines, color = "blue") |>
-  style_tt(j = 2:5, align = "c")
-expect_snapshot_print(print_html(dat), "html-built_in_plots")
+# # Built-in plots
+# # cannot be tested because the names of plots are random and set seed doesn't work
+# set.seed(1024)
+# plot_data <- list(mtcars$mpg, mtcars$hp, mtcars$qsec)
+# dat <- data.frame(
+#   Variables = c("mpg", "hp", "qsec"),
+#   Histogram = "",
+#   Density = "",
+#   Bar = "",
+#   Line = ""
+# )
+# lines <- lapply(1:3, \(x) data.frame(x = 1:10, y = rnorm(10)))
+# dat<-tt(dat) |>
+#   plot_tt(j = 2, fun = "histogram", data = plot_data) |>
+#   plot_tt(j = 3, fun = "density", data = plot_data, color = "darkgreen") |>
+#   plot_tt(j = 4, fun = "bar", data = list(2, 3, 6), color = "orange") |>
+#   plot_tt(j = 5, fun = "line", data = lines, color = "blue") |>
+#   style_tt(j = 2:5, align = "c")
+# expect_snapshot_print(print_html(dat), "html-built_in_plots")
 
 options(tinytable_print_output = NULL)
