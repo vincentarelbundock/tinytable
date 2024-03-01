@@ -15,7 +15,7 @@
 \item When called interactively in RStudio, the default is to display an HTML table in the viewer pane.
 \item When called interactively in another development environment, the default is "markdown".
 \item The default print output can be changed for an entire R session by calling: \code{options(tinytable_print_output = "html")}
-\item The default print output can be changed for a single \code{tinytable} object by modifying the \code{output} element of the meta data attribute: \code{attr(x,"tinytable_meta")}
+\item The default print output can be changed for a single \code{tinytable} object by modifying the \code{output} S4 slot.
 }}
 
 \item{...}{Other arguments are ignored.}

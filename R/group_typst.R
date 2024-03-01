@@ -1,9 +1,9 @@
 group_typst <- function(x, i = NULL, j = NULL, ...) {
   out <- x
 
-  # if (!is.null(i)) {
-  #   out <- group_typst_row(out, i)
-  # }
+  if (!is.null(i)) {
+    out <- group_typst_row(out, i)
+  }
 
   if (!is.null(j)) {
     out <- group_typst_col(out, j, ...)
@@ -12,11 +12,33 @@ group_typst <- function(x, i = NULL, j = NULL, ...) {
   return(out)
 }
 
+group_typst_row <- function(x, i, ...) {
+  tab <- x@table_string
+  tab <- strsplit(tab, split = "\\n")[[1]]
+  body_min <- utils::head(grep("tinytable cell content after", tab), 1) + x@nhead
+  body_max <- utils::head(grep("end tablex", tab), 1) - 1
+  body <- body_min:body_max
+  top <- tab[1:(body_min - 1)]
+  mid <- tab[body_min:body_max]
+  mid <- mid[mid != ""]
+  bot <- tab[(body_max + 1):length(tab)]
+  for (idx in rev(seq_along(i))) {
+    mid <- c(
+      mid[1:(i[idx] - 1)],
+      sprintf("colspanx(%s)[%s],", ncol(x), names(i)[idx]),
+      mid[i[idx]:length(mid)]
+    )
+  }
+  tab <- c(top, mid, bot)
+  tab <- paste(tab, collapse = "\n")
+  x@table_string <- tab
+  return(x)
+}
+
 
 group_typst_col <- function(x, j, ihead, ...) {
-  m <- meta(x)
-  out <- x
-  miss <- as.list(setdiff(seq_len(m$ncols), unlist(j)))
+  out <- x@table_string
+  miss <- as.list(setdiff(seq_len(ncol(x)), unlist(j)))
   miss <- stats::setNames(miss, rep(" ", length(miss)))
   j <- c(j, miss)
   max_col <- sapply(j, max)
@@ -28,11 +50,15 @@ group_typst_col <- function(x, j, ihead, ...) {
   col <- paste(col, collapse = "")
   out <- typst_insert(out, col, type = "body")
 
+  x@table_string <- out
+
   # midrule
   jrule <- lapply(names(j), function(n) if (trimws(n) != "") j[[n]])
-  jrule <- Filter(function(x) !is.null(x), jrule)
+  jrule <- Filter(function(k) !is.null(k), jrule)
   for (jr in jrule) {
-    out <- style_typst(out, i = ihead, j = jr, line = "b", line_width = .05, midrule = TRUE)
+    # 0 indexing
+    x <- style_typst(x, i = ihead, j = jr, line = "b", line_width = .05, midrule = TRUE)
   }
-  return(out)
+
+  return(x)
 }

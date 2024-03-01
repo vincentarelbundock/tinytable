@@ -12,6 +12,13 @@ options(tinytable_print_output = NULL)
 
 
 
+# s4 refactor bug along the way
+x <- mtcars[1:3, 1:3]
+tab <- save_tt(tt(x, notes = "Hello World!"), "markdown")
+expect_inherits(tab, "character")
+
+
+
 
 
 

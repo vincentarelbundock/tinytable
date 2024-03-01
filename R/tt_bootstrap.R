@@ -1,11 +1,9 @@
-tt_bootstrap <- function(x, caption, theme, width, notes, ...) {
+tt_bootstrap <- function(x, ...) {
 
   template <- readLines(system.file("templates/bootstrap.html", package = "tinytable"))
-  m <- meta(x)
-
 
   # caption
-  if (is.null(caption)) {
+  if (length(x@caption) != 1) {
     template <- sub(
       "$tinytable_BOOTSTRAP_CAPTION",
       "",
@@ -15,14 +13,14 @@ tt_bootstrap <- function(x, caption, theme, width, notes, ...) {
   } else {
     template <- sub(
       "$tinytable_BOOTSTRAP_CAPTION",
-      sprintf("<caption>%s</caption>", caption),
+      sprintf("<caption>%s</caption>", x@caption),
       template,
       fixed = TRUE
     )
   }
 
   # note
-  if (is.null(notes)) {
+  if (length(x@notes) == 0) {
     template <- sub(
       "$tinytable_BOOTSTRAP_NOTE",
       "",
@@ -31,22 +29,22 @@ tt_bootstrap <- function(x, caption, theme, width, notes, ...) {
     )
   } else {
     notes_tmp <- NULL
-    for (k in seq_along(notes)) {
-      if (!is.null(names(notes))) {
-        if (is.list(notes[[k]])) {
+    for (k in seq_along(x@notes)) {
+      if (!is.null(names(x@notes))) {
+        if (is.list(x@notes[[k]])) {
           tmp <- sprintf("<tr><td colspan='%s'><sup>%s</sup> %s</td></tr>",
             ncol(x),
-            names(notes)[k],
-            notes[[k]]$text)
+            names(x@notes)[k],
+            x@notes[[k]]$text)
         # note is a string
         } else {
           tmp <- sprintf("<tr><td colspan='%s'><sup>%s</sup> %s</td></tr>",
             ncol(x),
-            names(notes)[k],
-            notes[k])
+            names(x@notes)[k],
+            x@notes[k])
         }
       } else {
-        tmp <- sprintf("<tr><td colspan='%s'>%s</td></tr>", ncol(x), notes[k])
+        tmp <- sprintf("<tr><td colspan='%s'>%s</td></tr>", ncol(x), x@notes[[k]])
       }
       notes_tmp <- c(notes_tmp, tmp)
     }
@@ -61,10 +59,10 @@ tt_bootstrap <- function(x, caption, theme, width, notes, ...) {
   }
 
   # width
-  if (is.numeric(width)) {
+  if (length(x@width) == 1) {
     template <- sub(
       "width: auto;",
-      sprintf('table-layout: fixed; width: %s%% !important;', round(width * 100)),
+      sprintf('table-layout: fixed; width: %s%% !important;', round(x@width * 100)),
       template,
       fixed = TRUE
     )
@@ -80,7 +78,7 @@ tt_bootstrap <- function(x, caption, theme, width, notes, ...) {
 
   # header
   idx <- grep("$tinytable_BOOTSTRAP_HEADER", template, fixed = TRUE)
-  if (!is.null(colnames(x))) {
+  if (length(colnames(x)) > 0) {
     header <- sprintf('    <th scope="col">%s</th>', colnames(x))
     header <- c("  <tr>", header, "  </tr>")
     header <- paste(strrep(" ", 11), header)
@@ -93,14 +91,14 @@ tt_bootstrap <- function(x, caption, theme, width, notes, ...) {
     template[(idx + 1):length(template)]
    )
   # body
-  makerow <- function(x) {
+  makerow <- function(k) {
     out <- c(
       "  <tr>",
-      sprintf('    <td>%s</td>', x),
+      sprintf('    <td>%s</td>', k),
       "  </tr>")
     return(out)
   }
-  body <- apply(x, 1, makerow)
+  body <- apply(x@table_dataframe, 1, makerow)
   idx <- grep("$tinytable_BOOTSTRAP_BODY", template, fixed = TRUE)
   template <- c(
     template[1:(idx - 1)],
@@ -111,23 +109,22 @@ tt_bootstrap <- function(x, caption, theme, width, notes, ...) {
   out <- paste(template, collapse = "\n")
 
   # before style_bootstrap()
-  class(out) <- c("tinytable", "knit_asis", class(out))
-  attr(out, "tinytable_meta") <- m
+  x@table_string <- out
 
-  if (theme == "default") {
-    out <- style_bootstrap(out, bootstrap_class = "table table-borderless",
+  if (x@theme == "default") {
+    x <- style_bootstrap(x, bootstrap_class = "table table-borderless",
       i = 0, line = "b", line_color = "#d3d8dc", line_width = .1)
-  } else if (theme == "bootstrap") {
-    out <- style_bootstrap(out, bootstrap_class = "table")
-  } else if (theme == "striped") {
-    out <- style_bootstrap(out, bootstrap_class = "table table-striped")
-  } else if (theme == "grid") {
-    out <- style_bootstrap(out, bootstrap_class = "table table-bordered")
-  } else if (theme == "void") {
-    out <- style_bootstrap(out, bootstrap_class = "table table-borderless")
+  } else if (x@theme == "bootstrap") {
+    x <- style_bootstrap(x, bootstrap_class = "table")
+  } else if (x@theme == "striped") {
+    x <- style_bootstrap(x, bootstrap_class = "table table-striped")
+  } else if (x@theme == "grid") {
+    x <- style_bootstrap(x, bootstrap_class = "table table-bordered")
+  } else if (x@theme == "void") {
+    x <- style_bootstrap(x, bootstrap_class = "table table-borderless")
   }
 
-  return(out)
+  return(x)
 }
 
 

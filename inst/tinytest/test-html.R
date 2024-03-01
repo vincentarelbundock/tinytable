@@ -74,4 +74,10 @@ tab <- tt(mtcars[1:4, 1:4]) |>
     color = "orange")
 expect_snapshot_print(print_html(tab), "html-individual_cells")
 
+# Issue #432: S4 refactor broke bootstrap_css argument
+x <- mtcars[1:4, 1:5]
+tab <- tt(x) |> style_tt(j = 1, bootstrap_css = "font-weight: bold; color: red;")
+expect_snapshot_print(print_html(tab), "html-bootstrap_css")
+
+
 options(tinytable_print_output = NULL)
