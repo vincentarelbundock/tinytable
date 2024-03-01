@@ -102,4 +102,93 @@ tab<-tt(tab)
 tab<-format_tt(tab, replace_na = "-")
 expect_snapshot_print(print_html(tab), "html-missing_value")
 
+# Alignment
+dat <- data.frame(
+  a = c("a", "aa", "aaa"),
+  b = c("b", "bb", "bbb"),
+  c = c("c", "cc", "ccc"))
+dat<-tt(dat) |> style_tt(j = 1:3, align = "lcr")
+expect_snapshot_print(print_html(dat), "html-alignment")
+
+# Font size
+x <- mtcars[1:4, 1:5]
+x <-tt(x) |> style_tt(j = "mpg|hp|qsec", fontsize = 1.5)
+expect_snapshot_print(print_html(x), "html-font_size")
+
+# Merge cells
+x <-(mtcars[1:4, 1:5])
+x <-tt(x)|> style_tt(
+  i = 2, j = 2,
+  colspan = 3,
+  rowspan = 2,
+  align = "c",
+  alignv = "m",
+  color = "white",
+  background = "black",
+  bold = TRUE)
+expect_snapshot_print(print_html(x), "html-merge_cells")
+
+# Spanning cells 
+tab <- aggregate(mpg ~ cyl + am, FUN = mean, data = mtcars)
+tab <- tab[order(tab$cyl, tab$am),]
+tab<-tt(tab, digits = 2) |>
+  style_tt(i = c(1, 3, 5), j = 1, rowspan = 2, alignv = "t")
+expect_snapshot_print(print_html(tab), "html-spanning_cells")
+
+# Omit headers
+k <- (mtcars[1:4, 1:5])
+colnames(k) <- NULL
+k<-tt(k)
+expect_snapshot_print(print_html(k), "html-omit_headers")
+
+# Conditional styling
+k <- mtcars[1:10, c("mpg", "am", "vs")]
+k <-tt(k) |>
+  style_tt(
+    i = which(k$am == k$vs),
+    background = "teal",
+    color = "white")
+expect_snapshot_print(print_html(k), "html-conditional_styling")
+
+# Borders
+x<-tt(mtcars[1:4, 1:5], theme = "void") |>
+  style_tt(
+    i = 0:3,
+    j = 1:3,
+    line = "tblr",
+    line_width = 0.4,
+    line_color = "orange")
+expect_snapshot_print(print_html(x), "html-borders")
+
+# Images
+dat <- data.frame(
+  Species = c("Spider", "Squirrel"),
+  Image = ""
+)
+img <- c(
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeLPSPrPtVgPg6BLCiN6lBYy8l1xNy0T5yttVjkIk0L3Rva8Zl",
+  "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQdBlFVajljNz5qMbO622ihkIU2r6yA5whM9b8MbRGKOfJ8_UmZ"
+)
+dat<-tt(dat) |>
+  plot_tt(j = 2, images = img, height = 3)
+expect_snapshot_print(print_html(dat), "html-images")
+
+# Built-in plots
+plot_data <- list(mtcars$mpg, mtcars$hp, mtcars$qsec)
+dat <- data.frame(
+  Variables = c("mpg", "hp", "qsec"),
+  Histogram = "",
+  Density = "",
+  Bar = "",
+  Line = ""
+)
+lines <- lapply(1:3, \(x) data.frame(x = 1:10, y = rnorm(10)))
+dat<-tt(dat) |>
+  plot_tt(j = 2, fun = "histogram", data = plot_data) |>
+  plot_tt(j = 3, fun = "density", data = plot_data, color = "darkgreen") |>
+  plot_tt(j = 4, fun = "bar", data = list(2, 3, 6), color = "orange") |>
+  plot_tt(j = 5, fun = "line", data = lines, color = "blue") |>
+  style_tt(j = 2:5, align = "c")
+expect_snapshot_print(print_html(dat), "html-built_in_plots")
+
 options(tinytable_print_output = NULL)
