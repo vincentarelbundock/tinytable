@@ -79,5 +79,27 @@ x <- mtcars[1:4, 1:5]
 tab <- tt(x) |> style_tt(j = 1, bootstrap_css = "font-weight: bold; color: red;")
 expect_snapshot_print(print_html(tab), "html-bootstrap_css")
 
+# Line break
+d <- data.frame(
+  "{Sed ut \\\\ perspiciatis unde}",
+  "dicta sunt<br> explicabo. Nemo"
+) |> setNames(c("LaTeX line break", "HTML line break"))
+d <-tt(d)
+expect_snapshot_print(print_html(d), "html-line_break")
+
+# Formatting
+dat <- data.frame(
+  w = c(143002.2092, 201399.181, 100188.3883),
+  x = c(1.43402, 201.399, 0.134588),
+  y = as.Date(c(999,675,3)),
+  z = c(TRUE, TRUE, FALSE))
+dat<-tt(dat, digits = 2)
+expect_snapshot_print(print_html(dat), "html-formatting")
+
+# Missing value replacement
+tab <- data.frame(a = c(NA, 1, 2), b = c(3, NA, 5))
+tab<-tt(tab)
+tab<-format_tt(tab, replace_na = "-")
+expect_snapshot_print(print_html(tab), "html-missing_value")
 
 options(tinytable_print_output = NULL)
