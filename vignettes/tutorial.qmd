@@ -582,6 +582,15 @@ tt(dat) |> style_tt(j = 1:3, align = "c")
 tt(dat) |> style_tt(j = 1:3, align = "lcr")
 ```
 
+In LaTeX documents (only), we can use decimal-alignment:
+
+```{r}
+z <- data.frame(pi = c(pi * 100, pi * 1000, pi * 10000, pi * 100000))
+tt(z) |>
+    format_tt(j = 1, digits = 8, num_fmt = "significant_cell") |>
+    style_tt(j = 1, align = "d")
+```
+
 
 ## Fonts
 

@@ -76,6 +76,7 @@ style_bootstrap <- function(x,
 
   if (!is.null(align)) {
     align_bootstrap <- ifelse(align == "c", "center", align)
+    align_bootstrap <- ifelse(align == "d", "center", align_bootstrap)
     align_bootstrap <- ifelse(align == "l", "left", align_bootstrap)
     align_bootstrap <- ifelse(align == "r", "right", align_bootstrap)
   } else {

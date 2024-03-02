@@ -67,9 +67,24 @@ style_tabularray <- function(x,
 
   # convert to tabularray now that we've filled the bootstrap settings
   if (is.numeric(fontsize)) settings$tabularray <- sprintf("%s font=\\fontsize{%sem}{%sem}\\selectfont,", settings$tabularray, fontsize, fontsize + 0.3) 
-  if (!is.null(align)) settings$tabularray <- sprintf("%s halign=%s,", settings$tabularray, align)
   if (!is.null(width)) settings$tabularray <- sprintf("%s wd=%s,", settings$tabularray, width)
   if (indent > 0) settings$tabularary <- sprintf("%s preto={\\hspace{%sem}},", settings$tabularray, indent)
+
+  if (!is.null(align)) {
+    if (align[1] == "d") {
+      num <- unlist(x@table_dataframe[ival, jval])
+      if (!all(grepl("\\.", num)) || length(num) == 0) {
+        settings$tabularray <- sprintf("%s halign=c,", settings$tabularray)
+      } else {
+        num <- strsplit(num, "\\.")
+        left <- max(sapply(num, function(k) nchar(k[[1]])))
+        right <- max(sapply(num, function(k) nchar(k[[2]])))
+        settings$tabularray <- sprintf("%s si={table-format=%s.%s},", settings$tabularray, left, right)
+      }
+    } else {
+      settings$tabularray <- sprintf("%s halign=%s,", settings$tabularray, align)
+    }
+  }
 
   vectorize_tabularray <- function(z) {
     if (is.null(z)) {

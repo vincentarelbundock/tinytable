@@ -17,6 +17,7 @@ Typst format:
 
 Misc:
 
+* `style_tt()`: LaTeX format supports decimal alignement with `align="d"`. The width of columns is determined by the maximum number of digits to the left and to the right in all cells specified by `i`, `j`.
 * Support RevealJS slides in Quarto documents.
 * Improved support for `tibble`. ANSI characters (ex: fancy `pillar` formatting) are stripped automatically or converted to HTML when the `fansi` package is installed. `fansi` is a dependency of `tibble`, so it should often be installed.
 * New `tinytable_tt_digits` global option can set the default number of digits in the `tt()` function.

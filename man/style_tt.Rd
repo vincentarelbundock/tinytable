@@ -77,7 +77,7 @@ style_tt(
 
 \item{width}{Width of column in em units. Can be \code{NULL} for default width.}
 
-\item{align}{A single character or a string with a number of characters equal to the number of columns in \code{j}. Valid characters include 'c' (center), 'l' (left), or 'r' (right).}
+\item{align}{A single character or a string with a number of characters equal to the number of columns in \code{j}. Valid characters include 'c' (center), 'l' (left), 'r' (right), 'd' (decimal). Decimal alignment is only available in LaTeX via the \code{siunitx} package. The width of columns is determined by the maximum number of digits to the left and to the right in all cells specified by \code{i} and \code{j}.}
 
 \item{alignv}{A single character specifying vertical alignment. Valid characters include 't' (top), 'm' (middle), 'b' (bottom).}
 

@@ -104,6 +104,7 @@ let j = (%s,);",
       k <- switch(
         align[idx],
         c = "center",
+        d = "center",
         r = "right",
         l = "left"
       )

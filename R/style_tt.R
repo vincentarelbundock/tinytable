@@ -28,7 +28,7 @@
 #' @param background Background color. Specified as a color name or hexadecimal code. Can be `NULL` for default color.
 #' @param fontsize Font size in em units. Can be `NULL` for default size.
 #' @param width Width of column in em units. Can be `NULL` for default width.
-#' @param align A single character or a string with a number of characters equal to the number of columns in `j`. Valid characters include 'c' (center), 'l' (left), or 'r' (right).
+#' @param align A single character or a string with a number of characters equal to the number of columns in `j`. Valid characters include 'c' (center), 'l' (left), 'r' (right), 'd' (decimal). Decimal alignment is only available in LaTeX via the `siunitx` package. The width of columns is determined by the maximum number of digits to the left and to the right in all cells specified by `i` and `j`.
 #' @param alignv A single character specifying vertical alignment. Valid characters include 't' (top), 'm' (middle), 'b' (bottom).
 #' @param colspan Number of columns a cell should span. `i` and `j` must be of length 1.
 #' @param rowspan Number of rows a cell should span. `i` and `j` must be of length 1.
@@ -172,11 +172,11 @@ style_tt_lazy <- function (x,
 
   if (!is.null(align)) {
     if (nchar(align) == 1) {
-      assert_choice(align, c("c", "l", "r"))
+      assert_choice(align, c("c", "l", "r", "d"))
     } else {
       align_split <- strsplit(align, split = "")[[1]]
       for (align_character in align_split){
-        assert_choice(align_character, c("c", "l", "r"))
+        assert_choice(align_character, c("c", "l", "r", "d"))
       }
       if (is.null(j)) {
         msg <- "Please specify the `j` argument."
@@ -192,8 +192,8 @@ style_tt_lazy <- function (x,
       msg <- sprintf("`align` must be a single character or a string of length %s.", nalign)
       stop(msg, call. = FALSE)
     }
-    if (any(!align %in% c("c", "l", "r"))) {
-      msg <- "`align` must be characters c, l, or r."
+    if (any(!align %in% c("c", "l", "r", "d"))) {
+      msg <- "`align` must be characters c, l, r, or d."
       stop(msg, call. = FALSE)
     }
   }

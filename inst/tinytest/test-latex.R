@@ -57,6 +57,11 @@ expect_snapshot_print(a, label = "latex-group_style_order")
 expect_equal(as.character(a@table_string), as.character(b@table_string))
 
 
+x <- data.frame(pi = c(pi * 100, pi * 1000, pi * 10000, pi * 100000))
+tab <- tt(x) |>
+    format_tt(j = 1, digits = 8, num_fmt = "significant_cell") |>
+    style_tt(j = 1, align = "d")
+expect_snapshot_print(tab, label = "latex-align_d")
 
 
 options(tinytable_print_output = NULL)
