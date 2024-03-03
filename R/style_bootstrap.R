@@ -3,7 +3,10 @@
 #' @inheritParams style_tt
 #' @keywords internal
 #' @noRd
-style_bootstrap <- function(x,
+setMethod(
+  f = "style_eval",
+  signature = "tinytable_bootstrap",
+  definition = function(x,
                             i = NULL,
                             j = NULL,
                             bold = FALSE,
@@ -27,9 +30,6 @@ style_bootstrap <- function(x,
                             bootstrap_css = NULL,
                             bootstrap_css_rule = NULL,
                             ...) {
-
-
-  if (x@output != "html") return(x)
 
   out <- x@table_string
 
@@ -169,5 +169,5 @@ style_bootstrap <- function(x,
   }
 
   return(x)
-}
+})
 

@@ -191,7 +191,7 @@ style_tt_lazy <- function (x,
     if (length(align) != 1 && length(align) != nalign) {
       msg <- sprintf("`align` must be a single character or a string of length %s.", nalign)
       stop(msg, call. = FALSE)
-    }
+    } 
     if (any(!align %in% c("c", "l", "r", "d"))) {
       msg <- "`align` must be characters c, l, r, or d."
       stop(msg, call. = FALSE)
@@ -210,29 +210,7 @@ style_tt_lazy <- function (x,
     width <- paste0(width, "em")
   }
 
-  out <- style_tabularray(
-    x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
-    color = color, background = background, fontsize = fontsize, width = width, align = align, alignv = alignv, colspan = colspan, rowspan = rowspan, indent = indent,
-    tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer,
-    line = line, line_color = line_color, line_width = line_width)
-
-  out <- style_bootstrap(
-    x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
-    color = color, background = background, fontsize = fontsize, width = width, align = align, alignv = alignv, colspan = colspan, rowspan = rowspan, indent = indent,
-    bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule, bootstrap_class = bootstrap_class,
-    line = line, line_color = line_color, line_width = line_width)
-
-  out <- style_grid(
-    x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
-    color = color, background = background, fontsize = fontsize, width = width, align = align, alignv = alignv, colspan = colspan, rowspan = rowspan, indent = indent,
-    bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule,
-    line = line, line_color = line_color, line_width = line_width)
-
-  out <- style_typst(
-    x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
-    color = color, background = background, fontsize = fontsize, width = width, align = align, alignv = alignv, colspan = colspan, rowspan = rowspan, indent = indent,
-    bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule,
-    line = line, line_color = line_color, line_width = line_width)
+  out <- style_eval(x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout, color = color, background = background, fontsize = fontsize, width = width, align = align, alignv = alignv, colspan = colspan, rowspan = rowspan, indent = indent, tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule, bootstrap_class = bootstrap_class, line = line, line_color = line_color, line_width = line_width)
 
   return(out)
 }

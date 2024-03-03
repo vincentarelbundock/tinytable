@@ -1,4 +1,7 @@
-style_tabularray <- function(x,
+setMethod(
+  f = "style_eval",
+  signature = "tinytable_tabularray",
+  definition = function(x,
                              i = NULL,
                              j = NULL,
                              bold = FALSE,
@@ -21,8 +24,6 @@ style_tabularray <- function(x,
                              tabularray_inner = NULL,
                              tabularray_outer = NULL,
                              ...) {
-
-  if (x@output != "latex") return(x)
 
   out <- x@table_string
 
@@ -187,7 +188,7 @@ style_tabularray <- function(x,
   x@table_string <- out
 
   return(x)
-}  
+})  
 
 tabularray_insert <- function(x, content = NULL, type = "body") {
 

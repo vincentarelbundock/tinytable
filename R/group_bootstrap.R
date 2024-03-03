@@ -39,12 +39,12 @@ group_bootstrap_col <- function(x, j, ihead, ...) {
 
   x@table_string <- out
 
-  x <- style_bootstrap(x, i = ihead, align = "c")
+  x <- style_eval(x, i = ihead, align = "c")
 
   # midrule on numbered spans (not full columns of body)
   jnames <- names(j)
   jnames <- seq_along(jnames)[trimws(jnames) != ""]
-  x <- style_bootstrap(x, i = ihead, j = jnames, line = "b", line_width = .05, line_color = "#d3d8dc")
+  x <- style_eval(x, i = ihead, j = jnames, line = "b", line_width = .05, line_color = "#d3d8dc")
 
   return(x)
 }
@@ -88,10 +88,10 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
   x@table_string <- out
 
   # should not be style_tt, because we already have a string bootstrap table at this stage
-  x <- style_bootstrap(x, i = idx_old, j = 1, indent = indent)
+  x <- style_eval(x, i = idx_old, j = 1, indent = indent)
 
   # if there's a two-level header column multi-span, we want it centered.
-  x <- style_bootstrap(x, i = -1, align = "c")
+  x <- style_eval(x, i = -1, align = "c")
 
   dots <- list(...)
   dots[["j"]] <- NULL
