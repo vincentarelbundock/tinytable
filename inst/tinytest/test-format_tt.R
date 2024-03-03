@@ -2,6 +2,13 @@ source("helpers.R")
 using("tinysnapshot")
 
 
+# bug discovered in modelsummary
+z <- factor(c("a", "b", NA))
+a <- format_tt(z, replace_na = "-")
+b <- c("a", "b", "-")
+expect_equivalent(a, b)
+
+
 # numeric vector input
 a <- c(98938272783457, 7288839482, 29111727, 93945)
 b <- format_tt(a, num_suffix = TRUE, digits = 2)

@@ -239,6 +239,8 @@ check_atomic_vector<- function(x, null.ok = FALSE, name = as.character(substitut
   flag <- is.atomic(x) && is.vector(x) && !is.list(x)
   if (flag) {
     out <- TRUE
+  } else if (is.factor(x) && is.null(dim(x))) {
+    out <- TRUE
   } else {
     out <- sprintf("`%s` must be an atomic vector.", name)
   }

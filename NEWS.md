@@ -29,6 +29,9 @@ Breaking changes:
 * The "tinytable_tabularray_placement" global option is renamed to "tinytable_tt_placement".
 * `tinytable` objects no longer have a `meta_tinytable` attribute. Use S4 slots instead.
 
+Bugs:
+
+* `format_tt()` did not work on factor vector.
 
 ## 0.0.5
 
