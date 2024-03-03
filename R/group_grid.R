@@ -1,9 +1,12 @@
-group_grid <- function(x, i = NULL, j = NULL, ...) {
+setMethod(
+  f = "group_eval",
+  signature = "tinytable_grid",
+  definition = function(x, i = NULL, j = NULL, ...) {
   # add here because this is where lazy gets executed
   x <- group_grid_row(x, i)
   x <- group_grid_col(x, j)
   return(x)
-}
+})
 
 
 group_grid_col <- function(x, j, ...) {

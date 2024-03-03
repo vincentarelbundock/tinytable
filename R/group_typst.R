@@ -1,4 +1,8 @@
-group_typst <- function(x, i = NULL, j = NULL, ...) {
+#' @export
+setMethod(
+  f = "group_eval",
+  signature = "tinytable_typst",
+  definition = function(x, i = NULL, j = NULL, ...) {
   out <- x
 
   if (!is.null(i)) {
@@ -10,7 +14,7 @@ group_typst <- function(x, i = NULL, j = NULL, ...) {
   }
 
   return(out)
-}
+})
 
 group_typst_row <- function(x, i, ...) {
   tab <- x@table_string

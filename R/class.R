@@ -89,6 +89,11 @@ setGeneric(
 )
 
 setGeneric(
+  name = "group_eval",
+  def = function(x, ...) standardGeneric("group_eval")
+)
+
+setGeneric(
   name = "finalize",
   def = function(x, ...) standardGeneric("finalize")
 )

@@ -1,5 +1,8 @@
-
-group_bootstrap <- function(x, i, j, indent = 1, ...) {
+#' @export
+setMethod(
+  f = "group_eval",
+  signature = "tinytable_bootstrap",
+  definition = function(x, i = NULL, j = NULL, indent = 1, ...) {
   out <- x
   # columns first to count headers properly
   if (!is.null(j)) {
@@ -9,7 +12,7 @@ group_bootstrap <- function(x, i, j, indent = 1, ...) {
     out <- group_bootstrap_row(out, i = i, j = j, indent = indent, ...)
   }
   return(out)
-}
+})
 
 
 group_bootstrap_col <- function(x, j, ihead, ...) {

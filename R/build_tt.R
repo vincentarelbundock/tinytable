@@ -71,15 +71,6 @@ build_tt <- function(x, output = NULL) {
       ihead <- ihead - 1
       l[["ihead"]] <- ihead
     }
-    if (x@output == "html") {
-      l[[1]] <- quote(group_bootstrap)
-    } else if (x@output == "latex") {
-      l[[1]] <- quote(group_tabularray)
-    } else if (x@output == "markdown") {
-      l[[1]] <- quote(group_grid)
-    } else if (x@output == "typst") {
-      l[[1]] <- quote(group_typst)
-    }
     x <- eval(l)
   }
 

@@ -1,9 +1,13 @@
-group_tabularray <- function(x, i, j, indent, ...) {
+#' @export
+setMethod(
+  f = "group_eval",
+  signature = "tinytable_tabularray",
+  definition = function(x, i = NULL, j = NULL, indent = 1, ...) {
   # columns first to count headers properly
   x <- group_tabularray_col(x, j, ...)
   x <- group_tabularray_row(x, i, indent)
   return(x)
-}
+})
 
 
 group_tabularray_col <- function(x, j, ihead, ...) {
