@@ -82,3 +82,8 @@ setGeneric(
   name = "style_eval",
   def = function(x, ...) standardGeneric("style_eval")
 )
+
+setGeneric(
+  name = "tt_eval",
+  def = function(x, ...) standardGeneric("tt_eval")
+)

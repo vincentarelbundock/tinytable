@@ -1,4 +1,7 @@
-tt_bootstrap <- function(x, ...) {
+setMethod(
+  f = "tt_eval",
+  signature = "tinytable_bootstrap",
+  definition = function(x, ...) {
 
   template <- readLines(system.file("templates/bootstrap.html", package = "tinytable"))
 
@@ -125,7 +128,7 @@ tt_bootstrap <- function(x, ...) {
   }
 
   return(x)
-}
+})
 
 
 

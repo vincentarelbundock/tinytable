@@ -13,7 +13,7 @@ group_grid_col <- function(x, j, ...) {
   cw <- x@width_cols
   cw <- sapply(header, function(k) sum(cw[k]) + length(cw[k]) - 1)
   header <- t(matrix(names(cw)))
-  header <- tt_grid(header, cw)
+  header <- tt_eval(header, cw)
   header <- strsplit(header, split = "\\n")[[1]]
   header <- header[header != "\\n"]
   header <- header[!header %in% c("\\n", "")]
@@ -56,7 +56,7 @@ group_grid_row <- function(x, i, ...) {
   cw <- sum(cw) + length(cw) - 1
   for (idx in rev(seq_along(i))) {
     tmp <- matrix(names(i)[idx])
-    tmp <- as.character(tt_grid(tmp, width_cols = cw))
+    tmp <- as.character(tt_eval(tmp, width_cols = cw))
     tmp <- strsplit(tmp, split = "\\n")[[1]]
     tmp <- tmp[tmp != ""][2]
     lo <- i[idx] - 1

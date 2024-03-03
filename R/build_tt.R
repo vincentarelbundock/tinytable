@@ -61,13 +61,7 @@ build_tt <- function(x, output = NULL) {
   }
 
   # draw the table
-  fun <- switch(x@output,
-    html = tt_bootstrap,
-    latex = tt_tabularray,
-    markdown = tt_grid,
-    typst = tt_typst
-  )
-  x <- fun(x)
+  x <- tt_eval(x)
 
   ihead <- 0
   for (idx in seq_along(x@lazy_group)) {

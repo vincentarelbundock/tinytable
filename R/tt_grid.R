@@ -6,7 +6,7 @@ grid_line <- function(width_cols, char = "-") {
 }
 
 
-tt_grid <- function(x, width_cols = NULL, ...) {
+tt_eval_grid  <- function(x, width_cols = NULL, ...) {
 
   is_matrix <- is.matrix(x)
   if (is_matrix) {
@@ -126,3 +126,14 @@ grid_hlines <- function(x) {
   x@table_string <- paste(lines, collapse = "\n")
   return(x)
 }
+
+
+setMethod(
+  f = "tt_eval",
+  signature = "tinytable_grid",
+  definition = tt_eval_grid)
+
+setMethod(
+  f = "tt_eval",
+  signature = "matrix",
+  definition = tt_eval_grid)

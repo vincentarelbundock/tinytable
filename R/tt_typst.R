@@ -1,4 +1,7 @@
-tt_typst <- function(x, ...) {
+setMethod(
+  f = "tt_eval",
+  signature = "tinytable_typst",
+  definition = function(x, ...) {
   out <- readLines(system.file("templates/typst.typ", package = "tinytable"))
   out <- paste(out, collapse = "\n")
 
@@ -28,7 +31,7 @@ tt_typst <- function(x, ...) {
   } 
 
   return(x)
-}
+})
 
 
 typst_insert <- function(x, content = NULL, type = "body") {

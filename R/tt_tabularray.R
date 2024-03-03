@@ -1,4 +1,7 @@
-tt_tabularray <- function(x) {
+setMethod(
+  f = "tt_eval",
+  signature = "tinytable_tabularray",
+  definition = function(x, ...) {
 
   template <- template_tabularray(x@theme)
 
@@ -91,6 +94,6 @@ tt_tabularray <- function(x) {
   x@body <- body
 
   return(x)
-}
+})
 
 
