@@ -96,10 +96,7 @@ build_tt <- function(x, output = NULL) {
     }
   }
 
-  # finalize 
-  x <- finalize_bootstrap(x)
-  x <- finalize_typst(x)
-  x <- finalize_grid(x)
+  x <- finalize(x)
 
   return(x)
 }

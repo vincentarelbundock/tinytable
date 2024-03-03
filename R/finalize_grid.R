@@ -1,7 +1,7 @@
-
-finalize_grid <- function(x) {
-    if (!isTRUE(x@output == "markdown")) return(x)
-
+setMethod(
+  f = "finalize",
+  signature = "tinytable_grid",
+  definition = function(x, ...) {
 
     # formal grid specification in pandoc includes lines everywhere
     # important for docx output
@@ -45,7 +45,7 @@ finalize_grid <- function(x) {
     x@table_string <- out
 
     return(x)
-}
+})
 
 
 

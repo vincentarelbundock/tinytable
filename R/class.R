@@ -87,3 +87,8 @@ setGeneric(
   name = "tt_eval",
   def = function(x, ...) standardGeneric("tt_eval")
 )
+
+setGeneric(
+  name = "finalize",
+  def = function(x, ...) standardGeneric("finalize")
+)

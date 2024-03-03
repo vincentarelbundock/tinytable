@@ -1,8 +1,7 @@
-
-finalize_bootstrap <- function(x) {
-  if (!isTRUE(x@output == "html")) {
-    return(x)
-  }
+setMethod(
+  f = "finalize",
+  signature = "tinytable_bootstrap",
+  definition = function(x, ...) {
 
   # class
   cl <- x@bootstrap_class
@@ -25,4 +24,4 @@ finalize_bootstrap <- function(x) {
   x@table_string <- out
 
   return(x)
-}
+})

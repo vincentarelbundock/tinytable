@@ -1,5 +1,7 @@
-finalize_typst <- function(x) {
-  if (!isTRUE(x@output == "typst")) return(x)
+setMethod(
+  f = "finalize",
+  signature = "tinytable_typst",
+  definition = function(x, ...) {
 
   out <- x@table_string
   out <- sub("$TINYTABLE_TYPST_NROW", nrow(x), out, fixed = TRUE)
@@ -16,4 +18,4 @@ finalize_typst <- function(x) {
   x@table_string <- out
 
   return(x)
-}
+})
