@@ -257,8 +257,10 @@ format_tt_lazy <- function(x,
       o <- "html"
     } else if (isTRUE(escape == "typst")) {
       o <- "typst"
-    } else {
+    } else if (inherits(x, "tinytable")) {
       o <- x@output
+    } else {
+      o <- FALSE
     }
     # if j includes all columns, the user wants to escape the full table, including the column headers
     if (jnull) {
@@ -276,7 +278,7 @@ format_tt_lazy <- function(x,
   if (isTRUE(markdown)) {
     assert_dependency("markdown")
     for (col in j) {
-      if (isTRUE(x@output == "html")) {
+      if (inherits(x, "tinytable_bootstrap")) {
         fun <- function(k) {
           k <- trimws(markdown::mark_html(text = k, template = FALSE))
           k <- sub("<p>", "", k, fixed = TRUE)
@@ -284,7 +286,7 @@ format_tt_lazy <- function(x,
           return(k)
         }
         out[i, col] <- sapply(out[i, col], function(k) fun(k))
-      } else if (isTRUE(x@output == "latex")) {
+      } else if (inherits(x, "tinytable_tabularray")) {
         fun <- function(k) {
           k <- trimws(markdown::mark_latex(text = k, template = FALSE))
           return(k)
