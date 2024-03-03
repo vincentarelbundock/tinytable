@@ -3,7 +3,10 @@
 #' @inheritParams style_tt
 #' @keywords internal
 #' @noRd
-style_typst <- function(x,
+setMethod(
+  f = "style_eval",
+  signature = "tinytable_typst",
+  definition = function(x,
                         i = NULL,
                         j = NULL,
                         bold = FALSE,
@@ -155,4 +158,4 @@ let j = (%s,);",
   x@table_string <- out
 
   return(x)
-}
+})

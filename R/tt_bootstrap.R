@@ -108,20 +108,20 @@ tt_bootstrap <- function(x, ...) {
 
   out <- paste(template, collapse = "\n")
 
-  # before style_bootstrap()
+  # before style_eval()
   x@table_string <- out
 
   if (x@theme == "default") {
-    x <- style_bootstrap(x, bootstrap_class = "table table-borderless",
+    x <- style_eval(x, bootstrap_class = "table table-borderless",
       i = 0, line = "b", line_color = "#d3d8dc", line_width = .1)
   } else if (x@theme == "bootstrap") {
-    x <- style_bootstrap(x, bootstrap_class = "table")
+    x <- style_eval(x, bootstrap_class = "table")
   } else if (x@theme == "striped") {
-    x <- style_bootstrap(x, bootstrap_class = "table table-striped")
+    x <- style_eval(x, bootstrap_class = "table table-striped")
   } else if (x@theme == "grid") {
-    x <- style_bootstrap(x, bootstrap_class = "table table-bordered")
+    x <- style_eval(x, bootstrap_class = "table table-bordered")
   } else if (x@theme == "void") {
-    x <- style_bootstrap(x, bootstrap_class = "table table-borderless")
+    x <- style_eval(x, bootstrap_class = "table table-borderless")
   }
 
   return(x)

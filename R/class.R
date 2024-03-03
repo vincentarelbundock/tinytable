@@ -77,3 +77,8 @@ setClass("tinytable_tabularray", contains = "tinytable")
 setClass("tinytable_bootstrap", contains = "tinytable")
 setClass("tinytable_typst", contains = "tinytable")
 setClass("tinytable_grid", contains = "tinytable")
+
+setGeneric(
+  name = "style_eval",
+  def = function(x, ...) standardGeneric("style_eval")
+)
