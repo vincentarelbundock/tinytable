@@ -25,8 +25,6 @@ setMethod(
                              tabularray_outer = NULL,
                              ...) {
 
-  if (x@output != "latex") return(x)
-
   out <- x@table_string
 
   ival <- if (is.null(i)) seq_len(nrow(x)) else i

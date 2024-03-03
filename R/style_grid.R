@@ -12,9 +12,6 @@ setMethod(
                         rowspan = NULL,
                         colspan = NULL,
                         ...) {
-    if (x@output != "markdown") {
-      return(x)
-    }
 
     out <- x@table_dataframe
 

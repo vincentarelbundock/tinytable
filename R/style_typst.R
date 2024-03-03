@@ -27,8 +27,6 @@ setMethod(
                         midrule = FALSE, # undocumented, only used by `group_tt()`
                         ...) {
 
-  if (x@output != "typst") return(x)
-
   out <- x@table_string
 
   ival <- if (is.null(i)) seq_len(nrow(x)) else i

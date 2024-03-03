@@ -31,9 +31,6 @@ setMethod(
                             bootstrap_css_rule = NULL,
                             ...) {
 
-
-  if (x@output != "html") return(x)
-
   out <- x@table_string
 
   ival <- if (is.null(i)) seq_len(nrow(x)) else i
