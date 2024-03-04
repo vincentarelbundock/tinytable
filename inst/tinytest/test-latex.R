@@ -80,6 +80,29 @@ x <- tt(mtcars[1:9, 1:8]) |>
     save_tt("latex")
 expect_inherits(x, "character")
 
+# Footnotes
+expect_snapshot_print(
+  (tt(mtcars[1:4, 1:5], notes = list(a = "Blah.", b = "Blah blah."))),
+  label = "latex-footnotes")
+
+# Maths
+maths<-data.frame(Math = c(
+  "$x^2 + y^2 = z^2$",
+  "$\\frac{1}{2}$"
+)) |> style_tt(j = 1, align = "c")
+expect_snapshot_print(
+  maths,
+  label = "latex-maths")
+
+# Line breaks
+tableau<-tt(data.frame(
+  "{Sed ut \\\\ perspiciatis unde}",
+  "dicta sunt<br> explicabo. Nemo"
+) |> setNames(c("LaTeX line break", "HTML line break")), width = 1)
+expect_snapshot_print(
+  tableau,
+  label = "latex-breaks")
+
 
 options(tinytable_print_output = NULL)
 
