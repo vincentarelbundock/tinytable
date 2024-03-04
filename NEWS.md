@@ -14,6 +14,7 @@ Typst format:
 
 * Support for row headers with `group_tt(i)`
 * Supports images and inline plots with `plot_tt()`. Thanks to @aghaynes for contribution #155.
+* "kind: tinytable" parameter is now added to all figures enclosing a `tinytable`. This allows users to apply targeted show rules. For example, in a table of contents: `outline(target: figure.where(kind: "tinytable"))`
 
 Misc:
 
