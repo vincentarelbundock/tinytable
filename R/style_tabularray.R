@@ -73,27 +73,52 @@ setMethod(
 
   if (!is.null(align)) {
     if (length(align) == 1) align <- rep(align, length(jval))
-    for (idx in seq_along(jval)) {
-      a_tmp <- align[idx]
-      j_tmp <- jval[idx]
-      if (a_tmp == "d") {
-        num <- x@table_dataframe[[j_tmp]]
-        num <- strsplit(num, "\\.")
-        num <- lapply(num, function(k) if (length(k) == 1) c(k, " ") else k)
-        left <- max(sapply(num, function(k) nchar(k[[1]])))
-        right <- max(sapply(num, function(k) nchar(k[[2]])))
-        settings$tabularray <- ifelse(
-          settings$j == j_tmp,
-          sprintf("%s si={table-format=-%s.%s,input-symbols={()}},", settings$tabularray, left, right),
-          settings$tabularray)
+
+    # explicit j input
+    if ("j" %in% colnames(settings)) {
+      for (idx in seq_along(jval)) {
+        a_tmp <- align[idx]
+        j_tmp <- jval[idx]
+        rowidx <- settings$j == j_tmp
+        if (a_tmp == "d") {
+          num <- x@table_dataframe[[j_tmp]]
+          num <- strsplit(num, "\\.")
+          num <- lapply(num, function(k) if (length(k) == 1) c(k, " ") else k)
+          left <- max(sapply(num, function(k) nchar(k[[1]])))
+          right <- max(sapply(num, function(k) nchar(k[[2]])))
+          settings$tabularray <- ifelse(
+            rowidx,
+            sprintf("%s si={table-format=-%s.%s,input-symbols={()}},", settings$tabularray, left, right),
+            settings$tabularray)
+        } else {
+          settings$tabularray <- ifelse(
+            rowidx,
+            sprintf("%s halign=%s,", settings$tabularray, a_tmp),
+            settings$tabularray)
+        }
+      }
+
+      # no explicit j input
       } else {
-        settings$tabularray <- ifelse(
-          settings$j == j_tmp,
-          sprintf("%s halign=%s,", settings$tabularray, a_tmp),
-          settings$tabularray)
+        a_tmp <- align[1]
+        if (a_tmp == "d") {
+          num <- unlist(x@table_dataframe[, jval])
+          num <- strsplit(num, "\\.")
+          num <- lapply(num, function(k) if (length(k) == 1) c(k, " ") else k)
+          left <- max(sapply(num, function(k) nchar(k[[1]])))
+          right <- max(sapply(num, function(k) nchar(k[[2]])))
+          settings$tabularray <- sprintf(
+            "%s si={table-format=-%s.%s,input-symbols={()}},", 
+            settings$tabularray, 
+            left, 
+            right)
+        } else {
+          settings$tabularray <- sprintf(
+            "%s halign=%s,",
+            settings$tabularray, a_tmp)
+        }
       }
     }
-  }
 
   vectorize_tabularray <- function(z) {
     if (is.null(z)) {

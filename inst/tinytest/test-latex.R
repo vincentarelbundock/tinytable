@@ -64,4 +64,23 @@ tab <- tt(x) |>
 expect_snapshot_print(tab, label = "latex-align_d")
 
 
+# bug discovered with vignette
+x <- tt(mtcars[1:9, 1:8]) |> 
+  group_tt(
+    i = list(
+      "I like (fake) hamburgers" = 3,
+      "She prefers halloumi" = 4,
+      "They love tofu" = 7)) |>
+  style_tt(
+    i = c(3, 5, 9),
+    align = "c",
+    color = "white",
+    background = "gray",
+    bold = TRUE) |> 
+    save_tt("latex")
+expect_inherits(x, "character")
+
+
 options(tinytable_print_output = NULL)
+
+
