@@ -86,21 +86,20 @@ expect_snapshot_print(
   label = "latex-footnotes")
 
 # Maths
-maths<-data.frame(Math = c(
+math <- tt(data.frame(Math = c(
   "$x^2 + y^2 = z^2$",
   "$\\frac{1}{2}$"
-)) |> style_tt(j = 1, align = "c")
+))) |> style_tt(j = 1, align = "c")
 expect_snapshot_print(
-  maths,
+  math,
   label = "latex-maths")
 
 # Line breaks
-tableau<-tt(data.frame(
-  "{Sed ut \\\\ perspiciatis unde}",
-  "dicta sunt<br> explicabo. Nemo"
-) |> setNames(c("LaTeX line break", "HTML line break")), width = 1)
 expect_snapshot_print(
-  tableau,
+  (tt(data.frame(
+    "{Sed ut \\\\ perspiciatis unde}",
+    "dicta sunt<br> explicabo. Nemo"
+  ) |> setNames(c("LaTeX line break", "HTML line break")), width = 1)),
   label = "latex-breaks")
 
 
