@@ -102,6 +102,32 @@ expect_snapshot_print(
   ) |> setNames(c("LaTeX line break", "HTML line break")), width = 1)),
   label = "latex-breaks")
 
+# Formatting
+dat <- data.frame(
+  a = c("Burger", "Halloumi", "Tofu", "Beans"),
+  b = c(1.43202, 201.399, 0.146188, 0.0031),
+  c = c(98938272783457, 7288839482, 29111727, 93945))
+expect_snapshot_print(
+  (tt(dat) |>
+    format_tt(j = "a", sprintf = "Food: %s") |>
+    format_tt(j = 2, digits = 1) |>
+    format_tt(j = "c", digits = 2, num_suffix = TRUE)),
+  label = "latex-formatting")
+
+# Missing value replacement
+tab <- data.frame(a = c(NA, 1, 2), b = c(3, NA, 5))
+expect_snapshot_print(
+  tt(tab) |> format_tt(replace_na = "-"),
+  label = "latex-missing_value_replacement")
+
+# Escape special characters
+dat <- data.frame(
+  "LaTeX" = c("Dollars $", "Percent %", "Underscore _"),
+  "HTML" = c("<br>", "<sup>4</sup>", "<emph>blah</emph>")
+)
+expect_snapshot_print(
+  tt(dat) |> format_tt(escape = TRUE),
+  label = "latex-escape_special_caracters")
 
 options(tinytable_print_output = NULL)
 
