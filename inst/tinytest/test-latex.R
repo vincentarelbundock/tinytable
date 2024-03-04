@@ -129,6 +129,61 @@ expect_snapshot_print(
   tt(dat) |> format_tt(escape = TRUE),
   label = "latex-escape_special_caracters")
 
+# Formatting URLs
+dat <- data.frame(
+  `Package (link)` = c(
+    "[`marginaleffects`](https://www.marginaleffects.com/)",
+    "[`modelsummary`](https://www.modelsummary.com/)"
+  ),
+  Purpose = c(
+    "Interpreting statistical models",
+    "Data and model summaries"
+  ),
+  check.names = FALSE
+)
+dat<-tt(dat) |> format_tt(j = 1, markdown = TRUE)
+expect_snapshot_print(
+  dat,
+  label = "latex-formatting_url")
+
+# Style
+x <- mtcars[1:4, 1:5]
+expect_snapshot_print(
+  (tt(x) |>
+     style_tt(
+       i = 2:3,
+       j = c(1, 3, 4),
+       italic = TRUE,
+       background = "green",
+       color = "orange")),
+  label = "latex-style")
+
+# Font size 
+expect_snapshot_print(
+  (tt(x) |> style_tt(j = "mpg|hp|qsec", fontsize = 1.5)),
+  label = "latex-font_size")
+
+# Merging cells
+expect_snapshot_print(
+  (tt(x)|> style_tt(
+    i = 2, j = 2,
+    colspan = 3,
+    rowspan = 2,
+    align = "c",
+    alignv = "m",
+    color = "white",
+    background = "black",
+    bold = TRUE)),
+  label = "latex-merging_cells")
+
+# Spanning cells
+tab <- aggregate(mpg ~ cyl + am, FUN = mean, data = mtcars)
+tab <- tab[order(tab$cyl, tab$am),]
+expect_snapshot_print(
+  (tt(tab, digits = 2) |>
+     style_tt(i = c(1, 3, 5), j = 1, rowspan = 2, alignv = "t")),
+  label = "latex-spanning_cells")
+
 options(tinytable_print_output = NULL)
 
 
