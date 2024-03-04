@@ -31,7 +31,7 @@ setMethod(
   jval <- if (is.null(j)) seq_len(ncol(x)) else j
 
   # order may be important for recycling 
-  settings <- expand.grid(i = ival, j = jval, tabularray = "")
+  settings <- expand.grid(i = ival, j = jval, tabularray = "", stringsAsFactors = FALSE)
   if (is.null(i) && !is.null(j)) {
     settings <- settings[order(settings$i, settings$j), ]
   }
@@ -72,18 +72,26 @@ setMethod(
   if (indent > 0) settings$tabularary <- sprintf("%s preto={\\hspace{%sem}},", settings$tabularray, indent)
 
   if (!is.null(align)) {
-    if (align[1] == "d") {
-      num <- unlist(x@table_dataframe[ival, jval])
-      if (!all(grepl("\\.", num)) || length(num) == 0) {
-        settings$tabularray <- sprintf("%s halign=c,", settings$tabularray)
-      } else {
+    if (length(align) == 1) align <- rep(align, length(jval))
+    for (idx in seq_along(jval)) {
+      a_tmp <- align[idx]
+      j_tmp <- jval[idx]
+      if (a_tmp == "d") {
+        num <- x@table_dataframe[[j_tmp]]
         num <- strsplit(num, "\\.")
+        num <- lapply(num, function(k) if (length(k) == 1) c(k, " ") else k)
         left <- max(sapply(num, function(k) nchar(k[[1]])))
         right <- max(sapply(num, function(k) nchar(k[[2]])))
-        settings$tabularray <- sprintf("%s si={table-format=%s.%s},", settings$tabularray, left, right)
+        settings$tabularray <- ifelse(
+          settings$j == j_tmp,
+          sprintf("%s si={table-format=%s.%s},", settings$tabularray, left, right),
+          settings$tabularray)
+      } else {
+        settings$tabularray <- ifelse(
+          settings$j == j_tmp,
+          sprintf("%s halign=%s,", settings$tabularray, a_tmp),
+          settings$tabularray)
       }
-    } else {
-      settings$tabularray <- sprintf("%s halign=%s,", settings$tabularray, align)
     }
   }
 
