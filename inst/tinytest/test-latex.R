@@ -184,6 +184,45 @@ expect_snapshot_print(
      style_tt(i = c(1, 3, 5), j = 1, rowspan = 2, alignv = "t")),
   label = "latex-spanning_cells")
 
+# Conditional styling
+k <- mtcars[1:10, c("mpg", "am", "vs")]
+expect_snapshot_print(
+  (tt(k) |>
+     style_tt(
+       i = which(k$am == k$vs),
+       background = "teal",
+       color = "white")),
+  label = "latex-conditional_styling")
+
+# Heatmaps
+fs <- seq(.1, 2, length.out = 20)
+k <- data.frame(matrix(fs, ncol = 5))
+colnames(k) <- NULL
+bg <- hcl.colors(20, "Inferno")
+fg <- ifelse(as.matrix(k) < 1.7, tail(bg, 1), head(bg, 1))
+expect_snapshot_print(
+  (tt(k, width = .7, theme = "void") |>
+     style_tt(j = 1:5, align = "ccccc") |>
+     style_tt(
+       i = 1:4,
+       j = 1:5,
+       color = fg,
+       background = bg,
+       fontsize = fs)),
+  label = "latex-heatmaps")
+
+# Borders
+expect_snapshot_print(
+  tt(x, theme = "void") |>
+    style_tt(
+      i = 0:3,
+      j = 1:3,
+      line = "tblr",
+      line_width = 0.4,
+      line_color = "orange"),
+  label = "latex-borders")
+
+
 options(tinytable_print_output = NULL)
 
 
