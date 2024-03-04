@@ -84,7 +84,7 @@ setMethod(
         right <- max(sapply(num, function(k) nchar(k[[2]])))
         settings$tabularray <- ifelse(
           settings$j == j_tmp,
-          sprintf("%s si={table-format=%s.%s},", settings$tabularray, left, right),
+          sprintf("%s si={table-format=-%s.%s,input-symbols={()}},", settings$tabularray, left, right),
           settings$tabularray)
       } else {
         settings$tabularray <- ifelse(
