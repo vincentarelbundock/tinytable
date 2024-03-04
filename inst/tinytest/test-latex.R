@@ -80,6 +80,148 @@ x <- tt(mtcars[1:9, 1:8]) |>
     save_tt("latex")
 expect_inherits(x, "character")
 
+# Footnotes
+expect_snapshot_print(
+  (tt(mtcars[1:4, 1:5], notes = list(a = "Blah.", b = "Blah blah."))),
+  label = "latex-footnotes")
+
+# Maths
+math <- tt(data.frame(Math = c(
+  "$x^2 + y^2 = z^2$",
+  "$\\frac{1}{2}$"
+))) |> style_tt(j = 1, align = "c")
+expect_snapshot_print(
+  math,
+  label = "latex-maths")
+
+# Line breaks
+expect_snapshot_print(
+  (tt(data.frame(
+    "{Sed ut \\\\ perspiciatis unde}",
+    "dicta sunt<br> explicabo. Nemo"
+  ) |> setNames(c("LaTeX line break", "HTML line break")), width = 1)),
+  label = "latex-breaks")
+
+# Formatting
+dat <- data.frame(
+  a = c("Burger", "Halloumi", "Tofu", "Beans"),
+  b = c(1.43202, 201.399, 0.146188, 0.0031),
+  c = c(98938272783457, 7288839482, 29111727, 93945))
+expect_snapshot_print(
+  (tt(dat) |>
+    format_tt(j = "a", sprintf = "Food: %s") |>
+    format_tt(j = 2, digits = 1) |>
+    format_tt(j = "c", digits = 2, num_suffix = TRUE)),
+  label = "latex-formatting")
+
+# Missing value replacement
+tab <- data.frame(a = c(NA, 1, 2), b = c(3, NA, 5))
+expect_snapshot_print(
+  tt(tab) |> format_tt(replace_na = "-"),
+  label = "latex-missing_value_replacement")
+
+# Escape special characters
+dat <- data.frame(
+  "LaTeX" = c("Dollars $", "Percent %", "Underscore _"),
+  "HTML" = c("<br>", "<sup>4</sup>", "<emph>blah</emph>")
+)
+expect_snapshot_print(
+  tt(dat) |> format_tt(escape = TRUE),
+  label = "latex-escape_special_caracters")
+
+# Formatting URLs
+dat <- data.frame(
+  `Package (link)` = c(
+    "[`marginaleffects`](https://www.marginaleffects.com/)",
+    "[`modelsummary`](https://www.modelsummary.com/)"
+  ),
+  Purpose = c(
+    "Interpreting statistical models",
+    "Data and model summaries"
+  ),
+  check.names = FALSE
+)
+dat<-tt(dat) |> format_tt(j = 1, markdown = TRUE)
+expect_snapshot_print(
+  dat,
+  label = "latex-formatting_url")
+
+# Style
+x <- mtcars[1:4, 1:5]
+expect_snapshot_print(
+  (tt(x) |>
+     style_tt(
+       i = 2:3,
+       j = c(1, 3, 4),
+       italic = TRUE,
+       background = "green",
+       color = "orange")),
+  label = "latex-style")
+
+# Font size 
+expect_snapshot_print(
+  (tt(x) |> style_tt(j = "mpg|hp|qsec", fontsize = 1.5)),
+  label = "latex-font_size")
+
+# Merging cells
+expect_snapshot_print(
+  (tt(x)|> style_tt(
+    i = 2, j = 2,
+    colspan = 3,
+    rowspan = 2,
+    align = "c",
+    alignv = "m",
+    color = "white",
+    background = "black",
+    bold = TRUE)),
+  label = "latex-merging_cells")
+
+# Spanning cells
+tab <- aggregate(mpg ~ cyl + am, FUN = mean, data = mtcars)
+tab <- tab[order(tab$cyl, tab$am),]
+expect_snapshot_print(
+  (tt(tab, digits = 2) |>
+     style_tt(i = c(1, 3, 5), j = 1, rowspan = 2, alignv = "t")),
+  label = "latex-spanning_cells")
+
+# Conditional styling
+k <- mtcars[1:10, c("mpg", "am", "vs")]
+expect_snapshot_print(
+  (tt(k) |>
+     style_tt(
+       i = which(k$am == k$vs),
+       background = "teal",
+       color = "white")),
+  label = "latex-conditional_styling")
+
+# Heatmaps
+fs <- seq(.1, 2, length.out = 20)
+k <- data.frame(matrix(fs, ncol = 5))
+colnames(k) <- NULL
+bg <- hcl.colors(20, "Inferno")
+fg <- ifelse(as.matrix(k) < 1.7, tail(bg, 1), head(bg, 1))
+expect_snapshot_print(
+  (tt(k, width = .7, theme = "void") |>
+     style_tt(j = 1:5, align = "ccccc") |>
+     style_tt(
+       i = 1:4,
+       j = 1:5,
+       color = fg,
+       background = bg,
+       fontsize = fs)),
+  label = "latex-heatmaps")
+
+# Borders
+expect_snapshot_print(
+  tt(x, theme = "void") |>
+    style_tt(
+      i = 0:3,
+      j = 1:3,
+      line = "tblr",
+      line_width = 0.4,
+      line_color = "orange"),
+  label = "latex-borders")
+
 
 options(tinytable_print_output = NULL)
 
