@@ -84,8 +84,10 @@ setMethod(
           num <- x@table_dataframe[[j_tmp]]
           num <- strsplit(num, "\\.")
           num <- lapply(num, function(k) if (length(k) == 1) c(k, " ") else k)
-          left <- max(sapply(num, function(k) nchar(k[[1]])))
-          right <- max(sapply(num, function(k) nchar(k[[2]])))
+          left <- sapply(num, function(k) k[[1]])
+          right <- sapply(num, function(k) k[[2]])
+          left <- max(nchar(gsub("\\D", "", left)))
+          right <- max(nchar(gsub("\\D", "", right)))
           settings$tabularray <- ifelse(
             rowidx,
             sprintf("%s si={table-format=-%s.%s,input-symbols={()}},", settings$tabularray, left, right),
@@ -105,8 +107,10 @@ setMethod(
           num <- unlist(x@table_dataframe[, jval])
           num <- strsplit(num, "\\.")
           num <- lapply(num, function(k) if (length(k) == 1) c(k, " ") else k)
-          left <- max(sapply(num, function(k) nchar(k[[1]])))
-          right <- max(sapply(num, function(k) nchar(k[[2]])))
+          left <- sapply(num, function(k) k[[1]])
+          right <- sapply(num, function(k) k[[2]])
+          left <- max(nchar(gsub("\\D", "", left)))
+          right <- max(nchar(gsub("\\D", "", right)))
           settings$tabularray <- sprintf(
             "%s si={table-format=-%s.%s,input-symbols={()}},", 
             settings$tabularray, 
