@@ -9,6 +9,7 @@
 * `num_fmt="significant_cell"` rounds significant digits on a cell-by-cell basis rather than for full columns (as is default in base R `format()`).
 * Numeric formatting options can be set via global options, defined in the function signature.
 * `num_mark_big` and `num_mark_dec` require an explicit `digits`. We now raise an informative error.
+* `escape = TRUE` now escapes spanning cells created by `group_tt()` when `i` and `j` are both `NULL`. To avoid escaping group labels, users can specify `j` explicitly.
 
 Typst format:
 
@@ -23,9 +24,8 @@ Misc:
 * Improved support for `tibble`. ANSI characters (ex: fancy `pillar` formatting) are stripped automatically or converted to HTML when the `fansi` package is installed. `fansi` is a dependency of `tibble`, so it should often be installed.
 * New `tinytable_tt_digits` global option can set the default number of digits in the `tt()` function.
 * Refactor: `tinytable` objects are now S4 class objects, with slots to hold data about the content and structure.
-* `as.character()` now works on `tinytable` objects, choosing the output format in the `@output` slot by default.
+* `as.character()` now works on `tinytable` objects, returning a string in the output format specified by the `@output` slot of the `tinytable` object (markdown by default).
 * LaTeX code in captions no longer requires double escaping, allowing: `tt(x, caption = "Blah blah \\label{tab:blah})`
-* `format_tt(escape = TRUE)` now escapes spanning cells created by `group_tt()` when `i` and `j` are both `NULL`. To avoid escaping group labels, users can specify `j` explicitly.
 
 Breaking changes:
 
