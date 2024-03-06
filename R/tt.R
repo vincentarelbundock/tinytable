@@ -44,6 +44,9 @@
 #' tab <- tt(x, notes = list("*" = fn))
 #' print(tab, "latex")
 #' 
+#' k <- data.frame(x = c(0.000123456789, 12.4356789))
+#' tt(k, digits=2)
+#' 
 #' @export
 tt <- function(x,
                digits = getOption("tinytable_tt_digits", default = NULL),
