@@ -67,6 +67,34 @@
 #' style_tt(tab, j = "drat|wt", background = "pink")
 #' style_tt(tab, j = c("drat", "wt"), background = "pink")
 #'
+#' style_tt(tab,
+#'   i = 2, j = 2,
+#'   colspan = 3,
+#'   rowspan = 2
+#'   align="c"
+#'   alignv = "m",
+#'   color = "white",
+#'   background = "black",
+#'   bold = TRUE)
+#'   
+#' tt(x, theme = "void") |>
+#'   style_tt(
+#'     i=0:3,
+#'     j=1:3,
+#'     line="tblr",
+#'     line_width=0.4,
+#'     line_color="orange")
+#'     
+#' tt(x, theme = "bootstrap") |>
+#'     style_tt(
+#'       i = c(2,5),
+#'       j = 3,
+#'       strikeout = TRUE,
+#'       fontsize = 0.7
+#'       )
+#'     
+#'     
+#'
 style_tt <- function (x,
                       i = NULL,
                       j = NULL,
