@@ -57,7 +57,11 @@ format_tt(
 
 \item{replace_na}{String to display for missing values.}
 
-\item{escape}{Logical or String; if TRUE, escape special characters to display them as text in the format of the output of a \code{tt()} table. If \code{format_tt()} is called as a standalone function instead of on a \code{tt()} table, the \code{escape} argument accepts strings to specify the escaping method: "latex" or "html".}
+\item{escape}{Logical or "latex" or "html". If TRUE, escape special characters to display them as text in the format of the output of a \code{tt()} table.
+\itemize{
+\item If \code{i} is \code{NULL}, escape the \code{j} columns and column names.
+\item If \code{i} and \code{j} are both \code{NULL}, escape all cells, column names, as well as spanning labels created by \code{group_tt()}.
+}}
 
 \item{markdown}{Logical; if TRUE, render markdown syntax in cells. Ex: \verb{_italicized text_} is properly italicized in HTML and LaTeX.}
 

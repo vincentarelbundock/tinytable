@@ -25,6 +25,7 @@ Misc:
 * Refactor: `tinytable` objects are now S4 class objects, with slots to hold data about the content and structure.
 * `as.character()` now works on `tinytable` objects, choosing the output format in the `@output` slot by default.
 * LaTeX code in captions no longer requires double escaping, allowing: `tt(x, caption = "Blah blah \\label{tab:blah})`
+* `format_tt(escape = TRUE)` now escapes spanning cells created by `group_tt()` when `i` and `j` are both `NULL`. To avoid escaping group labels, users can specify `j` explicitly.
 
 Breaking changes:
 

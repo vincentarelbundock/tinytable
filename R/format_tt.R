@@ -17,7 +17,9 @@
 #' @param bool A function to format logical columns. Defaults to title case.
 #' @param other A function to format columns of other types. Defaults to `as.character()`.
 #' @param replace_na String to display for missing values.
-#' @param escape Logical or String; if TRUE, escape special characters to display them as text in the format of the output of a `tt()` table. If `format_tt()` is called as a standalone function instead of on a `tt()` table, the `escape` argument accepts strings to specify the escaping method: "latex" or "html".
+#' @param escape Logical or "latex" or "html". If TRUE, escape special characters to display them as text in the format of the output of a `tt()` table.
+#' - If `i` is `NULL`, escape the `j` columns and column names.
+#' - If `i` and `j` are both `NULL`, escape all cells, column names, as well as spanning labels created by `group_tt()`.
 #' @param markdown Logical; if TRUE, render markdown syntax in cells. Ex: `_italicized text_` is properly italicized in HTML and LaTeX.
 #' @param fn Function for custom formatting. Accepts a vector and returns a character vector of the same length.
 #' @param sprintf String passed to the `?sprintf` function to format numbers or interpolate strings with a user-defined pattern (similar to the `glue` package, but using Base R).
@@ -154,6 +156,7 @@ format_tt_lazy <- function(x,
   assert_string(sprintf, null.ok = TRUE)
   assert_flag(markdown)
   if (is.null(j)) jnull <- TRUE else jnull <- FALSE
+  if (is.null(i)) inull <- TRUE else inull <- FALSE
   j <- sanitize_j(j, ori)
 
   if (is.null(digits)) {
@@ -249,7 +252,6 @@ format_tt_lazy <- function(x,
     }
   }
 
-
   # escape latex characters
   if (!isFALSE(escape)) {
     if (isTRUE(escape == "latex")) {
@@ -263,15 +265,38 @@ format_tt_lazy <- function(x,
     } else {
       o <- FALSE
     }
-    # if j includes all columns, the user wants to escape the full table, including the column headers
-    if (jnull) {
+
+    if (!inull && jnull) {
+      for (col in j) {
+        out[i, col] <- escape_text(out[i, col], output = o)
+      }
+
+    } else if (inull && jnull) {
+      for (col in j) {
+        out[, col] <- escape_text(out[, col], output = o)
+      }
+
       colnames(out) <- escape_text(colnames(out), output = o)
       if (inherits(x, "tinytable")) {
         x@names <- escape_text(x@names, output = o)
       }
-    }
-    for (col in j) {
-      out[i, col] <- escape_text(out[i, col], output = o)
+      for (idx in seq_along(x@lazy_group)) {
+        g <- x@lazy_group[[idx]]
+        if (!is.null(g$j)) {
+          names(g$j) <- escape_text(names(g$j), output = o)
+        }
+        if (!is.null(g$i)) {
+          names(g$i) <- escape_text(names(g$i), output = o)
+        }
+        x@lazy_group[[idx]] <- g
+      }
+
+    } else {
+      for (row in i) {
+        for (col in j) {
+          out[row, col] <- escape_text(out[row, col], output = o)
+        }
+      }
     }
   }
 

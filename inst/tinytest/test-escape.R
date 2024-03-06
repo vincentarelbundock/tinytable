@@ -20,3 +20,15 @@ expect_snapshot_print(tab, "escape-latex_colnames")
 tab <- tt(head(iris), caption = "Blah blah \\label{tab:blah-blah}")
 tab@output <- "latex"
 expect_snapshot_print(tab, "escape-issue150_caption_escape")
+
+
+tab <- mtcars[1:3, 1:4] |>
+    setNames(c("blah_blah", "foo_bar", "c", "d")) |>
+    tt() |>
+    format_tt(escape = TRUE) |>
+    group_tt(j = list("foo_bar" = 1:2, "banana_fish" = 3:4))
+tab@output <- "latex"
+expect_snapshot_print(tab, "escape-issue150_caption_escape_02")
+
+
+
