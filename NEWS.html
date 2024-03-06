@@ -262,6 +262,7 @@ ul.task-list li input[type="checkbox"] {
 <li><code>num_fmt="significant_cell"</code> rounds significant digits on a cell-by-cell basis rather than for full columns (as is default in base R <code>format()</code>).</li>
 <li>Numeric formatting options can be set via global options, defined in the function signature.</li>
 <li><code>num_mark_big</code> and <code>num_mark_dec</code> require an explicit <code>digits</code>. We now raise an informative error.</li>
+<li><code>escape = TRUE</code> now escapes spanning cells created by <code>group_tt()</code> when <code>i</code> and <code>j</code> are both <code>NULL</code>. To avoid escaping group labels, users can specify <code>j</code> explicitly.</li>
 </ul>
 <p>Typst format:</p>
 <ul>
@@ -276,9 +277,8 @@ ul.task-list li input[type="checkbox"] {
 <li>Improved support for <code>tibble</code>. ANSI characters (ex: fancy <code>pillar</code> formatting) are stripped automatically or converted to HTML when the <code>fansi</code> package is installed. <code>fansi</code> is a dependency of <code>tibble</code>, so it should often be installed.</li>
 <li>New <code>tinytable_tt_digits</code> global option can set the default number of digits in the <code>tt()</code> function.</li>
 <li>Refactor: <code>tinytable</code> objects are now S4 class objects, with slots to hold data about the content and structure.</li>
-<li><code>as.character()</code> now works on <code>tinytable</code> objects, choosing the output format in the <code>@output</code> slot by default.</li>
+<li><code>as.character()</code> now works on <code>tinytable</code> objects, returning a string in the output format specified by the <code>@output</code> slot of the <code>tinytable</code> object (markdown by default).</li>
 <li>LaTeX code in captions no longer requires double escaping, allowing: <code>tt(x, caption = "Blah blah \\label{tab:blah})</code></li>
-<li><code>format_tt(escape = TRUE)</code> now escapes spanning cells created by <code>group_tt()</code> when <code>i</code> and <code>j</code> are both <code>NULL</code>. To avoid escaping group labels, users can specify <code>j</code> explicitly.</li>
 </ul>
 <p>Breaking changes:</p>
 <ul>
