@@ -277,30 +277,31 @@ format_tt_lazy <- function(x,
       }
 
       colnames(out) <- escape_text(colnames(out), output = o)
+
       if (inherits(x, "tinytable")) {
         x@names <- escape_text(x@names, output = o)
-      }
-      x@caption <- escape_text(x@caption, output = o)
+        x@caption <- escape_text(x@caption, output = o)
 
-      for (idx in seq_along(x@notes)) {
-        n <- x@notes[[idx]]
-        if (is.character(n) && length(n) == 1) {
-          x@notes[[idx]] <- escape_text(n, output = o)
-        } else if (is.list(n) && "text" %in% names(n)) {
-          n$text <- escape_text(n$text, output = o)
-          x@notes[[idx]] <- n
+        for (idx in seq_along(x@notes)) {
+          n <- x@notes[[idx]]
+          if (is.character(n) && length(n) == 1) {
+            x@notes[[idx]] <- escape_text(n, output = o)
+          } else if (is.list(n) && "text" %in% names(n)) {
+            n$text <- escape_text(n$text, output = o)
+            x@notes[[idx]] <- n
+          }
         }
-      }
 
-      for (idx in seq_along(x@lazy_group)) {
-        g <- x@lazy_group[[idx]]
-        if (!is.null(g$j)) {
-          names(g$j) <- escape_text(names(g$j), output = o)
+        for (idx in seq_along(x@lazy_group)) {
+          g <- x@lazy_group[[idx]]
+          if (!is.null(g$j)) {
+            names(g$j) <- escape_text(names(g$j), output = o)
+          }
+          if (!is.null(g$i)) {
+            names(g$i) <- escape_text(names(g$i), output = o)
+          }
+          x@lazy_group[[idx]] <- g
         }
-        if (!is.null(g$i)) {
-          names(g$i) <- escape_text(names(g$i), output = o)
-        }
-        x@lazy_group[[idx]] <- g
       }
 
     } else {
