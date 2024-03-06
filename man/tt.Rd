@@ -86,4 +86,7 @@ fn <- list(i = 0:1, j = 2, text = "Hello World!")
 tab <- tt(x, notes = list("*" = fn))
 print(tab, "latex")
 
+k <- data.frame(x = c(0.000123456789, 12.4356789))
+tt(k, digits=2)
+
 }
