@@ -83,7 +83,7 @@
 #'     j=1:3,
 #'     line="tblr",
 #'     line_width=0.4,
-#'     line_color="orange")
+#'     line_color="teal")
 #'     
 #' tt(x, theme = "bootstrap") |>
 #'     style_tt(
@@ -92,8 +92,24 @@
 #'       strikeout = TRUE,
 #'       fontsize = 0.7
 #'       )
-#'     
-#'     
+#'       
+#' style_tt(tab, bootstrap_class = "table table-dark table-hover")
+#'
+#'
+#' inner <- "
+#' column{1-4}={halign=c},
+#' hlines = {fg=white},
+#' vlines = {fg=white},
+#' cell{1,6}{odd} = {bg=teal7},
+#' cell{1,6}{even} = {bg=green7},
+#' cell{2,4}{1,4} = {bg=red7},
+#' cell{3,5}{1,4} = {bg=purple7},
+#' cell{2}{2} = {r=4,c=2}{bg=azure7},
+#' "
+#' mtcars[1:5, 1:4] |>
+#'   tt(theme = "void") |>
+#'   style_tt(tabularray_inner = inner)
+#'   
 #'
 style_tt <- function (x,
                       i = NULL,
