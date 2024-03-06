@@ -19,7 +19,7 @@
 #' @param replace_na String to display for missing values.
 #' @param escape Logical or "latex" or "html". If TRUE, escape special characters to display them as text in the format of the output of a `tt()` table.
 #' - If `i` is `NULL`, escape the `j` columns and column names.
-#' - If `i` and `j` are both `NULL`, escape all cells, column names, as well as spanning labels created by `group_tt()`.
+#' - If `i` and `j` are both `NULL`, escape all cells, column names, caption, notes, and spanning labels created by `group_tt()`.
 #' @param markdown Logical; if TRUE, render markdown syntax in cells. Ex: `_italicized text_` is properly italicized in HTML and LaTeX.
 #' @param fn Function for custom formatting. Accepts a vector and returns a character vector of the same length.
 #' @param sprintf String passed to the `?sprintf` function to format numbers or interpolate strings with a user-defined pattern (similar to the `glue` package, but using Base R).
@@ -280,6 +280,18 @@ format_tt_lazy <- function(x,
       if (inherits(x, "tinytable")) {
         x@names <- escape_text(x@names, output = o)
       }
+      x@caption <- escape_text(x@caption, output = o)
+
+      for (idx in seq_along(x@notes)) {
+        n <- x@notes[[idx]]
+        if (is.character(n) && length(n) == 1) {
+          x@notes[[idx]] <- escape_text(n, output = o)
+        } else if (is.list(n) && "text" %in% names(n)) {
+          n$text <- escape_text(n$text, output = o)
+          x@notes[[idx]] <- n
+        }
+      }
+
       for (idx in seq_along(x@lazy_group)) {
         g <- x@lazy_group[[idx]]
         if (!is.null(g$j)) {

@@ -9,7 +9,7 @@
 * `num_fmt="significant_cell"` rounds significant digits on a cell-by-cell basis rather than for full columns (as is default in base R `format()`).
 * Numeric formatting options can be set via global options, defined in the function signature.
 * `num_mark_big` and `num_mark_dec` require an explicit `digits`. We now raise an informative error.
-* `escape = TRUE` now escapes spanning cells created by `group_tt()` when `i` and `j` are both `NULL`. To avoid escaping group labels, users can specify `j` explicitly.
+* `escape = TRUE` now escapes captions, notes, and spanning cells created by `group_tt()` when `i` and `j` are both `NULL`. To avoid escaping group labels, users can specify `i` and/or `j` explicitly.
 
 Typst format:
 
