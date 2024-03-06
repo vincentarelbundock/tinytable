@@ -35,6 +35,33 @@
 #'  digits = 2,
 #'  num_mark_dec = ",",
 #'  num_mark_big = " ")
+#'  
+#' k <- tt(data.frame(x = c(0.000123456789, 12.4356789)))
+#' format_tt(k, digits = 2, num_fmt = "significant_cell")
+#'  
+#' dat <- data.frame(
+#'    a = c("Burger", "Halloumi", "Tofu", "Beans"),
+#'    b = c(1.43202, 201.399, 0.146188, 0.0031),
+#'    c = c(98938272783457, 7288839482, 29111727, 93945))
+#' tt(dat) |>
+#'  format_tt(j = "a", sprintf = "Food: %s") |>
+#'  format_tt(j = 2, digits = 1, num_fmt = "decimal", num_zero = TRUE) |>
+#'  format_tt(j = "c", digits = 2, num_suffix = TRUE)
+#'  
+#' y <- tt(data.frame(x = c(123456789.678, 12435.6789)))
+#' format_tt(y, digits=3, num_mark_big=" ")
+#'
+#'x <- tt(data.frame(Text = c("_italicized text_", "__bold text__")))
+#'format_tt(x, markdown=TRUE)
+#'
+#'tab <- data.frame(a = c(NA, 1, 2), b = c(3, NA, 5))
+#'tt(tab) |> format_tt(replace_na = "-")
+#'
+#'dat <- data.frame(
+#'    "LaTeX" = c("Dollars $", "Percent %", "Underscore _"),
+#'    "HTML" = c("<br>", "<sup>4</sup>", "<emph>blah</emph>")
+#' )
+#'tt(dat) |> format_tt(escape = TRUE)   
 #'
 format_tt <- function(x,
                       i = NULL,
