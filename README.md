@@ -117,7 +117,7 @@ service to developers alone justifies writing a new package.
 
 Now let’s consider alternatives one by one.
 
-`gt` (65 dependencies) is an amazingly powerful table-drawing package;
+`gt` (63 dependencies) is an amazingly powerful table-drawing package;
 possibly the most powerful in R. I like it *a lot*, and it is the one I
 recommend if you don’t find the features you need in `tinytable`. The
 reasons I don’t personally use `gt` on a day-to-day basis are entirely
@@ -156,11 +156,11 @@ also makes for a steep learning curve. In addition, I prefer HTML and
 LaTeX code to be human-readable, in case I need to tweak them by hand
 before publication; `huxtable` tables are not that.
 
-`DT` (43 dependencies) is nice, but it only draws HTML table, so that’s
+`DT` (40 dependencies) is nice, but it only draws HTML table, so that’s
 a non-starter for me. I need HTML, LaTeX, Word, PNG, PDF, and Typst
 output, depending on the project I am working on.
 
-`flextable` (43 dependencies) is nice, but it does not support LaTeX,
+`flextable` (40 dependencies) is nice, but it does not support LaTeX,
 and I need that format for “real work.”
 
 At this point, it’s useful to point out that there are also many
