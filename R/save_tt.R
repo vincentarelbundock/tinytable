@@ -13,9 +13,6 @@
 #' library(tinytable)
 #' x <- tt(mtcars[1:4, 1:5])
 #' 
-#'save_tt(x, "path/to/file.png")
-#'
-#'save_tt(x, "path/to/file.html", overwrite=TRUE)
 #'
 #' library(tinytable)
 #' filename <- file.path(tempdir(), "table.tex")
