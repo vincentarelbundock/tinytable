@@ -53,17 +53,17 @@
 #' y <- tt(data.frame(x = c(123456789.678, 12435.6789)))
 #' format_tt(y, digits=3, num_mark_big=" ")
 #'
-#'x <- tt(data.frame(Text = c("_italicized text_", "__bold text__")))
-#'format_tt(x, markdown=TRUE)
+#' x <- tt(data.frame(Text = c("_italicized text_", "__bold text__")))
+#' format_tt(x, markdown=TRUE)
 #'
-#'tab <- data.frame(a = c(NA, 1, 2), b = c(3, NA, 5))
-#'tt(tab) |> format_tt(replace_na = "-")
+#' tab <- data.frame(a = c(NA, 1, 2), b = c(3, NA, 5))
+#' tt(tab) |> format_tt(replace_na = "-")
 #'
-#'dat <- data.frame(
+#' dat <- data.frame(
 #'    "LaTeX" = c("Dollars $", "Percent %", "Underscore _"),
 #'    "HTML" = c("<br>", "<sup>4</sup>", "<emph>blah</emph>")
 #' )
-#'tt(dat) |> format_tt(escape = TRUE)   
+#' tt(dat) |> format_tt(escape = TRUE)   
 #'
 format_tt <- function(x,
                       i = NULL,
