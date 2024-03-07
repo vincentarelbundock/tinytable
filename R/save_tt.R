@@ -10,6 +10,11 @@
 #' @return A string or `TRUE` when the table is written to file.
 #' @export
 #' @examples
+#' library(tinytable)
+#' x <- mtcars[1:4, 1:5]
+#' 
+#' fn <- file.path(tempdir(), "test.html")
+#' tt(x) |> save_tt(fn, overwrite = TRUE)
 #'
 #' library(tinytable)
 #' filename <- file.path(tempdir(), "table.tex")

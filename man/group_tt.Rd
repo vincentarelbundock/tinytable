@@ -36,4 +36,25 @@ tt(mtcars[1:10, 1:5]) |>
     j = list(
       "Foo" = 2:3,
       "Bar" = 4:5))
+      
+dat <- mtcars[1:9, 1:8]
+tt(dat) |>
+  group_tt(i = list(
+    "I like (fake) hamburgers" = 3,
+    "She prefers halloumi" = 4,
+    "They love tofu" = 7))  
+
+tt(dat) |>
+  group_tt(
+    j = list(
+      "Hamburgers" = 1:3,
+      "Halloumi" = 4:5,
+      "Tofu" = 7))
+      
+x <- mtcars[1:5, 1:6]
+tt(x) |>
+  group_tt(j = list("Hello" = 1:2, "World" = 3:4, "Hello"=5:6)) |>
+  group_tt(j = list("Foo" = 1:3, "Bar" = 4:6))
+      
+      
 }

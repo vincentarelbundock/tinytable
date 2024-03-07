@@ -157,4 +157,48 @@ style_tt(tab, j = 5:6, background = "pink")
 style_tt(tab, j = "drat|wt", background = "pink")
 style_tt(tab, j = c("drat", "wt"), background = "pink")
 
+style_tt(tab,
+  i = 2, j = 2,
+  colspan = 3,
+  rowspan = 2,
+  align="c",
+  alignv = "m",
+  color = "white",
+  background = "black",
+  bold = TRUE)
+  
+tt(x, theme = "void") |>
+  style_tt(
+    i=0:3,
+    j=1:3,
+    line="tblr",
+    line_width=0.4,
+    line_color="teal")
+    
+tt(x, theme = "bootstrap") |>
+    style_tt(
+      i = c(2,5),
+      j = 3,
+      strikeout = TRUE,
+      fontsize = 0.7
+      )
+      
+style_tt(tab, bootstrap_class = "table table-dark table-hover")
+
+
+inner <- "
+column{1-4}={halign=c},
+hlines = {fg=white},
+vlines = {fg=white},
+cell{1,6}{odd} = {bg=teal7},
+cell{1,6}{even} = {bg=green7},
+cell{2,4}{1,4} = {bg=red7},
+cell{3,5}{1,4} = {bg=purple7},
+cell{2}{2} = {r=4,c=2}{bg=azure7},
+"
+mtcars[1:5, 1:4] |>
+  tt(theme = "void") |>
+  style_tt(tabularray_inner = inner)
+  
+
 }

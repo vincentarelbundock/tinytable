@@ -24,6 +24,11 @@ A string or \code{TRUE} when the table is written to file.
 This function saves an object of class tinytable to a specified file and format, with an option to overwrite existing files.
 }
 \examples{
+library(tinytable)
+x <- mtcars[1:4, 1:5]
+
+fn <- file.path(tempdir(), "test.html")
+tt(x) |> save_tt(fn, overwrite = TRUE)
 
 library(tinytable)
 filename <- file.path(tempdir(), "table.tex")
