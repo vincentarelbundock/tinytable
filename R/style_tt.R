@@ -196,6 +196,11 @@ style_tt_lazy <- function (x,
       msg <- "`align` must be characters c, l, r, or d."
       stop(msg, call. = FALSE)
     }
+
+    if (any(align == "d")) {
+      tmp <- paste(sprintf("row{%s}={guard},", seq_len(x@nhead)), collapse = "\n")
+      tabularray_inner <- paste(tabularray_inner, tmp)
+    }
   }
 
   assert_style_tt(

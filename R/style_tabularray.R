@@ -75,6 +75,7 @@ setMethod(
     if (length(align) == 1) align <- rep(align, length(jval))
 
     # explicit j input
+    siunitx <- getOption("tinytable_siunitx_table-format", default = "table-format=-%s.%s,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\\*+()}")
     if ("j" %in% colnames(settings)) {
       for (idx in seq_along(jval)) {
         a_tmp <- align[idx]
@@ -88,9 +89,10 @@ setMethod(
           right <- sapply(num, function(k) k[[2]])
           left <- max(nchar(gsub("\\D", "", left)))
           right <- max(nchar(gsub("\\D", "", right)))
+          tmp <- sprintf(siunitx, left, right)
           settings$tabularray <- ifelse(
             rowidx,
-            sprintf("%s si={table-format=-%s.%s,input-symbols={()}},", settings$tabularray, left, right),
+            sprintf("%s si={%s},", settings$tabularray, tmp),
             settings$tabularray)
         } else {
           settings$tabularray <- ifelse(
@@ -111,11 +113,8 @@ setMethod(
           right <- sapply(num, function(k) k[[2]])
           left <- max(nchar(gsub("\\D", "", left)))
           right <- max(nchar(gsub("\\D", "", right)))
-          settings$tabularray <- sprintf(
-            "%s si={table-format=-%s.%s,input-symbols={()}},", 
-            settings$tabularray, 
-            left, 
-            right)
+          tmp <- sprintf(siunitx, left, right)
+          settings$tabularray <- sprintf("%s si={%s},", settings$tabularray, tmp)
         } else {
           settings$tabularray <- sprintf(
             "%s halign=%s,",
