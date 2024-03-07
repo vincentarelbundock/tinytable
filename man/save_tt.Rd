@@ -28,7 +28,7 @@ library(tinytable)
 x <- tt(mtcars[1:4, 1:5])
 
 fn <- file.path(tempdir(), "test.html")
-tt(x) |> save_tt(tab, fn, overwrite = TRUE)
+tt(x) |> save_tt(fn, overwrite = TRUE)
 
 library(tinytable)
 filename <- file.path(tempdir(), "table.tex")
