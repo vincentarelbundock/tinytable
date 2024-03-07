@@ -10,7 +10,8 @@ setMethod(
 
   # caption
   if (length(x@caption) > 0) {
-    template <- sub("\\$tinytable_CAPTION", x@caption, template)
+    idx <- grep("\\$tinytable_CAPTION", template)
+    template[idx] <- sprintf("\\caption{%s}", x@caption)
   } else {
     idx <- grep("\\$tinytable_CAPTION", template)
     template <- template[-idx]

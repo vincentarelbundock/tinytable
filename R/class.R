@@ -71,6 +71,9 @@ setMethod("ncol", "tinytable", function(x) return(x@ncol))
 setMethod("dim", "tinytable", function(x) return(c(x@nrow, x@ncol)))
 setMethod("names", "tinytable", function(x) return(x@names))
 setMethod("colnames", "tinytable", function(x) return(x@names))
+setMethod("as.character", "tinytable", function(x) {
+  out <- save_tt(x, x@output)
+})
 
 
 setClass("tinytable_tabularray", contains = "tinytable")
