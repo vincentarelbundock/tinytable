@@ -56,16 +56,23 @@
 #' tab <- tt(x)
 #' 
 #' # Alignment
-#' style_tt(tab, j = 1:5, align = "lcccr")
-#' style_tt(tab, i = 2:3, background = "black", color = "orange", bold = TRUE)
-#' tab
+#' tmp <- style_tt(tab, j = 1:5, align = "lcccr")
+#' print(tmp)
+#' 
+#' tmp <- style_tt(tab, i = 2:3, background = "black", color = "orange", bold = TRUE)
+#' print(tmp)
 #' 
 #' # column selection with `j``
 #' x <- mtcars[1:5, 1:6]
 #' tab <- tt(x)
-#' style_tt(tab, j = 5:6, background = "pink")
-#' style_tt(tab, j = "drat|wt", background = "pink")
-#' style_tt(tab, j = c("drat", "wt"), background = "pink")
+#' tmp <- style_tt(tab, j = 5:6, background = "pink")
+#' print(tmp)
+#' 
+#' tmp <- style_tt(tab, j = "drat|wt", background = "pink")
+#' print(tmp)
+#' 
+#' tmp <- style_tt(tab, j = c("drat", "wt"), background = "pink")
+#' print(tmp)
 #'
 #' style_tt(tab,
 #'   i = 2, j = 2,
