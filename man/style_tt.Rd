@@ -25,6 +25,7 @@ style_tt(
   line = NULL,
   line_color = "black",
   line_width = 0.1,
+  finalize = NULL,
   tabularray_inner = NULL,
   tabularray_outer = NULL,
   bootstrap_class = NULL,
@@ -99,6 +100,8 @@ style_tt(
 \item{line_color}{Color of the line. See the \code{color} argument for details.}
 
 \item{line_width}{Width of the line in em units (default: 0.1).}
+
+\item{finalize}{A function applied to the table object at the very end of table-building, for post-processing. For example, the function could use regular expressions to add LaTeX commands to the text version of the table hosted in \code{x@table_string}, or it could programmatically change the caption in \code{x@caption}.}
 
 \item{tabularray_inner}{A string that specifies the "inner" settings of a tabularray LaTeX table.}
 

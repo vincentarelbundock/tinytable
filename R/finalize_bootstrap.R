@@ -23,5 +23,9 @@ setMethod(
 
   x@table_string <- out
 
+  for (fn in x@lazy_finalize) {
+    x <- fn(x)
+  }
+
   return(x)
 })

@@ -41,6 +41,7 @@
 #' + Can be combined such as: "lbt" to draw borders at the left, bottom, and top.
 #' @param line_color Color of the line. See the `color` argument for details.
 #' @param line_width Width of the line in em units (default: 0.1).
+#' @param finalize A function applied to the table object at the very end of table-building, for post-processing. For example, the function could use regular expressions to add LaTeX commands to the text version of the table hosted in `x@table_string`, or it could programmatically change the caption in `x@caption`.
 #' @param bootstrap_class String. A Bootstrap table class such as `"table"`, `"table table-dark"` or `"table table-dark table-hover"`. See the bootstrap documentation. 
 #' @param bootstrap_css A vector of CSS style declarations to be applied (ex: `"font-weight: bold"`). Each element corresponds to a cell defined by `i` and `j`.
 #' @param bootstrap_css_rule A string with complete CSS rules that apply to the table class specified using the `theme` argument of the `tt()` function.
@@ -139,6 +140,7 @@ style_tt <- function (x,
                       line = NULL,
                       line_color = "black",
                       line_width = 0.1,
+                      finalize = NULL,
                       tabularray_inner = NULL,
                       tabularray_outer = NULL,
                       bootstrap_class = NULL,
@@ -179,6 +181,11 @@ style_tt <- function (x,
     out <- eval(cal)
   } else {
     out@lazy_style <- c(out@lazy_style, list(cal))
+  }
+
+  assert_function(finalize, null.ok = TRUE)
+  if (is.function(finalize)) {
+    out@lazy_finalize <- c(out@lazy_finalize, list(finalize))
   }
 
   return(out)
@@ -266,6 +273,7 @@ style_tt_lazy <- function (x,
   if (!is.null(width)) {
     width <- paste0(width, "em")
   }
+
 
   out <- style_eval(x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout, color = color, background = background, fontsize = fontsize, width = width, align = align, alignv = alignv, colspan = colspan, rowspan = rowspan, indent = indent, tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule, bootstrap_class = bootstrap_class, line = line, line_color = line_color, line_width = line_width)
 

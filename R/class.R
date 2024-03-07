@@ -34,7 +34,9 @@ setClass(
         lazy_format = "list",
         lazy_group = "list",
         lazy_style = "list",
-        lazy_plot = "list")
+        lazy_plot = "list",
+        lazy_finalize = "list"
+        )
 )
 
 setMethod("initialize", "tinytable", function(

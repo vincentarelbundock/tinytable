@@ -19,6 +19,7 @@ Typst format:
 
 Misc:
 
+* `style_tt()` gains a `finalize` argument. This accepts functions to be applied to the table object at the very end of the building process, to programmatically change its content. For example, this can be used with regular expressions to modify the text version of the table hosted in `tab@table_string`, or the function could programmatically modify the caption in `tab@caption`.
 * `style_tt()`: LaTeX format supports decimal alignement with `align="d"`. The width of columns is determined by the maximum number of digits to the left and to the right in all cells specified by `i`, `j`.
 * Support RevealJS slides in Quarto documents.
 * Improved support for `tibble`. ANSI characters (ex: fancy `pillar` formatting) are stripped automatically or converted to HTML when the `fansi` package is installed. `fansi` is a dependency of `tibble`, so it should often be installed.
