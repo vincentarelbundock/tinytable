@@ -70,8 +70,8 @@
 #' style_tt(tab,
 #'   i = 2, j = 2,
 #'   colspan = 3,
-#'   rowspan = 2
-#'   align="c"
+#'   rowspan = 2,
+#'   align="c",
 #'   alignv = "m",
 #'   color = "white",
 #'   background = "black",
