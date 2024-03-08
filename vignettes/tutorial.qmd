@@ -1036,6 +1036,31 @@ tt(x) |>
   group_tt(j = list("Hello" = 1:2, "World" = 4:5))
 ```
 
+# Themes
+
+## Resize (LaTeX)
+
+```{r}
+tmp <- cbind(mtcars, mtcars)[1:10,]
+
+tt(tmp) |> 
+    theme_tt("resize")
+```
+
+## Multi-page (LaTeX)
+
+::: {.content-visible when-format="html"}
+```{r}
+tmp <- rbind(mtcars, mtcars)[, 1:6]
+
+cap <- "A long 80\\% width table with repeating headers."
+
+tt(tmp, width = .8, caption = cap) |> 
+    theme_tt("multipage", rowhead = 1)
+```
+:::
+
+
 # HTML customization
 
 ::: {.content-visible when-format="pdf"}
@@ -1121,7 +1146,6 @@ tt(x, width = 2/3) |>
 ```
 
 :::
-
 
 
 # LaTeX / PDF customization {#sec-tabularray}
@@ -1325,5 +1349,4 @@ vlines:
 | `belowpos` | crossing or trimming position at the below side               | `0`           |
 
 :::
-
 
