@@ -1,7 +1,7 @@
 theme_default <- function(x, ...) {
     fn <- function(table) {
         if (isTRUE(table@output == "typst")) {
-            table <- style_eval(table, i = 1 - x@nhead, line = "t", line_width = .1)
+            table <- style_eval(table, i = 0 - x@nhead, line = "t", line_width = .1)
             table <- style_eval(table, i = 0, line = "b", line_width = .05)
             table <- style_eval(table, i = nrow(x), line = "b", line_width = .1)
         }

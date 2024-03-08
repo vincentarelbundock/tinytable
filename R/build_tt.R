@@ -89,6 +89,8 @@ build_tt <- function(x, output = NULL) {
 
   x <- finalize(x)
 
+  x@table_string <- lines_drop_empty(x@table_string)
+
   return(x)
 }
 

@@ -13,3 +13,16 @@ ttempdir <- function() {
   dir.create(d)
   return(d)
 }
+
+
+# remove consecutive empty lines
+lines_drop_empty <- function(x) {
+  lines <- strsplit(x, "\n")[[1]]
+  tmp = rle(lines)
+  idx <- which(tmp$lengths == 1)
+  tmp$values <- tmp$values[idx]
+  tmp$lengths <- tmp$length[idx]
+  lines <- inverse.rle(tmp) 
+  x <- paste0(lines, collapse = "\n")
+  return(x)
+}
