@@ -1355,3 +1355,26 @@ vlines:
 
 :::
 
+
+# Shiny
+
+`tinytable` is a great complement to Shiny for displaying HTML tables in a web app. The styling in a `tinytable` is applied by JavaScript functions and CSS. Thus, to ensure that this styling is preserved in a Shiny app, one strategy is to bake the entire page, save it in a temporary file, and load it using the `includeHTML` function from the `shiny` package. This approach is illustrated in this minimal example:
+
+
+```{r, eval = FALSE}
+library("shiny")
+library("tinytable")
+
+fn <- paste(tempfile(), ".html")
+tab <- tt(mtcars[1:5, 1:4]) |> 
+  style_tt(i = 0:5, color = "orange", background = "black") |> 
+  save_tt(fn) 
+
+shinyApp(
+  ui = fluidPage(
+    fluidRow(column(12, h1("This is test of tinytable"), 
+                    shiny::includeHTML(fn)))), 
+  server = function(input, output) { 
+  }
+)
+```
