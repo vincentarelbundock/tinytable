@@ -17,19 +17,6 @@ setMethod(
 
   x@table_string <- out
 
-  # themes ("void" needs nothing)
-  if (isTRUE(x@theme %in% c("default", "striped"))) {
-    x <- style_eval(x, i = 1 - x@nhead, line = "t", line_width = .1)
-    x <- style_eval(x, i = 0, line = "b", line_width = .05)
-    x <- style_eval(x, i = nrow(x), line = "b", line_width = .1)
-  } else if (isTRUE(x@theme == "grid")) {
-    x@table_string <- sub("auto-lines: false,", "auto-lines: true,", x@table_string)
-  }
-  # striped = default + background
-  if (isTRUE(x@theme == "striped")) {
-    x <- style_eval(x, i = seq(1, nrow(x), by = 2), background = "#ededed")
-  } 
-
   return(x)
 })
 

@@ -93,6 +93,8 @@ tt <- function(x,
     placement = placement,
     width = width)
 
+  out <- theme_tt(out, theme)
+
   return(out)
 }
 

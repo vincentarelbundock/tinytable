@@ -1,3 +1,18 @@
+theme_default <- function(x, ...) {
+    fn <- function(table) {
+        if (isTRUE(table@output == "typst")) {
+            table <- style_eval(table, i = 1 - x@nhead, line = "t", line_width = .1)
+            table <- style_eval(table, i = 0, line = "b", line_width = .05)
+            table <- style_eval(table, i = nrow(x), line = "b", line_width = .1)
+        }
+
+        return(table)
+    }
+    x <- style_tt(x, finalize = fn)
+    return(x)
+}
+
+
 theme_resize <- function(x, width = 1, ...) {
     assert_class(x, "tinytable")
     assert_numeric(width, len = 1, lower = 0.01, upper = 1)
@@ -26,6 +41,66 @@ theme_resize <- function(x, width = 1, ...) {
 
     x <- style_tt(x, finalize = fn)
 
+    return(x)
+}
+
+
+theme_void <- function(x, ...) {
+    assert_class(x, "tinytable")
+    fn <- function(table) {
+        if (isTRUE(table@output == "latex")) {
+            s <- table@table_string
+            s <- gsub("\\\\toprule|\\\\bottomrule|\\\\midrule", "", s)
+            l <- strsplit(s, "\n")[[1]]
+            l <- l[which(trimws(l) != "")]
+            table@table_string <- paste(l, collapse = "\n")
+        }
+        return(table)
+    }
+    x <- style_tt(x, finalize = fn)
+    return(x)
+}
+
+
+theme_grid <- function(x, ...) {
+    assert_class(x, "tinytable")
+    fn <- function(table) {
+        if (isTRUE(table@output == "typst")) {
+            table@table_string <- sub(
+                "auto-lines: false,",
+                "auto-lines: true,",
+                table@table_string)
+        }
+        return(table)
+    }
+    x <- theme_tt(x, theme = "void") # only affects LaTeX
+    x <- style_tt(x, tabularray_inner = "hlines, vlines,")
+    return(x)
+}
+
+
+theme_striped <- function(x, ...) {
+    assert_class(x, "tinytable")
+    fn <- function(table) {
+        if (isTRUE(table@output == "typst")) {
+            x <- table
+            x <- style_eval(x, i = 1 - x@nhead, line = "t", line_width = .1)
+            x <- style_eval(x, i = 0, line = "b", line_width = .05)
+            x <- style_eval(x, i = nrow(x), line = "b", line_width = .1)
+            x <- style_eval(x, i = seq(1, nrow(x), by = 2), background = "#ededed")
+            table <- x
+        }
+        return(table)
+    }
+    x <- style_tt(x, finalize = fn, tabularray_inner = "row{even}={bg=black!5!white}")
+    return(x)
+}
+
+
+theme_bootstrap <- function(x, ...) {
+    assert_class(x, "tinytable")
+    x <- theme_tt(x, theme = "void") # only affects LaTeX
+    x <- style_tt(x, tabularray_inner = "hlines={gray8},")
     return(x)
 }
 
@@ -67,8 +142,23 @@ theme_multipage <- function(x, rowhead = 0, rowfoot = 0, ...) {
 }
 
 
+theme_dictionary <- list(
+    "default" = theme_default,
+    "grid" = theme_grid,
+    "resize" = theme_resize,
+    "multipage" = theme_multipage,
+    "striped" = theme_striped,
+    "void" = theme_void,
+    "bootstrap" = theme_bootstrap
+)
+
+
+
 #' Themes for tinytable
 #' 
+#' @description 
+#' Themes are functions that apply a collection of transformations to a `tinytable` object. Whereas the other functions in `tinytable` are designed to be output-agnostic, themes can be output-specific, only applying to LaTeX or HTML, as needed. Themes can also have their own arguments
+#'
 #' @param x A `tinytable` object
 #' @param theme String. Name of the theme to apply.
 #'   + "resize" (LaTeX)
@@ -94,14 +184,11 @@ theme_multipage <- function(x, rowhead = 0, rowfoot = 0, ...) {
 #' @export
 #' @return A modified `tinytable` object
 theme_tt <- function(x, theme, ...) {
-    assert_choice(theme, c("resize", "multipage"))
-
-    fn <- switch(theme,
-        resize = theme_resize,
-        multipage = theme_multipage)
-
+    td <- getOption("tinytable_themes", default = theme_dictionary)
+    na <- unique(c("default", sort(names(td))))
+    assert_choice(theme, na)
+    fn <- td[[theme]]
     out <- fn(x, ...)
-
     return(out)
 }
 
