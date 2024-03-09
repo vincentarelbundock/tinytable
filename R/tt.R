@@ -53,7 +53,7 @@ tt <- function(x,
                caption = NULL,
                width = NULL,
                notes = NULL,
-               theme = getOption("tinytable_tt_theme", default = NULL),
+               theme = getOption("tinytable_tt_theme", default = "default"),
                placement = getOption("tinytable_tt_placement", default = NULL)) {
 
   # sanity checks
@@ -63,13 +63,8 @@ tt <- function(x,
   notes <- sanitize_notes(notes)
 
   td <- getOption("tinytable_themes", default = theme_dictionary)
-  na <- setdiff(unique(sort(names(td))), "default")
+  na <- unique(sort(names(td)))
   assert_choice(theme, na, null.ok = TRUE)
-  if (is.null(theme)) {
-    theme <- "default"
-  } else {
-    theme <- unique(c("default", theme))
-  }
 
   # x should be a data frame, not a tibble, for indexing convenience
   assert_data_frame(x, min_rows = 1, min_cols = 1)
@@ -101,8 +96,11 @@ tt <- function(x,
     placement = placement,
     width = width)
 
+  out <- theme_tt(out, theme = "default")
   for (th in theme) {
-    out <- theme_tt(out, th)
+    if (th != "default") {
+      out <- theme_tt(out, theme = th)
+    }
   }
 
   return(out)

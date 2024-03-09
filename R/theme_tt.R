@@ -78,14 +78,13 @@ theme_void <- function(x, ...) {
             l <- strsplit(s, "\n")[[1]]
             l <- l[which(trimws(l) != "")]
             table@table_string <- paste(l, collapse = "\n")
-        # theme_bootstrap calls this to affect LaTeX, but messes with markdown
-        # } else if (isTRUE(table@output == "markdown")) {
-        #     tab <- table@table_string
-        #     tab <- strsplit(tab, "\n")[[1]]
-        #     tab <- tab[!grepl("^[\\+|-]+$", tab)]
-        #     tab <- tab[!grepl("^[\\+|=]+$", tab)]
-        #     tab <- gsub("|", " ", tab, fixed = TRUE)
-        #     table@table_string <- paste(tab, collapse = "\n")
+        } else if (isTRUE(table@output == "markdown")) {
+            tab <- table@table_string
+            tab <- strsplit(tab, "\n")[[1]]
+            tab <- tab[!grepl("^[\\+|-]+$", tab)]
+            tab <- tab[!grepl("^[\\+|=]+$", tab)]
+            tab <- gsub("|", " ", tab, fixed = TRUE)
+            table@table_string <- paste(tab, collapse = "\n")
         }
         return(table)
     }
@@ -97,7 +96,15 @@ theme_void <- function(x, ...) {
 theme_grid <- function(x, ...) {
     assert_class(x, "tinytable")
     fn <- function(table) {
-        if (isTRUE(table@output == "typst")) {
+        if (isTRUE(table@output == "latex")) {
+            # start with void theme
+            s <- table@table_string
+            s <- gsub("\\\\toprule|\\\\bottomrule|\\\\midrule", "", s)
+            l <- strsplit(s, "\n")[[1]]
+            l <- l[which(trimws(l) != "")]
+            table@table_string <- paste(l, collapse = "\n")
+            table <- style_tt(table, tabularray_inner = "hlines, vlines,")
+        } else if (isTRUE(table@output == "typst")) {
             table@table_string <- sub(
                 "auto-lines: false,",
                 "auto-lines: true,",
@@ -105,7 +112,6 @@ theme_grid <- function(x, ...) {
         }
         return(table)
     }
-    x <- theme_tt(x, theme = "void") # only affects LaTeX
     x <- style_tt(x, tabularray_inner = "hlines, vlines,")
     return(x)
 }
