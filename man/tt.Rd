@@ -10,7 +10,7 @@ tt(
   caption = NULL,
   width = NULL,
   notes = NULL,
-  theme = "default",
+  theme = getOption("tinytable_tt_theme", default = NULL),
   placement = getOption("tinytable_tt_placement", default = NULL)
 )
 }

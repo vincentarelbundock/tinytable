@@ -13,28 +13,52 @@ theme_default <- function(x, ...) {
 }
 
 
+theme_tabular <- function(x, ...) {
+    assert_class(x, "tinytable")
+    fn <- function(table) {
+        tab <- table@table_string
+
+        if (isTRUE(table@output == "latex")) {
+            tab <- lines_drop(tab, regex = "\\\\begin\\{table\\}", position = "before")
+            tab <- lines_drop(tab, regex = "\\\\begin\\{table\\}", position = "equal")
+            tab <- lines_drop(tab, regex = "\\\\end\\{table\\}", position = "after")
+            tab <- lines_drop(tab, regex = "\\\\end\\{table\\}", position = "equal")
+            tab <- lines_drop(tab, regex = "\\\\centering", position = "equal")
+
+        } else if (isTRUE(table@output == "html")) {
+            tab <- lines_drop(tab, regex = "<table class", position = "before")
+            tab <- lines_drop(tab, regex = "<\\/table>", position = "after")
+
+        } else if (isTRUE(table@output == "typst")) {
+            tab <- lines_drop(tab, regex = "tablex\\(", position = "before")
+            tab <- lines_drop(tab, regex = "\\/\\/ end tablex", position = "after")
+        }
+
+        table@table_string <- tab
+        return(table)
+    }
+    x <- style_tt(x, finalize = fn)
+    return(x)
+}
+
+
 theme_resize <- function(x, width = 1, ...) {
     assert_class(x, "tinytable")
     assert_numeric(width, len = 1, lower = 0.01, upper = 1)
     fn <- function(table) {
         if (!isTRUE(table@output == "latex")) return(table)
 
-        lines <- table@table_string
-        lines <- strsplit(lines, "\n")[[1]]
+        tab <- table@table_string
 
-        idx <- grep("\\begin{tblr}", lines, fixed = TRUE)
-        lines <- c(
-            lines[1:(idx - 1)],
-            sprintf("\\resizebox{%s\\linewidth}{!}{", width),
-            lines[idx:length(lines)])
+        new <- sprintf("\\resizebox{%s\\linewidth}{!}{", width)
+        reg <- "\\\\begin\\{tblr\\}"
+        tab <- lines_insert(tab, regex = reg, new = new, position = "before")
 
-        idx <- grep("\\end{tblr}", lines, fixed = TRUE)
-        lines <- c(
-            lines[1:idx],
-            "}",
-            lines[(idx + 1):length(lines)])
+        new <- "}"
+        reg <- "\\\\end\\{tblr\\}"
+        tab <- lines_insert(tab, regex = reg, new = new, position = "after")
 
-        table@table_string <- paste(lines, collapse = "\n")
+        table@table_string <- tab
 
         return(table)
     }
@@ -54,6 +78,14 @@ theme_void <- function(x, ...) {
             l <- strsplit(s, "\n")[[1]]
             l <- l[which(trimws(l) != "")]
             table@table_string <- paste(l, collapse = "\n")
+        # theme_bootstrap calls this to affect LaTeX, but messes with markdown
+        # } else if (isTRUE(table@output == "markdown")) {
+        #     tab <- table@table_string
+        #     tab <- strsplit(tab, "\n")[[1]]
+        #     tab <- tab[!grepl("^[\\+|-]+$", tab)]
+        #     tab <- tab[!grepl("^[\\+|=]+$", tab)]
+        #     tab <- gsub("|", " ", tab, fixed = TRUE)
+        #     table@table_string <- paste(tab, collapse = "\n")
         }
         return(table)
     }
@@ -97,8 +129,18 @@ theme_striped <- function(x, ...) {
 
 theme_bootstrap <- function(x, ...) {
     assert_class(x, "tinytable")
+    fn <- function(table) {
+        if (isTRUE(table@output == "markdown")) {
+            tab <- table@table_string
+            tab <- strsplit(tab, "\n")[[1]]
+            tab <- tab[!grepl("^[\\+|-]+$", tab)]
+            tab <- gsub("|", " ", tab, fixed = TRUE)
+            table@table_string <- paste(tab, collapse = "\n")
+        }
+        return(table)
+    }
     x <- theme_tt(x, theme = "void") # only affects LaTeX
-    x <- style_tt(x, tabularray_inner = "hlines={gray8},")
+    x <- style_tt(x, tabularray_inner = "hlines={gray8},", finalize = fn)
     return(x)
 }
 
@@ -147,7 +189,8 @@ theme_dictionary <- list(
     "multipage" = theme_multipage,
     "striped" = theme_striped,
     "void" = theme_void,
-    "bootstrap" = theme_bootstrap
+    "bootstrap" = theme_bootstrap,
+    "tabular" = theme_tabular
 )
 
 
