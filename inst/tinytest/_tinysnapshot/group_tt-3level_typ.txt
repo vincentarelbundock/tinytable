@@ -1,1 +1,43 @@
-[1] "#import \"@preview/tablex:0.0.8\": tablex, hlinex, vlinex, colspanx\n#let nhead = 4;\n#let nrow = 3;\n#let ncol = 5;\n\n#figure(\n  \n  kind: \"tinytable\",\n  tablex(\n    columns: ncol,\n    header-rows: nhead,\n    align: left + horizon,\n    auto-lines: false,\n\nhlinex(y: 0, start: 0, end: 5, stroke: 0.1em + black),\nhlinex(y: 4, start: 0, end: 5, stroke: 0.05em + black),\nhlinex(y: 7, start: 0, end: 5, stroke: 0.1em + black),\nhlinex(y: 3, start: 1, end: 3, stroke: 0.05em + black, expand: -1.5pt),\nhlinex(y: 3, start: 3, end: 5, stroke: 0.05em + black, expand: -1.5pt),\nhlinex(y: 2, start: 0, end: 2, stroke: 0.05em + black, expand: -1.5pt),\nhlinex(y: 2, start: 2, end: 5, stroke: 0.05em + black, expand: -1.5pt),\nhlinex(y: 1, start: 0, end: 3, stroke: 0.05em + black, expand: -1.5pt),\nhlinex(y: 1, start: 3, end: 4, stroke: 0.05em + black, expand: -1.5pt),\n    // tinytable lines before\n\n    map-cells: cell => {\n\n\n\n\n\n\n\n\n\n      // tinytable cell style before\n      return cell;\n    },\n\n    // tinytable cell content after\ncolspanx(3, align: center)[e],colspanx(1, align: center)[f],colspanx(1, align: center)[ ],\ncolspanx(2, align: center)[c],colspanx(3, align: center)[d],\ncolspanx(1, align: center)[ ],colspanx(2, align: center)[a],colspanx(2, align: center)[b],\n[mpg], [cyl], [disp], [hp], [drat],\n[21.0], [6], [160], [110], [3.90],\n[21.0], [6], [160], [110], [3.90],\n[22.8], [4], [108], [ 93], [3.85],\n\n  ) // end tablex\n) // end figure"
+#import "@preview/tablex:0.0.8": tablex, hlinex, vlinex, colspanx
+#let nhead = 4;
+#let nrow = 3;
+#let ncol = 5;
+
+#figure(
+  
+  kind: "tinytable",
+  supplement: none,
+  tablex(
+    columns: ncol,
+    header-rows: nhead,
+    align: left + horizon,
+    auto-lines: false,
+
+hlinex(y: 3, start: 1, end: 3, stroke: 0.05em + black, expand: -1.5pt),
+hlinex(y: 3, start: 3, end: 5, stroke: 0.05em + black, expand: -1.5pt),
+hlinex(y: 2, start: 0, end: 2, stroke: 0.05em + black, expand: -1.5pt),
+hlinex(y: 2, start: 2, end: 5, stroke: 0.05em + black, expand: -1.5pt),
+hlinex(y: 1, start: 0, end: 3, stroke: 0.05em + black, expand: -1.5pt),
+hlinex(y: 1, start: 3, end: 4, stroke: 0.05em + black, expand: -1.5pt),
+hlinex(y: 0, start: 0, end: 5, stroke: 0.1em + black),
+hlinex(y: 4, start: 0, end: 5, stroke: 0.05em + black),
+hlinex(y: 7, start: 0, end: 5, stroke: 0.1em + black),
+    // tinytable lines before
+
+    map-cells: cell => {
+
+      // tinytable cell style before
+      return cell;
+    },
+
+    // tinytable cell content after
+colspanx(3, align: center)[e],colspanx(1, align: center)[f],colspanx(1, align: center)[ ],
+colspanx(2, align: center)[c],colspanx(3, align: center)[d],
+colspanx(1, align: center)[ ],colspanx(2, align: center)[a],colspanx(2, align: center)[b],
+[mpg], [cyl], [disp], [hp], [drat],
+[21.0], [6], [160], [110], [3.90],
+[21.0], [6], [160], [110], [3.90],
+[22.8], [4], [108], [ 93], [3.85],
+
+  ) // end tablex
+) // end figure 

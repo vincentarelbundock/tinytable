@@ -21,7 +21,7 @@ theme_tt(x, theme, ...)
 A modified \code{tinytable} object
 }
 \description{
-Themes for tinytable
+Themes are functions that apply a collection of transformations to a \code{tinytable} object. Whereas the other functions in \code{tinytable} are designed to be output-agnostic, themes can be output-specific, only applying to LaTeX or HTML, as needed. Themes can also have their own arguments
 }
 \section{Themes}{
 

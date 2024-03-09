@@ -6,6 +6,7 @@
 #figure(
   $TINYTABLE_TYPST_CAPTION
   kind: "tinytable",
+  supplement: none,
   tablex(
     columns: ncol,
     header-rows: nhead,

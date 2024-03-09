@@ -6,17 +6,18 @@
 #figure(
   
   kind: "tinytable",
+  supplement: none,
   tablex(
     columns: ncol,
     header-rows: nhead,
     align: left + horizon,
     auto-lines: false,
 
+hlinex(y: 1, start: 1, end: 3, stroke: 0.05em + black, expand: -1.5pt),
+hlinex(y: 1, start: 3, end: 5, stroke: 0.05em + black, expand: -1.5pt),
 hlinex(y: 0, start: 0, end: 5, stroke: 0.1em + black),
 hlinex(y: 2, start: 0, end: 5, stroke: 0.05em + black),
 hlinex(y: 14, start: 0, end: 5, stroke: 0.1em + black),
-hlinex(y: 1, start: 1, end: 3, stroke: 0.05em + black, expand: -1.5pt),
-hlinex(y: 1, start: 3, end: 5, stroke: 0.05em + black, expand: -1.5pt),
     // tinytable lines before
 
     map-cells: cell => {
@@ -27,6 +28,7 @@ let j = (0,1,2,3,4,);
 if (i.contains(cell.y) and j.contains(cell.x)) { cell.fill = blue };
 if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = { set text(white); cell.content } };
 if (cell.x == 0) { cell.align = center };
+
       // tinytable cell style before
       return cell;
     },

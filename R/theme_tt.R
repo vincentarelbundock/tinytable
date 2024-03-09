@@ -1,9 +1,9 @@
 theme_default <- function(x, ...) {
     fn <- function(table) {
         if (isTRUE(table@output == "typst")) {
-            table <- style_eval(table, i = 1 - x@nhead, line = "t", line_width = .1)
+            table <- style_eval(table, i = 1 - table@nhead, line = "t", line_width = .1)
             table <- style_eval(table, i = 0, line = "b", line_width = .05)
-            table <- style_eval(table, i = nrow(x), line = "b", line_width = .1)
+            table <- style_eval(table, i = nrow(table), line = "b", line_width = .1)
         }
 
         return(table)
@@ -83,12 +83,10 @@ theme_striped <- function(x, ...) {
     assert_class(x, "tinytable")
     fn <- function(table) {
         if (isTRUE(table@output == "typst")) {
-            x <- table
-            x <- style_eval(x, i = 1 - x@nhead, line = "t", line_width = .1)
-            x <- style_eval(x, i = 0, line = "b", line_width = .05)
-            x <- style_eval(x, i = nrow(x), line = "b", line_width = .1)
-            x <- style_eval(x, i = seq(1, nrow(x), by = 2), background = "#ededed")
-            table <- x
+            table <- style_eval(table, i = 1 - table@nhead, line = "t", line_width = .1)
+            table <- style_eval(table, i = 0, line = "b", line_width = .05)
+            table <- style_eval(table, i = nrow(table), line = "b", line_width = .1)
+            table <- style_eval(table, i = seq(1, nrow(table), by = 2), background = "#ededed")
         }
         return(table)
     }
