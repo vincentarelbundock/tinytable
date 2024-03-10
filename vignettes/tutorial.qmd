@@ -34,14 +34,13 @@ Load the library and set some global options:
 ```{r}
 library(tinytable)
 
-options(digits = 3) # how many significant digits to print by default
-options("tinytable_tt_theme" = "placement") # for LaTeX
+options(tinytable_tt_digits = 3)
+options(tinytable_theme_placement_latex_float = "H")
 ```
 
 Draw a first table:
 
 ```{r}
-pkgload::load_all()
 x <- mtcars[1:4, 1:5]
 tt(x)
 ```
@@ -1101,7 +1100,7 @@ tt(tmp) |> theme_tt("resize", width = .9)
 LaTeX only.
 :::
 
-::: {.content-visible when-format="latex"}
+::: {.content-visible when-format="pdf"}
 The `placement` theme offers control over the positioning of the table in LaTeX documents, using floating parameters like `H` (from the `float` LaTeX package) to specify where the table should appear.
 
 ```{r placement-theme}

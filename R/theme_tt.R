@@ -9,6 +9,7 @@ theme_default <- function(x, ...) {
         return(table)
     }
     x <- style_tt(x, finalize = fn)
+    x <- theme_tt(x, "placement")
     return(x)
 }
 
@@ -68,7 +69,7 @@ theme_resize <- function(x, width = 1, ...) {
     }
 
     x <- style_tt(x, finalize = fn)
-
+    x <- theme_tt(x, "placement")
     return(x)
 }
 
@@ -93,6 +94,7 @@ theme_void <- function(x, ...) {
         return(table)
     }
     x <- style_tt(x, finalize = fn)
+    x <- theme_tt(x, "placement")
     return(x)
 }
 
@@ -115,6 +117,7 @@ theme_grid <- function(x, ...) {
         return(table)
     }
     x <- style_tt(x, tabularray_inner = "hlines, vlines,", finalize = fn)
+    x <- theme_tt(x, "placement")
     return(x)
 }
 
@@ -131,6 +134,7 @@ theme_striped <- function(x, ...) {
         return(table)
     }
     x <- style_tt(x, finalize = fn, tabularray_inner = "row{even}={bg=black!5!white}")
+    x <- theme_tt(x, "placement")
     return(x)
 }
 
@@ -153,7 +157,7 @@ theme_bootstrap <- function(x, ...) {
 }
 
 
-theme_placement <- function(x, latex_float = "H") {
+theme_placement <- function(x, latex_float = getOption("tinytable_theme_placement_latex_float", default = NULL)) {
     assert_string(latex_float, null.ok = TRUE)
     # do not change the defaul theme
     if (identical(x@theme[[1]], "placement")) x@theme <- list("default")
@@ -257,7 +261,8 @@ theme_dictionary <- list(
 #' 
 #' placement
 #' 
-#' + `latex_float` (default: "H"): String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp".
+#' + `latex_float`: String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp". The default value is controlled by a global option:
+#'    - `options("tinytable_theme_placement_latex_float" = "H")`
 #' 
 #' @examples
 #' library(tinytable)

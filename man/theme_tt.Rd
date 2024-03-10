@@ -47,7 +47,10 @@ multipage
 
 placement
 \itemize{
-\item \code{latex_float} (default: "H"): String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp".
+\item \code{latex_float}: String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp". The default value is controlled by a global option:
+\itemize{
+\item \code{options("tinytable_theme_placement_latex_float" = "H")}
+}
 }
 }
 
