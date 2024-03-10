@@ -165,8 +165,8 @@ theme_placement <- function(x, latex_float = getOption("tinytable_theme_placemen
         if (table@output == "latex" && !is.null(latex_float)) {
             tab <- table@table_string
             template <- sub(
-                "\\\\begin\\{table\\}",
-                sprintf("\\\\begin{table}[%s]", latex_float),
+                "\\\\begin\\{table\\}([^\\[])",
+                sprintf("\\\\begin{table}[%s]\\1", latex_float),
                 tab)
             table@table_string <- template
         }
