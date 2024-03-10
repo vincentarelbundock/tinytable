@@ -2,7 +2,7 @@
 % Please edit documentation in R/theme_tt.R
 \name{theme_tt}
 \alias{theme_tt}
-\title{Themes for tinytable}
+\title{Themes for \code{tinytable}}
 \usage{
 theme_tt(x, theme, ...)
 }
@@ -21,7 +21,7 @@ theme_tt(x, theme, ...)
 A modified \code{tinytable} object
 }
 \description{
-Themes are functions that apply a collection of transformations to a \code{tinytable} object. Whereas the other functions in \code{tinytable} are designed to be output-agnostic, themes can be output-specific, only applying to LaTeX or HTML, as needed. Themes can also have their own arguments
+A theme is a function that applies a collection of transformations to a \code{tinytable} object. Whereas the other functions in \code{tinytable} aim to be output-agnostic, themes can be output-specific, only applying to LaTeX or HTML, as needed. Themes can also have their own arguments
 }
 \section{Themes}{
 

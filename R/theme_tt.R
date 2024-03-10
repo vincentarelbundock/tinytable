@@ -218,21 +218,22 @@ theme_dictionary <- list(
 
 
 
-#' Themes for tinytable
+#' Themes for `tinytable`
 #' 
 #' @description 
-#' Themes are functions that apply a collection of transformations to a `tinytable` object. Whereas the other functions in `tinytable` are designed to be output-agnostic, themes can be output-specific, only applying to LaTeX or HTML, as needed. Themes can also have their own arguments
+#' A theme is a function which applies a collection of transformations to a `tinytable` object. Whereas the other `tinytable` functions such as `format_tt()` and `style_tt()` aim to be output-agnostic, themes can be output-specific, only applying to LaTeX, HTML, or Typst, as needed. Themes can also have their own arguments
 #'
 #' @param x A `tinytable` object
-#' @param theme String. Name of the theme to apply.
-#'   + "resize" (LaTeX)
-#'   + "multipage" (LaTeX)
+#' @param theme String. Name of the theme to apply. One of: 
+#'   + "grid": Vertical and horizontal rules around each cell.
+#'   + "void": No rules
+#'   + "bootstrap": Similar appearance to the default Bootstrap theme in HTML
+#'   + "striped": Grey stripes on alternating rows
+#'   + "tabular": No table environment (LaTeX) or Javascript/CSS (HTML)
+#'   + "resize": Scale a LaTeX `tinytable` to fit the `width` argument.
+#'   + "multipage": Long tables continue on the next page (LaTeX only)
+#'   + "placement": Position of the table environment (LaTeX)
 #' @param ... Additional arguments passed the themeing function. See the "Arguments" section below for a list of supported arguments for each theme.
-#' 
-#' @section Themes:
-#' 
-#'   + resize: Resize a `tinytable` to fit the line width, while maintaining proportions
-#'   + multipage: Long tables continue on the next page
 #' 
 #' @section Arguments:
 #' 
@@ -244,6 +245,10 @@ theme_dictionary <- list(
 #' 
 #' + `rowhead`: Non-negative integer. The number of header rows to repeat on each page.
 #' + `rowfoot`: Non-negative integer. The number of footer rows to repeat on each page.
+#' 
+#' placement
+#' 
+#' + `latex_float` (default: "H"): String to insert in square brackets after the table environment. Typically: "H", "htbp", such as `"The LaTeX float placement specifier. Default is "H".
 #' 
 #' @export
 #' @return A modified `tinytable` object

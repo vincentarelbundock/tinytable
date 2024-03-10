@@ -10,7 +10,7 @@ tt(
   caption = NULL,
   notes = NULL,
   width = getOption("tinytable_tt_width", default = NULL),
-  theme = getOption("tinytable_tt_theme", default = "default"),
+  theme = getOption("tinytable_tt_theme", default = NULL),
   ...
 )
 }
@@ -33,8 +33,8 @@ tt(
 
 \item{theme}{Function or string.
 \itemize{
+\item String: grid, resize, multipage, placement, striped, void, bootstrap, tabular
 \item Function: Applied to the \code{tinytable} object.
-\item String: One of grid, resize, multipage, placement, striped, void, bootstrap, tabular
 }}
 
 \item{...}{Additional arguments are ignored}
