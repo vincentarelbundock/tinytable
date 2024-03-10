@@ -10,8 +10,8 @@ tt(
   caption = NULL,
   width = NULL,
   notes = NULL,
-  theme = getOption("tinytable_tt_theme", default = NULL),
-  placement = getOption("tinytable_tt_placement", default = NULL)
+  theme = getOption("tinytable_tt_theme", default = "default"),
+  ...
 )
 }
 \arguments{
@@ -33,7 +33,7 @@ tt(
 
 \item{theme}{The theme to apply to the table: "default", "striped", "bootstrap", "void", or "grid".}
 
-\item{placement}{A string to control the position of tables in LaTeX. Will be inserted in square brackets like: \verb{\\\\begin\{table\}[H]}}
+\item{...}{Additional arguments are ignored}
 }
 \value{
 An object of class \code{tt} representing the table.

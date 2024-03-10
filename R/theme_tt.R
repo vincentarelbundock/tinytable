@@ -149,6 +149,24 @@ theme_bootstrap <- function(x, ...) {
 }
 
 
+theme_placement <- function(x, latex_float = "H") {
+    assert_string(latex_float, null.ok = TRUE)
+    fn <- function(table) {
+        if (table@output == "latex" && !is.null(latex_float)) {
+            tab <- table@table_string
+            template <- sub(
+                "\\\\begin\\{table\\}",
+                sprintf("\\\\begin{table}[%s]", latex_float),
+                tab)
+            table@table_string <- template
+        }
+        return(table)
+    }
+    x <- style_tt(x, finalize = fn)
+    return(x)
+}
+
+
 theme_multipage <- function(x, rowhead = 0, rowfoot = 0, ...) {
     assert_class(x, "tinytable")
     assert_integerish(rowhead, lower = 0, len = 1)
@@ -191,6 +209,7 @@ theme_dictionary <- list(
     "grid" = theme_grid,
     "resize" = theme_resize,
     "multipage" = theme_multipage,
+    "placement" = theme_placement,
     "striped" = theme_striped,
     "void" = theme_void,
     "bootstrap" = theme_bootstrap,

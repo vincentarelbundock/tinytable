@@ -2,6 +2,9 @@
 
 ## Development
 
+
+New function `theme_tt()`:
+
 `format_tt()` improvements:
 
 * New `i` argument to format subsets of rows.
@@ -30,9 +33,9 @@ Misc:
 
 Breaking changes:
 
-* In some cases, `format_tt()` could previously be applied sequentially to apply two formats to the same cell. Now, multiple calls to `format_tt()` can still be make chained with pipes, but they must apply to different cells with `i`, `j`, otherwise only the last change is respected. One exception is the `escape` argument which can be applied to pre-formatted cells.
-* The "tinytable_tabularray_placement" global option is renamed to "tinytable_tt_placement".
+* In some cases, `format_tt()` could be use sequentially to apply two formats to the same cell. Now, multiple calls to `format_tt()` can still be make chained with pipes, but they must apply to different cells with `i`, `j`, otherwise only the last change is respected. One exception is the `escape` argument which can be applied to pre-formatted cells.
 * `tinytable` objects no longer have a `meta_tinytable` attribute. Use S4 slots instead.
+* `placement` argument in `tt()` is removed in favor of `theme_tt(placement)`.
 
 Bugs:
 

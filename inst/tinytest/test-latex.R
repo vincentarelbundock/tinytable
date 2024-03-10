@@ -114,6 +114,12 @@ expect_snapshot_print(
     format_tt(j = "c", digits = 2, num_suffix = TRUE)),
   label = "latex-formatting")
 
+# placement
+tab <- mtcars[1:3, 1:3]
+tab <- tt(tab) |> theme_tt("placement")
+tab@output <- "latex"
+expect_snapshot_print(tab, label = "latex-placement")
+
 # Missing value replacement
 tab <- data.frame(a = c(NA, 1, 2), b = c(3, NA, 5))
 expect_snapshot_print(
