@@ -254,6 +254,8 @@ theme_dictionary <- list(
 #' @examples
 #' library(tinytable)
 #' 
+#' x <- mtcars[1:4, 1:4]
+#' 
 #' # equivalent calls
 #' tt(x, theme = "striped")
 #' 
