@@ -15,7 +15,9 @@
 #' @param digits Number of significant digits to keep for numeric variables. When `digits` is an integer, `tt()` calls `format_tt(x, digits = digits)` before proceeding to draw the table. Users who need more control can use the `format_tt()` function.
 #' @param caption A string that will be used as the caption of the table.
 #' @param width A numeric value between 0 and 1 indicating the proportion of the line width that the table should cover.
-#' @param theme The theme to apply to the table: "default", "striped", "bootstrap", "void", or "grid".
+#' @param theme Function or string.
+#' - String: `r paste(setdiff(names(theme_dictionary), "default"), collapse = ", ")`
+#' - Function: Applied to the `tinytable` object.
 #' @param notes Notes to append to the bottom of the table. This argument accepts several different inputs:
 #' * Single string insert a single note: `"blah blah"`
 #' * Multiple strings insert multiple notes sequentially: `list("Hello world", "Foo bar")`
@@ -51,9 +53,9 @@
 tt <- function(x,
                digits = getOption("tinytable_tt_digits", default = NULL),
                caption = NULL,
-               width = NULL,
                notes = NULL,
-               theme = getOption("tinytable_tt_theme", default = "default"),
+               width = getOption("tinytable_tt_width", default = NULL),
+               theme = getOption("tinytable_tt_theme", default = NULL),
                ...) {
 
 
@@ -68,9 +70,6 @@ tt <- function(x,
   assert_integerish(digits, len = 1, null.ok = TRUE)
   notes <- sanitize_notes(notes)
 
-  td <- getOption("tinytable_themes", default = theme_dictionary)
-  na <- unique(sort(names(td)))
-  assert_choice(theme, na, null.ok = TRUE)
 
   # x should be a data frame, not a tibble, for indexing convenience
   assert_data_frame(x, min_rows = 1, min_cols = 1)
@@ -98,15 +97,11 @@ tt <- function(x,
     table = tab,
     caption = caption,
     notes = notes,
-    theme = theme,
+    theme = list(theme),
     width = width)
 
   out <- theme_tt(out, theme = "default")
-  for (th in theme) {
-    if (th != "default") {
-      out <- theme_tt(out, theme = th)
-    }
-  }
+  out <- theme_tt(out, theme = theme)
 
   if ("placement" %in% names(dots)) {
     out <- theme_tt(out, "placement", latex_float = dots[["placement"]])

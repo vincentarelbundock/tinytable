@@ -20,7 +20,7 @@ setClass(
         width = "numeric",
         width_cols = "numeric",
         notes = "list",
-        theme = "character",
+        theme = "list",
         placement = "character",
         body = "character",
         nrow = "numeric",
@@ -45,7 +45,7 @@ setMethod("initialize", "tinytable", function(
     table = data.frame(),
     caption = NULL,
     notes = NULL,
-    theme = "default",
+    theme = list("default"),
     placement = NULL,
     width = NULL) {
   # explicit

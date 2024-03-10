@@ -248,8 +248,10 @@ theme_dictionary <- list(
 #' @export
 #' @return A modified `tinytable` object
 theme_tt <- function(x, theme, ...) {
+    if (is.null(theme)) return(x)
+    if (is.function(theme)) return(theme(x, ...))
     td <- getOption("tinytable_themes", default = theme_dictionary)
-    na <- unique(c("default", sort(names(td))))
+    na <- unique(sort(names(td)))
     assert_choice(theme, na)
     fn <- td[[theme]]
     out <- fn(x, ...)

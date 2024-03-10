@@ -8,8 +8,8 @@ tt(
   x,
   digits = getOption("tinytable_tt_digits", default = NULL),
   caption = NULL,
-  width = NULL,
   notes = NULL,
+  width = getOption("tinytable_tt_width", default = NULL),
   theme = getOption("tinytable_tt_theme", default = "default"),
   ...
 )
@@ -21,8 +21,6 @@ tt(
 
 \item{caption}{A string that will be used as the caption of the table.}
 
-\item{width}{A numeric value between 0 and 1 indicating the proportion of the line width that the table should cover.}
-
 \item{notes}{Notes to append to the bottom of the table. This argument accepts several different inputs:
 \itemize{
 \item Single string insert a single note: \code{"blah blah"}
@@ -31,7 +29,13 @@ tt(
 \item A named list with positions inserts markers as superscripts inside table cells: \code{list("a" = list(i = 0:1, j = 2, text = "Hello World"))}
 }}
 
-\item{theme}{The theme to apply to the table: "default", "striped", "bootstrap", "void", or "grid".}
+\item{width}{A numeric value between 0 and 1 indicating the proportion of the line width that the table should cover.}
+
+\item{theme}{Function or string.
+\itemize{
+\item Function: Applied to the \code{tinytable} object.
+\item String: One of grid, resize, multipage, placement, striped, void, bootstrap, tabular
+}}
 
 \item{...}{Additional arguments are ignored}
 }

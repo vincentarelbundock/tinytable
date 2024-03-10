@@ -35,7 +35,8 @@ setMethod(
   body <- paste(body, "\\\\")
 
   # theme: booktabs
-  if (isTRUE(x@theme %in% c("default", "striped"))) {
+  th <- x@theme[[1]]
+  if (is.null(th) || isTRUE(th %in% c("default", "striped"))) {
     if (length(colnames(x)) > 0) {
       # %% are important to distinguish between potentially redundant data rows
       header[length(header)] <- paste(header[length(header)], "\\midrule %% TinyTableHeader")

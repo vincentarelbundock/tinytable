@@ -114,16 +114,16 @@ setMethod(
   # before style_eval()
   x@table_string <- out
 
-  if ("default" %in% x@theme) {
+  if (is.null(x@theme[[1]]) || "default" %in% x@theme[[1]]) {
     x <- style_eval(x, bootstrap_class = "table table-borderless",
       i = 0, line = "b", line_color = "#d3d8dc", line_width = .1)
-  } else if ("bootstrap" %in% x@theme) {
+  } else if ("bootstrap" %in% x@theme[[1]]) {
     x <- style_eval(x, bootstrap_class = "table")
-  } else if ("striped" %in% x@theme) {
+  } else if ("striped" %in% x@theme[[1]]) {
     x <- style_eval(x, bootstrap_class = "table table-striped")
-  } else if ("grid" %in% x@theme) {
+  } else if ("grid" %in% x@theme[[1]]) {
     x <- style_eval(x, bootstrap_class = "table table-bordered")
-  } else if ("void" %in% x@theme) {
+  } else if ("void" %in% x@theme[[1]]) {
     x <- style_eval(x, bootstrap_class = "table table-borderless")
   }
 
