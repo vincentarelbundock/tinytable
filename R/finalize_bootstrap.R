@@ -5,7 +5,7 @@ setMethod(
 
   # class
   cl <- x@bootstrap_class
-  if (is.null(cl)) {
+  if (is.null(cl) || length(cl) == 0) {
     cl <- "table table-borderless"
   }
   out <- sub(
