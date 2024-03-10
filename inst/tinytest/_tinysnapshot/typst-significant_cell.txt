@@ -1,0 +1,33 @@
+#import "@preview/tablex:0.0.8": tablex, hlinex, vlinex, colspanx
+#let nhead = 1;
+#let nrow = 2;
+#let ncol = 1;
+
+#figure(
+  
+  kind: "tinytable",
+  supplement: none,
+  tablex(
+    columns: ncol,
+    header-rows: nhead,
+    align: left + horizon,
+    auto-lines: false,
+
+hlinex(y: 0, start: 0, end: 1, stroke: 0.1em + black),
+hlinex(y: 1, start: 0, end: 1, stroke: 0.05em + black),
+hlinex(y: 3, start: 0, end: 1, stroke: 0.1em + black),
+    // tinytable lines before
+
+    map-cells: cell => {
+
+      // tinytable cell style before
+      return cell;
+    },
+
+    // tinytable cell content after
+[x],
+[0.00012],
+[12],
+
+  ) // end tablex
+) // end figure 

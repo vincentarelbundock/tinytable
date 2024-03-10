@@ -1,0 +1,34 @@
+#import "@preview/tablex:0.0.8": tablex, hlinex, vlinex, colspanx
+#let nhead = 1;
+#let nrow = 1;
+#let ncol = 1;
+
+#figure(
+  
+  kind: "tinytable",
+  supplement: none,
+  tablex(
+    columns: ncol,
+    header-rows: nhead,
+    align: left + horizon,
+    auto-lines: false,
+
+hlinex(y: 0, start: 0, end: 1, stroke: 0.1em + black),
+hlinex(y: 1, start: 0, end: 1, stroke: 0.05em + black),
+hlinex(y: 2, start: 0, end: 1, stroke: 0.1em + black),
+    // tinytable lines before
+
+    map-cells: cell => {
+
+if (cell.x == 0) { cell.align = center };
+
+      // tinytable cell style before
+      return cell;
+    },
+
+    // tinytable cell content after
+[markdown],
+[This is _italic_ text.],
+
+  ) // end tablex
+) // end figure 
