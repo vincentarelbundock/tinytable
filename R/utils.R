@@ -26,12 +26,13 @@ lines_drop_consecutive_empty <- function(x) {
 
 
 lines_drop <- function(old, regex, position = "equal") {
-    assert_choice(position, c("equal", "before", "after"))
-    lines <- strsplit(old, "\n")[[1]]
-    idx <- grep(regex, lines)
-    if (length(idx) != 1 || anyNA(idx)) {
-        stop("The `regex` supplied `lines_drop()` did not match a unique line.", call. = FALSE)
-    }
+  assert_choice(position, c("equal", "before", "after"))
+  lines <- strsplit(old, "\n")[[1]]
+  idx <- grep(regex, lines)
+  if (length(idx) > 1) {
+    stop("The `regex` supplied `lines_drop()` did not match a unique line.", call. = FALSE)
+  }
+  if (!anyNA(idx)) {
     if (position == "equal") {
       lines <- lines[!seq_along(lines) %in% idx]
     } else if (position == "before") {
@@ -39,8 +40,9 @@ lines_drop <- function(old, regex, position = "equal") {
     } else if (position == "after") {
       lines <- lines[1:idx]
     }
-    out <- paste(lines, collapse = "\n")
-    return(out)
+  }
+  out <- paste(lines, collapse = "\n")
+  return(out)
 }
 
 

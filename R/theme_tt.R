@@ -97,13 +97,11 @@ theme_grid <- function(x, ...) {
     assert_class(x, "tinytable")
     fn <- function(table) {
         if (isTRUE(table@output == "latex")) {
-            # start with void theme
             s <- table@table_string
-            s <- gsub("\\\\toprule|\\\\bottomrule|\\\\midrule", "", s)
-            l <- strsplit(s, "\n")[[1]]
-            l <- l[which(trimws(l) != "")]
-            table@table_string <- paste(l, collapse = "\n")
-            table <- style_tt(table, tabularray_inner = "hlines, vlines,")
+            s <- lines_drop(s, regex = "\\\\bottomrule", position = "equal")
+            s <- lines_drop(s, regex = "\\\\midrule", position = "equal")
+            s <- lines_drop(s, regex = "\\\\toprule", position = "equal")
+            table@table_string <- s
         } else if (isTRUE(table@output == "typst")) {
             table@table_string <- sub(
                 "auto-lines: false,",
@@ -112,7 +110,7 @@ theme_grid <- function(x, ...) {
         }
         return(table)
     }
-    x <- style_tt(x, tabularray_inner = "hlines, vlines,")
+    x <- style_tt(x, tabularray_inner = "hlines, vlines,", finalize = fn)
     return(x)
 }
 
