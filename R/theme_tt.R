@@ -15,8 +15,8 @@ theme_default <- function(x, ...) {
 
 theme_tabular <- function(x, ...) {
     assert_class(x, "tinytable")
-    # do not change the defaul theme
-    x@theme <- list("default")
+    # do not change the default theme
+    if (identical(x@theme[[1]], "tabular")) x@theme <- list("default")
     fn <- function(table) {
         tab <- table@table_string
 
@@ -47,8 +47,8 @@ theme_tabular <- function(x, ...) {
 theme_resize <- function(x, width = 1, ...) {
     assert_class(x, "tinytable")
     assert_numeric(width, len = 1, lower = 0.01, upper = 1)
-    # do not change the defaul theme
-    x@theme <- list("default")
+    # do not change the default theme
+    if (identical(x@theme[[1]], "resize")) x@theme <- list("default")
     fn <- function(table) {
         if (!isTRUE(table@output == "latex")) return(table)
 
@@ -156,7 +156,7 @@ theme_bootstrap <- function(x, ...) {
 theme_placement <- function(x, latex_float = "H") {
     assert_string(latex_float, null.ok = TRUE)
     # do not change the defaul theme
-    x@theme <- list("default")
+    if (identical(x@theme[[1]], "placement")) x@theme <- list("default")
     fn <- function(table) {
         if (table@output == "latex" && !is.null(latex_float)) {
             tab <- table@table_string
@@ -176,7 +176,7 @@ theme_placement <- function(x, latex_float = "H") {
 theme_multipage <- function(x, rowhead = 0, rowfoot = 0, ...) {
     assert_class(x, "tinytable")
     # do not change the defaul theme
-    x@theme <- list("default")
+    if (identical(x@theme[[1]], "multipage")) x@theme <- list("default")
     assert_integerish(rowhead, lower = 0, len = 1)
     assert_integerish(rowfoot, lower = 0, len = 1)
     cap <- sprintf("caption={%s}", x@caption)
