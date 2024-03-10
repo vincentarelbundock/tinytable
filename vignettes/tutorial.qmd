@@ -116,6 +116,11 @@ tt(mtcars[1:4, 1:4])
 ```
 ````
 
+```{r, include=FALSE}
+# knitr adds this by default, I guess, which duplicates [H][H]
+options(tinytable_theme_placement_latex_float = NULL)
+```
+
 And here is the rendered version of the code chunk above:
 
 
@@ -125,7 +130,7 @@ And here is the rendered version of the code chunk above:
 #| label: tbl-blah
 #| tbl-cap: "Blah blah blah"
 library(tinytable)
-tt(mtcars[1:4, 1:4])
+tt(mtcars[1:4, 1:4]) |> print("latex")
 ```
 
 For standalone LaTeX tables, you can use the `caption` argument like so:
@@ -134,8 +139,13 @@ For standalone LaTeX tables, you can use the `caption` argument like so:
 tt(x, caption = "Blah blah.\\label{tbl-blah}")
 ```
 
-Be aware that this more approach may not work well in Quarto or Rmarkdown documents.
+Be aware that this approach may not work well in Quarto or Rmarkdown documents.
 
+
+```{r, include=FALSE}
+# knitr adds this by default, I guess, which duplicates [H][H]
+options(tinytable_theme_placement_latex_float = "H")
+```
 
 ## Math
 
@@ -1108,6 +1118,7 @@ tt(x) |>
   theme_tt("placement", latex_float = "H") |>
   print(output = "latex")
 ```
+:::
 
 
 ## Multipage
