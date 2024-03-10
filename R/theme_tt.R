@@ -93,7 +93,8 @@ theme_void <- function(x, ...) {
         }
         return(table)
     }
-    x <- style_tt(x, finalize = fn)
+    x <- style_tt(x, finalize = fn,
+        bootstrap_class = "table table-bordered")
     x <- theme_tt(x, "placement")
     return(x)
 }
@@ -116,7 +117,8 @@ theme_grid <- function(x, ...) {
         }
         return(table)
     }
-    x <- style_tt(x, tabularray_inner = "hlines, vlines,", finalize = fn)
+    x <- style_tt(x, tabularray_inner = "hlines, vlines,", finalize = fn,
+        bootstrap_class = "table table-borderless")
     x <- theme_tt(x, "placement")
     return(x)
 }
@@ -133,7 +135,10 @@ theme_striped <- function(x, ...) {
         }
         return(table)
     }
-    x <- style_tt(x, finalize = fn, tabularray_inner = "row{even}={bg=black!5!white}")
+    x <- style_tt(x,
+        finalize = fn, 
+        tabularray_inner = "row{even}={bg=black!5!white}",
+        bootstrap_class = "table table-striped")
     x <- theme_tt(x, "placement")
     return(x)
 }
