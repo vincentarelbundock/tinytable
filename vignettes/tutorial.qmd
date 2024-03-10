@@ -35,7 +35,7 @@ Load the library and set some global options:
 library(tinytable)
 
 options(digits = 3) # how many significant digits to print by default
-options("tinytable_tt_placement" = "H") # for LaTeX
+options("tinytable_tt_theme" = "placement") # for LaTeX
 ```
 
 Draw a first table:
@@ -1016,9 +1016,13 @@ tt(x) |>
 
 # Themes
 
-`tinytable` offers a few basic themes out of the box: "default", "striped", "bootstrap", "grid", "void." Those themes can be applied with the `theme` argument of the `tt()` function, or with the `theme_tt()` function.
+`tinytable` offers a very flexible theming framwork, which includes a few basic visual looks, as well as other functions to apply collections of transformations to `tinytable` objects in a repeatable way. These themes can be applied by supplying a string or function to the `theme` argument in `tt()`. Alternatively, users can call the `theme_tt()` function.
+
+The main difference between `theme_tt()` and the other options in package, is that whereas `style_tt()` and `format_tt()` aim to be output agnostic, `theme_tt()` supplies transformations that can be output-specific, and which can have their own sets of distinct arguments. See below for a few examples.
 
 ## Visual themes
+
+To begin, let's explore a few of the basic looks supplied by themes:
 
 ```{r}
 tt(x, theme = "striped")
@@ -1047,7 +1051,9 @@ Users can also define their own themes to apply consistent visual tweaks to tabl
 
 ```{r}
 theme_vincent <- function(x, ...) {
-  out <- x |> style_tt(color = "teal")
+  out <- x |> 
+    style_tt(color = "teal") |>
+    theme_tt("placement")
   out@caption <- "Always use the same caption."
   return(out)
 }
@@ -1058,7 +1064,7 @@ tt(mtcars[1:2, 1:2])
 
 tt(mtcars[1:3, 1:3])
 
-options(tinytable_tt_theme = NULL)
+options(tinytable_tt_theme = "placement")
 ```
 
 
