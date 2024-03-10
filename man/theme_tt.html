@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -231,14 +265,14 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#themes-for-tinytable" id="toc-themes-for-tinytable" class="nav-link active" data-scroll-target="#themes-for-tinytable">Themes for tinytable</a>
+  <li><a href="#themes-for-tinytable" id="toc-themes-for-tinytable" class="nav-link active" data-scroll-target="#themes-for-tinytable">Themes for <code>tinytable</code></a>
   <ul class="collapse">
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
   <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
-  <li><a href="#themes" id="toc-themes" class="nav-link" data-scroll-target="#themes">Themes</a></li>
   <li><a href="#arguments-1" id="toc-arguments-1" class="nav-link" data-scroll-target="#arguments-1">Arguments</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -250,10 +284,11 @@ ul.task-list li input[type="checkbox"] {
 
 
 <section id="themes-for-tinytable" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="themes-for-tinytable">Themes for tinytable</h2>
+<h2 class="unnumbered anchored" data-anchor-id="themes-for-tinytable">Themes for <code>tinytable</code></h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Themes are functions that apply a collection of transformations to a <code>tinytable</code> object. Whereas the other functions in <code>tinytable</code> are designed to be output-agnostic, themes can be output-specific, only applying to LaTeX or HTML, as needed. Themes can also have their own arguments</p>
+<p>A theme is a function which applies a collection of transformations to a <code>tinytable</code> object. Whereas the other <code>tinytable</code> functions such as <code>format_tt()</code> and <code>style_tt()</code> aim to be output-agnostic, themes can be output-specific, only applying to LaTeX, HTML, or Typst, as needed.</p>
+<p>Each theme can have specific arguments, which are passed to the <code>theme_tt()</code> function. See the "Arguments" section below.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
@@ -276,13 +311,31 @@ A <code>tinytable</code> object
 <code id="theme_tt_:_theme">theme</code>
 </td>
 <td>
-<p>String. Name of the theme to apply.</p>
+<p>String. Name of the theme to apply. One of:</p>
 <ul>
 <li>
-<p>"resize" (LaTeX)</p>
+<p>"grid": Vertical and horizontal rules around each cell.</p>
 </li>
 <li>
-<p>"multipage" (LaTeX)</p>
+<p>"void": No rules</p>
+</li>
+<li>
+<p>"bootstrap": Similar appearance to the default Bootstrap theme in HTML</p>
+</li>
+<li>
+<p>"striped": Grey stripes on alternating rows</p>
+</li>
+<li>
+<p>"tabular": No table environment (LaTeX) or Javascript/CSS (HTML)</p>
+</li>
+<li>
+<p>"resize": Scale a LaTeX <code>tinytable</code> to fit the <code>width</code> argument.</p>
+</li>
+<li>
+<p>"multipage": Long tables continue on the next page (LaTeX only)</p>
+</li>
+<li>
+<p>"placement": Position of the table environment (LaTeX)</p>
 </li>
 </ul>
 </td>
@@ -301,17 +354,6 @@ Additional arguments passed the themeing function. See the "Arguments" section b
 <h3 class="anchored" data-anchor-id="value">Value</h3>
 <p>A modified <code>tinytable</code> object</p>
 </section>
-<section id="themes" class="level3">
-<h3 class="anchored" data-anchor-id="themes">Themes</h3>
-<ul>
-<li>
-<p>resize: Resize a <code>tinytable</code> to fit the line width, while maintaining proportions</p>
-</li>
-<li>
-<p>multipage: Long tables continue on the next page</p>
-</li>
-</ul>
-</section>
 <section id="arguments-1" class="level3">
 <h3 class="anchored" data-anchor-id="arguments-1">Arguments</h3>
 <p>resize</p>
@@ -329,6 +371,288 @@ Additional arguments passed the themeing function. See the "Arguments" section b
 <p><code>rowfoot</code>: Non-negative integer. The number of footer rows to repeat on each page.</p>
 </li>
 </ul>
+<p>placement</p>
+<ul>
+<li>
+<p><code>latex_float</code> (default: "H"): String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp".</p>
+</li>
+</ul>
+</section>
+<section id="examples" class="level3">
+<h3 class="anchored" data-anchor-id="examples">Examples</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># equivalent calls</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x, <span class="at">theme =</span> <span class="st">"striped"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+ 
+
+  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytable_dzqrhuct88p9ob5ll1du</title>
+    <style>
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+  
+
+  
+    <div class="container">
+      <table class="table table-striped" id="tinytable_dzqrhuct88p9ob5ll1du" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+        
+              <tr>
+                <th scope="col">mpg</th>
+                <th scope="col">cyl</th>
+                <th scope="col">disp</th>
+                <th scope="col">hp</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td>21.0</td>
+                  <td>6</td>
+                  <td>160</td>
+                  <td>110</td>
+                </tr>
+                <tr>
+                  <td>21.0</td>
+                  <td>6</td>
+                  <td>160</td>
+                  <td>110</td>
+                </tr>
+                <tr>
+                  <td>22.8</td>
+                  <td>4</td>
+                  <td>108</td>
+                  <td> 93</td>
+                </tr>
+                <tr>
+                  <td>21.4</td>
+                  <td>6</td>
+                  <td>258</td>
+                  <td>110</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      function styleCell_tinytable_b1mq8o2oprifamvb3381(i, j, css_id) {
+        var table = document.getElementById("tinytable_dzqrhuct88p9ob5ll1du");
+        table.rows[i].cells[j].classList.add(css_id);
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_dzqrhuct88p9ob5ll1du');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_tinytable_b1mq8o2oprifamvb3381(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_dzqrhuct88p9ob5ll1du");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+
+    </script>
+
+  
+
+
+</div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x) <span class="sc">|&gt;</span> <span class="fu">theme_tt</span>(<span class="st">"striped"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+ 
+
+  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytable_vdwk7h0cnrsf5k1cc848</title>
+    <style>
+.table td.tinytable_css_vxsfy3sglnwsilwu22wa, .table th.tinytable_css_vxsfy3sglnwsilwu22wa {    border-bottom: solid 0.1em #d3d8dc; }
+    </style>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+  
+
+  
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_vdwk7h0cnrsf5k1cc848" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+        
+              <tr>
+                <th scope="col">mpg</th>
+                <th scope="col">cyl</th>
+                <th scope="col">disp</th>
+                <th scope="col">hp</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td>21.0</td>
+                  <td>6</td>
+                  <td>160</td>
+                  <td>110</td>
+                </tr>
+                <tr>
+                  <td>21.0</td>
+                  <td>6</td>
+                  <td>160</td>
+                  <td>110</td>
+                </tr>
+                <tr>
+                  <td>22.8</td>
+                  <td>4</td>
+                  <td>108</td>
+                  <td> 93</td>
+                </tr>
+                <tr>
+                  <td>21.4</td>
+                  <td>6</td>
+                  <td>258</td>
+                  <td>110</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      function styleCell_tinytable_cdemb367vpf5crhqamg9(i, j, css_id) {
+        var table = document.getElementById("tinytable_vdwk7h0cnrsf5k1cc848");
+        table.rows[i].cells[j].classList.add(css_id);
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_vdwk7h0cnrsf5k1cc848');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_tinytable_cdemb367vpf5crhqamg9(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_vdwk7h0cnrsf5k1cc848");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+
+window.addEventListener('load', function () { styleCell_tinytable_cdemb367vpf5crhqamg9(0, 0, 'tinytable_css_vxsfy3sglnwsilwu22wa') })
+window.addEventListener('load', function () { styleCell_tinytable_cdemb367vpf5crhqamg9(0, 1, 'tinytable_css_vxsfy3sglnwsilwu22wa') })
+window.addEventListener('load', function () { styleCell_tinytable_cdemb367vpf5crhqamg9(0, 2, 'tinytable_css_vxsfy3sglnwsilwu22wa') })
+window.addEventListener('load', function () { styleCell_tinytable_cdemb367vpf5crhqamg9(0, 3, 'tinytable_css_vxsfy3sglnwsilwu22wa') })
+    </script>
+
+  
+
+
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># resize w/ argument</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">cbind</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,], mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,])</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x) <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_tt</span>(<span class="st">"resize"</span>, <span class="at">width =</span> .<span class="dv">9</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"latex"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>\begin{table}
+\centering
+\resizebox{0.9\linewidth}{!}{
+\begin{tblr}[         %% tabularray outer open
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+colspec={Q[]Q[]Q[]Q[]Q[]Q[]Q[]Q[]Q[]Q[]Q[]Q[]Q[]Q[]Q[]Q[]Q[]Q[]Q[]Q[]Q[]Q[]},
+}                     %% tabularray inner close
+\toprule
+mpg &amp; cyl &amp; disp &amp; hp &amp; drat &amp; wt &amp; qsec &amp; vs &amp; am &amp; gear &amp; carb &amp; mpg &amp; cyl &amp; disp &amp; hp &amp; drat &amp; wt &amp; qsec &amp; vs &amp; am &amp; gear &amp; carb \\ \midrule %% TinyTableHeader
+21.0 &amp; 6 &amp; 160.0 &amp; 110 &amp; 3.90 &amp; 2.620 &amp; 16.46 &amp; 0 &amp; 1 &amp; 4 &amp; 4 &amp; 21.0 &amp; 6 &amp; 160.0 &amp; 110 &amp; 3.90 &amp; 2.620 &amp; 16.46 &amp; 0 &amp; 1 &amp; 4 &amp; 4 \\
+21.0 &amp; 6 &amp; 160.0 &amp; 110 &amp; 3.90 &amp; 2.875 &amp; 17.02 &amp; 0 &amp; 1 &amp; 4 &amp; 4 &amp; 21.0 &amp; 6 &amp; 160.0 &amp; 110 &amp; 3.90 &amp; 2.875 &amp; 17.02 &amp; 0 &amp; 1 &amp; 4 &amp; 4 \\
+22.8 &amp; 4 &amp; 108.0 &amp;  93 &amp; 3.85 &amp; 2.320 &amp; 18.61 &amp; 1 &amp; 1 &amp; 4 &amp; 1 &amp; 22.8 &amp; 4 &amp; 108.0 &amp;  93 &amp; 3.85 &amp; 2.320 &amp; 18.61 &amp; 1 &amp; 1 &amp; 4 &amp; 1 \\
+21.4 &amp; 6 &amp; 258.0 &amp; 110 &amp; 3.08 &amp; 3.215 &amp; 19.44 &amp; 1 &amp; 0 &amp; 3 &amp; 1 &amp; 21.4 &amp; 6 &amp; 258.0 &amp; 110 &amp; 3.08 &amp; 3.215 &amp; 19.44 &amp; 1 &amp; 0 &amp; 3 &amp; 1 \\
+18.7 &amp; 8 &amp; 360.0 &amp; 175 &amp; 3.15 &amp; 3.440 &amp; 17.02 &amp; 0 &amp; 0 &amp; 3 &amp; 2 &amp; 18.7 &amp; 8 &amp; 360.0 &amp; 175 &amp; 3.15 &amp; 3.440 &amp; 17.02 &amp; 0 &amp; 0 &amp; 3 &amp; 2 \\
+18.1 &amp; 6 &amp; 225.0 &amp; 105 &amp; 2.76 &amp; 3.460 &amp; 20.22 &amp; 1 &amp; 0 &amp; 3 &amp; 1 &amp; 18.1 &amp; 6 &amp; 225.0 &amp; 105 &amp; 2.76 &amp; 3.460 &amp; 20.22 &amp; 1 &amp; 0 &amp; 3 &amp; 1 \\
+14.3 &amp; 8 &amp; 360.0 &amp; 245 &amp; 3.21 &amp; 3.570 &amp; 15.84 &amp; 0 &amp; 0 &amp; 3 &amp; 4 &amp; 14.3 &amp; 8 &amp; 360.0 &amp; 245 &amp; 3.21 &amp; 3.570 &amp; 15.84 &amp; 0 &amp; 0 &amp; 3 &amp; 4 \\
+24.4 &amp; 4 &amp; 146.7 &amp;  62 &amp; 3.69 &amp; 3.190 &amp; 20.00 &amp; 1 &amp; 0 &amp; 4 &amp; 2 &amp; 24.4 &amp; 4 &amp; 146.7 &amp;  62 &amp; 3.69 &amp; 3.190 &amp; 20.00 &amp; 1 &amp; 0 &amp; 4 &amp; 2 \\
+22.8 &amp; 4 &amp; 140.8 &amp;  95 &amp; 3.92 &amp; 3.150 &amp; 22.90 &amp; 1 &amp; 0 &amp; 4 &amp; 2 &amp; 22.8 &amp; 4 &amp; 140.8 &amp;  95 &amp; 3.92 &amp; 3.150 &amp; 22.90 &amp; 1 &amp; 0 &amp; 4 &amp; 2 \\
+19.2 &amp; 6 &amp; 167.6 &amp; 123 &amp; 3.92 &amp; 3.440 &amp; 18.30 &amp; 1 &amp; 0 &amp; 4 &amp; 4 &amp; 19.2 &amp; 6 &amp; 167.6 &amp; 123 &amp; 3.92 &amp; 3.440 &amp; 18.30 &amp; 1 &amp; 0 &amp; 4 &amp; 4 \\
+\bottomrule
+\end{tblr}
+}
+\end{table} </code></pre>
+</div>
+</div>
 
 
 </section>
