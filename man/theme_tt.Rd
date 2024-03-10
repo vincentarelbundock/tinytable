@@ -9,10 +9,16 @@ theme_tt(x, theme, ...)
 \arguments{
 \item{x}{A \code{tinytable} object}
 
-\item{theme}{String. Name of the theme to apply.
+\item{theme}{String. Name of the theme to apply. One of:
 \itemize{
-\item "resize" (LaTeX)
-\item "multipage" (LaTeX)
+\item "grid": Vertical and horizontal rules around each cell.
+\item "void": No rules
+\item "bootstrap": Similar appearance to the default Bootstrap theme in HTML
+\item "striped": Grey stripes on alternating rows
+\item "tabular": No table environment (LaTeX) or Javascript/CSS (HTML)
+\item "resize": Scale a LaTeX \code{tinytable} to fit the \code{width} argument.
+\item "multipage": Long tables continue on the next page (LaTeX only)
+\item "placement": Position of the table environment (LaTeX)
 }}
 
 \item{...}{Additional arguments passed the themeing function. See the "Arguments" section below for a list of supported arguments for each theme.}
@@ -21,16 +27,10 @@ theme_tt(x, theme, ...)
 A modified \code{tinytable} object
 }
 \description{
-A theme is a function that applies a collection of transformations to a \code{tinytable} object. Whereas the other functions in \code{tinytable} aim to be output-agnostic, themes can be output-specific, only applying to LaTeX or HTML, as needed. Themes can also have their own arguments
-}
-\section{Themes}{
+A theme is a function which applies a collection of transformations to a \code{tinytable} object. Whereas the other \code{tinytable} functions such as \code{format_tt()} and \code{style_tt()} aim to be output-agnostic, themes can be output-specific, only applying to LaTeX, HTML, or Typst, as needed.
 
-\itemize{
-\item resize: Resize a \code{tinytable} to fit the line width, while maintaining proportions
-\item multipage: Long tables continue on the next page
+Each theme can have specific arguments, which are passed to the \code{theme_tt()} function. See the "Arguments" section below.
 }
-}
-
 \section{Arguments}{
 
 
@@ -44,5 +44,25 @@ multipage
 \item \code{rowhead}: Non-negative integer. The number of header rows to repeat on each page.
 \item \code{rowfoot}: Non-negative integer. The number of footer rows to repeat on each page.
 }
+
+placement
+\itemize{
+\item \code{latex_float} (default: "H"): String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp".
+}
 }
 
+\examples{
+library(tinytable)
+
+# equivalent calls
+tt(x, theme = "striped")
+
+tt(x) |> theme_tt("striped")
+
+# resize w/ argument
+x <- cbind(mtcars[1:10,], mtcars[1:10,])
+tt(x) |>
+  theme_tt("resize", width = .9) |>
+  print("latex")
+
+}

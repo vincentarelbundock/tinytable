@@ -221,7 +221,9 @@ theme_dictionary <- list(
 #' Themes for `tinytable`
 #' 
 #' @description 
-#' A theme is a function which applies a collection of transformations to a `tinytable` object. Whereas the other `tinytable` functions such as `format_tt()` and `style_tt()` aim to be output-agnostic, themes can be output-specific, only applying to LaTeX, HTML, or Typst, as needed. Themes can also have their own arguments
+#' A theme is a function which applies a collection of transformations to a `tinytable` object. Whereas the other `tinytable` functions such as `format_tt()` and `style_tt()` aim to be output-agnostic, themes can be output-specific, only applying to LaTeX, HTML, or Typst, as needed. 
+#' 
+#' Each theme can have specific arguments, which are passed to the `theme_tt()` function. See the "Arguments" section below.
 #'
 #' @param x A `tinytable` object
 #' @param theme String. Name of the theme to apply. One of: 
@@ -234,7 +236,6 @@ theme_dictionary <- list(
 #'   + "multipage": Long tables continue on the next page (LaTeX only)
 #'   + "placement": Position of the table environment (LaTeX)
 #' @param ... Additional arguments passed the themeing function. See the "Arguments" section below for a list of supported arguments for each theme.
-#' 
 #' @section Arguments:
 #' 
 #' resize
@@ -248,10 +249,24 @@ theme_dictionary <- list(
 #' 
 #' placement
 #' 
-#' + `latex_float` (default: "H"): String to insert in square brackets after the table environment. Typically: "H", "htbp", such as `"The LaTeX float placement specifier. Default is "H".
+#' + `latex_float` (default: "H"): String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp".
 #' 
-#' @export
+#' @examples
+#' library(tinytable)
+#' 
+#' # equivalent calls
+#' tt(x, theme = "striped")
+#' 
+#' tt(x) |> theme_tt("striped")
+#' 
+#' # resize w/ argument
+#' x <- cbind(mtcars[1:10,], mtcars[1:10,])
+#' tt(x) |>
+#'   theme_tt("resize", width = .9) |>
+#'   print("latex")
+#' 
 #' @return A modified `tinytable` object
+#' @export
 theme_tt <- function(x, theme, ...) {
     if (is.null(theme)) return(x)
     if (is.function(theme)) return(theme(x, ...))

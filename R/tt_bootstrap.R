@@ -114,7 +114,7 @@ setMethod(
   # before style_eval()
   x@table_string <- out
 
-  if (is.null(x@theme[[1]]) || "default" %in% x@theme[[1]]) {
+  if (is.null(x@theme[[1]]) || is.function(x@theme[[1]]) || isTRUE("default" %in% x@theme[[1]])) {
     x <- style_eval(x, bootstrap_class = "table table-borderless",
       i = 0, line = "b", line_color = "#d3d8dc", line_width = .1)
   } else if ("bootstrap" %in% x@theme[[1]]) {
