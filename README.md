@@ -84,7 +84,56 @@ install_github("vincentarelbundock/tinytable")
 
 Restart `R` completely for the installation to take effect.
 
-## Get started
+## First steps
+
+The best feature of `tinytable` is its simplicity. To draw a table,
+simply call the `tt()` function with your data frame as the first
+argument:
+
+``` r
+library(tinytable)
+
+x <- mtcars[1:5, 1:5]
+
+tt(x)
+```
+
+<p align="center">
+
+<img src="man/figures/readme_01.png" height = "250" class = "center">
+<br>
+
+More complex tables can be created by calling arguments and chaining
+functions together. In the next example, we add a caption, footnote,
+colors, styles, and spanning column headers:
+
+``` r
+cap <- "A simple \\texttt{tinytable} example."
+not <- "Nullam odio est, ullamcorper scelerisque lectus a, eleifend luctus nisl. Etiam ullamcorper, nibh vel interdum auctor, odio nulla mollis tortor, vel fringilla ante quam quis est."
+
+tt(x, 
+   caption = cap, 
+   notes = not, 
+   width = .5) |> 
+ style_tt(
+   i = 1:3,
+   j = 1:2,
+   background = "teal",
+   color = "white",
+   bold = TRUE) |>
+ group_tt(
+   j = list("Halloumi" = 1:2, "Tofu" = 4:5))
+```
+
+<p align="center">
+
+<img src="man/figures/readme_02.png" height = "450" class = "center">
+<br>
+
+## Tutorial
+
+The `tinytable` tutorial will take you much further. It is available in
+two formats:
 
 -   [Tutorial
     (HTML)](https://vincentarelbundock.github.io/tinytable/vignettes/tutorial.html)
