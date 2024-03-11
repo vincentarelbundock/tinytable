@@ -1,3 +1,6 @@
+#' tinytable S4 method
+#' 
+#' @keywords internal
 setMethod(
   f = "group_eval",
   signature = "tinytable_grid",

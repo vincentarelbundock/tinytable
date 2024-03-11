@@ -7,3 +7,4 @@
 \description{
 tinytable S4 class
 }
+\keyword{internal}

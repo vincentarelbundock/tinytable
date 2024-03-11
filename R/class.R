@@ -9,6 +9,7 @@ swap_class <- function(x, new_class) {
 
 #' tinytable S4 class
 #' 
+#' @keywords internal
 #' @export
 setClass(
     Class = "tinytable",
@@ -39,6 +40,10 @@ setClass(
         )
 )
 
+#' Method for a tinytable S4 object
+#' 
+#' @inheritParams tt
+#' @keywords internal
 setMethod("initialize", "tinytable", function(
     .Object,
     data = data.frame(),
@@ -68,26 +73,40 @@ setMethod("initialize", "tinytable", function(
   return(.Object)
 })
 
+#' Method for a tinytable S4 object
+#' 
+#' @inheritParams tt
+#' @keywords internal
 setMethod("nrow", "tinytable", function(x) return(x@nrow))
+
+#' Method for a tinytable S4 object
+#' 
+#' @inheritParams tt
+#' @keywords internal
 setMethod("ncol", "tinytable", function(x) return(x@ncol))
+
+#' Method for a tinytable S4 object
+#' 
+#' @inheritParams tt
+#' @keywords internal
 setMethod("colnames", "tinytable", function(x) return(x@names))
 
 #' Dimensions a tinytable S4 object
 #' 
 #' @inheritParams tt
-#' @noRd
+#' @keywords internal
 setMethod("dim", "tinytable", function(x) return(c(x@nrow, x@ncol)))
 
 #' Column names of a tinytable
 #' 
 #' @inheritParams tt
-#' @noRd
+#' @keywords internal
 setMethod("names", "tinytable", function(x) return(x@names))
 
 #' Convert a tinytable S4 object to a string
 #' 
 #' @inheritParams tt
-#' @noRd
+#' @keywords internal
 setMethod("as.character", "tinytable", function(x) {
   out <- save_tt(x, x@output)
 })
@@ -98,24 +117,36 @@ setClass("tinytable_bootstrap", contains = "tinytable")
 setClass("tinytable_typst", contains = "tinytable")
 setClass("tinytable_grid", contains = "tinytable")
 
+#' Apply style settings to a tinytable
+#' 
+#' @inheritParams tt
 #' @keywords internal
 setGeneric(
   name = "style_eval",
   def = function(x, ...) standardGeneric("style_eval")
 )
 
+#' Apply group settings to a tinytable
+#' 
+#' @inheritParams tt
 #' @keywords internal
 setGeneric(
   name = "tt_eval",
   def = function(x, ...) standardGeneric("tt_eval")
 )
 
+#' Apply group settings to a tinytable
+#' 
+#' @inheritParams tt
 #' @keywords internal
 setGeneric(
   name = "group_eval",
   def = function(x, ...) standardGeneric("group_eval")
 )
 
+#' Apply final settings to a tinytable
+#' 
+#' @inheritParams tt
 #' @keywords internal
 setGeneric(
   name = "finalize",
