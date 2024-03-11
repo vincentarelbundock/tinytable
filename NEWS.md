@@ -2,10 +2,16 @@
 
 ## Development
 
-
 New function `theme_tt()`:
 
-`format_tt()` improvements:
+* Function to apply collections of transformations to a `tinytable`.
+* Visual themes:
+  - grid, void, striped, bootstrap, default 
+* `resize`: Insert a LaTeX table in a `resizebox` environment to ensure a table fits the page, or to scale it to a fraction of `\linewidth`
+* `placement`: Determine where a LaTeX table float is positioned. Ex: `[H]`, `[htbp]`
+* `multipage`: Split long LaTeX tables across multiple pages with (optional) repeated headers/footers. Uses the `longtblr` environment from `tabularray`.
+
+`format_tt()`:
 
 * New `i` argument to format subsets of rows.
 * New `fn` argument which accepts an arbitrary function to format table content.
@@ -40,6 +46,7 @@ Breaking changes:
 Bugs:
 
 * `format_tt()` did not work on factor vector.
+
 
 ## 0.0.5
 
