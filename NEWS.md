@@ -1,6 +1,6 @@
 # News
 
-## Development
+## 0.0.6
 
 
 New function `theme_tt()`:
