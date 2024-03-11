@@ -70,9 +70,24 @@ setMethod("initialize", "tinytable", function(
 
 setMethod("nrow", "tinytable", function(x) return(x@nrow))
 setMethod("ncol", "tinytable", function(x) return(x@ncol))
-setMethod("dim", "tinytable", function(x) return(c(x@nrow, x@ncol)))
-setMethod("names", "tinytable", function(x) return(x@names))
 setMethod("colnames", "tinytable", function(x) return(x@names))
+
+#' Dimensions a tinytable S4 object
+#' 
+#' @inheritParams tt
+#' @noRd
+setMethod("dim", "tinytable", function(x) return(c(x@nrow, x@ncol)))
+
+#' Column names of a tinytable
+#' 
+#' @inheritParams tt
+#' @noRd
+setMethod("names", "tinytable", function(x) return(x@names))
+
+#' Convert a tinytable S4 object to a string
+#' 
+#' @inheritParams tt
+#' @noRd
 setMethod("as.character", "tinytable", function(x) {
   out <- save_tt(x, x@output)
 })
@@ -83,21 +98,25 @@ setClass("tinytable_bootstrap", contains = "tinytable")
 setClass("tinytable_typst", contains = "tinytable")
 setClass("tinytable_grid", contains = "tinytable")
 
+#' @keywords internal
 setGeneric(
   name = "style_eval",
   def = function(x, ...) standardGeneric("style_eval")
 )
 
+#' @keywords internal
 setGeneric(
   name = "tt_eval",
   def = function(x, ...) standardGeneric("tt_eval")
 )
 
+#' @keywords internal
 setGeneric(
   name = "group_eval",
   def = function(x, ...) standardGeneric("group_eval")
 )
 
+#' @keywords internal
 setGeneric(
   name = "finalize",
   def = function(x, ...) standardGeneric("finalize")
