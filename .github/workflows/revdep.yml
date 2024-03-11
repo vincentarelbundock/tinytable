@@ -1,0 +1,48 @@
+# adapted from easystats/workflows
+
+# name: revdepcheck
+
+on:
+  workflow_call:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  revdepcheck:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+    if: startsWith(github.head_ref, 'rc')
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-pandoc@v2
+        # with:
+        #   pandoc-version: "3.1.12.1"
+
+      - uses: r-lib/actions/setup-r@v2
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          upgrade: 'TRUE'
+          cache-version: 2
+          extra-packages: |
+            r-lib/revdepcheck
+            local::.
+            any::rcmdcheck
+          pak-version: devel
+
+      - name: Revdepcheck
+        run: |
+          options(crayon.enabled = TRUE)
+          library(revdepcheck)
+          revdep_check(num_workers = 4)
+          revdep_report()
+          revdep_reset()
+        shell: Rscript {0}
+
+      #- uses: stefanzweifel/git-auto-commit-action@v4
