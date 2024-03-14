@@ -1225,8 +1225,26 @@ tt(x, width = 2/3) |>
     bootstrap_css_rule = css_rule)
 ```
 
-:::
 
+And here's another example:
+
+
+```{r}
+css <- "
+.mytable {
+  background-size: cover;
+  background-position: center;
+  background-image: url('https://user-images.githubusercontent.com/987057/82732352-b9aabf00-9cda-11ea-92a6-26750cf097d0.png');
+  --bs-table-bg: transparent;
+}
+"
+
+tt(mtcars[1:10, 1:8]) |>
+  style_tt(
+    bootstrap_class = "table table-borderless mytable", 
+    bootstrap_css_rule = css)
+```
+:::
 
 # LaTeX / PDF customization {#sec-tabularray}
 
