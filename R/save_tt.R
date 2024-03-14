@@ -114,7 +114,6 @@ latex_standalone <- "
 \\usepackage{tabularray}
 \\usepackage{graphicx}
 \\usepackage{float}
-\\usepackage{codehigh}
 \\usepackage[normalem]{ulem}
 \\UseTblrLibrary{booktabs}
 \\UseTblrLibrary{siunitx}

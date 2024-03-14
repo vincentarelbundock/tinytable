@@ -8,7 +8,6 @@
 #' \usepackage{tabularray}
 #' \usepackage{float}
 #' \usepackage{graphicx}
-#' \usepackage{codehigh}
 #' \usepackage[normalem]{ulem}
 #' \UseTblrLibrary{booktabs}
 #' \newcommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}

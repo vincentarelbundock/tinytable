@@ -37,7 +37,6 @@ sanitize_output <- function(output) {
   if (isTRUE(check_dependency("knitr"))) {
 
     if (isTRUE(knitr::pandoc_to() == "latex")) {
-      usepackage_latex("codehigh")
       usepackage_latex("float")
       usepackage_latex("tabularray", extra_lines = c(
         "\\usepackage[normalem]{ulem}",
