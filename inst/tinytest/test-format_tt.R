@@ -32,7 +32,7 @@ set.seed(1024)
 dat <- data.frame(
      w = c(143002.2092, 201399.181, 100188.3883),
      x = c(1.43402, 201.399, 0.134588),
-     y = as.Date(sample(1:1000, 3)),
+     y = as.Date(sample(1:1000, 3), origin = "1970-01-01"),
      z = c(TRUE, TRUE, FALSE))
 tab <- tt(dat, digits = 2)
 expect_snapshot_print(tab, label = "format_tt-vignette_digits")
