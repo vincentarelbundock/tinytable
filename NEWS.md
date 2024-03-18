@@ -2,6 +2,10 @@
 
 ## Development
 
+Misc:
+
+* Informative error message when no default browser is selected via global options.
+
 
 ## 0.1.0
 

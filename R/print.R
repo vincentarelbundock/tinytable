@@ -84,6 +84,11 @@ print.tinytable <- function(x,
     if (isTRUE(check_dependency("rstudioapi")) && rstudioapi::isAvailable()) {
       rstudioapi::viewer(htmlFile)
     } else if (interactive()) {
+      msg <- "Please choose a default browser with:
+
+      options(browser = 'firefox')
+      "
+      if (isTRUE(getOption("browser") == "")) stop(msg, call. = FALSE)
       utils::browseURL(htmlFile)
     } else {
       cat(tab, "\n")
