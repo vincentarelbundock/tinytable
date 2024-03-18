@@ -34,7 +34,11 @@ tt_eval_grid  <- function(x, width_cols = NULL, ...) {
 
   if (is.null(width_cols) || length(width_cols) == 0) {
     for (j in 1:ncol(tab)) {
-      width_cols[j] <- max(nchar(tab[, j]))
+      if (isTRUE(check_dependency("fansi"))) {
+        width_cols[j] <- max(nchar(as.character(fansi::strip_ctl(tab[, j]))))
+      } else {
+        width_cols[j] <- max(nchar(tab[, j]))
+      }
     }
   }
 
@@ -52,7 +56,11 @@ tt_eval_grid  <- function(x, width_cols = NULL, ...) {
   }
 
   for (j in 1:ncol(x)) {
-    nc <- nchar(tab[, j])
+    if (isTRUE(check_dependency("fansi"))) {
+      nc <- nchar(fansi::strip_ctl(tab[, j]))
+    } else {
+      nc <- nchar(tab[, j])
+    }
     pad <- width_cols[j] - nc
     pad <- sapply(pad, function(k) strrep(" ", k))
     tab[, j] <- paste0(tab[, j], pad)

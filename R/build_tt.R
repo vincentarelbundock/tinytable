@@ -25,12 +25,12 @@ build_tt <- function(x, output = NULL) {
 
   tab <- x@table_dataframe
 
-  # strip ANSI from `tibble`/`pillar`
+  # strip ANSI from `tibble`/`pillar`; keep for markdown
   if (isTRUE(check_dependency("fansi"))) {
     for (col in seq_along(tab)) {
       if (isTRUE(x@output == "html")) {
         tab[[col]] <- as.character(fansi::to_html(tab[[col]], warn = FALSE))
-      } else {
+      } else if (isTRUE(x@output != "markdown")) {
         tab[[col]] <- as.character(fansi::strip_ctl(tab[[col]]))
       }
     }
