@@ -91,6 +91,21 @@ setMethod("ncol", "tinytable", function(x) return(x@ncol))
 #' @keywords internal
 setMethod("colnames", "tinytable", function(x) return(x@names))
 
+
+#' Method for a tinytable S4 object
+#' 
+#' @inheritParams tt
+#' @keywords internal
+setReplaceMethod("colnames",
+                 signature = "tinytable", 
+                 definition = function(x, value) {
+                   assert_character(value, len = length(x@names))
+                   x@names <- value
+                   return(x)
+                 }
+)
+
+
 #' Dimensions a tinytable S4 object
 #' 
 #' @inheritParams tt
