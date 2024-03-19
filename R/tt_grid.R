@@ -21,7 +21,7 @@ tt_eval_grid  <- function(x, width_cols = NULL, ...) {
 
   if (!is.null(names(tab))) {
     tab <- as.matrix(tab)
-    tab <- rbind(colnames(x), tab)
+    tab <- base::rbind(colnames(x), tab)
     header <- TRUE
   } else {
     tab <- as.matrix(tab)

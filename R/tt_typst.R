@@ -8,7 +8,7 @@ setMethod(
   # body
   body <- apply(x@table_dataframe, 2, function(k) paste0("[", k, "]"))
   if (!is.null(colnames(x)) && length(colnames(x)) > 0) {
-    body <- rbind(paste0("[", colnames(x), "]"), body)
+    body <- base::rbind(paste0("[", colnames(x), "]"), body)
   }
   body <- apply(body, 1, paste, collapse = ", ")
   body <- paste(body, collapse = ",\n")

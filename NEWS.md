@@ -2,10 +2,14 @@
 
 ## Development
 
-Misc:
+New features:
+
+* `rbind()` and `rbind2()` can be used to stack `tinytable` objects. `rbind2()` is more flexible than `rbind()`.
+* New output format in `print()`: "dataframe"
+
+Minor:
 
 * Informative error message when no default browser is selected via global options.
-* New output format in `print()`: "dataframe"
 
 
 ## 0.1.0
