@@ -88,11 +88,10 @@ d <-tt(d)
 expect_snapshot_print(print_html(d), "html-line_break")
 
 # Formatting
-dat <- data.frame(
-  w = c(143002.2092, 201399.181, 100188.3883),
-  x = c(1.43402, 201.399, 0.134588),
-  y = as.Date(c(999,675,3)),
-  z = c(TRUE, TRUE, FALSE))
+dat <- data.frame(w = c(143002.2092, 201399.181, 100188.3883),
+                  x = c(1.43402, 201.399, 0.134588),
+                  y = as.Date(c(999,675,3), origin = "1970-01-01"),
+                  z = c(TRUE, TRUE, FALSE))
 dat<-tt(dat, digits = 2)
 expect_snapshot_print(print_html(dat), "html-formatting")
 

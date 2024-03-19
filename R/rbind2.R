@@ -42,6 +42,7 @@
 #' # bind by position rather than column names
 #' rbind2(x, y, use_names = FALSE)
 #' 
+#' @importFrom methods rbind2
 #' @export
 setMethod("rbind2", 
           signature = "tinytable", 
