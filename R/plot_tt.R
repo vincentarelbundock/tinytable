@@ -198,6 +198,10 @@ plot_tt_lazy <- function(x,
     cell <- '#image("%s")'
     cell <- sprintf(cell, images)
 
+  } else if (isTRUE(x@output == "dataframe")) {
+    cell <- '%s'
+    cell <- sprintf(cell, images)
+
   } else {
     stop("here be dragons")
   }
