@@ -1,15 +1,16 @@
 # News
 
-## Development
+## 0.2.0
 
 New features:
 
-* `rbind()` and `rbind2()` can be used to stack `tinytable` objects. `rbind2()` is more flexible than `rbind()`.
+* `rbind()` and `rbind2()` can be used to stack `tinytable` objects. `rbind2()` is more flexible than `rbind()`. See `?tinytable::rbind2`
 * New output format in `print()`: "dataframe"
 
 Minor:
 
 * Informative error message when no default browser is selected via global options.
+* Fix CRAN errors on Mac old releases.
 
 
 ## 0.1.0
