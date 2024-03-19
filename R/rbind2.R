@@ -19,7 +19,6 @@
 #'
 #' @param x `tinytable` object
 #' @param y `tinytable` object
-#' @param fill Logical. TRUE fills the missing columns with `NA`
 #' @param use_names ‘TRUE’ binds by matching column name, ‘FALSE’ by position
 #' @param headers Logical. TRUE inserts the colnames of `y` as an extra row between the two tables.
 #' @param ... Additional arguments are ignored.
@@ -47,7 +46,6 @@
 setMethod("rbind2", 
           signature = "tinytable", 
           definition = function(x, y, 
-                                fill = TRUE, 
                                 use_names = TRUE,
                                 headers = TRUE,
                                 ...) {
@@ -55,7 +53,6 @@ setMethod("rbind2",
   assert_class(x, "tinytable")
   assert_class(y, "tinytable")
   assert_dependency("data.table")
-  assert_flag(fill)
   assert_flag(use_names)
   assert_flag(headers)
 
@@ -67,7 +64,7 @@ setMethod("rbind2",
   }
 
   out <- data.table::rbindlist(list(x_df, y_df), 
-                               fill = fill,
+                               fill = TRUE,
                                use.names = use_names)
 
   out <- tt(out)

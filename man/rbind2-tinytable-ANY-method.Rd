@@ -5,14 +5,12 @@
 \alias{rbind2}
 \title{Combine \code{tinytable} objects by rows (vertically)}
 \usage{
-\S4method{rbind2}{tinytable,ANY}(x, y, fill = TRUE, use_names = TRUE, headers = TRUE, ...)
+\S4method{rbind2}{tinytable,ANY}(x, y, use_names = TRUE, headers = TRUE, ...)
 }
 \arguments{
 \item{x}{\code{tinytable} object}
 
 \item{y}{\code{tinytable} object}
-
-\item{fill}{Logical. TRUE fills the missing columns with \code{NA}}
 
 \item{use_names}{‘TRUE’ binds by matching column name, ‘FALSE’ by position}
 
