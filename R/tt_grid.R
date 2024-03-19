@@ -146,3 +146,7 @@ setMethod(
   signature = "matrix",
   definition = tt_eval_grid)
 
+setMethod(
+  f = "tt_eval",
+  signature = "tinytable_dataframe",
+  definition = tt_eval_grid)

@@ -41,6 +41,9 @@ save_tt <- function(x, output, overwrite = FALSE) {
   } else if (identical(output, "typst")) {
     out <- build_tt(x, output = "typst")@table_string
     return(as.character(out))
+  } else if (identical(output, "dataframe")) {
+    out <- build_tt(x, output = "dataframe")@table_dataframe
+    return(as.character(out))
   }
 
   x@output_dir <- dirname(output)

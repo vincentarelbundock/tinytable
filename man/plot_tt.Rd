@@ -28,8 +28,9 @@ images will be inserted in all rows.}
 \item{j}{Integer vector, the column indices where images are to be inserted. If \code{NULL},
 images will be inserted in all columns.}
 
-\item{fun}{A function to generate plots from the data in \code{data}. Valid functions include:
+\item{fun}{String or function to generate inline plots.
 \itemize{
+\item String: "histogram", "density", "bar", "line"
 \item Functions that return \code{ggplot2} objects.
 \item Functions that return another function which generates a base \code{R} plot, ex: \code{function(x) {function() hist(x)}}
 \item See the tutorial on the \code{tinytable} website for more information.

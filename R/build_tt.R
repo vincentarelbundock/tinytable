@@ -11,7 +11,8 @@ build_tt <- function(x, output = NULL) {
     html = swap_class(x, "tinytable_bootstrap"),
     latex = swap_class(x, "tinytable_tabularray"),
     markdown = swap_class(x, "tinytable_grid"),
-    typst = swap_class(x, "tinytable_typst")
+    typst = swap_class(x, "tinytable_typst"),
+    dataframe = swap_class(x, "tinytable_dataframe"),
   )
 
   # groups must increment indices here
@@ -30,7 +31,7 @@ build_tt <- function(x, output = NULL) {
     for (col in seq_along(tab)) {
       if (isTRUE(x@output == "html")) {
         tab[[col]] <- as.character(fansi::to_html(tab[[col]], warn = FALSE))
-      } else if (isTRUE(x@output != "markdown")) {
+      } else if (isTRUE(!x@output %in% c("markdown", "dataframe"))) {
         tab[[col]] <- as.character(fansi::strip_ctl(tab[[col]]))
       }
     }
@@ -52,8 +53,17 @@ build_tt <- function(x, output = NULL) {
     x <- eval(l)
   }
 
+  # data frame we trim strings, pre-padded for markdown
+  if (x@output == "dataframe") {
+    tmp <- x@table_dataframe
+    for (i in seq_along(tmp)) {
+      tmp[[i]] <- trimws(tmp[[i]])
+    }
+    x@table_dataframe <- tmp
+  }
+
   # markdown styles need to be applied before creating the table, otherwise there's annoying parsing, etc.
-  if (x@output == "markdown") {
+  if (x@output %in% c("markdown", "dataframe")) {
     for (l in x@lazy_style) {
       l[["x"]] <- x
       x <- eval(l)
@@ -80,7 +90,7 @@ build_tt <- function(x, output = NULL) {
     x@lazy_style <- rev(x@lazy_style)
   }
 
-  if (x@output != "markdown") {
+  if (!x@output %in% c("markdown", "dataframe")) {
     for (l in x@lazy_style) {
       l[["x"]] <- x
       x <- eval(l)

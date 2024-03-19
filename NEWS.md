@@ -5,6 +5,7 @@
 Misc:
 
 * Informative error message when no default browser is selected via global options.
+* New output format in `print()`: "dataframe"
 
 
 ## 0.1.0

@@ -23,7 +23,7 @@ sanitize_j <- function(j, x) {
 }
 
 sanitize_output <- function(output) {
-  assert_choice(output, choice = c("markdown", "latex", "html", "typst"), null.ok = TRUE)
+  assert_choice(output, choice = c("markdown", "latex", "html", "typst", "dataframe"), null.ok = TRUE)
 
   # default output format
   if (is.null(output)) {

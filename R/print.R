@@ -59,7 +59,7 @@ print.tinytable <- function(x,
   if (is.null(output)) {
     output <- x@output
   } else {
-    assert_choice(output, c("latex", "markdown", "html", "typst"))
+    assert_choice(output, c("latex", "markdown", "html", "typst", "dataframe"))
   }
 
   if (output == "html") {
@@ -95,7 +95,7 @@ print.tinytable <- function(x,
     }
 
   } else {
-    stop("here be dragons")
+    return(x@table_dataframe)
   }
 
   return(invisible(x))
