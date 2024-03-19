@@ -21,16 +21,35 @@
 #' @param x `tinytable` object
 #' @param y `tinytable` object
 #' @param fill Logical. TRUE fills the missing columns with `NA`
-#' @param use.names ‘TRUE’ binds by matching column name, ‘FALSE’ by position
+#' @param use_names ‘TRUE’ binds by matching column name, ‘FALSE’ by position
 #' @param headers Logical. TRUE inserts the colnames of `y` as an extra row between the two tables.
 #' @param ... Additional arguments are ignored.
 #' @aliases rbind2
+#' @examples
+#' library(tinytable)
+#' x = tt(mtcars[1:3, 1:2], caption = "Combine two tiny tables.")
+#' y = tt(mtcars[4:5, 8:10]) 
+#' 
+#' # rbind() does not support additional aarguments
+#' # rbind2() supports additional arguments
+#' 
+#' # basic combination
+#' rbind(x, y)
+#' 
+#' rbind(x, y) |> format_tt(replace_na = "")
+#' 
+#' # omit y header
+#' rbind2(x, y, headers = FALSE)
+#' 
+#' # bind by position rather than column names
+#' rbind2(x, y, use_names = FALSE)
+#' 
 #' @export
 setMethod("rbind2", 
           signature = "tinytable", 
           definition = function(x, y, 
                                 fill = TRUE, 
-                                use.names = TRUE,
+                                use_names = TRUE,
                                 headers = TRUE,
                                 ...) {
 
@@ -38,7 +57,7 @@ setMethod("rbind2",
   assert_class(y, "tinytable")
   assert_dependency("data.table")
   assert_flag(fill)
-  assert_flag(use.names)
+  assert_flag(use_names)
   assert_flag(headers)
 
   x_df <- print(x, output = "dataframe")
@@ -50,7 +69,7 @@ setMethod("rbind2",
 
   out <- data.table::rbindlist(list(x_df, y_df), 
                                fill = fill,
-                               use.names = use.names)
+                               use.names = use_names)
 
   out <- tt(out)
 

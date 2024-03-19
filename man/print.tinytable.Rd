@@ -2,14 +2,14 @@
 % Please edit documentation in R/print.R
 \name{print.tinytable}
 \alias{print.tinytable}
-\title{Print a tinytable to console or in an HTML viewer pane}
+\title{Print, display, or convert a tinytable object}
 \usage{
 \method{print}{tinytable}(x, output = getOption("tinytable_print_output", default = NULL), ...)
 }
 \arguments{
 \item{x}{A data frame or data table to be rendered as a table.}
 
-\item{output}{format in which a Tiny Table is printed: \code{NULL} or one of \code{"latex"}, \code{"markdown"}, \code{"html"}, \code{"typst"}. If \code{NULL}, the output is chosen based on these rules:
+\item{output}{format in which a Tiny Table is printed: \code{NULL} or one of \code{"latex"}, \code{"markdown"}, \code{"html"}, \code{"typst"}, \code{"dataframe"}. If \code{NULL}, the output is chosen based on these rules:
 \itemize{
 \item When called from a script in non-interactive mode, the default is "markdown" (\code{interactive() == FALSE}).
 \item When called interactively in RStudio, the default is to display an HTML table in the viewer pane.
