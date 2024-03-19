@@ -3,7 +3,7 @@
 #' @details
 #' `format_tt()` calls applied to `x` or `y` are evaluated before binding, to allow distinct formatting for each panel.
 #'
-#' Calls to other `tinytable` function such as `style_tt()` or `group_tt()` are ignored when applied to `x` or `y`. These functions should be applied to the final table instead.
+#' Calls to other `tinytable` functions such as `style_tt()` or `group_tt()` are ignored when applied to `x` or `y`. These functions should be applied to the final table instead.
 #'
 #' Information in these S4 slots is carried over from `x` to the combined table:
 #'
@@ -13,10 +13,9 @@
 #'
 #' Information in these S4 slots is concatenated and carried over to the combined table:
 #'
-#' + `x@notes`
-#' + `y@notes`
+#' + `c(x@notes, y@notes)`
 #'
-#' This function requires the `data.table` package.
+#' This function relies on the `rbindlist()` function from the `data.table` package.
 #'
 #' @param x `tinytable` object
 #' @param y `tinytable` object

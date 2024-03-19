@@ -1146,22 +1146,23 @@ tt(tmp, width = .8, caption = cap) |>
 Tables can be combined with the usual `rbind()` function:
 
 ```{r}
-x = tt(mtcars[1:3, 1:2], caption = "Combine two tiny tables.")
-y = tt(mtcars[4:5, 8:10]) 
+a <- tt(mtcars[1:3, 1:2], caption = "Combine two tiny tables.")
+b <- tt(mtcars[4:5, 8:10]) 
 
-rbind(x, y)
+rbind(a, b)
 
-rbind(x, y) |> format_tt(replace_na = "")
+rbind(a, mtcars[1:3, 1:4])
+rbind(a, b) |> format_tt(replace_na = "")
 ```
 
 The `rbind2()` S4 method is slightly more flexible than `rbind()`, as it supports arguments `headers` and `use.names`.
 
 ```{r}
 # omit y header
-rbind2(x, y, headers = FALSE)
+rbind2(a, b, headers = FALSE)
 
 # bind by position rather than column names
-rbind2(x, y, use_names = FALSE)
+rbind2(a, b, use_names = FALSE)
 ```
 
 

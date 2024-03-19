@@ -26,7 +26,7 @@ Combine \code{tinytable} objects by rows (vertically)
 \details{
 \code{format_tt()} calls applied to \code{x} or \code{y} are evaluated before binding, to allow distinct formatting for each panel.
 
-Calls to other \code{tinytable} function such as \code{style_tt()} or \code{group_tt()} are ignored when applied to \code{x} or \code{y}. These functions should be applied to the final table instead.
+Calls to other \code{tinytable} functions such as \code{style_tt()} or \code{group_tt()} are ignored when applied to \code{x} or \code{y}. These functions should be applied to the final table instead.
 
 Information in these S4 slots is carried over from \code{x} to the combined table:
 \itemize{
@@ -37,11 +37,10 @@ Information in these S4 slots is carried over from \code{x} to the combined tabl
 
 Information in these S4 slots is concatenated and carried over to the combined table:
 \itemize{
-\item \code{x@notes}
-\item \code{y@notes}
+\item \code{c(x@notes, y@notes)}
 }
 
-This function requires the \code{data.table} package.
+This function relies on the \code{rbindlist()} function from the \code{data.table} package.
 }
 \examples{
 library(tinytable)
