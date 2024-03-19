@@ -100,7 +100,7 @@ tt(x)
 
 <p align="center">
 
-<img src="man/figures/readme_01.png" height = "250" class = "center">
+<img src="man/figures/readme_01.png" height = "180" class = "center">
 <br>
 
 More complex tables can be created by calling arguments and chaining
@@ -127,7 +127,7 @@ tt(x,
 
 <p align="center">
 
-<img src="man/figures/readme_02.png" height = "450" class = "center">
+<img src="man/figures/readme_02.png" height = "350" class = "center">
 <br>
 
 ## Tutorial
