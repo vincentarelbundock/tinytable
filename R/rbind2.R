@@ -8,15 +8,22 @@
 #'
 #' Calls to other `tinytable` function such as `style_tt()` or `group_tt()` are ignored when applied to `x` or `y`. These functions should be applied to the final table instead.
 #'
-#' @inheritParams data.table::rbindlist
+#' This function requires the `data.table` package.
+#' @param x `tinytable` object
+#' @param y `tinytable` object
+#' @param fill Logical. TRUE fills the missing columns with `NA`
+#' @param use.names ‘TRUE’ binds by matching column name, ‘FALSE’ by position
 #' @param headers Logical. TRUE inserts the colnames of `y` as an extra row between the two tables.
+#' @name rbind2
+#' @rdname rbind2
+#' @aliases rbind2,tinytable
 #' @export
 setMethod("rbind2", 
           signature = "tinytable", 
           definition = function(x, y, 
                                 fill = TRUE, 
                                 use.names = TRUE,
-                                headers = FALSE,
+                                headers = TRUE,
                                 ...) {
 
   assert_class(x, "tinytable")
@@ -29,7 +36,7 @@ setMethod("rbind2",
   x <- print(x, output = "dataframe")
   y <- print(y, output = "dataframe")
 
-  if (isTRUE(headers)) {
+  if (isTRUE(headers) && !is.null(colnames(y))) {
     y <- base::rbind(colnames(y), y)
   }
 
@@ -39,6 +46,5 @@ setMethod("rbind2",
 
   out <- tt(out)
 
-  # TODO: restore other lazy things
   return(out)
 })
