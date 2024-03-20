@@ -7,12 +7,16 @@ New features:
 * `rbind()` and `rbind2()` can be used to stack `tinytable` objects. `rbind2()` is more flexible than `rbind()`. See `?tinytable::rbind2`
 * New output format in `print()`: "dataframe"
 * Rename table headers: `colnames(tab) <- c("a", "b", "c")` 
-* `theme_tt("resize")` gets a `direction` argument with "up", "down", "both" options.
+* `theme_tt("resize")` gets a `direction` argument with "up", "down", "both" options. Thanks to @MarcoPortmann for feature request #207
 
 Minor:
 
 * Informative error message when no default browser is selected via global options.
 * Fix CRAN errors on Mac old releases.
+
+Bugs:
+
+* `theme_tt()` resize issue with `talltblr` environment and notes in LaTeX. Thanks to @MarcoPortmann for reporting issue #206
 
 
 ## 0.1.0

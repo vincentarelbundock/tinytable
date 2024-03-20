@@ -64,11 +64,11 @@ theme_resize <- function(x, width = 1, direction = "down", ...) {
           new <- sprintf("\\resizebox{\\ifdim\\width<\\linewidth %s\\linewidth\\else\\width\\fi}{!}{", width)
         }
 
-        reg <- "\\\\begin\\{tblr\\}"
+        reg <- "\\\\begin\\{tblr\\}|\\\\begin\\{talltblr\\}"
         tab <- lines_insert(tab, regex = reg, new = new, position = "before")
 
         new <- "}"
-        reg <- "\\\\end\\{tblr\\}"
+        reg <- "\\\\end\\{tblr\\}|\\\\end\\{talltblr\\}"
         tab <- lines_insert(tab, regex = reg, new = new, position = "after")
 
         table@table_string <- tab

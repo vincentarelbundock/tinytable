@@ -50,7 +50,7 @@ lines_insert <- function(old, new, regex, position = "before") {
     lines <- strsplit(old, "\n")[[1]]
     idx <- grep(regex, lines)
     if (length(idx) != 1 || anyNA(idx)) {
-          stop("The `regex` supplied `lines_drop()` did not match a unique line.", call. = FALSE)
+          stop("The `regex` supplied `lines_insert()` did not match a unique line.", call. = FALSE)
     }
     if (position == "before") {
         top <- lines[1:(idx - 1)]
