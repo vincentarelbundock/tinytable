@@ -7,6 +7,7 @@ New features:
 * `rbind()` and `rbind2()` can be used to stack `tinytable` objects. `rbind2()` is more flexible than `rbind()`. See `?tinytable::rbind2`
 * New output format in `print()`: "dataframe"
 * Rename table headers: `colnames(tab) <- c("a", "b", "c")` 
+* `theme_tt("resize")` gets a `direction` argument with "up", "down", "both" options.
 
 Minor:
 

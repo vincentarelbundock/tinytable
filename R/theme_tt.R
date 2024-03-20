@@ -45,9 +45,10 @@ theme_tabular <- function(x, ...) {
 }
 
 
-theme_resize <- function(x, width = 1, ...) {
+theme_resize <- function(x, width = 1, direction = "down", ...) {
     assert_class(x, "tinytable")
     assert_numeric(width, len = 1, lower = 0.01, upper = 1)
+    assert_choice(direction, c("down", "up", "both"))
     # do not change the default theme
     if (identical(x@theme[[1]], "resize")) x@theme <- list("default")
     fn <- function(table) {
@@ -55,7 +56,14 @@ theme_resize <- function(x, width = 1, ...) {
 
         tab <- table@table_string
 
-        new <- sprintf("\\resizebox{%s\\linewidth}{!}{", width)
+        if (direction == "both") {
+          new <- sprintf("\\resizebox{%s\\linewidth}{!}{", width)
+        } else if (direction == "down") {
+          new <- sprintf("\\resizebox{\\ifdim\\width>\\linewidth %s\\linewidth\\else\\width\\fi}{!}{", width)
+        } else if (direction == "up") {
+          new <- sprintf("\\resizebox{\\ifdim\\width<\\linewidth %s\\linewidth\\else\\width\\fi}{!}{", width)
+        }
+
         reg <- "\\\\begin\\{tblr\\}"
         tab <- lines_insert(tab, regex = reg, new = new, position = "before")
 
@@ -258,6 +266,7 @@ theme_dictionary <- list(
 #' resize
 #' 
 #' + `width`: A numeric value between 0.01 and 1, representing the proportion of the line width to use
+#' + `direction`: "down", "up", "both" A string indicating if the table should be scaled in one direction. For example, "down" will only resize the table if it exceeds `\linewidth`
 #' 
 #' multipage
 #' 

@@ -37,6 +37,7 @@ Each theme can have specific arguments, which are passed to the \code{theme_tt()
 resize
 \itemize{
 \item \code{width}: A numeric value between 0.01 and 1, representing the proportion of the line width to use
+\item \code{direction}: "down", "up", "both" A string indicating if the table should be scaled in one direction. For example, "down" will only resize the table if it exceeds \verb{\\linewidth}
 }
 
 multipage
