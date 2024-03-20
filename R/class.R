@@ -1,7 +1,13 @@
 swap_class <- function(x, new_class) {
   out <- methods::new(new_class)
   for (s in methods::slotNames(x)) {
-    methods::slot(out, s) <- methods::slot(x, s)
+    # modelsummary issue #727
+    tmp <- methods::slot(x, s)
+    if (inherits(tmp, "data.table")) {
+      assert_dependency("data.table")
+      data.table::setDT(tmp)
+    }
+    methods::slot(out, s) <- tmp
   }
   return(out)
 }
