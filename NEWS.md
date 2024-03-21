@@ -1,5 +1,9 @@
 # News
 
+## Development
+
+* `colnames` and `colnames<-` are now exported functions.
+
 ## 0.2.0
 
 New features:

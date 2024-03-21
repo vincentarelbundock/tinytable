@@ -1141,7 +1141,26 @@ tt(tmp, width = .8, caption = cap) |>
 :::
 
 
-# Combining tables
+# Combination and exploration
+
+Tables can be explored, modified, and combined using many of the usual base `R` functions:
+
+```{r}
+a <- tt(mtcars[1:2, 1:2])
+a
+
+dim(a)
+ncol(a)
+nrow(a)
+colnames(a)
+```
+
+Rename columns:
+
+```{r}
+colnames(a) <- c("a", "b")
+a
+```
 
 Tables can be combined with the usual `rbind()` function:
 

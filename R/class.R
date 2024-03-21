@@ -95,6 +95,7 @@ setMethod("ncol", "tinytable", function(x) return(x@ncol))
 #' 
 #' @inheritParams tt
 #' @keywords internal
+#' @export
 setMethod("colnames", "tinytable", function(x) return(x@names))
 
 
@@ -102,6 +103,7 @@ setMethod("colnames", "tinytable", function(x) return(x@names))
 #' 
 #' @inheritParams tt
 #' @keywords internal
+#' @export
 setReplaceMethod("colnames",
                  signature = "tinytable", 
                  definition = function(x, value) {
