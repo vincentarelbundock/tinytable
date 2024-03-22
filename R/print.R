@@ -81,8 +81,10 @@ print.tinytable <- function(x,
     # for plot_tt() inline plots to show up in RStudio
     htmlFile <- file.path(dir, "index.html")
     cat(tab, file = htmlFile)
-    if (isTRUE(check_dependency("rstudioapi")) && rstudioapi::isAvailable()) {
+
+    if (isTRUE(interactive() && check_dependency("rstudioapi")) && rstudioapi::isAvailable()) {
       rstudioapi::viewer(htmlFile)
+
     } else if (interactive()) {
       msg <- "Please choose a default browser with:
 
@@ -90,6 +92,7 @@ print.tinytable <- function(x,
       "
       if (isTRUE(getOption("browser") == "")) stop(msg, call. = FALSE)
       utils::browseURL(htmlFile)
+
     } else {
       cat(tab, "\n")
     }
