@@ -5,16 +5,17 @@
 # THE ORDER MATTERS A LOT!
 build_tt <- function(x, output = NULL) {
 
-  x@output <- sanitize_output(output)
-
-  x <- switch(x@output,
+  output <- sanitize_output(output)
+  x <- switch(output,
     html = swap_class(x, "tinytable_bootstrap"),
     latex = swap_class(x, "tinytable_tabularray"),
     markdown = swap_class(x, "tinytable_grid"),
     typst = swap_class(x, "tinytable_typst"),
     dataframe = swap_class(x, "tinytable_dataframe"),
   )
-
+  
+  x@output <- output
+  
   # groups must increment indices here
   for (idx in seq_along(x@lazy_group)) {
     l <- x@lazy_group[[idx]]

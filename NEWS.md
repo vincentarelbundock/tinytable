@@ -3,6 +3,7 @@
 ## Development
 
 * `colnames` and `colnames<-` are now exported functions.
+* RStudio displays table in HTML viewer instead of markdown in the console.
 
 ## 0.2.0
 

@@ -23,13 +23,12 @@ sanitize_j <- function(j, x) {
 }
 
 sanitize_output <- function(output) {
-  assert_choice(output, choice = c("markdown", "latex", "html", "typst", "dataframe"), null.ok = TRUE)
+  assert_choice(output, choice = c("tinytable", "markdown", "latex", "html", "typst", "dataframe"), null.ok = TRUE)
 
   # default output format
-  if (is.null(output)) {
+  if (isTRUE(output == "tinytable")) {
     in_rstudio <- interactive() && isTRUE(check_dependency("rstudioapi")) && rstudioapi::isAvailable()
     out <- getOption("tt_output_default", default = if (in_rstudio) "html" else "markdown")
-
   } else {
     out <- output
   }
@@ -57,9 +56,6 @@ sanitize_output <- function(output) {
       if (is.null(output)) out <- "typst"
 
     } else if (isTRUE(knitr::pandoc_to() == "docx")) {
-      if (is.null(output)) out <- "markdown"
-
-    } else if (isTRUE(knitr::pandoc_to() == "commonmark")) {
       if (is.null(output)) out <- "markdown"
 
     } else {

@@ -69,7 +69,7 @@ setMethod("initialize", "tinytable", function(
   .Object@nhead <- if (is.null(colnames(data))) 0 else 1
   .Object@names <- if (is.null(colnames(data))) character() else colnames(data)
   .Object@id <- get_id("tinytable_")
-  .Object@output <- "markdown"
+  .Object@output <- "tinytable"
   .Object@output_dir <- getwd()
   # conditional: allows NULL user input
   if (!is.null(placement)) .Object@placement <- placement

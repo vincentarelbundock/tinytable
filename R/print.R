@@ -57,9 +57,9 @@ print.tinytable <- function(x,
                             ...){
 
   if (is.null(output)) {
-    output <- x@output
+    output <- sanitize_output(x@output)
   } else {
-    assert_choice(output, c("latex", "markdown", "html", "typst", "dataframe"))
+    output <- sanitize_output(output)
   }
 
   if (output == "html") {
