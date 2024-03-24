@@ -11,6 +11,7 @@ requiet <- function(package) {
     return(pkg_available)
 }
 
+requiet("tinytable")
 requiet("tinytest")
 requiet("tinysnapshot")
 
