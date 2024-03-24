@@ -72,9 +72,9 @@ tt <- function(x,
   notes <- sanitize_notes(notes)
 
 
-  # x should be a data frame, not a tibble, for indexing convenience
+  # x should be a data frame, not a tibble or slopes, for indexing convenience
   assert_data_frame(x, min_rows = 1, min_cols = 1)
-  if (inherits(x, "tbl_df")) {
+  if (!isTRUE(identical(class(x), "data.frame"))) {
     cn <- colnames(x)
     x <- as.data.frame(x, check.names = FALSE)
     colnames(x) <- cn
