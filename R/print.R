@@ -62,6 +62,8 @@ print.tinytable <- function(x,
     output <- sanitize_output(output)
   }
 
+  message(output)
+
   if (output == "html") {
     dir <- tempfile()
     dir.create(dir)
@@ -106,5 +108,5 @@ print.tinytable <- function(x,
 
 
 setMethod("show", "tinytable", function(object) {
-  print.tinytable(object, output = object@output)
+  print.tinytable(object, output = getOption("tinytable_print_output", default = NULL))
 })
