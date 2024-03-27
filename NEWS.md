@@ -6,6 +6,7 @@
 * `colnames` and `colnames<-` are now exported functions.
 * `tt()` supports data.frame-like objects which also inherit from other classes, ex: `marginaleffects::slopes()`
 
+
 ## 0.2.0
 
 New features:
