@@ -90,7 +90,8 @@ print.tinytable <- function(x,
 
       options(browser = 'firefox')
       "
-      if (isTRUE(getOption("browser") == "")) stop(msg, call. = FALSE)
+      br <- getOption("browser")
+      if (is.character(br) && identical(br, "")) stop(msg, call. = FALSE)
       utils::browseURL(htmlFile)
 
     } else {
