@@ -62,8 +62,6 @@ print.tinytable <- function(x,
     output <- sanitize_output(output)
   }
 
-  message(output)
-
   if (output == "html") {
     dir <- tempfile()
     dir.create(dir)
