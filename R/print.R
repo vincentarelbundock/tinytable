@@ -82,7 +82,7 @@ print.tinytable <- function(x,
     htmlFile <- file.path(dir, "index.html")
     cat(tab, file = htmlFile)
 
-    if (isTRUE(interactive() && check_dependency("rstudioapi")) && rstudioapi::isAvailable()) {
+    if (isTRUE(interactive()) && isTRUE(check_dependency("rstudioapi")) && rstudioapi::isAvailable()) {
       rstudioapi::viewer(htmlFile)
 
     } else if (interactive()) {
