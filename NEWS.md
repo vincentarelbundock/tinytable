@@ -5,6 +5,7 @@
 * RStudio displays table in HTML viewer by default when the `rstudioapi` package is available.
 * `colnames` and `colnames<-` are now exported functions.
 * `tt()` supports data.frame-like objects which also inherit from other classes, ex: `marginaleffects::slopes()`
+* Bug: `options(tinytable_tt_print)` is respected in `print()` without argument.
 
 
 ## 0.2.0
