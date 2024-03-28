@@ -65,7 +65,8 @@ setMethod(
 
   } else if (length(x@width) > 1) {
     tabularray_cols <- sprintf("X[%s]", x@width)
-    # spec <- sprintf("width={%s\\linewidth},", round(sum(x@width), 4))
+    spec <- sprintf("width={%s\\linewidth},", round(sum(x@width), 4))
+    out <- tabularray_insert(out, content = spec, type = "inner")
   }
 
   # colspec (we don't need rowspec)
