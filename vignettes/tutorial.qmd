@@ -50,7 +50,7 @@ tt(x)
 
 ## Width
 
-The `width` arguments accepts a number between 0 and 1, indicating what proportion of the linewidth the table should cover:
+The `width` arguments indicating what proportion of the line width the table should cover. This argument accepts a number between 0 and 1 to control the whole table width, or a vector of numeric values between 0 and 1, representing each column.
 
 ```{r}
 tt(x, width = 0.5)
@@ -60,7 +60,14 @@ tt(x, width = 0.5)
 tt(x, width = 1)
 ```
 
+We can control individual columns by supplying a vector. In that case, the sum of `width` elements determines the full table width. For example, this table takes 70% of available width, with the first column 3 times as large as the other ones.
+
+```{r}
+tt(x, width = c(.3, .1, .1, .1, .1))
+```
+
 When specifying a table `width`, the text is automatically wrapped to appropriate size:
+
 
 ```{r}
 lorem <- data.frame(

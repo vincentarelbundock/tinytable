@@ -19,6 +19,4 @@ test: install ## test
 	Rscript -e "library(tinytable);tinytest::run_test_dir()"
 
 website: install ## render vignettes and website
-	Rscript -e "altdoc::render_docs(verbose = TRUE)"
-	rm -rf _quarto
-	rm -rf ~/Downloads/tinytable_website && cp -r docs ~/Downloads/tinytable_website
+	Rscript -e "altdoc::render_docs(verbose = TRUE, freeze = TRUE)"

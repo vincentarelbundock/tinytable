@@ -1,5 +1,10 @@
 # News
 
+## Development
+
+* `width` argument of `tt` now accepts a vector of numeric values to control the width of each column, as a proportion of the total linewidth.
+
+
 ## 0.2.1
 
 * RStudio displays table in HTML viewer by default when the `rstudioapi` package is available.
