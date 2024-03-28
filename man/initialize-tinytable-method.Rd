@@ -32,7 +32,7 @@
 \item Function: Applied to the \code{tinytable} object.
 }}
 
-\item{width}{A numeric vector of length 1 or equal to the number of columns in \code{x}. Each entry must be between 0 and 1, and the sum of the \code{width} vector must also be smaller than or equal to 1. If a single numeric value is provided, \code{width} represents the width of the full table in proportion of the line width. If a vector is supplied, each value represents the horizontal proportion taken up by each column.}
+\item{width}{Table or column width. A single numeric value smaller than 1 determines the full table width, in proportion to line width. A numeric vector of length equal to the number of columns in \code{x} determines the width of each column, in proportion to line width. The sum of the \code{width} vector cannot exceed 1.}
 }
 \description{
 Method for a tinytable S4 object

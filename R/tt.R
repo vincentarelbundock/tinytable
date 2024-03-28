@@ -15,7 +15,7 @@
 #' @param x A data frame or data table to be rendered as a table.
 #' @param digits Number of significant digits to keep for numeric variables. When `digits` is an integer, `tt()` calls `format_tt(x, digits = digits)` before proceeding to draw the table. Users who need more control can use the `format_tt()` function.
 #' @param caption A string that will be used as the caption of the table.
-#' @param width A numeric vector of length 1 or equal to the number of columns in `x`. Each entry must be between 0 and 1, and the sum of the `width` vector must also be smaller than or equal to 1. If a single numeric value is provided, `width` represents the width of the full table in proportion of the line width. If a vector is supplied, each value represents the horizontal proportion taken up by each column.
+#' @param width Table or column width. A single numeric value smaller than 1 determines the full table width, in proportion to line width. A numeric vector of length equal to the number of columns in `x` determines the width of each column, in proportion to line width. The sum of the `width` vector cannot exceed 1.
 #' @param theme Function or string.
 #' - String: `r paste(setdiff(names(theme_dictionary), "default"), collapse = ", ")`
 #' - Function: Applied to the `tinytable` object.
