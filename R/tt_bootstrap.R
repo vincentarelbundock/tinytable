@@ -69,6 +69,13 @@ setMethod(
       template,
       fixed = TRUE
     )
+  } else if (length(x@width) > 1) {
+    template <- sub(
+      "width: auto;",
+      sprintf('table-layout: fixed; width: %s%% !important;', round(sum(x@width) * 100)),
+      template,
+      fixed = TRUE
+    )
   }
 
   # (pseudo-)unique table IDs
@@ -125,6 +132,13 @@ setMethod(
     x <- style_eval(x, bootstrap_class = "table table-bordered")
   } else if ("void" %in% x@theme[[1]]) {
     x <- style_eval(x, bootstrap_class = "table table-borderless")
+  }
+
+  if (length(x@width) > 1) {
+      for (j in seq_len(ncol(x))) {
+          css <- sprintf("width: %s%%;", x@width[j] / sum(x@width) * 100)
+          x <- style_eval(x, j = j, bootstrap_css = css)
+      }
   }
 
   return(x)

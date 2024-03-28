@@ -15,7 +15,7 @@
 #' @param x A data frame or data table to be rendered as a table.
 #' @param digits Number of significant digits to keep for numeric variables. When `digits` is an integer, `tt()` calls `format_tt(x, digits = digits)` before proceeding to draw the table. Users who need more control can use the `format_tt()` function.
 #' @param caption A string that will be used as the caption of the table.
-#' @param width A numeric value between 0 and 1 indicating the proportion of the line width that the table should cover.
+#' @param width A numeric vector of length 1 or equal to the number of columns in `x`. Each entry must be between 0 and 1, and the sum of the `width` vector must also be smaller than or equal to 1. If a single numeric value is provided, `width` represents the width of the full table in proportion of the line width. If a vector is supplied, each value represents the horizontal proportion taken up by each column.
 #' @param theme Function or string.
 #' - String: `r paste(setdiff(names(theme_dictionary), "default"), collapse = ", ")`
 #' - Function: Applied to the `tinytable` object.
@@ -67,9 +67,10 @@ tt <- function(x,
 
   # sanity checks
   assert_string(caption, null.ok = TRUE)
-  assert_numeric(width, len = 1, lower = 0, upper = 1, null.ok = TRUE)
+  assert_numeric(width, lower = 0, upper = 1, null.ok = TRUE)
   assert_integerish(digits, len = 1, null.ok = TRUE)
   notes <- sanitize_notes(notes)
+
 
 
   # x should be a data frame, not a tibble or slopes, for indexing convenience
@@ -78,6 +79,15 @@ tt <- function(x,
     cn <- colnames(x)
     x <- as.data.frame(x, check.names = FALSE)
     colnames(x) <- cn
+  }
+
+  if (!length(width) %in% c(0, 1, ncol(x))) {
+      msg <- sprintf("The `width` argument must have length 1 or %s.", ncol(x))
+      stop(msg, call. = FALSE)
+  }
+  if (sum(width) > 1) {
+      msg <- "The sum of the `width` argument must be equal to or less than 1."
+      stop(msg, call. = FALSE)
   }
 
   # formatting options are limited here

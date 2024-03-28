@@ -29,7 +29,7 @@ tt(
 \item A named list with positions inserts markers as superscripts inside table cells: \code{list("a" = list(i = 0:1, j = 2, text = "Hello World"))}
 }}
 
-\item{width}{A numeric value between 0 and 1 indicating the proportion of the line width that the table should cover.}
+\item{width}{A numeric vector of length 1 or equal to the number of columns in \code{x}. Each entry must be between 0 and 1, and the sum of the \code{width} vector must also be smaller than or equal to 1. If a single numeric value is provided, \code{width} represents the width of the full table in proportion of the line width. If a vector is supplied, each value represents the horizontal proportion taken up by each column.}
 
 \item{theme}{Function or string.
 \itemize{
