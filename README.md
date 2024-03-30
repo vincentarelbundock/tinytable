@@ -75,11 +75,13 @@ install.packages("tinytable")
 
 `tinytable` is a relatively new package with rapid development. If you
 want to benefit from the latest features—showcased on the package
-website—you may want to install the development version from Github.
+website—you may want to install from R-Universe:
 
 ``` r
-library(remotes)
-install_github("vincentarelbundock/tinytable")
+install.packages(
+    "tinytable", 
+    repos = c("https://vincentarelbundock.r-universe.dev", "https://cran.r-project.org")
+)
 ```
 
 Restart `R` completely for the installation to take effect.
