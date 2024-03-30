@@ -78,10 +78,7 @@ want to benefit from the latest features—showcased on the package
 website—you may want to install from R-Universe:
 
 ``` r
-install.packages(
-    "tinytable", 
-    repos = c("https://vincentarelbundock.r-universe.dev", "https://cran.r-project.org")
-)
+install.packages("tinytable", repos = "https://vincentarelbundock.r-universe.dev")
 ```
 
 Restart `R` completely for the installation to take effect.
