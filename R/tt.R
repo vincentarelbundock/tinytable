@@ -15,7 +15,9 @@
 #' @param x A data frame or data table to be rendered as a table.
 #' @param digits Number of significant digits to keep for numeric variables. When `digits` is an integer, `tt()` calls `format_tt(x, digits = digits)` before proceeding to draw the table. Users who need more control can use the `format_tt()` function.
 #' @param caption A string that will be used as the caption of the table.
-#' @param width Table or column width. A single numeric value smaller than 1 determines the full table width, in proportion to line width. A numeric vector of length equal to the number of columns in `x` determines the width of each column, in proportion to line width. The sum of the `width` vector cannot exceed 1.
+#' @param width Table or column width. 
+#' - Single numeric value smaller than or equal to 1 determines the full table width, in proportion of line width. 
+#' - Numeric vector of length equal to the number of columns in `x` determines the width of each column, in proportion of line width. If the sum of `width` exceeds 1, each element is divided by `sum(width)`. This makes the table full-width with relative column sizes.
 #' @param theme Function or string.
 #' - String: `r paste(setdiff(names(theme_dictionary), "default"), collapse = ", ")`
 #' - Function: Applied to the `tinytable` object.
@@ -67,11 +69,8 @@ tt <- function(x,
 
   # sanity checks
   assert_string(caption, null.ok = TRUE)
-  assert_numeric(width, lower = 0, upper = 1, null.ok = TRUE)
   assert_integerish(digits, len = 1, null.ok = TRUE)
   notes <- sanitize_notes(notes)
-
-
 
   # x should be a data frame, not a tibble or slopes, for indexing convenience
   assert_data_frame(x, min_rows = 1, min_cols = 1)
@@ -81,13 +80,13 @@ tt <- function(x,
     colnames(x) <- cn
   }
 
+  assert_numeric(width, lower = 0, null.ok = TRUE)
   if (!length(width) %in% c(0, 1, ncol(x))) {
       msg <- sprintf("The `width` argument must have length 1 or %s.", ncol(x))
       stop(msg, call. = FALSE)
   }
   if (sum(width) > 1) {
-      msg <- "The sum of the `width` argument must be equal to or less than 1."
-      stop(msg, call. = FALSE)
+      width <- width / sum(width)
   }
 
   # formatting options are limited here
