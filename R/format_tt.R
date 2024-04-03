@@ -16,13 +16,16 @@
 #' @param date A string passed to the `format()` function, such as "%Y-%m-%d". See the "Details" section in `?strptime`
 #' @param bool A function to format logical columns. Defaults to title case.
 #' @param other A function to format columns of other types. Defaults to `as.character()`.
-#' @param replace_na String to display instead of `NA` or `NaN`.
+#' @param replace String or Named list of vectors
+#' - String: Replace `NA` entries by the string.
+#' - Named list: Matching elements of the vectors by theirs names. Ex: `replace=list("-"=c(NA,NaN), "Small"=-Inf, "Big"=Inf)`
 #' @param escape Logical or "latex" or "html". If TRUE, escape special characters to display them as text in the format of the output of a `tt()` table.
 #' - If `i` is `NULL`, escape the `j` columns and column names.
 #' - If `i` and `j` are both `NULL`, escape all cells, column names, caption, notes, and spanning labels created by `group_tt()`.
 #' @param markdown Logical; if TRUE, render markdown syntax in cells. Ex: `_italicized text_` is properly italicized in HTML and LaTeX.
 #' @param fn Function for custom formatting. Accepts a vector and returns a character vector of the same length.
 #' @param sprintf String passed to the `?sprintf` function to format numbers or interpolate strings with a user-defined pattern (similar to the `glue` package, but using Base R).
+#' @param ... Additional arguments are ignored.
 #' @inheritParams tt
 #' @inheritParams style_tt
 #'
@@ -57,7 +60,7 @@
 #' format_tt(x, markdown=TRUE)
 #'
 #' tab <- data.frame(a = c(NA, 1, 2), b = c(3, NA, 5))
-#' tt(tab) |> format_tt(replace_na = "-")
+#' tt(tab) |> format_tt(replace = "-")
 #'
 #' dat <- data.frame(
 #'    "LaTeX" = c("Dollars $", "Percent %", "Underscore _"),
@@ -77,15 +80,22 @@ format_tt <- function(x,
                       date = "%Y-%m-%d",
                       bool = function(column) tools::toTitleCase(tolower(column)),
                       other = as.character,
-                      replace_na = "",
+                      replace = "",
                       escape = FALSE,
                       markdown = FALSE,
                       fn = NULL,
-                      sprintf = NULL
+                      sprintf = NULL,
+                      ...
                       ) {
 
 
   out <- x
+
+  dots <- list(...)
+  if ("replace_na" %in% names(dots)) {
+      replace <- dots[["replace_na"]]
+      warning("The `replace_na` argument was renamed `replace`.", call. = FALSE)
+  }
 
   if (inherits(out, "tinytable")) {
     cal <- call("format_tt_lazy", 
@@ -97,7 +107,7 @@ format_tt <- function(x,
                 num_suffix = num_suffix,
                 num_mark_big = num_mark_big,
                 num_mark_dec = num_mark_dec,
-                replace_na = replace_na,
+                replace = replace,
                 fn = fn,
                 sprintf = sprintf,
                 url = url,
@@ -118,7 +128,7 @@ format_tt <- function(x,
                           num_suffix = num_suffix,
                           num_mark_big = num_mark_big,
                           num_mark_dec = num_mark_dec,
-                          replace_na = replace_na,
+                          replace = replace,
                           fn = fn,
                           sprintf = sprintf,
                           url = url,
@@ -141,7 +151,7 @@ format_tt_lazy <- function(x,
                            num_suffix = FALSE,
                            num_mark_big = "",
                            num_mark_dec = NULL,
-                           replace_na = "",
+                           replace = "",
                            fn = NULL,
                            sprintf = NULL,
                            url = FALSE,
@@ -162,7 +172,7 @@ format_tt_lazy <- function(x,
     ori <- out <- x
   } else if (inherits(x, "tinytable")){
     atomic_vector <- FALSE
-    # if no other format_tt() call has been applied, we can have numeric values
+    # if no other format_tt() call has been applied, we ctan have numeric values
     out <- x@table_dataframe
     ori <- x@data
   } else {
@@ -175,7 +185,6 @@ format_tt_lazy <- function(x,
   assert_flag(num_zero)
   assert_string(num_mark_big)
   assert_string(num_mark_dec)
-  assert_string(replace_na)
   assert_string(date)
   assert_function(bool)
   assert_function(identity)
@@ -185,6 +194,11 @@ format_tt_lazy <- function(x,
   if (is.null(j)) jnull <- TRUE else jnull <- FALSE
   if (is.null(i)) inull <- TRUE else inull <- FALSE
   j <- sanitize_j(j, ori)
+  if (!isTRUE(check_string(replace))) {
+      assert_list(replace, named = TRUE)
+  } else {
+      replace <- stats::setNames(list(NA), replace)
+  }
 
   if (is.null(digits)) {
     if (num_mark_big != "") stop("`num_mark_big` requires a `digits` value.", call. = FALSE)
@@ -267,8 +281,11 @@ format_tt_lazy <- function(x,
       }
     }
 
-    # replace missing values by `na`
-    out[i, col][is.na(ori[i, col]) | is.nan(ori[i, col])] <- replace_na
+    for (j in seq_along(replace)) {
+        idx <- ori[i, col] %in% replace[[j]]
+        out[i, col][idx] <- names(replace)[[j]]
+    }
+
   } # loop over columns
 
   # Custom functions overwrite all the other formatting, but is before markdown

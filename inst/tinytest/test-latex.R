@@ -123,7 +123,7 @@ expect_snapshot_print(tab, label = "latex-placement")
 # Missing value replacement
 tab <- data.frame(a = c(NA, 1, 2), b = c(3, NA, 5))
 expect_snapshot_print(
-  tt(tab) |> format_tt(replace_na = "-"),
+  tt(tab) |> format_tt(replace = "-"),
   label = "latex-missing_value_replacement")
 
 # Escape special characters

@@ -18,11 +18,12 @@ format_tt(
   date = "\%Y-\%m-\%d",
   bool = function(column) tools::toTitleCase(tolower(column)),
   other = as.character,
-  replace_na = "",
+  replace = "",
   escape = FALSE,
   markdown = FALSE,
   fn = NULL,
-  sprintf = NULL
+  sprintf = NULL,
+  ...
 )
 }
 \arguments{
@@ -55,7 +56,11 @@ format_tt(
 
 \item{other}{A function to format columns of other types. Defaults to \code{as.character()}.}
 
-\item{replace_na}{String to display for missing values.}
+\item{replace}{String or Named list of vectors
+\itemize{
+\item String: Replace \code{NA} entries by the string.
+\item Named list: Matching elements of the vectors by theirs names. Ex: \code{replace=list("-"=c(NA,NaN), "Small"=-Inf, "Big"=Inf)}
+}}
 
 \item{escape}{Logical or "latex" or "html". If TRUE, escape special characters to display them as text in the format of the output of a \code{tt()} table.
 \itemize{
@@ -68,6 +73,8 @@ format_tt(
 \item{fn}{Function for custom formatting. Accepts a vector and returns a character vector of the same length.}
 
 \item{sprintf}{String passed to the \code{?sprintf} function to format numbers or interpolate strings with a user-defined pattern (similar to the \code{glue} package, but using Base R).}
+
+\item{...}{Additional arguments are ignored.}
 }
 \value{
 A data frame with formatted columns.
@@ -107,7 +114,7 @@ x <- tt(data.frame(Text = c("_italicized text_", "__bold text__")))
 format_tt(x, markdown=TRUE)
 
 tab <- data.frame(a = c(NA, 1, 2), b = c(3, NA, 5))
-tt(tab) |> format_tt(replace_na = "-")
+tt(tab) |> format_tt(replace = "-")
 
 dat <- data.frame(
    "LaTeX" = c("Dollars $", "Percent \%", "Underscore _"),
