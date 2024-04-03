@@ -139,7 +139,7 @@ check_integerish <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok 
   if (!is.null(len) && length(x) != len) return(FALSE)
   if (!is.null(lower) && any(x < lower)) return(FALSE)
   if (!is.null(upper) && any(x > upper)) return(FALSE)
-  if (any(abs(x - round(x)) > (.Machine$double.eps)^0.5)) return(FALSE)
+  if (isTRUE(any(abs(x - round(x)) > (.Machine$double.eps)^0.5))) return(FALSE)
   return(TRUE)
 }
 
@@ -153,7 +153,7 @@ assert_integerish <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok
     if (!is.null(len) && length(x) != len) msg <- paste0(msg, sprintf("; its length must be %s", len))
     if (!is.null(lower) && any(x < lower)) msg <- paste0(msg, sprintf("; all values must be greater than or equal to %s", lower))
     if (!is.null(upper) && any(x > upper)) msg <- paste0(msg, sprintf("; all values must be less than or equal to %s", upper))
-    if (any(abs(x - round(x)) > (.Machine$double.eps)^0.5)) msg <- paste0(msg, "; all values must be close to integers")
+    if (isTRUE(any(abs(x - round(x)) > (.Machine$double.eps)^0.5))) msg <- paste0(msg, "; all values must be close to integers")
     stop(msg, call. = FALSE)
   }
 }

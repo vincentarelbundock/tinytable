@@ -107,4 +107,24 @@ expect_snapshot_print(tab, "format_tt-issue149")
 # expect_error(format_tt(tt(x), num_mark_big = " "))
 
 
+# Issue #218
+options(tinytable_print_output = "dataframe")
+tab <- data.frame(x = 1, y = Inf) |> tt() |> print()
+expect_inherits(tab, "data.frame")
+tab <- data.frame(x = 1, y = NaN) |> tt() |> print()
+expect_inherits(tab, "data.frame")
+tab <- data.frame(x = 1, y = NA) |> tt() |> print()
+expect_inherits(tab, "data.frame")
+tab <- data.frame(x = 1, y = Inf) |> tt() |> print()
+expect_inherits(tab, "data.frame")
+tab <- data.frame(x = 1, y = Inf) |> tt() |> format_tt() |> print()
+expect_inherits(tab, "data.frame")
+tab <- data.frame(x = 1, y = NaN) |> tt() |> format_tt() |> print()
+expect_inherits(tab, "data.frame")
+tab <- data.frame(x = 1, y = NA) |> tt() |> format_tt() |> print()
+expect_inherits(tab, "data.frame")
+options(tinytable_print_output = NULL)
+
+
+
 options(tinytable_print_output = NULL)
