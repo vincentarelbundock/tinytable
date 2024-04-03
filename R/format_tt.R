@@ -16,7 +16,7 @@
 #' @param date A string passed to the `format()` function, such as "%Y-%m-%d". See the "Details" section in `?strptime`
 #' @param bool A function to format logical columns. Defaults to title case.
 #' @param other A function to format columns of other types. Defaults to `as.character()`.
-#' @param replace_na String to display for missing values.
+#' @param replace_na String to display instead of `NA` or `NaN`.
 #' @param escape Logical or "latex" or "html". If TRUE, escape special characters to display them as text in the format of the output of a `tt()` table.
 #' - If `i` is `NULL`, escape the `j` columns and column names.
 #' - If `i` and `j` are both `NULL`, escape all cells, column names, caption, notes, and spanning labels created by `group_tt()`.
@@ -268,7 +268,7 @@ format_tt_lazy <- function(x,
     }
 
     # replace missing values by `na`
-    out[i, col][is.na(ori[i, col])] <- replace_na
+    out[i, col][is.na(ori[i, col]) | is.nan(ori[i, col])] <- replace_na
   } # loop over columns
 
   # Custom functions overwrite all the other formatting, but is before markdown
