@@ -281,9 +281,9 @@ format_tt_lazy <- function(x,
       }
     }
 
-    for (j in seq_along(replace)) {
-        idx <- ori[i, col] %in% replace[[j]]
-        out[i, col][idx] <- names(replace)[[j]]
+    for (k in seq_along(replace)) {
+        idx <- ori[i, col] %in% replace[[k]]
+        out[i, col][idx] <- names(replace)[[k]]
     }
 
   } # loop over columns
