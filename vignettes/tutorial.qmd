@@ -351,7 +351,7 @@ We can also specify multiple value replacements at once using a named list of ve
 
 ```{r}
 tmp <- data.frame(x = 1:5, y = c(pi, NA, NaN, -Inf, Inf))
-dict <- list("-" = c(NA, NaN), "Tiny" = -Inf, "Huge" = Inf)
+dict <- list("-" = c(NA, NaN), "-∞" = -Inf, "∞" = Inf)
 tt(tmp) |> format_tt(replace = dict, digits = 2)
 ```
 
