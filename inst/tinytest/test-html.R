@@ -98,7 +98,7 @@ expect_snapshot_print(print_html(dat), "html-formatting")
 # Missing value replacement
 tab <- data.frame(a = c(NA, 1, 2), b = c(3, NA, 5))
 tab<-tt(tab)
-tab<-format_tt(tab, replace_na = "-")
+tab<-format_tt(tab, replace = "-")
 expect_snapshot_print(print_html(tab), "html-missing_value")
 
 # Alignment

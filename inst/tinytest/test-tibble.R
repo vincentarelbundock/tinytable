@@ -30,11 +30,16 @@ expect_snapshot_print(tab, "tibble-typst_pillar_num")
 options("tinytable_print_output" = "latex")
 expect_snapshot_print(tab, "tibble-latex_pillar_num")
 
+options("tinytable_print_output" = NULL)
+
+
+
+exit_file("ANSI tinysnapshot issue")
 options("tinytable_print_output" = "markdown")
 expect_snapshot_print(tab, "tibble-markdown_pillar_num")
-
-
 options("tinytable_print_output" = NULL)
+
+
 
 
 exit_file("works interactively")

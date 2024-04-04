@@ -55,7 +55,7 @@ expect_snapshot_print(k, label = "typst-significant_cell")
 
 # Missing value replacement
 tab <- tt(data.frame(a = c(NA, 1, 2), b = c(3, NA, 5)))
-tab<-format_tt(tab,replace_na = "-")
+tab<-format_tt(tab,replace = "-")
 expect_snapshot_print(tab, label = "typst-missing_value_replacement")
 
 # Italic markdown
