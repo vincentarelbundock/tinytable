@@ -20,7 +20,7 @@ setMethod(
                         width = NULL,
                         align = NULL,
                         line = NULL,
-                        line_color = "black",
+                        line_color = "#000000",
                         line_width = .1,
                         colspan = NULL,
                         indent = 0,
