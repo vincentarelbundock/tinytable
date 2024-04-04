@@ -88,8 +88,8 @@ format_tt <- function(x,
                       ...
                       ) {
 
+    out <- x
 
-  out <- x
 
   dots <- list(...)
   if ("replace_na" %in% names(dots)) {
