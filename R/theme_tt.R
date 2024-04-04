@@ -101,10 +101,10 @@ theme_void <- function(x, ...) {
         } else if (isTRUE(table@output == "typst")) {
             tab <- table@table_string
             tab <- lines_drop(tab, regex = "align", position = "equal")
-            tab <- lines_drop(tab, regex = "hlinex\\(y\\: 0", position = "equal")
-            tab <- lines_drop(tab, regex = "hlinex\\(y\\: 1", position = "equal")
-            tab <- lines_drop(tab, regex = "hlinex\\(y\\: \\d+", position = "equal")
-
+            tab <- lines_drop(tab, regex = paste0("hlinex\\(y\\: 0, start\\: 0, end\\: ",table@ncol, ", , stroke\\: 0.1em \\+ black\\)"), position = "equal")
+            tab <- lines_drop(tab, regex = paste0("hlinex\\(y\\: 1, start\\: 0, end\\: ",table@ncol, ", stroke\\: 0.1em \\+ black\\)"), position = "equal")
+            tab <- lines_drop(tab, regex = paste0("hlinex\\(y\\:", table@nrow, ", start\\: 0, end\\: ",table@ncol, ", stroke\\: 0.1em \\+ black\\)"), position = "equal")
+            
         }
         return(table)
     }
