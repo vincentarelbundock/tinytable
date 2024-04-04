@@ -16,9 +16,12 @@
 #' @param date A string passed to the `format()` function, such as "%Y-%m-%d". See the "Details" section in `?strptime`
 #' @param bool A function to format logical columns. Defaults to title case.
 #' @param other A function to format columns of other types. Defaults to `as.character()`.
-#' @param replace String or Named list of vectors
-#' - String: Replace `NA` entries by the string.
-#' - Named list: Matching elements of the vectors by theirs names. Ex: `replace=list("-"=c(NA,NaN), "Small"=-Inf, "Big"=Inf)`
+#' @param replace Logical, String or Named list of vectors
+#' - TRUE: Replace `NA` by an empty string.
+#' - FALSE: Print `NA` as the string "NA".
+#' - String: Replace `NA` entries by the user-supplied string.
+#' - Named list: Replace matching elements of the vectors in the list by theirs names. Example: 
+#'      - `list("-" = c(NA, NaN), "-∞" = -Inf, "∞" = Inf)`
 #' @param escape Logical or "latex" or "html". If TRUE, escape special characters to display them as text in the format of the output of a `tt()` table.
 #' - If `i` is `NULL`, escape the `j` columns and column names.
 #' - If `i` and `j` are both `NULL`, escape all cells, column names, caption, notes, and spanning labels created by `group_tt()`.
@@ -80,16 +83,14 @@ format_tt <- function(x,
                       date = getOption("tinytable_format_date", default = "%Y-%m-%d"),
                       bool = getOption("tinytable_format_bool", default = function(column) tools::toTitleCase(tolower(column))),
                       other = getOption("tinytable_format_other", default = as.character),
-                      replace = getOption("tinytable_format_replace", default = ""),
+                      replace = getOption("tinytable_format_replace", default = TRUE),
                       escape = getOption("tinytable_format_escape", default = FALSE),
                       markdown = getOption("tinytable_format_markdown", default = FALSE),
                       fn = getOption("tinytable_format_fn", default = NULL),
                       sprintf = getOption("tinytable_format_sprintf", default = NULL),
                       ...
                       ) {
-
-    out <- x
-
+  out <- x
 
   dots <- list(...)
   if ("replace_na" %in% names(dots)) {
@@ -151,7 +152,7 @@ format_tt_lazy <- function(x,
                            num_suffix = FALSE,
                            num_mark_big = "",
                            num_mark_dec = NULL,
-                           replace = "",
+                           replace = TRUE,
                            fn = NULL,
                            sprintf = NULL,
                            url = FALSE,
@@ -194,10 +195,15 @@ format_tt_lazy <- function(x,
   if (is.null(j)) jnull <- TRUE else jnull <- FALSE
   if (is.null(i)) inull <- TRUE else inull <- FALSE
   j <- sanitize_j(j, ori)
-  if (!isTRUE(check_string(replace))) {
-      assert_list(replace, named = TRUE)
-  } else {
+
+  if (isTRUE(replace)) {
+      replace <- stats::setNames(list(NA), "")
+  } else if (isFALSE(replace)) {
+      replace <- stats::setNames(list(NULL), "")
+  } else if (isTRUE(check_string(replace))) {
       replace <- stats::setNames(list(NA), replace)
+  } else if (!is.list(replace) || is.null(names(replace))) {
+      stop("`replace` should be TRUE/FALSE, a single string, or a named list.", call. = FALSE)
   }
 
   if (is.null(digits)) {

@@ -19,7 +19,7 @@ format_tt(
   bool = getOption("tinytable_format_bool", default = function(column)
     tools::toTitleCase(tolower(column))),
   other = getOption("tinytable_format_other", default = as.character),
-  replace = getOption("tinytable_format_replace", default = ""),
+  replace = getOption("tinytable_format_replace", default = TRUE),
   escape = getOption("tinytable_format_escape", default = FALSE),
   markdown = getOption("tinytable_format_markdown", default = FALSE),
   fn = getOption("tinytable_format_fn", default = NULL),
@@ -57,10 +57,15 @@ format_tt(
 
 \item{other}{A function to format columns of other types. Defaults to \code{as.character()}.}
 
-\item{replace}{String or Named list of vectors
+\item{replace}{Logical, String or Named list of vectors
 \itemize{
-\item String: Replace \code{NA} entries by the string.
-\item Named list: Matching elements of the vectors by theirs names. Ex: \code{replace=list("-"=c(NA,NaN), "Small"=-Inf, "Big"=Inf)}
+\item TRUE: Replace \code{NA} by an empty string.
+\item FALSE: Print \code{NA} as the string "NA".
+\item String: Replace \code{NA} entries by the user-supplied string.
+\item Named list: Replace matching elements of the vectors in the list by theirs names. Example:
+\itemize{
+\item \code{list("-" = c(NA, NaN), "-∞" = -Inf, "∞" = Inf)}
+}
 }}
 
 \item{escape}{Logical or "latex" or "html". If TRUE, escape special characters to display them as text in the format of the output of a \code{tt()} table.

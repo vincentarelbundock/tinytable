@@ -8,7 +8,8 @@
 
 `format_tt()`:
 
-* New `replace` argument which accepts a single string to replace `NA` values (default: "") or a named list to specify multiple replacements.
+* New `replace` argument which accepts a single logical, a single string, or a named list to specify multiple replacements.
+* `replace=TRUE` by default replaces `NA` by an empty string. `FALSE` prints "NA" as string.
 * `replace_na` is deprecated in favor of `replace`. Backward compatibility is maintained and a warning is issued.
 * All arguments can now be set using global options.
 
