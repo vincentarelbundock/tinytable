@@ -13,6 +13,10 @@
 * `replace_na` is deprecated in favor of `replace`. Backward compatibility is maintained and a warning is issued.
 * All arguments can now be set using global options.
 
+`theme_tt()`:
+
+* "void" is now supported for Typst tables. Thanks to @marcboschmatas for PR #223.
+
 
 ## 0.2.1
 
