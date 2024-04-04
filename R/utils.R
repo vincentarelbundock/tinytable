@@ -25,10 +25,10 @@ lines_drop_consecutive_empty <- function(x) {
 }
 
 
-lines_drop <- function(old, regex, position = "equal") {
+lines_drop <- function(old, regex, position = "equal", fixed = FALSE) {
   assert_choice(position, c("equal", "before", "after"))
   lines <- strsplit(old, "\n")[[1]]
-  idx <- grep(regex, lines)
+  idx <- grep(regex, lines, fixed = fixed)
   if (length(idx) > 1) {
     stop("The `regex` supplied `lines_drop()` did not match a unique line.", call. = FALSE)
   }
