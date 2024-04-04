@@ -110,8 +110,11 @@ tt <- function(x,
     theme = list(theme),
     width = width)
 
-  out <- theme_tt(out, theme = "default")
-  out <- theme_tt(out, theme = theme)
+  if (is.null(theme)) {
+    out <- theme_tt(out, theme = "default")
+  } else {
+    out <- theme_tt(out, theme = theme)
+  }
 
   if ("placement" %in% names(dots)) {
     out <- theme_tt(out, "placement", latex_float = dots[["placement"]])
