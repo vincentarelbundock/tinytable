@@ -98,11 +98,17 @@ theme_void <- function(x, ...) {
             tab <- tab[!grepl("^[\\+|=]+$", tab)]
             tab <- gsub("|", " ", tab, fixed = TRUE)
             table@table_string <- paste(tab, collapse = "\n")
+        } else if (isTRUE(table@output == "typst")) {
+            tab <- table@table_string
+            tab <- lines_drop(tab, regex = "align", position = "equal")
+            tab <- lines_drop(tab, regex = "hlinex\\(y\\: 0", position = "equal")
+            tab <- lines_drop(tab, regex = "hlinex\\(y\\: 1", position = "equal")
+            tab <- lines_drop(tab, regex = "hlinex\\(y\\: \\d+", position = "equal")
+
         }
         return(table)
     }
-    x <- style_tt(x, finalize = fn,
-        bootstrap_class = "table table-borderless")
+    x <- style_tt(x, finalize = fn)
     x <- theme_tt(x, "placement")
     return(x)
 }
