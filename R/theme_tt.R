@@ -139,6 +139,9 @@ theme_striped <- function(x, ...) {
             table <- style_eval(table, i = 1 - table@nhead, line = "t", line_width = .1)
             table <- style_eval(table, i = 0, line = "b", line_width = .05)
             table <- style_eval(table, i = nrow(table), line = "b", line_width = .1)
+            table <- style_eval(table, i = 1 - table@nhead, line = "t", line_width = .1)
+            table <- style_eval(table, i = 0, line = "b", line_width = .05)
+            table <- style_eval(table, i = nrow(table), line = "b", line_width = .1)
             table <- style_eval(table, i = seq(1, nrow(table), by = 2), background = "#ededed")
         }
         return(table)
