@@ -51,7 +51,7 @@ y = tt(mtcars[4:5, 8:10])
 # basic combination
 rbind(x, y)
 
-rbind(x, y) |> format_tt(replace_na = "")
+rbind(x, y) |> format_tt(replace = "")
 
 # omit y header
 rbind2(x, y, headers = FALSE)

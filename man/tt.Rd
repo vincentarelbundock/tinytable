@@ -17,7 +17,7 @@ tt(
 \arguments{
 \item{x}{A data frame or data table to be rendered as a table.}
 
-\item{digits}{Number of significant digits to keep for numeric variables. When \code{digits} is an integer, \code{tt()} calls \code{format_tt(x, digits = digits)} before proceeding to draw the table. Users who need more control can use the \code{format_tt()} function.}
+\item{digits}{Number of significant digits to keep for numeric variables. When \code{digits} is an integer, \code{tt()} calls \code{format_tt(x, digits = digits)} before proceeding to draw the table. Note that this will apply all default argument values of \code{format_tt()}, such as replacing \code{NA} by "". Users who need more control can use the \code{format_tt()} function instead.}
 
 \item{caption}{A string that will be used as the caption of the table.}
 

@@ -15,14 +15,16 @@ format_tt(
   num_mark_big = getOption("tinytable_format_num_mark_big", default = ""),
   num_mark_dec = getOption("tinytable_format_num_mark_dec", default = getOption("OutDec",
     default = ".")),
-  date = "\%Y-\%m-\%d",
-  bool = function(column) tools::toTitleCase(tolower(column)),
-  other = as.character,
-  replace_na = "",
-  escape = FALSE,
-  markdown = FALSE,
-  fn = NULL,
-  sprintf = NULL
+  date = getOption("tinytable_format_date", default = "\%Y-\%m-\%d"),
+  bool = getOption("tinytable_format_bool", default = function(column)
+    tools::toTitleCase(tolower(column))),
+  other = getOption("tinytable_format_other", default = as.character),
+  replace = getOption("tinytable_format_replace", default = TRUE),
+  escape = getOption("tinytable_format_escape", default = FALSE),
+  markdown = getOption("tinytable_format_markdown", default = FALSE),
+  fn = getOption("tinytable_format_fn", default = NULL),
+  sprintf = getOption("tinytable_format_sprintf", default = NULL),
+  ...
 )
 }
 \arguments{
@@ -55,7 +57,16 @@ format_tt(
 
 \item{other}{A function to format columns of other types. Defaults to \code{as.character()}.}
 
-\item{replace_na}{String to display for missing values.}
+\item{replace}{Logical, String or Named list of vectors
+\itemize{
+\item TRUE: Replace \code{NA} by an empty string.
+\item FALSE: Print \code{NA} as the string "NA".
+\item String: Replace \code{NA} entries by the user-supplied string.
+\item Named list: Replace matching elements of the vectors in the list by theirs names. Example:
+\itemize{
+\item \code{list("-" = c(NA, NaN), "-∞" = -Inf, "∞" = Inf)}
+}
+}}
 
 \item{escape}{Logical or "latex" or "html". If TRUE, escape special characters to display them as text in the format of the output of a \code{tt()} table.
 \itemize{
@@ -68,6 +79,8 @@ format_tt(
 \item{fn}{Function for custom formatting. Accepts a vector and returns a character vector of the same length.}
 
 \item{sprintf}{String passed to the \code{?sprintf} function to format numbers or interpolate strings with a user-defined pattern (similar to the \code{glue} package, but using Base R).}
+
+\item{...}{Additional arguments are ignored.}
 }
 \value{
 A data frame with formatted columns.
@@ -107,7 +120,7 @@ x <- tt(data.frame(Text = c("_italicized text_", "__bold text__")))
 format_tt(x, markdown=TRUE)
 
 tab <- data.frame(a = c(NA, 1, 2), b = c(3, NA, 5))
-tt(tab) |> format_tt(replace_na = "-")
+tt(tab) |> format_tt(replace = "-")
 
 dat <- data.frame(
    "LaTeX" = c("Dollars $", "Percent \%", "Underscore _"),

@@ -332,9 +332,9 @@ options("tinytable_format_num_fmt" = NULL)
 ```
 
 
-## Missing values
+## Replacement
 
-Missing values can be replaced by a custom string using the `replace_na` argument (default `""`):
+Missing values can be replaced by a custom string using the `replace` argument (default `""`):
 
 ```{r}
 tab <- data.frame(a = c(NA, 1, 2), b = c(3, NA, 5))
@@ -343,9 +343,17 @@ tt(tab)
 
 tt(tab) |> format_tt()
 
-tt(tab) |> format_tt(replace_na = "-")
+tt(tab) |> format_tt(replace = "-")
 ```
 
+We can also specify multiple value replacements at once using a named list of vectors:
+
+
+```{r}
+tmp <- data.frame(x = 1:5, y = c(pi, NA, NaN, -Inf, Inf))
+dict <- list("-" = c(NA, NaN), "-∞" = -Inf, "∞" = Inf)
+tt(tmp) |> format_tt(replace = dict, digits = 2)
+```
 
 ## Escape special characters
 
@@ -1183,7 +1191,7 @@ b <- tt(mtcars[4:5, 8:10])
 
 rbind(a, b)
 
-rbind(a, b) |> format_tt(replace_na = "")
+rbind(a, b) |> format_tt(replace = "")
 ```
 
 The `rbind2()` S4 method is slightly more flexible than `rbind()`, as it supports arguments `headers` and `use.names`.

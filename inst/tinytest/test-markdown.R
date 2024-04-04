@@ -64,7 +64,7 @@ expect_snapshot_print(tab, label = "markdown-bold_columns")
 tab <- mtcars[1:4, 1:3]
 tab[2,3]=NA
 tab<-tt(tab)|>
-  format_tt(replace_na = "-")
+  format_tt(replace = "-")
 expect_snapshot_print(tab, label = "markdown-missing_value")
 
 

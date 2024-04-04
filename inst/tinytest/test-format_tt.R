@@ -4,7 +4,7 @@ using("tinysnapshot")
 
 # bug discovered in modelsummary
 z <- factor(c("a", "b", NA))
-a <- format_tt(z, replace_na = "-")
+a <- format_tt(z, replace = "-")
 b <- c("a", "b", "-")
 expect_equivalent(a, b)
 
@@ -123,8 +123,25 @@ tab <- data.frame(x = 1, y = NaN) |> tt() |> format_tt() |> print()
 expect_inherits(tab, "data.frame")
 tab <- data.frame(x = 1, y = NA) |> tt() |> format_tt() |> print()
 expect_inherits(tab, "data.frame")
+
+x <- data.frame(x = 1:5, y = c(pi, NA, NaN, -Inf, Inf))
+dict <- list("-" = c(NA, NaN), "Tiny" = -Inf, "Huge" = Inf)
+tab <- tt(x) |> format_tt(replace = dict) |> print()
+expect_equivalent(tab$y, c("3.141593", "-", "-", "Tiny", "Huge"))
+
+x <- data.frame(x = pi, y = NA)
+options(tinytable_tt_digits = 2)
+tab <- tt(x) |> print()
+expect_equivalent(tab$y, "")
+
+options(tinytable_format_replace = "zzz")
+tab <- tt(x) |> print()
+expect_equivalent(tab$y, "zzz")
+
+options(tinytable_format_replace = FALSE)
+tab <- tt(x) |> print()
+expect_equivalent(tab$y, "NA")
+
 options(tinytable_print_output = NULL)
-
-
-
-options(tinytable_print_output = NULL)
+options(tinytable_tt_digits = NULL)
+options(tinytable_format_replace = NULL)
