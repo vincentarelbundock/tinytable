@@ -145,7 +145,7 @@ let j = (%s,);",
           "vlinex(x: %s, start: %s, end: %s, stroke: %sem + %s),",
           j,
           min(ival),
-          max(ival),
+          max(ival)+1,
           line_width,
           line_color)
         out <- typst_insert(out, tmp, type = "lines")
