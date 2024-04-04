@@ -15,14 +15,15 @@ format_tt(
   num_mark_big = getOption("tinytable_format_num_mark_big", default = ""),
   num_mark_dec = getOption("tinytable_format_num_mark_dec", default = getOption("OutDec",
     default = ".")),
-  date = "\%Y-\%m-\%d",
-  bool = function(column) tools::toTitleCase(tolower(column)),
-  other = as.character,
-  replace = "",
-  escape = FALSE,
-  markdown = FALSE,
-  fn = NULL,
-  sprintf = NULL,
+  date = getOption("tinytable_format_date", default = "\%Y-\%m-\%d"),
+  bool = getOption("tinytable_format_bool", default = function(column)
+    tools::toTitleCase(tolower(column))),
+  other = getOption("tinytable_format_other", default = as.character),
+  replace = getOption("tinytable_format_replace", default = ""),
+  escape = getOption("tinytable_format_escape", default = FALSE),
+  markdown = getOption("tinytable_format_markdown", default = FALSE),
+  fn = getOption("tinytable_format_fn", default = NULL),
+  sprintf = getOption("tinytable_format_sprintf", default = NULL),
   ...
 )
 }

@@ -2,9 +2,15 @@
 
 ## Development
 
-* `width` argument of `tt` now accepts a vector of numeric values to control the width of each column, as a proportion of the total linewidth.
-* `format_tt()` gains a `replace` argument which accepts a single string to replace `NA` values (default: "") or a named list to specify multiple replacements.
+`tt()`:
+
+* `width` argument now accepts a vector of numeric values to control the width of each column, as a proportion of the total linewidth.
+
+`format_tt()`:
+
+* New `replace` argument which accepts a single string to replace `NA` values (default: "") or a named list to specify multiple replacements.
 * `replace_na` is deprecated in favor of `replace`. Backward compatibility is maintained and a warning is issued.
+* All arguments can now be set using global options.
 
 
 ## 0.2.1
