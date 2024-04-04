@@ -108,7 +108,8 @@ theme_void <- function(x, ...) {
         }
         return(table)
     }
-    x <- style_tt(x, finalize = fn)
+    x <- style_tt(x, finalize = fn,
+                  bootstrap_class = "table table-borderless")
     x <- theme_tt(x, "placement")
     return(x)
 }
