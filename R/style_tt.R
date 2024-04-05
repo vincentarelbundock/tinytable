@@ -151,7 +151,7 @@ style_tt <- function (x,
   out <- x
   cal <- call("style_tt_lazy",
   # out <- style_tt_lazy(
-              x = out,
+              # x should not be in here otherwise the object becomes very big
               i = i,
               j = j,
               bold = bold,

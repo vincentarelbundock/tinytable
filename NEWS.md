@@ -17,6 +17,10 @@
 
 * "void" is now supported for Typst tables. Thanks to @marcboschmatas for PR #223.
 
+Misc:
+
+* `style_tt()` used to keep many versions of the same data frame, which could increase memory use.
+
 
 ## 0.2.1
 
