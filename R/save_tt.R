@@ -93,12 +93,12 @@ save_tt <- function(x, output, overwrite = FALSE) {
     # tinytex is fiddly with file paths, so we need to hack 
     # it by changing the working directory
     wd <- getwd()
+    on.exit(setwd(wd))
     setwd(dirname(output))
     f <- paste0(get_id(), ".tex")
     write(tmp, f) 
     tinytex::xelatex(f, pdf_file = output)
     unlink(f)
-    setwd(wd)
 
   } else if (file_ext == "docx") {
     assert_dependency("pandoc")
