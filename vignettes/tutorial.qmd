@@ -601,7 +601,7 @@ tt(z) |>
 ```
 
 
-## Fonts
+## Font size
 
 The font size is specified in em units. 
 
@@ -770,6 +770,19 @@ tt(dat, theme = "void") |>
   style_tt(
     line = "tblr", line_color = "white", line_width = 0.5,
     background = "blue", color = "white")
+```
+
+## Cell padding
+
+There is no argument in `style_tt()` to control the padding of cells. Thankfully, this is easy to control using CSS and `tabularray` options:
+
+
+```{r}
+tt(x) |> style_tt(
+    i = 1:5,
+    bootstrap_css = "padding-right: .2em; padding-top: 2em;",
+    tabularray_inner = "rowsep={2em}, colsep = {.2em}"
+)
 ```
 
 
