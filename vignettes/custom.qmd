@@ -1,0 +1,338 @@
+# Customization
+
+```{r}
+library(tinytable)
+options(tinytable_tt_digits = 3)
+options(tinytable_theme_placement_latex_float = "H")
+x <- mtcars[1:4, 1:5]
+```
+
+## HTML customization
+
+::: {.content-visible when-format="pdf"}
+The HTML customization options described in this section are not available for LaTeX (or PDF) documents. Please refer to the web documentation to read this part of the tutorial.
+:::
+
+### Bootstrap classes
+
+::: {.content-visible when-format="html"}
+The Bootstrap framework provides a number of built-in themes to style tables, using "classes." To use them, we call `style_tt()` with the `bootstrap_class` argument. A list of available Bootstrap classes can be found here: <https://getbootstrap.com/docs/5.3/content/tables/>
+
+For example, to produce a "bordered" table, we use the `table-bordered` class:
+
+
+```{r, eval = knitr::is_html_output()}
+tt(x) |> style_tt(bootstrap_class = "table table-bordered")
+```
+
+We can also combine several Bootstrap classes. Here, we get a table with the "hover" feature:
+
+```{r, eval = knitr::is_html_output()}
+tt(x) |> style_tt(
+  bootstrap_class = "table table-hover")
+```
+:::
+
+
+### CSS declarations
+
+::: {.content-visible when-format="html"}
+The `style_tt()` function allows us to declare CSS properties and values for individual cells, columns, or rows of a table. For example, if we want to make the first column bold, we could do:
+
+```{r}
+tt(x) |>
+  style_tt(j = 1, bootstrap_css = "font-weight: bold; color: red;")
+```
+:::
+
+### CSS rules
+
+::: {.content-visible when-format="html"}
+For more extensive customization, we can use complete CSS rules. In this example, we define several rules that apply to a new class called `mytable`. Then, we use the `theme` argument of the `tt()` function to ensure that our tiny table is of class `mytable`. Finally, we call `style_bootstrap()` to apply the rules with the `bootstrap_css_rule` argument.
+
+```{r, eval = knitr::is_html_output()}
+css_rule <- "
+.mytable {
+  background: linear-gradient(45deg, #EA8D8D, #A890FE);
+  width: 600px;
+  border-collapse: collapse;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.mytable th,
+.mytable td {
+  padding: 5px;
+  background-color: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+.mytable tbody tr:hover {
+  background-color: rgba(255,255,255,0.3);
+}
+
+.mytable tbody td:hover:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -9999px;
+  bottom: -9999px;
+  background-color: rgba(255,255,255,0.2);
+  z-index: -1;
+}
+"
+
+tt(x, width = 2/3) |> 
+  style_tt(
+    j = 1:5,
+    align = "ccccc",
+    bootstrap_class = "table mytable",
+    bootstrap_css_rule = css_rule)
+```
+
+
+And here's another example:
+
+
+```{r}
+css <- "
+.squirreltable {
+  background-size: cover;
+  background-position: center;
+  background-image: url('https://user-images.githubusercontent.com/987057/82732352-b9aabf00-9cda-11ea-92a6-26750cf097d0.png');
+  --bs-table-bg: transparent;
+}
+"
+
+tt(mtcars[1:10, 1:8]) |>
+  style_tt(
+    bootstrap_class = "table table-borderless squirreltable", 
+    bootstrap_css_rule = css)
+```
+:::
+
+## LaTeX / PDF customization {#sec-tabularray}
+
+::: {.content-visible when-format="html"}
+The LaTeX / PDF customization options described in this section are not available for HTML documents. Please refer to the PDF documentation hosted on the website to read this part of the tutorial.
+:::
+
+### Preamble
+
+::: {.content-visible when-format="pdf"}
+_Warning_: Some of the features of this package may require a recent version of the `tabularray` package. Please update your local LaTeX distribution before using `tinytable`.
+
+In Rmarkdown and Quarto documents, `tinytable` will automatically populate your LaTeX preamble with the necessary packages and commands. When creating your own LaTeX documents, you should insert these commands in the preamble:
+
+```latex
+\usepackage{tabularray}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage[normalem]{ulem}
+\UseTblrLibrary{booktabs}
+\NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
+\newcommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}
+\newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
+```
+:::
+
+### Introduction to `tabularray`
+
+::: {.content-visible when-format="pdf"}
+`tabularray` offers a robust solution for creating and managing tables in LaTeX, standing out for its flexibility and ease of use. It excels in handling complex table layouts and offers enhanced functionality compared to traditional LaTeX table environments. This package is particularly useful for users requiring advanced table features, such as complex cell formatting, color management, and versatile table structures.
+
+A key feature of Tabularray is its separation of style from content. This approach allows users to define the look and feel of their tables (such as color, borders, and text alignment) independently from the actual data within the table. This separation simplifies the process of formatting tables and enhances the clarity and maintainability of LaTeX code. The `tabularray` documentation is fantastic. It will teach you how to customize virtually every aspect of your tables: <https://ctan.org/pkg/tabularray?lang=en>
+
+Tabularray introduces a streamlined interface for specifying table settings. It employs two types of settings blocks: Inner and Outer. The Outer block is used for settings that apply to the entire table, like overall alignment, while the Inner block handles settings for specific elements like columns, rows, and cells. The `style_tt()` function includes `tabularray_inner` and `tabularray_outer` arguments to set these respective features.
+
+Consider this `tabularray` example, which illustrates the use of inner settings:
+
+```latex
+\begin{table}
+\centering
+\begin{tblr}[         %% tabularray outer open
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+column{1-4}={halign=c},
+hlines = {bg=white},
+vlines = {bg=white},
+cell{1,6}{odd} = {bg=teal7},
+cell{1,6}{even} = {bg=green7},
+cell{2,4}{1,4} = {bg=red7},
+cell{3,5}{1,4} = {bg=purple7},
+cell{2}{2} = {r=4,c=2}{bg=azure7},
+}                     %% tabularray inner close
+mpg & cyl & disp & hp \\
+21 & 6 & 160 & 110 \\
+21 & 6 & 160 & 110 \\
+22.8 & 4 & 108 & 93 \\
+21.4 & 6 & 258 & 110 \\
+18.7 & 8 & 360 & 175 \\
+\end{tblr}
+\end{table}
+```
+   
+The Inner block, enclosed in `{}`, defines specific styles like column formats (`column{1-4}={halign=c}`), horizontal and vertical line colors (`hlines={fg=white}`, `vlines={fg=white}`), and cell colorations (`cell{1,6}{odd}={bg=teal7}`, etc.). The last line of the inner block also species that the second cell of row 2 (`cell{2}{2}`) should span 4 rows and 2 columns (`{r=4,c=3}`), be centered (`halign=c`), and with a background color with the 7th luminance level of the azure color (`bg=azure7`).
+
+We can create this code easily by passing a string to the `tabularray_inner` argument of the `style_tt()` function:
+
+```{r, eval = knitr::is_latex_output()}
+##| tbl-cap: "\\LaTeX{} table with colors and a spanning cell."
+inner <- "
+column{1-4}={halign=c},
+hlines = {fg=white},
+vlines = {fg=white},
+cell{1,6}{odd} = {bg=teal7},
+cell{1,6}{even} = {bg=green7},
+cell{2,4}{1,4} = {bg=red7},
+cell{3,5}{1,4} = {bg=purple7},
+cell{2}{2} = {r=4,c=2}{bg=azure7},
+"
+mtcars[1:5, 1:4] |>
+  tt(theme = "void") |>
+  style_tt(tabularray_inner = inner)
+```
+
+
+:::
+
+
+### `tabularray`  keys
+
+::: {.content-visible when-format="pdf"}
+Inner specifications:
+
+| Key       | Description and Values                                    | Initial Value |
+|-----------|-----------------------------------------------------------|---------------|
+| `rulesep` | space between two hlines or vlines                        | `2pt`         |
+| `stretch` | stretch ratio for struts added to cell text               | `1`           |
+| `abovesep`| set vertical space above every row                        | `2pt`         |
+| `belowsep`| set vertical space below every row                        | `2pt`         |
+| `rowsep`  | set vertical space above and below every row              | `2pt`         |
+| `leftsep` | set horizontal space to the left of every column          | `6pt`         |
+| `rightsep`| set horizontal space to the right of every column         | `6pt`         |
+| `colsep`  | set horizontal space to both sides of every column        | `6pt`         |
+| `hspan`   | horizontal span algorithm: `default`, `even`, or `minimal`| `default`     |
+| `vspan`   | vertical span algorithm: `default` or `even`              | `default`     |
+| `baseline`| set the baseline of the table                             | `m`           |
+
+
+Outer specifications:
+
+| Key       | Description and Values                          | Initial Value |
+|-----------|-------------------------------------------------|---------------|
+| `baseline`| set the baseline of the table                   | `m`           |
+| `long`    | change the table to a long table                | None          |
+| `tall`    | change the table to a tall table                | None          |
+| `expand`  | you need this key to use verb commands          | None          |
+
+Cells:
+
+| Key     | Description and Values                                                         | Initial Value |
+|---------|---------------------------------------------------------------------------------|---------------|
+| `halign`| horizontal alignment: `l` (left), `c` (center), `r` (right) or `j` (justify)   | `j`           |
+| `valign`| vertical alignment: `t` (top), `m` (middle), `b` (bottom), `h` (head) or `f` (foot) | `t`       |
+| `wd`    | width dimension                                                                | None          |
+| `bg`    | background color name                                                          | None          |
+| `fg`    | foreground color name                                                          | None          |
+| `font`  | font commands                                                                  | None          |
+| `mode`  | set cell mode: `math`, `imath`, `dmath` or `text`                              | None          |
+| `cmd`   | execute command for the cell text                                              | None          |
+| `preto` | prepend text to the cell                                                       | None          |
+| `appto` | append text to the cell                                                        | None          |
+| `r`     | number of rows the cell spans            | 1             |
+| `c`     | number of columns the cell spans         | 1             |
+
+
+Rows:
+
+
+| Key        | Description and Values                                                              | Initial Value |
+|------------|-------------------------------------------------------------------------------------|---------------|
+| `halign`   | horizontal alignment: `l` (left), `c` (center), `r` (right) or `j` (justify)        | `j`           |
+| `valign`   | vertical alignment: `t` (top), `m` (middle), `b` (bottom), `h` (head) or `f` (foot) | `t`       |
+| `ht`       | height dimension                                                                    | None          |
+| `bg`       | background color name                                                               | None          |
+| `fg`       | foreground color name                                                               | None          |
+| `font`     | font commands                                                                       | None          |
+| `mode`     | set mode for row cells: `math`, `imath`, `dmath` or `text`                          | None          |
+| `cmd`      | execute command for every cell text                                                 | None          |
+| `abovesep` | set vertical space above the row                                                    | `2pt`         |
+| `belowsep` | set vertical space below the row                                                    | `2pt`         |
+| `rowsep`   | set vertical space above and below the row                                          | `2pt`         |
+| `preto`    | prepend text to every cell (like `>` specifier in `rowspec`)                        | None          |
+| `appto`    | append text to every cell (like `<` specifier in `rowspec`)                         | None          |
+
+
+Columns:
+
+
+| Key         | Description and Values                                                         | Initial Value |
+|-------------|--------------------------------------------------------------------------------|---------------|
+| `halign`    | horizontal alignment: `l` (left), `c` (center), `r` (right) or `j` (justify)  | `j`           |
+| `valign`    | vertical alignment: `t` (top), `m` (middle), `b` (bottom), `h` (head) or `f` (foot) | `t`       |
+| `wd`        | width dimension                                                                | None          |
+| `co`        | coefficient for the extendable column (`X` column)                             | None          |
+| `bg`        | background color name                                                          | None          |
+| `fg`        | foreground color name                                                          | None          |
+| `font`      | font commands                                                                  | None          |
+| `mode`      | set mode for column cells: `math`, `imath`, `dmath` or `text`                  | None          |
+| `cmd`       | execute command for every cell text                                            | None          |
+| `leftsep`   | set horizontal space to the left of the column                                 | `6pt`         |
+| `rightsep`  | set horizontal space to the right of the column                                | `6pt`         |
+| `colsep`    | set horizontal space to both sides of the column                               | `6pt`         |
+| `preto`     | prepend text to every cell (like `>` specifier in `colspec`)                   | None          |
+| `appto`     | append text to every cell (like `<` specifier in `colspec`)                    | None          |
+
+
+hlines:
+
+
+| Key         | Description and Values                                         | Initial Value |
+|-------------|-----------------------------------------------------------------|---------------|
+| `dash`      | dash style: `solid`, `dashed` or `dotted`                      | `solid`       |
+| `text`      | replace hline with text (like `!` specifier in `rowspec`)      | None          |
+| `wd`        | rule width dimension                                           | `0.4pt`       |
+| `fg`        | rule color name                                                | None          |
+| `leftpos`   | crossing or trimming position at the left side                 | `1`           |
+| `rightpos`  | crossing or trimming position at the right side                | `1`           |
+| `endpos`    | adjust leftpos/rightpos for only the leftmost/rightmost column | `false`       |
+
+vlines:
+
+
+| Key        | Description and Values                                        | Initial Value |
+|------------|---------------------------------------------------------------|---------------|
+| `dash`     | dash style: `solid`, `dashed` or `dotted`                     | `solid`       |
+| `text`     | replace vline with text (like `!` specifier in `colspec`)     | None          |
+| `wd`       | rule width dimension                                          | `0.4pt`       |
+| `fg`       | rule color name                                               | None          |
+| `abovepos` | crossing or trimming position at the above side               | `0`           |
+| `belowpos` | crossing or trimming position at the below side               | `0`           |
+
+:::
+
+
+## Shiny
+
+`tinytable` is a great complement to Shiny for displaying HTML tables in a web app. The styling in a `tinytable` is applied by JavaScript functions and CSS. Thus, to ensure that this styling is preserved in a Shiny app, one strategy is to bake the entire page, save it in a temporary file, and load it using the `includeHTML` function from the `shiny` package. This approach is illustrated in this minimal example:
+
+
+```{r, eval = FALSE}
+library("shiny")
+library("tinytable")
+
+fn <- paste(tempfile(), ".html")
+tab <- tt(mtcars[1:5, 1:4]) |> 
+  style_tt(i = 0:5, color = "orange", background = "black") |> 
+  save_tt(fn) 
+
+shinyApp(
+  ui = fluidPage(
+    fluidRow(column(12, h1("This is test of tinytable"), 
+                    shiny::includeHTML(fn)))), 
+  server = function(input, output) { 
+  }
+)
+```

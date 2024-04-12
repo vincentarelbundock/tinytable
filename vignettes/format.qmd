@@ -1,0 +1,218 @@
+# Formatting
+
+```{r}
+library(tinytable)
+options(tinytable_tt_digits = 3)
+options(tinytable_theme_placement_latex_float = "H")
+x <- mtcars[1:4, 1:5]
+```
+
+## Numbers, dates, strings, etc.
+
+The `tt()` function is minimalist; it's inteded purpose is simply to draw nice tables. Users who want to format numbers, dates, strings, and other variables in different ways should process their data *before* supplying it to the `tt()` table-drawing function. To do so, we can use the `format_tt()` function supplied by the `tinytable`. 
+
+In a very simple case---such as printing 2 significant digits of all numeric variables---we can use the `digits` argument of `tt()`:
+
+```{r}
+dat <- data.frame(
+     w = c(143002.2092, 201399.181, 100188.3883),
+     x = c(1.43402, 201.399, 0.134588),
+     y = as.Date(sample(1:1000, 3), origin = "1970-01-01"),
+     z = c(TRUE, TRUE, FALSE))
+
+tt(dat, digits = 2)
+```
+
+We can get more fine-grained control over formatting by calling `format_tt()` after `tt()`, optionally by specifying the columns to format with `j`:
+
+```{r}
+tt(dat) |> 
+  format_tt(
+    j = 2:4,
+    digits = 1,
+    date = "%B %d %Y") |>
+  format_tt(
+    j = 1,
+    digits = 2,
+    num_mark_big = " ",
+    num_mark_dec = ",",
+    num_fmt = "decimal")
+```
+
+We can use a regular expression in `j` to select columns, and the `?sprintf` function to format strings, numbers, and to do [string interpolation](https://en.wikipedia.org/wiki/String_interpolation) (similar to the `glue` package, but using Base `R`):
+
+```{r}
+dat <- data.frame(
+     a = c("Burger", "Halloumi", "Tofu", "Beans"),
+     b = c(1.43202, 201.399, 0.146188, 0.0031),
+     c = c(98938272783457, 7288839482, 29111727, 93945))
+tt(dat) |>
+  format_tt(j = "a", sprintf = "Food: %s") |>
+  format_tt(j = 2, digits = 1) |>
+  format_tt(j = "c", digits = 2, num_suffix = TRUE)
+```
+
+Finally, if you like the `format_tt()` interface, you can use it directly with numbers, vectors, or data frames:
+
+```{r}
+format_tt(pi, digits = 1)
+
+format_tt(dat, digits = 1, num_suffix = TRUE)
+```
+
+
+## Significant digits and decimals
+
+By default, `format_tt()` formats numbers to ensure that the smallest value in a vector (column) has at least a certain number of significant digits. For example,
+
+```{r}
+k <- data.frame(x = c(0.000123456789, 12.4356789))
+tt(k, digits = 2)
+```
+
+We can alter this behavior to ensure to round significant digits on a per-cell basis, using the `num_fmt` argument in `format_tt()`:
+
+```{r}
+tt(k) |> format_tt(digits = 2, num_fmt = "significant_cell")
+```
+
+The numeric formatting options in `format_tt()` can also be controlled using global options:
+
+```{r}
+options("tinytable_tt_digits" = 2)
+options("tinytable_format_num_fmt" = "significant_cell")
+tt(k)
+```
+
+```{r, include = FALSE}
+options("tinytable_tt_digits" = NULL)
+options("tinytable_format_num_fmt" = NULL)
+```
+
+
+## Replacement
+
+Missing values can be replaced by a custom string using the `replace` argument (default `""`):
+
+```{r}
+tab <- data.frame(a = c(NA, 1, 2), b = c(3, NA, 5))
+
+tt(tab)
+
+tt(tab) |> format_tt()
+
+tt(tab) |> format_tt(replace = "-")
+```
+
+We can also specify multiple value replacements at once using a named list of vectors:
+
+
+```{r}
+tmp <- data.frame(x = 1:5, y = c(pi, NA, NaN, -Inf, Inf))
+dict <- list("-" = c(NA, NaN), "-∞" = -Inf, "∞" = Inf)
+tt(tmp) |> format_tt(replace = dict, digits = 2)
+```
+
+## Escape special characters
+
+LaTeX and HTML use special characters to indicate strings which should be interpreted rather than displayed as text. For example, including underscores or dollar signs in LaTeX can cause compilation errors in some documents. To display those special characters, we need to substitute or escape them with backslashes, depending on the output format. The `escape` argument of `format_tt()` can be used to do this automatically:
+
+```{r}
+dat <- data.frame(
+    "LaTeX" = c("Dollars $", "Percent %", "Underscore _"),
+    "HTML" = c("<br>", "<sup>4</sup>", "<emph>blah</emph>")
+)
+
+tt(dat) |> format_tt(escape = TRUE)
+```
+
+When applied to a `tt()` table, `format_tt()` will determine the type of escaping to do automatically. When applied to a string or vector, we must specify the type of escaping to apply:
+
+```{r}
+format_tt("_ Dollars $", escape = "latex")
+```
+
+## Markdown
+
+Markdown can be rendered in cells by using the `markdown` argument of the `format_tt()` function (note: this requires installing the `markdown` as an optional dependency). 
+
+```{r}
+dat <- data.frame( markdown = c(
+  "This is _italic_ text.",
+  "This sentence ends with a superscript.^2^")
+)
+
+tt(dat) |>
+  format_tt(j = 1, markdown = TRUE) |>
+  style_tt(j = 1, align = "c")
+```
+
+Markdown syntax can be particularly useful when formatting URLs in a table:
+
+```{r}
+#| tbl-cap: "Vincent sometimes contributes to these R packages."
+dat <- data.frame(
+  `Package (link)` = c(
+    "[`marginaleffects`](https://www.marginaleffects.com/)",
+    "[`modelsummary`](https://www.modelsummary.com/)",
+    "[`tinytable`](https://vincentarelbundock.github.io/tinytable/)",
+    "[`countrycode`](https://vincentarelbundock.github.io/countrycode/)",
+    "[`WDI`](https://vincentarelbundock.github.io/WDI/)",
+    "[`softbib`](https://vincentarelbundock.github.io/softbib/)",
+    "[`tinysnapshot`](https://vincentarelbundock.github.io/tinysnapshot/)",
+    "[`altdoc`](https://etiennebacher.github.io/altdoc/)",
+    "[`plot2`](https://grantmcdermott.com/plot2/)",
+    "[`parameters`](https://easystats.github.io/parameters/)",
+    "[`insight`](https://easystats.github.io/insight/)"
+  ),
+  Purpose = c(
+    "Interpreting statistical models",
+    "Data and model summaries",
+    "Draw beautiful tables easily",
+    "Convert country codes and names",
+    "Download data from the World Bank",
+    "Software bibliographies in R",
+    "Snapshots for unit tests using `tinytest`",
+    "Create documentation website for R packages",
+    "Extension of base R plot functions",
+    "Extract from model objects",
+    "Extract information from model objects"
+  ),
+  check.names = FALSE
+)
+
+tt(dat) |> format_tt(j = 1, markdown = TRUE)
+```
+
+## Custom functions
+
+On top of the built-in features of `format_tt`, a custom formatting function can be specified via the `fn` argument. The `fn` argument takes a function that accepts a single vector and returns a string (or something that coerces to a string like a number).  
+
+```{r}
+tt(x) |> 
+  format_tt(j = "mpg", fn = function(x) paste0(x, " mpg")) |>
+  format_tt(j = "drat", fn = \(x) signif(x, 2))
+```
+
+For example, the [`scales` package](https://scales.r-lib.org/index.html) which is used internally by `ggplot2` provides a bunch of useful tools for formatting (e.g. dates, numbers, percents, logs, currencies, etc.). The `label_*()` functions can be passed to the `fn` argument.
+
+Note that we call `format_tt(escape = TRUE)` at the end of the pipeline because the column names and cells include characters that need to be escaped in LaTeX: `_`, `%`, and `$`. This last call is superfluous in HTML.
+
+```{r}
+thumbdrives <- data.frame(
+  date_lookup = as.Date(c("2024-01-15", "2024-01-18", "2024-01-14", "2024-01-16")),
+  price = c(18.49, 19.99, 24.99, 24.99),
+  price_rank = c(1, 2, 3, 3),
+  memory = c(16e9, 12e9, 10e9, 8e9),
+  speed_benchmark = c(0.6, 0.73, 0.82, 0.99)
+)
+
+tt(thumbdrives) |>
+  format_tt(j = 1, fn = scales::label_date("%e %b", locale = "fr")) |>
+  format_tt(j = 2, fn = scales::label_currency()) |>
+  format_tt(j = 3, fn = scales::label_ordinal()) |> 
+  format_tt(j = 4, fn = scales::label_bytes()) |> 
+  format_tt(j = 5, fn = scales::label_percent())  |>
+  format_tt(escape = TRUE)
+```
+

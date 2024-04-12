@@ -1,0 +1,353 @@
+# Style
+
+
+The main styling function for the `tinytable` package is `style_tt()`. Via this function, you can access three main interfaces to customize tables:
+
+1. A general interface to frequently used style choices which works for both HTML and LaTeX (PDF): colors, font style and size, row and column spans, etc. This is accessed through several distinct arguments in the `style_tt()`  function, such as `italic`, `color`, etc.
+2. A specialized interface which allows users to use the [powerful `tabularray` package](https://ctan.org/pkg/tabularray?lang=en) to customize LaTeX tables. This is accessed by passing `tabularray` settings as strings to the `tabularray_inner` and `tabularray_outer` arguments of `style_tt()`.
+3. A specialized interface which allows users to use the [powerful `Bootstrap` framework](https://getbootstrap.com/docs/5.3/content/tables/) to customize HTML tables. This is accessed by passing CSS declarations and rules to the `bootstrap_css` and `bootstrap_css_rule` arguments of `style_tt()`.
+
+These functions can be used to customize rows, columns, or individual cells. They control many features, including:
+
+* Text color
+* Background color
+* Widths
+* Heights
+* Alignment
+* Text Wrapping
+* Column and Row Spacing
+* Cell Merging
+* Multi-row or column spans
+* Border Styling
+* Font Styling: size, underline, italic, bold, strikethrough, etc.
+* Header Customization
+
+The `style_*()` functions can modify individual cells, or entire columns and rows. The portion of the table that is styled is determined by the `i` (rows)  and `j` (columns) arguments.
+
+```{r}
+library(tinytable)
+options(tinytable_tt_digits = 3)
+options(tinytable_theme_placement_latex_float = "H")
+x <- mtcars[1:4, 1:5]
+```
+
+## Cells, rows, columns
+
+To style individual cells, we use the `style_cell()`  function. The first two arguments---`i` and `j`---identify the cells of interest, by row and column numbers respectively. To style a cell in the 2nd row and 3rd column, we can do:
+
+```{r}
+tt(x) |>
+  style_tt(
+    i = 2,
+    j = 3,
+    background = "black",
+    color = "white")
+```
+
+The `i` and `j` accept vectors of integers to modify several cells at once:
+
+```{r}
+tt(x) |>
+  style_tt(
+    i = 2:3,
+    j = c(1, 3, 4),
+    italic = TRUE,
+    color = "orange")
+```
+
+We can style all cells in a table by omitting both the `i` and `j` arguments:
+
+
+```{r}
+tt(x) |> style_tt(color = "orange")
+```
+
+We can style entire rows by omitting the `j` argument:
+
+```{r}
+tt(x) |> style_tt(i = 1:2, color = "orange")
+```
+
+We can style entire columns by omitting the `i` argument:
+
+```{r}
+tt(x) |> style_tt(j = c(2, 4), bold = TRUE)
+```
+
+The `j` argument accepts integer vectors, character vectors, but also a string with a Perl-style regular expression, which makes it easier to select columns by name:
+
+```{r}
+tt(x) |> style_tt(j = c("mpg", "drat"), color = "orange")
+
+tt(x) |> style_tt(j = "mpg|drat", color = "orange")
+```
+
+Here we use a "negative lookahead" to exclude certain columns:
+
+```{r}
+tt(x) |> style_tt(j = "^(?!drat|mpg)", color = "orange")
+```
+
+Of course, we can also call the `style_tt()` function several times to apply different styles to different parts of the table:
+
+```{r}
+tt(x) |> 
+  style_tt(i = 1, j = 1:2, color = "orange") |>
+  style_tt(i = 1, j = 3:4, color = "green")
+```
+
+
+## Colors
+
+The `color` and `background` arguments in the `style_tt()` function are used for specifying the text color and the background color for cells of a table created by the `tt()` function. This argument plays a crucial role in enhancing the visual appeal and readability of the table, whether it's rendered in LaTeX or HTML format. The way we specify colors differs slightly between the two formats:
+
+For HTML Output:
+
+- Hex Codes: You can specify colors using hexadecimal codes, which consist of a `#` followed by 6 characters (e.g., `#CC79A7`). This allows for a wide range of colors.
+- Keywords: There's also the option to use color keywords for convenience. The supported keywords are basic color names like `black`, `red`, `blue`, etc.
+
+For LaTeX Output:
+
+- Hexadecimal Codes: Similar to HTML, you can use hexadecimal codes. However, in LaTeX, you need to include these codes as strings (e.g., `"#CC79A7"`).
+- Keywords: LaTeX supports a different set of color keywords, which include standard colors like `black`, `red`, `blue`, as well as additional ones like `cyan`, `darkgray`, `lightgray`, etc.
+- Color Blending: An advanced feature in LaTeX is color blending, which can be achieved using the `xcolor` package. You can blend colors by specifying ratios (e.g., `white!80!blue` or `green!20!red`).
+- Luminance Levels: [The `ninecolors` package in LaTeX](https://ctan.org/pkg/ninecolors?lang=en) offers colors with predefined luminance levels, allowing for more nuanced color choices (e.g., "azure4", "magenta8").
+
+Note that the keywords used in LaTeX and HTML are slightly different.
+
+```{r}
+tt(x) |> style_tt(i = 1:4, j = 1, color = "#FF5733")
+```
+
+Note that when using Hex codes in a LaTeX table, we need extra declarations in the LaTeX preamble. See `?tt` for details.
+
+
+## Alignment
+
+To align columns, we use a single character, or a string where each letter represents a column:
+
+```{r}
+dat <- data.frame(
+  a = c("a", "aa", "aaa"),
+  b = c("b", "bb", "bbb"),
+  c = c("c", "cc", "ccc"))
+
+tt(dat) |> style_tt(j = 1:3, align = "c")
+
+tt(dat) |> style_tt(j = 1:3, align = "lcr")
+```
+
+In LaTeX documents (only), we can use decimal-alignment:
+
+```{r}
+z <- data.frame(pi = c(pi * 100, pi * 1000, pi * 10000, pi * 100000))
+tt(z) |>
+    format_tt(j = 1, digits = 8, num_fmt = "significant_cell") |>
+    style_tt(j = 1, align = "d")
+```
+
+
+## Font size
+
+The font size is specified in em units. 
+
+```{r}
+tt(x) |> style_tt(j = "mpg|hp|qsec", fontsize = 1.5)
+```
+
+## Spanning cells (merging cells)
+
+Sometimes, it can be useful to make a cell stretch across multiple colums or rows, for example when we want to insert a label. To achieve this, we can use the `colspan` argument. Here, we make the 2nd cell of the 2nd row stretch across three columns and two rows:
+
+```{r}
+tt(x)|> style_tt(
+  i = 2, j = 2,
+  colspan = 3,
+  rowspan = 2,
+  align = "c",
+  alignv = "m",
+  color = "white",
+  background = "black",
+  bold = TRUE)
+```
+
+Here is the original table for comparison:
+
+```{r}
+tt(x)
+```
+
+Spanning cells can be particularly useful when we want to suppress redundant labels:
+
+```{r}
+tab <- aggregate(mpg ~ cyl + am, FUN = mean, data = mtcars)
+tab <- tab[order(tab$cyl, tab$am),]
+tab
+
+tt(tab, digits = 2) |>
+  style_tt(i = c(1, 3, 5), j = 1, rowspan = 2, alignv = "t")
+```
+
+
+## Headers
+
+The header can be omitted from the table by deleting the column names in the `x` data frame:
+
+```{r}
+k <- x
+colnames(k) <- NULL
+tt(k)
+```
+
+The first is row 0, and higher level headers (ex: column spanning labels) have negative indices like -1. They can be styled as expected:
+
+```{r}
+tt(x) |> style_tt(i = 0, color = "white", background = "black")
+```
+
+When styling columns without specifying `i`, the headers are styled in accordance with the rest of the column:
+
+```{r}
+tt(x) |> style_tt(j = 2:3, color = "white", background = "black")
+```
+
+
+## Conditional styling
+
+We can use the standard `which` function from Base `R` to create indices and apply conditional stying on rows. And we can use a regular expression in `j` to apply conditional styling on columns:
+
+```{r}
+k <- mtcars[1:10, c("mpg", "am", "vs")]
+
+tt(k) |> 
+  style_tt(
+    i = which(k$am == k$vs),
+    background = "teal",
+    color = "white")
+```
+
+## Vectorized styling (heatmaps)
+
+The `color`, `background`, and `fontsize` arguments are vectorized. This allows easy specification of different colors in a single call:
+
+```{r}
+tt(x) |>
+  style_tt(
+    i = 1:4,
+    color = c("red", "blue", "green", "orange"))
+```
+
+When using a single value for a vectorized argument, it gets applied to all values:
+
+```{r}
+tt(x) |>
+  style_tt(
+    j = 2:3,
+    color = c("orange", "green"),
+    background = "black")
+```
+
+We can also produce more complex heatmap-like tables to illustrate different font sizes in em units:
+
+```{r}
+# font sizes
+fs <- seq(.1, 2, length.out = 20)
+
+# headless table
+k <- data.frame(matrix(fs, ncol = 5))
+colnames(k) <- NULL
+
+# colors
+bg <- hcl.colors(20, "Inferno")
+fg <- ifelse(as.matrix(k) < 1.7, tail(bg, 1), head(bg, 1))
+
+# table
+tt(k, width = .7, theme = "void") |>
+  style_tt(j = 1:5, align = "ccccc") |>
+  style_tt(
+    i = 1:4,
+    j = 1:5,
+    color = fg,
+    background = bg,
+    fontsize = fs)
+```
+
+
+## Lines (borders)
+
+The `style_tt` function allows us to customize the borders that surround eacell of a table, as well horizontal and vertical rules. To control these lines, we use the `line`, `line_width`, and `line_color` arguments. Here's a brief overview of each of these arguments:
+
+- `line`: This argument specifies where solid lines should be drawn. It is a string that can consist of the following characters:
+  - `"t"`: Draw a line at the top of the cell, row, or column.
+  - `"b"`: Draw a line at the bottom of the cell, row, or column.
+  - `"l"`: Draw a line at the left side of the cell, row, or column.
+  - `"r"`: Draw a line at the right side of the cell, row, or column.
+  - You can combine these characters to draw lines on multiple sides, such as `"tbl"` to draw lines at the top, bottom, and left sides of a cell.
+- `line_width`: This argument controls the width of the solid lines in em units (default: 0.1 em). You can adjust this value to make the lines thicker or thinner.
+- `line_color`: Specifies the color of the solid lines. You can use color names, hexadecimal codes, or other color specifications to define the line color.
+
+Here is an example where we draw lines around every border ("t", "b", "l", and "r") of specified cells.
+
+```{r}
+tt(x, theme = "void") |>
+    style_tt(
+        i = 0:3,
+        j = 1:3,
+        line = "tblr",
+        line_width = 0.4,
+        line_color = "orange")
+```
+
+And here is an example with horizontal rules:
+
+```{r}
+tt(x, theme = "void") |>
+    style_tt(i = 0, line = "t", line_color = "orange", line_width = 0.4) |>
+    style_tt(i = 0, line = "b", line_color = "purple", line_width = 0.2) |>
+    style_tt(i = 4, line = "b", line_color = "orange", line_width = 0.4)
+```
+
+
+```{r}
+dat <- data.frame(1:2, 3:4, 5:6, 7:8)
+colnames(dat) <- NULL
+
+tt(dat, theme = "void") |> 
+  style_tt(
+    line = "tblr", line_color = "white", line_width = 0.5,
+    background = "blue", color = "white")
+```
+
+## Cell padding
+
+There is no argument in `style_tt()` to control the padding of cells. Thankfully, this is easy to control using CSS and `tabularray` options:
+
+
+```{r}
+tt(x) |> style_tt(
+    i = 1:5,
+    bootstrap_css = "padding-right: .2em; padding-top: 2em;",
+    tabularray_inner = "rowsep={2em}, colsep = {.2em}"
+)
+```
+
+
+## Markdown and Word
+
+Styling for Markdown and Word tables is more limited than for the other formats. In particular:
+
+* The only supported arguments are: `bold`, `italic`, and `strikeout`.
+* Headers inserted by `group_tt()` cannot be styled using the `style_tt()` function.
+
+These limitations are due to the fact that there is no markdown syntax for the other options (ex: colors and background), and that we create Word documents by converting a markdown table to .docx via the Pandoc software.
+
+One workaround is to style the group headers directly in their definition by using markdown syntax:
+
+```{r}
+mtcars[1:4, 1:4] |>
+  tt() |>
+  group_tt(i = list("*Hello*" = 1, "__World__" = 3)) |>
+  print("markdown")
+```
+
+

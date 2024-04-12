@@ -1,0 +1,275 @@
+# Tiny Tables
+
+`tinytable` is a small but powerful `R` package to draw HTML, LaTeX, Word, PDF, Markdown, and Typst tables. The interface is minimalist, but it gives users direct and convenient access to powerful frameworks to create endlessly customizable tables.
+
+Install it from Github:
+
+```{r, eval = FALSE}
+library(remotes)
+install_github("vincentarelbundock/tinytable")
+```
+
+This tutorial introduces the main functions of the package. It is available in two versions:
+
+* [PDF](tutorial.pdf)
+* [HTML](tutorial.html)
+
+Load the library and set some global options:
+
+```{r}
+library(tinytable)
+options(tinytable_tt_digits = 3)
+options(tinytable_theme_placement_latex_float = "H")
+```
+
+Draw a first table:
+
+```{r}
+x <- mtcars[1:4, 1:5]
+tt(x)
+```
+
+## Width
+
+The `width` arguments indicating what proportion of the line width the table should cover. This argument accepts a number between 0 and 1 to control the whole table width, or a vector of numeric values between 0 and 1, representing each column.
+
+```{r}
+tt(x, width = 0.5)
+```
+
+```{r}
+tt(x, width = 1)
+```
+
+We can control individual columns by supplying a vector. In that case, the sum of `width` elements determines the full table width. For example, this table takes 70% of available width, with the first column 3 times as large as the other ones.
+
+```{r}
+tt(x, width = c(.3, .1, .1, .1, .1))
+```
+
+When the sum of the `width` vector exceeds 1, it is automatically normalized to full-width. This is convenient when we only want to specify column width in relative terms:
+
+```{r}
+tt(x, width = c(3, 2, 1, 1, 1))
+```
+
+When specifying a table `width`, the text is automatically wrapped to appropriate size:
+
+
+```{r}
+lorem <- data.frame(
+  Lorem = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+  Ipsum = " Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos."
+)
+
+tt(lorem, width = 3/4)
+```
+
+
+## Footnotes
+
+The `notes` argument accepts single strings or named lists of strings:
+
+```{r}
+#| tbl-cap: "A full-width table with wrapped text in cells and a footnote."
+n <- "Fusce id ipsum consequat ante pellentesque iaculis eu a ipsum. Mauris id ex in nulla consectetur aliquam. In nec tempus diam. Aliquam arcu nibh, dapibus id ex vestibulum, feugiat consequat erat. Morbi feugiat dapibus malesuada. Quisque vel ullamcorper felis. Aenean a sem at nisi tempor pretium sit amet quis lacus."
+
+tt(lorem, notes = n, width = 1)
+```
+
+When `notes` is a named list, the names are used as identifiers and displayed as superscripts:
+
+```{r}
+tt(x, notes = list(a = "Blah.", b = "Blah blah."))
+```
+
+We can also add markers in individual cells by providing coordinates:
+
+```{r}
+tt(x, notes = list(
+    a = list(i = 0:1, j = 1, text = "Blah."),
+    b = "Blah blah."
+  )
+)
+```
+
+
+## Captions and cross-references
+
+In Quarto, one can specify captions and use cross-references using code like this:
+
+
+````{verbatim}
+@tbl-blah shows that...
+
+```{r}
+#| label: tbl-blah
+#| tbl-cap: "Blah blah blah"
+library(tinytable)
+tt(mtcars[1:4, 1:4])
+```
+````
+
+```{r, include=FALSE}
+# knitr adds this by default, I guess, which duplicates [H][H]
+options(tinytable_theme_placement_latex_float = NULL)
+```
+
+And here is the rendered version of the code chunk above:
+
+
+@tbl-blah shows that...
+
+```{r}
+#| label: tbl-blah
+#| tbl-cap: "Blah blah blah"
+library(tinytable)
+tt(mtcars[1:4, 1:4])
+```
+
+For standalone LaTeX tables, you can use the `caption` argument like so:
+
+```{r, eval=FALSE}
+tt(x, caption = "Blah blah.\\label{tbl-blah}")
+```
+
+Be aware that this approach may not work well in Quarto or Rmarkdown documents.
+
+
+```{r, include=FALSE}
+# knitr adds this by default, I guess, which duplicates [H][H]
+options(tinytable_theme_placement_latex_float = "H")
+```
+
+## Math
+
+To insert LaTeX-style mathematical expressions in a `tinytable`, we enclose the expression in dollar signs: `$...$`. The expression will then rendered as a mathematical expression by MathJax (for HTML), LaTeX, or Pandoc. Do not forget to double escape any backslashes.
+
+```{r}
+dat <- data.frame(Math = c(
+  "$x^2 + y^2 = z^2$",
+  "$\\frac{1}{2}$"
+))
+tt(dat) |> style_tt(j = 1, align = "c")
+```
+
+::: {.content-visible when-format="pdf"}
+In LaTeX (PDF), you can also use the `mode` inner setting from `tabularray` to render math in tables without delimiters (see @sec-tabularray for details on `tabularray`):
+
+```{r, eval = knitr::is_latex_output()}
+
+dat <- data.frame(Math = c("x^2 + y^2 = z^2", "\\frac{1}{2}"))
+tt(dat) |>
+  style_tt(j = 1, align = "c", tabularray_inner = "column{1}={mode=math},")
+```
+:::
+
+
+## Line breaks and text wrapping
+
+Manual line breaks work sligthly different in LaTeX (PDF) or HTML. This table shows the two strategies. For HTML, we insert a `<br>` tag. For LaTeX, we wrap the string in curly braces `{}`, and then insert two (escaped) backslashes: `\\\\`
+
+```{r}
+d <- data.frame(
+  "{Sed ut \\\\ perspiciatis unde}",
+  "dicta sunt<br> explicabo. Nemo"
+) |> setNames(c("LaTeX line break", "HTML line break"))
+tt(d, width = 1)
+```
+
+## Output formats
+
+`tinytable` can produce tables in HTML, Word, Markdown, LaTeX, Typst, PDF, or PNG format. An appropriate output format for printing is automatically selected based on (1) whether the function is called interactively, (2) is called within RStudio, and (3) the output format of the Rmarkdown or Quarto document, if applicable. Alternatively, users can specify the print format in `print()` or by setting a global option:
+
+```{r}
+#| eval: false
+tt(x) |> print("markdown")
+tt(x) |> print("html")
+tt(x) |> print("latex")
+
+options(tinytable_print_output = "markdown")
+```
+
+With the `save_tt()` function, users can also save tables directly to PNG (images), PDF or Word documents, and to any of the basic formats. All we need to do is supply a valid file name with the appropriate extension (ex: `.png`, `.html`, `.pdf`, etc.):
+
+```r
+tt(x) |> save_tt("path/to/file.png")
+tt(x) |> save_tt("path/to/file.pdf")
+tt(x) |> save_tt("path/to/file.docx")
+tt(x) |> save_tt("path/to/file.html")
+tt(x) |> save_tt("path/to/file.tex")
+tt(x) |> save_tt("path/to/file.md")
+```
+
+`save_tt()` can also return a string with the table in it, for further processing in `R`. In the first case, the table is printed to console with `cat()`. In the second case, it returns as a single string as an `R` object.
+
+```{r}
+tt(mtcars[1:10, 1:5]) |>
+  group_tt(
+    i = list(
+      "Hello" = 3,
+      "World" = 8),
+    j = list(
+      "Foo" = 2:3,
+      "Bar" = 4:5)) |>
+  print("markdown")
+```
+
+```{r}
+tt(mtcars[1:10, 1:5]) |>
+  group_tt(
+    i = list(
+      "Hello" = 3,
+      "World" = 8),
+    j = list(
+      "Foo" = 2:3,
+      "Bar" = 4:5)) |>
+  save_tt("markdown")
+```
+
+## Combination and exploration
+
+Tables can be explored, modified, and combined using many of the usual base `R` functions:
+
+```{r}
+a <- tt(mtcars[1:2, 1:2])
+a
+
+dim(a)
+ncol(a)
+nrow(a)
+colnames(a)
+```
+
+Rename columns:
+
+```{r}
+colnames(a) <- c("a", "b")
+a
+```
+
+Tables can be combined with the usual `rbind()` function:
+
+```{r}
+a <- tt(mtcars[1:3, 1:2], caption = "Combine two tiny tables.")
+b <- tt(mtcars[4:5, 8:10]) 
+
+rbind(a, b)
+
+rbind(a, b) |> format_tt(replace = "")
+```
+
+The `rbind2()` S4 method is slightly more flexible than `rbind()`, as it supports arguments `headers` and `use.names`.
+
+Omit `y` header:
+
+```{r}
+rbind2(a, b, headers = FALSE)
+```
+
+Bind tables by position rather than column names:
+
+```{r}
+rbind2(a, b, use_names = FALSE)
+```
+
