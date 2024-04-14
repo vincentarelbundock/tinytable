@@ -25,6 +25,9 @@
 
 * Do not change working directory when saving to file raises an error. Thanks to @etiennebacher for report #225.
 
+Bug fixes:
+
+* Data frames without column headers could be displayed as "c(1,2,3,3)". Bug in `format_tt()`. Issue #230.
 
 ## 0.2.1
 

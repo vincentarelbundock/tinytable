@@ -219,27 +219,28 @@ format_tt_lazy <- function(x,
   if (is.null(j)) j <- seq_len(ncol(out))
 
   # format each column
+  # Issue #230: drop=TRUE fixes bug which returned a character dput-like vector
   for (col in j) {
     # sprintf() is self-contained
     if (!is.null(sprintf)) {
-      out[i, col] <- base::sprintf(sprintf, ori[i, col])
+      out[i, col] <- base::sprintf(sprintf, ori[i, col, drop = TRUE])
     } else {
       # logical
       if (is.logical(ori[i, col])) {
-        out[i, col] <- bool(ori[i, col])
+        out[i, col] <- bool(ori[i, col, drop = TRUE])
 
       # date
       } else if (inherits(ori[i, col], "Date")) {
-        out[i, col] <- format(ori[i, col], date)
+        out[i, col] <- format(ori[i, col, drop = TRUE], date)
 
       # numeric
-      } else if (is.numeric(ori[i, col])) {
+      } else if (is.numeric(ori[i, col, drop = TRUE])) {
         # digits check needs to be done here to avoid the other() formatting from ori, which zaps the original setting
 
         # numeric suffix
         if (isTRUE(num_suffix) && !is.null(digits)) {
           out[i, col] <- format_num_suffix(
-            ori[i, col],
+            ori[i, col, drop = TRUE],
             digits = digits,
             num_mark_big = num_mark_big,
             num_mark_dec = num_mark_dec,
@@ -249,7 +250,7 @@ format_tt_lazy <- function(x,
         # non-integer numeric
         } else if (is.numeric(ori[i, col]) && !isTRUE(check_integerish(ori[i, col])) && !is.null(digits)) {
           if (num_fmt == "significant") {
-            out[i, col] <- format(ori[i, col],
+            out[i, col] <- format(ori[i, col, drop = TRUE],
               digits = digits, drop0trailing = !num_zero,
               big.mark = num_mark_big, decimal.mark = num_mark_dec,
               scientific = FALSE)
@@ -260,14 +261,14 @@ format_tt_lazy <- function(x,
                 big.mark = num_mark_big, decimal.mark = num_mark_dec,
                 scientific = FALSE)
             }
-            out[i, col] <- sapply(ori[i, col], zzz)
+            out[i, col] <- sapply(ori[i, col, drop = TRUE], zzz)
           } else if (num_fmt == "decimal") {
-            out[i, col] <- formatC(ori[i, col],
+            out[i, col] <- formatC(ori[i, col, drop = TRUE],
               digits = digits, format = "f", drop0trailing = !num_zero,
               big.mark = num_mark_big, decimal.mark = num_mark_dec)
 
             if (num_fmt == "scientific") {
-              out[i, col] <- formatC(ori[i, col],
+              out[i, col] <- formatC(ori[i, col, drop = TRUE],
                 digits = digits, format = "e", drop0trailing = !num_zero,
                 big.mark = num_mark_big, decimal.mark = num_mark_dec)
             }
@@ -276,19 +277,19 @@ format_tt_lazy <- function(x,
         # integer
         } else if (isTRUE(check_integerish(ori[i, col])) && !is.null(digits)) {
           if (num_fmt == "scientific") {
-            out[i, col] <- formatC(ori[i, col],
+            out[i, col] <- formatC(ori[i, col, drop = TRUE],
               digits = digits, format = "e", drop0trailing = !num_zero,
               big.mark = num_mark_big, decimal.mark = num_mark_dec)
           }
         }
         
       } else {
-        out[i, col] <- other(ori[i, col])
+        out[i, col] <- other(ori[i, col, drop = TRUE])
       }
     }
 
     for (k in seq_along(replace)) {
-        idx <- ori[i, col] %in% replace[[k]]
+        idx <- ori[i, col, drop = TRUE] %in% replace[[k]]
         out[i, col][idx] <- names(replace)[[k]]
     }
 
@@ -298,7 +299,7 @@ format_tt_lazy <- function(x,
   # before escaping
   if (is.function(fn)) {
     for (col in j) {
-      out[i, col] <- fn(ori[i, col])
+      out[i, col] <- fn(ori[i, col, drop = TRUE])
     }
   }
 
