@@ -1,6 +1,3 @@
----
-bibliography: bibliography.bib
----
 
 # Formatting
 
@@ -228,7 +225,7 @@ Quarto automatically applies [some data processing](https://quarto.org/docs/auth
 
 To enable Quarto data processing, we can use the `quarto` argument of the `format_tt()` function. This argument allows users to mark certain cells explicitly for processing by Quarto, by wrapping them in a special "span" called "data-qmd", supported by Quarto: 
 
-```{r}
+```{r, eval = knitr::is_html_output()}
 k <- data.frame(Thing = "qwerty", Citation = "@Lovelace1842")
 
 tt(k) |> format_tt(quarto = TRUE)
@@ -236,18 +233,23 @@ tt(k) |> format_tt(quarto = TRUE)
 
 Some users may want to apply Quarto data processing to all tables. This can be done with themes:
 
-```{r}
+```{r, eval = knitr::is_html_output()}
 theme_quarto <- function(x) format_tt(x, quarto = TRUE)
 options(tinytable_tt_theme = theme_quarto)
 
 tt(k)
 ```
 
+Back to normal:
+
+```{r, eval = knitr::is_html_output()}
+options(tinytable_tt_theme = NULL)
+```
 
 
 Alternatively, users can set a global option to process all tables in Quarto, but they will then have to mark each cell with special content using  `format_tt(quarto)`:
 
-```{r}
+```{r, eval = knitr::is_html_output()}
 options(tinytable_quarto_disable_processing = FALSE)
 
 tt(x)
@@ -257,7 +259,7 @@ Notice that Quarto is now processing the table, so we lose the default `tinytabl
 
 Back to normal:
 
-```{r}
+```{r, eval = knitr::is_html_output()}
 options(tinytable_quarto_disable_processing = TRUE)
 ```
 :::
