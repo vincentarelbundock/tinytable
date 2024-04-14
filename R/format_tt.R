@@ -27,10 +27,12 @@
 #' - If `i` and `j` are both `NULL`, escape all cells, column names, caption, notes, and spanning labels created by `group_tt()`.
 #' @param markdown Logical; if TRUE, render markdown syntax in cells. Ex: `_italicized text_` is properly italicized in HTML and LaTeX.
 #' @param fn Function for custom formatting. Accepts a vector and returns a character vector of the same length.
+#' @param quarto Logical. Enable Quarto data processing and wrap cell content in a `data-qmd` span (HTML) or `\QuartoMarkdownBase64{}` macro (LaTeX). Warning: Quarto data processing can enter in conflict with `tinytable` styling or formatting options. See global options section below.
 #' @param sprintf String passed to the `?sprintf` function to format numbers or interpolate strings with a user-defined pattern (similar to the `glue` package, but using Base R).
 #' @param ... Additional arguments are ignored.
 #' @inheritParams tt
 #' @inheritParams style_tt
+#' @template global_options
 #'
 #' @return A data frame with formatted columns.
 #' @export
@@ -86,6 +88,7 @@ format_tt <- function(x,
                       replace = getOption("tinytable_format_replace", default = TRUE),
                       escape = getOption("tinytable_format_escape", default = FALSE),
                       markdown = getOption("tinytable_format_markdown", default = FALSE),
+                      quarto = getOption("tinytable_format_quarto", default = FALSE),
                       fn = getOption("tinytable_format_fn", default = NULL),
                       sprintf = getOption("tinytable_format_sprintf", default = NULL),
                       ...
@@ -116,6 +119,7 @@ format_tt <- function(x,
                 bool = bool,
                 escape = escape,
                 markdown = markdown,
+                quarto = quarto,
                 other = other)
     out@lazy_format <- c(out@lazy_format, list(cal))
   } else {
@@ -137,6 +141,7 @@ format_tt <- function(x,
                           bool = bool,
                           other = other,
                           escape = escape,
+                          quarto = quarto,
                           markdown = markdown)
   }
 
@@ -160,6 +165,7 @@ format_tt_lazy <- function(x,
                            bool = identity,
                            escape = FALSE,
                            markdown = FALSE,
+                           quarto = quarto,
                            other = as.character
                            ) {
 
@@ -192,6 +198,7 @@ format_tt_lazy <- function(x,
   assert_function(fn, null.ok = TRUE)
   assert_string(sprintf, null.ok = TRUE)
   assert_flag(markdown)
+  assert_flag(quarto)
   if (is.null(j)) jnull <- TRUE else jnull <- FALSE
   if (is.null(i)) inull <- TRUE else inull <- FALSE
   j <- sanitize_j(j, ori)
@@ -385,6 +392,27 @@ format_tt_lazy <- function(x,
       }
     }
   }
+
+  # quarto at the very end
+  if (isTRUE(quarto)) {
+      fun <- function(z) {
+          z@table_string <- sub(
+              "data-quarto-disable-processing='true'",
+              "data-quarto-disable-processing='false'",
+              z@table_string,
+              fixed = TRUE)
+          return(z)
+      }
+      x <- style_tt(x, finalize = fun)
+      if (isTRUE(check_dependency("knitr"))) {
+        if (knitr::is_html_output()) {
+            out[i, col] <- sprintf('<span data-qmd="%s"></span>', ori[i, col, drop = TRUE])
+        } else if (knitr::is_latex_output()) {
+            out[i, col] <- sprintf('\\QuartoMarkdownBase64{%s}', ori[i, col, drop = TRUE])
+        }
+      }
+  }
+
 
   if (isTRUE(atomic_vector)) {
     return(out[[1]])

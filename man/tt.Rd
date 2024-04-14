@@ -79,8 +79,7 @@ When rendering Quarto and Rmarkdown documents, \code{tinytable} will populate th
 
 \section{Global options}{
 
-
-Quarto data processing:
+\subsection{Quarto data processing}{
 
 \code{options(tinytable_quarto_disable_processing = TRUE)}
 
@@ -90,6 +89,9 @@ Disable Quarto processing of cell content. Setting this global option to \code{F
 fn <- function(z) sprintf("<span data-qmd='\%s'></span>", z)
 tt(x) |> format_tt(i = 1, fn = fn)
 }\if{html}{\out{</div>}}
+
+See this link for more details: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing
+}
 }
 
 \examples{

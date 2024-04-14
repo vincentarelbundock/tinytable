@@ -2,7 +2,7 @@
 #'
 #' @section Global options:
 #'
-#' Quarto data processing:
+#' ## Quarto data processing
 #'
 #' `options(tinytable_quarto_disable_processing = TRUE)`
 #'
@@ -13,4 +13,6 @@
 #' fn <- function(z) sprintf("<span data-qmd='%s'></span>", z)
 #' tt(x) |> format_tt(i = 1, fn = fn)
 #' ```
+#'
+#' See this link for more details: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing
 #'

@@ -5,10 +5,10 @@
 `tt()`:
 
 * `width` argument now accepts a vector of numeric values to control the width of each column, as a proportion of the total linewidth.
-* Global option to enable Quarto data processing: `options(tinytable_quarto_disable_processing = FALSE)`. Thanks to @andrewheiss for issue #215.
 
 `format_tt()`:
 
+* New `quarto` argument enables Quarto data processing for the whole table and marks specific cells as containing Quarto content. This is especially useful to include @Citation1981 in a table. Thanks to @andrewheiss for issue #215.
 * New `replace` argument which accepts a single logical, a single string, or a named list to specify multiple replacements.
 * `replace=TRUE` by default replaces `NA` by an empty string. `FALSE` prints "NA" as string.
 * `replace_na` is deprecated in favor of `replace`. Backward compatibility is maintained and a warning is issued.
@@ -25,6 +25,10 @@
 `save_tt()`:
 
 * Do not change working directory when saving to file raises an error. Thanks to @etiennebacher for report #225.
+
+Misc:
+
+* Global option to enable Quarto data processing: `options(tinytable_quarto_disable_processing = FALSE)`. Thanks to @andrewheiss for issue #215.
 
 Bug fixes:
 

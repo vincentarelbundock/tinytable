@@ -1,3 +1,7 @@
+---
+bibliography: bibliography.bib
+---
+
 # Formatting
 
 ```{r}
@@ -216,3 +220,33 @@ tt(thumbdrives) |>
   format_tt(escape = TRUE)
 ```
 
+
+::: {.content-visible when-format="html"}
+## Quarto data processing
+
+Quarto automatically applies [some data processing](https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing) to the content of the tables it renders. By default, `tinytable` disables this processing, because it can enter in conflict with styling and formatting features of the package. 
+
+To enable Quarto data processing, we can use the `quarto` argument of the `format_tt()` function. This argument allows users to mark certain cells explicitly for processing by Quarto, by wrapping them in a special "span" called "data-qmd", supported by Quarto: 
+
+```{r}
+k <- data.frame(Thing = "qwerty", Citation = "@Lovelace1842")
+
+tt(k) |> format_tt(quarto = TRUE)
+```
+
+Alternatively, users can set a global option to process all tables in Quarto:
+
+```{r}
+options(tinytable_quarto_disable_processing = FALSE)
+
+tt(x)
+```
+
+Notice that Quarto is now processing the table, so we lose the default `tinytable` theme and get the default striped Quarto look.
+
+Back to normal:
+
+```{r}
+options(tinytable_quarto_disable_processing = TRUE)
+```
+:::
