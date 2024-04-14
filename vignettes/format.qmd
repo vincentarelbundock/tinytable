@@ -234,7 +234,18 @@ k <- data.frame(Thing = "qwerty", Citation = "@Lovelace1842")
 tt(k) |> format_tt(quarto = TRUE)
 ```
 
-Alternatively, users can set a global option to process all tables in Quarto:
+Some users may want to apply Quarto data processing to all tables. This can be done with themes:
+
+```{r}
+theme_quarto <- function(x) format_tt(x, quarto = TRUE)
+options(tinytable_tt_theme = theme_quarto)
+
+tt(k)
+```
+
+
+
+Alternatively, users can set a global option to process all tables in Quarto, but they will then have to mark each cell with special content using  `format_tt(quarto)`:
 
 ```{r}
 options(tinytable_quarto_disable_processing = FALSE)
