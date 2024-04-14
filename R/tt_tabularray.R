@@ -8,14 +8,10 @@ setMethod(
   ncols <- ncol(x)
   nrows <- nrow(x)
 
-  # caption
-  if (length(x@caption) > 0) {
-    idx <- grep("\\$tinytable_CAPTION", template)
-    template[idx] <- sprintf("\\caption{%s}", x@caption)
-  } else {
-    idx <- grep("\\$tinytable_CAPTION", template)
-    template <- template[-idx]
-  }
+  tall <- FALSE
+  if (length(x@caption) > 0) tall <- TRUE
+  if (length(x@notes) > 0) tall <- TRUE
+
 
   # placement
   if (length(x@placement) == 1) {
@@ -55,6 +51,11 @@ setMethod(
   out <- trimws(out)
   out <- paste(out, collapse = "\n")
 
+  if (length(x@caption) > 0) {
+    spec <- sprintf("caption={%s},", x@caption[1])
+    out <- tabularray_insert(out, content = spec, type = "outer")
+  }
+
   if (length(x@width) == 0) {
     tabularray_cols <- rep("Q[]", ncol(x))
 
@@ -75,8 +76,6 @@ setMethod(
 
   # notes
   if (length(x@notes) > 0) {
-    out <- sub("\\begin{tblr}", "\\begin{talltblr}", out, fixed = TRUE)
-    out <- sub("\\end{tblr}", "\\end{talltblr}", out, fixed = TRUE)
     # otherwise an empty caption is created automatically
     out <- tabularray_insert(out, content = "entry=none,label=none", type = "outer")
     if (is.null(names(x@notes))) {
@@ -89,6 +88,11 @@ setMethod(
       spec <- sprintf("note{%s}={%s}", lab[k], notes[k])
       out <- tabularray_insert(out, content = spec, type = "outer")
     }
+  }
+
+  if (isTRUE(tall)) {
+    out <- sub("\\begin{tblr}", "\\begin{talltblr}", out, fixed = TRUE)
+    out <- sub("\\end{tblr}", "\\end{talltblr}", out, fixed = TRUE)
   }
 
   x@table_string <- out

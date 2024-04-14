@@ -28,6 +28,8 @@
 Bug fixes:
 
 * Data frames without column headers could be displayed as "c(1,2,3,3)". Bug in `format_tt()`. Issue #230.
+* `save_tt()` can now save to PDF when the table includes a caption. Thanks to @etiennebacher for report #224.
+
 
 ## 0.2.1
 
