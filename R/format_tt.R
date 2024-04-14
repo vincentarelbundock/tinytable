@@ -395,21 +395,20 @@ format_tt_lazy <- function(x,
 
   # quarto at the very end
   if (isTRUE(quarto)) {
-      fun <- function(z) {
-          z@table_string <- sub(
-              "data-quarto-disable-processing='true'",
-              "data-quarto-disable-processing='false'",
-              z@table_string,
-              fixed = TRUE)
-          return(z)
-      }
-      x <- style_tt(x, finalize = fun)
       if (isTRUE(check_dependency("knitr"))) {
-        if (knitr::is_html_output()) {
-            out[i, col] <- sprintf('<span data-qmd="%s"></span>', ori[i, col, drop = TRUE])
-        } else if (knitr::is_latex_output()) {
-            out[i, col] <- sprintf('\\QuartoMarkdownBase64{%s}', ori[i, col, drop = TRUE])
-        }
+          if (knitr::is_html_output()) {
+              fun <- function(z) {
+                  z@table_string <- sub("data-quarto-disable-processing='true'",
+                                        "data-quarto-disable-processing='false'",
+                                        z@table_string,
+                                        fixed = TRUE)
+                  return(z)
+              }
+              x <- style_tt(x, finalize = fun)
+              out[i, col] <- sprintf('<span data-qmd="%s"></span>', ori[i, col, drop = TRUE])
+          } else if (knitr::is_latex_output()) {
+              out[i, col] <- sprintf('\\QuartoMarkdownBase64{%s}', ori[i, col, drop = TRUE])
+          }
       }
   }
 
