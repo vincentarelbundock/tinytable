@@ -19,7 +19,7 @@ tt(
 
 \item{digits}{Number of significant digits to keep for numeric variables. When \code{digits} is an integer, \code{tt()} calls \code{format_tt(x, digits = digits)} before proceeding to draw the table. Note that this will apply all default argument values of \code{format_tt()}, such as replacing \code{NA} by "". Users who need more control can use the \code{format_tt()} function instead.}
 
-\item{caption}{A string that will be used as the caption of the table.}
+\item{caption}{A string that will be used as the caption of the table. This argument should \emph{not} be used in Quarto or Rmarkdown documents. In that context, please use the appropriate chunk options.}
 
 \item{notes}{Notes to append to the bottom of the table. This argument accepts several different inputs:
 \itemize{

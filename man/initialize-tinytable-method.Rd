@@ -16,7 +16,7 @@
 )
 }
 \arguments{
-\item{caption}{A string that will be used as the caption of the table.}
+\item{caption}{A string that will be used as the caption of the table. This argument should \emph{not} be used in Quarto or Rmarkdown documents. In that context, please use the appropriate chunk options.}
 
 \item{notes}{Notes to append to the bottom of the table. This argument accepts several different inputs:
 \itemize{
