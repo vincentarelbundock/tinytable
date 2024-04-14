@@ -77,6 +77,21 @@ When rendering Quarto and Rmarkdown documents, \code{tinytable} will populate th
 }\if{html}{\out{</div>}}
 }
 
+\section{Global options}{
+
+
+Quarto data processing:
+
+\code{options(tinytable_quarto_disable_processing = TRUE)}
+
+Disable Quarto processing of cell content. Setting this global option to \code{FALSE} may lead to conflicts with some \code{tinytable} features, but it also allows use of markdown and Quarto-specific code in table cells, such as cross-references.
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{x <- data.frame(Math = "x^2^", Citation = "@Lovelace1842")
+fn <- function(z) sprintf("<span data-qmd='\%s'></span>", z)
+tt(x) |> format_tt(i = 1, fn = fn)
+}\if{html}{\out{</div>}}
+}
+
 \examples{
 library(tinytable)
 x <- mtcars[1:4, 1:5]

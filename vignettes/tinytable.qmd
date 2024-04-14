@@ -1,3 +1,7 @@
+---
+bibliography: bibliography.bib
+---
+
 # Tiny Tables
 
 `tinytable` is a small but powerful `R` package to draw HTML, LaTeX, Word, PDF, Markdown, and Typst tables. The interface is minimalist, but it gives users direct and convenient access to powerful frameworks to create endlessly customizable tables.
@@ -278,3 +282,30 @@ Bind tables by position rather than column names:
 rbind2(a, b, use_names = FALSE)
 ```
 
+::: {.content-visible when-format="html"}
+## Quarto data processing
+
+Quarto automatically applies some data processing to the content of the tables it renders. By default, `tinytable` disables this processing, because it can enter in conflict with styling and formatting features of the package. To enable Quarto data processing, users can set a global option:
+
+```{r}
+options(tinytable_quarto_disable_processing = FALSE)
+```
+
+This option then allows users to mark certain cells explicitly for processing by Quarto, by wrapping them in a special "span" called "data-qmd", defined by Quarto: 
+
+```{r}
+k <- data.frame(Thing = "x^2^", Citation = "@Lovelace1842")
+fn <- function(z) sprintf("<span data-qmd='%s'></span>", z)
+tt(k) |> format_tt(fn = fn)
+```
+
+Notice that Quarto is now processing the table, so we lose the default `tinytable` theme and get the default striped Quarto look.
+
+Back to normal:
+
+```{r}
+options(tinytable_quarto_disable_processing = TRUE)
+```
+
+
+:::

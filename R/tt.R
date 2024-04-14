@@ -31,6 +31,7 @@
 #' 
 #' The table object has S4 slots which hold information about the structure of the table. This meta-data can be accessed with the usual `@` accessor. In general, modifying the content of these slots is not recommended, but it can be useful to some developers, such as those who want to force print to a specific output format without calling `print()`.
 #' @template latex_preamble
+#' @template global_options
 #' 
 #' @examples
 #' library(tinytable)

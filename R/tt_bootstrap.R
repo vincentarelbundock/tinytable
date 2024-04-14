@@ -5,6 +5,16 @@ setMethod(
 
   template <- readLines(system.file("templates/bootstrap.html", package = "tinytable"))
 
+  quartoprocessing <- getOption("tinytable_quarto_disable_processing", default = TRUE)
+  assert_flag(quartoprocessing, name = "tinytable_quarto_disable_processing")
+
+  if (isFALSE(quartoprocessing)) {
+      template <- sub("data-quarto-disable-processing='true'",
+                      "data-quarto-disable-processing='false'",
+                      template,
+                      fixed = TRUE)
+  }
+
   # caption
   if (length(x@caption) != 1) {
     template <- sub(

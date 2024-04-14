@@ -5,6 +5,7 @@
 `tt()`:
 
 * `width` argument now accepts a vector of numeric values to control the width of each column, as a proportion of the total linewidth.
+* Global option to enable Quarto data processing: `options(tinytable_quarto_disable_processing = FALSE)`. Thanks to @andrewheiss for issue #215.
 
 `format_tt()`:
 
