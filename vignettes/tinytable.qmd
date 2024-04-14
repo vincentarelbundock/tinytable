@@ -127,12 +127,11 @@ tt(mtcars[1:4, 1:4])
 
 One exception to the injunction above is when rendering a Quarto document to LaTeX using `theme_tt("multipage")"`. In that case, one must *avoid* using the Quarto chunk option, because these options trigger Quarto post-processing that will conflict with the `longtblr` environment used to split long tables across multiple pages.
 
-The alternative is to use the `caption` argument and a `tabularray` outer option to specify the label:
+The alternative is to use to refer to tables using standard LaTeX syntax: `\ref{tbl-ex-multipage}`. Then, use the `caption` argument in `tt()` to specify both the label and the caption:
 
 ```{r}
 #| eval: false
-tt(rbind(mtcars, mtcars), caption = "Example table.") |>
-  style_tt(tabularray_outer = "label={tbl-ex-multipage}") |>
+tt(iris, caption = "Example table.\\label{tbl-ex-multipage}") |>
   theme_tt("multipage")
 ```
 
