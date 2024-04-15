@@ -376,19 +376,19 @@ format_tt_lazy <- function(x,
     assert_dependency("markdown")
     for (col in j) {
       if (inherits(x, "tinytable_bootstrap")) {
-        fun <- function(k) {
+        tmpfun <- function(k) {
           k <- trimws(markdown::mark_html(text = k, template = FALSE))
           k <- sub("<p>", "", k, fixed = TRUE)
           k <- sub("</p>", "", k, fixed = TRUE)
           return(k)
         }
-        out[i, col] <- sapply(out[i, col], function(k) fun(k))
+        out[i, col] <- sapply(out[i, col], function(k) tmpfun(k))
       } else if (inherits(x, "tinytable_tabularray")) {
-        fun <- function(k) {
+        tmpfun <- function(k) {
           k <- trimws(markdown::mark_latex(text = k, template = FALSE))
           return(k)
         }
-        out[i, col] <- sapply(out[i, col], function(k) fun(k))
+        out[i, col] <- sapply(out[i, col], function(k) tmpfun(k))
       }
     }
   }
