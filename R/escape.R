@@ -38,7 +38,7 @@ escape_text <- function(x, output = "latex") {
         out <- gsub(">", "\\>", out, fixed = TRUE)
         out <- gsub("*", "\\*", out, fixed = TRUE)
         out <- gsub(">", "\\>", out, fixed = TRUE)
-        out <- gsub("_", "\_", out, fixed = TRUE)
+        # out <- gsub("_", "\\_", out, fixed = TRUE)
         out <- gsub("@", "\\@", out, fixed = TRUE)
         out <- gsub("=", "\\=", out, fixed = TRUE)
         out <- gsub("-", "\\-", out, fixed = TRUE)
