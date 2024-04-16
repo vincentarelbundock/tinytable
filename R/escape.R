@@ -36,6 +36,16 @@ escape_text <- function(x, output = "latex") {
     } else if (isTRUE(output == "typst")) {
         out <- gsub("<", "\\<", out, fixed = TRUE)
         out <- gsub(">", "\\>", out, fixed = TRUE)
+        out <- gsub("*", "\\*", out, fixed = TRUE)
+        out <- gsub(">", "\\>", out, fixed = TRUE)
+        out <- gsub("@", "\\@", out, fixed = TRUE)
+        out <- gsub("=", "\\=", out, fixed = TRUE)
+        out <- gsub("-", "\\-", out, fixed = TRUE)
+        out <- gsub("+", "\\+", out, fixed = TRUE)
+        out <- gsub("/", "\\/", out, fixed = TRUE)
+        out <- gsub("$", "\\$", out, fixed = TRUE)
+        out <- gsub("#", "\\#", out, fixed = TRUE)
+
     }
 
     return(out)
