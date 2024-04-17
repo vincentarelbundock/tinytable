@@ -3,10 +3,14 @@
 #let nrow = $TINYTABLE_TYPST_NROW;
 #let ncol = $TINYTABLE_TYPST_NCOL;
 
+// start figure preamble
 #figure(
   $TINYTABLE_TYPST_CAPTION
   kind: "tinytable",
   supplement: none,
+// end figure preamble
+
+
   tablex(
     columns: ncol,
     header-rows: nhead,
@@ -22,5 +26,5 @@
 
     // tinytable cell content after
   ) // end tablex
-) // end figure
 
+) // end figure

@@ -46,6 +46,26 @@ lines_drop <- function(old, regex, position = "equal", fixed = FALSE) {
 }
 
 
+lines_drop_between <- function(text, regex_start, regex_end, fixed = FALSE) {
+  lines <- strsplit(text, "\n")[[1]]
+  idx_start <- grep(regex_start, lines, fixed = fixed)
+  idx_end <- grep(regex_end, lines, fixed = fixed)
+  if (length(idx_start) != 1) {
+    stop("The `regex_start` did not match a unique line.", call. = FALSE)
+  }
+  if (length(idx_end) != 1) {
+    stop("The `regex_end` did not match a unique line.", call. = FALSE)
+  }
+  if (idx_start >= idx_end) {
+    stop("`regex_start` matches a line after `regex_end`.", call. = FALSE)
+  }
+  lines_to_keep <- c(1:(idx_start-1), (idx_end+1):length(lines))
+  output <- lines[lines_to_keep]
+  out <- paste(output, collapse = "\n")
+  return(out)
+}
+
+
 lines_insert <- function(old, new, regex, position = "before") {
     lines <- strsplit(old, "\n")[[1]]
     idx <- grep(regex, lines)

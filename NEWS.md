@@ -26,6 +26,10 @@
 
 * Do not change working directory when saving to file raises an error. Thanks to @etiennebacher for report #225.
 
+Typst:
+
+* Better compatibility with Quarto captions. Recommended strategy is to *not* use the `caption` argument, and rather to define *both* the `label` and `tbl-cap` chunk options in Quarto. This is a breaking change, as Typst tables are no longer enclosed in a `#figure` environment in Quarto documents when both `tbl-cap` and `label` chunk options are defined.
+
 Misc:
 
 * Global option to enable Quarto data processing: `options(tinytable_quarto_disable_processing = FALSE)`. Thanks to @andrewheiss for issue #215.
