@@ -214,8 +214,8 @@ theme_multipage <- function(x, rowhead = 0, rowfoot = 0, ...) {
         if (!isTRUE(table@output == "latex")) return(table)
 
         tab <- table@table_string
-        tab <- sub("\\\\begin\\{tblr", "\\\\begin\\{longtblr", tab)
-        tab <- sub("\\\\end\\{tblr", "\\\\end\\{longtblr", tab)
+        tab <- sub("\\\\begin\\{talltblr", "\\\\begin\\{longtblr", tab)
+        tab <- sub("\\\\end\\{talltblr", "\\\\end\\{longtblr", tab)
 
         tab <- strsplit(tab, "\n")[[1]]
         idx <- grepl("^\\\\caption\\{|^\\\\begin\\{table|^\\\\end\\{table|^\\\\centering", trimws(tab))
