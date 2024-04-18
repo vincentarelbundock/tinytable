@@ -406,8 +406,10 @@ format_tt_lazy <- function(x,
               }
               x <- style_tt(x, finalize = fun)
               out[i, col] <- sprintf('<span data-qmd="%s"></span>', ori[i, col, drop = TRUE])
-          } else if (knitr::is_latex_output()) {
-              out[i, col] <- sprintf('\\QuartoMarkdownBase64{%s}', ori[i, col, drop = TRUE])
+          } else {#if (knitr::is_latex_output()) {
+              assert_dependency("base64enc")
+              tmp <- sapply(ori[i, col, drop = TRUE], function(z) base64enc::base64encode(charToRaw(z)))
+              out[i, col] <- sprintf('\\QuartoMarkdownBase64{%s}', tmp)
           }
       }
   }

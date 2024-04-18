@@ -8,7 +8,7 @@
 
 `format_tt()`:
 
-* New `quarto` argument enables Quarto data processing for the whole table and marks specific cells as containing Quarto content. This is especially useful to include @Citation1981 in a table. Thanks to @andrewheiss for issue #215.
+* New `quarto` argument enables Quarto data processing for the whole table and marks specific cells as containing Quarto content. This is especially useful to include @Citation1981 in a table. Thanks to @andrewheiss for issue #215 and @giabaio for further discussion and debugging.
 * New `replace` argument which accepts a single logical, a single string, or a named list to specify multiple replacements.
 * `replace=TRUE` by default replaces `NA` by an empty string. `FALSE` prints "NA" as string.
 * `replace_na` is deprecated in favor of `replace`. Backward compatibility is maintained and a warning is issued.
