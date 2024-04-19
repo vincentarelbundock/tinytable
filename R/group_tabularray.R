@@ -80,7 +80,7 @@ group_tabularray_row <- function(x, i, indent) {
 
   # separator rows
   # add separator rows so they are treated as body in future calls
-  new <- paste(label, strrep("&", ncol(x)), "\\\\")
+  new <- paste(label, strrep("&", ncol(x) - 1), "\\\\")
   x@body <- c(x@body, new)
   idx <- insert_values(mid, new, i)
 
