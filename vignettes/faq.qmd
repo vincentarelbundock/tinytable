@@ -2,16 +2,18 @@
 
 ## LaTeX: `setspace`
 
-Some users have encountered spacing issues when using `tinytable` to generate tables that are *not* wrapped in a `\begin{table}` environment (ex: `multipage` or raw `tblr`).
+Some users have encountered unexpected spacing behavior when generating tables that are *not* wrapped in a `\begin{table}` environment (ex: `multipage` or raw `tblr`).
 
-The `\begin{table}` resets any spacing commands in the preamble or body, such as:
+One issue stems from the fact that the `\begin{table}` environment resets any spacing commands in the preamble or body by default, such as:
 
 ```tex
 \usepackage{setspace}
 \doublespacing
 ```
 
-This means that when using `theme_tt("multipage")` ---which does not wrap the table in a `table` environment--- tables are double spaced. One solution is to add the following to the document preamble when using multipage/longtblr:
+This means that when using `theme_tt("multipage")` ---which does not wrap the table in a `table` environment--- the spacing is *not* reset, and tables are double spaced. This is not a bug, since double-spacing is in fact what the user requested. Nevertheless, the behavior can seem surprising for those used to the automagical `table` environment spacing reset.
+
+One workaround is to add the following to the document preamble when using multipage/longtblr:
 
 ```tex
 \usepackage{etoolbox}
