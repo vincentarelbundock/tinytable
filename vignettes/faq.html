@@ -384,11 +384,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>FAQ</h1>
 <section id="latex-setspace" class="level2">
 <h2 class="anchored" data-anchor-id="latex-setspace">LaTeX: <code>setspace</code></h2>
-<p>Some users have encountered spacing issues when using <code>tinytable</code> to generate tables that are <em>not</em> wrapped in a <code>\begin{table}</code> environment (ex: <code>multipage</code> or raw <code>tblr</code>).</p>
-<p>The <code>\begin{table}</code> resets any spacing commands in the preamble or body, such as:</p>
+<p>Some users have encountered unexpected spacing behavior when generating tables that are <em>not</em> wrapped in a <code>\begin{table}</code> environment (ex: <code>multipage</code> or raw <code>tblr</code>).</p>
+<p>One issue stems from the fact that the <code>\begin{table}</code> environment resets any spacing commands in the preamble or body by default, such as:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode tex code-with-copy"><code class="sourceCode latex"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">\usepackage</span>{<span class="ex">setspace</span>}</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">\doublespacing</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>This means that when using <code>theme_tt("multipage")</code> —which does not wrap the table in a <code>table</code> environment— tables are double spaced. One solution is to add the following to the document preamble when using multipage/longtblr:</p>
+<p>This means that when using <code>theme_tt("multipage")</code> —which does not wrap the table in a <code>table</code> environment— the spacing is <em>not</em> reset, and tables are double spaced. This is not a bug, since double-spacing is in fact what the user requested. Nevertheless, the behavior can seem surprising for those used to the automagical <code>table</code> environment spacing reset.</p>
+<p>One workaround is to add the following to the document preamble when using multipage/longtblr:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode tex code-with-copy"><code class="sourceCode latex"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">\usepackage</span>{<span class="ex">etoolbox</span>}</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">\AtBeginEnvironment</span>{longtblr}{<span class="kw">\begin</span>{<span class="ex">singlespacing</span>}}</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">\AtEndEnvironment</span>{longtblr}{<span class="kw">\end</span>{<span class="ex">singlespacing</span>}}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
