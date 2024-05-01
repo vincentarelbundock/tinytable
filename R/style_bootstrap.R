@@ -158,10 +158,6 @@ setMethod(
     out <- bootstrap_setting(out, bootstrap_css_rule, component = "css")
   }
 
-  # Changing function names to table ID to avoid conflict with other tables functions 
-  out <- gsub("styleCell_\\w+\\(", paste0("styleCell_", x@id, "("), out)
-  out <- gsub("spanCell_\\w+\\(", paste0("spanCell_", x@id, "("), out)
-
   x@table_string <- out
 
   if (!is.null(bootstrap_class)) {

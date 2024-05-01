@@ -149,6 +149,10 @@ style_tt <- function (x,
                       ...) {
 
   out <- x
+
+  # issue #759: reuse object with different styles across RevealJS slides requires new ID every time style_tt is called
+  out@id <- get_id("tinytable_")
+
   cal <- call("style_tt_lazy",
   # out <- style_tt_lazy(
               # x should not be in here otherwise the object becomes very big

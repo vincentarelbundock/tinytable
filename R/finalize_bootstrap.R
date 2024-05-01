@@ -21,6 +21,10 @@ setMethod(
     out <- paste(out, collapse = "\n")
   }
 
+  # Changing function names to table ID to avoid conflict with other tables functions 
+  out <- gsub("styleCell_\\w+\\(", paste0("styleCell_", x@id, "("), out)
+  out <- gsub("spanCell_\\w+\\(", paste0("spanCell_", x@id, "("), out)
+  
   x@table_string <- out
 
   for (fn in x@lazy_finalize) {
