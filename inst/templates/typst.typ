@@ -1,3 +1,4 @@
+
 #[
 #let nhead = $TINYTABLE_TYPST_NHEAD;
 #let nrow = $TINYTABLE_TYPST_NROW;
@@ -11,13 +12,17 @@
 // end figure preamble
 
   #let fill-array = ( 
+    // TODO: insert fill at top because it overrides lower calls
+    (x: 0, y: 1, fill: red), 
     (x: 0, y: 1, fill: yellow), 
     (x: 2, y: 1, fill: blue) 
   )
   #let style-array = ( 
-    (x: 0, y: 1, color: blue, underline: false, italic: true, bold: true, mono: false, strikeout: true), 
+    // TODO: insert style at top because it overrides lower calls
+    (x: 0, y: 1, color: yellow, underline: false, italic: true, bold: true, mono: false, strikeout: true), 
     (x: 1, y: 1, color: none, underline: false, italic: false, bold: false, mono: true, strikeout: false), 
-    (x: 2, y: 1, color: yellow, underline: true, italic: false, bold: false, mono: false, strikeout: false)
+    (x: 2, y: 1, color: yellow, underline: true, italic: false, bold: false, mono: false, strikeout: false),
+    (x: 0, y: 1, color: red, underline: false, italic: true, bold: true, mono: false, strikeout: true),
   )
   #show table.cell: it => {
     let tmp = it
