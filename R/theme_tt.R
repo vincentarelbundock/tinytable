@@ -33,8 +33,8 @@ theme_tabular <- function(x, ...) {
             tab <- lines_drop(tab, regex = "<\\/table>", position = "after")
 
         } else if (isTRUE(table@output == "typst")) {
-            tab <- lines_drop(tab, regex = "tablex\\(", position = "before")
-            tab <- lines_drop(tab, regex = "\\/\\/ end tablex", position = "after")
+            tab <- lines_drop(tab, regex = "table\\(", position = "before")
+            tab <- lines_drop(tab, regex = "\\/\\/ end table", position = "after")
         }
 
         table@table_string <- tab
@@ -100,11 +100,11 @@ theme_void <- function(x, ...) {
             table@table_string <- paste(tab, collapse = "\n")
         } else if (isTRUE(table@output == "typst")) {
             tab <- table@table_string
-            reg <- sprintf("hlinex(y: 0, start: 0, end: %s, stroke: 0.1em + black),", table@ncol)
+            reg <- sprintf("table.hline(y: 0, start: 0, end: %s, stroke: 0.1em + black),", table@ncol)
             tab <- lines_drop(tab, regex = reg, position = "equal", fixed = TRUE)
-            reg <- sprintf("hlinex(y: 1, start: 0, end: %s, stroke: 0.05em + black),", table@ncol)
+            reg <- sprintf("table.hline(y: 1, start: 0, end: %s, stroke: 0.05em + black),", table@ncol)
             tab <- lines_drop(tab, regex = reg, position = "equal", fixed = TRUE)
-            reg <- sprintf("hlinex(y: %s, start: 0, end: %s, stroke: 0.1em + black),", table@nrow + 1, table@ncol)
+            reg <- sprintf("table.hline(y: %s, start: 0, end: %s, stroke: 0.1em + black),", table@nrow + 1, table@ncol)
             tab <- lines_drop(tab, regex = reg, position = "equal", fixed = TRUE)
             table@table_string <- paste(tab, collapse = "\n")
         }
@@ -128,8 +128,8 @@ theme_grid <- function(x, ...) {
             table@table_string <- s
         } else if (isTRUE(table@output == "typst")) {
             table@table_string <- sub(
-                "auto-lines: false,",
-                "auto-lines: true,",
+                "stroke: none,",
+                "stroke: true,",
                 table@table_string)
         }
         return(table)

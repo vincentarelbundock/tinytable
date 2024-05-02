@@ -123,9 +123,9 @@ let j = (%s,);",
     iline <- unique(iline)
     for (i in iline) {
       if (isTRUE(midrule)) {
-        tmp <- "hlinex(y: %s, start: %s, end: %s, stroke: %sem + %s, expand: -1.5pt),"
+        tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %sem + %s, expand: -1.5pt),"
       } else {
-        tmp <- "hlinex(y: %s, start: %s, end: %s, stroke: %sem + %s),"
+        tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %sem + %s),"
       }
       tmp <- sprintf(tmp,
                      i,
@@ -142,7 +142,7 @@ let j = (%s,);",
     jline <- unique(jline)
     for (j in jline) {
       tmp <- sprintf(
-        "vlinex(x: %s, start: %s, end: %s, stroke: %sem + %s),",
+        "table.vline(x: %s, start: %s, end: %s, stroke: %sem + %s),",
         j,
         min(ival),
         max(ival)+1,
