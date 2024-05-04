@@ -45,74 +45,79 @@ setMethod(
   if (isTRUE(grepl("^#", background))) background <- sprintf('rgb("%s")', background)
   if (isTRUE(grepl("^#", line_color))) line_color <- sprintf('rgb("%s")', line_color)
 
-  style <- ""
+  # style <- ""
 
-  if (!is.null(fontsize)) {
-    tmp <- sprintf("if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = { set text(%sem); cell.content } };", fontsize)
-    style <- paste0(style, "\n", tmp)
-  }
+  # if (!is.null(fontsize)) {
+  #   tmp <- sprintf("if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = { set text(%sem); cell.content } };", fontsize)
+  #   style <- paste0(style, "\n", tmp)
+  # }
 
-  if (isTRUE(monospace)) {
-    tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = math.mono(cell.content) };"
-    style <- paste0(style, "\n", tmp)
-  }
+  # if (isTRUE(monospace)) {
+  #   tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = math.mono(cell.content) };"
+  #   style <- paste0(style, "\n", tmp)
+  # }
 
-  if (isTRUE(italic)) {
-    tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = emph(cell.content) };"
-    style <- paste0(style, "\n", tmp)
-  }
+  # if (isTRUE(italic)) {
+  #   tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = emph(cell.content) };"
+  #   style <- paste0(style, "\n", tmp)
+  # }
 
-  if (isTRUE(bold)) {
-    tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = strong(cell.content) };"
-    style <- paste0(style, "\n", tmp)
-  }
+  # if (isTRUE(bold)) {
+  #   tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = strong(cell.content) };"
+  #   style <- paste0(style, "\n", tmp)
+  # }
 
-  if (isTRUE(underline)) {
-    tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = underline(cell.content) };"
-    style <- paste0(style, "\n", tmp)
-  }
+  # if (isTRUE(underline)) {
+  #   tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = underline(cell.content) };"
+  #   style <- paste0(style, "\n", tmp)
+  # }
 
-  if (isTRUE(strikeout)) {
-    tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = strike(cell.content) };"
-    style <- paste0(style, "\n", tmp)
-  }
+  # if (isTRUE(strikeout)) {
+  #   tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = strike(cell.content) };"
+  #   style <- paste0(style, "\n", tmp)
+  # }
 
-  if (!is.null(background)) {
-    tmp <- sprintf("if (i.contains(cell.y) and j.contains(cell.x)) { cell.fill = %s };", background)
-    style <- paste0(style, "\n", tmp)
-  }
+  # if (!is.null(background)) {
+  #   tmp <- sprintf("if (i.contains(cell.y) and j.contains(cell.x)) { cell.fill = %s };", background)
+  #   style <- paste0(style, "\n", tmp)
+  # }
 
-  if (!is.null(color)) {
-    tmp <- sprintf("if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = { set text(%s); cell.content } };", color)
-    style <- paste0(style, "\n", tmp)
-  }
+  # if (!is.null(color)) {
+  #   tmp <- sprintf("if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = { set text(%s); cell.content } };", color)
+  #   style <- paste0(style, "\n", tmp)
+  # }
 
-
-  if (style != "") {
-    idx <- sprintf(
-      "let i = (%s,);
-let j = (%s,);",
-      paste(ival, collapse = ","),
-      paste(jval, collapse = ","))
-      style <- paste0(idx, "\n", style)
-  }
-
-  out <- typst_insert(out, style, type = "style")
-
-  # align
-  if (!is.null(align)) {
-    for (idx in seq_along(jval)) {
-      k <- switch(
-        align[idx],
-        c = "center",
-        d = "center",
-        r = "right",
-        l = "left"
+  for (k in ival) {
+    for (w in jval) {
+      style <- sprintf(
+        "    (y: %s, x: %s, color: %s, underline: %s, italic: %s, bold: %s, mono: %s, strikeout: %s),",
+        k,
+        w,
+        color,
+        tolower(underline),
+        tolower(italic),
+        tolower(bold),
+        tolower(monospace),
+        tolower(strikeout)
       )
-      tmp <- sprintf("if (cell.x == %s) { cell.align = %s };", jval[idx], k)
-      out <- typst_insert(out, tmp, type = "style")
+      out <- lines_insert(out, style, "tinytable cell style after", "after")
     }
   }
+
+  # # align
+  # if (!is.null(align)) {
+  #   for (idx in seq_along(jval)) {
+  #     k <- switch(
+  #       align[idx],
+  #       c = "center",
+  #       d = "center",
+  #       r = "right",
+  #       l = "left"
+  #     )
+  #     tmp <- sprintf("if (cell.x == %s) { cell.align = %s };", jval[idx], k)
+  #     out <- typst_insert(out, tmp, type = "style")
+  #   }
+  # }
 
 
   # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
