@@ -52,19 +52,24 @@ group_typst_col <- function(x, j, ihead, ...) {
   j <- j[idx]
   lab <- names(j)
   len <- sapply(j, length)
-  col <- sprintf("table.cell(colspan: %s, align: center)[%s],", len, lab)
+  col <- ifelse(
+    trimws(lab) == "", 
+    sprintf("[%s],", lab), 
+    sprintf("table.cell(stroke: (bottom: .05em + black), colspan: %s, align: center)[%s],", len, lab))
   col <- paste(col, collapse = "")
   out <- typst_insert(out, col, type = "body")
 
+  out <- lines_insert(out, "column-gutter: 5pt,", "// tinytable table start", "after")
+
   x@table_string <- out
 
-  # midrule
-  jrule <- lapply(names(j), function(n) if (trimws(n) != "") j[[n]])
-  jrule <- Filter(function(k) !is.null(k), jrule)
-  for (jr in jrule) {
-    # 0 indexing
-    x <- style_eval(x, i = ihead, j = jr, line = "b", line_width = .05, midrule = TRUE)
-  }
+  # # midrule
+  # jrule <- lapply(names(j), function(n) if (trimws(n) != "") j[[n]])
+  # jrule <- Filter(function(k) !is.null(k), jrule)
+  # for (jr in jrule) {
+  #   # 0 indexing
+  #   x <- style_eval(x, i = ihead, j = jr, line = "b", line_width = .05, midrule = TRUE)
+  # }
 
   return(x)
 }
