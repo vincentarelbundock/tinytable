@@ -15,7 +15,11 @@ setMethod(
   body <- paste0(body, ",\n")
   out <- typst_insert(out, body, type = "body")
 
-  width <- sprintf("%.2f%%", x@width * 100)
+  if (length(x@width) == 0) {
+    width <- rep("auto", ncol(x))
+  } else {
+    width <- sprintf("%.2f%%", x@width * 100)
+  }
   width <- sprintf("columns: (%s),", paste(width, collapse = ", "))
   out <- lines_insert(out, width, "tinytable table start", "after")
 
