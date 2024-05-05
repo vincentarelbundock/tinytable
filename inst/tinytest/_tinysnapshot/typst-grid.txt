@@ -1,4 +1,4 @@
-#import "@preview/tablex:0.0.8": tablex, hlinex, vlinex, colspanx
+#[
 #let nhead = 1;
 #let nrow = 4;
 #let ncol = 5;
@@ -10,27 +10,58 @@
   supplement: none,
 // end figure preamble
 
-  tablex(
-    columns: ncol,
-    header-rows: nhead,
-    align: left + horizon,
-    auto-lines: true,
+  #let fill-array = ( 
+    // tinytable cell fill after
+  )
+  #let style-array = ( 
+    // tinytable cell style after
+  )
+  #show table.cell: it => {
+    let tmp = it
+    let data = style-array.find(data => data.x == it.x and data.y == it.y)
+    if data != none {
+      set text(data.color)
+      set text(data.fontsize)
+      if data.underline == true { tmp = underline(tmp) }
+      if data.italic == true { tmp = emph(tmp) }
+      if data.bold == true { tmp = strong(tmp) }
+      if data.mono == true { tmp = math.mono(tmp) }
+      if data.strikeout == true { tmp = strike(tmp) }
+      tmp
+    } else {
+      tmp
+    }
+  }
 
-    // tinytable lines before
-
-    map-cells: cell => {
-
-      // tinytable cell style before
-      return cell;
+  table( // tinytable table start
+    columns: (auto, auto, auto, auto, auto),
+    stroke: true,
+    fill: (x, y) => {
+      let data = fill-array.find(data => data.x == x and data.y == y)
+      if data != none {
+        data.fill
+      }
     },
 
-    // tinytable cell content after
+    // tinytable lines after
+
+    table.header(
+      repeat: true,
 [mpg], [cyl], [disp], [hp], [drat],
+    ),
+
+    // tinytable cell content after
 [21.0], [6], [160], [110], [3.90],
 [21.0], [6], [160], [110], [3.90],
 [22.8], [4], [108], [ 93], [3.85],
 [21.4], [6], [258], [110], [3.08],
 
-  ) // end tablex
+    table.footer(
+      repeat: false,
+      // tinytable notes after
+    ),
 
-) // end figure 
+  ) // end table
+
+) // end figure
+] 

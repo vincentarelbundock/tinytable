@@ -113,8 +113,8 @@ setMethod(
 
   # align
   if (!is.null(align)) {
-    if (length(align) != length(jval)) {
-      stop("Length of `j` must be equal to the length of `align`.", call. = FALSE)
+    if (!length(align) %in% c(1, length(jval))) {
+      stop("Length of `j` must be 1 or equal to the length of `align`.", call. = FALSE)
     }
     align <- sapply(align,
       switch,
