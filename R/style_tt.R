@@ -242,13 +242,17 @@ style_tt_lazy <- function (x,
         assert_choice(align_character, c("c", "l", "r", "d"))
       }
       if (is.null(j)) {
-        msg <- "Please specify the `j` argument."
-        stop(msg, call. = FALSE)
+        j <- seq_len(x@ncol)
       }
     }
   }
-    
-  nalign <- if (is.null(j)) x@ncol else length(j)
+
+  if (x@output == "typst") {
+    nalign <- x@ncol
+  } else {
+    nalign <- if (is.null(j)) x@ncol else length(j)
+  }
+
   if (!is.null(align)) {
     align <- strsplit(align, split = "")[[1]]
     if (length(align) != 1 && length(align) != nalign) {

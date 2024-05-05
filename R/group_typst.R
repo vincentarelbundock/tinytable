@@ -31,7 +31,7 @@ group_typst_row <- function(x, i, ...) {
   for (idx in rev(seq_along(i))) {
     mid <- c(
       mid[1:(i[idx] - 1)],
-      sprintf("colspanx(%s)[%s],", ncol(x), names(i)[idx]),
+      sprintf("table.cell(colspan: %s)[%s],", ncol(x), names(i)[idx]),
       mid[i[idx]:length(mid)]
     )
   }
@@ -52,7 +52,7 @@ group_typst_col <- function(x, j, ihead, ...) {
   j <- j[idx]
   lab <- names(j)
   len <- sapply(j, length)
-  col <- sprintf("colspanx(%s, align: center)[%s],", len, lab)
+  col <- sprintf("table.cell(colspan: %s, align: center)[%s],", len, lab)
   col <- paste(col, collapse = "")
   out <- typst_insert(out, col, type = "body")
 

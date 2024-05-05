@@ -111,20 +111,20 @@ setMethod(
     }
   }
 
-  # # align
-  # if (!is.null(align)) {
-  #   for (idx in seq_along(jval)) {
-  #     k <- switch(
-  #       align[idx],
-  #       c = "center",
-  #       d = "center",
-  #       r = "right",
-  #       l = "left"
-  #     )
-  #     tmp <- sprintf("if (cell.x == %s) { cell.align = %s };", jval[idx], k)
-  #     out <- typst_insert(out, tmp, type = "style")
-  #   }
-  # }
+  # align
+  if (!is.null(align)) {
+    if (length(align) != length(jval)) {
+      stop("Length of `j` must be equal to the length of `align`.", call. = FALSE)
+    }
+    align <- sapply(align,
+      switch,
+      c = "center",
+      d = "center",
+      r = "right",
+      l = "left")
+    align <- sprintf("align: (%s),", paste(align, collapse = ", "))
+    out <- lines_insert(out, align, "tinytable table start", "after")
+  }
 
 
   # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
@@ -134,8 +134,9 @@ setMethod(
     if (grepl("t", line)) iline <- c(iline, ival)
     iline <- unique(iline)
     for (i in iline) {
-      if (isTRUE(midrule)) {
-        tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %sem + %s, expand: -1.5pt),"
+      # TODO: `expand` in #tablex does not seem available in #table
+      if (midrule) {
+        tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %sem + %s),"
       } else {
         tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %sem + %s),"
       }
