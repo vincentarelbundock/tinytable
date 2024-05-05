@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.4.553">
+<meta name="generator" content="quarto-1.4.554">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -369,7 +369,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#faq" id="toc-faq" class="nav-link active" data-scroll-target="#faq">FAQ</a>
   <ul class="collapse">
-  <li><a href="#latex-setspace" id="toc-latex-setspace" class="nav-link" data-scroll-target="#latex-setspace">LaTeX: <code>setspace</code></a></li>
+  <li><a href="#latex" id="toc-latex" class="nav-link" data-scroll-target="#latex">LaTeX</a>
+  <ul class="collapse">
+  <li><a href="#setspace" id="toc-setspace" class="nav-link" data-scroll-target="#setspace"><code>setspace</code></a></li>
+  </ul></li>
+  <li><a href="#typst" id="toc-typst" class="nav-link" data-scroll-target="#typst">Typst</a>
+  <ul class="collapse">
+  <li><a href="#multi-page-long-tables" id="toc-multi-page-long-tables" class="nav-link" data-scroll-target="#multi-page-long-tables">Multi-page long tables</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -382,8 +389,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="faq" class="level1">
 <h1>FAQ</h1>
-<section id="latex-setspace" class="level2">
-<h2 class="anchored" data-anchor-id="latex-setspace">LaTeX: <code>setspace</code></h2>
+<section id="latex" class="level2">
+<h2 class="anchored" data-anchor-id="latex">LaTeX</h2>
+<section id="setspace" class="level3">
+<h3 class="anchored" data-anchor-id="setspace"><code>setspace</code></h3>
 <p>Some users have encountered unexpected spacing behavior when generating tables that are <em>not</em> wrapped in a <code>\begin{table}</code> environment (ex: <code>multipage</code> or raw <code>tblr</code>).</p>
 <p>One issue stems from the fact that the <code>\begin{table}</code> environment resets any spacing commands in the preamble or body by default, such as:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode tex code-with-copy"><code class="sourceCode latex"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">\usepackage</span>{<span class="ex">setspace</span>}</span>
@@ -435,8 +444,30 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="in">\bottomrule</span></span>
 <span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="in">\end{longtblr}</span></span>
 <span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="typst" class="level2">
+<h2 class="anchored" data-anchor-id="typst">Typst</h2>
+<section id="multi-page-long-tables" class="level3">
+<h3 class="anchored" data-anchor-id="multi-page-long-tables">Multi-page long tables</h3>
+<p>The Typst tables created by <code>tinytable</code> are automatically broken across pages with repeated headers. However, in Quarto documents, the Quarto software wraps tables in an non-breakable <code>#figure</code> environment. This can break the display of long tables. One solution is to use a raw Typst code block to set Figures to be breakable:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>format: typst</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>```{=typst}</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>#show figure: set block(breakable: true)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>```</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>```{r}</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>#| tbl-cap: "blah blah blah"</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>#| label: tbl-blah</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>library(tinytable)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>tt(head(iris, 50))</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>```</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
+</section>
 </section>
 </section>
 
