@@ -168,7 +168,6 @@ style_tt <- function (x,
               color = color,
               background = background,
               fontsize = fontsize,
-              width = width,
               align = align,
               alignv = alignv,
               colspan = colspan,
@@ -210,7 +209,6 @@ style_tt_lazy <- function (x,
                            color,
                            background,
                            fontsize,
-                           width,
                            align,
                            alignv,
                            colspan,
@@ -270,18 +268,14 @@ style_tt_lazy <- function (x,
 
   assert_style_tt(
     x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
-    color = color, background = background, fontsize = fontsize, width = width, align = align, alignv = alignv, 
+    color = color, background = background, fontsize = fontsize, align = align, alignv = alignv, 
     colspan = colspan, rowspan = rowspan, indent = indent,
     line = line, line_color = line_color, line_width = line_width,
     tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css,
     bootstrap_css_rule = bootstrap_css_rule, bootstrap_class = bootstrap_class)
 
-  if (!is.null(width)) {
-    width <- paste0(width, "em")
-  }
 
-
-  out <- style_eval(x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout, color = color, background = background, fontsize = fontsize, width = width, align = align, alignv = alignv, colspan = colspan, rowspan = rowspan, indent = indent, tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule, bootstrap_class = bootstrap_class, line = line, line_color = line_color, line_width = line_width)
+  out <- style_eval(x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout, color = color, background = background, fontsize = fontsize, align = align, alignv = alignv, colspan = colspan, rowspan = rowspan, indent = indent, tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule, bootstrap_class = bootstrap_class, line = line, line_color = line_color, line_width = line_width)
 
   return(out)
 }
@@ -298,7 +292,6 @@ assert_style_tt <- function (x,
                              color,
                              background,
                              fontsize,
-                             width,
                              align,
                              alignv,
                              colspan,
@@ -313,14 +306,8 @@ assert_style_tt <- function (x,
                              bootstrap_css = NULL,
                              bootstrap_css_rule = NULL) {
 
-  if (!is.null(width) && !is.null(i)) {
-    msg <- "The `width` argument cannot be used with `i`."
-    stop(msg, call. = FALSE)
-  }
-
   assert_integerish(colspan, len = 1, lower = 2, null.ok = TRUE)
   assert_integerish(rowspan, len = 1, lower = 2, null.ok = TRUE)
-  assert_numeric(width, len = 1, lower = 0, null.ok = TRUE)
   assert_numeric(indent, len = 1, lower = 0)
   assert_character(background, null.ok = TRUE)
   assert_character(color, null.ok = TRUE)

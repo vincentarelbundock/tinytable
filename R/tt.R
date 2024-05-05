@@ -123,5 +123,3 @@ tt <- function(x,
 
   return(out)
 }
-
-
