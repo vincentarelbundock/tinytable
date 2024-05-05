@@ -50,6 +50,12 @@
 
     // tinytable cell content after
 
+
+    table.footer(
+      repeat: false,
+      // tinytable notes after
+    ),
+
   ) // end table
 
 ) // end figure

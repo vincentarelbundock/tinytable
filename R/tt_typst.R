@@ -28,6 +28,26 @@ setMethod(
   width <- sprintf("    columns: (%s),", paste(width, collapse = ", "))
   out <- lines_insert(out, width, "tinytable table start", "after")
 
+  # notes
+  if (length(x@notes) > 0) {
+    notes <- rev(x@notes)
+    # otherwise an empty caption is created automatically
+    if (is.null(names(notes))) {
+      lab <- rep("", length(notes))
+    } else {
+      lab <- names(notes)
+    }
+    notes <- sapply(notes, function(n) if (is.list(n)) n$text else n)
+    for (k in seq_along(notes)) {
+      if (lab[k] == "") {
+        tmp <- sprintf("    table.cell(align: left, colspan: 5, [%s]),", notes[k])
+      } else {
+        tmp <- sprintf("    table.cell(align: left, colspan: 5, [#super[%s] %s]),", lab[k], notes[k])
+      }
+      out <- lines_insert(out, tmp, "tinytable notes after", "after")
+    }
+  }
+
   x@table_string <- out
 
   return(x)
