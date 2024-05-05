@@ -1,4 +1,3 @@
-
 #[
 #let nhead = $TINYTABLE_TYPST_NHEAD;
 #let nrow = $TINYTABLE_TYPST_NROW;
@@ -44,6 +43,11 @@
     },
 
     // tinytable lines after
+
+    table.header(
+      repeat: true,
+    ),
+
     // tinytable cell content after
 
   ) // end table

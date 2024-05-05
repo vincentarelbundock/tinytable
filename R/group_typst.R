@@ -57,9 +57,8 @@ group_typst_col <- function(x, j, ihead, ...) {
     sprintf("[%s],", lab), 
     sprintf("table.cell(stroke: (bottom: .05em + black), colspan: %s, align: center)[%s],", len, lab))
   col <- paste(col, collapse = "")
-  out <- typst_insert(out, col, type = "body")
-
-  out <- lines_insert(out, "column-gutter: 5pt,", "// tinytable table start", "after")
+  out <- lines_insert(out, col, "repeat: true", "after")
+  out <- lines_insert(out, "    column-gutter: 5pt,", "// tinytable table start", "after")
 
   x@table_string <- out
 
