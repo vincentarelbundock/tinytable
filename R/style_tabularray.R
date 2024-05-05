@@ -12,7 +12,6 @@ setMethod(
                              color = NULL,
                              background = NULL,
                              fontsize = NULL,
-                             width = NULL,
                              align = NULL,
                              alignv = NULL,
                              line = NULL,
@@ -68,7 +67,6 @@ setMethod(
 
   # convert to tabularray now that we've filled the bootstrap settings
   if (is.numeric(fontsize)) settings$tabularray <- sprintf("%s font=\\fontsize{%sem}{%sem}\\selectfont,", settings$tabularray, fontsize, fontsize + 0.3) 
-  if (!is.null(width)) settings$tabularray <- sprintf("%s wd=%s,", settings$tabularray, width)
   if (indent > 0) settings$tabularary <- sprintf("%s preto={\\hspace{%sem}},", settings$tabularray, indent)
 
   if (!is.null(align)) {

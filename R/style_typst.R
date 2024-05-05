@@ -1,4 +1,9 @@
-# TODO: fontsize, background, line, colspan, indent, align
+# TODO: 
+# colspan, 
+# indent, 
+# align,
+# alignv,
+
 
 
 #' Internal styling function
@@ -20,7 +25,6 @@ setMethod(
                         color = NULL,
                         background = NULL,
                         fontsize = NULL,
-                        width = NULL,
                         align = NULL,
                         line = NULL,
                         line_color = "black",

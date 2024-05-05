@@ -27,7 +27,6 @@
 #'   - Color names with luminance levels from [the `ninecolors` package](https://mirror.quantum5.ca/CTAN/macros/latex/contrib/ninecolors/ninecolors.pdf) (ex: "azure4", "magenta8", "teal2", "gray1", "olive3"). 
 #' @param background Background color. Specified as a color name or hexadecimal code. Can be `NULL` for default color.
 #' @param fontsize Font size in em units. Can be `NULL` for default size.
-#' @param width Width of column in em units. Can be `NULL` for default width.
 #' @param align A single character or a string with a number of characters equal to the number of columns in `j`. Valid characters include 'c' (center), 'l' (left), 'r' (right), 'd' (decimal). Decimal alignment is only available in LaTeX via the `siunitx` package. The width of columns is determined by the maximum number of digits to the left and to the right in all cells specified by `i` and `j`.
 #' @param alignv A single character specifying vertical alignment. Valid characters include 't' (top), 'm' (middle), 'b' (bottom).
 #' @param colspan Number of columns a cell should span. `i` and `j` must be of length 1.
@@ -131,7 +130,6 @@ style_tt <- function (x,
                       color = NULL,
                       background = NULL,
                       fontsize = NULL,
-                      width = NULL,
                       align = NULL,
                       alignv = NULL,
                       colspan = NULL,
@@ -149,6 +147,10 @@ style_tt <- function (x,
                       ...) {
 
   out <- x
+
+  if ("width" %in% names(list(...))) {
+    stop("The `width` argument is now in the `tt()` function.", call. = FALSE)
+  }
 
   # issue #759: reuse object with different styles across RevealJS slides requires new ID every time style_tt is called
   out@id <- get_id("tinytable_")

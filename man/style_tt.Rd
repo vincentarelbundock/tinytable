@@ -16,7 +16,6 @@ style_tt(
   color = NULL,
   background = NULL,
   fontsize = NULL,
-  width = NULL,
   align = NULL,
   alignv = NULL,
   colspan = NULL,
@@ -75,8 +74,6 @@ style_tt(
 \item{background}{Background color. Specified as a color name or hexadecimal code. Can be \code{NULL} for default color.}
 
 \item{fontsize}{Font size in em units. Can be \code{NULL} for default size.}
-
-\item{width}{Width of column in em units. Can be \code{NULL} for default width.}
 
 \item{align}{A single character or a string with a number of characters equal to the number of columns in \code{j}. Valid characters include 'c' (center), 'l' (left), 'r' (right), 'd' (decimal). Decimal alignment is only available in LaTeX via the \code{siunitx} package. The width of columns is determined by the maximum number of digits to the left and to the right in all cells specified by \code{i} and \code{j}.}
 
