@@ -1,3 +1,6 @@
+# TODO: fontsize, background, line, colspan, indent, align
+
+
 #' Internal styling function
 #'
 #' @inheritParams style_tt
@@ -29,6 +32,9 @@ setMethod(
 
   out <- x@table_string
 
+  text_style_flag <- isTRUE(bold) || isTRUE(italic) || isTRUE(monospace) || isTRUE(underline) || isTRUE(strikeout) || !is.null(color) || !is.null(fontsize)
+  fill_style_flag <- !is.null(background)
+
   ival <- if (is.null(i)) seq_len(nrow(x)) else i
   jval <- if (is.null(j)) seq_len(ncol(x)) else j
 
@@ -41,66 +47,63 @@ setMethod(
   jval <- jval - 1
   ival <- ival - 1 + x@nhead
 
-  if (isTRUE(grepl("^#", color))) color <- sprintf('rgb("%s")', color)
   if (isTRUE(grepl("^#", background))) background <- sprintf('rgb("%s")', background)
   if (isTRUE(grepl("^#", line_color))) line_color <- sprintf('rgb("%s")', line_color)
 
-  # style <- ""
+  if (is.null(color)) {
+    color <- "black"
+  } else if (isTRUE(grepl("^#", color))) {
+    color <- sprintf('rgb("%s")', color)
+  }
 
-  # if (!is.null(fontsize)) {
-  #   tmp <- sprintf("if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = { set text(%sem); cell.content } };", fontsize)
-  #   style <- paste0(style, "\n", tmp)
-  # }
+  if (is.null(fontsize)) {
+    fontsize <- "1em"
+  } else {
+    fontsize <- sprintf("%sem", fontsize)
+  }
 
-  # if (isTRUE(monospace)) {
-  #   tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = math.mono(cell.content) };"
-  #   style <- paste0(style, "\n", tmp)
-  # }
+  if (text_style_flag) {
+    if (length(color) == 1) color <- rep(color, length(ival) * length(jval))
+    if (length(underline) == 1) underline <- rep(underline, length(ival) * length(jval))
+    if (length(italic) == 1) italic <- rep(italic, length(ival) * length(jval))
+    if (length(bold) == 1) bold <- rep(bold, length(ival) * length(jval))
+    if (length(monospace) == 1) monospace <- rep(monospace, length(ival) * length(jval))
+    if (length(strikeout) == 1) strikeout <- rep(strikeout, length(ival) * length(jval))
+    if (length(fontsize) == 1) fontsize <- rep(fontsize, length(ival) * length(jval))
+    counter <- 0
+    for (k in ival) {
+      for (w in jval) {
+        counter <- counter + 1
+        style <- sprintf(
+          "    (y: %s, x: %s, color: %s, underline: %s, italic: %s, bold: %s, mono: %s, strikeout: %s, fontsize: %s),",
+          k,
+          w,
+          color[counter],
+          tolower(underline[counter]),
+          tolower(italic[counter]),
+          tolower(bold[counter]),
+          tolower(monospace[counter]),
+          tolower(strikeout[counter]),
+          fontsize[counter]
+        )
+        out <- lines_insert(out, style, "tinytable cell style after", "after")
+      }
+    }
+  }
 
-  # if (isTRUE(italic)) {
-  #   tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = emph(cell.content) };"
-  #   style <- paste0(style, "\n", tmp)
-  # }
-
-  # if (isTRUE(bold)) {
-  #   tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = strong(cell.content) };"
-  #   style <- paste0(style, "\n", tmp)
-  # }
-
-  # if (isTRUE(underline)) {
-  #   tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = underline(cell.content) };"
-  #   style <- paste0(style, "\n", tmp)
-  # }
-
-  # if (isTRUE(strikeout)) {
-  #   tmp <- "if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = strike(cell.content) };"
-  #   style <- paste0(style, "\n", tmp)
-  # }
-
-  # if (!is.null(background)) {
-  #   tmp <- sprintf("if (i.contains(cell.y) and j.contains(cell.x)) { cell.fill = %s };", background)
-  #   style <- paste0(style, "\n", tmp)
-  # }
-
-  # if (!is.null(color)) {
-  #   tmp <- sprintf("if (i.contains(cell.y) and j.contains(cell.x)) { cell.content = { set text(%s); cell.content } };", color)
-  #   style <- paste0(style, "\n", tmp)
-  # }
-
-  for (k in ival) {
-    for (w in jval) {
-      style <- sprintf(
-        "    (y: %s, x: %s, color: %s, underline: %s, italic: %s, bold: %s, mono: %s, strikeout: %s),",
-        k,
-        w,
-        color,
-        tolower(underline),
-        tolower(italic),
-        tolower(bold),
-        tolower(monospace),
-        tolower(strikeout)
-      )
-      out <- lines_insert(out, style, "tinytable cell style after", "after")
+  if (fill_style_flag) {
+    if (length(background) == 1) background <- rep(background, length(ival) * length(jval))
+    counter <- 0
+    for (k in ival) {
+      for (w in jval) {
+        counter <- counter + 1
+        fill <- sprintf(
+          "    (y: %s, x: %s, fill: %s),",
+          k,
+          w,
+          background[counter])
+        out <- lines_insert(out, fill, "tinytable cell fill after", "after")
+      }
     }
   }
 
@@ -138,7 +141,7 @@ setMethod(
                      max(jval) + 1,
                      line_width,
                      line_color)
-      out <- typst_insert(out, tmp, type = "lines")
+      out <- lines_insert(out, tmp, "tinytable lines after", "after")
       }
 
     jline <- NULL
@@ -153,7 +156,7 @@ setMethod(
         max(ival)+1,
         line_width,
         line_color)
-      out <- typst_insert(out, tmp, type = "lines")
+      out <- lines_insert(out, tmp, "tinytable lines after", "after")
     }
 
   }

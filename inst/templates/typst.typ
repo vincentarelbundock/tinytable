@@ -12,10 +12,7 @@
 // end figure preamble
 
   #let fill-array = ( 
-    // TODO: insert fill at top because it overrides lower calls
-    // (x: 0, y: 1, fill: red), 
-    // (x: 0, y: 1, fill: yellow), 
-    // (x: 2, y: 1, fill: blue) 
+    // tinytable cell fill after
   )
   #let style-array = ( 
     // tinytable cell style after
@@ -24,8 +21,8 @@
     let tmp = it
     let data = style-array.find(data => data.x == it.x and data.y == it.y)
     if data != none {
-      if (data.color == none) { data.color = black }
       set text(data.color)
+      set text(data.fontsize)
       if data.underline == true { tmp = underline(tmp) }
       if data.italic == true { tmp = emph(tmp) }
       if data.bold == true { tmp = strong(tmp) }
@@ -48,8 +45,7 @@
       }
     },
 
-    // tinytable lines before
-    // tinytable cell style before
+    // tinytable lines after
     // tinytable cell content after
 
   ) // end table
