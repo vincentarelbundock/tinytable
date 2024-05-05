@@ -7,13 +7,16 @@ setMethod(
 
   # body
   body <- apply(x@table_dataframe, 2, function(k) paste0("[", k, "]"))
+  if (nrow(x@table_dataframe) && is.null(dim(body))) {
+    body <- matrix(body)
+  }
   header <- !is.null(colnames(x)) && length(colnames(x)) > 0
   if (header) {
     header <- paste(paste0("[", colnames(x), "]"), collapse = ", ")
     header <- paste0(header, ",")
     out <- lines_insert(out, header, "repeat: true", "after")
   }
-  body <- apply(body, 1, paste, collapse = ", ")
+  body <- apply(body, 1, paste, collapse = ", ", simplify = FALSE)
   body <- paste(body, collapse = ",\n")
   body <- paste0(body, ",\n")
   out <- typst_insert(out, body, type = "body")

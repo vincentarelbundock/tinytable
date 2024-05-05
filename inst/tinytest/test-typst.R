@@ -60,12 +60,11 @@ tab <- format_tt(tab, replace = "-")
 expect_snapshot_print(tab, label = "typst-missing_value_replacement")
 
 # Italic markdown
-exit_file("TODO here")
 dat <- data.frame(markdown = c("This is _italic_ text."))
-dat <- tt(dat) |>
+tab <- tt(dat) |>
   format_tt(j = 1, markdown = TRUE) |>
   style_tt(j = 1, align = "c")
-expect_snapshot_print(dat, label = "typst-italic_markdown")
+expect_snapshot_print(tab, label = "typst-italic_markdown")
 
 # Font size
 dat <- tt(x) |> style_tt(j = "mpg|hp|qsec", fontsize = 1.5)
