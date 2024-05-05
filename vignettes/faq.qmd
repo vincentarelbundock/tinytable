@@ -1,6 +1,8 @@
 # FAQ
 
-## LaTeX: `setspace`
+## LaTeX
+
+### `setspace`
 
 Some users have encountered unexpected spacing behavior when generating tables that are *not* wrapped in a `\begin{table}` environment (ex: `multipage` or raw `tblr`).
 
@@ -65,5 +67,29 @@ foo & bar & baz \\
 foo & bar & baz \\
 \bottomrule
 \end{longtblr}
+```
+````
+
+
+## Typst
+
+### Multi-page long tables
+
+The Typst tables created by `tinytable` are automatically broken across pages with repeated headers. However, in Quarto documents, the Quarto software wraps tables in an non-breakable `#figure` environment. This can break the display of long tables. One solution is to use a raw Typst code block to set Figures to be breakable:
+
+````
+---
+format: typst
+---
+
+```{=typst}
+#show figure: set block(breakable: true)
+```
+
+```{r}
+#| tbl-cap: "blah blah blah"
+#| label: tbl-blah
+library(tinytable)
+tt(head(iris, 50))
 ```
 ````
