@@ -34,9 +34,8 @@
     }
   }
 
-  table(
-    columns: ncol,
-    align: left + horizon,
+  table( // tinytable table start
+    // align: left + horizon,
     stroke: none,
     fill: (x, y) => {
       let data = fill-array.find(data => data.x == x and data.y == y)

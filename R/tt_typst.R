@@ -15,6 +15,10 @@ setMethod(
   body <- paste0(body, ",\n")
   out <- typst_insert(out, body, type = "body")
 
+  width <- sprintf("%.2f%%", x@width * 100)
+  width <- sprintf("columns: (%s),", paste(width, collapse = ", "))
+  out <- lines_insert(out, width, "tinytable table start", "after")
+
   x@table_string <- out
 
   return(x)
