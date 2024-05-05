@@ -22,7 +22,7 @@ group_typst_row <- function(x, i, ...) {
   tab <- x@table_string
   tab <- strsplit(tab, split = "\\n")[[1]]
   body_min <- utils::head(grep("tinytable cell content after", tab), 1) + x@nhead
-  body_max <- utils::head(grep("end tablex", tab), 1) - 1
+  body_max <- utils::head(grep("end table", tab), 1) - 1
   body <- body_min:body_max
   top <- tab[1:(body_min - 1)]
   mid <- tab[body_min:body_max]
@@ -31,7 +31,7 @@ group_typst_row <- function(x, i, ...) {
   for (idx in rev(seq_along(i))) {
     mid <- c(
       mid[1:(i[idx] - 1)],
-      sprintf("colspanx(%s)[%s],", ncol(x), names(i)[idx]),
+      sprintf("table.cell(colspan: %s)[%s],", ncol(x), names(i)[idx]),
       mid[i[idx]:length(mid)]
     )
   }
@@ -52,19 +52,25 @@ group_typst_col <- function(x, j, ihead, ...) {
   j <- j[idx]
   lab <- names(j)
   len <- sapply(j, length)
-  col <- sprintf("colspanx(%s, align: center)[%s],", len, lab)
+  col <- ifelse(
+    trimws(lab) == "", 
+    sprintf("[%s],", lab), 
+    sprintf("table.cell(stroke: (bottom: .05em + black), colspan: %s, align: center)[%s],", len, lab))
   col <- paste(col, collapse = "")
-  out <- typst_insert(out, col, type = "body")
+  out <- lines_insert(out, col, "repeat: true", "after")
+  if (!any(grepl("column-gutter", out))) {
+    out <- lines_insert(out, "    column-gutter: 5pt,", "// tinytable table start", "after")
+  }
 
   x@table_string <- out
 
-  # midrule
-  jrule <- lapply(names(j), function(n) if (trimws(n) != "") j[[n]])
-  jrule <- Filter(function(k) !is.null(k), jrule)
-  for (jr in jrule) {
-    # 0 indexing
-    x <- style_eval(x, i = ihead, j = jr, line = "b", line_width = .05, midrule = TRUE)
-  }
+  # # midrule
+  # jrule <- lapply(names(j), function(n) if (trimws(n) != "") j[[n]])
+  # jrule <- Filter(function(k) !is.null(k), jrule)
+  # for (jr in jrule) {
+  #   # 0 indexing
+  #   x <- style_eval(x, i = ihead, j = jr, line = "b", line_width = .05, midrule = TRUE)
+  # }
 
   return(x)
 }

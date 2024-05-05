@@ -17,7 +17,6 @@ setMethod(
                             color = NULL,
                             background = NULL,
                             fontsize = NULL,
-                            width = NULL,
                             align = NULL,
                             alignv = NULL,
                             line = NULL,
@@ -109,7 +108,6 @@ setMethod(
   settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, alignv_bootstrap, "vertical-align: %s;")
   settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, color, "color: %s;")
   settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, background, "background-color: %s;")
-  settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, width, "width: %s;")
   if (indent > 0) {
     settings$bootstrap <- paste(settings$bootstrap, sprintf("padding-left: %sem;", indent), sep = "")
   }

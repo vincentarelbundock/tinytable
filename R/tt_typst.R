@@ -7,13 +7,49 @@ setMethod(
 
   # body
   body <- apply(x@table_dataframe, 2, function(k) paste0("[", k, "]"))
-  if (!is.null(colnames(x)) && length(colnames(x)) > 0) {
-    body <- base::rbind(paste0("[", colnames(x), "]"), body)
+  if (nrow(x@table_dataframe) && is.null(dim(body))) {
+    body <- matrix(body)
   }
-  body <- apply(body, 1, paste, collapse = ", ")
+  header <- !is.null(colnames(x)) && length(colnames(x)) > 0
+  if (header) {
+    header <- paste(paste0("[", colnames(x), "]"), collapse = ", ")
+    header <- paste0(header, ",")
+    out <- lines_insert(out, header, "repeat: true", "after")
+  }
+  body <- apply(body, 1, paste, collapse = ", ", simplify = FALSE)
   body <- paste(body, collapse = ",\n")
   body <- paste0(body, ",\n")
   out <- typst_insert(out, body, type = "body")
+
+  if (length(x@width) == 0) {
+    width <- rep("auto", ncol(x))
+  } else if (length(x@width) == 1) {
+    width <- rep(sprintf("%.2f%%", x@width / ncol(x) * 100), ncol(x))
+  } else {
+    width <- sprintf("%.2f%%", x@width * 100)
+  }
+  width <- sprintf("    columns: (%s),", paste(width, collapse = ", "))
+  out <- lines_insert(out, width, "tinytable table start", "after")
+
+  # notes
+  if (length(x@notes) > 0) {
+    notes <- rev(x@notes)
+    # otherwise an empty caption is created automatically
+    if (is.null(names(notes))) {
+      lab <- rep("", length(notes))
+    } else {
+      lab <- names(notes)
+    }
+    notes <- sapply(notes, function(n) if (is.list(n)) n$text else n)
+    for (k in seq_along(notes)) {
+      if (lab[k] == "") {
+        tmp <- sprintf("    table.cell(align: left, colspan: 5, [%s]),", notes[k])
+      } else {
+        tmp <- sprintf("    table.cell(align: left, colspan: 5, [#super[%s] %s]),", lab[k], notes[k])
+      }
+      out <- lines_insert(out, tmp, "tinytable notes after", "after")
+    }
+  }
 
   x@table_string <- out
 

@@ -85,12 +85,6 @@ build_tt <- function(x, output = NULL) {
     x <- eval(l)
   }
 
-  # style the table
-  if (x@output == "typst") {
-    # rules of precedence appear to differ
-    x@lazy_style <- rev(x@lazy_style)
-  }
-
   if (!x@output %in% c("markdown", "dataframe")) {
     for (l in x@lazy_style) {
       l[["x"]] <- x

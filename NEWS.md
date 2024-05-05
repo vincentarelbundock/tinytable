@@ -2,6 +2,10 @@
 
 ## Development
 
+Breaking change:
+
+* The `width` argument is moved from `style_tt()` to `tt()`.
+
 `tt()`:
 
 * `width` argument now accepts a vector of numeric values to control the width of each column, as a proportion of the total linewidth.

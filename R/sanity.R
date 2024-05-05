@@ -54,6 +54,12 @@ sanitize_output <- function(output) {
 
     } else if (isTRUE(knitr::pandoc_to() == "typst")) {
       if (is.null(output)) out <- "typst"
+      if (isTRUE(check_dependency("quarto"))) {
+        if (isTRUE(quarto::quarto_version() < "1.5.29")) {
+          msg <- "Typst tables require version 1.5.29 or later of Quarto and version 0.11.0 or later of Typst. This software may (or may not) only be available in pre-release builds: https://quarto.org/docs/download"
+          stop(msg, call. = FALSE)
+        }
+      }
 
     } else if (isTRUE(knitr::pandoc_to() == "docx")) {
       if (is.null(output)) out <- "markdown"
