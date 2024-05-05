@@ -100,13 +100,8 @@ theme_void <- function(x, ...) {
             table@table_string <- paste(tab, collapse = "\n")
         } else if (isTRUE(table@output == "typst")) {
             tab <- table@table_string
-            reg <- sprintf("table.hline(y: 0, start: 0, end: %s, stroke: 0.1em + black),", table@ncol)
-            tab <- lines_drop(tab, regex = reg, position = "equal", fixed = TRUE)
-            reg <- sprintf("table.hline(y: 1, start: 0, end: %s, stroke: 0.05em + black),", table@ncol)
-            tab <- lines_drop(tab, regex = reg, position = "equal", fixed = TRUE)
-            reg <- sprintf("table.hline(y: %s, start: 0, end: %s, stroke: 0.1em + black),", table@nrow + 1, table@ncol)
-            tab <- lines_drop(tab, regex = reg, position = "equal", fixed = TRUE)
-            table@table_string <- paste(tab, collapse = "\n")
+            tab <- lines_drop(tab, regex = "table.hline", position = "all", fixed = TRUE)
+            table@table_string <- tab
         }
         return(table)
     }
@@ -173,6 +168,8 @@ theme_bootstrap <- function(x, ...) {
             tab <- tab[!grepl("^[\\+|-]+$", tab)]
             tab <- gsub("|", " ", tab, fixed = TRUE)
             table@table_string <- paste(tab, collapse = "\n")
+        } else if (isTRUE(table@output == "typst")) {
+            table <- style_eval(table, i = 0:nrow(table), line = "bt", line_width = 0.05, line_color = "silver")
         }
         return(table)
     }
