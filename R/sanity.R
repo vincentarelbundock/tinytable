@@ -35,7 +35,7 @@ sanitize_output <- function(output) {
 
   if (isTRUE(check_dependency("knitr"))) {
 
-    if (isTRUE(knitr::pandoc_to() == "latex")) {
+    if (isTRUE(knitr::pandoc_to() %in% c("latex", "beamer"))) {
       usepackage_latex("float")
       usepackage_latex("tabularray", extra_lines = c(
         "\\usepackage[normalem]{ulem}",
