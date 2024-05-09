@@ -38,6 +38,7 @@ Misc:
 
 * Table objects can be modified and printed several times ---with styling--- in a single HTML document like a ReavealJS slideshow. Thanks to @kazuyanagimoto for report #759.
 * Global option to enable Quarto data processing: `options(tinytable_quarto_disable_processing = FALSE)`. Thanks to @andrewheiss for issue #215.
+* Allow beamer presentations. But see: https://github.com/vincentarelbundock/tinytable/issues/244
 
 Bug fixes:
 
