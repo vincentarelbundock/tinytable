@@ -45,6 +45,7 @@ Bug fixes:
 * Data frames without column headers could be displayed as "c(1,2,3,3)". Bug in `format_tt()`. Issue #230.
 * `save_tt()` can now save to PDF when the table includes a caption. Thanks to @etiennebacher for report #224.
 * `group_tt(i)` inserted an extra latex column, which made horizontal lines stop to early. Thanks to @andrewheiss for report #235.
+* Multiple unnamed footnotes allowed in LaTeX tabularray. Issue #242.
 
 
 ## 0.2.1
