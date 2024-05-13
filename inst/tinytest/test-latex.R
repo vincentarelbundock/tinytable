@@ -229,6 +229,12 @@ expect_snapshot_print(
   label = "latex-borders")
 
 
+# Issue #242: multiple notes in tabularray are fiddly
+tab <- tt(mtcars[1:4, 1:4], notes = list(a = "blah", b = "hello world", "oh yeah", "works?"))
+tab@output <- "latex"
+expect_snapshot_print(tab, label = "latex-issue242")
+
+
 options(tinytable_print_output = NULL)
 
 

@@ -81,7 +81,17 @@ setMethod(
     if (is.null(names(x@notes))) {
       lab <- rep("", length(x@notes))
     } else {
-      lab <- names(x@notes)
+      lab <- NULL
+      pad <- 0
+      for (i in seq_along(x@notes)) {
+        # tabularray requires unique labels, but multiple blanks work
+        if (names(x@notes)[i] == "") {
+          lab[i] <- strrep(" ", pad) # not sure why -1 is necessary in tabularray
+          pad <- pad + 1
+        } else {
+          lab[i] <- names(x@notes)[i]
+        }
+      }
     }
     notes <- sapply(x@notes, function(n) if (is.list(n)) n$text else n)
     for (k in seq_along(notes)) {
