@@ -79,7 +79,7 @@ setMethod(
     # otherwise an empty caption is created automatically
     out <- tabularray_insert(out, content = "entry=none,label=none", type = "outer")
     if (is.null(names(x@notes))) {
-      lab <- rep("", length(x@notes))
+      lab <- sapply(seq_along(x@notes), function(k) strrep(" ", k - 1))
     } else {
       lab <- NULL
       pad <- 0
