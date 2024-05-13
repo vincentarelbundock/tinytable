@@ -71,6 +71,39 @@ foo & bar & baz \\
 ````
 
 
+### Beamer
+
+Due to [a bug in the upstream package `rmarkdown`](https://github.com/rstudio/rmarkdown/issues/2478), Quarto or Rmarkdown presentations compiled to Beamer cannot include adequate package loading commands in the preamble automatically. This bug prevents `tinytable::usepackage_latex()` from modifying the preamble. Here's a workaround.
+
+Save this LaTeX code as `preamble.tex`:
+
+```latex
+\RequirePackage{tabularray}
+\RequirePackage{booktabs}
+\RequirePackage{float}
+\usepackage[normalem]{ulem}
+\usepackage{graphicx}
+\UseTblrLibrary{booktabs}
+\UseTblrLibrary{siunitx}
+\NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
+\newcommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}
+\newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
+```
+
+Then, load `preamble.tex` in your YAML header:
+
+````yaml
+---
+output: 
+  beamer_presentation:
+    includes:
+      in_header: preamble.tex
+---
+````
+
+With these changes, the table should appear with colors as expected.
+
+
 ## Typst
 
 ### Multi-page long tables
