@@ -12,7 +12,8 @@
   notes = NULL,
   theme = list("default"),
   placement = NULL,
-  width = NULL
+  width = NULL,
+  landscape = FALSE
 )
 }
 \arguments{
@@ -37,6 +38,8 @@
 \item Single numeric value smaller than or equal to 1 determines the full table width, in proportion of line width.
 \item Numeric vector of length equal to the number of columns in \code{x} determines the width of each column, in proportion of line width. If the sum of \code{width} exceeds 1, each element is divided by \code{sum(width)}. This makes the table full-width with relative column sizes.
 }}
+
+\item{landscape}{Print the table in landscape. This is only relevant for latex and typst output.}
 }
 \description{
 Method for a tinytable S4 object

@@ -11,6 +11,7 @@ tt(
   notes = NULL,
   width = getOption("tinytable_tt_width", default = NULL),
   theme = getOption("tinytable_tt_theme", default = NULL),
+  landscape = FALSE,
   ...
 )
 }
@@ -40,6 +41,8 @@ tt(
 \item String: grid, resize, multipage, placement, striped, void, bootstrap, tabular
 \item Function: Applied to the \code{tinytable} object.
 }}
+
+\item{landscape}{Print the table in landscape. This is only relevant for latex and typst output.}
 
 \item{...}{Additional arguments are ignored}
 }
