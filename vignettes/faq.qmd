@@ -138,3 +138,18 @@ library(tinytable)
 tt(head(iris, 50))
 ```
 ````
+
+
+## Markdown
+
+### `style_tt()` does not apply to row headers
+
+This is an important limitation, but it is difficult to get around. See this issue for discussion: https://github.com/vincentarelbundock/tinytable/issues/125
+
+Users can use markdown styling directly in `group_tt()` to circumvent this. This is documented in the tutorial.
+
+### `rowspan` and `colspan`
+
+These arguments are already implemented in the form of "pseudo-spans", meaning that we flush the content of adjacent cells, but do not modify the row or column borders. This is probably adequate for most needs. 
+
+One alternative would be to remove line segments in finalize_grid(). I tried this but it is tricky and the results were brittle, so I rolled it back. I'm open to considering a PR if someone wants to contribute code, but please discuss the feature design in an issue with me before working on this.
