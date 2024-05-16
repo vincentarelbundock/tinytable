@@ -14,7 +14,7 @@ swap_class <- function(x, new_class) {
 
 
 #' tinytable S4 class
-#' 
+#'
 #' @keywords internal
 #' @export
 setClass(
@@ -42,12 +42,13 @@ setClass(
         lazy_group = "list",
         lazy_style = "list",
         lazy_plot = "list",
-        lazy_finalize = "list"
+        lazy_finalize = "list",
+        landscape = "logical"
         )
 )
 
 #' Method for a tinytable S4 object
-#' 
+#'
 #' @inheritParams tt
 #' @keywords internal
 setMethod("initialize", "tinytable", function(
@@ -58,11 +59,13 @@ setMethod("initialize", "tinytable", function(
     notes = NULL,
     theme = list("default"),
     placement = NULL,
-    width = NULL) {
+    width = NULL,
+    landscape = FALSE) {
   # explicit
   .Object@data <- data
   .Object@table_dataframe <- table
   .Object@theme <- theme
+  .Object@landscape <- landscape
   # dynamic
   .Object@nrow <- nrow(.Object@data)
   .Object@ncol <- ncol(.Object@data)
@@ -80,19 +83,19 @@ setMethod("initialize", "tinytable", function(
 })
 
 #' Method for a tinytable S4 object
-#' 
+#'
 #' @inheritParams tt
 #' @keywords internal
 setMethod("nrow", "tinytable", function(x) return(x@nrow))
 
 #' Method for a tinytable S4 object
-#' 
+#'
 #' @inheritParams tt
 #' @keywords internal
 setMethod("ncol", "tinytable", function(x) return(x@ncol))
 
 #' Method for a tinytable S4 object
-#' 
+#'
 #' @inheritParams tt
 #' @keywords internal
 #' @export
@@ -100,12 +103,12 @@ setMethod("colnames", "tinytable", function(x) return(x@names))
 
 
 #' Method for a tinytable S4 object
-#' 
+#'
 #' @inheritParams tt
 #' @keywords internal
 #' @export
 setReplaceMethod("colnames",
-                 signature = "tinytable", 
+                 signature = "tinytable",
                  definition = function(x, value) {
                    assert_character(value, len = length(x@names))
                    x@names <- value
@@ -115,19 +118,19 @@ setReplaceMethod("colnames",
 
 
 #' Dimensions a tinytable S4 object
-#' 
+#'
 #' @inheritParams tt
 #' @keywords internal
 setMethod("dim", "tinytable", function(x) return(c(x@nrow, x@ncol)))
 
 #' Column names of a tinytable
-#' 
+#'
 #' @inheritParams tt
 #' @keywords internal
 setMethod("names", "tinytable", function(x) return(x@names))
 
 #' Convert a tinytable S4 object to a string
-#' 
+#'
 #' @inheritParams tt
 #' @keywords internal
 setMethod("as.character", "tinytable", function(x) {
@@ -142,7 +145,7 @@ setClass("tinytable_grid", contains = "tinytable")
 setClass("tinytable_dataframe", contains = "tinytable")
 
 #' Apply style settings to a tinytable
-#' 
+#'
 #' @inheritParams tt
 #' @keywords internal
 setGeneric(
@@ -151,7 +154,7 @@ setGeneric(
 )
 
 #' Apply group settings to a tinytable
-#' 
+#'
 #' @inheritParams tt
 #' @keywords internal
 setGeneric(
@@ -160,7 +163,7 @@ setGeneric(
 )
 
 #' Apply group settings to a tinytable
-#' 
+#'
 #' @inheritParams tt
 #' @keywords internal
 setGeneric(
@@ -169,7 +172,7 @@ setGeneric(
 )
 
 #' Apply final settings to a tinytable
-#' 
+#'
 #' @inheritParams tt
 #' @keywords internal
 setGeneric(

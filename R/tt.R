@@ -15,8 +15,8 @@
 #' @param x A data frame or data table to be rendered as a table.
 #' @param digits Number of significant digits to keep for numeric variables. When `digits` is an integer, `tt()` calls `format_tt(x, digits = digits)` before proceeding to draw the table. Note that this will apply all default argument values of `format_tt()`, such as replacing `NA` by "". Users who need more control can use the `format_tt()` function instead.
 #' @param caption A string that will be used as the caption of the table. This argument should *not* be used in Quarto or Rmarkdown documents. In that context, please use the appropriate chunk options.
-#' @param width Table or column width. 
-#' - Single numeric value smaller than or equal to 1 determines the full table width, in proportion of line width. 
+#' @param width Table or column width.
+#' - Single numeric value smaller than or equal to 1 determines the full table width, in proportion of line width.
 #' - Numeric vector of length equal to the number of columns in `x` determines the width of each column, in proportion of line width. If the sum of `width` exceeds 1, each element is divided by `sum(width)`. This makes the table full-width with relative column sizes.
 #' @param theme Function or string.
 #' - String: `r paste(setdiff(names(theme_dictionary), "default"), collapse = ", ")`
@@ -26,33 +26,34 @@
 #' * Multiple strings insert multiple notes sequentially: `list("Hello world", "Foo bar")`
 #' * A named list inserts a list with the name as superscript: `list("a" = list("Hello World"))`
 #' * A named list with positions inserts markers as superscripts inside table cells: `list("a" = list(i = 0:1, j = 2, text = "Hello World"))`
+#' @param landscape Print the table in landscape. This is only relevant for latex and typst output.
 #' @param ... Additional arguments are ignored
 #' @return An object of class `tt` representing the table.
-#' 
+#'
 #' The table object has S4 slots which hold information about the structure of the table. This meta-data can be accessed with the usual `@` accessor. In general, modifying the content of these slots is not recommended, but it can be useful to some developers, such as those who want to force print to a specific output format without calling `print()`.
 #' @template latex_preamble
 #' @template global_options
-#' 
+#'
 #' @examples
 #' library(tinytable)
 #' x <- mtcars[1:4, 1:5]
 #'
 #' tt(x)
-#' 
+#'
 #' tt(x,
 #'    theme = "striped",
 #'    width = 0.5,
 #'    caption = "Data about cars.")
-#' 
+#'
 #' tt(x, notes = "Hello World!")
 #'
 #' fn <- list(i = 0:1, j = 2, text = "Hello World!")
 #' tab <- tt(x, notes = list("*" = fn))
 #' print(tab, "latex")
-#' 
+#'
 #' k <- data.frame(x = c(0.000123456789, 12.4356789))
 #' tt(k, digits=2)
-#' 
+#'
 #' @export
 tt <- function(x,
                digits = getOption("tinytable_tt_digits", default = NULL),
@@ -60,6 +61,7 @@ tt <- function(x,
                notes = NULL,
                width = getOption("tinytable_tt_width", default = NULL),
                theme = getOption("tinytable_tt_theme", default = NULL),
+               landscape = FALSE,
                ...) {
 
 
@@ -109,7 +111,8 @@ tt <- function(x,
     caption = caption,
     notes = notes,
     theme = list(theme),
-    width = width)
+    width = width,
+    landscape = landscape)
 
   if (is.null(theme)) {
     out <- theme_tt(out, theme = "default")

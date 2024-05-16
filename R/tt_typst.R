@@ -2,7 +2,15 @@ setMethod(
   f = "tt_eval",
   signature = "tinytable_typst",
   definition = function(x, ...) {
+
   out <- readLines(system.file("templates/typst.typ", package = "tinytable"))
+  if(x@landscape){
+    out[1] <- "["
+    out <- c("#rotate(-90deg, reflow: true,",
+             out,
+             ")")
+  }
+
   out <- paste(out, collapse = "\n")
 
   # body
