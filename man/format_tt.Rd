@@ -65,7 +65,7 @@ format_tt(
 \item String: Replace \code{NA} entries by the user-supplied string.
 \item Named list: Replace matching elements of the vectors in the list by theirs names. Example:
 \itemize{
-\item \code{list("-" = c(NA, NaN), "-∞" = -Inf, "∞" = Inf)}
+\item \code{list("-" = c(NA, NaN), "Tiny" = -Inf, "Massive" = Inf)}
 }
 }}
 

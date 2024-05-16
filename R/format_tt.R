@@ -21,7 +21,7 @@
 #' - FALSE: Print `NA` as the string "NA".
 #' - String: Replace `NA` entries by the user-supplied string.
 #' - Named list: Replace matching elements of the vectors in the list by theirs names. Example: 
-#'      - `list("-" = c(NA, NaN), "-∞" = -Inf, "∞" = Inf)`
+#'      - `list("-" = c(NA, NaN), "Tiny" = -Inf, "Massive" = Inf)`
 #' @param escape Logical or "latex" or "html". If TRUE, escape special characters to display them as text in the format of the output of a `tt()` table.
 #' - If `i` is `NULL`, escape the `j` columns and column names.
 #' - If `i` and `j` are both `NULL`, escape all cells, column names, caption, notes, and spanning labels created by `group_tt()`.
