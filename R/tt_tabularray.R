@@ -4,6 +4,9 @@ setMethod(
   definition = function(x, ...) {
 
   template <- readLines(system.file("templates/tabularray.tex", package = "tinytable"))
+  if(x@landscape){
+    template <- c("\\begin{landscape}", template, "\\end{landscape}")
+  }
 
   ncols <- ncol(x)
   nrows <- nrow(x)
