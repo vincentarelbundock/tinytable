@@ -33,6 +33,8 @@
     }
   }
 
+  #align(center, [
+
   table( // tinytable table start
     stroke: none,
     fill: (x, y) => {
@@ -57,6 +59,8 @@
     ),
 
   ) // end table
+
+  ]) // end align
 
 ) // end figure
 ]
