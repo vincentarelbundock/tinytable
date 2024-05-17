@@ -133,10 +133,9 @@ tt(x,
 The `tinytable` tutorial will take you much further. It is available in
 two formats:
 
+- [Tutorial (HTML)](https://vincentarelbundock.github.io/tinytable/)
 - [Tutorial
-  (HTML)](https://vincentarelbundock.github.io/tinytable/vignettes/tutorial.html)
-- [Tutorial
-  (PDF)](https://vincentarelbundock.github.io/tinytable/vignettes/tutorial.pdf)
+  (PDF)](https://vincentarelbundock.github.io/tinytable/vignettes/tinytable_tutorial.pdf)
 
 [^1]: Other formats like Markdown and Typst are also available, but less
     flexible.
