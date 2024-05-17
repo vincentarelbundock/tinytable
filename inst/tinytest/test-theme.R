@@ -17,3 +17,15 @@ k <- data.frame(X = 1) |>
   theme_tt(theme = "resize", width = 0.9) |>
   save_tt("latex")
 expect_inherits(k, "character")
+
+
+# Issue #206: resize with footnote
+Q
+pkgload::load_all()
+data.frame(mtcars[1:2,]) |>
+  tt(note = "abc") |>
+  theme_tt(theme = "rotate") |>
+  print("typst")
+
+
+expect_inherits(k, "character")

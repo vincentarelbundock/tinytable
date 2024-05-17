@@ -5,7 +5,6 @@ theme_default <- function(x, ...) {
             table <- style_eval(table, i = 0, line = "b", line_width = .05)
             table <- style_eval(table, i = nrow(table), line = "b", line_width = .1)
         }
-
         return(table)
     }
     x <- style_tt(x, finalize = fn)
@@ -238,6 +237,30 @@ theme_multipage <- function(x, rowhead = 0, rowfoot = 0, ...) {
 }
 
 
+theme_rotate <- function(x, ...) {
+    fn_typst <- function(table) {
+        if (isTRUE(table@output == "typst")) {
+            s <- table@table_string
+            s <- lines_insert(
+                old = s,
+                new = "#rotate(-90deg, reflow: true, ",
+                regex = "tinytable table start",
+                position = "before")
+            s <- lines_insert(
+                old = s,
+                new = ")",
+                regex = "end table",
+                position = "after")
+            s <- sub("#table(", "table(", s, fixed = TRUE)
+            table@table_string <- s
+        }
+        table
+    }
+    x <- style_tt(x, finalize = fn_typst)
+    return(x)
+}
+
+
 theme_dictionary <- list(
     "default" = theme_default,
     "grid" = theme_grid,
@@ -247,8 +270,10 @@ theme_dictionary <- list(
     "striped" = theme_striped,
     "void" = theme_void,
     "bootstrap" = theme_bootstrap,
+    "rotate" = theme_rotate,
     "tabular" = theme_tabular
 )
+
 
 
 
