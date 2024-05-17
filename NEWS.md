@@ -17,6 +17,7 @@ Breaking change:
 * `replace=TRUE` by default replaces `NA` by an empty string. `FALSE` prints "NA" as string.
 * `replace_na` is deprecated in favor of `replace`. Backward compatibility is maintained and a warning is issued.
 * All arguments can now be set using global options.
+* `escape` escapes square brackets in Typst.
 
 `theme_tt()`:
 
