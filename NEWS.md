@@ -17,7 +17,6 @@ Breaking change:
 * `replace=TRUE` by default replaces `NA` by an empty string. `FALSE` prints "NA" as string.
 * `replace_na` is deprecated in favor of `replace`. Backward compatibility is maintained and a warning is issued.
 * All arguments can now be set using global options.
-* `escape` escapes square brackets in Typst.
 
 `theme_tt()`:
 
@@ -34,6 +33,8 @@ Breaking change:
 Typst:
 
 * Better compatibility with Quarto captions. Recommended strategy is to *not* use the `caption` argument, and rather to define *both* the `label` and `tbl-cap` chunk options in Quarto. This is a breaking change, as Typst tables are no longer enclosed in a `#figure` environment in Quarto documents when both `tbl-cap` and `label` chunk options are defined.
+* `format_tt(escape=TRUE)` escapes square brackets.
+* Tables are centered by default.
 
 Misc:
 
