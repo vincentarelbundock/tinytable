@@ -45,7 +45,7 @@
 #' @importFrom methods rbind2
 #' @export
 setMethod("rbind2", 
-          signature = "tinytable", 
+          signature = signature(x = "tinytable", y = "tinytable"), 
           definition = function(x, y, 
                                 use_names = TRUE,
                                 headers = TRUE,
