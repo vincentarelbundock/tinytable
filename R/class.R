@@ -12,6 +12,7 @@ swap_class <- function(x, new_class) {
   return(out)
 }
 
+setClassUnion("NULLorCharacter", c("NULL", "character"))
 
 #' tinytable S4 class
 #' 
@@ -33,7 +34,7 @@ setClass(
         nrow = "numeric",
         ncol = "numeric",
         nhead = "numeric",
-        names = "character",
+        names = "NULLorCharacter",
         output = "character",
         output_dir = "character",
         id = "character",
@@ -107,7 +108,11 @@ setMethod("colnames", "tinytable", function(x) return(x@names))
 setReplaceMethod("colnames",
                  signature = "tinytable", 
                  definition = function(x, value) {
-                   assert_character(value, len = length(x@names))
+                   if (!is.null(value)) {
+                     assert_character(value, len = length(x@names))
+                   } else {
+                     if (x@nhead == 1) x@nhead <- 0
+                   }
                    x@names <- value
                    return(x)
                  }

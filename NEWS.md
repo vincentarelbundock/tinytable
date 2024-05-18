@@ -1,5 +1,9 @@
 # News
 
+## Development
+
+* `colnames(x)<-NULL` works on a `tinytable` object.
+
 ## 0.3.0
 
 Breaking change:

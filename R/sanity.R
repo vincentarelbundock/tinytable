@@ -202,20 +202,27 @@ assert_data_frame <- function(x, min_rows = 0, min_cols = 0, name = as.character
 }
 
 
-assert_character <- function(x, len = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
-  if (isTRUE(null.ok) && is.null(x)) return(invisible(TRUE))
-  if (!is.character(x)) {
+check_character <- function(x, len = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
+  if (isTRUE(null.ok) && is.null(x)) {
+    return(TRUE)
+  } else if (!is.character(x)) {
     msg <- sprintf("`%s` must be character.", name)
-    stop(msg, call. = FALSE)
+    return(msg)
+  } else if (!is.null(len) && length(x) != len) {
+    msg <- sprintf("`%s` must have length %s.", name, len)
+    return(msg)
   }
-  if (!is.null(len)) {
-    if (length(x) != len) {
-      msg <- sprintf("`%s` must have length %s.", name, len)
-      stop(msg, call. = FALSE)
-    }
-  }
+  return(TRUE)
 }
 
+assert_character <- function(x, len = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
+  flag <- check_character(x, len = len, null.ok = null.ok, name = name)
+  if (!isTRUE(flag)) {
+    stop(flag, call. = FALSE)
+  } else {
+    return(invisible(TRUE))
+  }
+}
 
 assert_list <- function(x, named = FALSE, len = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
   if (isTRUE(null.ok) && is.null(x)) return(invisible(TRUE))

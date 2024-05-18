@@ -5,8 +5,16 @@ options(tinytable_print_output = "markdown")
 # markdown without labels
 k = iris[1:10,]
 colnames(k) <- NULL
+tt(k)
 expect_snapshot_print(
   tt(k), label = "markdown-nocolnames")
+
+# no colnames
+tab <- tt(head(iris))
+colnames(tab) <- NULL
+tab
+expect_snapshot_print(tab, label = "markdown-nocolnames_02")
+
 
 # group rows and columns
 tab <- tt(mtcars[1:10, 1:5]) |>
@@ -18,6 +26,8 @@ tab <- tt(mtcars[1:10, 1:5]) |>
         "Foo" = 2:3,
         "Bar" = 4:5))
 expect_snapshot_print(tab, label = "markdown-group_tt")
+
+
 
 # simple caption
 tab <- tt(mtcars[1:3, 1:3], caption = "Blah blah blah") 
@@ -74,6 +84,7 @@ n <- list("Blah blah", "*" = list(i = 0:1, j = 2, text = "foo bar"))
 tab <- tt(x, notes = n)
 
 expect_snapshot_print(tab, label = "markdown-footnote")
+
 
 
 options(tinytable_print_output = NULL)

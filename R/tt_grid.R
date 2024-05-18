@@ -19,7 +19,8 @@ tt_eval_grid  <- function(x, width_cols = NULL, ...) {
       width_cols <- x@width_cols
   }
 
-  if (!is.null(names(tab))) {
+  tthead <- inherits(x, "tinytable") && isTRUE(x@nhead > 0)
+  if (length(colnames(x)) != 0 || tthead) {
     tab <- as.matrix(tab)
     tab <- base::rbind(colnames(x), tab)
     header <- TRUE
