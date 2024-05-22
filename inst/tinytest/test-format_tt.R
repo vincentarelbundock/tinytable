@@ -129,6 +129,14 @@ dict <- list("-" = c(NA, NaN), "Tiny" = -Inf, "Huge" = Inf)
 tab <- tt(x) |> format_tt(replace = dict) |> print()
 expect_equivalent(tab$y, c("3.141593", "-", "-", "Tiny", "Huge"))
 
+# Issue #256: big mark for integers
+tab <- data.frame(x = c(1332037, 1299128, 805058, 206840, 698511))  |>
+  tt() |>
+  format_tt(num_mark_big = " ", digits = 0, num_fmt = "decimal") |>
+  print("dataframe")
+expect_equivalent(tab$x, c("1 332 037", "1 299 128", "805 058", "206 840", "698 511"))
+
+
 x <- data.frame(x = pi, y = NA)
 options(tinytable_tt_digits = 2)
 tab <- tt(x) |> print()

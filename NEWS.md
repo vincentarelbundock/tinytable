@@ -3,6 +3,7 @@
 ## Development
 
 * `colnames(x)<-NULL` works on a `tinytable` object.
+* `format_tt(num_big_mark)` applies to integer columns.
 
 ## 0.3.0
 

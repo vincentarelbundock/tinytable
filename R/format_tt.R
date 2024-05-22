@@ -287,6 +287,8 @@ format_tt_lazy <- function(x,
             out[i, col] <- formatC(ori[i, col, drop = TRUE],
               digits = digits, format = "e", drop0trailing = !num_zero,
               big.mark = num_mark_big, decimal.mark = num_mark_dec)
+          } else {
+            out[i, col] <- format(ori[i, col, drop = TRUE], big.mark = num_mark_big, scientific = FALSE)
           }
         }
         
