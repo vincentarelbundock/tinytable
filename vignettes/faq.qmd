@@ -70,6 +70,30 @@ foo & bar & baz \\
 ```
 ````
 
+### Global styles
+
+`tabularray` allows very powerful styling and themeing options. See [the reference manual](https://ctan.org/pkg/tabularray) for more information.
+
+For example, you can change the size of footnotes in all tables of a document with:
+
+````md
+---
+title: "debug_tinytable"
+format: 
+    pdf:
+        keep-tex: true
+        header-includes: |
+            \SetTblrStyle{foot}{font=\LARGE}
+---
+
+
+```{r}
+library(tinytable)
+library(magrittr)
+tt(head(iris), notes = "Blah blah") |> style_tt(color = "orange")
+```
+````
+
 
 ### Beamer
 
