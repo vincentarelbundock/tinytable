@@ -5,6 +5,12 @@
 * `colnames(x)<-NULL` works on a `tinytable` object.
 * `format_tt(num_big_mark)` applies to integer columns.
 
+Bugs:
+
+* `style_tt(indent)` works for LaTeX
+
+
+
 ## 0.3.0
 
 Breaking change:
