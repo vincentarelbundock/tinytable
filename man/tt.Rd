@@ -64,7 +64,7 @@ The \code{tt} function renders a table in different formats with various styling
 \section{LaTeX preamble}{
 
 
-When rendering Quarto and Rmarkdown documents, \code{tinytable} will populate the LaTeX preamble automatically with all the required packages. For standalone LaTeX packages, these commands should be inserted in the preamble:
+When rendering Quarto and Rmarkdown documents, \code{tinytable} will populate the LaTeX preamble automatically with all the required packages (except when the code chunk in question is cached). For standalone LaTeX packages, these commands should be inserted in the preamble:
 
 \if{html}{\out{<div class="sourceCode latex">}}\preformatted{\\usepackage\{tabularray\}
 \\usepackage\{float\}
