@@ -1,5 +1,4 @@
 #' 
-#'
 #' @section Global options:
 #'
 #' ## Quarto data processing
