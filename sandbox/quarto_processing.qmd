@@ -1,6 +1,8 @@
 ---
 title: "Citations in tables"
-format: pdf
+format: 
+  pdf:
+    keep-tex: true
 
 references:
 - type: article-journal
@@ -22,17 +24,16 @@ references:
 ---
 
 
-## `gt::gt()`
-
-This doesn't work.
-
 ```{r}
 #| message: false
-library(tibble)
 library(tinytable)
-tribble(
-  ~Thing, ~Citation,
-  1234, "@Lovelace1842") |>
-  tt() |>
-  format_tt(quarto = TRUE)
+x <- data.frame(Thing = 1:2, Citation = c("@Lovelace1842", NA))
+
+tt(x) |> format_tt(replace = " ", quarto = TRUE)
+```
+
+
+```{r}
+#| eval: false
+tt(x) |> format_tt(replace = "+", quarto = TRUE)
 ```
