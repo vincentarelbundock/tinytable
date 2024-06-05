@@ -27,7 +27,7 @@
 #' - If `i` and `j` are both `NULL`, escape all cells, column names, caption, notes, and spanning labels created by `group_tt()`.
 #' @param markdown Logical; if TRUE, render markdown syntax in cells. Ex: `_italicized text_` is properly italicized in HTML and LaTeX.
 #' @param fn Function for custom formatting. Accepts a vector and returns a character vector of the same length.
-#' @param quarto Logical. Enable Quarto data processing and wrap cell content in a `data-qmd` span (HTML) or `\QuartoMarkdownBase64{}` macro (LaTeX). Warning: Quarto data processing can enter in conflict with `tinytable` styling or formatting options. See global options section below.
+#' @param quarto Logical. Enable Quarto data processing and wrap cell content in a `data-qmd` span (HTML) or `\QuartoMarkdownBase64{}` macro (LaTeX). See warnings in the Global Options section below.
 #' @param sprintf String passed to the `?sprintf` function to format numbers or interpolate strings with a user-defined pattern (similar to the `glue` package, but using Base R).
 #' @param ... Additional arguments are ignored.
 #' @inheritParams tt
@@ -397,23 +397,21 @@ format_tt_lazy <- function(x,
 
   # quarto at the very end
   if (isTRUE(quarto)) {
-      if (isTRUE(check_dependency("knitr"))) {
-          if (knitr::is_html_output()) {
-              fun <- function(z) {
-                  z@table_string <- sub("data-quarto-disable-processing='true'",
-                                        "data-quarto-disable-processing='false'",
-                                        z@table_string,
-                                        fixed = TRUE)
-                  return(z)
-              }
-              x <- style_tt(x, finalize = fun)
-              out[i, col] <- sprintf('<span data-qmd="%s"></span>', ori[i, col, drop = TRUE])
-          } else {#if (knitr::is_latex_output()) {
-              assert_dependency("base64enc")
-              tmp <- sapply(ori[i, col, drop = TRUE], function(z) base64enc::base64encode(charToRaw(z)))
-              out[i, col] <- sprintf('\\QuartoMarkdownBase64{%s}', tmp)
-          }
+    if (isTRUE(x@output == "html")) {
+      fun <- function(z) {
+        z@table_string <- sub("data-quarto-disable-processing='true'",
+          "data-quarto-disable-processing='false'",
+          z@table_string,
+          fixed = TRUE)
+        return(z)
       }
+      x <- style_tt(x, finalize = fun)
+      out[i, col] <- sprintf('<span data-qmd="%s"></span>', out[i, col, drop = TRUE])
+    } else if (isTRUE(x@output == "latex")) {
+      assert_dependency("base64enc")
+      tmp <- sapply(out[i, col, drop = TRUE], function(z) base64enc::base64encode(charToRaw(z)))
+      out[i, col] <- sprintf("\\QuartoMarkdownBase64{%s}", tmp)
+    }
   }
 
 

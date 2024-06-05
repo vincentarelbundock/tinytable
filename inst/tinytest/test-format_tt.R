@@ -153,3 +153,21 @@ expect_equivalent(tab$y, "NA")
 options(tinytable_print_output = NULL)
 options(tinytable_tt_digits = NULL)
 options(tinytable_format_replace = NULL)
+
+
+
+# Issue #263: NA processing with Quarto doesn't work
+x <- data.frame(
+  Points = c(40, 0, 10, 10, 10, 10, 10, 20, 110),
+  Assignment = c(
+    "Analytical Assignments", "Team Project Part 0 - County Selection",
+    "Team Project Part 1 - Summary Background",
+    "Team Project Part 2 - SWOT Analysis",
+    "Team Project Part 3 - Strategic Direction/Action Plan",
+    "Team Project Part 4 - Evaluation Framework",
+    "Team Project Part 5 - Plan Presentation", "Class participation", "Total"
+  ),
+  Percent = c("36%", "0%", "9%", "9%", "9%", "9%", "9%", "18%", NA)
+)
+x <- tt(x) |> format_tt(replace = "!", quarto = TRUE) |> save_tt("latex") 
+expect_true(grepl("IQ==", x))

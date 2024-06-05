@@ -7,9 +7,8 @@
 
 Bugs:
 
+* `replace` does not work in LaTeX with `format_tt(quarto=TRUE)`. Thanks to @cbgoodman for Issue #263.
 * `style_tt(indent)` works for LaTeX
-
-
 
 ## 0.3.0
 

@@ -82,6 +82,12 @@ When rendering Quarto and Rmarkdown documents, \code{tinytable} will populate th
 
 \subsection{Quarto data processing}{
 
+The \code{format_tt(quarto=TRUE)} argument activates Quarto data processing for specific cells. This funcationality comes with  a few warnings:
+\enumerate{
+\item Currently, Quarto provides a \verb{\\QuartoMarkdownBase64\{\}} LaTeX macro, but it does not appear to do anything with it. References and markdown codes may not be processed as expected in LaTeX.
+\item Quarto data processing can enter in conflict with \code{tinytable} styling or formatting options. See below for how to disable it.
+}
+
 \code{options(tinytable_quarto_disable_processing = TRUE)}
 
 Disable Quarto processing of cell content. Setting this global option to \code{FALSE} may lead to conflicts with some \code{tinytable} features, but it also allows use of markdown and Quarto-specific code in table cells, such as cross-references.

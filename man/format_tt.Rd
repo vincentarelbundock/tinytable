@@ -77,7 +77,7 @@ format_tt(
 
 \item{markdown}{Logical; if TRUE, render markdown syntax in cells. Ex: \verb{_italicized text_} is properly italicized in HTML and LaTeX.}
 
-\item{quarto}{Logical. Enable Quarto data processing and wrap cell content in a \code{data-qmd} span (HTML) or \verb{\\QuartoMarkdownBase64\{\}} macro (LaTeX). Warning: Quarto data processing can enter in conflict with \code{tinytable} styling or formatting options. See global options section below.}
+\item{quarto}{Logical. Enable Quarto data processing and wrap cell content in a \code{data-qmd} span (HTML) or \verb{\\QuartoMarkdownBase64\{\}} macro (LaTeX). See warnings in the Global Options section below.}
 
 \item{fn}{Function for custom formatting. Accepts a vector and returns a character vector of the same length.}
 
@@ -97,6 +97,12 @@ If this function is applied several times to the same cell, the last transformat
 \section{Global options}{
 
 \subsection{Quarto data processing}{
+
+The \code{format_tt(quarto=TRUE)} argument activates Quarto data processing for specific cells. This funcationality comes with  a few warnings:
+\enumerate{
+\item Currently, Quarto provides a \verb{\\QuartoMarkdownBase64\{\}} LaTeX macro, but it does not appear to do anything with it. References and markdown codes may not be processed as expected in LaTeX.
+\item Quarto data processing can enter in conflict with \code{tinytable} styling or formatting options. See below for how to disable it.
+}
 
 \code{options(tinytable_quarto_disable_processing = TRUE)}
 
