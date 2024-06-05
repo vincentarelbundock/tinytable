@@ -56,8 +56,8 @@
 #' @export
 tt <- function(x,
                digits = getOption("tinytable_tt_digits", default = NULL),
-               caption = NULL,
-               notes = NULL,
+               caption = getOption("tinytable_tt_caption", default = NULL),
+               notes = getOption("tinytable_tt_notes", default = NULL),
                width = getOption("tinytable_tt_width", default = NULL),
                theme = getOption("tinytable_tt_theme", default = NULL),
                ...) {
@@ -88,6 +88,14 @@ tt <- function(x,
   }
   if (sum(width) > 1) {
       width <- width / sum(width)
+  }
+
+  # bind the row names if the user explicitly asks for it in global option. 
+  # Same name as tibble::rownames_to_column()
+  if (isTRUE(getOption("tinytable_tt_rownames", default = FALSE)) && !is.null(row.names(x))) {
+    rn <- data.frame(format(row.names(x)))
+    rn <- stats::setNames(rn, "rowname")
+    x <- cbind(rn, x)
   }
 
   # formatting options are limited here
