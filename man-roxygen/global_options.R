@@ -1,5 +1,18 @@
 #' 
 #' @section Global options:
+#' 
+#' ## Row names
+#' 
+#' When the `x` data frame includes row names, `tinytable` can bind them to the first column (without an empty string string as column name). This global option triggers this behavior:
+#' 
+#' ```r
+#' options(tinytable_tt_rownames = TRUE)
+#' 
+#' x <- mtcars[1:3, 1:3]
+#' tt(x)
+#' 
+#' options(tinytable_tt_rownames = FALSE)
+#' ```
 #'
 #' ## Quarto data processing
 #'
@@ -7,7 +20,6 @@
 #' 
 #' 1. Currently, Quarto provides a `\QuartoMarkdownBase64{}` LaTeX macro, but it does not appear to do anything with it. References and markdown codes may not be processed as expected in LaTeX.
 #' 2. Quarto data processing can enter in conflict with `tinytable` styling or formatting options. See below for how to disable it.
-#' 
 #' 
 #' `options(tinytable_quarto_disable_processing = TRUE)`
 #'

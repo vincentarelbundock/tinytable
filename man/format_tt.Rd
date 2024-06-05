@@ -96,6 +96,19 @@ If this function is applied several times to the same cell, the last transformat
 }
 \section{Global options}{
 
+\subsection{Row names}{
+
+When the \code{x} data frame includes row names, \code{tinytable} can bind them to the first column (without an empty string string as column name). This global option triggers this behavior:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(tinytable_tt_rownames = TRUE)
+
+x <- mtcars[1:3, 1:3]
+tt(x)
+
+options(tinytable_tt_rownames = FALSE)
+}\if{html}{\out{</div>}}
+}
+
 \subsection{Quarto data processing}{
 
 The \code{format_tt(quarto=TRUE)} argument activates Quarto data processing for specific cells. This funcationality comes with  a few warnings:

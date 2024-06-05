@@ -7,8 +7,8 @@
 tt(
   x,
   digits = getOption("tinytable_tt_digits", default = NULL),
-  caption = NULL,
-  notes = NULL,
+  caption = getOption("tinytable_tt_caption", default = NULL),
+  notes = getOption("tinytable_tt_notes", default = NULL),
   width = getOption("tinytable_tt_width", default = NULL),
   theme = getOption("tinytable_tt_theme", default = NULL),
   ...
@@ -79,6 +79,19 @@ When rendering Quarto and Rmarkdown documents, \code{tinytable} will populate th
 }
 
 \section{Global options}{
+
+\subsection{Row names}{
+
+When the \code{x} data frame includes row names, \code{tinytable} can bind them to the first column (without an empty string string as column name). This global option triggers this behavior:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(tinytable_tt_rownames = TRUE)
+
+x <- mtcars[1:3, 1:3]
+tt(x)
+
+options(tinytable_tt_rownames = FALSE)
+}\if{html}{\out{</div>}}
+}
 
 \subsection{Quarto data processing}{
 
