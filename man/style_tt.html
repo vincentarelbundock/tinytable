@@ -706,7 +706,8 @@ extra arguments are ignored
 </section>
 <section id="latex-preamble" class="level3">
 <h3 class="anchored" data-anchor-id="latex-preamble">LaTeX preamble</h3>
-<p>When rendering Quarto and Rmarkdown documents, <code>tinytable</code> will populate the LaTeX preamble automatically with all the required packages (except when the code chunk in question is cached). For standalone LaTeX packages, these commands should be inserted in the preamble:</p>
+<p><code>tinytable</code> uses the <code>tabularray</code> package from your LaTeX distribution to draw tables. <code>tabularray</code>, in turn, uses the special <code>tblr</code>, <code>talltblr</code>, and <code>longtblr</code> environments.</p>
+<p>When rendering a document from Quarto or Rmarkdown directly to PDF, <code>tinytable</code> will populate the LaTeX preamble automatically with all the required packages (except when code chunks are cached). For standalone LaTeX documents, these commands should be inserted in the preamble manually:</p>
 <div class="sourceCode latex">
 <pre>\usepackage{tabularray}
 \usepackage{float}
