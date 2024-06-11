@@ -256,40 +256,21 @@ format_tt_lazy <- function(x,
 
         # non-integer numeric
         } else if (is.numeric(ori[i, col]) && !isTRUE(check_integerish(ori[i, col])) && !is.null(digits)) {
-          if (num_fmt == "significant") {
-            out[i, col] <- format(ori[i, col, drop = TRUE],
-              digits = digits, drop0trailing = !num_zero,
-              big.mark = num_mark_big, decimal.mark = num_mark_dec,
-              scientific = FALSE)
-          } else if (num_fmt == "significant_cell") {
-            zzz <- function(z) {
-              format(z,
-                digits = digits, drop0trailing = !num_zero,
-                big.mark = num_mark_big, decimal.mark = num_mark_dec,
-                scientific = FALSE)
-            }
-            out[i, col] <- sapply(ori[i, col, drop = TRUE], zzz)
-          } else if (num_fmt == "decimal") {
-            out[i, col] <- formatC(ori[i, col, drop = TRUE],
-              digits = digits, format = "f", drop0trailing = !num_zero,
-              big.mark = num_mark_big, decimal.mark = num_mark_dec)
-
-            if (num_fmt == "scientific") {
-              out[i, col] <- formatC(ori[i, col, drop = TRUE],
-                digits = digits, format = "e", drop0trailing = !num_zero,
-                big.mark = num_mark_big, decimal.mark = num_mark_dec)
-            }
-          }
+          out[i, col] <- format_non_integer_numeric(ori[i, col, drop = TRUE],
+            digits = digits,
+            num_mark_big = num_mark_big,
+            num_mark_dec = num_mark_dec,
+            num_zero = num_zero,
+            num_fmt = num_fmt)
 
         # integer
         } else if (isTRUE(check_integerish(ori[i, col])) && !is.null(digits)) {
-          if (num_fmt == "scientific") {
-            out[i, col] <- formatC(ori[i, col, drop = TRUE],
-              digits = digits, format = "e", drop0trailing = !num_zero,
-              big.mark = num_mark_big, decimal.mark = num_mark_dec)
-          } else {
-            out[i, col] <- format(ori[i, col, drop = TRUE], big.mark = num_mark_big, scientific = FALSE)
-          }
+          out[i, col] <- format_integer(ori[i, col, drop = TRUE], 
+            digits = digits, 
+            num_mark_big = num_mark_big, 
+            num_mark_dec = num_mark_dec, 
+            num_zero = num_zero, 
+            num_fmt = num_fmt)
         }
         
       } else {
@@ -449,4 +430,65 @@ format_num_suffix <- function(x, digits, num_mark_big, num_mark_dec, num_zero, n
   number <- ifelse(x > 1e12, fun(x / 1e12), number)
   number <- paste0(number, suffix)
   return(number)
+}
+
+
+
+
+# Format individual column values based on type
+format_column_value <- function(value, date, num_suffix, digits, num_mark_big, num_mark_dec, num_zero, num_fmt, bool, other) {
+  if (is.logical(value)) {
+    return(bool(value))
+  } else if (inherits(value, "Date")) {
+    return(format(value, date))
+  } else if (is.numeric(value)) {
+    return(format_numeric_value(value, num_suffix, digits, num_mark_big, num_mark_dec, num_zero, num_fmt))
+  } else {
+    return(other(value))
+  }
+}
+
+# Format numeric values with different formats
+format_numeric_value <- function(value, num_suffix, digits, num_mark_big, num_mark_dec, num_zero, num_fmt) {
+  if (isTRUE(num_suffix) && !is.null(digits)) {
+    return(format_num_suffix(value, digits, num_mark_big, num_mark_dec, num_zero, num_fmt))
+  } else if (is.numeric(value) && !isTRUE(check_integerish(value)) && !is.null(digits)) {
+    return(format_non_integer_numeric(value, digits, num_mark_big, num_mark_dec, num_zero, num_fmt))
+  } else if (isTRUE(check_integerish(value)) && !is.null(digits)) {
+    return(format_integer(value, digits, num_mark_big, num_mark_dec, num_zero, num_fmt))
+  } else {
+    return(value)
+  }
+}
+
+# Format non-integer numeric values
+format_non_integer_numeric <- function(value, digits, num_mark_big, num_mark_dec, num_zero, num_fmt) {
+  if (num_fmt == "significant") {
+    return(format(value, digits = digits, drop0trailing = !num_zero, big.mark = num_mark_big, decimal.mark = num_mark_dec, scientific = FALSE))
+  } else if (num_fmt == "significant_cell") {
+    return(sapply(value, function(z) format(z, digits = digits, drop0trailing = !num_zero, big.mark = num_mark_big, decimal.mark = num_mark_dec, scientific = FALSE)))
+  } else if (num_fmt == "decimal") {
+    return(formatC(value, digits = digits, format = "f", drop0trailing = !num_zero, big.mark = num_mark_big, decimal.mark = num_mark_dec))
+  } else if (num_fmt == "scientific") {
+    return(formatC(value, digits = digits, format = "e", drop0trailing = !num_zero, big.mark = num_mark_big, decimal.mark = num_mark_dec))
+  }
+  return(value)
+}
+
+# Format integer values
+format_integer <- function(value, digits, num_mark_big, num_mark_dec, num_zero, num_fmt) {
+  if (num_fmt == "scientific") {
+    return(formatC(value, digits = digits, format = "e", drop0trailing = !num_zero, big.mark = num_mark_big, decimal.mark = num_mark_dec))
+  } else {
+    return(format(value, big.mark = num_mark_big, scientific = FALSE))
+  }
+}
+
+# Apply replacements to the column values
+format_replace <- function(original_value, formatted_value, replace) {
+  for (k in seq_along(replace)) {
+    idx <- original_value %in% replace[[k]]
+    formatted_value[idx] <- names(replace)[[k]]
+  }
+  return(formatted_value)
 }
