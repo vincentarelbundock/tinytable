@@ -242,37 +242,15 @@ format_tt_lazy <- function(x,
 
       # numeric
       } else if (is.numeric(ori[i, col, drop = TRUE])) {
-        # digits check needs to be done here to avoid the other() formatting from ori, which zaps the original setting
-
-        # numeric suffix
-        if (isTRUE(num_suffix) && !is.null(digits)) {
-          out[i, col] <- format_num_suffix(
-            ori[i, col, drop = TRUE],
-            digits = digits,
-            num_mark_big = num_mark_big,
-            num_mark_dec = num_mark_dec,
-            num_zero = num_zero,
-            num_fmt = num_fmt)
-
-        # non-integer numeric
-        } else if (is.numeric(ori[i, col]) && !isTRUE(check_integerish(ori[i, col])) && !is.null(digits)) {
-          out[i, col] <- format_non_integer_numeric(ori[i, col, drop = TRUE],
-            digits = digits,
-            num_mark_big = num_mark_big,
-            num_mark_dec = num_mark_dec,
-            num_zero = num_zero,
-            num_fmt = num_fmt)
-
-        # integer
-        } else if (isTRUE(check_integerish(ori[i, col])) && !is.null(digits)) {
-          out[i, col] <- format_integer(ori[i, col, drop = TRUE], 
-            digits = digits, 
-            num_mark_big = num_mark_big, 
-            num_mark_dec = num_mark_dec, 
-            num_zero = num_zero, 
-            num_fmt = num_fmt)
-        }
-        
+         tmp <- format_numeric_value(ori[i, col], 
+           num_suffix = num_suffix, 
+           digits = digits, 
+           num_mark_big = num_mark_big, 
+           num_mark_dec = num_mark_dec, 
+           num_zero = num_zero, 
+           num_fmt = num_fmt)
+        if (!is.null(tmp)) out[i, col] <- tmp
+         
       } else {
         out[i, col] <- other(ori[i, col, drop = TRUE])
       }
@@ -449,17 +427,40 @@ format_column_value <- function(value, date, num_suffix, digits, num_mark_big, n
 }
 
 # Format numeric values with different formats
+# digits check needs to be done here to avoid the other() formatting from ori, which zaps the original setting
 format_numeric_value <- function(value, num_suffix, digits, num_mark_big, num_mark_dec, num_zero, num_fmt) {
+  # numeric suffix
   if (isTRUE(num_suffix) && !is.null(digits)) {
-    return(format_num_suffix(value, digits, num_mark_big, num_mark_dec, num_zero, num_fmt))
+    out <- format_num_suffix(
+      value,
+      digits = digits,
+      num_mark_big = num_mark_big,
+      num_mark_dec = num_mark_dec,
+      num_zero = num_zero,
+      num_fmt = num_fmt)
+  # non-integer numeric
   } else if (is.numeric(value) && !isTRUE(check_integerish(value)) && !is.null(digits)) {
-    return(format_non_integer_numeric(value, digits, num_mark_big, num_mark_dec, num_zero, num_fmt))
+    out <- format_non_integer_numeric(
+      value,
+      digits = digits,
+      num_mark_big = num_mark_big,
+      num_mark_dec = num_mark_dec,
+      num_zero = num_zero,
+      num_fmt = num_fmt)
+  # integer
   } else if (isTRUE(check_integerish(value)) && !is.null(digits)) {
-    return(format_integer(value, digits, num_mark_big, num_mark_dec, num_zero, num_fmt))
+    out <- format_integer(value, 
+      digits = digits, 
+      num_mark_big = num_mark_big, 
+      num_mark_dec = num_mark_dec, 
+      num_zero = num_zero, 
+      num_fmt = num_fmt)
   } else {
-    return(value)
+    out <- NULL
   }
+  return(out)
 }
+
 
 # Format non-integer numeric values
 format_non_integer_numeric <- function(value, digits, num_mark_big, num_mark_dec, num_zero, num_fmt) {
