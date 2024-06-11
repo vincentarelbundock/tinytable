@@ -5,6 +5,7 @@
 * `colnames(x)<-NULL` works on a `tinytable` object.
 * `format_tt(num_big_mark)` applies to integer columns.
 * Print row names in the first column by calling `options(tinytable_tt_rownames=TRUE)`. Thanks to @rsbivand for Issue #264.
+* Improved documentation.
 
 Bugs:
 

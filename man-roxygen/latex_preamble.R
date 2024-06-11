@@ -1,8 +1,10 @@
-#' 
+#'
 #'
 #' @section LaTeX preamble:
 #'
-#' When rendering Quarto and Rmarkdown documents, `tinytable` will populate the LaTeX preamble automatically with all the required packages (except when the code chunk in question is cached). For standalone LaTeX packages, these commands should be inserted in the preamble:
+#' `tinytable` uses the `tabularray` package from your LaTeX distribution to draw tables. `tabularray`, in turn, uses the special `tblr`, `talltblr`, and `longtblr` environments.
+#'
+#' When rendering a document from Quarto or Rmarkdown directly to PDF, `tinytable` will populate the LaTeX preamble automatically with all the required packages (except when code chunks are cached). For standalone LaTeX documents, these commands should be inserted in the preamble manually:
 #'
 #' ```latex
 #' \usepackage{tabularray}
