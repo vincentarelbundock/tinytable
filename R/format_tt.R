@@ -323,49 +323,17 @@ format_tt_lazy <- function(x,
     }
   }
 
-  # markdown at the very end
-  if (isTRUE(markdown)) {
-    assert_dependency("markdown")
-    for (col in j) {
-      if (inherits(x, "tinytable_bootstrap")) {
-        tmpfun <- function(k) {
-          k <- trimws(markdown::mark_html(text = k, template = FALSE))
-          k <- sub("<p>", "", k, fixed = TRUE)
-          k <- sub("</p>", "", k, fixed = TRUE)
-          return(k)
-        }
-        out[i, col] <- sapply(out[i, col], function(k) tmpfun(k))
-      } else if (inherits(x, "tinytable_tabularray")) {
-        tmpfun <- function(k) {
-          k <- trimws(markdown::mark_latex(text = k, template = FALSE))
-          return(k)
-        }
-        out[i, col] <- sapply(out[i, col], function(k) tmpfun(k))
-      }
+  # markdown and quarto at the very end
+  for (col in j) {
+    if (isTRUE(markdown)) {
+      assert_dependency("markdown")
+      out <- format_markdown(out = out, i = i, col = col, x = x)
+    }
+
+    if (isTRUE(quarto)) {
+      out <- format_quarto(out = out, i = i, col = col, x = x)
     }
   }
-
-  # quarto at the very end
-  if (isTRUE(quarto)) {
-    for (col in j) {
-      if (isTRUE(x@output == "html")) {
-        fun <- function(z) {
-          z@table_string <- sub("data-quarto-disable-processing='true'",
-            "data-quarto-disable-processing='false'",
-            z@table_string,
-            fixed = TRUE)
-          return(z)
-        }
-        x <- style_tt(x, finalize = fun)
-        out[i, col] <- sprintf('<span data-qmd="%s"></span>', out[i, col, drop = TRUE])
-      } else if (isTRUE(x@output == "latex")) {
-        assert_dependency("base64enc")
-        tmp <- sapply(out[i, col, drop = TRUE], function(z) base64enc::base64encode(charToRaw(z)))
-        out[i, col] <- sprintf("\\QuartoMarkdownBase64{%s}", tmp)
-      }
-    }
-  }
-
 
   # output
   if (isTRUE(atomic_vector)) {
@@ -376,6 +344,49 @@ format_tt_lazy <- function(x,
     x@table_dataframe <- out
     return(x)
   }
+}
 
+
+format_markdown <- function(out, i, col, x) {
+  tmpfun_html <- function(k) {
+    k <- trimws(markdown::mark_html(text = k, template = FALSE))
+    k <- sub("<p>", "", k, fixed = TRUE)
+    k <- sub("</p>", "", k, fixed = TRUE)
+    return(k)
+  }
+  
+  tmpfun_latex <- function(k) {
+    k <- trimws(markdown::mark_latex(text = k, template = FALSE))
+    return(k)
+  }
+
+  if (inherits(x, "tinytable_bootstrap")) {
+    out[i, col] <- sapply(out[i, col], function(k) tmpfun_html(k))
+  } else if (inherits(x, "tinytable_tabularray")) {
+    out[i, col] <- sapply(out[i, col], function(k) tmpfun_latex(k))
+  }
+
+  return(out)
+}
+
+
+format_quarto <- function(out, i, col, x) {
+  if (isTRUE(x@output == "html")) {
+    fun <- function(z) {
+      z@table_string <- sub("data-quarto-disable-processing='true'",
+        "data-quarto-disable-processing='false'",
+        z@table_string,
+        fixed = TRUE)
+      return(z)
+    }
+    x <- style_tt(x, finalize = fun)
+    out[i, col] <- sprintf('<span data-qmd="%s"></span>', out[i, col, drop = TRUE])
+  } else if (isTRUE(x@output == "latex")) {
+    assert_dependency("base64enc")
+    tmp <- sapply(out[i, col, drop = TRUE], function(z) base64enc::base64encode(charToRaw(z)))
+    out[i, col] <- sprintf("\\QuartoMarkdownBase64{%s}", tmp)
+  }
+  
+  return(out)
 }
 
