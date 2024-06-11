@@ -169,6 +169,7 @@ format_tt_lazy <- function(x,
                            other = as.character
                            ) {
 
+  # format_tt() supports vectors
   if (isTRUE(check_atomic_vector(x))) {
     atomic_vector <- TRUE
     if (is.factor(x)) x <- as.character(x)
@@ -199,24 +200,12 @@ format_tt_lazy <- function(x,
   assert_string(sprintf, null.ok = TRUE)
   assert_flag(markdown)
   assert_flag(quarto)
+  replace <- sanitize_replace(replace)
+  sanity_num_mark(digits, num_mark_big, num_mark_dec)
+
   if (is.null(j)) jnull <- TRUE else jnull <- FALSE
   if (is.null(i)) inull <- TRUE else inull <- FALSE
   j <- sanitize_j(j, ori)
-
-  if (isTRUE(replace)) {
-      replace <- stats::setNames(list(NA), "")
-  } else if (isFALSE(replace)) {
-      replace <- stats::setNames(list(NULL), "")
-  } else if (isTRUE(check_string(replace))) {
-      replace <- stats::setNames(list(NA), replace)
-  } else if (!is.list(replace) || is.null(names(replace))) {
-      stop("`replace` should be TRUE/FALSE, a single string, or a named list.", call. = FALSE)
-  }
-
-  if (is.null(digits)) {
-    if (num_mark_big != "") stop("`num_mark_big` requires a `digits` value.", call. = FALSE)
-    if (num_mark_dec != ".") stop("`num_mark_dec` requires a `digits` value.", call. = FALSE)
-  }
 
   # In sanity_tt(), we fill in missing NULL `j` in the format-specific versions,
   # because tabularray can do whole column styling. Here, we need to fill in
@@ -231,6 +220,7 @@ format_tt_lazy <- function(x,
     # sprintf() is self-contained
     if (!is.null(sprintf)) {
       out[i, col] <- base::sprintf(sprintf, ori[i, col, drop = TRUE])
+
     } else {
       # logical
       if (is.logical(ori[i, col])) {
@@ -242,7 +232,7 @@ format_tt_lazy <- function(x,
 
       # numeric
       } else if (is.numeric(ori[i, col, drop = TRUE])) {
-         tmp <- format_numeric_value(ori[i, col], 
+         tmp <- format_numeric(ori[i, col], 
            num_suffix = num_suffix, 
            digits = digits, 
            num_mark_big = num_mark_big, 
@@ -251,6 +241,7 @@ format_tt_lazy <- function(x,
            num_fmt = num_fmt)
         if (!is.null(tmp)) out[i, col] <- tmp
          
+      # other
       } else {
         out[i, col] <- other(ori[i, col, drop = TRUE])
       }
@@ -356,24 +347,27 @@ format_tt_lazy <- function(x,
 
   # quarto at the very end
   if (isTRUE(quarto)) {
-    if (isTRUE(x@output == "html")) {
-      fun <- function(z) {
-        z@table_string <- sub("data-quarto-disable-processing='true'",
-          "data-quarto-disable-processing='false'",
-          z@table_string,
-          fixed = TRUE)
-        return(z)
+    for (col in j) {
+      if (isTRUE(x@output == "html")) {
+        fun <- function(z) {
+          z@table_string <- sub("data-quarto-disable-processing='true'",
+            "data-quarto-disable-processing='false'",
+            z@table_string,
+            fixed = TRUE)
+          return(z)
+        }
+        x <- style_tt(x, finalize = fun)
+        out[i, col] <- sprintf('<span data-qmd="%s"></span>', out[i, col, drop = TRUE])
+      } else if (isTRUE(x@output == "latex")) {
+        assert_dependency("base64enc")
+        tmp <- sapply(out[i, col, drop = TRUE], function(z) base64enc::base64encode(charToRaw(z)))
+        out[i, col] <- sprintf("\\QuartoMarkdownBase64{%s}", tmp)
       }
-      x <- style_tt(x, finalize = fun)
-      out[i, col] <- sprintf('<span data-qmd="%s"></span>', out[i, col, drop = TRUE])
-    } else if (isTRUE(x@output == "latex")) {
-      assert_dependency("base64enc")
-      tmp <- sapply(out[i, col, drop = TRUE], function(z) base64enc::base64encode(charToRaw(z)))
-      out[i, col] <- sprintf("\\QuartoMarkdownBase64{%s}", tmp)
     }
   }
 
 
+  # output
   if (isTRUE(atomic_vector)) {
     return(out[[1]])
   } else if (!inherits(x, "tinytable")) {
@@ -385,111 +379,3 @@ format_tt_lazy <- function(x,
 
 }
 
-
-
-format_num_suffix <- function(x, digits, num_mark_big, num_mark_dec, num_zero, num_fmt) {
-  suffix <- number <- rep("", length(x))
-  suffix <- ifelse(x > 1e3, "K", suffix)
-  suffix <- ifelse(x > 1e6, "M", suffix)
-  suffix <- ifelse(x > 1e9, "B", suffix)
-  suffix <- ifelse(x > 1e12, "T", suffix)
-  fun <- function(x) {
-    out <- sapply(x, function(k) {
-      format(k,
-        digits = digits, drop0trailing = !num_zero, type = "f",
-        big.mark = num_mark_big, decimal.mark = num_mark_dec,
-        scientific = FALSE)
-    })
-  }
-  number <- fun(x)
-  number <- ifelse(x > 1e3, fun(x / 1e3), number)
-  number <- ifelse(x > 1e6, fun(x / 1e6), number)
-  number <- ifelse(x > 1e9, fun(x / 1e9), number)
-  number <- ifelse(x > 1e12, fun(x / 1e12), number)
-  number <- paste0(number, suffix)
-  return(number)
-}
-
-
-
-
-# Format individual column values based on type
-format_column_value <- function(value, date, num_suffix, digits, num_mark_big, num_mark_dec, num_zero, num_fmt, bool, other) {
-  if (is.logical(value)) {
-    return(bool(value))
-  } else if (inherits(value, "Date")) {
-    return(format(value, date))
-  } else if (is.numeric(value)) {
-    return(format_numeric_value(value, num_suffix, digits, num_mark_big, num_mark_dec, num_zero, num_fmt))
-  } else {
-    return(other(value))
-  }
-}
-
-# Format numeric values with different formats
-# digits check needs to be done here to avoid the other() formatting from ori, which zaps the original setting
-format_numeric_value <- function(value, num_suffix, digits, num_mark_big, num_mark_dec, num_zero, num_fmt) {
-  # numeric suffix
-  if (isTRUE(num_suffix) && !is.null(digits)) {
-    out <- format_num_suffix(
-      value,
-      digits = digits,
-      num_mark_big = num_mark_big,
-      num_mark_dec = num_mark_dec,
-      num_zero = num_zero,
-      num_fmt = num_fmt)
-  # non-integer numeric
-  } else if (is.numeric(value) && !isTRUE(check_integerish(value)) && !is.null(digits)) {
-    out <- format_non_integer_numeric(
-      value,
-      digits = digits,
-      num_mark_big = num_mark_big,
-      num_mark_dec = num_mark_dec,
-      num_zero = num_zero,
-      num_fmt = num_fmt)
-  # integer
-  } else if (isTRUE(check_integerish(value)) && !is.null(digits)) {
-    out <- format_integer(value, 
-      digits = digits, 
-      num_mark_big = num_mark_big, 
-      num_mark_dec = num_mark_dec, 
-      num_zero = num_zero, 
-      num_fmt = num_fmt)
-  } else {
-    out <- NULL
-  }
-  return(out)
-}
-
-
-# Format non-integer numeric values
-format_non_integer_numeric <- function(value, digits, num_mark_big, num_mark_dec, num_zero, num_fmt) {
-  if (num_fmt == "significant") {
-    return(format(value, digits = digits, drop0trailing = !num_zero, big.mark = num_mark_big, decimal.mark = num_mark_dec, scientific = FALSE))
-  } else if (num_fmt == "significant_cell") {
-    return(sapply(value, function(z) format(z, digits = digits, drop0trailing = !num_zero, big.mark = num_mark_big, decimal.mark = num_mark_dec, scientific = FALSE)))
-  } else if (num_fmt == "decimal") {
-    return(formatC(value, digits = digits, format = "f", drop0trailing = !num_zero, big.mark = num_mark_big, decimal.mark = num_mark_dec))
-  } else if (num_fmt == "scientific") {
-    return(formatC(value, digits = digits, format = "e", drop0trailing = !num_zero, big.mark = num_mark_big, decimal.mark = num_mark_dec))
-  }
-  return(value)
-}
-
-# Format integer values
-format_integer <- function(value, digits, num_mark_big, num_mark_dec, num_zero, num_fmt) {
-  if (num_fmt == "scientific") {
-    return(formatC(value, digits = digits, format = "e", drop0trailing = !num_zero, big.mark = num_mark_big, decimal.mark = num_mark_dec))
-  } else {
-    return(format(value, big.mark = num_mark_big, scientific = FALSE))
-  }
-}
-
-# Apply replacements to the column values
-format_replace <- function(original_value, formatted_value, replace) {
-  for (k in seq_along(replace)) {
-    idx <- original_value %in% replace[[k]]
-    formatted_value[idx] <- names(replace)[[k]]
-  }
-  return(formatted_value)
-}

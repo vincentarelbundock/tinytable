@@ -294,3 +294,26 @@ sanitize_notes <- function(notes) {
   }
   return(notes)
 }
+
+
+sanitize_replace <- function(replace) {
+  if (isTRUE(replace)) {
+    replace <- stats::setNames(list(NA), "")
+  } else if (isFALSE(replace)) {
+    replace <- stats::setNames(list(NULL), "")
+  } else if (isTRUE(check_string(replace))) {
+    replace <- stats::setNames(list(NA), replace)
+  } else if (!is.list(replace) || is.null(names(replace))) {
+    stop("`replace` should be TRUE/FALSE, a single string, or a named list.", call. = FALSE)
+  }
+  return(replace)
+}
+
+
+sanity_num_mark <- function(digits, num_mark_big, num_mark_dec) {
+  if (is.null(digits)) {
+    if (num_mark_big != "") stop("`num_mark_big` requires a `digits` value.", call. = FALSE)
+    if (num_mark_dec != ".") stop("`num_mark_dec` requires a `digits` value.", call. = FALSE)
+  }
+}
+
