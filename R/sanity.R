@@ -4,17 +4,12 @@ usepackage_latex <- function(name, options = NULL, extra_lines = NULL) {
 }
 
 
-sanitize_i <- function(i, x, rows = "tinytable", pre_group = FALSE) {
+sanitize_i <- function(i, x, ...) {
   if (inherits(x, "tinytable") && x@nhead > 0) {
     assert_integerish(i, lower = -((x@nhead) - 1), upper = nrow(x), null.ok = TRUE)
   }
   if (is.null(i)) {
-    if (inherits(x, "tinytable") && pre_group) {
-      xn <- nrow(x) - x@ngroupi
-    } else {
-      xn <- nrow(x)
-    }
-    out <- seq_len(xn)
+    out <- seq_len(nrow(x))
   } else {
     out <- i
   }
