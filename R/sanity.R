@@ -17,24 +17,6 @@ sanitize_i <- function(i, x) {
 sanitize_j <- function(j, x) {
   # regex
   if (is.character(j) && length(j) == 1 && !is.null(colnames(x))) {
-    j <- grep(j, colnames(x), perl = TRUE)
-  # full names
-  } else if (is.character(j) && length(j) > 1 && !is.null(colnames(x))) {
-    bad <- setdiff(j, colnames(x))
-    if (length(bad) > 0) {
-      msg <- sprintf("Missing columns: %s", paste(bad, collapse = ", "))
-      stop(msg, call. = FALSE)
-    }
-    j <- which(colnames(x) %in% j)
-  } else {
-    assert_integerish(j, lower = 1, upper = ncol(x), null.ok = TRUE)
-  }
-  return(j)
-}
-
-sanitize_j2 <- function(j, x) {
-  # regex
-  if (is.character(j) && length(j) == 1 && !is.null(colnames(x))) {
     out <- grep(j, colnames(x), perl = TRUE)
     # full names
   } else if (is.character(j) && length(j) > 1 && !is.null(colnames(x))) {

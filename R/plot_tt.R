@@ -1,15 +1,15 @@
 #' Insert images and inline plots into tinytable objects
 #'
-#' The `plot_tt()` function allows for the insertion of images and inline plots into 
+#' The `plot_tt()` function allows for the insertion of images and inline plots into
 #' tinytable objects. This function can handle both local and web-based images.
 #'
 #' @param x A tinytable object.
-#' @param i Integer vector, the row indices where images are to be inserted. If `NULL`, 
+#' @param i Integer vector, the row indices where images are to be inserted. If `NULL`,
 #'    images will be inserted in all rows.
 #' @param j Integer vector, the column indices where images are to be inserted. If `NULL`,
 #'    images will be inserted in all columns.
 #' @param height Numeric, the height of the images in the table in em units.
-#' @param asp Numeric, aspect ratio of the plots (height / width). 
+#' @param asp Numeric, aspect ratio of the plots (height / width).
 #' @param color string Name of color to use for inline plots (passed to the `col` argument base `graphics` plots in `R`).
 #' @param xlim Numeric vector of length 2.
 #' @param fun  String or function to generate inline plots.
@@ -34,18 +34,16 @@ plot_tt <- function(x,
                     color = "black",
                     xlim = NULL,
                     height = 1,
-                    asp = 1/3,
+                    asp = 1 / 3,
                     images = NULL,
                     assets = "tinytable_assets",
                     ...) {
-
-  j <- sanitize_j(j, x)
+  jval <- sanitize_j(j, x)
   assert_integerish(i, null.ok = TRUE)
   assert_numeric(height, len = 1, lower = 0)
   assert_numeric(asp, len = 1, lower = 0, upper = 1)
   assert_class(x, "tinytable")
 
-  jval <- if (is.null(j)) seq_len(ncol(x)) else j
   ival <- if (is.null(i)) seq_len(nrow(x)) else i
 
   len <- length(ival) * length(jval)
@@ -54,7 +52,7 @@ plot_tt <- function(x,
   assert_character(images, len = len, null.ok = TRUE)
 
   if (!is.null(images) && length(images) != len) {
-    msg <- sprintf("`images` must match the dimensions of `i` and `j`: length %s.", len) 
+    msg <- sprintf("`images` must match the dimensions of `i` and `j`: length %s.", len)
     stop(msg, call. = FALSE)
   }
 
@@ -75,13 +73,10 @@ plot_tt <- function(x,
   # built-in plots
   if (identical(fun, "histogram")) {
     fun <- rep(list(tiny_histogram), length(data))
-
   } else if (identical(fun, "density")) {
     fun <- rep(list(tiny_density), length(data))
-
   } else if (identical(fun, "line")) {
     fun <- rep(list(tiny_line), length(data))
-
   } else if (identical(fun, "bar")) {
     for (idx in seq_along(data)) {
       assert_numeric(data[[idx]], len = 1, name = "data[[1]]")
@@ -96,7 +91,7 @@ plot_tt <- function(x,
 
   # needed when rendering in tempdir()
   cal <- list(
-    "plot_tt_lazy", 
+    "plot_tt_lazy",
     x = x,
     i = ival,
     j = jval,
@@ -121,7 +116,7 @@ plot_tt_lazy <- function(x,
                          i = NULL,
                          j = NULL,
                          height = 1,
-                         asp = 1/3,
+                         asp = 1 / 3,
                          fun = NULL,
                          color = NULL,
                          data = NULL,
@@ -129,11 +124,10 @@ plot_tt_lazy <- function(x,
                          images = NULL,
                          assets = "tinytable_assets",
                          ...) {
-
   out <- x@table_dataframe
 
   if (!is.null(data)) {
-    assert_dependency('ggplot2')
+    assert_dependency("ggplot2")
     images <- NULL
     path_full <- file.path(x@output_dir, assets)
     if (!dir.exists(path_full)) {
@@ -161,7 +155,7 @@ plot_tt_lazy <- function(x,
           units = "in"
         ))
 
-      # base R
+        # base R
       } else if (is.function(p)) {
         grDevices::png(fn_full, width = 1000, height = 1000 * asp)
         op <- graphics::par()
@@ -170,38 +164,32 @@ plot_tt_lazy <- function(x,
         graphics::par(mar = op$mar)
         grDevices::dev.off()
 
-      # sanity check
+        # sanity check
       } else {
         msg <- "The functions in the `fun` list must return a function or a `ggplot2` object. See the tutorial online for examples: https://vincentarelbundock.github.io/tinytable"
         stop(msg, call. = FALSE)
       }
-
     }
   }
 
   if (isTRUE(x@output == "latex")) {
     cell <- "\\includegraphics[height=%sem]{%s}"
     cell <- sprintf(cell, height, images)
-
   } else if (isTRUE(x@output == "html")) {
     cell <- ifelse(
       grepl("^http", trimws(images)),
       '<img src="%s" style="height: %sem;">',
       '<img src="./%s" style="height: %sem;">')
     cell <- sprintf(cell, images, height)
-
   } else if (isTRUE(x@output == "markdown")) {
-    cell <- '![](%s)'
+    cell <- "![](%s)"
     cell <- sprintf(cell, images)
-
   } else if (isTRUE(x@output == "typst")) {
     cell <- '#image("%s")'
     cell <- sprintf(cell, images)
-
   } else if (isTRUE(x@output == "dataframe")) {
-    cell <- '%s'
+    cell <- "%s"
     cell <- sprintf(cell, images)
-
   } else {
     stop("here be dragons")
   }

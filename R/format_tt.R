@@ -205,7 +205,7 @@ format_tt_lazy <- function(x,
 
   if (is.null(j)) jnull <- TRUE else jnull <- FALSE
   if (is.null(i)) inull <- TRUE else inull <- FALSE
-  j <- sanitize_j2(j, x)
+  j <- sanitize_j(j, x)
 
   # In sanity_tt(), we fill in missing NULL `j` in the format-specific versions,
   # because tabularray can do whole column styling. Here, we need to fill in
