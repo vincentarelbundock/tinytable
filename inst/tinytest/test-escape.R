@@ -7,12 +7,16 @@ dat <- data.frame(
 )
 
 set.seed(1024) # reproducibility of html unique IDs
-tab <- tt(dat) |> format_tt(escape = TRUE) |> save_tt("latex")
+tab <- tt(dat) |>
+    format_tt(escape = TRUE) |>
+    save_tt("latex")
 expect_snapshot_print(tab, "escape-latex")
 
 # escape columns
 dat <- data.frame("blah_blah" = 1:2)
-tab <- tt(dat) |> format_tt(escape = TRUE) |> save_tt("latex")
+tab <- tt(dat) |>
+    format_tt(escape = TRUE) |>
+    save_tt("latex")
 expect_snapshot_print(tab, "escape-latex_colnames")
 
 
@@ -39,4 +43,3 @@ tab <- mtcars[1:3, 1:4] |>
     group_tt(j = list("foo_bar" = 1:2, "banana_fish" = 3:4))
 tab@output <- "latex"
 expect_snapshot_print(tab, "escape-issue150_caption_escape_03")
-

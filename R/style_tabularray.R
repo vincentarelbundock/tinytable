@@ -47,7 +47,7 @@ setMethod(
       settings <- unique(settings[, c("i", "tabularray"), drop = FALSE])
     } else if (is.null(i)) {
       settings <- unique(settings[, c("j", "tabularray"), drop = FALSE])
-    } else if (is.null(j)) {
+    } else if (is.null(j) || isTRUE(attr(j, "null"))) {
       settings <- unique(settings[, c("i", "tabularray"), drop = FALSE])
     }
   }
@@ -66,8 +66,16 @@ setMethod(
   }
 
   # convert to tabularray now that we've filled the bootstrap settings
-  if (is.numeric(fontsize)) settings$tabularray <- sprintf("%s font=\\fontsize{%sem}{%sem}\\selectfont,", settings$tabularray, fontsize, fontsize + 0.3) 
-  if (indent > 0) settings$tabularray <- sprintf("%s preto={\\hspace{%sem}},", settings$tabularray, indent)
+  if (is.numeric(fontsize)) {
+    settings$tabularray <- sprintf(
+        "%s font=\\fontsize{%sem}{%sem}\\selectfont,", 
+        settings$tabularray, fontsize, fontsize + 0.3) 
+  }
+  if (indent > 0) {
+    settings$tabularray <- sprintf(
+        "%s preto={\\hspace{%sem}},",
+        settings$tabularray, indent)
+  }
 
   if (!is.null(align)) {
     if (length(align) == 1) align <- rep(align, length(jval))

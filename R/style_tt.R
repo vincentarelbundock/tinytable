@@ -225,7 +225,7 @@ style_tt_lazy <- function (x,
 
   out <- x
 
-  # j <- sanitize_j(j, x)
+  j <- sanitize_j(j, x)
   # i <- sanitize_i(i, x)
 
   # alignv can only be a single character for now
@@ -337,8 +337,8 @@ assert_style_tt <- function (x,
     }
   }
 
-  ival <- if (is.null(i)) x@nrow else i
-  jval <- if (is.null(j)) x@ncol else j
+  jval <- sanitize_j(j, x)
+  ival <- if (is.null(i)) seq_len(nrow(x)) else i
 
   # 1
   if (is.null(i) && is.null(j)) {

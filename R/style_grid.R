@@ -1,8 +1,5 @@
-
-
-
 #' tinytable S4 method
-#' 
+#'
 #' @keywords internal
 style_grid_internal <- function(x,
                                 i = NULL,
@@ -15,11 +12,10 @@ style_grid_internal <- function(x,
                                 rowspan = NULL,
                                 colspan = NULL,
                                 ...) {
-
   out <- x@table_dataframe
 
+  jval <- sanitize_j(j, x)
   ival <- if (is.null(i)) seq_len(nrow(x)) else i
-  jval <- if (is.null(j)) seq_len(ncol(x)) else j
 
   # Unlike other formats, Markdown inserts `group_tt()` row labels after styling. This aligns the `i` index to the full columns.
   gr <- x@lazy_group
@@ -75,10 +71,10 @@ style_grid_internal <- function(x,
 
 
 #' tinytable S4 method
-#' 
+#'
 #' @keywords internal
 setMethod(
-          f = "style_eval",
-          signature = "tinytable_grid",
-          definition = style_grid_internal
+  f = "style_eval",
+  signature = "tinytable_grid",
+  definition = style_grid_internal
 )

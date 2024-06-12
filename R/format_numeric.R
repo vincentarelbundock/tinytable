@@ -10,7 +10,7 @@ format_numeric <- function(value, num_suffix, digits, num_mark_big, num_mark_dec
       num_mark_dec = num_mark_dec,
       num_zero = num_zero,
       num_fmt = num_fmt)
-  # non-integer numeric
+    # non-integer numeric
   } else if (is.numeric(value) && !isTRUE(check_integerish(value)) && !is.null(digits)) {
     out <- format_non_integer_numeric(
       value,
@@ -19,13 +19,13 @@ format_numeric <- function(value, num_suffix, digits, num_mark_big, num_mark_dec
       num_mark_dec = num_mark_dec,
       num_zero = num_zero,
       num_fmt = num_fmt)
-  # integer
+    # integer
   } else if (isTRUE(check_integerish(value)) && !is.null(digits)) {
-    out <- format_integer(value, 
-      digits = digits, 
-      num_mark_big = num_mark_big, 
-      num_mark_dec = num_mark_dec, 
-      num_zero = num_zero, 
+    out <- format_integer(value,
+      digits = digits,
+      num_mark_big = num_mark_big,
+      num_mark_dec = num_mark_dec,
+      num_zero = num_zero,
       num_fmt = num_fmt)
   } else {
     out <- NULL
@@ -76,8 +76,8 @@ format_non_integer_numeric <- function(value, digits, num_mark_big, num_mark_dec
 # Format integer values
 format_integer <- function(value, digits, num_mark_big, num_mark_dec, num_zero, num_fmt) {
   if (num_fmt == "scientific") {
-    return(formatC(value, digits = digits, format = "e", drop0trailing = !num_zero, big.mark = num_mark_big, decimal.mark = num_mark_dec))
+    return(formatC(value, digits = digits, format = "e", drop0trailing = !num_zero, big.mark = num_mark_big, decimal.mark = num_mark_dec, trim = TRUE))
   } else {
-    return(format(value, big.mark = num_mark_big, scientific = FALSE))
+    return(format(value, big.mark = num_mark_big, scientific = FALSE, trim = TRUE))
   }
 }
