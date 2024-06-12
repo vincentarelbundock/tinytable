@@ -39,17 +39,22 @@ setMethod(
   text_style_flag <- isTRUE(bold) || isTRUE(italic) || isTRUE(monospace) || isTRUE(underline) || isTRUE(strikeout) || !is.null(color) || !is.null(fontsize)
   fill_style_flag <- !is.null(background)
 
-  ival <- if (is.null(i)) seq_len(nrow(x)) else i
-  jval <- if (is.null(j)) seq_len(ncol(x)) else j
 
-  # only columns means we also want to style headers
-  if (is.null(i) && !is.null(j)) {
-    ival <- c(-1 * rev(seq_len(x@nhead) - 1), ival)
-  }
+  ival <- sanitize_i(i, x)
+  jval <- sanitize_j(j, x)
+  inull <- isTRUE(attr(ival, "null"))
+  jnull <- isTRUE(attr(jval, "null"))
+
+  # # only columns means we also want to style headers
+  # if (inull && !jnull) {
+  #   ival <- c(-1 * rev(seq_len(x@nhead) - 1), ival)
+  # }
 
   # 0- & header-indexing
   jval <- jval - 1
   ival <- ival - 1 + x@nhead
+
+  # browser()
 
   if (isTRUE(grepl("^#", background))) background <- sprintf('rgb("%s")', background)
   if (isTRUE(grepl("^#", line_color))) line_color <- sprintf('rgb("%s")', line_color)

@@ -225,8 +225,8 @@ style_tt_lazy <- function (x,
 
   out <- x
 
-  j <- sanitize_j(j, x)
-  jnull <- isTRUE(attr(j, "null"))
+  jval <- sanitize_j(j, x)
+  jnull <- isTRUE(attr(jval, "null"))
 
   # alignv can only be a single character for now
   assert_choice(alignv, c("t", "m", "b"), null.ok = TRUE)
@@ -251,7 +251,7 @@ style_tt_lazy <- function (x,
   if (x@output == "typst") {
     nalign <- x@ncol
   } else {
-    nalign <- if (jnull) x@ncol else length(j)
+    nalign <- if (jnull) x@ncol else length(jval)
   }
 
   if (!is.null(align)) {

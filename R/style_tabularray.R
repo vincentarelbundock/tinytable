@@ -26,13 +26,14 @@ setMethod(
 
   out <- x@table_string
 
-  ival <- if (is.null(i)) seq_len(nrow(x)) else i
-  jval <- j
-  jnull <- isTRUE(attr(j, "null"))
+  ival <- sanitize_i(i, x)
+  jval <- sanitize_j(j, x)
+  inull <- isTRUE(attr(ival, "null"))
+  jnull <- isTRUE(attr(jval, "null"))
 
   # order may be important for recycling 
   settings <- expand.grid(i = ival, j = jval, tabularray = "", stringsAsFactors = FALSE)
-  if (is.null(i) && !jnull) {
+  if (inull && !jnull) {
     settings <- settings[order(settings$i, settings$j), ]
   }
 
@@ -44,9 +45,9 @@ setMethod(
   # colspan and rowspan require cell level, so we keep the full settings DF, even
   # in tabularray, where we can sometimes use rowspec or colspec when one is empty
   if (is.null(colspan) && is.null(rowspan)) {
-    if (is.null(i) && jnull) {
+    if (inull && jnull) {
       settings <- unique(settings[, c("i", "tabularray"), drop = FALSE])
-    } else if (is.null(i)) {
+    } else if (inull) {
       settings <- unique(settings[, c("j", "tabularray"), drop = FALSE])
     } else if (jnull) {
       settings <- unique(settings[, c("i", "tabularray"), drop = FALSE])
