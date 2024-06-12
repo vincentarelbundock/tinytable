@@ -46,10 +46,13 @@ expect_snapshot_print(
   label = "latex-cell_color")
 
 
-# Lazy style: group after style makes no difference here
-a <- tt(mtcars[1:4, 1:4]) |>
-  style_tt(color = "orange", background = "black") |>
-  group_tt(j = list("blah" = 1:2, "bar" = 3:4))
+# # Lazy style: group after style makes no difference here
+# pkgload::load_all()
+# a <- tt(mtcars[1:4, 1:4]) |>
+#   style_tt(color = "orange", background = "black") |>
+#   group_tt(j = list("blah" = 1:2, "bar" = 3:4))
+# print(a, "latex")
+
 b <- tt(mtcars[1:4, 1:4]) |>
   group_tt(j = list("blah" = 1:2, "bar" = 3:4)) |>
   style_tt(color = "orange", background = "black")

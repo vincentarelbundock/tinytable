@@ -14,8 +14,11 @@ style_grid_internal <- function(x,
                                 ...) {
   out <- x@table_dataframe
 
+  # grid tables only support styling body
   jval <- sanitize_j(j, x)
-  ival <- if (is.null(i)) seq_len(nrow(x)) else i
+  ival <- sanitize_i(i, x)
+  ival <- attr(ival, "pos")
+
 
   # Unlike other formats, Markdown inserts `group_tt()` row labels after styling. This aligns the `i` index to the full columns.
   gr <- x@lazy_group

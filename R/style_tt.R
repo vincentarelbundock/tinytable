@@ -225,8 +225,9 @@ style_tt_lazy <- function (x,
 
   out <- x
 
-  j <- sanitize_j(j, x)
+  # sanitize_i and sanitize_j format-specifc functions because of pre_rows
   # i <- sanitize_i(i, x)
+  # j <- sanitize_j(j, x)
 
   # alignv can only be a single character for now
   assert_choice(alignv, c("t", "m", "b"), null.ok = TRUE)

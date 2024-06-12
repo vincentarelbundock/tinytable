@@ -47,7 +47,7 @@ setMethod(
       settings <- unique(settings[, c("i", "tabularray"), drop = FALSE])
     } else if (is.null(i)) {
       settings <- unique(settings[, c("j", "tabularray"), drop = FALSE])
-    } else if (isTRUE(attr(k, "null")) || isTRUE(attr(j, "null"))) {
+    } else if (isTRUE(attr(i, "null")) || isTRUE(attr(j, "null"))) {
       settings <- unique(settings[, c("i", "tabularray"), drop = FALSE])
     }
   }

@@ -210,7 +210,7 @@ format_tt_lazy <- function(x,
   j <- sanitize_j(j, x)
   jnull <- attr(j, "null")
 
-  i <- sanitize_i(i, x, rows = "dataframe")
+  i <- sanitize_i(i, x, pre_group = TRUE)
   inull <- attr(i, "null")
   ipos <- attr(i, "pos")
   ineg <- attr(i, "neg")

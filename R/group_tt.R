@@ -8,10 +8,10 @@
 #' @param ... Other arguments are ignored.
 #' @return An object of class `tt` representing the table.
 #' @param indent integer number of `pt` to use when indenting the non-labelled rows.
-#' @details 
+#' @details
 #' Warning: The `style_tt()` can normally be used to style the group headers, as expected, but that feature is not available for Markdown and Word tables.
-#' @examples 
-#' 
+#' @examples
+#'
 #' tt(mtcars[1:10, 1:5]) |>
 #'   group_tt(
 #'     i = list(
@@ -20,13 +20,13 @@
 #'     j = list(
 #'       "Foo" = 2:3,
 #'       "Bar" = 4:5))
-#'       
+#'
 #' dat <- mtcars[1:9, 1:8]
 #' tt(dat) |>
 #'   group_tt(i = list(
 #'     "I like (fake) hamburgers" = 3,
 #'     "She prefers halloumi" = 4,
-#'     "They love tofu" = 7))  
+#'     "They love tofu" = 7))
 #'
 #' tt(dat) |>
 #'   group_tt(
@@ -34,13 +34,12 @@
 #'       "Hamburgers" = 1:3,
 #'       "Halloumi" = 4:5,
 #'       "Tofu" = 7))
-#'       
+#'
 #' x <- mtcars[1:5, 1:6]
 #' tt(x) |>
-#'   group_tt(j = list("Hello" = 1:2, "World" = 3:4, "Hello"=5:6)) |>
+#'   group_tt(j = list("Hello" = 1:2, "World" = 3:4, "Hello" = 5:6)) |>
 #'   group_tt(j = list("Foo" = 1:3, "Bar" = 4:6))
-#'       
-#'       
+#'
 group_tt <- function(x, i = NULL, j = NULL, indent = 1, ...) {
   # ... is important for ihead passing
 
@@ -58,13 +57,19 @@ group_tt <- function(x, i = NULL, j = NULL, indent = 1, ...) {
 
   x@lazy_group <- c(x@lazy_group, list(cal))
 
+  if (!is.null(i)) {
+    x@ngroupi <- x@ngroupi + length(unlist(i))
+  }
+
   return(x)
 }
 
 
 
 sanitize_group_index <- function(idx, hi, orientation) {
-  if (is.null(idx)) return(idx)
+  if (is.null(idx)) {
+    return(idx)
+  }
   assert_list(idx, named = TRUE)
   for (n in names(idx)) {
     if (orientation == "row") {
