@@ -226,6 +226,7 @@ style_tt_lazy <- function (x,
   out <- x
 
   j <- sanitize_j(j, x)
+  jnull <- isTRUE(attr(j, "null"))
 
   # alignv can only be a single character for now
   assert_choice(alignv, c("t", "m", "b"), null.ok = TRUE)
@@ -241,7 +242,7 @@ style_tt_lazy <- function (x,
       for (align_character in align_split){
         assert_choice(align_character, c("c", "l", "r", "d"))
       }
-      if (is.null(j)) {
+      if (jnull) {
         j <- seq_len(x@ncol)
       }
     }
@@ -250,7 +251,7 @@ style_tt_lazy <- function (x,
   if (x@output == "typst") {
     nalign <- x@ncol
   } else {
-    nalign <- if (is.null(j)) x@ncol else length(j)
+    nalign <- if (jnull) x@ncol else length(j)
   }
 
   if (!is.null(align)) {
@@ -337,10 +338,11 @@ assert_style_tt <- function (x,
   }
 
   ival <- if (is.null(i)) x@nrow else i
-  jval <- if (is.null(j)) x@ncol else j
+  jval <- j
+  jnull <- isTRUE(attr(j, "null"))
 
   # 1
-  if (is.null(i) && is.null(j)) {
+  if (is.null(i) && jnull) {
     assert_length(color, len = 1, null.ok = TRUE)
     assert_length(background, len = 1, null.ok = TRUE)
     assert_length(fontsize, len = 1, null.ok = TRUE)
@@ -351,7 +353,7 @@ assert_style_tt <- function (x,
     assert_length(strikeout, len = 1)
 
   # 1 or #rows
-  } else if (!is.null(i) && is.null(j)) {
+  } else if (!is.null(i) && jnull) {
     assert_length(color, len = c(1, length(ival)), null.ok = TRUE)
     assert_length(background, len = c(1, length(ival)), null.ok = TRUE)
     assert_length(fontsize, len = c(1, length(ival)), null.ok = TRUE)
@@ -362,7 +364,7 @@ assert_style_tt <- function (x,
     assert_length(strikeout, len = c(1, length(ival)))
 
   # 1 or #cols
-  } else if (is.null(i) && !is.null(j)) {
+  } else if (is.null(i) && !jnull) {
     assert_length(color, len = c(1, length(jval)), null.ok = TRUE)
     assert_length(background, len = c(1, length(jval)), null.ok = TRUE)
     assert_length(fontsize, len = c(1, length(jval)), null.ok = TRUE)
@@ -373,7 +375,7 @@ assert_style_tt <- function (x,
     assert_length(strikeout, len = c(1, length(jval)))
 
   # 1 or #cells
-  } else if (!is.null(i) && !is.null(j)) {
+  } else if (!is.null(i) && !jnull) {
     assert_length(color, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
     assert_length(background, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
     assert_length(fontsize, len = c(1, length(ival) * length(jval)), null.ok = TRUE)

@@ -205,14 +205,13 @@ format_tt_lazy <- function(x,
 
   if (is.null(j)) jnull <- TRUE else jnull <- FALSE
   if (is.null(i)) inull <- TRUE else inull <- FALSE
-  j <- sanitize_j(j, ori)
+  j <- sanitize_j2(j, x)
 
   # In sanity_tt(), we fill in missing NULL `j` in the format-specific versions,
   # because tabularray can do whole column styling. Here, we need to fill in
   # NULL for all formats since this is applied before creating the table.
   # nrow(out) because nrow(x) sometimes includes rows that will be added **in the lazy future** by group_tt()
   if (is.null(i)) i <- seq_len(nrow(out))
-  if (is.null(j)) j <- seq_len(ncol(out))
 
   # format each column
   # Issue #230: drop=TRUE fixes bug which returned a character dput-like vector
