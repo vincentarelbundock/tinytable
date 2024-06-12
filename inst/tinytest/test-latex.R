@@ -236,4 +236,12 @@ tab@output <- "latex"
 expect_snapshot_print(tab, label = "latex-issue242")
 
 
+# i,j refactor bug
+x <- mtcars[1:4, 1:5]
+tab <- tt(x) |> style_tt(i = 1:4, color = c("red", "blue", "green", "orange"))
+tab <- save_tt(tab, "latex")
+expect_inherits(tab, "character")
+
+
+
 options(tinytable_print_output = NULL)
