@@ -225,7 +225,7 @@ style_tt_lazy <- function (x,
 
   out <- x
 
-  j <- sanitize_j(j, x)
+  j <- sanitize_j2(j, x)
   jnull <- isTRUE(attr(j, "null"))
 
   # alignv can only be a single character for now
