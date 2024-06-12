@@ -31,7 +31,7 @@ setMethod(
 
   # order may be important for recycling 
   settings <- expand.grid(i = ival, j = jval, tabularray = "", stringsAsFactors = FALSE)
-  if (is.null(i) && !is.null(j)) {
+  if (is.null(i) && !isTRUE(attr(j, "null"))) {
     settings <- settings[order(settings$i, settings$j), ]
   }
 
@@ -43,11 +43,11 @@ setMethod(
   # colspan and rowspan require cell level, so we keep the full settings DF, even
   # in tabularray, where we can sometimes use rowspec or colspec when one is empty
   if (is.null(colspan) && is.null(rowspan)) {
-    if (is.null(i) && is.null(j)) {
+    if (is.null(i) && isTRUE(attr(j, "null"))) {
       settings <- unique(settings[, c("i", "tabularray"), drop = FALSE])
     } else if (is.null(i)) {
       settings <- unique(settings[, c("j", "tabularray"), drop = FALSE])
-    } else if (is.null(j) || isTRUE(attr(j, "null"))) {
+    } else if (isTRUE(attr(k, "null")) || isTRUE(attr(j, "null"))) {
       settings <- unique(settings[, c("i", "tabularray"), drop = FALSE])
     }
   }
