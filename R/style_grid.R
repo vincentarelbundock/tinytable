@@ -18,8 +18,9 @@ style_grid_internal <- function(x,
 
   out <- x@table_dataframe
 
-  ival <- if (is.null(i)) seq_len(nrow(x)) else i
-  jval <- if (is.null(j)) seq_len(ncol(x)) else j
+  jval <- sanitize_j(j, x)
+  ival <- sanitize_i(i, x)
+  ival <- attr(ival, "body")
 
   # Unlike other formats, Markdown inserts `group_tt()` row labels after styling. This aligns the `i` index to the full columns.
   gr <- x@lazy_group
