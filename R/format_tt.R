@@ -187,6 +187,9 @@ format_tt_lazy <- function(x,
     stop("`x` must be a `tinytable` object, a data frame, or an atomic vector.", call. = FALSE)
   }
 
+  inull <- is.null(i)
+  jnull <- is.null(j)
+
   assert_integerish(digits, len = 1, null.ok = TRUE)
   assert_integerish(i, null.ok = TRUE)
   assert_choice(num_fmt, c("significant", "significant_cell", "decimal", "scientific"))
@@ -200,56 +203,55 @@ format_tt_lazy <- function(x,
   assert_string(sprintf, null.ok = TRUE)
   assert_flag(markdown)
   assert_flag(quarto)
-  replace <- sanitize_replace(replace)
   sanity_num_mark(digits, num_mark_big, num_mark_dec)
+  replace <- sanitize_replace(replace)
+  escape <- sanitize_escape(x, escape)
 
-  if (is.null(j)) jnull <- TRUE else jnull <- FALSE
-  if (is.null(i)) inull <- TRUE else inull <- FALSE
-  j <- sanitize_j(j, ori)
+  j <- sanitize_j(j, x)
+  jnull <- attr(j, "null")
 
-  # In sanity_tt(), we fill in missing NULL `j` in the format-specific versions,
-  # because tabularray can do whole column styling. Here, we need to fill in
-  # NULL for all formats since this is applied before creating the table.
-  # nrow(out) because nrow(x) sometimes includes rows that will be added **in the lazy future** by group_tt()
-  if (is.null(i)) i <- seq_len(nrow(out))
-  if (is.null(j)) j <- seq_len(ncol(out))
+  i <- sanitize_i(i, x)
+  inull <- attr(i, "null")
+  ipos <- attr(i, "pos")
+  ineg <- attr(i, "neg")
+
 
   # format each column
   # Issue #230: drop=TRUE fixes bug which returned a character dput-like vector
   for (col in j) {
     # sprintf() is self-contained
     if (!is.null(sprintf)) {
-      out[i, col] <- base::sprintf(sprintf, ori[i, col, drop = TRUE])
+      out[ipos, col] <- base::sprintf(sprintf, ori[ipos, col, drop = TRUE])
 
     } else {
       # logical
-      if (is.logical(ori[i, col])) {
-        out[i, col] <- bool(ori[i, col, drop = TRUE])
+      if (is.logical(ori[ipos, col])) {
+        out[ipos, col] <- bool(ori[ipos, col, drop = TRUE])
 
       # date
-      } else if (inherits(ori[i, col], "Date")) {
-        out[i, col] <- format(ori[i, col, drop = TRUE], date)
+      } else if (inherits(ori[ipos, col], "Date")) {
+        out[ipos, col] <- format(ori[ipos, col, drop = TRUE], date)
 
       # numeric
-      } else if (is.numeric(ori[i, col, drop = TRUE])) {
-         tmp <- format_numeric(ori[i, col], 
+      } else if (is.numeric(ori[ipos, col, drop = TRUE])) {
+         tmp <- format_numeric(ori[ipos, col], 
            num_suffix = num_suffix, 
            digits = digits, 
            num_mark_big = num_mark_big, 
            num_mark_dec = num_mark_dec, 
            num_zero = num_zero, 
            num_fmt = num_fmt)
-        if (!is.null(tmp)) out[i, col] <- tmp
+        if (!is.null(tmp)) out[ipos, col] <- tmp
          
       # other
       } else {
-        out[i, col] <- other(ori[i, col, drop = TRUE])
+        out[ipos, col] <- other(ori[ipos, col, drop = TRUE])
       }
     }
 
     for (k in seq_along(replace)) {
-        idx <- ori[i, col, drop = TRUE] %in% replace[[k]]
-        out[i, col][idx] <- names(replace)[[k]]
+        idx <- ori[ipos, col, drop = TRUE] %in% replace[[k]]
+        out[ipos, col][idx] <- names(replace)[[k]]
     }
 
   } # loop over columns
@@ -258,70 +260,53 @@ format_tt_lazy <- function(x,
   # before escaping
   if (is.function(fn)) {
     for (col in j) {
-      out[i, col] <- fn(ori[i, col, drop = TRUE])
+      out[ipos, col] <- fn(ori[ipos, col, drop = TRUE])
     }
   }
 
   # escape latex characters
   if (!isFALSE(escape)) {
-    if (isTRUE(escape == "latex")) {
-      o <- "latex"
-    } else if (isTRUE(escape == "html")) {
-      o <- "html"
-    } else if (isTRUE(escape == "typst")) {
-      o <- "typst"
-    } else if (inherits(x, "tinytable")) {
-      o <- x@output
-    } else {
-      o <- FALSE
+
+    # body
+    for (col in j) {
+      out[ipos, col] <- escape_text(out[ipos, col], output = escape)
     }
 
-    if (!inull && jnull) {
-      for (col in j) {
-        out[i, col] <- escape_text(out[i, col], output = o)
-      }
-
-    } else if (inull && jnull) {
-      for (col in j) {
-        out[, col] <- escape_text(out[, col], output = o)
-      }
-
-      colnames(out) <- escape_text(colnames(out), output = o)
-
+    # column names
+    if (0 %in% i) {
+      colnames(out) <- escape_text(colnames(out), output = escape)
       if (inherits(x, "tinytable")) {
-        x@names <- escape_text(x@names, output = o)
-        x@caption <- escape_text(x@caption, output = o)
-
-        for (idx in seq_along(x@notes)) {
-          n <- x@notes[[idx]]
-          if (is.character(n) && length(n) == 1) {
-            x@notes[[idx]] <- escape_text(n, output = o)
-          } else if (is.list(n) && "text" %in% names(n)) {
-            n$text <- escape_text(n$text, output = o)
-            x@notes[[idx]] <- n
-          }
-        }
-
-        for (idx in seq_along(x@lazy_group)) {
-          g <- x@lazy_group[[idx]]
-          if (!is.null(g$j)) {
-            names(g$j) <- escape_text(names(g$j), output = o)
-          }
-          if (!is.null(g$i)) {
-            names(g$i) <- escape_text(names(g$i), output = o)
-          }
-          x@lazy_group[[idx]] <- g
-        }
+        x@names <- escape_text(x@names, output = escape)
       }
+    }
 
-    } else {
-      for (row in i) {
-        for (col in j) {
-          out[row, col] <- escape_text(out[row, col], output = o)
+    # column groups
+    ineg <- abs(ineg)
+    for (idx in ineg) {
+      g <- x@lazy_group[[idx]]
+      if (!is.null(g$j)) {
+        names(g$j) <- escape_text(names(g$j), output = escape)
+      }
+      if (!is.null(g$i)) {
+        names(g$i) <- escape_text(names(g$i), output = escape)
+      }
+      x@lazy_group[[idx]] <- g
+    }
+
+    # caption and notes
+    if (inull && jnull && inherits(x, "tinytable")) {
+      x@caption <- escape_text(x@caption, output = escape)
+      for (idx in seq_along(x@notes)) {
+        n <- x@notes[[idx]]
+        if (is.character(n) && length(n) == 1) {
+          x@notes[[idx]] <- escape_text(n, output = escape)
+        } else if (is.list(n) && "text" %in% names(n)) {
+          n$text <- escape_text(n$text, output = escape)
+          x@notes[[idx]] <- n
         }
       }
     }
-  }
+  } # end escape
 
   # markdown and quarto at the very end
   for (col in j) {
@@ -349,12 +334,13 @@ format_tt_lazy <- function(x,
 
 format_markdown <- function(out, i, col, x) {
   tmpfun_html <- function(k) {
+    k <- trimws(k)
     k <- trimws(markdown::mark_html(text = k, template = FALSE))
     k <- sub("<p>", "", k, fixed = TRUE)
     k <- sub("</p>", "", k, fixed = TRUE)
     return(k)
   }
-  
+
   tmpfun_latex <- function(k) {
     k <- trimws(markdown::mark_latex(text = k, template = FALSE))
     return(k)
@@ -389,4 +375,6 @@ format_quarto <- function(out, i, col, x) {
   
   return(out)
 }
+
+
 

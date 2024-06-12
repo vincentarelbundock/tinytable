@@ -50,7 +50,6 @@ expect_snapshot_print(print_html(tab), "group_tt-html_tutorial_01")
 
 
 
-
 # Issue #165: Column labels not centered, last row not styled because of row group offset
 k = mtcars[1:5, 1:5]
 k[1, 1] <- pi

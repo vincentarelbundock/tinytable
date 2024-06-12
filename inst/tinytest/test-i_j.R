@@ -21,4 +21,13 @@ tab <- tt(x) |>
     format_tt(i = 3:4, j = c(5:6), num_fmt = "decimal", digits = 2)
 expect_snapshot_print(tab, "i_j-format_tt_i_01")
 
+
+# pkgload::load_all()
+# x <- head(iris)
+# colnames(x)[1:2] <- c("foo$bar", "hello$world")
+# tt(x) |> 
+#     format_tt(escape = TRUE) |>
+#     group_tt(j = list("blah_blah" = 1:2)) |>
+#     print("latex")
+
 options(tinytable_print_output = NULL)

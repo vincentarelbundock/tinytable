@@ -4,6 +4,25 @@ usepackage_latex <- function(name, options = NULL, extra_lines = NULL) {
 }
 
 
+sanitize_i <- function(i, x) {
+  if (inherits(x, "tinytable") && x@nhead > 0) {
+    assert_integerish(i, lower = -((x@nhead) - 1), upper = nrow(x), null.ok = TRUE)
+  }
+  if (is.null(i)) {
+    out <- seq_len(nrow(x))
+    if (inherits(x, "tinytable") && x@nhead > 0) {
+      out <- c(-(1:x@nhead - 1), out)
+    }
+  } else {
+    out <- i
+  }
+  attr(out, "pos") <- out[out > 0]
+  attr(out, "neg") <- out[out < 0]
+  attr(out, "null") <- is.null(i)
+  return(out)
+}
+
+
 sanitize_j <- function(j, x) {
   # regex
   if (is.character(j) && length(j) == 1 && !is.null(colnames(x))) {
@@ -19,8 +38,15 @@ sanitize_j <- function(j, x) {
   } else {
     assert_integerish(j, lower = 1, upper = ncol(x), null.ok = TRUE)
   }
+  if (is.null(j)) {
+    j <- seq_len(ncol(x))
+    attr(j, "null") <- TRUE
+  } else {
+    attr(j, "null") <- FALSE
+  }
   return(j)
 }
+
 
 sanitize_output <- function(output) {
   assert_choice(output, choice = c("tinytable", "markdown", "latex", "html", "typst", "dataframe"), null.ok = TRUE)
@@ -317,3 +343,21 @@ sanity_num_mark <- function(digits, num_mark_big, num_mark_dec) {
   }
 }
 
+
+sanitize_escape <- function(x, escape) {
+  if (isFALSE(escape)) {
+    o <- FALSE
+  } else if (isTRUE(escape == "latex")) {
+    o <- "latex"
+  } else if (isTRUE(escape == "html")) {
+    o <- "html"
+  } else if (isTRUE(escape == "typst")) {
+    o <- "typst"
+  } else if (inherits(x, "tinytable")) {
+    o <- x@output
+  } else {
+    stop("`escape` must be TRUE/FALSE for `tinytable` objects, or one of: latex, html, typst.", 
+      call. = FALSE)
+  }
+  return(o)
+}
