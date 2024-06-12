@@ -34,6 +34,7 @@ setClass(
         nrow = "numeric",
         ncol = "numeric",
         nhead = "numeric",
+        ngroupi = "numeric",
         names = "NULLorCharacter",
         output = "character",
         output_dir = "character",
@@ -68,6 +69,7 @@ setMethod("initialize", "tinytable", function(
   .Object@nrow <- nrow(.Object@data)
   .Object@ncol <- ncol(.Object@data)
   .Object@nhead <- if (is.null(colnames(data))) 0 else 1
+  .Object@ngroupi <- 0
   .Object@names <- if (is.null(colnames(data))) character() else colnames(data)
   .Object@id <- get_id("tinytable_")
   .Object@output <- "tinytable"

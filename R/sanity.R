@@ -4,12 +4,19 @@ usepackage_latex <- function(name, options = NULL, extra_lines = NULL) {
 }
 
 
-sanitize_i <- function(i, x) {
+sanitize_i <- function(i, x, pre_group_i = FALSE) {
   if (is.null(i)) {
-    out <- seq_len(nrow(x))
+    if (pre_group_i && inherits(x, "tinytable")) {
+      out <- seq_len(nrow(x) - x@ngroupi)
+    } else {
+      out <- seq_len(nrow(x))
+    }
   } else {
     out <- i
   }
+  attr(out, "null") <- is.null(i)
+  attr(out, "body") <- out[out > 0]
+  attr(out, "head") <- out[out < 1]
   return(out)
 }
 
@@ -30,11 +37,11 @@ sanitize_j <- function(j, x) {
     assert_integerish(j, lower = 1, upper = ncol(x), null.ok = TRUE)
     if (is.null(j)) {
       out <- seq_len(ncol(x))
-      attr(out, "null") <- TRUE
     } else {
       out <- j
     }
   }
+  attr(out, "null") <- is.null(j)
   return(out)
 }
 

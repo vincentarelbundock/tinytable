@@ -337,12 +337,13 @@ assert_style_tt <- function (x,
     }
   }
 
-  ival <- if (is.null(i)) x@nrow else i
-  jval <- j
-  jnull <- isTRUE(attr(j, "null"))
+  ival <- sanitize_i(i, x, pre_group_i = TRUE)
+  jval <- sanitize_j(j, x)
+  inull <- isTRUE(attr(ival, "null"))
+  jnull <- isTRUE(attr(jval, "null"))
 
   # 1
-  if (is.null(i) && jnull) {
+  if (inull && jnull) {
     assert_length(color, len = 1, null.ok = TRUE)
     assert_length(background, len = 1, null.ok = TRUE)
     assert_length(fontsize, len = 1, null.ok = TRUE)
@@ -353,7 +354,7 @@ assert_style_tt <- function (x,
     assert_length(strikeout, len = 1)
 
   # 1 or #rows
-  } else if (!is.null(i) && jnull) {
+  } else if (!inull && jnull) {
     assert_length(color, len = c(1, length(ival)), null.ok = TRUE)
     assert_length(background, len = c(1, length(ival)), null.ok = TRUE)
     assert_length(fontsize, len = c(1, length(ival)), null.ok = TRUE)
@@ -364,7 +365,7 @@ assert_style_tt <- function (x,
     assert_length(strikeout, len = c(1, length(ival)))
 
   # 1 or #cols
-  } else if (is.null(i) && !jnull) {
+  } else if (inull && !jnull) {
     assert_length(color, len = c(1, length(jval)), null.ok = TRUE)
     assert_length(background, len = c(1, length(jval)), null.ok = TRUE)
     assert_length(fontsize, len = c(1, length(jval)), null.ok = TRUE)
@@ -375,7 +376,7 @@ assert_style_tt <- function (x,
     assert_length(strikeout, len = c(1, length(jval)))
 
   # 1 or #cells
-  } else if (!is.null(i) && !jnull) {
+  } else if (!inull && !jnull) {
     assert_length(color, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
     assert_length(background, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
     assert_length(fontsize, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
