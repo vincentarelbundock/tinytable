@@ -11,6 +11,9 @@ sanitize_i <- function(i, x, pre_group_i = FALSE) {
     } else {
       out <- seq_len(nrow(x))
     }
+    if (inherits(x, "tinytable") && x@nhead > 0) {
+      out <- c(-1 * (1:x@nhead - 1), out)
+    }
   } else {
     out <- i
   }
