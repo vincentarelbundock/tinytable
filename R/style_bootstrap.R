@@ -1,4 +1,4 @@
-#' Internal styling function
+#p' Internal styling function
 #'
 #' @inheritParams style_tt
 #' @keywords internal
@@ -31,13 +31,8 @@ setMethod(
                         ...) {
     out <- x@table_string
 
-    ival <- if (is.null(i)) seq_len(nrow(x)) else i
-    jval <- if (is.null(j)) seq_len(ncol(x)) else j
-
-    # only columns means we also want to style headers
-    if (is.null(i) && !is.null(j)) {
-      ival <- c(-1 * rev(seq_len(x@nhead) - 1), ival)
-    }
+    ival <- sanitize_i(i, x)
+    jval <- sanitize_j(j, x)
 
     # order may be important for recycling
     settings <- expand.grid(i = ival, j = jval, tabularray = "")
