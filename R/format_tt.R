@@ -23,7 +23,6 @@
 #' - Named list: Replace matching elements of the vectors in the list by theirs names. Example: 
 #'      - `list("-" = c(NA, NaN), "Tiny" = -Inf, "Massive" = Inf)`
 #' @param escape Logical or "latex" or "html". If TRUE, escape special characters to display them as text in the format of the output of a `tt()` table.
-#' - If `i` is `NULL`, escape the `j` columns and column names.
 #' - If `i` and `j` are both `NULL`, escape all cells, column names, caption, notes, and spanning labels created by `group_tt()`.
 #' @param markdown Logical; if TRUE, render markdown syntax in cells. Ex: `_italicized text_` is properly italicized in HTML and LaTeX.
 #' @param fn Function for custom formatting. Accepts a vector and returns a character vector of the same length.
@@ -276,20 +275,21 @@ format_tt_lazy <- function(x,
       o <- FALSE
     }
 
-    if (!inull && jnull) {
+    # body
+    for (row in ibody) {
       for (col in j) {
-        out[ibody, col] <- escape_text(out[ibody, col], output = o)
+        out[row, col] <- escape_text(out[row, col], output = o)
       }
+    }
 
-    } else if (inull && jnull) {
-      for (col in j) {
-        out[, col] <- escape_text(out[, col], output = o)
-      }
+    # column names
+    if (0 %in% i) {
+      colnames(x) <- escape_text(colnames(x), output = o)
+    }
 
-      colnames(out) <- escape_text(colnames(out), output = o)
-
+    # caption & groups: if i and j are both null
+    if (inull && jnull) {
       if (inherits(x, "tinytable")) {
-        x@names <- escape_text(x@names, output = o)
         x@caption <- escape_text(x@caption, output = o)
 
         for (idx in seq_along(x@notes)) {
@@ -311,13 +311,6 @@ format_tt_lazy <- function(x,
             names(g$i) <- escape_text(names(g$i), output = o)
           }
           x@lazy_group[[idx]] <- g
-        }
-      }
-
-    } else {
-      for (row in i) {
-        for (col in j) {
-          out[row, col] <- escape_text(out[row, col], output = o)
         }
       }
     }

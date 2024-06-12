@@ -71,7 +71,6 @@ format_tt(
 
 \item{escape}{Logical or "latex" or "html". If TRUE, escape special characters to display them as text in the format of the output of a \code{tt()} table.
 \itemize{
-\item If \code{i} is \code{NULL}, escape the \code{j} columns and column names.
 \item If \code{i} and \code{j} are both \code{NULL}, escape all cells, column names, caption, notes, and spanning labels created by \code{group_tt()}.
 }}
 

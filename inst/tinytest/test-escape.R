@@ -40,3 +40,12 @@ tab <- mtcars[1:3, 1:4] |>
 tab@output <- "latex"
 expect_snapshot_print(tab, "escape-issue150_caption_escape_03")
 
+
+# mtcars[1:3, 1:4] |>
+#     setNames(c("blah_blah", "foo_bar", "c", "d")) |>
+#     tt(caption = "banana_fish") |>
+#     format_tt(escape = TRUE) |>
+#     print("latex")
+
+
+
