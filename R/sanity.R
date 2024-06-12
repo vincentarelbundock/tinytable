@@ -4,12 +4,16 @@ usepackage_latex <- function(name, options = NULL, extra_lines = NULL) {
 }
 
 
-sanitize_i <- function(i, x) {
+sanitize_i <- function(i, x, rows = "tinytable") {
   if (inherits(x, "tinytable") && x@nhead > 0) {
     assert_integerish(i, lower = -((x@nhead) - 1), upper = nrow(x), null.ok = TRUE)
   }
   if (is.null(i)) {
-    out <- seq_len(nrow(x))
+    if (rows == "dataframe" && inherits(x, "tinytable")) {
+      out <- seq_len(nrow(x@data))
+    } else {
+      out <- seq_len(nrow(x))
+    }
     if (inherits(x, "tinytable") && x@nhead > 0) {
       out <- c(-(1:x@nhead - 1), out)
     }
