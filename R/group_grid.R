@@ -1,19 +1,21 @@
 #' tinytable S4 method
-#' 
+#'
 #' @keywords internal
 setMethod(
   f = "group_eval",
   signature = "tinytable_grid",
   definition = function(x, i = NULL, j = NULL, ...) {
-  # add here because this is where lazy gets executed
-  x <- group_grid_row(x, i)
-  x <- group_grid_col(x, j)
-  return(x)
-})
+    # add here because this is where lazy gets executed
+    x <- group_grid_row(x, i)
+    x <- group_grid_col(x, j)
+    return(x)
+  })
 
 
 group_grid_col <- function(x, j, ...) {
-  if (is.null(j)) return(x)
+  if (is.null(j)) {
+    return(x)
+  }
   tab <- x@table_string
   header <- empty_cells(j)
   cw <- x@width_cols
@@ -42,7 +44,9 @@ group_grid_col <- function(x, j, ...) {
 
 
 group_grid_row <- function(x, i, ...) {
-  if (is.null(i)) return(x)
+  if (is.null(i)) {
+    return(x)
+  }
   tab <- x@table_string
   tab <- strsplit(tab, split = "\\n")[[1]]
   tab <- tab[tab != ""]
@@ -66,11 +70,7 @@ group_grid_row <- function(x, i, ...) {
     tmp <- strsplit(tmp, split = "\\n")[[1]]
     tmp <- tmp[tmp != ""][2]
     lo <- i[idx] - 1
-    if (lo > 0) {
-      mid <- c(mid[1:lo], tmp, mid[i[idx]:length(mid)]) 
-    } else {
-      mid <- c(tmp, mid[i[idx]:length(mid)]) 
-    }
+    mid <- append(mid, tmp, after = lo)
   }
 
   tab <- c(top, mid, bot)
@@ -80,4 +80,3 @@ group_grid_row <- function(x, i, ...) {
 
   return(x)
 }
-

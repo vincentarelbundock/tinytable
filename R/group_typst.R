@@ -29,18 +29,9 @@ group_typst_row <- function(x, i, ...) {
   mid <- mid[mid != ""]
   bot <- tab[(body_max + 1):length(tab)]
   for (idx in rev(seq_along(i))) {
-    if (idx == 1) {
-      mid <- c(
-        sprintf("table.cell(colspan: %s)[%s],", ncol(x), names(i)[idx]),
-        mid
-      )
-    } else {
-      mid <- c(
-        mid[1:(i[idx] - 1)],
-        sprintf("table.cell(colspan: %s)[%s],", ncol(x), names(i)[idx]),
-        mid[i[idx]:length(mid)]
-      )
-    }
+    mid <- append(mid,
+      sprintf("table.cell(colspan: %s)[%s],", ncol(x), names(i)[idx]),
+      after = i[idx] - 1)
   }
   tab <- c(top, mid, bot)
   tab <- paste(tab, collapse = "\n")
