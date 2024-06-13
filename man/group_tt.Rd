@@ -9,7 +9,12 @@ group_tt(x, i = NULL, j = NULL, indent = 1, ...)
 \arguments{
 \item{x}{A data frame or data table to be rendered as a table.}
 
-\item{i}{A named list of row indices to group. The names of the list will be used as labels.}
+\item{i}{A named list of row indices to group. The names of the list will be used as labels. The indices represent the position where labels should be inserted in the original table. For example,
+\itemize{
+\item \code{i=list("Hello"=5)}: insert the "Hello" label after the 4th row in the original table.
+\item \code{i=list("Hello"=2, "World"=2)}: insert the two labels consecutively after the 1st row in the original table.
+\item \code{i=list("Foo Bar"=0)}: insert the label in the first row after the header.
+}}
 
 \item{j}{A named list of column indices to group. The names of the list will be used as labels. See examples below. Note: empty labels must be a space: " ".}
 
@@ -36,13 +41,13 @@ tt(mtcars[1:10, 1:5]) |>
     j = list(
       "Foo" = 2:3,
       "Bar" = 4:5))
-      
+
 dat <- mtcars[1:9, 1:8]
 tt(dat) |>
   group_tt(i = list(
     "I like (fake) hamburgers" = 3,
     "She prefers halloumi" = 4,
-    "They love tofu" = 7))  
+    "They love tofu" = 7))
 
 tt(dat) |>
   group_tt(
@@ -50,11 +55,10 @@ tt(dat) |>
       "Hamburgers" = 1:3,
       "Halloumi" = 4:5,
       "Tofu" = 7))
-      
+
 x <- mtcars[1:5, 1:6]
 tt(x) |>
-  group_tt(j = list("Hello" = 1:2, "World" = 3:4, "Hello"=5:6)) |>
+  group_tt(j = list("Hello" = 1:2, "World" = 3:4, "Hello" = 5:6)) |>
   group_tt(j = list("Foo" = 1:3, "Bar" = 4:6))
-      
-      
+
 }

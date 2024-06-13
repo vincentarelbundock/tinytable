@@ -23,6 +23,18 @@ tt(dat) |>
     "They love tofu" = 7))
 ```
 
+The numbers in the `i` list indicate that a label must be inserted at position # in the original table (without row groups). For example,
+
+```{r}
+tt(head(iris)) |>
+  group_tt(i = list("After 1" = 2, "After 2" = 3, "After 3" = 4, "After 5" = 6))
+
+tt(head(iris)) |>
+  group_tt(i = list("After 1a" = 2, "After 1b" = 2, "After 5" = 6))
+
+tt(head(iris)) |>
+  group_tt(i = list("After 0" = 1))
+```
 
 We can style group rows in the same way as regular rows:
 

@@ -3,7 +3,10 @@
 #' @export
 #' @inheritParams tt
 #' @inheritParams style_tt
-#' @param i A named list of row indices to group. The names of the list will be used as labels.
+#' @param i A named list of row indices to group. The names of the list will be used as labels. The indices represent the position where labels should be inserted in the original table. For example,
+#' + `i=list("Hello"=5)`: insert the "Hello" label after the 4th row in the original table.
+#' + `i=list("Hello"=2, "World"=2)`: insert the two labels consecutively after the 1st row in the original table.
+#' + `i=list("Foo Bar"=0)`: insert the label in the first row after the header.
 #' @param j A named list of column indices to group. The names of the list will be used as labels. See examples below. Note: empty labels must be a space: " ".
 #' @param ... Other arguments are ignored.
 #' @return An object of class `tt` representing the table.
