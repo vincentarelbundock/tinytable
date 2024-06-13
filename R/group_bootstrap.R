@@ -1,24 +1,23 @@
 #' tinytable S4 method
-#' 
+#'
 #' @keywords internal
 setMethod(
   f = "group_eval",
   signature = "tinytable_bootstrap",
   definition = function(x, i = NULL, j = NULL, indent = 1, ...) {
-  out <- x
-  # columns first to count headers properly
-  if (!is.null(j)) {
-    out <- group_bootstrap_col(out, j = j, ...)
-  }
-  if (!is.null(i)) {
-    out <- group_bootstrap_row(out, i = i, j = j, indent = indent, ...)
-  }
-  return(out)
-})
+    out <- x
+    # columns first to count headers properly
+    if (!is.null(j)) {
+      out <- group_bootstrap_col(out, j = j, ...)
+    }
+    if (!is.null(i)) {
+      out <- group_bootstrap_row(out, i = i, j = j, indent = indent, ...)
+    }
+    return(out)
+  })
 
 
 group_bootstrap_col <- function(x, j, ihead, ...) {
-
   out <- x@table_string
 
   out <- strsplit(out, "\\n")[[1]]
@@ -31,9 +30,11 @@ group_bootstrap_col <- function(x, j, ihead, ...) {
   max_col <- sapply(j, max)
   idx <- order(max_col)
   j <- j[idx]
-  jstring <- lapply(names(j), function(n) sprintf(
-    '<th scope="col" align="center" colspan=%s>%s</th>',
-    max(j[[n]]) - min(j[[n]]) + 1, n))
+  jstring <- lapply(names(j), function(n) {
+    sprintf(
+      '<th scope="col" align="center" colspan=%s>%s</th>',
+      max(j[[n]]) - min(j[[n]]) + 1, n)
+  })
   jstring <- paste(unlist(jstring), collapse = "\n")
   jstring <- sprintf("<tr>\n%s\n</tr>", jstring)
 
@@ -60,6 +61,9 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
 
   # reverse order is important
   i <- rev(sort(i))
+
+  # # i = list("a" = 2, "b" = 3, "c" = 4) should be displayed consecutively
+  # i <- i - (rev(seq_along(i)) - 1)
 
   out <- x@table_string
 
