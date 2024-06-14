@@ -61,7 +61,7 @@ save_tt <- function(x, output, overwrite = FALSE) {
     "txt" = "markdown",
     "docx" = "markdown",
     "typ" = "typst",
-    stop("The supported file extensions are: .png, .html, .pdf, .tex, and .md.", call. = FALSE)
+    stop("The supported file extensions are: .png, .html, .pdf, .tex, .typ, .qmd, .Rmd, .txt, .docx, and .md.", call. = FALSE)
   )
 
   # evaluate styles at the very end of the pipeline, just before writing
@@ -122,8 +122,8 @@ save_tt <- function(x, output, overwrite = FALSE) {
         existing_log_files
       )
       invisible(file.remove(new_log_files))
-      unlink(f)
     }
+    unlink(f)
   } else if (file_ext == "docx") {
     assert_dependency("pandoc")
     pandoc::pandoc_convert(text = x@table_string, to = "docx", output = output)
