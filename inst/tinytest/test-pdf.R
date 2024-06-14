@@ -18,7 +18,7 @@ expect_equal(
     0
 )
 
-# logfiles that exist before call to tinytex as left untouched
+# logfiles that exist before call to tinytex are left untouched
 cat("some content", file = dest_log)
 
 expect_warning(
