@@ -9,6 +9,9 @@
 * Print row names in the first column by calling `options(tinytable_tt_rownames=TRUE)`. Thanks to @rsbivand for Issue #264.
 * Improved documentation.
 * Typst: no more gutters when `group_tt(j)` and `style_tt(background)`
+* `save_tt("pdf")` gets new global options:
+  - `options(tinytable_save_pdf_clean = TRUE)`
+  - `options(tinytable_save_pdf_engine = "xelatex")`
 
 Bugs:
 
