@@ -113,17 +113,17 @@ save_tt <- function(x, output, overwrite = FALSE) {
       tinytex::lualatex(f, pdf_file = output)
     }
 
-    # # clean
-    # flag <- getOption("tinytable_save_pdf_clean", default = TRUE)
-    # assert_flag(flag, name = "tinytable_save_pdf_clean")
-    # if (flag) {
-    #   new_log_files <- setdiff(
-    #     list.files(temp_wd, pattern = "\\.log$", full.names = TRUE),
-    #     existing_log_files
-    #   )
-    #   invisible(file.remove(new_log_files))
-    #   unlink(f)
-    # }
+    # clean
+    flag <- getOption("tinytable_save_pdf_clean", default = TRUE)
+    assert_flag(flag, name = "tinytable_save_pdf_clean")
+    if (flag) {
+      new_log_files <- setdiff(
+        list.files(temp_wd, pattern = "\\.log$", full.names = TRUE),
+        existing_log_files
+      )
+      invisible(file.remove(new_log_files))
+      unlink(f)
+    }
   } else if (file_ext == "docx") {
     assert_dependency("pandoc")
     pandoc::pandoc_convert(text = x@table_string, to = "docx", output = output)
