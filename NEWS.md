@@ -8,7 +8,7 @@
 * `format_tt(num_big_mark)` applies to integer columns.
 * Print row names in the first column by calling `options(tinytable_tt_rownames=TRUE)`. Thanks to @rsbivand for Issue #264.
 * Improved documentation.
-* Typst: no more gutters when group_tt(j) and style_tt(background)
+* Typst: no more gutters when `group_tt(j)` and `style_tt(background)`
 
 Bugs:
 
