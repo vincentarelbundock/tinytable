@@ -170,7 +170,7 @@ setMethod(
             coords <- expand.grid(block$i, block$j)
             coords <- apply(coords, 1, function(x) sprintf("[%s, %s]", x[1], x[2]))
             coords <- unique(coords)
-            coords <- sprintf("{coords: [%s], class: '%s'},", paste(coords, collapse = ", "), settings$id[1])
+            coords <- sprintf("{coords: [%s], class: '%s'},", paste(coords, collapse = ", "), block$id[1])
             listener <- sprintf(listener_template, coords, block$id[1])
             out <- bootstrap_setting(out, listener, component = "cell")
         }
