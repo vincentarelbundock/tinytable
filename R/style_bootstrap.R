@@ -144,6 +144,15 @@ setMethod(
       }
     }
 
+    # spans
+    for (row in seq_len(nrow(settings))) {
+        if (rowspan != 1 || colspan != 1) {
+            listener <- "window.addEventListener('load', function () { spanCell_%s(%s, %s, %s, %s) })"
+            listener <- sprintf(listener, settings$id[row], settings$i[row], settings$j[row], rowspan, colspan)
+            out <- bootstrap_setting(out, listener, component = "cell")
+        }
+    }
+
     # CSS listeners
     listener_template <- "
      window.addEventListener('load', function () {
