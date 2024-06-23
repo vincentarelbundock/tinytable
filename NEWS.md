@@ -12,6 +12,7 @@
 * `save_tt("pdf")` gets new global options:
   - `options(tinytable_save_pdf_clean = TRUE)`
   - `options(tinytable_save_pdf_engine = "xelatex")`
+* Simplify JS functions in HTML documents. Avoid nesting full HTML documents inside Quarto output.
 
 Bugs:
 
