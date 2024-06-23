@@ -2,6 +2,7 @@
 
 ## Development
 
+* `plot_tt()`: The `height` argument is now respected in Markdown and Word documents.
 * `group_tt()` allows 0 and duplicates in `i` argument for labels in the first row and consecutive labels.
 * Headers are now styled and formatted when `i=NULL`.
 * `colnames(x)<-NULL` works on a `tinytable` object.

@@ -182,8 +182,8 @@ plot_tt_lazy <- function(x,
       '<img src="./%s" style="height: %sem;">')
     cell <- sprintf(cell, images, height)
   } else if (isTRUE(x@output == "markdown")) {
-    cell <- "![](%s)"
-    cell <- sprintf(cell, images)
+    cell <- "![](%s){ height=%s }"
+    cell <- sprintf(cell, images, height * 16)
   } else if (isTRUE(x@output == "typst")) {
     cell <- '#image("%s")'
     cell <- sprintf(cell, images)
