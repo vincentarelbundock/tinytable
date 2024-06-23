@@ -8,7 +8,7 @@ dest_log <- file.path(dest_dir, "somelog.log")
 expect_warning(
     tt(x) |>
         theme_tt("resize") |>
-        save_tt(dest_pdf),
+        save_tt(dest_pdf, overwrite = TRUE),
     "Table width is too small"
 )
 

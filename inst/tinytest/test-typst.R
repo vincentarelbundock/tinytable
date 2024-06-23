@@ -87,7 +87,7 @@ dat <- tt(dat) |>
     "I like (fake) hamburgers" = 3,
     "She prefers halloumi" = 4,
     "They love tofu" = 7))
-expect_snapshot_print(dat, label = "group_rows")
+expect_snapshot_print(dat, label = "typst-group_rows")
 
 # Group columns
 dat <- mtcars[1:9, 1:8]
