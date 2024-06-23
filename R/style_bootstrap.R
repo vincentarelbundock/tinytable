@@ -157,7 +157,7 @@ setMethod(
 
     settings_blocks <- split(settings, settings$id)
     for (block in settings_blocks) {
-        if (any(block$bootstrap != "")) {
+        if (any(block$bootstrap != "") || !is.null(bootstrap_css)) {
             coords <- expand.grid(block$i, block$j)
             coords <- apply(coords, 1, function(x) sprintf("[%s, %s]", x[1], x[2]))
             coords <- unique(coords)
