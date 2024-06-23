@@ -145,30 +145,27 @@ setMethod(
     }
 
     # CSS listeners
+    listener_template <- "
+     window.addEventListener('load', function () {
+         const cellStyles = [
+             %s
+         ];
+         cellStyles.forEach(({coords, class: cssClass}) => {
+             styleCell_%s('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
+         });
+     });"
+
     settings_blocks <- split(settings, settings$id)
-    coords <- NULL
     for (block in settings_blocks) {
         if (any(block$bootstrap != "")) {
-                browser()
-            tmp <- expand.grid(block$i, block$j)
-            tmp <- apply(tmp, 1, function(x) sprintf("[%s, %s]", x[1], x[2]))
-            tmp <- sprintf("{coords: [%s], class: '%s'},", paste(tmp, collapse = ", "), settings$id[1])
-            coords <- c(coords, tmp)
+            coords <- expand.grid(block$i, block$j)
+            coords <- apply(coords, 1, function(x) sprintf("[%s, %s]", x[1], x[2]))
+            coords <- unique(coords)
+            coords <- sprintf("{coords: [%s], class: '%s'},", paste(coords, collapse = ", "), settings$id[1])
+            listener <- sprintf(listener_template, coords, block$id[1])
+            out <- bootstrap_setting(out, listener, component = "cell")
         }
     }
-    coords <- paste(coords, collapse = "\n")
-    listener <- "
-window.addEventListener('load', function () {
-  const cellStyles = [
-    %s
-  ];
-  cellStyles.forEach(({coords, class: cssClass}) => {
-    styleCell('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
-  });
-});
-"
-    listener <- sprintf(listener, coords)
-    out <- bootstrap_setting(out, listener, component = "cell")
 
     if (!is.null(bootstrap_css_rule)) {
       out <- bootstrap_setting(out, bootstrap_css_rule, component = "css")

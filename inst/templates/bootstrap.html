@@ -39,10 +39,13 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      function styleCell(i, j, css_id) {
-        var table = document.getElementById("$tinytable_TABLE_ID");
-        table.rows[i].cells[j].classList.add(css_id);
-      }
+      function styleCell(tableId, cellCoordinates, cssClass) {
+            var table = document.getElementById("$tinytable_TABLE_ID");
+            cellCoordinates.forEach(([i, j]) => {
+                table.rows[i].cells[j].classList.add(cssClass);
+            });
+        }
+
       function insertSpanRow(i, colspan, content) {
         var table = document.getElementById('$tinytable_TABLE_ID');
         var newRow = table.insertRow(i);
