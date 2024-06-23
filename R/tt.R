@@ -81,9 +81,10 @@ tt <- function(x,
     colnames(x) <- cn
   }
 
-  # non-numeric should all be characters (for replace, etc.)
+  # factors should all be characters (for replace, etc.)
+  # it might be dangerous to leave non-numerics, but what about dates and other character-coercibles?
   for (i in seq_along(x)) {
-    if (!is.numeric(x[[i]])) {
+    if (is.factor(x[[i]])) {
        x[[i]] <- as.character(x[[i]])
     }
   }
