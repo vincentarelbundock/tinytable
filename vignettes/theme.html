@@ -401,15 +401,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x, <span class="at">theme =</span> <span class="st">"striped"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
- 
+<!-- preamble start -->
 
-  
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_rbqlo7m3ch36uuol4njc</title>
-    <style>
-    </style>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>
     MathJax = {
@@ -421,11 +414,56 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       }
     };
     </script>
-  
+    <script>
+      function styleCell_tinytable_x6r4e87ayy1kkftlulf9(tableId, cellCoordinates, cssClass) {
+            var table = document.getElementById("tinytable_lqxurwa2vsbpfbktvs01");
+            cellCoordinates.forEach(([i, j]) => {
+                table.rows[i].cells[j].classList.add(cssClass);
+            });
+        }
 
-  
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_lqxurwa2vsbpfbktvs01');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_tinytable_x6r4e87ayy1kkftlulf9(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_lqxurwa2vsbpfbktvs01");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+    </script>
+
+    <style>
+    </style>
     <div class="container">
-      <table class="table table-striped" id="tinytable_rbqlo7m3ch36uuol4njc" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-striped" id="tinytable_lqxurwa2vsbpfbktvs01" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -469,67 +507,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         </tbody>
       </table>
     </div>
-
-    <script>
-      function styleCell_tinytable_nh8bkeefxq87s5istk2y(i, j, css_id) {
-        var table = document.getElementById("tinytable_rbqlo7m3ch36uuol4njc");
-        table.rows[i].cells[j].classList.add(css_id);
-      }
-      function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_rbqlo7m3ch36uuol4njc');
-        var newRow = table.insertRow(i);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_tinytable_nh8bkeefxq87s5istk2y(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_rbqlo7m3ch36uuol4njc");
-        const targetRow = table.rows[i];
-        const targetCell = targetRow.cells[j];
-        for (let r = 0; r < rowspan; r++) {
-          // Only start deleting cells to the right for the first row (r == 0)
-          if (r === 0) {
-            // Delete cells to the right of the target cell in the first row
-            for (let c = colspan - 1; c > 0; c--) {
-              if (table.rows[i + r].cells[j + c]) {
-                table.rows[i + r].deleteCell(j + c);
-              }
-            }
-          }
-          // For rows below the first, delete starting from the target column
-          if (r > 0) {
-            for (let c = colspan - 1; c >= 0; c--) {
-              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
-                table.rows[i + r].deleteCell(j);
-              }
-            }
-          }
-        }
-        // Set rowspan and colspan of the target cell
-        targetCell.rowSpan = rowspan;
-        targetCell.colSpan = colspan;
-      }
-
-    </script>
-
-  
-
-
+<!-- hack to avoid NA insertion in last line -->
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x) <span class="sc">|&gt;</span> <span class="fu">theme_tt</span>(<span class="st">"striped"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
- 
+<!-- preamble start -->
 
-  
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_aztn5rf9i25udsf3zkwo</title>
-    <style>
-.table td.tinytable_css_306bil3uoodgpu1mfnw5, .table th.tinytable_css_306bil3uoodgpu1mfnw5 {    border-bottom: solid 0.1em #d3d8dc; }
-    </style>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>
     MathJax = {
@@ -541,11 +524,66 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       }
     };
     </script>
-  
+    <script>
+      function styleCell_tinytable_uux1gpjetnsob4vp101k(tableId, cellCoordinates, cssClass) {
+            var table = document.getElementById("tinytable_hyi3agxmurx7u5n2svl7");
+            cellCoordinates.forEach(([i, j]) => {
+                table.rows[i].cells[j].classList.add(cssClass);
+            });
+        }
 
-  
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_hyi3agxmurx7u5n2svl7');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_tinytable_uux1gpjetnsob4vp101k(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_hyi3agxmurx7u5n2svl7");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+
+     window.addEventListener('load', function () {
+         const cellStyles = [
+             {coords: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]], class: 'tinytable_css_h5ml5x5a1iz514rdr43y'},
+         ];
+         cellStyles.forEach(({coords, class: cssClass}) => {
+             styleCell_tinytable_uux1gpjetnsob4vp101k('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
+         });
+     });
+    </script>
+
+    <style>
+.table td.tinytable_css_h5ml5x5a1iz514rdr43y, .table th.tinytable_css_h5ml5x5a1iz514rdr43y {    border-bottom: solid 0.1em #d3d8dc; }
+    </style>
     <div class="container">
-      <table class="table table-striped" id="tinytable_aztn5rf9i25udsf3zkwo" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-striped" id="tinytable_hyi3agxmurx7u5n2svl7" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -589,73 +627,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         </tbody>
       </table>
     </div>
-
-    <script>
-      function styleCell_tinytable_mmpysrswi1nae2eba4lo(i, j, css_id) {
-        var table = document.getElementById("tinytable_aztn5rf9i25udsf3zkwo");
-        table.rows[i].cells[j].classList.add(css_id);
-      }
-      function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_aztn5rf9i25udsf3zkwo');
-        var newRow = table.insertRow(i);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_tinytable_mmpysrswi1nae2eba4lo(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_aztn5rf9i25udsf3zkwo");
-        const targetRow = table.rows[i];
-        const targetCell = targetRow.cells[j];
-        for (let r = 0; r < rowspan; r++) {
-          // Only start deleting cells to the right for the first row (r == 0)
-          if (r === 0) {
-            // Delete cells to the right of the target cell in the first row
-            for (let c = colspan - 1; c > 0; c--) {
-              if (table.rows[i + r].cells[j + c]) {
-                table.rows[i + r].deleteCell(j + c);
-              }
-            }
-          }
-          // For rows below the first, delete starting from the target column
-          if (r > 0) {
-            for (let c = colspan - 1; c >= 0; c--) {
-              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
-                table.rows[i + r].deleteCell(j);
-              }
-            }
-          }
-        }
-        // Set rowspan and colspan of the target cell
-        targetCell.rowSpan = rowspan;
-        targetCell.colSpan = colspan;
-      }
-
-window.addEventListener('load', function () { styleCell_tinytable_mmpysrswi1nae2eba4lo(0, 0, 'tinytable_css_306bil3uoodgpu1mfnw5') })
-window.addEventListener('load', function () { styleCell_tinytable_mmpysrswi1nae2eba4lo(0, 1, 'tinytable_css_306bil3uoodgpu1mfnw5') })
-window.addEventListener('load', function () { styleCell_tinytable_mmpysrswi1nae2eba4lo(0, 2, 'tinytable_css_306bil3uoodgpu1mfnw5') })
-window.addEventListener('load', function () { styleCell_tinytable_mmpysrswi1nae2eba4lo(0, 3, 'tinytable_css_306bil3uoodgpu1mfnw5') })
-window.addEventListener('load', function () { styleCell_tinytable_mmpysrswi1nae2eba4lo(0, 4, 'tinytable_css_306bil3uoodgpu1mfnw5') })
-    </script>
-
-  
-
-
+<!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x, <span class="at">theme =</span> <span class="st">"grid"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
- 
+<!-- preamble start -->
 
-  
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_xqmxpqu5v1fp0mf4u4bo</title>
-    <style>
-    </style>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>
     MathJax = {
@@ -667,11 +646,56 @@ window.addEventListener('load', function () { styleCell_tinytable_mmpysrswi1nae2
       }
     };
     </script>
-  
+    <script>
+      function styleCell_tinytable_eyzpf6xez5u74lassbmb(tableId, cellCoordinates, cssClass) {
+            var table = document.getElementById("tinytable_339no371rj244chx2d57");
+            cellCoordinates.forEach(([i, j]) => {
+                table.rows[i].cells[j].classList.add(cssClass);
+            });
+        }
 
-  
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_339no371rj244chx2d57');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_tinytable_eyzpf6xez5u74lassbmb(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_339no371rj244chx2d57");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+    </script>
+
+    <style>
+    </style>
     <div class="container">
-      <table class="table table-bordered" id="tinytable_xqmxpqu5v1fp0mf4u4bo" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-bordered" id="tinytable_339no371rj244chx2d57" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -715,68 +739,14 @@ window.addEventListener('load', function () { styleCell_tinytable_mmpysrswi1nae2
         </tbody>
       </table>
     </div>
-
-    <script>
-      function styleCell_tinytable_wyls5vf1sy1amhk6el0p(i, j, css_id) {
-        var table = document.getElementById("tinytable_xqmxpqu5v1fp0mf4u4bo");
-        table.rows[i].cells[j].classList.add(css_id);
-      }
-      function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_xqmxpqu5v1fp0mf4u4bo');
-        var newRow = table.insertRow(i);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_tinytable_wyls5vf1sy1amhk6el0p(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_xqmxpqu5v1fp0mf4u4bo");
-        const targetRow = table.rows[i];
-        const targetCell = targetRow.cells[j];
-        for (let r = 0; r < rowspan; r++) {
-          // Only start deleting cells to the right for the first row (r == 0)
-          if (r === 0) {
-            // Delete cells to the right of the target cell in the first row
-            for (let c = colspan - 1; c > 0; c--) {
-              if (table.rows[i + r].cells[j + c]) {
-                table.rows[i + r].deleteCell(j + c);
-              }
-            }
-          }
-          // For rows below the first, delete starting from the target column
-          if (r > 0) {
-            for (let c = colspan - 1; c >= 0; c--) {
-              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
-                table.rows[i + r].deleteCell(j);
-              }
-            }
-          }
-        }
-        // Set rowspan and colspan of the target cell
-        targetCell.rowSpan = rowspan;
-        targetCell.colSpan = colspan;
-      }
-
-    </script>
-
-  
-
-
+<!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x, <span class="at">theme =</span> <span class="st">"bootstrap"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
- 
+<!-- preamble start -->
 
-  
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_3n7ztnyqqwq1bl6bj3rc</title>
-    <style>
-    </style>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>
     MathJax = {
@@ -788,11 +758,56 @@ window.addEventListener('load', function () { styleCell_tinytable_mmpysrswi1nae2
       }
     };
     </script>
-  
+    <script>
+      function styleCell_tinytable_el799svqr0p3t2vn0xx0(tableId, cellCoordinates, cssClass) {
+            var table = document.getElementById("tinytable_3corgbfd492gq6ig7p2g");
+            cellCoordinates.forEach(([i, j]) => {
+                table.rows[i].cells[j].classList.add(cssClass);
+            });
+        }
 
-  
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_3corgbfd492gq6ig7p2g');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_tinytable_el799svqr0p3t2vn0xx0(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_3corgbfd492gq6ig7p2g");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+    </script>
+
+    <style>
+    </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_3n7ztnyqqwq1bl6bj3rc" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_3corgbfd492gq6ig7p2g" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -836,54 +851,7 @@ window.addEventListener('load', function () { styleCell_tinytable_mmpysrswi1nae2
         </tbody>
       </table>
     </div>
-
-    <script>
-      function styleCell_tinytable_3kevarxk1tqgejajefn2(i, j, css_id) {
-        var table = document.getElementById("tinytable_3n7ztnyqqwq1bl6bj3rc");
-        table.rows[i].cells[j].classList.add(css_id);
-      }
-      function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_3n7ztnyqqwq1bl6bj3rc');
-        var newRow = table.insertRow(i);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_tinytable_3kevarxk1tqgejajefn2(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_3n7ztnyqqwq1bl6bj3rc");
-        const targetRow = table.rows[i];
-        const targetCell = targetRow.cells[j];
-        for (let r = 0; r < rowspan; r++) {
-          // Only start deleting cells to the right for the first row (r == 0)
-          if (r === 0) {
-            // Delete cells to the right of the target cell in the first row
-            for (let c = colspan - 1; c > 0; c--) {
-              if (table.rows[i + r].cells[j + c]) {
-                table.rows[i + r].deleteCell(j + c);
-              }
-            }
-          }
-          // For rows below the first, delete starting from the target column
-          if (r > 0) {
-            for (let c = colspan - 1; c >= 0; c--) {
-              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
-                table.rows[i + r].deleteCell(j);
-              }
-            }
-          }
-        }
-        // Set rowspan and colspan of the target cell
-        targetCell.rowSpan = rowspan;
-        targetCell.colSpan = colspan;
-      }
-
-    </script>
-
-  
-
-
+<!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
 </section>
@@ -904,17 +872,8 @@ window.addEventListener('load', function () { styleCell_tinytable_mmpysrswi1nae2
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
- 
+<!-- preamble start -->
 
-  
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_e5anfq60pyauvd9contw</title>
-    <style>
-.table td.tinytable_css_kqxd0c0y1sxbxv800dnt, .table th.tinytable_css_kqxd0c0y1sxbxv800dnt {    border-bottom: solid 0.1em #d3d8dc; }
-.table td.tinytable_css_xou3h2460b3ffilesvts, .table th.tinytable_css_xou3h2460b3ffilesvts {    color: teal; }
-    </style>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>
     MathJax = {
@@ -926,39 +885,16 @@ window.addEventListener('load', function () { styleCell_tinytable_mmpysrswi1nae2
       }
     };
     </script>
-  
-
-  
-    <div class="container">
-      <table class="table table-borderless" id="tinytable_e5anfq60pyauvd9contw" style="table-layout: fixed; width: 50% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
-        <thead>
-        </thead><caption>Always use the same caption.</caption>
-              <tbody><tr>
-                <th scope="col">mpg</th>
-                <th scope="col">cyl</th>
-              </tr>
-        
-        
-        </tbody><tbody>
-                <tr>
-                  <td>21</td>
-                  <td>6</td>
-                </tr>
-                <tr>
-                  <td>21</td>
-                  <td>6</td>
-                </tr>
-        </tbody>
-      </table>
-    </div>
-
     <script>
-      function styleCell_tinytable_xulel6d7vjv6k98i8o11(i, j, css_id) {
-        var table = document.getElementById("tinytable_e5anfq60pyauvd9contw");
-        table.rows[i].cells[j].classList.add(css_id);
-      }
+      function styleCell_tinytable_neil7atn3vykoyiwtxjy(tableId, cellCoordinates, cssClass) {
+            var table = document.getElementById("tinytable_ip9ij1i7ku9db0wggzns");
+            cellCoordinates.forEach(([i, j]) => {
+                table.rows[i].cells[j].classList.add(cssClass);
+            });
+        }
+
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_e5anfq60pyauvd9contw');
+        var table = document.getElementById('tinytable_ip9ij1i7ku9db0wggzns');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -966,8 +902,8 @@ window.addEventListener('load', function () { styleCell_tinytable_mmpysrswi1nae2
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_xulel6d7vjv6k98i8o11(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_e5anfq60pyauvd9contw");
+      function spanCell_tinytable_neil7atn3vykoyiwtxjy(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_ip9ij1i7ku9db0wggzns");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -994,33 +930,57 @@ window.addEventListener('load', function () { styleCell_tinytable_mmpysrswi1nae2
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { styleCell_tinytable_xulel6d7vjv6k98i8o11(0, 0, 'tinytable_css_kqxd0c0y1sxbxv800dnt') })
-window.addEventListener('load', function () { styleCell_tinytable_xulel6d7vjv6k98i8o11(0, 1, 'tinytable_css_kqxd0c0y1sxbxv800dnt') })
-window.addEventListener('load', function () { styleCell_tinytable_xulel6d7vjv6k98i8o11(0, 0, 'tinytable_css_xou3h2460b3ffilesvts') })
-window.addEventListener('load', function () { styleCell_tinytable_xulel6d7vjv6k98i8o11(1, 0, 'tinytable_css_xou3h2460b3ffilesvts') })
-window.addEventListener('load', function () { styleCell_tinytable_xulel6d7vjv6k98i8o11(2, 0, 'tinytable_css_xou3h2460b3ffilesvts') })
-window.addEventListener('load', function () { styleCell_tinytable_xulel6d7vjv6k98i8o11(0, 1, 'tinytable_css_xou3h2460b3ffilesvts') })
-window.addEventListener('load', function () { styleCell_tinytable_xulel6d7vjv6k98i8o11(1, 1, 'tinytable_css_xou3h2460b3ffilesvts') })
-window.addEventListener('load', function () { styleCell_tinytable_xulel6d7vjv6k98i8o11(2, 1, 'tinytable_css_xou3h2460b3ffilesvts') })
+     window.addEventListener('load', function () {
+         const cellStyles = [
+             {coords: [[0, 0], [0, 1]], class: 'tinytable_css_iaay3kl9ztb53cu55ms0'},
+         ];
+         cellStyles.forEach(({coords, class: cssClass}) => {
+             styleCell_tinytable_neil7atn3vykoyiwtxjy('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
+         });
+     });
+
+     window.addEventListener('load', function () {
+         const cellStyles = [
+             {coords: [[0, 0], [1, 0], [2, 0], [0, 1], [1, 1], [2, 1]], class: 'tinytable_css_jdc0kja1ppau7lgktz8v'},
+         ];
+         cellStyles.forEach(({coords, class: cssClass}) => {
+             styleCell_tinytable_neil7atn3vykoyiwtxjy('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
+         });
+     });
     </script>
 
-  
-
-
+    <style>
+.table td.tinytable_css_iaay3kl9ztb53cu55ms0, .table th.tinytable_css_iaay3kl9ztb53cu55ms0 {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_jdc0kja1ppau7lgktz8v, .table th.tinytable_css_jdc0kja1ppau7lgktz8v {    color: teal; }
+    </style>
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_ip9ij1i7ku9db0wggzns" style="table-layout: fixed; width: 50% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+        </thead><caption>Always use the same caption.</caption>
+              <tbody><tr>
+                <th scope="col">mpg</th>
+                <th scope="col">cyl</th>
+              </tr>
+        
+        
+        </tbody><tbody>
+                <tr>
+                  <td>21</td>
+                  <td>6</td>
+                </tr>
+                <tr>
+                  <td>21</td>
+                  <td>6</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
- 
+<!-- preamble start -->
 
-  
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_smqzklqjgg3f7wecnpmv</title>
-    <style>
-.table td.tinytable_css_7ail5wu3g4boj61xcq08, .table th.tinytable_css_7ail5wu3g4boj61xcq08 {    border-bottom: solid 0.1em #d3d8dc; }
-.table td.tinytable_css_ltzxy3l94mifczo88rda, .table th.tinytable_css_ltzxy3l94mifczo88rda {    color: teal; }
-    </style>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>
     MathJax = {
@@ -1032,11 +992,76 @@ window.addEventListener('load', function () { styleCell_tinytable_xulel6d7vjv6k9
       }
     };
     </script>
-  
+    <script>
+      function styleCell_tinytable_vxd4brfpa8db92ebf3j9(tableId, cellCoordinates, cssClass) {
+            var table = document.getElementById("tinytable_adq3um4metcl7g29mp6u");
+            cellCoordinates.forEach(([i, j]) => {
+                table.rows[i].cells[j].classList.add(cssClass);
+            });
+        }
 
-  
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_adq3um4metcl7g29mp6u');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_tinytable_vxd4brfpa8db92ebf3j9(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_adq3um4metcl7g29mp6u");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+
+     window.addEventListener('load', function () {
+         const cellStyles = [
+             {coords: [[0, 0], [0, 1], [0, 2]], class: 'tinytable_css_2wlgig56v8izy9zv7bra'},
+         ];
+         cellStyles.forEach(({coords, class: cssClass}) => {
+             styleCell_tinytable_vxd4brfpa8db92ebf3j9('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
+         });
+     });
+
+     window.addEventListener('load', function () {
+         const cellStyles = [
+             {coords: [[0, 0], [1, 0], [2, 0], [3, 0], [0, 1], [1, 1], [2, 1], [3, 1], [0, 2], [1, 2], [2, 2], [3, 2]], class: 'tinytable_css_dsp684hs592fga2xhd28'},
+         ];
+         cellStyles.forEach(({coords, class: cssClass}) => {
+             styleCell_tinytable_vxd4brfpa8db92ebf3j9('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
+         });
+     });
+    </script>
+
+    <style>
+.table td.tinytable_css_2wlgig56v8izy9zv7bra, .table th.tinytable_css_2wlgig56v8izy9zv7bra {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_dsp684hs592fga2xhd28, .table th.tinytable_css_dsp684hs592fga2xhd28 {    color: teal; }
+    </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_smqzklqjgg3f7wecnpmv" style="table-layout: fixed; width: 50% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_adq3um4metcl7g29mp6u" style="table-layout: fixed; width: 50% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         </thead><caption>Always use the same caption.</caption>
               <tbody><tr>
@@ -1065,69 +1090,7 @@ window.addEventListener('load', function () { styleCell_tinytable_xulel6d7vjv6k9
         </tbody>
       </table>
     </div>
-
-    <script>
-      function styleCell_tinytable_pisie73q339wl6goxtq7(i, j, css_id) {
-        var table = document.getElementById("tinytable_smqzklqjgg3f7wecnpmv");
-        table.rows[i].cells[j].classList.add(css_id);
-      }
-      function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_smqzklqjgg3f7wecnpmv');
-        var newRow = table.insertRow(i);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_tinytable_pisie73q339wl6goxtq7(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_smqzklqjgg3f7wecnpmv");
-        const targetRow = table.rows[i];
-        const targetCell = targetRow.cells[j];
-        for (let r = 0; r < rowspan; r++) {
-          // Only start deleting cells to the right for the first row (r == 0)
-          if (r === 0) {
-            // Delete cells to the right of the target cell in the first row
-            for (let c = colspan - 1; c > 0; c--) {
-              if (table.rows[i + r].cells[j + c]) {
-                table.rows[i + r].deleteCell(j + c);
-              }
-            }
-          }
-          // For rows below the first, delete starting from the target column
-          if (r > 0) {
-            for (let c = colspan - 1; c >= 0; c--) {
-              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
-                table.rows[i + r].deleteCell(j);
-              }
-            }
-          }
-        }
-        // Set rowspan and colspan of the target cell
-        targetCell.rowSpan = rowspan;
-        targetCell.colSpan = colspan;
-      }
-
-window.addEventListener('load', function () { styleCell_tinytable_pisie73q339wl6goxtq7(0, 0, 'tinytable_css_7ail5wu3g4boj61xcq08') })
-window.addEventListener('load', function () { styleCell_tinytable_pisie73q339wl6goxtq7(0, 1, 'tinytable_css_7ail5wu3g4boj61xcq08') })
-window.addEventListener('load', function () { styleCell_tinytable_pisie73q339wl6goxtq7(0, 2, 'tinytable_css_7ail5wu3g4boj61xcq08') })
-window.addEventListener('load', function () { styleCell_tinytable_pisie73q339wl6goxtq7(0, 0, 'tinytable_css_ltzxy3l94mifczo88rda') })
-window.addEventListener('load', function () { styleCell_tinytable_pisie73q339wl6goxtq7(1, 0, 'tinytable_css_ltzxy3l94mifczo88rda') })
-window.addEventListener('load', function () { styleCell_tinytable_pisie73q339wl6goxtq7(2, 0, 'tinytable_css_ltzxy3l94mifczo88rda') })
-window.addEventListener('load', function () { styleCell_tinytable_pisie73q339wl6goxtq7(3, 0, 'tinytable_css_ltzxy3l94mifczo88rda') })
-window.addEventListener('load', function () { styleCell_tinytable_pisie73q339wl6goxtq7(0, 1, 'tinytable_css_ltzxy3l94mifczo88rda') })
-window.addEventListener('load', function () { styleCell_tinytable_pisie73q339wl6goxtq7(1, 1, 'tinytable_css_ltzxy3l94mifczo88rda') })
-window.addEventListener('load', function () { styleCell_tinytable_pisie73q339wl6goxtq7(2, 1, 'tinytable_css_ltzxy3l94mifczo88rda') })
-window.addEventListener('load', function () { styleCell_tinytable_pisie73q339wl6goxtq7(3, 1, 'tinytable_css_ltzxy3l94mifczo88rda') })
-window.addEventListener('load', function () { styleCell_tinytable_pisie73q339wl6goxtq7(0, 2, 'tinytable_css_ltzxy3l94mifczo88rda') })
-window.addEventListener('load', function () { styleCell_tinytable_pisie73q339wl6goxtq7(1, 2, 'tinytable_css_ltzxy3l94mifczo88rda') })
-window.addEventListener('load', function () { styleCell_tinytable_pisie73q339wl6goxtq7(2, 2, 'tinytable_css_ltzxy3l94mifczo88rda') })
-window.addEventListener('load', function () { styleCell_tinytable_pisie73q339wl6goxtq7(3, 2, 'tinytable_css_ltzxy3l94mifczo88rda') })
-    </script>
-
-  
-
-
+<!-- hack to avoid NA insertion in last line -->
 </div>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tinytable_tt_theme =</span> <span class="cn">NULL</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
