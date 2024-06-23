@@ -1,14 +1,14 @@
-#[
+#figure( // start figure preamble
+  $TINYTABLE_TYPST_CAPTION
+  kind: "tinytable",
+  supplement: "Table", // end figure preamble
+
+block[ // start block
+
 #let nhead = $TINYTABLE_TYPST_NHEAD;
 #let nrow = $TINYTABLE_TYPST_NROW;
 #let ncol = $TINYTABLE_TYPST_NCOL;
 
-// start figure preamble
-#figure(
-  $TINYTABLE_TYPST_CAPTION
-  kind: "tinytable",
-  supplement: none,
-// end figure preamble
 
   #let fill-array = ( 
     // tinytable cell fill after
@@ -35,7 +35,7 @@
 
   #align(center, [
 
-  table( // tinytable table start
+  #table( // tinytable table start
     stroke: none,
     fill: (x, y) => {
       let data = fill-array.find(data => data.x == x and data.y == y)
@@ -62,5 +62,5 @@
 
   ]) // end align
 
+] // end block
 ) // end figure
-]

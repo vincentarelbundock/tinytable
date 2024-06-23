@@ -27,7 +27,10 @@ setMethod(
                     regex_start = "// start figure preamble",
                     regex_end = "// end figure preamble",
                     fixed = TRUE)
-       out <- lines_drop(out, regex = ") // end figure", fixed = TRUE)
+       out <- lines_drop(out, regex = "// start figure preamble", fixed = TRUE)
+       out <- lines_drop(out, regex = "// end figure", fixed = TRUE)
+       out <- lines_drop(out, regex = "// start block", fixed = TRUE)
+       out <- lines_drop(out, regex = "// end block", fixed = TRUE)
        out <- sub(" table(", " #table(", out, fixed = TRUE)
     }
   }
