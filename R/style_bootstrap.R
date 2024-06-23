@@ -127,17 +127,11 @@ setMethod(
 
     # CSS style for cell
     css_done <- NULL
+
+
+    # CSS stylers
     for (row in seq_len(nrow(settings))) {
       if (settings$bootstrap[row] != "" || !is.null(bootstrap_css)) {
-        # Listener applies the styling to columns
-        listener <- "window.addEventListener('load', function () { styleCell_%s(%s, %s, '%s') })"
-        listener <- sprintf(listener, settings$id[row], settings$i[row], settings$j[row], settings$id[row])
-        out <- bootstrap_setting(out, listener, component = "cell")
-        if (rowspan != 1 || colspan != 1) {
-          listener <- "window.addEventListener('load', function () { spanCell_%s(%s, %s, %s, %s) })"
-          listener <- sprintf(listener, settings$id[row], settings$i[row], settings$j[row], rowspan, colspan)
-          out <- bootstrap_setting(out, listener, component = "cell")
-        }
         # CSS styling
         css <- paste(bootstrap_css, settings$bootstrap[row], collapse = ";")
         css_start <- sprintf(".table td.%s, .table th.%s { ", settings$id[row], settings$id[row])
@@ -149,6 +143,32 @@ setMethod(
         }
       }
     }
+
+    # CSS listeners
+    settings_blocks <- split(settings, settings$id)
+    coords <- NULL
+    for (block in settings_blocks) {
+        if (any(block$bootstrap != "")) {
+                browser()
+            tmp <- expand.grid(block$i, block$j)
+            tmp <- apply(tmp, 1, function(x) sprintf("[%s, %s]", x[1], x[2]))
+            tmp <- sprintf("{coords: [%s], class: '%s'},", paste(tmp, collapse = ", "), settings$id[1])
+            coords <- c(coords, tmp)
+        }
+    }
+    coords <- paste(coords, collapse = "\n")
+    listener <- "
+window.addEventListener('load', function () {
+  const cellStyles = [
+    %s
+  ];
+  cellStyles.forEach(({coords, class: cssClass}) => {
+    styleCell('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
+  });
+});
+"
+    listener <- sprintf(listener, coords)
+    out <- bootstrap_setting(out, listener, component = "cell")
 
     if (!is.null(bootstrap_css_rule)) {
       out <- bootstrap_setting(out, bootstrap_css_rule, component = "css")
