@@ -81,6 +81,14 @@ tt <- function(x,
     colnames(x) <- cn
   }
 
+  # factors should all be characters (for replace, etc.)
+  # it might be dangerous to leave non-numerics, but what about dates and other character-coercibles?
+  for (i in seq_along(x)) {
+    if (is.factor(x[[i]])) {
+       x[[i]] <- as.character(x[[i]])
+    }
+  }
+
   assert_numeric(width, lower = 0, null.ok = TRUE)
   if (!length(width) %in% c(0, 1, ncol(x))) {
       msg <- sprintf("The `width` argument must have length 1 or %s.", ncol(x))

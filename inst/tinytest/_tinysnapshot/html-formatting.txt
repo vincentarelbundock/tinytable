@@ -1,3 +1,4 @@
+<!-- preamble start -->
 <!DOCTYPE html> 
 <html lang="en">
   <head>
@@ -5,10 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>tinytable</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-.table td.tinytable, .table th.tinytable {    border-bottom: solid 0.1em #d3d8dc; }
-    </style>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  </head>
+  <body>
+<!-- preamble end -->
+
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <script>
     MathJax = {
@@ -20,50 +22,14 @@
       }
     };
     </script>
-  </head>
-
-  <body>
-    <div class="container">
-      <table class="table table-borderless" id="tinytable" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
-        <thead>
-        
-              <tr>
-                <th scope="col">w</th>
-                <th scope="col">x</th>
-                <th scope="col">y</th>
-                <th scope="col">z</th>
-              </tr>
-        </thead>
-        
-        <tbody>
-                <tr>
-                  <td>143002</td>
-                  <td>  1.43</td>
-                  <td>1972-09-26</td>
-                  <td>True </td>
-                </tr>
-                <tr>
-                  <td>201399</td>
-                  <td>201.4 </td>
-                  <td>1971-11-07</td>
-                  <td>True </td>
-                </tr>
-                <tr>
-                  <td>100188</td>
-                  <td>  0.13</td>
-                  <td>1970-01-04</td>
-                  <td>False</td>
-                </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      function tinytable(i, j, css_id) {
-        var table = document.getElementById("tinytable");
-        table.rows[i].cells[j].classList.add(css_id);
-      }
+      function tinytable(tableId, cellCoordinates, cssClass) {
+            var table = document.getElementById("tinytable");
+            cellCoordinates.forEach(([i, j]) => {
+                table.rows[i].cells[j].classList.add(cssClass);
+            });
+        }
+
       function insertSpanRow(i, colspan, content) {
         var table = document.getElementById('tinytable');
         var newRow = table.insertRow(i);
@@ -101,12 +67,56 @@
         targetCell.colSpan = colspan;
       }
 
-window.addEventListener('load', function () { tinytable(0, 0, 'tinytable') })
-window.addEventListener('load', function () { tinytable(0, 1, 'tinytable') })
-window.addEventListener('load', function () { tinytable(0, 2, 'tinytable') })
-window.addEventListener('load', function () { tinytable(0, 3, 'tinytable') })
+     window.addEventListener('load', function () {
+         const cellStyles = [
+             {coords: [[0, 0], [0, 1], [0, 2], [0, 3]], class: 'tinytable'},
+         ];
+         cellStyles.forEach(({coords, class: cssClass}) => {
+             tinytable('tinytable', coords, cssClass);
+         });
+     });
     </script>
 
+    <style>
+.table td.tinytable, .table th.tinytable {    border-bottom: solid 0.1em #d3d8dc; }
+    </style>
+    <div class="container">
+      <table class="table table-borderless" id="tinytable" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
+        <thead>
+        
+              <tr>
+                <th scope="col">w</th>
+                <th scope="col">x</th>
+                <th scope="col">y</th>
+                <th scope="col">z</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td>143002</td>
+                  <td>  1.43</td>
+                  <td>1972-09-26</td>
+                  <td>True </td>
+                </tr>
+                <tr>
+                  <td>201399</td>
+                  <td>201.4 </td>
+                  <td>1971-11-07</td>
+                  <td>True </td>
+                </tr>
+                <tr>
+                  <td>100188</td>
+                  <td>  0.13</td>
+                  <td>1970-01-04</td>
+                  <td>False</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- postamble start -->
   </body>
 
 </html>
+<!-- postamble end -->
+<!-- hack to avoid NA insertion in last line -->

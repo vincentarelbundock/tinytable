@@ -63,8 +63,6 @@ setMethod(
     jval <- jval - 1
     ival <- ival - 1 + x@nhead
 
-    # browser()
-
     if (isTRUE(grepl("^#", background))) background <- sprintf('rgb("%s")', background)
     if (isTRUE(grepl("^#", line_color))) line_color <- sprintf('rgb("%s")', line_color)
 
