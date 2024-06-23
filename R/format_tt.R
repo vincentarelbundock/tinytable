@@ -324,7 +324,9 @@ format_tt_lazy <- function(x,
     }
 
     if (isTRUE(quarto)) {
-      out <- format_quarto(out = out, i = i, col = col, x = x)
+      tmp <- format_quarto(out = out, i = i, col = col, x = x)
+      out <- tmp$out
+      x <- tmp$x
     }
   }
 
@@ -380,6 +382,6 @@ format_quarto <- function(out, i, col, x) {
     out[i, col] <- sprintf("\\QuartoMarkdownBase64{%s}", tmp)
   }
   
-  return(out)
+  return(list("out" = out, "x" = x))
 }
 
