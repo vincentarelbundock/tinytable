@@ -330,6 +330,22 @@ format_tt_lazy <- function(x,
     }
   }
 
+    if (inull && jnull) {
+        colnames(x) <- format_markdown(colnames(x), x = x)
+        if (inherits(x, "tinytable")) {
+            for (k in seq_along(x@lazy_group)) {
+                g <- x@lazy_group[[k]]
+                if (!is.null(g$j)) {
+                    names(g$j) <- format_markdown(names(g$j), x = x)
+                }
+                if (!is.null(g$i)) {
+                    names(g$i) <- format_markdown(names(g$i), x = x)
+                }
+                x@lazy_group[[k]] <- g
+            }
+        }
+    }
+
   # output
   if (isTRUE(atomic_vector)) {
     return(out[[1]])
@@ -342,26 +358,37 @@ format_tt_lazy <- function(x,
 }
 
 
-format_markdown <- function(out, i, col, x) {
-  tmpfun_html <- function(k) {
-    k <- trimws(markdown::mark_html(text = k, template = FALSE))
-    k <- sub("<p>", "", k, fixed = TRUE)
-    k <- sub("</p>", "", k, fixed = TRUE)
-    return(k)
-  }
-  
-  tmpfun_latex <- function(k) {
-    k <- trimws(markdown::mark_latex(text = k, template = FALSE))
-    return(k)
-  }
+format_markdown <- function(out, i = NULL, col = NULL, x) {
+    tmpfun_html <- function(k) {
+        k <- trimws(markdown::mark_html(text = k, template = FALSE))
+        k <- sub("<p>", "", k, fixed = TRUE)
+        k <- sub("</p>", "", k, fixed = TRUE)
+        return(k)
+    }
 
-  if (inherits(x, "tinytable_bootstrap")) {
-    out[i, col] <- sapply(out[i, col], function(k) tmpfun_html(k))
-  } else if (inherits(x, "tinytable_tabularray")) {
-    out[i, col] <- sapply(out[i, col], function(k) tmpfun_latex(k))
-  }
+    tmpfun_latex <- function(k) {
+        k <- trimws(markdown::mark_latex(text = k, template = FALSE))
+        return(k)
+    }
 
-  return(out)
+    if (inherits(out, "data.frame")) {
+        ipos <- i[i > 0]
+        if (length(ipos) > 0) {
+            if (inherits(x, "tinytable_bootstrap")) {
+                out[ipos, col] <- sapply(out[ipos, col], function(k) tmpfun_html(k))
+            } else if (inherits(x, "tinytable_tabularray")) {
+                out[ipos, col] <- sapply(out[ipos, col], function(k) tmpfun_latex(k))
+            }
+        }
+    } else {
+        if (inherits(x, "tinytable_bootstrap")) {
+            out <- sapply(out, function(k) tmpfun_html(k))
+        } else if (inherits(x, "tinytable_tabularray")) {
+            out <- sapply(out, function(k) tmpfun_latex(k))
+        } 
+    }
+
+    return(out)
 }
 
 
