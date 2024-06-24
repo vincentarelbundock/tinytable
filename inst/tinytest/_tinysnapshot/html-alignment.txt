@@ -69,7 +69,7 @@
 
      window.addEventListener('load', function () {
          const cellStyles = [
-             {coords: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]], class: 'tinytable'},
+             {coords: [[0, 0], [0, 1], [0, 2]], class: 'tinytable'},
          ];
          cellStyles.forEach(({coords, class: cssClass}) => {
              tinytable('tinytable', coords, cssClass);
@@ -78,7 +78,7 @@
 
      window.addEventListener('load', function () {
          const cellStyles = [
-             {coords: [[0, 1], [1, 1], [2, 1], [3, 1], [4, 1]], class: 'tinytable'},
+             {coords: [[0, 1], [1, 1], [2, 1], [3, 1]], class: 'tinytable'},
          ];
          cellStyles.forEach(({coords, class: cssClass}) => {
              tinytable('tinytable', coords, cssClass);
@@ -87,7 +87,16 @@
 
      window.addEventListener('load', function () {
          const cellStyles = [
-             {coords: [[0, 2], [1, 2], [2, 2], [3, 2], [4, 2]], class: 'tinytable'},
+             {coords: [[0, 2], [1, 2], [2, 2], [3, 2]], class: 'tinytable'},
+         ];
+         cellStyles.forEach(({coords, class: cssClass}) => {
+             tinytable('tinytable', coords, cssClass);
+         });
+     });
+
+     window.addEventListener('load', function () {
+         const cellStyles = [
+             {coords: [[0, 0], [1, 0], [2, 0], [3, 0]], class: 'tinytable'},
          ];
          cellStyles.forEach(({coords, class: cssClass}) => {
              tinytable('tinytable', coords, cssClass);
@@ -97,50 +106,36 @@
 
     <style>
 .table td.tinytable, .table th.tinytable {    border-bottom: solid 0.1em #d3d8dc; }
-.table td.tinytable, .table th.tinytable {    color: orange; background-color: black; }
-.table td.tinytable, .table th.tinytable {    color: green; background-color: black; }
+.table td.tinytable, .table th.tinytable {    text-align: left; }
+.table td.tinytable, .table th.tinytable {    text-align: center; }
+.table td.tinytable, .table th.tinytable {    text-align: right; }
     </style>
     <div class="container">
       <table class="table table-borderless" id="tinytable" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
         <thead>
         
               <tr>
-                <th scope="col">mpg</th>
-                <th scope="col">cyl</th>
-                <th scope="col">disp</th>
-                <th scope="col">hp</th>
-                <th scope="col">drat</th>
+                <th scope="col">a</th>
+                <th scope="col">b</th>
+                <th scope="col">c</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td>21.0</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.90</td>
+                  <td>a  </td>
+                  <td>b  </td>
+                  <td>c  </td>
                 </tr>
                 <tr>
-                  <td>21.0</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.90</td>
+                  <td>aa </td>
+                  <td>bb </td>
+                  <td>cc </td>
                 </tr>
                 <tr>
-                  <td>22.8</td>
-                  <td>4</td>
-                  <td>108</td>
-                  <td> 93</td>
-                  <td>3.85</td>
-                </tr>
-                <tr>
-                  <td>21.4</td>
-                  <td>6</td>
-                  <td>258</td>
-                  <td>110</td>
-                  <td>3.08</td>
+                  <td>aaa</td>
+                  <td>bbb</td>
+                  <td>ccc</td>
                 </tr>
         </tbody>
       </table>

@@ -333,7 +333,6 @@ format_tt_lazy <- function(x,
     if (inull && jnull) {
         colnames(x) <- format_markdown(colnames(x), x = x)
         if (inherits(x, "tinytable")) {
-            x@caption <- unlist(format_markdown(x@caption, x = x))
             for (k in seq_along(x@lazy_group)) {
                 g <- x@lazy_group[[k]]
                 if (!is.null(g$j)) {
