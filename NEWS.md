@@ -2,6 +2,7 @@
 
 ## Development
 
+* `format_tt(markdown=TRUE)` escapes groups and notes when `i` and `j` are `NULL`.
 * `plot_tt()`: The `height` argument is now respected in Markdown and Word documents.
 * `group_tt()` allows 0 and duplicates in `i` argument for labels in the first row and consecutive labels.
 * Headers are now styled and formatted when `i=NULL`.
