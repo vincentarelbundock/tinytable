@@ -15,6 +15,7 @@
   - `options(tinytable_save_pdf_clean = TRUE)`
   - `options(tinytable_save_pdf_engine = "xelatex")`
 * Simplify JS functions in HTML documents. Avoid nesting full HTML documents inside Quarto output.
+* Remove polyfill JS.
 
 Bugs:
 
