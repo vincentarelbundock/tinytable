@@ -27,6 +27,16 @@ theme_tabular <- function(x, ...) {
             tab <- lines_drop(tab, regex = "\\\\end\\{table\\}", position = "after")
             tab <- lines_drop(tab, regex = "\\\\end\\{table\\}", position = "equal")
             tab <- lines_drop(tab, regex = "\\\\centering", position = "equal")
+            tab <- lines_drop(tab, regex = "tabularray outer close", position = "equal")
+            tab <- lines_drop(tab, regex = "tabularray inner open", position = "equal")
+            tab <- lines_drop(tab, regex = "tabularray inner close", position = "equal")
+            tab <- lines_drop(tab, regex = "^colspec=\\{", position = "equal")
+            tab <- gsub("\\{tblr\\}\\[*", "{tabular}", tab)
+            tab <- gsub("\\{talltblr\\}\\[", "{tabular}", tab)
+            tab <- gsub("\\{longtblr\\}\\[", "{tabular}", tab)
+            tab <- gsub("\\\\toprule|\\\\midrule|\\\\bottomrule", "\\\\hline", tab)
+            tab <- sub("\\s*%% tabularray outer open", "", tab)
+            tab <- sub("\\s*%% TinyTableHeader", "", tab)
 
         } else if (isTRUE(table@output == "html")) {
             tab <- lines_drop(tab, regex = "<table class", position = "before")

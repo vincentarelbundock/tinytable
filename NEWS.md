@@ -2,19 +2,24 @@
 
 ## Development
 
+General:
+
+* Improved documentation.
 * `format_tt(markdown=TRUE)` escapes groups and notes when `i` and `j` are `NULL`.
 * `plot_tt()`: The `height` argument is now respected in Markdown and Word documents.
 * `group_tt()` allows 0 and duplicates in `i` argument for labels in the first row and consecutive labels.
 * Headers are now styled and formatted when `i=NULL`.
 * `colnames(x)<-NULL` works on a `tinytable` object.
 * `format_tt(num_big_mark)` applies to integer columns.
-* Print row names in the first column by calling `options(tinytable_tt_rownames=TRUE)`. Thanks to @rsbivand for Issue #264.
-* Improved documentation.
-* `save_tt("pdf")` gets new global options:
-  - `options(tinytable_save_pdf_clean = TRUE)`
-  - `options(tinytable_save_pdf_engine = "xelatex")`
+
+HTML:
+
 * Simplify JS functions in HTML documents. Avoid nesting full HTML documents inside Quarto output.
-* Remove polyfill JS.
+* Remove polyfill JS because of security issues.
+
+LaTeX:
+
+* `theme_tt("tabular")` no longer uses `tabularray` or `booktabs`. Only relies on basic LaTeX packages.
 
 Typst:
 
@@ -22,6 +27,13 @@ Typst:
 * `style_tt()` supports `indent` argument.
 * `group_tt()` supports `indent` argument.
 * No more gutters when `group_tt(j)` and `style_tt(background)`
+
+New global options:
+
+* `save_tt("pdf")`:
+  - `options(tinytable_save_pdf_clean = TRUE)`
+  - `options(tinytable_save_pdf_engine = "xelatex")`
+* `options(tinytable_tt_rownames=TRUE)`: Print row names in the first column by calling. Thanks to @rsbivand for Issue #264.
 
 Bugs:
 
