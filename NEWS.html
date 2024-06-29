@@ -359,22 +359,24 @@ ul.task-list li input[type="checkbox"] {
 <h1>News</h1>
 <section id="development" class="level2">
 <h2 class="anchored" data-anchor-id="development">Development</h2>
+<p>General:</p>
 <ul>
+<li>Improved documentation.</li>
 <li><code>format_tt(markdown=TRUE)</code> escapes groups and notes when <code>i</code> and <code>j</code> are <code>NULL</code>.</li>
 <li><code>plot_tt()</code>: The <code>height</code> argument is now respected in Markdown and Word documents.</li>
 <li><code>group_tt()</code> allows 0 and duplicates in <code>i</code> argument for labels in the first row and consecutive labels.</li>
 <li>Headers are now styled and formatted when <code>i=NULL</code>.</li>
 <li><code>colnames(x)&lt;-NULL</code> works on a <code>tinytable</code> object.</li>
 <li><code>format_tt(num_big_mark)</code> applies to integer columns.</li>
-<li>Print row names in the first column by calling <code>options(tinytable_tt_rownames=TRUE)</code>. Thanks to <a href="https://github.com/rsbivand"><span class="citation" data-cites="rsbivand">@rsbivand</span></a> for Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/264">#264</a>.</li>
-<li>Improved documentation.</li>
-<li><code>save_tt("pdf")</code> gets new global options:
+</ul>
+<p>HTML:</p>
 <ul>
-<li><code>options(tinytable_save_pdf_clean = TRUE)</code></li>
-<li><code>options(tinytable_save_pdf_engine = "xelatex")</code></li>
-</ul></li>
 <li>Simplify JS functions in HTML documents. Avoid nesting full HTML documents inside Quarto output.</li>
-<li>Remove polyfill JS.</li>
+<li>Remove polyfill JS because of security issues.</li>
+</ul>
+<p>LaTeX:</p>
+<ul>
+<li><code>theme_tt("tabular")</code> no longer uses <code>tabularray</code> or <code>booktabs</code>. Only relies on basic LaTeX packages.</li>
 </ul>
 <p>Typst:</p>
 <ul>
@@ -382,6 +384,15 @@ ul.task-list li input[type="checkbox"] {
 <li><code>style_tt()</code> supports <code>indent</code> argument.</li>
 <li><code>group_tt()</code> supports <code>indent</code> argument.</li>
 <li>No more gutters when <code>group_tt(j)</code> and <code>style_tt(background)</code></li>
+</ul>
+<p>New global options:</p>
+<ul>
+<li><code>save_tt("pdf")</code>:
+<ul>
+<li><code>options(tinytable_save_pdf_clean = TRUE)</code></li>
+<li><code>options(tinytable_save_pdf_engine = "xelatex")</code></li>
+</ul></li>
+<li><code>options(tinytable_tt_rownames=TRUE)</code>: Print row names in the first column by calling. Thanks to <a href="https://github.com/rsbivand"><span class="citation" data-cites="rsbivand">@rsbivand</span></a> for Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/264">#264</a>.</li>
 </ul>
 <p>Bugs:</p>
 <ul>
