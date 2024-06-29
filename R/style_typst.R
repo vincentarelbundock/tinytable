@@ -1,11 +1,3 @@
-# TODO:
-# colspan,
-# indent,
-# align,
-# alignv,
-
-
-
 #' Internal styling function
 #'
 #' @inheritParams style_tt
@@ -35,8 +27,9 @@ setMethod(
                         ...) {
     out <- x@table_string
 
-    text_style_flag <- isTRUE(bold) || isTRUE(italic) || isTRUE(monospace) || isTRUE(underline) || isTRUE(strikeout) || !is.null(color) || !is.null(fontsize) || (!is.null(align) && !is.null(i)) || indent > 0
+    text_style_flag <- isTRUE(bold) || isTRUE(italic) || isTRUE(monospace) || isTRUE(underline) || isTRUE(strikeout) || !is.null(color) || !is.null(fontsize) || indent > 0
     fill_style_flag <- !is.null(background)
+    align_style_flag <- !is.null(align)
 
     # gutters are used for group_tt(j) but look ugly with cell fill
     if (fill_style_flag) {
@@ -78,21 +71,6 @@ setMethod(
       fontsize <- sprintf("%sem", fontsize)
     }
 
-    # align
-    if (!is.null(align)) {
-      align <- sapply(align,
-        switch,
-        c = "center",
-        d = "center",
-        r = "right",
-        l = "left")
-    }
-
-    if (!is.null(align) && is.null(i)) {
-      align <- sprintf("align: (%s),", paste(align, collapse = ", "))
-      out <- lines_insert(out, align, "tinytable table start", "after")
-    }
-
     if (text_style_flag) {
       if (length(color) == 1) color <- rep(color, length(ival) * length(jval))
       if (length(underline) == 1) underline <- rep(underline, length(ival) * length(jval))
@@ -101,14 +79,13 @@ setMethod(
       if (length(monospace) == 1) monospace <- rep(monospace, length(ival) * length(jval))
       if (length(strikeout) == 1) strikeout <- rep(strikeout, length(ival) * length(jval))
       if (length(fontsize) == 1) fontsize <- rep(fontsize, length(ival) * length(jval))
-      align_value <- if (!is.null(align) && !is.null(i)) align else "false"
       indent_value <- if (indent > 0) paste0(indent, "em") else "false"
       counter <- 0
       for (k in ival) {
         for (w in jval) {
           counter <- counter + 1
           style <- sprintf(
-            "    (y: %s, x: %s, color: %s, underline: %s, italic: %s, bold: %s, mono: %s, strikeout: %s, fontsize: %s, align: %s, indent: %s),",
+            "    (y: %s, x: %s, color: %s, underline: %s, italic: %s, bold: %s, mono: %s, strikeout: %s, fontsize: %s, indent: %s),",
             k,
             w,
             color[counter],
@@ -118,7 +95,6 @@ setMethod(
             tolower(monospace[counter]),
             tolower(strikeout[counter]),
             fontsize[counter],
-            align_value,
             indent_value
           )
           out <- lines_insert(out, style, "tinytable cell style after", "after")
@@ -142,7 +118,27 @@ setMethod(
       }
     }
 
-
+    if (align_style_flag) {
+      align <- sapply(align,
+        switch,
+        c = "center",
+        d = "center",
+        r = "right",
+        l = "left")
+      if (length(align) == 1) align <- rep(align, length(ival) * length(jval))
+      counter <- 0
+      for (k in ival) {
+        for (w in jval) {
+          counter <- counter + 1
+          fill <- sprintf(
+            "    (y: %s, x: %s, align: %s),",
+            k,
+            w,
+            align[counter])
+          out <- lines_insert(out, fill, "tinytable cell align after", "after")
+        }
+      }
+    }
 
     # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
     if (!is.null(line)) {
