@@ -29,7 +29,6 @@ setMethod(
 
     text_style_flag <- isTRUE(bold) || isTRUE(italic) || isTRUE(monospace) || isTRUE(underline) || isTRUE(strikeout) || !is.null(color) || !is.null(fontsize) || indent > 0
     fill_style_flag <- !is.null(background)
-    align_style_flag <- !is.null(align)
 
     # gutters are used for group_tt(j) but look ugly with cell fill
     if (fill_style_flag) {
@@ -118,26 +117,38 @@ setMethod(
       }
     }
 
-    if (align_style_flag) {
-      align <- sapply(align,
-        switch,
-        c = "center",
-        d = "center",
-        r = "right",
-        l = "left")
-      if (length(align) == 1) align <- rep(align, length(ival) * length(jval))
-      counter <- 0
-      for (k in ival) {
-        for (w in jval) {
-          counter <- counter + 1
-          fill <- sprintf(
-            "    (y: %s, x: %s, align: %s),",
-            k,
-            w,
-            align[counter])
-          out <- lines_insert(out, fill, "tinytable cell align after", "after")
+    if (!is.null(align)) {
+        align_value <- sapply(align,
+            switch,
+            c = "center",
+            d = "center",
+            r = "right",
+            l = "left")
+        # reset defaults for all columns
+        browser()
+        if (is.null(i) && length(align_value) == length(jval) && length(align_value) == ncol(x)) {
+            align_default <- sprintf(
+                "  #let align-array-default = ( %s ) // tinytable align-array-default here", 
+                paste(align_value, collapse = ", "))
+            out <- lines_drop(out, "// tinytable align-array-default here", fixed = TRUE) 
+            out <- lines_insert(out, fill, "tinytable cell align after", "after")
+        } else if (length(align_value) %in% c(1, length(ival) * length(jval))) {
+            if (length(align_value == 1)) align_value <- rep(align_value, length(ival) * length(jval))
+            counter <- 0
+            for (k in ival) {
+                for (w in jval) {
+                    counter <- counter + 1
+                    fill <- sprintf(
+                        "    (y: %s, x: %s, align: %s),",
+                        k,
+                        w,
+                        align_value[counter])
+                    out <- lines_insert(out, fill, "tinytable cell align after", "after")
+                }
+            }
+        } else {
+            stop("Wrong number of elements in `align` argument.", call. = FALSE)
         }
-      }
     }
 
     # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
