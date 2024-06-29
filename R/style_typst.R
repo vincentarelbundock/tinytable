@@ -125,13 +125,12 @@ setMethod(
             r = "right",
             l = "left")
         # reset defaults for all columns
-        browser()
         if (is.null(i) && length(align_value) == length(jval) && length(align_value) == ncol(x)) {
             align_default <- sprintf(
-                "  #let align-array-default = ( %s ) // tinytable align-array-default here", 
+                "  #let align-default-array = ( %s ) // tinytable align-default-array here", 
                 paste(align_value, collapse = ", "))
-            out <- lines_drop(out, "// tinytable align-array-default here", fixed = TRUE) 
-            out <- lines_insert(out, fill, "tinytable cell align after", "after")
+            out <- lines_drop(out, "// tinytable align-default-array here", fixed = TRUE) 
+            out <- lines_insert(out, align_default, "tinytable align-default-array after", "after")
         } else if (length(align_value) %in% c(1, length(ival) * length(jval))) {
             if (length(align_value == 1)) align_value <- rep(align_value, length(ival) * length(jval))
             counter <- 0

@@ -20,7 +20,7 @@ block[ // start block
   #let align-array = (
     // tinytable cell align after
   )
-  // tinytable align-array-default after
+  // tinytable align-default-array after
   #show table.cell: it => {
     let tmp = it
     let data = style-array.find(data => data.x == it.x and data.y == it.y)
@@ -48,7 +48,7 @@ block[ // start block
       if data != none {
         data.align
       } else {
-        align-array-default[y]
+        align-default-array.at(x)
       }
     },
     fill: (x, y) => {
