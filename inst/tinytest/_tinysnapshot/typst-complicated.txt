@@ -18,15 +18,15 @@ block[ // start block
   )
   #let style-array = ( 
     // tinytable cell style after
-    (y: 5, x: 0, color: red, underline: false, italic: true, bold: false, mono: false, strikeout: false, fontsize: 1em),
-    (y: 4, x: 0, color: red, underline: false, italic: true, bold: false, mono: false, strikeout: false, fontsize: 1em),
-    (y: 3, x: 0, color: red, underline: false, italic: true, bold: false, mono: false, strikeout: false, fontsize: 1em),
-    (y: 2, x: 0, color: red, underline: false, italic: true, bold: false, mono: false, strikeout: false, fontsize: 1em),
-    (y: 0, x: 0, color: red, underline: false, italic: true, bold: false, mono: false, strikeout: false, fontsize: 1em),
-    (y: 1, x: 0, color: red, underline: false, italic: true, bold: false, mono: false, strikeout: false, fontsize: 1em),
-    (y: 3, x: 2, color: white, underline: false, italic: false, bold: true, mono: false, strikeout: true, fontsize: 1em),
-    (y: 3, x: 1, color: white, underline: false, italic: false, bold: true, mono: false, strikeout: true, fontsize: 1em),
-    (y: 3, x: 0, color: white, underline: false, italic: false, bold: true, mono: false, strikeout: true, fontsize: 1em),
+    (y: 5, x: 0, color: red, underline: false, italic: true, bold: false, mono: false, strikeout: false, fontsize: 1em, align: false),
+    (y: 4, x: 0, color: red, underline: false, italic: true, bold: false, mono: false, strikeout: false, fontsize: 1em, align: false),
+    (y: 3, x: 0, color: red, underline: false, italic: true, bold: false, mono: false, strikeout: false, fontsize: 1em, align: false),
+    (y: 2, x: 0, color: red, underline: false, italic: true, bold: false, mono: false, strikeout: false, fontsize: 1em, align: false),
+    (y: 0, x: 0, color: red, underline: false, italic: true, bold: false, mono: false, strikeout: false, fontsize: 1em, align: false),
+    (y: 1, x: 0, color: red, underline: false, italic: true, bold: false, mono: false, strikeout: false, fontsize: 1em, align: false),
+    (y: 3, x: 2, color: white, underline: false, italic: false, bold: true, mono: false, strikeout: true, fontsize: 1em, align: false),
+    (y: 3, x: 1, color: white, underline: false, italic: false, bold: true, mono: false, strikeout: true, fontsize: 1em, align: false),
+    (y: 3, x: 0, color: white, underline: false, italic: false, bold: true, mono: false, strikeout: true, fontsize: 1em, align: false),
   )
   #show table.cell: it => {
     let tmp = it
@@ -34,6 +34,7 @@ block[ // start block
     if data != none {
       set text(data.color)
       set text(data.fontsize)
+      if data.align != false { tmp = align(data.align, tmp) }
       if data.underline == true { tmp = underline(tmp) }
       if data.italic == true { tmp = emph(tmp) }
       if data.bold == true { tmp = strong(tmp) }
