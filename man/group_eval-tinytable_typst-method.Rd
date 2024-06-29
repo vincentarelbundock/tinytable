@@ -4,7 +4,7 @@
 \alias{group_eval,tinytable_typst-method}
 \title{tinytable S4 method}
 \usage{
-\S4method{group_eval}{tinytable_typst}(x, i = NULL, j = NULL, ...)
+\S4method{group_eval}{tinytable_typst}(x, i = NULL, j = NULL, indent = 0, ...)
 }
 \description{
 tinytable S4 method

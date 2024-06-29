@@ -4,11 +4,11 @@
 setMethod(
   f = "group_eval",
   signature = "tinytable_typst",
-  definition = function(x, i = NULL, j = NULL, ...) {
+  definition = function(x, i = NULL, j = NULL, indent = 0, ...) {
     out <- x
 
     if (!is.null(i)) {
-      out <- group_typst_row(out, i)
+      out <- group_typst_row(out, i, indent)
     }
 
     if (!is.null(j)) {
@@ -18,7 +18,8 @@ setMethod(
     return(out)
   })
 
-group_typst_row <- function(x, i, ...) {
+
+group_typst_row <- function(x, i, indent, ...) {
   tab <- x@table_string
   tab <- strsplit(tab, split = "\\n")[[1]]
   body_min <- utils::head(grep("tinytable cell content after", tab), 1) + x@nhead
@@ -36,6 +37,9 @@ group_typst_row <- function(x, i, ...) {
   tab <- c(top, mid, bot)
   tab <- paste(tab, collapse = "\n")
   x@table_string <- tab
+  idx_new <- i + seq_along(i) - 1
+  idx_old <- setdiff(seq_len(nrow(x)), idx_new)
+  x <- style_tt(x, idx_old, indent = indent)
   return(x)
 }
 

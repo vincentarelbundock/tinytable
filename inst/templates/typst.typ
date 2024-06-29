@@ -23,6 +23,7 @@ block[ // start block
     if data != none {
       set text(data.color)
       set text(data.fontsize)
+      if data.indent != false { tmp = pad(left: data.indent, tmp) }
       if data.align != false { tmp = align(data.align, tmp) }
       if data.underline == true { tmp = underline(tmp) }
       if data.italic == true { tmp = emph(tmp) }
@@ -39,6 +40,7 @@ block[ // start block
 
   #table( // tinytable table start
     stroke: none,
+    align: left,
     fill: (x, y) => {
       let data = fill-array.find(data => data.x == x and data.y == y)
       if data != none {

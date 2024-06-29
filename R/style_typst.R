@@ -35,7 +35,7 @@ setMethod(
                         ...) {
     out <- x@table_string
 
-    text_style_flag <- isTRUE(bold) || isTRUE(italic) || isTRUE(monospace) || isTRUE(underline) || isTRUE(strikeout) || !is.null(color) || !is.null(fontsize) || (!is.null(align) && !is.null(i))
+    text_style_flag <- isTRUE(bold) || isTRUE(italic) || isTRUE(monospace) || isTRUE(underline) || isTRUE(strikeout) || !is.null(color) || !is.null(fontsize) || (!is.null(align) && !is.null(i)) || indent > 0
     fill_style_flag <- !is.null(background)
 
     # gutters are used for group_tt(j) but look ugly with cell fill
@@ -102,12 +102,13 @@ setMethod(
       if (length(strikeout) == 1) strikeout <- rep(strikeout, length(ival) * length(jval))
       if (length(fontsize) == 1) fontsize <- rep(fontsize, length(ival) * length(jval))
       align_value <- if (!is.null(align) && !is.null(i)) align else "false"
+      indent_value <- if (indent > 0) paste0(indent, "em") else "false"
       counter <- 0
       for (k in ival) {
         for (w in jval) {
           counter <- counter + 1
           style <- sprintf(
-            "    (y: %s, x: %s, color: %s, underline: %s, italic: %s, bold: %s, mono: %s, strikeout: %s, fontsize: %s, align: %s),",
+            "    (y: %s, x: %s, color: %s, underline: %s, italic: %s, bold: %s, mono: %s, strikeout: %s, fontsize: %s, align: %s, indent: %s),",
             k,
             w,
             color[counter],
@@ -117,7 +118,8 @@ setMethod(
             tolower(monospace[counter]),
             tolower(strikeout[counter]),
             fontsize[counter],
-            align_value
+            align_value,
+            indent_value
           )
           out <- lines_insert(out, style, "tinytable cell style after", "after")
         }

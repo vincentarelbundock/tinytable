@@ -15,16 +15,16 @@ block[ // start block
   )
   #let style-array = ( 
     // tinytable cell style after
-    (y: 4, x: 3, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false),
-    (y: 4, x: 0, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false),
-    (y: 3, x: 3, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false),
-    (y: 3, x: 0, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false),
-    (y: 2, x: 3, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false),
-    (y: 2, x: 0, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false),
-    (y: 1, x: 3, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false),
-    (y: 1, x: 0, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false),
-    (y: 0, x: 3, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false),
-    (y: 0, x: 0, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false),
+    (y: 4, x: 3, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false, indent: false),
+    (y: 4, x: 0, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false, indent: false),
+    (y: 3, x: 3, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false, indent: false),
+    (y: 3, x: 0, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false, indent: false),
+    (y: 2, x: 3, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false, indent: false),
+    (y: 2, x: 0, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false, indent: false),
+    (y: 1, x: 3, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false, indent: false),
+    (y: 1, x: 0, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false, indent: false),
+    (y: 0, x: 3, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false, indent: false),
+    (y: 0, x: 0, color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, align: false, indent: false),
   )
   #show table.cell: it => {
     let tmp = it
@@ -32,6 +32,7 @@ block[ // start block
     if data != none {
       set text(data.color)
       set text(data.fontsize)
+      if data.indent != false { tmp = pad(left: data.indent, tmp) }
       if data.align != false { tmp = align(data.align, tmp) }
       if data.underline == true { tmp = underline(tmp) }
       if data.italic == true { tmp = emph(tmp) }
@@ -49,6 +50,7 @@ block[ // start block
   #table( // tinytable table start
     columns: (auto, auto, auto, auto, auto),
     stroke: none,
+    align: left,
     fill: (x, y) => {
       let data = fill-array.find(data => data.x == x and data.y == y)
       if data != none {
