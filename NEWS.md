@@ -21,6 +21,7 @@ Bugs:
 
 * `replace` does not work in LaTeX with `format_tt(quarto=TRUE)`. Thanks to @cbgoodman for Issue #263.
 * `style_tt(indent)` works for LaTeX
+* Do not suppress labels when inserting notes. Thanks to @cportner for Issue #290.
 
 ## 0.3.0
 

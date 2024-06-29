@@ -76,8 +76,10 @@ setMethod(
 
   # notes
   if (length(x@notes) > 0) {
-    # otherwise an empty caption is created automatically
-    out <- tabularray_insert(out, content = "entry=none,label=none", type = "outer")
+    if (length(x@caption) == 0) {
+        # otherwise an empty caption is created automatically
+        out <- tabularray_insert(out, content = "entry=none,label=none", type = "outer")
+    }
     if (is.null(names(x@notes))) {
       lab <- sapply(seq_along(x@notes), function(k) strrep(" ", k - 1))
     } else {
