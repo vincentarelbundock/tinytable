@@ -53,7 +53,7 @@ setMethod(
 
   # default alignment
   align_default <- sprintf(
-    "  #let align-default-array = ( %s ) // tinytable align-default-array here", 
+    "  #let align-default-array = ( %s, ) // tinytable align-default-array here", 
     paste(rep("left", ncol(x)), collapse = ", "))
   out <- lines_insert(
         out,

@@ -127,7 +127,7 @@ setMethod(
         # reset defaults for all columns
         if (is.null(i) && length(align_value) == length(jval) && length(align_value) == ncol(x)) {
             align_default <- sprintf(
-                "  #let align-default-array = ( %s ) // tinytable align-default-array here", 
+                "  #let align-default-array = ( %s ,) // tinytable align-default-array here", 
                 paste(align_value, collapse = ", "))
             out <- lines_drop(out, "// tinytable align-default-array here", fixed = TRUE) 
             out <- lines_insert(out, align_default, "tinytable align-default-array after", "after")
