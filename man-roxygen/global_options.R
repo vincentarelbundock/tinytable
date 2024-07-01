@@ -33,10 +33,9 @@
 #'
 #' See this link for more details: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing
 #'
-#'
 #' ## HTML
 #'
-#' * `options(tinytable_html_mathjax = TRUE)` inserts MathJax scripts in the HTML document. This may conflict with other elements of the page if MathJax is otherwise loaded.
+#' * EXPERIMENTAL. `options(tinytable_html_mathjax = TRUE)` inserts MathJax scripts in the HTML document. This may conflict with other elements of the page if MathJax is otherwise loaded.
 #'
 #' ## PDF
 #'

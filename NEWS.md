@@ -34,7 +34,7 @@ New global options:
   - `options(tinytable_save_pdf_clean = TRUE)`
   - `options(tinytable_save_pdf_engine = "xelatex")`
 * `options(tinytable_tt_rownames=TRUE)`: Print row names in the first column by calling. Thanks to @rsbivand for Issue #264.
-* `options(tinytable_html_mathjax = TRUE)`: Inserts MathJax scripts in the HTML file. This may cause conflicts if MathJax is otherwise loaded in the document.
+* EXPERIMENTAL: `options(tinytable_html_mathjax = TRUE)`. Inserts MathJax scripts in the HTML file. This may cause conflicts if MathJax is otherwise loaded in the document.
 
 Bugs:
 

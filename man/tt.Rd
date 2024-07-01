@@ -117,7 +117,7 @@ See this link for more details: https://quarto.org/docs/authoring/tables.html#di
 
 \subsection{HTML}{
 \itemize{
-\item \code{options(tinytable_html_mathjax = TRUE)} inserts MathJax scripts in the HTML document. This may conflict with other elements of the page if MathJax is otherwise loaded.
+\item EXPERIMENTAL. \code{options(tinytable_html_mathjax = TRUE)} inserts MathJax scripts in the HTML document. This may conflict with other elements of the page if MathJax is otherwise loaded.
 }
 }
 
