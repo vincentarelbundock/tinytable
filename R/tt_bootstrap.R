@@ -5,9 +5,18 @@ setMethod(
 
   template <- readLines(system.file("templates/bootstrap.html", package = "tinytable"))
 
+  mathjax <- getOption("tinytable_html_mathjax", default = TRUE)
+  assert_flag(mathjax, name = "tinytable_html_mathjax")
+  if (isFALSE(mathjax)) {
+    template <- paste(template, collapse = "\n")
+    sta <- "    <!-- tinytable mathjax start -->"
+    end <- "    <!-- tinytable mathjax end -->"
+    template <- lines_drop_between(template, sta, end, fixed = TRUE)
+    template <- strsplit(template, "\n")[[1]]
+  }
+
   quartoprocessing <- getOption("tinytable_quarto_disable_processing", default = TRUE)
   assert_flag(quartoprocessing, name = "tinytable_quarto_disable_processing")
-
   if (isFALSE(quartoprocessing)) {
       template <- sub("data-quarto-disable-processing='true'",
                       "data-quarto-disable-processing='false'",

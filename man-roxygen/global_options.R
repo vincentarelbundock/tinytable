@@ -33,7 +33,12 @@
 #'
 #' See this link for more details: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing
 #'
-#' ## PDF output in `save_tt()`
+#'
+#' ## HTML
+#'
+#' * `options(tinytable_html_mathjax = TRUE)` inserts MathJax scripts in the HTML document. This may conflict with other elements of the page if MathJax is otherwise loaded.
+#'
+#' ## PDF
 #'
 #' * `options(tinytable_save_pdf_clean = TRUE)` deletes temporary and log files.
 #' * `options(tinytable_save_pdf_engine = "xelatex")`: "xelatex", "pdflatex", "lualatex"
