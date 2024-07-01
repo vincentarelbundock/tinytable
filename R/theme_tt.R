@@ -37,6 +37,9 @@ theme_tabular <- function(x, ...) {
             tab <- gsub("\\\\toprule|\\\\midrule|\\\\bottomrule", "\\\\hline", tab)
             tab <- sub("\\s*%% tabularray outer open", "", tab)
             tab <- sub("\\s*%% TinyTableHeader", "", tab)
+            # align
+            a <- sprintf("begin{tabular}{%s}", strrep("l", ncol(table)))
+            tab <- sub("begin{tabular}", a, tab, fixed = TRUE)
 
         } else if (isTRUE(table@output == "html")) {
             tab <- lines_drop(tab, regex = "<table class", position = "before")
