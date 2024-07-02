@@ -5,7 +5,7 @@ setMethod(
 
   template <- readLines(system.file("templates/bootstrap.html", package = "tinytable"))
 
-  mathjax <- getOption("tinytable_html_mathjax", default = TRUE)
+  mathjax <- getOption("tinytable_html_mathjax", default = FALSE)
   assert_flag(mathjax, name = "tinytable_html_mathjax")
   if (isFALSE(mathjax)) {
     template <- paste(template, collapse = "\n")

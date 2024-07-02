@@ -2,7 +2,32 @@
 
 ## Development
 
-General:
+### Breaking change
+
+HTML tables no longer insert MathJax scripts by default. This behavior could enter in conflict with other MathJax scripts loaded explicitly by the user or automatically by Quarto. Users can revert to the previous behavior by setting a global option:
+
+`options(tinytable_html_mathjax = TRUE)`
+
+Alternatively, users can insert appropriate scripts directly in their HTML document or as a Quarto literal chunk:
+
+````
+```{=html}
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  },
+  svg: {
+    fontCache: 'global'
+  }
+};
+</script>
+```
+````
+
+
+### General
 
 * Improved documentation.
 * `format_tt(markdown=TRUE)` escapes groups and notes when `i` and `j` are `NULL`.
@@ -12,23 +37,23 @@ General:
 * `colnames(x)<-NULL` works on a `tinytable` object.
 * `format_tt(num_big_mark)` applies to integer columns.
 
-HTML:
+### HTML
 
 * Simplify JS functions in HTML documents. Avoid nesting full HTML documents inside Quarto output.
 * Remove polyfill JS because of security issues.
 
-LaTeX:
+### LaTeX
 
 * `theme_tt("tabular")` no longer uses `tabularray` or `booktabs`. Only relies on basic LaTeX packages.
 
-Typst:
+### Typst
 
 * `style_tt()` supports `align` for different rows and cells, rather than just whole columns.
 * `style_tt()` supports `indent` argument.
 * `group_tt()` supports `indent` argument.
 * No more gutters when `group_tt(j)` and `style_tt(background)`
 
-New global options:
+### Global options
 
 * `save_tt("pdf")`:
   - `options(tinytable_save_pdf_clean = TRUE)`
@@ -36,7 +61,7 @@ New global options:
 * `options(tinytable_tt_rownames=TRUE)`: Print row names in the first column by calling. Thanks to @rsbivand for Issue #264.
 * EXPERIMENTAL: `options(tinytable_html_mathjax = TRUE)`. Inserts MathJax scripts in the HTML file. This may cause conflicts if MathJax is otherwise loaded in the document.
 
-Bugs:
+### Bugs
 
 * `replace` does not work in LaTeX with `format_tt(quarto=TRUE)`. Thanks to @cbgoodman for Issue #263.
 * `style_tt(indent)` works for LaTeX

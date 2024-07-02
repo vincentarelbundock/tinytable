@@ -146,7 +146,35 @@ options(tinytable_theme_placement_latex_float = "H")
 
 ## Math
 
-To insert LaTeX-style mathematical expressions in a `tinytable`, we enclose the expression in dollar signs: `$...$`. The expression will then rendered as a mathematical expression by MathJax (for HTML), LaTeX, or Pandoc. Do not forget to double escape any backslashes.
+To insert LaTeX-style mathematical expressions in a `tinytable`, we enclose the expression in dollar signs: `$...$`. Note that you must double backslashes in mathematical expressions in R strings.
+
+In LaTeX, expression enclosed between `$$` will automatically rendered as a mathematical expression.
+
+In HTML, users must first load the MathJax JavaScript library to render math. This can be done in two ways. First, one can use a global option. This will insert MathJax scripts alongside every table, which is convenient, but could enter in conflict with other scripts if the user (or notebook) has already inserted MathJax code:
+
+```r
+options(tinytable_html_mathjax = TRUE)
+```
+
+Alternatively, users can load MathJax explicitly in their HTML file. In a Quarto notebook, this can be done by using a code chunk like this:
+
+````
+```{=html}
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  },
+  svg: {
+    fontCache: 'global'
+  }
+};
+</script>
+```
+````
+
+Then, we can do:
 
 ```{r}
 dat <- data.frame(Math = c(
