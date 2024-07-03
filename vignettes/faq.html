@@ -572,132 +572,37 @@ MathJax = {
 <h2 class="anchored" data-anchor-id="quarto">Quarto</h2>
 <section id="custom-crossref-styles" class="level3">
 <h3 class="anchored" data-anchor-id="custom-crossref-styles">Custom crossref styles</h3>
-<p>In <code>Quarto</code>, it is possible to create a custom crossref type for things like appendix tables. One challenge, is that LaTeX will not allow users to nest a <code>tblr</code> environment, inside a <code>table</code> environment, inside the new environment that <code>Quarto</code> creates for the crossref. Therefore, when rendering a table to LaTeX/PDF, it is important to drop the <code>\begin{table}</code> environment. This can be done using the <code>theme_tt()</code> function:</p>
-<pre><code>---
-title: "Crossref Example"
-format:
-  pdf: default
-  html: default
-crossref:
-  custom:
-    - kind: float
-      key: apptbl
-      latex-env: apptbl
-      reference-prefix: Table A
-      space-before-numbering: false
-      latex-list-of-description: Appendix Table
-apptbl-cap-location: top
----
-
-See @apptbl-testing
-
-::: {#apptbl-testing}
-
-::: {.cell}
-
-```{.r .cell-code}
-library(tinytable)
-
-tt(mtcars[1:5,]) |&gt; theme_tt("tabular", style = "tabularray")
-```
-
-::: {.cell-output-display}
-
-```{=html}
-      &lt;table class="table table-borderless" id="tinytable_1jsc2fi6o5lmndjm7hyv" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'&gt;
-        &lt;thead&gt;
-        
-              &lt;tr&gt;
-                &lt;th scope="col"&gt;mpg&lt;/th&gt;
-                &lt;th scope="col"&gt;cyl&lt;/th&gt;
-                &lt;th scope="col"&gt;disp&lt;/th&gt;
-                &lt;th scope="col"&gt;hp&lt;/th&gt;
-                &lt;th scope="col"&gt;drat&lt;/th&gt;
-                &lt;th scope="col"&gt;wt&lt;/th&gt;
-                &lt;th scope="col"&gt;qsec&lt;/th&gt;
-                &lt;th scope="col"&gt;vs&lt;/th&gt;
-                &lt;th scope="col"&gt;am&lt;/th&gt;
-                &lt;th scope="col"&gt;gear&lt;/th&gt;
-                &lt;th scope="col"&gt;carb&lt;/th&gt;
-              &lt;/tr&gt;
-        &lt;/thead&gt;
-        
-        &lt;tbody&gt;
-                &lt;tr&gt;
-                  &lt;td&gt;21.0&lt;/td&gt;
-                  &lt;td&gt;6&lt;/td&gt;
-                  &lt;td&gt;160&lt;/td&gt;
-                  &lt;td&gt;110&lt;/td&gt;
-                  &lt;td&gt;3.90&lt;/td&gt;
-                  &lt;td&gt;2.620&lt;/td&gt;
-                  &lt;td&gt;16.46&lt;/td&gt;
-                  &lt;td&gt;0&lt;/td&gt;
-                  &lt;td&gt;1&lt;/td&gt;
-                  &lt;td&gt;4&lt;/td&gt;
-                  &lt;td&gt;4&lt;/td&gt;
-                &lt;/tr&gt;
-                &lt;tr&gt;
-                  &lt;td&gt;21.0&lt;/td&gt;
-                  &lt;td&gt;6&lt;/td&gt;
-                  &lt;td&gt;160&lt;/td&gt;
-                  &lt;td&gt;110&lt;/td&gt;
-                  &lt;td&gt;3.90&lt;/td&gt;
-                  &lt;td&gt;2.875&lt;/td&gt;
-                  &lt;td&gt;17.02&lt;/td&gt;
-                  &lt;td&gt;0&lt;/td&gt;
-                  &lt;td&gt;1&lt;/td&gt;
-                  &lt;td&gt;4&lt;/td&gt;
-                  &lt;td&gt;4&lt;/td&gt;
-                &lt;/tr&gt;
-                &lt;tr&gt;
-                  &lt;td&gt;22.8&lt;/td&gt;
-                  &lt;td&gt;4&lt;/td&gt;
-                  &lt;td&gt;108&lt;/td&gt;
-                  &lt;td&gt; 93&lt;/td&gt;
-                  &lt;td&gt;3.85&lt;/td&gt;
-                  &lt;td&gt;2.320&lt;/td&gt;
-                  &lt;td&gt;18.61&lt;/td&gt;
-                  &lt;td&gt;1&lt;/td&gt;
-                  &lt;td&gt;1&lt;/td&gt;
-                  &lt;td&gt;4&lt;/td&gt;
-                  &lt;td&gt;1&lt;/td&gt;
-                &lt;/tr&gt;
-                &lt;tr&gt;
-                  &lt;td&gt;21.4&lt;/td&gt;
-                  &lt;td&gt;6&lt;/td&gt;
-                  &lt;td&gt;258&lt;/td&gt;
-                  &lt;td&gt;110&lt;/td&gt;
-                  &lt;td&gt;3.08&lt;/td&gt;
-                  &lt;td&gt;3.215&lt;/td&gt;
-                  &lt;td&gt;19.44&lt;/td&gt;
-                  &lt;td&gt;1&lt;/td&gt;
-                  &lt;td&gt;0&lt;/td&gt;
-                  &lt;td&gt;3&lt;/td&gt;
-                  &lt;td&gt;1&lt;/td&gt;
-                &lt;/tr&gt;
-                &lt;tr&gt;
-                  &lt;td&gt;18.7&lt;/td&gt;
-                  &lt;td&gt;8&lt;/td&gt;
-                  &lt;td&gt;360&lt;/td&gt;
-                  &lt;td&gt;175&lt;/td&gt;
-                  &lt;td&gt;3.15&lt;/td&gt;
-                  &lt;td&gt;3.440&lt;/td&gt;
-                  &lt;td&gt;17.02&lt;/td&gt;
-                  &lt;td&gt;0&lt;/td&gt;
-                  &lt;td&gt;0&lt;/td&gt;
-                  &lt;td&gt;3&lt;/td&gt;
-                  &lt;td&gt;2&lt;/td&gt;
-                &lt;/tr&gt;
-        &lt;/tbody&gt;
-      &lt;/table&gt;
-```
-
-:::
-:::
-
-Caption goes here.
-
-:::</code></pre>
+<p>In <code>Quarto</code>, it is possible to create a custom crossref type for things like appendix tables. One challenge, is that LaTeX will not allow users to nest a <code>tblr</code> environment, inside a <code>table</code> environment, inside the new environment that <code>Quarto</code> creates for the crossref. Therefore, when rendering a table to LaTeX/PDF, it is important to drop the <code>\begin{table}</code> environment. This can be done using the <code>theme_tt()</code> function.</p>
+<p>In the example below, we call <code>theme_tt()</code> explicitly for a single table, but the <a href="https://vincentarelbundock.github.io/tinytable/vignettes/theme.html">themes vignette</a> shows how to set a global theme using the <code>tinytable_tt_theme</code> option.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>title: "Crossref Example"</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>format:</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  pdf: default</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  html: default</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>crossref:</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  custom:</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    - kind: float</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>      key: apptbl</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>      latex-env: apptbl</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>      reference-prefix: Table A</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>      space-before-numbering: false</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>      latex-list-of-description: Appendix Table</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>apptbl-cap-location: top</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>See @apptbl-testing</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>::: {#apptbl-testing}</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>```{r}</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>library(tinytable)</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>tt(mtcars[1:5,]) |&gt; theme_tt("tabular", style = "tabularray")</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>```</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>Caption goes here.</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>:::</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
