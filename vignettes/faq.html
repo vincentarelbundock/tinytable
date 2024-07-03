@@ -386,6 +386,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#style_tt-does-not-apply-to-row-headers" id="toc-style_tt-does-not-apply-to-row-headers" class="nav-link" data-scroll-target="#style_tt-does-not-apply-to-row-headers"><code>style_tt()</code> does not apply to row headers</a></li>
   <li><a href="#rowspan-and-colspan" id="toc-rowspan-and-colspan" class="nav-link" data-scroll-target="#rowspan-and-colspan"><code>rowspan</code> and <code>colspan</code></a></li>
   </ul></li>
+  <li><a href="#quarto" id="toc-quarto" class="nav-link" data-scroll-target="#quarto">Quarto</a>
+  <ul class="collapse">
+  <li><a href="#custom-crossref-styles" id="toc-custom-crossref-styles" class="nav-link" data-scroll-target="#custom-crossref-styles">Custom crossref styles</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -562,6 +566,138 @@ MathJax = {
 <h3 class="anchored" data-anchor-id="rowspan-and-colspan"><code>rowspan</code> and <code>colspan</code></h3>
 <p>These arguments are already implemented in the form of “pseudo-spans”, meaning that we flush the content of adjacent cells, but do not modify the row or column borders. This is probably adequate for most needs.</p>
 <p>One alternative would be to remove line segments in finalize_grid(). I tried this but it is tricky and the results were brittle, so I rolled it back. I’m open to considering a PR if someone wants to contribute code, but please discuss the feature design in an issue with me before working on this.</p>
+</section>
+</section>
+<section id="quarto" class="level2">
+<h2 class="anchored" data-anchor-id="quarto">Quarto</h2>
+<section id="custom-crossref-styles" class="level3">
+<h3 class="anchored" data-anchor-id="custom-crossref-styles">Custom crossref styles</h3>
+<p>In <code>Quarto</code>, it is possible to create a custom crossref type for things like appendix tables. One challenge, is that LaTeX will not allow users to nest a <code>tblr</code> environment, inside a <code>table</code> environment, inside the new environment that <code>Quarto</code> creates for the crossref. Therefore, when rendering a table to LaTeX/PDF, it is important to drop the <code>\begin{table}</code> environment. This can be done using the <code>theme_tt()</code> function:</p>
+<pre><code>---
+title: "Crossref Example"
+format:
+  pdf: default
+  html: default
+crossref:
+  custom:
+    - kind: float
+      key: apptbl
+      latex-env: apptbl
+      reference-prefix: Table A
+      space-before-numbering: false
+      latex-list-of-description: Appendix Table
+apptbl-cap-location: top
+---
+
+See @apptbl-testing
+
+::: {#apptbl-testing}
+
+::: {.cell}
+
+```{.r .cell-code}
+library(tinytable)
+
+tt(mtcars[1:5,]) |&gt; theme_tt("tabular", style = "tabularray")
+```
+
+::: {.cell-output-display}
+
+```{=html}
+      &lt;table class="table table-borderless" id="tinytable_1jsc2fi6o5lmndjm7hyv" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'&gt;
+        &lt;thead&gt;
+        
+              &lt;tr&gt;
+                &lt;th scope="col"&gt;mpg&lt;/th&gt;
+                &lt;th scope="col"&gt;cyl&lt;/th&gt;
+                &lt;th scope="col"&gt;disp&lt;/th&gt;
+                &lt;th scope="col"&gt;hp&lt;/th&gt;
+                &lt;th scope="col"&gt;drat&lt;/th&gt;
+                &lt;th scope="col"&gt;wt&lt;/th&gt;
+                &lt;th scope="col"&gt;qsec&lt;/th&gt;
+                &lt;th scope="col"&gt;vs&lt;/th&gt;
+                &lt;th scope="col"&gt;am&lt;/th&gt;
+                &lt;th scope="col"&gt;gear&lt;/th&gt;
+                &lt;th scope="col"&gt;carb&lt;/th&gt;
+              &lt;/tr&gt;
+        &lt;/thead&gt;
+        
+        &lt;tbody&gt;
+                &lt;tr&gt;
+                  &lt;td&gt;21.0&lt;/td&gt;
+                  &lt;td&gt;6&lt;/td&gt;
+                  &lt;td&gt;160&lt;/td&gt;
+                  &lt;td&gt;110&lt;/td&gt;
+                  &lt;td&gt;3.90&lt;/td&gt;
+                  &lt;td&gt;2.620&lt;/td&gt;
+                  &lt;td&gt;16.46&lt;/td&gt;
+                  &lt;td&gt;0&lt;/td&gt;
+                  &lt;td&gt;1&lt;/td&gt;
+                  &lt;td&gt;4&lt;/td&gt;
+                  &lt;td&gt;4&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                  &lt;td&gt;21.0&lt;/td&gt;
+                  &lt;td&gt;6&lt;/td&gt;
+                  &lt;td&gt;160&lt;/td&gt;
+                  &lt;td&gt;110&lt;/td&gt;
+                  &lt;td&gt;3.90&lt;/td&gt;
+                  &lt;td&gt;2.875&lt;/td&gt;
+                  &lt;td&gt;17.02&lt;/td&gt;
+                  &lt;td&gt;0&lt;/td&gt;
+                  &lt;td&gt;1&lt;/td&gt;
+                  &lt;td&gt;4&lt;/td&gt;
+                  &lt;td&gt;4&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                  &lt;td&gt;22.8&lt;/td&gt;
+                  &lt;td&gt;4&lt;/td&gt;
+                  &lt;td&gt;108&lt;/td&gt;
+                  &lt;td&gt; 93&lt;/td&gt;
+                  &lt;td&gt;3.85&lt;/td&gt;
+                  &lt;td&gt;2.320&lt;/td&gt;
+                  &lt;td&gt;18.61&lt;/td&gt;
+                  &lt;td&gt;1&lt;/td&gt;
+                  &lt;td&gt;1&lt;/td&gt;
+                  &lt;td&gt;4&lt;/td&gt;
+                  &lt;td&gt;1&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                  &lt;td&gt;21.4&lt;/td&gt;
+                  &lt;td&gt;6&lt;/td&gt;
+                  &lt;td&gt;258&lt;/td&gt;
+                  &lt;td&gt;110&lt;/td&gt;
+                  &lt;td&gt;3.08&lt;/td&gt;
+                  &lt;td&gt;3.215&lt;/td&gt;
+                  &lt;td&gt;19.44&lt;/td&gt;
+                  &lt;td&gt;1&lt;/td&gt;
+                  &lt;td&gt;0&lt;/td&gt;
+                  &lt;td&gt;3&lt;/td&gt;
+                  &lt;td&gt;1&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                  &lt;td&gt;18.7&lt;/td&gt;
+                  &lt;td&gt;8&lt;/td&gt;
+                  &lt;td&gt;360&lt;/td&gt;
+                  &lt;td&gt;175&lt;/td&gt;
+                  &lt;td&gt;3.15&lt;/td&gt;
+                  &lt;td&gt;3.440&lt;/td&gt;
+                  &lt;td&gt;17.02&lt;/td&gt;
+                  &lt;td&gt;0&lt;/td&gt;
+                  &lt;td&gt;0&lt;/td&gt;
+                  &lt;td&gt;3&lt;/td&gt;
+                  &lt;td&gt;2&lt;/td&gt;
+                &lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+```
+
+:::
+:::
+
+Caption goes here.
+
+:::</code></pre>
 
 
 </section>
