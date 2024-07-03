@@ -65,6 +65,7 @@ MathJax = {
 
 * `replace` does not work in LaTeX with `format_tt(quarto=TRUE)`. Thanks to @cbgoodman for Issue #263.
 * `style_tt(indent)` works for LaTeX
+* Notes were hard-coded to 5 colspan. We now use the actual number of columns in the table. Thanks to @DominikVogel for report #788.
 * Do not suppress labels when inserting notes. Thanks to @cportner for Issue #290.
 
 ## 0.3.0

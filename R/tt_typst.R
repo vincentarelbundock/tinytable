@@ -43,9 +43,9 @@ setMethod(
     notes <- sapply(notes, function(n) if (is.list(n)) n$text else n)
     for (k in seq_along(notes)) {
       if (lab[k] == "") {
-        tmp <- sprintf("    table.cell(align: left, colspan: 5, [%s]),", notes[k])
+        tmp <- sprintf("    table.cell(align: left, colspan: %s, [%s]),", ncol(x), notes[k])
       } else {
-        tmp <- sprintf("    table.cell(align: left, colspan: 5, [#super[%s] %s]),", lab[k], notes[k])
+        tmp <- sprintf("    table.cell(align: left, colspan: %s, [#super[%s] %s]),", ncol(x), lab[k], notes[k])
       }
       out <- lines_insert(out, tmp, "tinytable notes after", "after")
     }
