@@ -45,6 +45,7 @@ MathJax = {
 ### LaTeX
 
 * `theme_tt("tabular")` no longer uses `tabularray` or `booktabs`. Only relies on basic LaTeX packages.
+* `theme_tt("tabular", style = "tabularray")` does the same as above, but keeps the `\begin{tblr}` environment.
 
 ### Typst
 

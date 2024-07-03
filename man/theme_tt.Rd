@@ -15,7 +15,7 @@ theme_tt(x, theme, ...)
 \item "void": No rules
 \item "bootstrap": Similar appearance to the default Bootstrap theme in HTML
 \item "striped": Grey stripes on alternating rows
-\item "tabular": No table environment (LaTeX) or Javascript/CSS (HTML)
+\item "tabular": Remove table environment (LaTeX) or Javascript/CSS (HTML)
 \item "resize": Scale a LaTeX \code{tinytable} to fit the \code{width} argument.
 \item "multipage": Long tables continue on the next page (LaTeX only)
 \item "placement": Position of the table environment (LaTeX)
@@ -44,6 +44,15 @@ multipage
 \itemize{
 \item \code{rowhead}: Non-negative integer. The number of header rows to repeat on each page.
 \item \code{rowfoot}: Non-negative integer. The number of footer rows to repeat on each page.
+}
+
+tabular
+\itemize{
+\item \code{style}:
+\itemize{
+\item "tabular": Drop all LaTeX dependencies and floating environments, except \verb{\\\\begin\{tabular\}}
+\item "tabularray": Drop all LaTeX dependencies and floating environments, except \verb{\\\\begin\{tblr\}}
+}
 }
 
 placement

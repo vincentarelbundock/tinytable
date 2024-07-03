@@ -14,32 +14,44 @@ theme_default <- function(x, ...) {
 }
 
 
-theme_tabular <- function(x, ...) {
+theme_tabular <- function(x, style = "tabular", ...) {
     assert_class(x, "tinytable")
+
+    dots <- list(...)
+    if ("style" %in% names(dots)) {
+        assert_choice(style, c("tabular", "tabularray"))
+        style <- dots[["style"]]
+    } else {
+        style <- "tabular"
+    }
+
     # do not change the default theme
     if (identical(x@theme[[1]], "tabular")) x@theme <- list("default")
+
     fn <- function(table) {
         tab <- table@table_string
 
         if (isTRUE(table@output == "latex")) {
             tab <- lines_drop(tab, regex = "\\\\begin\\{table\\}", position = "before")
             tab <- lines_drop(tab, regex = "\\\\begin\\{table\\}", position = "equal")
-            tab <- lines_drop(tab, regex = "\\\\end\\{table\\}", position = "after")
-            tab <- lines_drop(tab, regex = "\\\\end\\{table\\}", position = "equal")
-            tab <- lines_drop(tab, regex = "\\\\centering", position = "equal")
-            tab <- lines_drop(tab, regex = "tabularray outer close", position = "equal")
-            tab <- lines_drop(tab, regex = "tabularray inner open", position = "equal")
-            tab <- lines_drop(tab, regex = "tabularray inner close", position = "equal")
-            tab <- lines_drop(tab, regex = "^colspec=\\{", position = "equal")
-            tab <- gsub("\\{tblr\\}\\[*", "{tabular}", tab)
-            tab <- gsub("\\{talltblr\\}\\[", "{tabular}", tab)
-            tab <- gsub("\\{longtblr\\}\\[", "{tabular}", tab)
-            tab <- gsub("\\\\toprule|\\\\midrule|\\\\bottomrule", "\\\\hline", tab)
-            tab <- sub("\\s*%% tabularray outer open", "", tab)
-            tab <- sub("\\s*%% TinyTableHeader", "", tab)
-            # align
-            a <- sprintf("begin{tabular}{%s}", strrep("l", ncol(table)))
-            tab <- sub("begin{tabular}", a, tab, fixed = TRUE)
+            if (style == "tabular") {
+                tab <- lines_drop(tab, regex = "\\\\end\\{table\\}", position = "after")
+                tab <- lines_drop(tab, regex = "\\\\end\\{table\\}", position = "equal")
+                tab <- lines_drop(tab, regex = "\\\\centering", position = "equal")
+                tab <- lines_drop(tab, regex = "tabularray outer close", position = "equal")
+                tab <- lines_drop(tab, regex = "tabularray inner open", position = "equal")
+                tab <- lines_drop(tab, regex = "tabularray inner close", position = "equal")
+                tab <- lines_drop(tab, regex = "^colspec=\\{", position = "equal")
+                tab <- gsub("\\{tblr\\}\\[*", "{tabular}", tab)
+                tab <- gsub("\\{talltblr\\}\\[", "{tabular}", tab)
+                tab <- gsub("\\{longtblr\\}\\[", "{tabular}", tab)
+                tab <- gsub("\\\\toprule|\\\\midrule|\\\\bottomrule", "\\\\hline", tab)
+                tab <- sub("\\s*%% tabularray outer open", "", tab)
+                tab <- sub("\\s*%% TinyTableHeader", "", tab)
+                # align
+                a <- sprintf("begin{tabular}{%s}", strrep("l", ncol(table)))
+                tab <- sub("begin{tabular}", a, tab, fixed = TRUE)
+            }
 
         } else if (isTRUE(table@output == "html")) {
             tab <- lines_drop(tab, regex = "<table class", position = "before")
@@ -278,7 +290,7 @@ theme_dictionary <- list(
 #'   + "void": No rules
 #'   + "bootstrap": Similar appearance to the default Bootstrap theme in HTML
 #'   + "striped": Grey stripes on alternating rows
-#'   + "tabular": No table environment (LaTeX) or Javascript/CSS (HTML)
+#'   + "tabular": Remove table environment (LaTeX) or Javascript/CSS (HTML)
 #'   + "resize": Scale a LaTeX `tinytable` to fit the `width` argument.
 #'   + "multipage": Long tables continue on the next page (LaTeX only)
 #'   + "placement": Position of the table environment (LaTeX)
@@ -295,6 +307,12 @@ theme_dictionary <- list(
 #' + `rowhead`: Non-negative integer. The number of header rows to repeat on each page.
 #' + `rowfoot`: Non-negative integer. The number of footer rows to repeat on each page.
 #' 
+#' tabular
+#'
+#' + `style`: 
+#'   - "tabular": Drop all LaTeX dependencies and floating environments, except `\\begin{tabular}` 
+#'   - "tabularray": Drop all LaTeX dependencies and floating environments, except `\\begin{tblr}` 
+#'
 #' placement
 #' 
 #' + `latex_float`: String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp". The default value is controlled by a global option:

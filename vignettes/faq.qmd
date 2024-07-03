@@ -207,3 +207,41 @@ Users can use markdown styling directly in `group_tt()` to circumvent this. This
 These arguments are already implemented in the form of "pseudo-spans", meaning that we flush the content of adjacent cells, but do not modify the row or column borders. This is probably adequate for most needs. 
 
 One alternative would be to remove line segments in finalize_grid(). I tried this but it is tricky and the results were brittle, so I rolled it back. I'm open to considering a PR if someone wants to contribute code, but please discuss the feature design in an issue with me before working on this.
+
+## Quarto
+
+### Custom crossref styles
+
+In `Quarto`, it is possible to create a custom crossref type for things like appendix tables. One challenge, is that LaTeX will not allow users to nest a `tblr` environment, inside a `table` environment, inside the new environment that `Quarto` creates for the crossref. Therefore, when rendering a table to LaTeX/PDF, it is important to drop the `\begin{table}` environment. This can be done using the `theme_tt()` function:
+
+````
+---
+title: "Crossref Example"
+format:
+  pdf: default
+  html: default
+crossref:
+  custom:
+    - kind: float
+      key: apptbl
+      latex-env: apptbl
+      reference-prefix: Table A
+      space-before-numbering: false
+      latex-list-of-description: Appendix Table
+apptbl-cap-location: top
+---
+
+See @apptbl-testing
+
+::: {#apptbl-testing}
+
+```{r}
+library(tinytable)
+
+tt(mtcars[1:5,]) |> theme_tt("tabular", style = "tabularray")
+```
+
+Caption goes here.
+
+:::
+````
