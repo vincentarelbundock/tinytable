@@ -212,7 +212,9 @@ One alternative would be to remove line segments in finalize_grid(). I tried thi
 
 ### Custom crossref styles
 
-In `Quarto`, it is possible to create a custom crossref type for things like appendix tables. One challenge, is that LaTeX will not allow users to nest a `tblr` environment, inside a `table` environment, inside the new environment that `Quarto` creates for the crossref. Therefore, when rendering a table to LaTeX/PDF, it is important to drop the `\begin{table}` environment. This can be done using the `theme_tt()` function:
+In `Quarto`, it is possible to create a custom crossref type for things like appendix tables. One challenge, is that LaTeX will not allow users to nest a `tblr` environment, inside a `table` environment, inside the new environment that `Quarto` creates for the crossref. Therefore, when rendering a table to LaTeX/PDF, it is important to drop the `\begin{table}` environment. This can be done using the `theme_tt()` function.
+
+In the example below, we call `theme_tt()` explicitly for a single table, but the [themes vignette](https://vincentarelbundock.github.io/tinytable/vignettes/theme.html) shows how to set a global theme using the `tinytable_tt_theme` option.
 
 ````
 ---
