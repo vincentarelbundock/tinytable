@@ -41,6 +41,7 @@ MathJax = {
 
 * Simplify JS functions in HTML documents. Avoid nesting full HTML documents inside Quarto output.
 * Remove polyfill JS because of security issues.
+* Avoid error in interactive use in Positron.
 
 ### LaTeX
 

@@ -82,10 +82,13 @@ print.tinytable <- function(x,
     htmlFile <- file.path(dir, "index.html")
     cat(tab, file = htmlFile)
 
-    if (isTRUE(interactive()) && isTRUE(check_dependency("rstudioapi")) && rstudioapi::isAvailable()) {
-      rstudioapi::viewer(htmlFile)
+    rstudio_flag <- isTRUE(interactive()) && isTRUE(check_dependency("rstudioapi")) && rstudioapi::isAvailable()
+    if (rstudio_flag) {
+      tmp <- try(rstudioapi::viewer(htmlFile), silent = TRUE)
+      if (!inherits(tmp, "try-error")) return(invisible(x))
+    } 
 
-    } else if (interactive()) {
+    if (interactive()) {
       msg <- "Please choose a default browser with:
 
       options(browser = 'firefox')
