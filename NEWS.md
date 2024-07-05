@@ -36,6 +36,7 @@ MathJax = {
 * Headers are now styled and formatted when `i=NULL`.
 * `colnames(x)<-NULL` works on a `tinytable` object.
 * `format_tt(num_big_mark)` applies to integer columns.
+* Use `getOption("viewer")` instead of `rstudioapi::viewer()` for positron support
 
 ### HTML
 
