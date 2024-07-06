@@ -26,9 +26,10 @@ MathJax = {
 ```
 ````
 
-j
+
 ### General
 
+* Support Viewer Pane in Positron IDE. Thank to @kylebutts for code contribution in PR #299.
 * Improved documentation.
 * `format_tt(markdown=TRUE)` escapes groups and notes when `i` and `j` are `NULL`.
 * `plot_tt()`: The `height` argument is now respected in Markdown and Word documents.
