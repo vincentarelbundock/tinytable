@@ -32,7 +32,13 @@ The HTML customization options described in this section are not available for L
 ::: {.content-visible when-format="html"}
 The Bootstrap framework provides a number of built-in themes to style tables, using "classes." To use them, we call `style_tt()` with the `bootstrap_class` argument. A list of available Bootstrap classes can be found here: <https://getbootstrap.com/docs/5.3/content/tables/>
 
-For example, to produce a "bordered" table, we use the `table-bordered` class:
+To produce a more condensed or "small" table, we use the `table-sm` class:
+
+```{r, eval = knitr::is_html_output()}
+tt(x) |> style_tt(bootstrap_class = "table-sm")
+```
+
+To produce a "bordered" table, we use the `table-bordered` class:
 
 
 ```{r, eval = knitr::is_html_output()}
@@ -45,6 +51,7 @@ We can also combine several Bootstrap classes. Here, we get a table with the "ho
 tt(x) |> style_tt(
   bootstrap_class = "table table-hover")
 ```
+
 :::
 
 
