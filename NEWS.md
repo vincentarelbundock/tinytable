@@ -29,6 +29,7 @@ MathJax = {
 
 ### General
 
+* Support Viewer Pane in Positron IDE. Thank to @kylebutts for code contribution in PR #299.
 * Improved documentation.
 * `format_tt(markdown=TRUE)` escapes groups and notes when `i` and `j` are `NULL`.
 * `plot_tt()`: The `height` argument is now respected in Markdown and Word documents.
@@ -36,6 +37,7 @@ MathJax = {
 * Headers are now styled and formatted when `i=NULL`.
 * `colnames(x)<-NULL` works on a `tinytable` object.
 * `format_tt(num_big_mark)` applies to integer columns.
+* Use `getOption("viewer")` instead of `rstudioapi::viewer()` for positron support
 
 ### HTML
 
