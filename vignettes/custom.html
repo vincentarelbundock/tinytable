@@ -416,22 +416,22 @@ MathJax = {
 <section id="bootstrap-classes" class="level3">
 <h3 class="anchored" data-anchor-id="bootstrap-classes">Bootstrap classes</h3>
 <p>The Bootstrap framework provides a number of built-in themes to style tables, using “classes.” To use them, we call <code>style_tt()</code> with the <code>bootstrap_class</code> argument. A list of available Bootstrap classes can be found here: <a href="https://getbootstrap.com/docs/5.3/content/tables/" class="uri">https://getbootstrap.com/docs/5.3/content/tables/</a></p>
-<p>For example, to produce a “bordered” table, we use the <code>table-bordered</code> class:</p>
+<p>To produce a more condensed or “small” table, we use the <code>table-sm</code> class:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x) <span class="sc">|&gt;</span> <span class="fu">style_tt</span>(<span class="at">bootstrap_class =</span> <span class="st">"table table-bordered"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x) <span class="sc">|&gt;</span> <span class="fu">style_tt</span>(<span class="at">bootstrap_class =</span> <span class="st">"table-sm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
     <script>
-      function styleCell_tinytable_ccd67qk4xhbivx5e8wwq(tableId, cellCoordinates, cssClass) {
-            var table = document.getElementById("tinytable_wy17srr6byoaf4wjihdh");
+      function styleCell_tinytable_yc023oupj64py6qxhogg(tableId, cellCoordinates, cssClass) {
+            var table = document.getElementById("tinytable_wdecbd9v0hmizlcs9rop");
             cellCoordinates.forEach(([i, j]) => {
                 table.rows[i].cells[j].classList.add(cssClass);
             });
         }
 
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_wy17srr6byoaf4wjihdh');
+        var table = document.getElementById('tinytable_wdecbd9v0hmizlcs9rop');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -439,8 +439,8 @@ MathJax = {
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_ccd67qk4xhbivx5e8wwq(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_wy17srr6byoaf4wjihdh");
+      function spanCell_tinytable_yc023oupj64py6qxhogg(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_wdecbd9v0hmizlcs9rop");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -469,19 +469,131 @@ MathJax = {
 
      window.addEventListener('load', function () {
          const cellStyles = [
-             {coords: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]], class: 'tinytable_css_p30aobagzu5x3b2enob6'},
+             {coords: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]], class: 'tinytable_css_3npb1x8e5auxuwcgjk6w'},
          ];
          cellStyles.forEach(({coords, class: cssClass}) => {
-             styleCell_tinytable_ccd67qk4xhbivx5e8wwq('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
+             styleCell_tinytable_yc023oupj64py6qxhogg('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
          });
      });
     </script>
 
     <style>
-.table td.tinytable_css_p30aobagzu5x3b2enob6, .table th.tinytable_css_p30aobagzu5x3b2enob6 {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_3npb1x8e5auxuwcgjk6w, .table th.tinytable_css_3npb1x8e5auxuwcgjk6w {    border-bottom: solid 0.1em #d3d8dc; }
     </style>
     <div class="container">
-      <table class="table table-bordered" id="tinytable_wy17srr6byoaf4wjihdh" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table-sm" id="tinytable_wdecbd9v0hmizlcs9rop" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+        
+              <tr>
+                <th scope="col">mpg</th>
+                <th scope="col">cyl</th>
+                <th scope="col">disp</th>
+                <th scope="col">hp</th>
+                <th scope="col">drat</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td>21  </td>
+                  <td>6</td>
+                  <td>160</td>
+                  <td>110</td>
+                  <td>3.9 </td>
+                </tr>
+                <tr>
+                  <td>21  </td>
+                  <td>6</td>
+                  <td>160</td>
+                  <td>110</td>
+                  <td>3.9 </td>
+                </tr>
+                <tr>
+                  <td>22.8</td>
+                  <td>4</td>
+                  <td>108</td>
+                  <td> 93</td>
+                  <td>3.85</td>
+                </tr>
+                <tr>
+                  <td>21.4</td>
+                  <td>6</td>
+                  <td>258</td>
+                  <td>110</td>
+                  <td>3.08</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+<p>To produce a “bordered” table, we use the <code>table-bordered</code> class:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x) <span class="sc">|&gt;</span> <span class="fu">style_tt</span>(<span class="at">bootstrap_class =</span> <span class="st">"table table-bordered"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script>
+      function styleCell_tinytable_v7699rskrc7gck58zpv2(tableId, cellCoordinates, cssClass) {
+            var table = document.getElementById("tinytable_80iuflrzfcgonjefl3bs");
+            cellCoordinates.forEach(([i, j]) => {
+                table.rows[i].cells[j].classList.add(cssClass);
+            });
+        }
+
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_80iuflrzfcgonjefl3bs');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_tinytable_v7699rskrc7gck58zpv2(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_80iuflrzfcgonjefl3bs");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+
+     window.addEventListener('load', function () {
+         const cellStyles = [
+             {coords: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]], class: 'tinytable_css_wi2u837c5d1rmja9xg43'},
+         ];
+         cellStyles.forEach(({coords, class: cssClass}) => {
+             styleCell_tinytable_v7699rskrc7gck58zpv2('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
+         });
+     });
+    </script>
+
+    <style>
+.table td.tinytable_css_wi2u837c5d1rmja9xg43, .table th.tinytable_css_wi2u837c5d1rmja9xg43 {    border-bottom: solid 0.1em #d3d8dc; }
+    </style>
+    <div class="container">
+      <table class="table table-bordered" id="tinytable_80iuflrzfcgonjefl3bs" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -530,21 +642,21 @@ MathJax = {
 </div>
 <p>We can also combine several Bootstrap classes. Here, we get a table with the “hover” feature:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x) <span class="sc">|&gt;</span> <span class="fu">style_tt</span>(</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">bootstrap_class =</span> <span class="st">"table table-hover"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x) <span class="sc">|&gt;</span> <span class="fu">style_tt</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">bootstrap_class =</span> <span class="st">"table table-hover"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
     <script>
-      function styleCell_tinytable_oogt3ps9o2rmk9iitm3m(tableId, cellCoordinates, cssClass) {
-            var table = document.getElementById("tinytable_rmd6c2rpxagz0a0886br");
+      function styleCell_tinytable_j4la9d0l9h0ipzjvij8s(tableId, cellCoordinates, cssClass) {
+            var table = document.getElementById("tinytable_kmmcp6spf15ddoaiyefp");
             cellCoordinates.forEach(([i, j]) => {
                 table.rows[i].cells[j].classList.add(cssClass);
             });
         }
 
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_rmd6c2rpxagz0a0886br');
+        var table = document.getElementById('tinytable_kmmcp6spf15ddoaiyefp');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -552,8 +664,8 @@ MathJax = {
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_oogt3ps9o2rmk9iitm3m(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_rmd6c2rpxagz0a0886br");
+      function spanCell_tinytable_j4la9d0l9h0ipzjvij8s(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_kmmcp6spf15ddoaiyefp");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -582,19 +694,19 @@ MathJax = {
 
      window.addEventListener('load', function () {
          const cellStyles = [
-             {coords: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]], class: 'tinytable_css_zadzmowklb54s8fwi4tx'},
+             {coords: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]], class: 'tinytable_css_ntdie61tg18poe97w5aa'},
          ];
          cellStyles.forEach(({coords, class: cssClass}) => {
-             styleCell_tinytable_oogt3ps9o2rmk9iitm3m('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
+             styleCell_tinytable_j4la9d0l9h0ipzjvij8s('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
          });
      });
     </script>
 
     <style>
-.table td.tinytable_css_zadzmowklb54s8fwi4tx, .table th.tinytable_css_zadzmowklb54s8fwi4tx {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_ntdie61tg18poe97w5aa, .table th.tinytable_css_ntdie61tg18poe97w5aa {    border-bottom: solid 0.1em #d3d8dc; }
     </style>
     <div class="container">
-      <table class="table table-hover" id="tinytable_rmd6c2rpxagz0a0886br" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-hover" id="tinytable_kmmcp6spf15ddoaiyefp" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -646,21 +758,21 @@ MathJax = {
 <h3 class="anchored" data-anchor-id="css-declarations">CSS declarations</h3>
 <p>The <code>style_tt()</code> function allows us to declare CSS properties and values for individual cells, columns, or rows of a table. For example, if we want to make the first column bold, we could do:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x) <span class="sc">|&gt;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(<span class="at">j =</span> <span class="dv">1</span>, <span class="at">bootstrap_css =</span> <span class="st">"font-weight: bold; color: red;"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x) <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(<span class="at">j =</span> <span class="dv">1</span>, <span class="at">bootstrap_css =</span> <span class="st">"font-weight: bold; color: red;"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
     <script>
-      function styleCell_tinytable_dedd7fm0iic39kbc5dz5(tableId, cellCoordinates, cssClass) {
-            var table = document.getElementById("tinytable_bae84d40wbikgm2fys7u");
+      function styleCell_tinytable_p695b2oexgsblvwhp22e(tableId, cellCoordinates, cssClass) {
+            var table = document.getElementById("tinytable_2fkbduyvgsh6zkq0bqyq");
             cellCoordinates.forEach(([i, j]) => {
                 table.rows[i].cells[j].classList.add(cssClass);
             });
         }
 
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_bae84d40wbikgm2fys7u');
+        var table = document.getElementById('tinytable_2fkbduyvgsh6zkq0bqyq');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -668,8 +780,8 @@ MathJax = {
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_dedd7fm0iic39kbc5dz5(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_bae84d40wbikgm2fys7u");
+      function spanCell_tinytable_p695b2oexgsblvwhp22e(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_2fkbduyvgsh6zkq0bqyq");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -698,29 +810,29 @@ MathJax = {
 
      window.addEventListener('load', function () {
          const cellStyles = [
-             {coords: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]], class: 'tinytable_css_07ksbqcrlx9xiwirzjl5'},
+             {coords: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]], class: 'tinytable_css_uaz408myskfr7zlvc9vn'},
          ];
          cellStyles.forEach(({coords, class: cssClass}) => {
-             styleCell_tinytable_dedd7fm0iic39kbc5dz5('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
+             styleCell_tinytable_p695b2oexgsblvwhp22e('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
          });
      });
 
      window.addEventListener('load', function () {
          const cellStyles = [
-             {coords: [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0]], class: 'tinytable_css_evwih9y9axc97bfjojor'},
+             {coords: [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0]], class: 'tinytable_css_1vvxp8ot581olbb5a0f7'},
          ];
          cellStyles.forEach(({coords, class: cssClass}) => {
-             styleCell_tinytable_dedd7fm0iic39kbc5dz5('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
+             styleCell_tinytable_p695b2oexgsblvwhp22e('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
          });
      });
     </script>
 
     <style>
-.table td.tinytable_css_07ksbqcrlx9xiwirzjl5, .table th.tinytable_css_07ksbqcrlx9xiwirzjl5 {    border-bottom: solid 0.1em #d3d8dc; }
-.table td.tinytable_css_evwih9y9axc97bfjojor, .table th.tinytable_css_evwih9y9axc97bfjojor {  font-weight: bold; color: red;  }
+.table td.tinytable_css_uaz408myskfr7zlvc9vn, .table th.tinytable_css_uaz408myskfr7zlvc9vn {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_1vvxp8ot581olbb5a0f7, .table th.tinytable_css_1vvxp8ot581olbb5a0f7 {  font-weight: bold; color: red;  }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_bae84d40wbikgm2fys7u" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_2fkbduyvgsh6zkq0bqyq" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -772,57 +884,57 @@ MathJax = {
 <h3 class="anchored" data-anchor-id="css-rules">CSS rules</h3>
 <p>For more extensive customization, we can use complete CSS rules. In this example, we define several rules that apply to a new class called <code>mytable</code>. Then, we use the <code>theme</code> argument of the <code>tt()</code> function to ensure that our tiny table is of class <code>mytable</code>. Finally, we call <code>style_bootstrap()</code> to apply the rules with the <code>bootstrap_css_rule</code> argument.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>css_rule <span class="ot">&lt;-</span> <span class="st">"</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="st">.mytable {</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="st">  background: linear-gradient(45deg, #EA8D8D, #A890FE);</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="st">  width: 600px;</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="st">  border-collapse: collapse;</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="st">  overflow: hidden;</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="st">  box-shadow: 0 0 20px rgba(0,0,0,0.1);</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="st">.mytable th,</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="st">.mytable td {</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="st">  padding: 5px;</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="st">  background-color: rgba(255,255,255,0.2);</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="st">  color: #fff;</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="st">.mytable tbody tr:hover {</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="st">  background-color: rgba(255,255,255,0.3);</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="st">.mytable tbody td:hover:before {</span></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="st">  content: '';</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="st">  position: absolute;</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="st">  left: 0;</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="st">  right: 0;</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="st">  top: -9999px;</span></span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="st">  bottom: -9999px;</span></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="st">  background-color: rgba(255,255,255,0.2);</span></span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="st">  z-index: -1;</span></span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
-<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x, <span class="at">width =</span> <span class="dv">2</span><span class="sc">/</span><span class="dv">3</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(</span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">align =</span> <span class="st">"ccccc"</span>,</span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">bootstrap_class =</span> <span class="st">"table mytable"</span>,</span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">bootstrap_css_rule =</span> css_rule)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>css_rule <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="st">.mytable {</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="st">  background: linear-gradient(45deg, #EA8D8D, #A890FE);</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="st">  width: 600px;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="st">  border-collapse: collapse;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="st">  overflow: hidden;</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="st">  box-shadow: 0 0 20px rgba(0,0,0,0.1);</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="st">.mytable th,</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="st">.mytable td {</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="st">  padding: 5px;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="st">  background-color: rgba(255,255,255,0.2);</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="st">  color: #fff;</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="st">.mytable tbody tr:hover {</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="st">  background-color: rgba(255,255,255,0.3);</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="st">.mytable tbody td:hover:before {</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="st">  content: '';</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="st">  position: absolute;</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="st">  left: 0;</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="st">  right: 0;</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="st">  top: -9999px;</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="st">  bottom: -9999px;</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="st">  background-color: rgba(255,255,255,0.2);</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="st">  z-index: -1;</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x, <span class="at">width =</span> <span class="dv">2</span><span class="sc">/</span><span class="dv">3</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>,</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">align =</span> <span class="st">"ccccc"</span>,</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">bootstrap_class =</span> <span class="st">"table mytable"</span>,</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">bootstrap_css_rule =</span> css_rule)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
     <script>
-      function styleCell_tinytable_whqo7ogdhp5hhrzpn508(tableId, cellCoordinates, cssClass) {
-            var table = document.getElementById("tinytable_8783hrx7okkxz0pwten3");
+      function styleCell_tinytable_f3rgmbaemvk5lt9nlib4(tableId, cellCoordinates, cssClass) {
+            var table = document.getElementById("tinytable_bjkq7s08cny2y74xu335");
             cellCoordinates.forEach(([i, j]) => {
                 table.rows[i].cells[j].classList.add(cssClass);
             });
         }
 
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_8783hrx7okkxz0pwten3');
+        var table = document.getElementById('tinytable_bjkq7s08cny2y74xu335');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -830,8 +942,8 @@ MathJax = {
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_whqo7ogdhp5hhrzpn508(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_8783hrx7okkxz0pwten3");
+      function spanCell_tinytable_f3rgmbaemvk5lt9nlib4(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_bjkq7s08cny2y74xu335");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -860,26 +972,26 @@ MathJax = {
 
      window.addEventListener('load', function () {
          const cellStyles = [
-             {coords: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]], class: 'tinytable_css_thljiab2k0m8tbvkhpsk'},
+             {coords: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4]], class: 'tinytable_css_2yiei2jq9wjr9lp01k1l'},
          ];
          cellStyles.forEach(({coords, class: cssClass}) => {
-             styleCell_tinytable_whqo7ogdhp5hhrzpn508('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
+             styleCell_tinytable_f3rgmbaemvk5lt9nlib4('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
          });
      });
 
      window.addEventListener('load', function () {
          const cellStyles = [
-             {coords: [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [0, 1], [1, 1], [2, 1], [3, 1], [4, 1], [0, 2], [1, 2], [2, 2], [3, 2], [4, 2], [0, 3], [1, 3], [2, 3], [3, 3], [4, 3], [0, 4], [1, 4], [2, 4], [3, 4], [4, 4]], class: 'tinytable_css_ma9wyk012w24bz6umczo'},
+             {coords: [[0, 0], [1, 0], [2, 0], [3, 0], [4, 0], [0, 1], [1, 1], [2, 1], [3, 1], [4, 1], [0, 2], [1, 2], [2, 2], [3, 2], [4, 2], [0, 3], [1, 3], [2, 3], [3, 3], [4, 3], [0, 4], [1, 4], [2, 4], [3, 4], [4, 4]], class: 'tinytable_css_7qnh944xs2ogf4uhxj7h'},
          ];
          cellStyles.forEach(({coords, class: cssClass}) => {
-             styleCell_tinytable_whqo7ogdhp5hhrzpn508('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
+             styleCell_tinytable_f3rgmbaemvk5lt9nlib4('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
          });
      });
     </script>
 
     <style>
-.table td.tinytable_css_thljiab2k0m8tbvkhpsk, .table th.tinytable_css_thljiab2k0m8tbvkhpsk {    border-bottom: solid 0.1em #d3d8dc; }
-.table td.tinytable_css_ma9wyk012w24bz6umczo, .table th.tinytable_css_ma9wyk012w24bz6umczo {    text-align: center; }
+.table td.tinytable_css_2yiei2jq9wjr9lp01k1l, .table th.tinytable_css_2yiei2jq9wjr9lp01k1l {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_7qnh944xs2ogf4uhxj7h, .table th.tinytable_css_7qnh944xs2ogf4uhxj7h {    text-align: center; }
 
 .mytable {
   background: linear-gradient(45deg, #EA8D8D, #A890FE);
@@ -913,7 +1025,7 @@ MathJax = {
 
     </style>
     <div class="container">
-      <table class="table mytable" id="tinytable_8783hrx7okkxz0pwten3" style="table-layout: fixed; width: 67% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table mytable" id="tinytable_bjkq7s08cny2y74xu335" style="table-layout: fixed; width: 67% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -962,32 +1074,32 @@ MathJax = {
 </div>
 <p>And here’s another example:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>css <span class="ot">&lt;-</span> <span class="st">"</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="st">.squirreltable {</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="st">  background-size: cover;</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="st">  background-position: center;</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="st">  background-image: url('https://user-images.githubusercontent.com/987057/82732352-b9aabf00-9cda-11ea-92a6-26750cf097d0.png');</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="st">  --bs-table-bg: transparent;</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>]) <span class="sc">|&gt;</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">bootstrap_class =</span> <span class="st">"table table-borderless squirreltable"</span>, </span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">bootstrap_css_rule =</span> css)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>css <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="st">.squirreltable {</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="st">  background-size: cover;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="st">  background-position: center;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="st">  background-image: url('https://user-images.githubusercontent.com/987057/82732352-b9aabf00-9cda-11ea-92a6-26750cf097d0.png');</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="st">  --bs-table-bg: transparent;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>]) <span class="sc">|&gt;</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">bootstrap_class =</span> <span class="st">"table table-borderless squirreltable"</span>, </span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">bootstrap_css_rule =</span> css)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
     <script>
-      function styleCell_tinytable_jd7ans5xw46jh5ag9sac(tableId, cellCoordinates, cssClass) {
-            var table = document.getElementById("tinytable_kab2h7illcajmyqba0h8");
+      function styleCell_tinytable_u0gmn12txhq4bfnrqflf(tableId, cellCoordinates, cssClass) {
+            var table = document.getElementById("tinytable_2kpbcbwjv74tgjtnoq9e");
             cellCoordinates.forEach(([i, j]) => {
                 table.rows[i].cells[j].classList.add(cssClass);
             });
         }
 
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_kab2h7illcajmyqba0h8');
+        var table = document.getElementById('tinytable_2kpbcbwjv74tgjtnoq9e');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -995,8 +1107,8 @@ MathJax = {
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tinytable_jd7ans5xw46jh5ag9sac(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_kab2h7illcajmyqba0h8");
+      function spanCell_tinytable_u0gmn12txhq4bfnrqflf(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_2kpbcbwjv74tgjtnoq9e");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1025,16 +1137,16 @@ MathJax = {
 
      window.addEventListener('load', function () {
          const cellStyles = [
-             {coords: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7]], class: 'tinytable_css_j7970johu1e83oza6rmz'},
+             {coords: [[0, 0], [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7]], class: 'tinytable_css_32otghmsrpf728gqknd6'},
          ];
          cellStyles.forEach(({coords, class: cssClass}) => {
-             styleCell_tinytable_jd7ans5xw46jh5ag9sac('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
+             styleCell_tinytable_u0gmn12txhq4bfnrqflf('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
          });
      });
     </script>
 
     <style>
-.table td.tinytable_css_j7970johu1e83oza6rmz, .table th.tinytable_css_j7970johu1e83oza6rmz {    border-bottom: solid 0.1em #d3d8dc; }
+.table td.tinytable_css_32otghmsrpf728gqknd6, .table th.tinytable_css_32otghmsrpf728gqknd6 {    border-bottom: solid 0.1em #d3d8dc; }
 
 .squirreltable {
   background-size: cover;
@@ -1045,7 +1157,7 @@ MathJax = {
 
     </style>
     <div class="container">
-      <table class="table table-borderless squirreltable" id="tinytable_kab2h7illcajmyqba0h8" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless squirreltable" id="tinytable_2kpbcbwjv74tgjtnoq9e" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -1186,21 +1298,21 @@ MathJax = {
 <h2 class="anchored" data-anchor-id="shiny">Shiny</h2>
 <p><code>tinytable</code> is a great complement to Shiny for displaying HTML tables in a web app. The styling in a <code>tinytable</code> is applied by JavaScript functions and CSS. Thus, to ensure that this styling is preserved in a Shiny app, one strategy is to bake the entire page, save it in a temporary file, and load it using the <code>includeHTML</code> function from the <code>shiny</code> package. This approach is illustrated in this minimal example:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"shiny"</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinytable"</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>fn <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">tempfile</span>(), <span class="st">".html"</span>)</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]) <span class="sc">|&gt;</span> </span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(<span class="at">i =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">color =</span> <span class="st">"orange"</span>, <span class="at">background =</span> <span class="st">"black"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">save_tt</span>(fn) </span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">ui =</span> <span class="fu">fluidPage</span>(</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fluidRow</span>(<span class="fu">column</span>(<span class="dv">12</span>, <span class="fu">h1</span>(<span class="st">"This is test of tinytable"</span>), </span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>                    shiny<span class="sc">::</span><span class="fu">includeHTML</span>(fn)))), </span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">server =</span> <span class="cf">function</span>(input, output) { </span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"shiny"</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinytable"</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>fn <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">tempfile</span>(), <span class="st">".html"</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]) <span class="sc">|&gt;</span> </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(<span class="at">i =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">color =</span> <span class="st">"orange"</span>, <span class="at">background =</span> <span class="st">"black"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">save_tt</span>(fn) </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">ui =</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fluidRow</span>(<span class="fu">column</span>(<span class="dv">12</span>, <span class="fu">h1</span>(<span class="st">"This is test of tinytable"</span>), </span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>                    shiny<span class="sc">::</span><span class="fu">includeHTML</span>(fn)))), </span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">server =</span> <span class="cf">function</span>(input, output) { </span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
