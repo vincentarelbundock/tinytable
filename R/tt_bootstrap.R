@@ -99,6 +99,7 @@ setMethod(
 
   # (pseudo-)unique table IDs
   id <- get_id("")
+  x@id <- id
 
   # table and styling function in JS must have different names when there is more than one table on a page.
   template <- gsub("styleCell", paste0("styleCell_", id), template, fixed = TRUE)

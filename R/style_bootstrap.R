@@ -1,4 +1,4 @@
-#p' Internal styling function
+#' Internal styling function
 #'
 #' @inheritParams style_tt
 #' @keywords internal
@@ -160,7 +160,7 @@ setMethod(
              %s
          ];
          cellStyles.forEach(({coords, class: cssClass}) => {
-             styleCell_%s('tinytable_szxl8eb7ubljmabuxmyx', coords, cssClass);
+             styleCell_%s('tinytable_%s', coords, cssClass);
          });
      });"
 
@@ -171,7 +171,7 @@ setMethod(
             coords <- apply(coords, 1, function(x) sprintf("[%s, %s]", x[1], x[2]))
             coords <- unique(coords)
             coords <- sprintf("{coords: [%s], class: '%s'},", paste(coords, collapse = ", "), block$id[1])
-            listener <- sprintf(listener_template, coords, block$id[1])
+            listener <- sprintf(listener_template, coords, block$id[1], x@id)
             out <- bootstrap_setting(out, listener, component = "cell")
         }
     }
