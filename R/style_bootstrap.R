@@ -128,21 +128,7 @@ setMethod(
     # CSS style for cell
     css_done <- NULL
 
-
-    # CSS stylers
-    for (row in seq_len(nrow(settings))) {
-      if (settings$bootstrap[row] != "" || !is.null(bootstrap_css)) {
-        # CSS styling
-        css <- paste(bootstrap_css, settings$bootstrap[row], collapse = ";")
-        css_start <- sprintf(".table td.%s, .table th.%s { ", settings$id[row], settings$id[row])
-        css_complete <- paste(c(css_start, css, "}"), collapse = " ")
-        # hack: avoid css duplication
-        if (!css_complete %in% css_done) {
-          out <- bootstrap_setting(out, css_complete, component = "css")
-          css_done <- c(css_done, css_complete)
-        }
-      }
-    }
+    x@css <- rbind(x@css, settings[, c("i", "j", "bootstrap", "id")])
 
     # spans
     for (row in seq_len(nrow(settings))) {
@@ -151,33 +137,6 @@ setMethod(
             listener <- sprintf(listener, settings$id[row], settings$i[row], settings$j[row], rowspan, colspan)
             out <- bootstrap_setting(out, listener, component = "cell")
         }
-    }
-
-    # CSS listeners
-    listener_template <- "
-     window.addEventListener('load', function () {
-         const cellStyles = [
-             %s
-         ];
-         cellStyles.forEach(({coords, class: cssClass}) => {
-             styleCell_%s('tinytable_%s', coords, cssClass);
-         });
-     });"
-
-    settings_blocks <- split(settings, settings$id)
-    for (block in settings_blocks) {
-        if (any(block$bootstrap != "") || !is.null(bootstrap_css)) {
-            coords <- expand.grid(block$i, block$j)
-            coords <- apply(coords, 1, function(x) sprintf("[%s, %s]", x[1], x[2]))
-            coords <- unique(coords)
-            coords <- sprintf("{coords: [%s], class: '%s'},", paste(coords, collapse = ", "), block$id[1])
-            listener <- sprintf(listener_template, coords, block$id[1], x@id)
-            out <- bootstrap_setting(out, listener, component = "cell")
-        }
-    }
-
-    if (!is.null(bootstrap_css_rule)) {
-      out <- bootstrap_setting(out, bootstrap_css_rule, component = "css")
     }
 
     x@table_string <- out

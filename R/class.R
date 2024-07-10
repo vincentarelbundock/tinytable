@@ -40,6 +40,7 @@ setClass(
         output_dir = "character",
         id = "character",
         bootstrap_class = "character",
+        css = "data.frame",
         lazy_format = "list",
         lazy_group = "list",
         lazy_style = "list",
@@ -74,6 +75,7 @@ setMethod("initialize", "tinytable", function(
   .Object@id <- get_id("tinytable_")
   .Object@output <- "tinytable"
   .Object@output_dir <- getwd()
+  .Object@css <- data.frame(i = NA, j = NA, bootstrap = NA, id = NA)
   # conditional: allows NULL user input
   if (!is.null(placement)) .Object@placement <- placement
   if (!is.null(caption)) .Object@caption <- caption
