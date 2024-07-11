@@ -43,7 +43,7 @@ tab <- tt(mtcars[1:10, 1:5]) |>
         j = list(
             "Foo" = 2:3,
             "Bar" = 4:5))
-expect_snapshot_print(print_html(tab), "group_tt-html_tutorial_01")
+expect_snapshot_print(print_html(tab), "group_tt-html_tutorial_01.html")
 
 
 
@@ -57,7 +57,7 @@ tab <- tt(k) |>
     style_tt(i = 1:3, j = 1, bold = TRUE) |>
     style_tt(j = 2, italic = TRUE) |>
     group_tt(i = list("hello world" = 2), j = list("foo" = 1:2, "bar" = 3:4))
-expect_snapshot_print(print_html(tab), "group_tt-issue165_html_centering_style")
+expect_snapshot_print(print_html(tab), "group_tt-issue165_html_centering_style.html")
 
 
 # Issue #165: group_tt insert extra row at the bottom
@@ -77,6 +77,7 @@ for (o in c("latex", "typst", "markdown", "html")) {
     lab = sprintf("group_tt-issue258_01_%s", o)
     tab <- tt(head(iris)) |> group_tt(i = list("hello" = 1))
     if (o == "html") {
+        lab <- paste0(lab, ".html")
         expect_snapshot_print(print_html(tab), lab)
     } else {
         expect_snapshot_print(tab, lab)
@@ -85,6 +86,7 @@ for (o in c("latex", "typst", "markdown", "html")) {
     lab = sprintf("group_tt-issue258_02_%s", o)
     tab <- tt(head(iris)) |> group_tt(i = list("hello" = 2, "world" = 2))
     if (o == "html") {
+        lab <- paste0(lab, ".html")
         expect_snapshot_print(print_html(tab), lab)
     } else {
         expect_snapshot_print(tab, lab)
