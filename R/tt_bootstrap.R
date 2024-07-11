@@ -157,7 +157,7 @@ setMethod(
   if (length(x@width) > 1) {
       for (j in seq_len(ncol(x))) {
           css <- sprintf("width: %s%%;", x@width[j] / sum(x@width) * 100)
-          x <- style_eval(x, j = j, bootstrap_css = css)
+          x <- style_tt(x, j = j, bootstrap_css = css)
       }
   }
 
