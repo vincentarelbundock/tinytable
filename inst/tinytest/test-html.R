@@ -7,11 +7,11 @@ options(tinytable_print_output = "html")
 x <- mtcars[1:4, 1:5]
 
 tab <- tt(x, theme = "striped")
-expect_snapshot_print(print_html(tab), "html-striped")
+expect_snapshot_print(print_html(tab), "html-striped.html")
 
 tab <- tt(x, theme = "striped") |>
   style_tt(color = "orange")
-expect_snapshot_print(print_html(tab), "html-striped_orange")
+expect_snapshot_print(print_html(tab), "html-striped_orange.html")
 
 
 # Issue #92: header alignment
@@ -19,7 +19,7 @@ k <- structure(list(Column1 = c("Some text", "123"), Column2 = c(
   "Some text",
   "456")), row.names = c(NA, -2L), class = "data.frame")
 tab <- tt(k, width = 1) |> style_tt(j = 2, align = "r")
-expect_snapshot_print(print_html(tab), "html-issue92")
+expect_snapshot_print(print_html(tab), "html-issue92.html")
 
 
 # tutorial.qmd: vectorized settings
@@ -28,18 +28,18 @@ tab <- tt(x) |>
     j = 2:3,
     color = c("orange", "green"),
     background = "black")
-expect_snapshot_print(print_html(tab), "html-vectorized_color_j")
+expect_snapshot_print(print_html(tab), "html-vectorized_color_j.html")
 
 # Issue #58
 tab <- tt(iris[1:10, ]) |>
   style_tt(align = "c") |>
   group_tt(j = list("Sepal" = 1:2, "Petal" = 3:4))
-expect_snapshot_print(print_html(tab), "html-issue58")
+expect_snapshot_print(print_html(tab), "html-issue58.html")
 
 # Issue #88: indent
 tab <- tt(iris[1:10, ]) |>
   style_tt(i = 2:4, indent = 3)
-expect_snapshot_print(print_html(tab), "html-issue88")
+expect_snapshot_print(print_html(tab), "html-issue88.html")
 
 # tutorial.qmd: heatmap
 k <- data.frame(matrix(1:20, ncol = 5))
@@ -54,15 +54,15 @@ tab <- tt(k, width = .5, theme = "void") |>
     color = fg,
     background = bg,
     fontsize = fs)
-expect_snapshot_print(print_html(tab), "html-heatmap")
+expect_snapshot_print(print_html(tab), "html-heatmap.html")
 
 # Caption
 tab <- tt(mtcars[1:3, 1:3], caption = "Blah blah")
-expect_snapshot_print(print_html(tab), "html-caption")
+expect_snapshot_print(print_html(tab), "html-caption.html")
 
 # Footnote
 tab <- tt(mtcars[1:3, 1:3], notes = list(a = "Blah.", b = "Blah blah."))
-expect_snapshot_print(print_html(tab), "html-footnote")
+expect_snapshot_print(print_html(tab), "html-footnote.html")
 
 # Style individual cells
 tab <- tt(mtcars[1:4, 1:4]) |>
@@ -72,12 +72,12 @@ tab <- tt(mtcars[1:4, 1:4]) |>
     italic = TRUE,
     background = "pink",
     color = "orange")
-expect_snapshot_print(print_html(tab), "html-individual_cells")
+expect_snapshot_print(print_html(tab), "html-individual_cells.html")
 
 # Issue #432: S4 refactor broke bootstrap_css argument
 x <- mtcars[1:4, 1:5]
 tab <- tt(x) |> style_tt(j = 1, bootstrap_css = "font-weight: bold; color: red;")
-expect_snapshot_print(print_html(tab), "html-bootstrap_css")
+expect_snapshot_print(print_html(tab), "html-bootstrap_css.html")
 
 # Line break
 d <- data.frame(
@@ -85,7 +85,7 @@ d <- data.frame(
   "dicta sunt<br> explicabo. Nemo"
 ) |> setNames(c("LaTeX line break", "HTML line break"))
 d <- tt(d)
-expect_snapshot_print(print_html(d), "html-line_break")
+expect_snapshot_print(print_html(d), "html-line_break.html")
 
 # Formatting
 dat <- data.frame(
@@ -94,13 +94,13 @@ dat <- data.frame(
   y = as.Date(c(999, 675, 3), origin = "1970-01-01"),
   z = c(TRUE, TRUE, FALSE))
 dat <- tt(dat, digits = 2)
-expect_snapshot_print(print_html(dat), "html-formatting")
+expect_snapshot_print(print_html(dat), "html-formatting.html")
 
 # Missing value replacement
 tab <- data.frame(a = c(NA, 1, 2), b = c(3, NA, 5))
 tab <- tt(tab)
 tab <- format_tt(tab, replace = "-")
-expect_snapshot_print(print_html(tab), "html-missing_value")
+expect_snapshot_print(print_html(tab), "html-missing_value.html")
 
 # Alignment
 dat <- data.frame(
@@ -108,12 +108,12 @@ dat <- data.frame(
   b = c("b", "bb", "bbb"),
   c = c("c", "cc", "ccc"))
 dat <- tt(dat) |> style_tt(j = 1:3, align = "lcr")
-expect_snapshot_print(print_html(dat), "html-alignment")
+expect_snapshot_print(print_html(dat), "html-alignment.html")
 
 # Font size
 x <- mtcars[1:4, 1:5]
 x <- tt(x) |> style_tt(j = "mpg|hp|qsec", fontsize = 1.5)
-expect_snapshot_print(print_html(x), "html-font_size")
+expect_snapshot_print(print_html(x), "html-font_size.html")
 
 # Merge cells
 x <- (mtcars[1:4, 1:5])
@@ -126,20 +126,20 @@ x <- tt(x) |> style_tt(
   color = "white",
   background = "black",
   bold = TRUE)
-expect_snapshot_print(print_html(x), "html-merge_cells")
+expect_snapshot_print(print_html(x), "html-merge_cells.html")
 
 # Spanning cells
 tab <- aggregate(mpg ~ cyl + am, FUN = mean, data = mtcars)
 tab <- tab[order(tab$cyl, tab$am), ]
 tab <- tt(tab, digits = 2) |>
   style_tt(i = c(1, 3, 5), j = 1, rowspan = 2, alignv = "t")
-expect_snapshot_print(print_html(tab), "html-spanning_cells")
+expect_snapshot_print(print_html(tab), "html-spanning_cells.html")
 
 # Omit headers
 k <- (mtcars[1:4, 1:5])
 colnames(k) <- NULL
 k <- tt(k)
-expect_snapshot_print(print_html(k), "html-omit_headers")
+expect_snapshot_print(print_html(k), "html-omit_headers.html")
 
 # Conditional styling
 k <- mtcars[1:10, c("mpg", "am", "vs")]
@@ -148,7 +148,7 @@ k <- tt(k) |>
     i = which(k$am == k$vs),
     background = "teal",
     color = "white")
-expect_snapshot_print(print_html(k), "html-conditional_styling")
+expect_snapshot_print(print_html(k), "html-conditional_styling.html")
 
 # Borders
 x <- tt(mtcars[1:4, 1:5], theme = "void") |>
@@ -158,7 +158,7 @@ x <- tt(mtcars[1:4, 1:5], theme = "void") |>
     line = "tblr",
     line_width = 0.4,
     line_color = "orange")
-expect_snapshot_print(print_html(x), "html-borders")
+expect_snapshot_print(print_html(x), "html-borders.html")
 
 # Images
 dat <- data.frame(
@@ -171,7 +171,7 @@ img <- c(
 )
 dat <- tt(dat) |>
   plot_tt(j = 2, images = img, height = 3)
-expect_snapshot_print(print_html(dat), "html-images")
+expect_snapshot_print(print_html(dat), "html-images.html")
 
 # # Built-in plots
 # # cannot be tested because the names of plots are random and set seed doesn't work

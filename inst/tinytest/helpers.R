@@ -21,12 +21,14 @@ print.custom_html_string <- function(x, ...) {
 }
 
 print_html <- function(x) {
+  # random table IDs
+  set.seed(1024)
   x <- tinytable::save_tt(x, output = "html")
-  x <- gsub("tinytable_\\w+\\b", "tinytable", x)
-  x <- gsub("styleCell_\\w+\\b", "tinytable", x)
-  x <- gsub("spanCell_\\w+\\b", "tinytable", x)
-  x <- gsub("insertSpanRow\\w+\\b", "tinytable", x)
-  x <- gsub("styleHeaderCell_\\w+\\b", "tinytable", x)
+  # x <- gsub("tinytable_\\w+\\b", "tinytable", x)
+  # x <- gsub("styleCell_\\w+\\b", "tinytable", x)
+  # x <- gsub("spanCell_\\w+\\b", "tinytable", x)
+  # x <- gsub("insertSpanRow\\w+\\b", "tinytable", x)
+  # x <- gsub("styleHeaderCell_\\w+\\b", "tinytable", x)
   class(x) <- c("custom_html_string", "character")
   x
 }
