@@ -44,5 +44,5 @@ options("tinytable_print_output" = NULL)
 
 exit_file("works interactively")
 options("tinytable_print_output" = "html")
-expect_snapshot_print(print_html(tab), "tibble-html_pillar_num")
+expect_snapshot_print(print_html(tab), "tibble-html_pillar_num.html")
 options("tinytable_print_output" = NULL)

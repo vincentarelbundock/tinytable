@@ -65,7 +65,7 @@ dat <- data.frame(
 tab <- tt(dat) |>
   format_tt(j = 1, markdown = TRUE) |>
   style_tt(j = 1, align = "c")
-expect_snapshot_print(print_html(tab), "format_tt-vignette_html_markdown")
+expect_snapshot_print(print_html(tab), "format_tt-vignette_html_markdown.html")
 
 
 # custom formatting
