@@ -247,3 +247,39 @@ Caption goes here.
 
 :::
 ````
+
+### Same table, different styles
+
+In some cases, the user wants to print a single table multiple times with different styles in a single HTML document. This will sometimes cause issues, because the `style_tt()` function inserts several javascript functions to modify the same table, thus creating conflicts. A simple solution is to change the unique ID of the table object manually. 
+
+Consider this RevalJS slideshow in which we sequentially highlight different rows of the data frame:
+
+````{verbatim}
+---
+format: revealjs
+---
+
+## Page 1
+
+```{r}
+library(tinytable)
+
+tab <- tt(head(iris))
+tab
+```
+
+## Page 2
+
+```{r}
+tab@id <- "table_01"
+tab |> style_tt(i = 3, background = "skyblue")
+```
+
+## Page 3
+
+```{r}
+tab@id <- "table_02"
+tab |> style_tt(i = 5, background = "orange")
+```
+````
+
