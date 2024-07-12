@@ -173,6 +173,19 @@ dat <- tt(dat) |>
   plot_tt(j = 2, images = img, height = 3)
 expect_snapshot_print(print_html(dat), "html-images.html")
 
+
+# Issue #297: group_tt() breaks alignment
+tab <- data.frame(
+  Person = c("Alice", "Bob", "Charlemagne"),
+  Fruit = c("Apple", "Banana", "Cantaloupe"),
+  Count = c(4, 238432, 32)) |>
+  tt() |> 
+  group_tt(i = list("Thing" = 1, "Thing again" = 2)) |> 
+  style_tt(i = c(1, 3), align = "l") |> 
+  style_tt(j = 1:3, align = "l")
+expect_snapshot_print(print_html(dat), "html-issue297")
+
+
 # # Built-in plots
 # # cannot be tested because the names of plots are random and set seed doesn't work
 # set.seed(1024)
