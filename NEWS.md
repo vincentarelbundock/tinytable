@@ -26,7 +26,6 @@ MathJax = {
 ```
 ````
 
-
 ### General
 
 * Support Viewer Pane in Positron IDE. Thank to @kylebutts for code contribution in PR #299.
@@ -67,6 +66,7 @@ MathJax = {
 
 ### Bugs
 
+* Footnotes were center-aligned in some Quarto chunks. Thanks to @aheiss for report #303.
 * `replace` does not work in LaTeX with `format_tt(quarto=TRUE)`. Thanks to @cbgoodman for Issue #263.
 * `style_tt(indent)` works for LaTeX
 * Notes were hard-coded to 5 colspan. We now use the actual number of columns in the table. Thanks to @DominikVogel for report #788.

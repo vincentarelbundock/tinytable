@@ -78,6 +78,9 @@ setMethod(
       template,
       fixed = TRUE
     )
+    for (ii in seq_along(notes)) { 
+        x <- style_tt(x, i = nrow(x) + ii, align = "l")
+    }
   }
 
   # width
