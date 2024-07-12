@@ -66,7 +66,8 @@ setMethod(
 
     for (ii in seq_len(nrow(css_rules))) {
         listener <- sprintf(
-            "window.addEventListener('load', function () { styleCell_tinytable_(%s, %s, '%s') })",
+            "window.addEventListener('load', function () { styleCell_%s(%s, %s, '%s') })",
+            x@id,
             css_rules$i[[ii]],
             css_rules$j[[ii]],
             css_rules$id[[ii]])

@@ -25,13 +25,10 @@
     <!-- tinytable mathjax end -->
 
     <script>
-      function styleCell(tableId, cellCoordinates, cssClass) {
-            var table = document.getElementById("$tinytable_TABLE_ID");
-            cellCoordinates.forEach(([i, j]) => {
-                table.rows[i].cells[j].classList.add(cssClass);
-            });
-        }
-
+      function styleCell(i, j, css_id) {
+        var table = document.getElementById("$tinytable_TABLE_ID");
+        table.rows[i].cells[j].classList.add(css_id);
+      }
       function insertSpanRow(i, colspan, content) {
         var table = document.getElementById('$tinytable_TABLE_ID');
         var newRow = table.insertRow(i);
