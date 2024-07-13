@@ -235,6 +235,14 @@ tab@output <- "latex"
 expect_snapshot_print(tab, label = "latex-issue242")
 
 
+# Issue #306
+x <- data.frame(x = 1:5)
+x <- data.frame(x = 1:5)
+colnames(x) <- NULL
+tab <- tt(x) |> format_tt() |> save_tt("latex")
+expect_inherits(tab, "character")
+
+
 options(tinytable_print_output = NULL)
 
 

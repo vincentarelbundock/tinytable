@@ -112,6 +112,8 @@ setMethod("colnames", "tinytable", function(x) return(x@names))
 setReplaceMethod("colnames",
                  signature = "tinytable", 
                  definition = function(x, value) {
+                   # Issue #306
+                   if (length(value) == 0) value <- NULL
                    if (!is.null(value)) {
                      assert_character(value, len = length(x@names))
                    } else {

@@ -71,6 +71,7 @@ MathJax = {
 * `style_tt(indent)` works for LaTeX
 * Notes were hard-coded to 5 colspan. We now use the actual number of columns in the table. Thanks to @DominikVogel for report #788.
 * Do not suppress labels when inserting notes. Thanks to @cportner for Issue #290.
+* `format_tt()` on a table without column names. Thanks to @aheiss for report #306.
 
 ## 0.3.0
 
