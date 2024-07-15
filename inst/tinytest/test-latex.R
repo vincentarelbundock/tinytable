@@ -243,6 +243,13 @@ tab <- tt(x) |> format_tt() |> save_tt("latex")
 expect_inherits(tab, "character")
 
 
+# Issue #307
+tab <- tt(head(iris)) |> 
+  group_tt(j = list("blah" = 1:2)) |>
+  theme_tt("tabular")
+expect_snapshot_print(tab, label = "latex-issue307.tex")
+
+
 options(tinytable_print_output = NULL)
 
 
