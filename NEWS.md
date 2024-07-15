@@ -66,12 +66,13 @@ MathJax = {
 
 ### Bugs
 
-* Footnotes were center-aligned in some Quarto chunks. Thanks to @aheiss for report #303.
+* Footnotes were center-aligned in some Quarto chunks. Thanks to @andrewheiss for report #303.
 * `replace` does not work in LaTeX with `format_tt(quarto=TRUE)`. Thanks to @cbgoodman for Issue #263.
 * `style_tt(indent)` works for LaTeX
 * Notes were hard-coded to 5 colspan. We now use the actual number of columns in the table. Thanks to @DominikVogel for report #788.
 * Do not suppress labels when inserting notes. Thanks to @cportner for Issue #290.
-* `format_tt()` on a table without column names. Thanks to @aheiss for report #306.
+* `format_tt()` on a table without column names. Thanks to @andrewheiss for report #306.
+* \cmidrule[lr] requires [] in tabularray but () otherwise. Thanks to @andrewheiss for report #307.
 
 ## 0.3.0
 
