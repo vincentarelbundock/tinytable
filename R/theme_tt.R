@@ -17,13 +17,7 @@ theme_default <- function(x, ...) {
 theme_tabular <- function(x, style = "tabular", ...) {
     assert_class(x, "tinytable")
 
-    dots <- list(...)
-    if ("style" %in% names(dots)) {
-        assert_choice(style, c("tabular", "tabularray"))
-        style <- dots[["style"]]
-    } else {
-        style <- "tabular"
-    }
+    assert_choice(style, c("tabular", "tabularray"))
 
     # do not change the default theme
     if (identical(x@theme[[1]], "tabular")) x@theme <- list("default")
@@ -34,10 +28,11 @@ theme_tabular <- function(x, style = "tabular", ...) {
         if (isTRUE(table@output == "latex")) {
             tab <- lines_drop(tab, regex = "\\\\begin\\{table\\}", position = "before")
             tab <- lines_drop(tab, regex = "\\\\begin\\{table\\}", position = "equal")
+            tab <- lines_drop(tab, regex = "\\\\end\\{table\\}", position = "equal")
+            tab <- lines_drop(tab, regex = "\\\\centering", position = "equal")
             if (style == "tabular") {
                 tab <- lines_drop(tab, regex = "\\\\end\\{table\\}", position = "after")
                 tab <- lines_drop(tab, regex = "\\\\end\\{table\\}", position = "equal")
-                tab <- lines_drop(tab, regex = "\\\\centering", position = "equal")
                 tab <- lines_drop_between(tab, regex_start = "tabularray outer open", regex_end = "tabularray inner close")
                 tab <- lines_drop(tab, regex = "tabularray outer close", position = "equal")
                 tab <- lines_drop(tab, regex = "tabularray inner open", position = "equal")
