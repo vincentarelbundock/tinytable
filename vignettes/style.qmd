@@ -201,6 +201,22 @@ tt(tab, digits = 2) |>
   style_tt(i = c(1, 3, 5), j = 1, rowspan = 2, alignv = "t")
 ```
 
+The `rowspan` feature is also useful to create multi-row labels. For example, in this table there is a linebreak, but all the text fits in a single cell:
+
+```{r} 
+tab <- data.frame(Letters = c("A<br>B", ""), Numbers = c("First", "Second"))
+
+tt(tab) |>
+    style_tt(bootstrap_class = "table-bordered")
+```
+
+Now, we use `colspan` to ensure that that cells in the first column take up less space and are combined into one:
+
+```{r} 
+tt(tab) |>
+    style_tt(bootstrap_class = "table-bordered") |>
+    style_tt(1, 1, rowspan = 2)
+```
 
 ## Headers
 
