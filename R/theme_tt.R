@@ -202,19 +202,28 @@ theme_bootstrap <- function(x, ...) {
 }
 
 
-theme_placement <- function(x, latex_float = getOption("tinytable_theme_placement_latex_float", default = NULL)) {
-    assert_string(latex_float, null.ok = TRUE)
+theme_placement <- function(x, 
+                            horizontal = getOption("tinytable_theme_placement_horizontal", default = NULL),
+                            latex_float = getOption("tinytable_theme_placement_latex_float", default = NULL)) {
     # do not change the defaul theme
     if (identical(x@theme[[1]], "placement")) x@theme <- list("default")
     fn <- function(table) {
+        tab <- table@table_string
         if (table@output == "latex" && !is.null(latex_float)) {
-            tab <- table@table_string
-            template <- sub(
+            assert_string(latex_float, null.ok = TRUE)
+            tab <- sub(
                 "\\\\begin\\{table\\}([^\\[])",
                 sprintf("\\\\begin{table}[%s]\\1", latex_float),
                 tab)
-            table@table_string <- template
+        } else if (table@output == "typst" && !is.null(horizontal)) {
+            assert_choice(horizontal, c("l", "c", "r"))
+            if (horizontal == "l") {
+                tab <- sub("#align(center,", "#align(left,", tab, fixed = TRUE)
+            } else if (horizontal == "r") {
+                tab <- sub("#align(center,", "#align(right,", tab, fixed = TRUE)
+            }
         }
+        table@table_string <- tab
         return(table)
     }
     x <- style_tt(x, finalize = fn)
@@ -313,6 +322,8 @@ theme_dictionary <- list(
 #'
 #' placement
 #' 
+#' + `horizontal` (Typst only): "l", "c", or "r" to align the table horizontally in the page.
+#'    - `options("tinytable_theme_placement_horizontal" = "l")`
 #' + `latex_float`: String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp". The default value is controlled by a global option:
 #'    - `options("tinytable_theme_placement_latex_float" = "H")`
 #' 

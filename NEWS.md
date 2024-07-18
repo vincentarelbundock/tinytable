@@ -55,6 +55,7 @@ MathJax = {
 * `style_tt()` supports `indent` argument.
 * `group_tt()` supports `indent` argument.
 * No more gutters when `group_tt(j)` and `style_tt(background)`
+* `theme_tt(x, horizontal = "l")` can left, center, or right-align a table in the page.
 
 ### Global options
 

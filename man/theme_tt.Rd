@@ -57,6 +57,10 @@ tabular
 
 placement
 \itemize{
+\item \code{horizontal} (Typst only): "l", "c", or "r" to align the table horizontally in the page.
+\itemize{
+\item \code{options("tinytable_theme_placement_horizontal" = "l")}
+}
 \item \code{latex_float}: String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp". The default value is controlled by a global option:
 \itemize{
 \item \code{options("tinytable_theme_placement_latex_float" = "H")}
