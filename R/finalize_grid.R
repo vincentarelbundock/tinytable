@@ -5,7 +5,7 @@ setMethod(
 
     # formal grid specification in pandoc includes lines everywhere
     # important for docx output
-    hlines <- get_option("tinytable_grid_hlines", default = TRUE)
+    hlines <- get_option("tinytable_markdown_hlines", default = TRUE)
     if (isTRUE(hlines)) {
       x <- grid_hlines(x)
     }
