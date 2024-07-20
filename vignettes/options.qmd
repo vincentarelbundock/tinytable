@@ -2,48 +2,28 @@
 
 Options can be set with `options()` and change the default behavior of tinytable. You can either set them in a script (usually at the top) or via `.Rprofile`. Note that you want to [be cautious](https://rstats.wtf/r-startup.html) with putting things in `.Rprofile` since they might make results not reproducible (e.g. if you change `tinytable_format_digits` in `.Rprofile`, the table will be formatted differently).
 
-First, you can set defaults for all the arguments in `tt()` and `format_tt()`. See the documentation for the what the argument looks like. 
+There are a set of global options that you can change. See `?tt()` for details. These are: 
 
-For `tt()`: `tinytable_tt_caption`, `tinytable_tt_digits`, `tinytable_tt_notes`, `tinytable_tt_rownames`, `tinytable_tt_theme`, `tinytable_tt_width`.
+`tinytable_quarto_disable_processing`, `tinytable_html_mathjax`, `tinytable_save_pdf_clean`, `tinytable_save_pdf_engine`.
 
-For `format_tt()`: `tinytable_format_bool`, `tinytable_format_date`, `tinytable_format_digits`, `tinytable_format_escape`, `tinytable_format_fn`, `tinytable_format_markdown`, `tinytable_format_num_fmt`, `tinytable_format_num_mark_big`, `tinytable_format_num_mark_dec`, `tinytable_format_num_suffix`, `tinytable_format_num_zero`, `tinytable_format_other`, `tinytable_format_quarto`, `tinytable_format_replace`, `tinytable_format_sprintf`.
+The rest of the options are function specific and start with `tinytable_X_` where X is `tt`/`format`/`print`/`theme`. 
+See the corresponding help documentation for the what the argument looks like. 
 
-There is a select few other options:
+For `tt()`: 
 
-```{r}
-#| echo: false
-#| tbl-cap: "Additional options"
-other_options <- tibble::tribble(
-  ~Option, ~`Description`,
-  # Print default
-  "`tinytable_print_output`", "String specifying default output format. See `print.tinytable()`",
+`tinytable_tt_digits`, `tinytable_tt_caption`, `tinytable_tt_notes`,  `tinytable_tt_width`, `tinytable_tt_theme`, `tinytable_tt_rownames`
 
-  # Available Themes
-  "`tinytable_themes`", "List of string/function pairs for themes. Changes what you can use with `tt(theme = 'name_of_theme')`. E.g. `list('simple' = theme_simpe)` where `theme_simple` is a custom function that accepts and returns a `tinytable` object.",
-  
-  # Pandoc Options
-  "`tinytable_grid_hlines`", "TRUE/FALSE. determines whether to have horizontal lines in table.",
-  
-  # HTML Options
-  "`tinytable_html_mathjax`", "TRUE/FALSE. whether to include mathjax in scripts (Experimental, see News)",
-  "`tinytable_quarto_disable_processing`", "TRUE/FALSE. Disables quarto processing of tables. See `?global_options`",
-  
-  # Latex Options
-  "`tinytable_save_pdf_clean`", "TRUE/FALSE. Whether to clean auxiliary files created during pdf rendering. See `?global_options`",
-  "`tinytable_save_pdf_engine`", "String specifying which engine to use for latex rendering. See `?global_options`",
-  "`tinytable_theme_placement_latex_float`", "String specifying float preference for table. See `?theme_tt`",
-  "`tinytable_siunitx_table-format`", "String specifying the table format to use with the `siunitx` latex package.",
-)
+For `format_tt()`: 
 
-tinytable::tt(other_options) |>
-  tinytable::group_tt(
-    i = list(
-      "`print_tt()`" = 1,
-      "Available Themes" = 2,
-      "Pandoc Options" = 3,
-      "HTML Options" = 4,
-      "Latex Options" = 6
-    )
-  ) |> 
-  tinytable::format_tt(markdown = TRUE) 
-```
+`tinytable_format_bool`, `tinytable_format_date`, `tinytable_format_digits`, `tinytable_format_escape`, `tinytable_format_fn`, `tinytable_format_markdown`, `tinytable_format_num_fmt`, `tinytable_format_num_mark_big`, `tinytable_format_num_mark_dec`, `tinytable_format_num_suffix`, `tinytable_format_num_zero`, `tinytable_format_other`, `tinytable_format_quarto`, `tinytable_format_replace`, `tinytable_format_sprintf`
+
+For `print.tinytable()`: 
+
+`tinytable_print_output`
+
+For `theme_tt()`: 
+
+`tinytable_theme_hlines`, `tinytable_theme_float_placement`, `tinytable_theme_horizontal_placement`, `tinytable_theme_resize_width`, `tinytable_theme_resize_direction`, 
+`tinytable_theme_multipage_rowhead`, `tinytable_theme_multipage_rowfoot`, 
+`tinytable_theme_tabular_style`, `tinytable_theme_siunitx_format`
+
