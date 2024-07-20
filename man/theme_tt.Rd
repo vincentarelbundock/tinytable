@@ -37,13 +37,25 @@ Each theme can have specific arguments, which are passed to the \code{theme_tt()
 resize
 \itemize{
 \item \code{width}: A numeric value between 0.01 and 1, representing the proportion of the line width to use
+\itemize{
+\item Set globally with \code{options("tinytable_theme_resize_width" = 0.9)}
+}
 \item \code{direction}: "down", "up", "both" A string indicating if the table should be scaled in one direction. For example, "down" will only resize the table if it exceeds \verb{\\linewidth}
+\itemize{
+\item Set globally with \code{options("tinytable_theme_resize_direction" = "down")}
+}
 }
 
 multipage
 \itemize{
 \item \code{rowhead}: Non-negative integer. The number of header rows to repeat on each page.
+\itemize{
+\item Set globally with \code{options("tinytable_theme_multipage_rowhead" = 1L)}
+}
 \item \code{rowfoot}: Non-negative integer. The number of footer rows to repeat on each page.
+\itemize{
+\item Set globally with \code{options("tinytable_theme_multipage_rowfoot" = 1L)}
+}
 }
 
 tabular
@@ -52,6 +64,7 @@ tabular
 \itemize{
 \item "tabular": Drop all LaTeX dependencies and floating environments, except \verb{\\\\begin\{tabular\}}
 \item "tabularray": Drop all LaTeX dependencies and floating environments, except \verb{\\\\begin\{tblr\}}
+\item Set globally with \code{options("tinytable_theme_tabular_style" = "tblr")}
 }
 }
 
@@ -59,11 +72,11 @@ placement
 \itemize{
 \item \code{horizontal} (Typst only): "l", "c", or "r" to align the table horizontally in the page.
 \itemize{
-\item \code{options("tinytable_theme_placement_horizontal" = "l")}
+\item Set globally with \code{options("tinytable_theme_placement_horizontal" = "l")}
 }
 \item \code{latex_float}: String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp". The default value is controlled by a global option:
 \itemize{
-\item \code{options("tinytable_theme_placement_latex_float" = "H")}
+\item Set globally with \code{options("tinytable_theme_placement_latex_float" = "H")}
 }
 }
 }

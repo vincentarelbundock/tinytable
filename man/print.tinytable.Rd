@@ -4,7 +4,7 @@
 \alias{print.tinytable}
 \title{Print, display, or convert a tinytable object}
 \usage{
-\method{print}{tinytable}(x, output = getOption("tinytable_print_output", default = NULL), ...)
+\method{print}{tinytable}(x, output = get_option("tinytable_print_output", default = NULL), ...)
 }
 \arguments{
 \item{x}{A data frame or data table to be rendered as a table.}

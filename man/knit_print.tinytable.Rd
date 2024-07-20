@@ -6,7 +6,7 @@
 \usage{
 knit_print.tinytable(
   x,
-  output = getOption("tinytable_print_output", default = NULL),
+  output = get_option("tinytable_print_output", default = NULL),
   ...
 )
 }
