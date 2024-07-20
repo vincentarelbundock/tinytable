@@ -26,6 +26,7 @@
 #' * Multiple strings insert multiple notes sequentially: `list("Hello world", "Foo bar")`
 #' * A named list inserts a list with the name as superscript: `list("a" = list("Hello World"))`
 #' * A named list with positions inserts markers as superscripts inside table cells: `list("a" = list(i = 0:1, j = 2, text = "Hello World"))`
+#' @param rownames Logical. If `TRUE`, rownames are included as the first column
 #' @param ... Additional arguments are ignored
 #' @return An object of class `tt` representing the table.
 #' 
@@ -55,11 +56,12 @@
 #' 
 #' @export
 tt <- function(x,
-               digits = getOption("tinytable_tt_digits", default = NULL),
-               caption = getOption("tinytable_tt_caption", default = NULL),
-               notes = getOption("tinytable_tt_notes", default = NULL),
-               width = getOption("tinytable_tt_width", default = NULL),
-               theme = getOption("tinytable_tt_theme", default = NULL),
+               digits = get_option("tinytable_tt_digits", default = NULL),
+               caption = get_option("tinytable_tt_caption", default = NULL),
+               notes = get_option("tinytable_tt_notes", default = NULL),
+               width = get_option("tinytable_tt_width", default = NULL),
+               theme = get_option("tinytable_tt_theme", default = NULL),
+               rownames = get_option("tinytable_tt_rownames", default = FALSE),
                ...) {
 
 
@@ -100,7 +102,8 @@ tt <- function(x,
 
   # bind the row names if the user explicitly asks for it in global option. 
   # Same name as tibble::rownames_to_column()
-  if (isTRUE(getOption("tinytable_tt_rownames", default = FALSE)) && !is.null(row.names(x))) {
+  assert_flag(rownames)
+  if (isTRUE(rownames) && !is.null(row.names(x))) {
     rn <- data.frame(format(row.names(x)))
     rn <- stats::setNames(rn, "rowname")
     x <- cbind(rn, x)

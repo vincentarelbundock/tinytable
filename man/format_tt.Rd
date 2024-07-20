@@ -8,23 +8,23 @@ format_tt(
   x,
   i = NULL,
   j = NULL,
-  digits = getOption("tinytable_format_digits", default = NULL),
-  num_fmt = getOption("tinytable_format_num_fmt", default = "significant"),
-  num_zero = getOption("tinytable_format_num_zero", default = FALSE),
-  num_suffix = getOption("tinytable_format_num_suffix", default = FALSE),
-  num_mark_big = getOption("tinytable_format_num_mark_big", default = ""),
-  num_mark_dec = getOption("tinytable_format_num_mark_dec", default = getOption("OutDec",
-    default = ".")),
-  date = getOption("tinytable_format_date", default = "\%Y-\%m-\%d"),
-  bool = getOption("tinytable_format_bool", default = function(column)
+  digits = get_option("tinytable_format_digits", default = NULL),
+  num_fmt = get_option("tinytable_format_num_fmt", default = "significant"),
+  num_zero = get_option("tinytable_format_num_zero", default = FALSE),
+  num_suffix = get_option("tinytable_format_num_suffix", default = FALSE),
+  num_mark_big = get_option("tinytable_format_num_mark_big", default = ""),
+  num_mark_dec = get_option("tinytable_format_num_mark_dec", default =
+    getOption("OutDec", default = ".")),
+  date = get_option("tinytable_format_date", default = "\%Y-\%m-\%d"),
+  bool = get_option("tinytable_format_bool", default = function(column)
     tools::toTitleCase(tolower(column))),
-  other = getOption("tinytable_format_other", default = as.character),
-  replace = getOption("tinytable_format_replace", default = TRUE),
-  escape = getOption("tinytable_format_escape", default = FALSE),
-  markdown = getOption("tinytable_format_markdown", default = FALSE),
-  quarto = getOption("tinytable_format_quarto", default = FALSE),
-  fn = getOption("tinytable_format_fn", default = NULL),
-  sprintf = getOption("tinytable_format_sprintf", default = NULL),
+  other = get_option("tinytable_format_other", default = as.character),
+  replace = get_option("tinytable_format_replace", default = TRUE),
+  escape = get_option("tinytable_format_escape", default = FALSE),
+  markdown = get_option("tinytable_format_markdown", default = FALSE),
+  quarto = get_option("tinytable_format_quarto", default = FALSE),
+  fn = get_option("tinytable_format_fn", default = NULL),
+  sprintf = get_option("tinytable_format_sprintf", default = NULL),
   ...
 )
 }
@@ -95,19 +95,6 @@ If this function is applied several times to the same cell, the last transformat
 }
 \section{Global options}{
 
-\subsection{Row names}{
-
-When the \code{x} data frame includes row names, \code{tinytable} can bind them to the first column (without an empty string string as column name). This global option triggers this behavior:
-
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(tinytable_tt_rownames = TRUE)
-
-x <- mtcars[1:3, 1:3]
-tt(x)
-
-options(tinytable_tt_rownames = FALSE)
-}\if{html}{\out{</div>}}
-}
-
 \subsection{Quarto data processing}{
 
 The \code{format_tt(quarto=TRUE)} argument activates Quarto data processing for specific cells. This funcationality comes with  a few warnings:
@@ -136,8 +123,14 @@ See this link for more details: https://quarto.org/docs/authoring/tables.html#di
 
 \subsection{PDF}{
 \itemize{
-\item \code{options(tinytable_save_pdf_clean = TRUE)} deletes temporary and log files.
-\item \code{options(tinytable_save_pdf_engine = "xelatex")}: "xelatex", "pdflatex", "lualatex"
+\item \code{options(tinytable_pdf_clean = TRUE)} deletes temporary and log files.
+\item \code{options(tinytable_pdf_engine = "xelatex")}: "xelatex", "pdflatex", "lualatex"
+}
+}
+
+\subsection{MARKDOWN}{
+\itemize{
+\item \code{options(tinytable_markdown_hlines = TRUE)} sets whether gridlines are included in markdown tables. This should be true for \code{docx} conversion.
 }
 }
 }

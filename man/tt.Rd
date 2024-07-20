@@ -6,11 +6,12 @@
 \usage{
 tt(
   x,
-  digits = getOption("tinytable_tt_digits", default = NULL),
-  caption = getOption("tinytable_tt_caption", default = NULL),
-  notes = getOption("tinytable_tt_notes", default = NULL),
-  width = getOption("tinytable_tt_width", default = NULL),
-  theme = getOption("tinytable_tt_theme", default = NULL),
+  digits = get_option("tinytable_tt_digits", default = NULL),
+  caption = get_option("tinytable_tt_caption", default = NULL),
+  notes = get_option("tinytable_tt_notes", default = NULL),
+  width = get_option("tinytable_tt_width", default = NULL),
+  theme = get_option("tinytable_tt_theme", default = NULL),
+  rownames = get_option("tinytable_tt_rownames", default = FALSE),
   ...
 )
 }
@@ -40,6 +41,8 @@ tt(
 \item String: grid, resize, multipage, placement, striped, void, bootstrap, tabular
 \item Function: Applied to the \code{tinytable} object.
 }}
+
+\item{rownames}{Logical. If \code{TRUE}, rownames are included as the first column}
 
 \item{...}{Additional arguments are ignored}
 }
@@ -82,19 +85,6 @@ When rendering a document from Quarto or Rmarkdown directly to PDF, \code{tinyta
 
 \section{Global options}{
 
-\subsection{Row names}{
-
-When the \code{x} data frame includes row names, \code{tinytable} can bind them to the first column (without an empty string string as column name). This global option triggers this behavior:
-
-\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(tinytable_tt_rownames = TRUE)
-
-x <- mtcars[1:3, 1:3]
-tt(x)
-
-options(tinytable_tt_rownames = FALSE)
-}\if{html}{\out{</div>}}
-}
-
 \subsection{Quarto data processing}{
 
 The \code{format_tt(quarto=TRUE)} argument activates Quarto data processing for specific cells. This funcationality comes with  a few warnings:
@@ -123,8 +113,14 @@ See this link for more details: https://quarto.org/docs/authoring/tables.html#di
 
 \subsection{PDF}{
 \itemize{
-\item \code{options(tinytable_save_pdf_clean = TRUE)} deletes temporary and log files.
-\item \code{options(tinytable_save_pdf_engine = "xelatex")}: "xelatex", "pdflatex", "lualatex"
+\item \code{options(tinytable_pdf_clean = TRUE)} deletes temporary and log files.
+\item \code{options(tinytable_pdf_engine = "xelatex")}: "xelatex", "pdflatex", "lualatex"
+}
+}
+
+\subsection{MARKDOWN}{
+\itemize{
+\item \code{options(tinytable_markdown_hlines = TRUE)} sets whether gridlines are included in markdown tables. This should be true for \code{docx} conversion.
 }
 }
 }

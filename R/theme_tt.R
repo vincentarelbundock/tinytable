@@ -14,7 +14,9 @@ theme_default <- function(x, ...) {
 }
 
 
-theme_tabular <- function(x, style = "tabular", ...) {
+theme_tabular <- function(x, 
+                          style = get_option("tinytable_theme_tabular_style", "tabular"), 
+                          ...) {
     assert_class(x, "tinytable")
 
     assert_choice(style, c("tabular", "tabularray"))
@@ -68,7 +70,10 @@ theme_tabular <- function(x, style = "tabular", ...) {
 }
 
 
-theme_resize <- function(x, width = 1, direction = "down", ...) {
+theme_resize <- function(x, 
+                         width = get_option("tinytable_theme_resize_width", 1), 
+                         direction = get_option("tinytable_theme_resize_direction", "down"), 
+                         ...) {
     assert_class(x, "tinytable")
     assert_numeric(width, len = 1, lower = 0.01, upper = 1)
     assert_choice(direction, c("down", "up", "both"))
@@ -203,8 +208,8 @@ theme_bootstrap <- function(x, ...) {
 
 
 theme_placement <- function(x, 
-                            horizontal = getOption("tinytable_theme_placement_horizontal", default = NULL),
-                            latex_float = getOption("tinytable_theme_placement_latex_float", default = NULL)) {
+                            horizontal = get_option("tinytable_theme_placement_horizontal", default = NULL),
+                            latex_float = get_option("tinytable_theme_placement_latex_float", default = NULL)) {
     # do not change the defaul theme
     if (identical(x@theme[[1]], "placement")) x@theme <- list("default")
     fn <- function(table) {
@@ -231,7 +236,10 @@ theme_placement <- function(x,
 }
 
 
-theme_multipage <- function(x, rowhead = 0, rowfoot = 0, ...) {
+theme_multipage <- function(x, 
+                            rowhead = get_option("tinytable_theme_multipage_rowhead", 0L), 
+                            rowfoot = get_option("tinytable_theme_multipage_rowfoot", 0L), 
+                            ...) {
     assert_class(x, "tinytable")
     # do not change the defaul theme
     if (identical(x@theme[[1]], "multipage")) x@theme <- list("default")
@@ -307,25 +315,32 @@ theme_dictionary <- list(
 #' resize
 #' 
 #' + `width`: A numeric value between 0.01 and 1, representing the proportion of the line width to use
+#'   - Set globally with `options("tinytable_theme_resize_width" = 0.9)`
 #' + `direction`: "down", "up", "both" A string indicating if the table should be scaled in one direction. For example, "down" will only resize the table if it exceeds `\linewidth`
+#'   - Set globally with `options("tinytable_theme_resize_direction" = "down")`
+#' 
 #' 
 #' multipage
 #' 
 #' + `rowhead`: Non-negative integer. The number of header rows to repeat on each page.
+#'   - Set globally with `options("tinytable_theme_multipage_rowhead" = 1L)`
 #' + `rowfoot`: Non-negative integer. The number of footer rows to repeat on each page.
+#'   - Set globally with `options("tinytable_theme_multipage_rowfoot" = 1L)`
 #' 
 #' tabular
 #'
 #' + `style`: 
 #'   - "tabular": Drop all LaTeX dependencies and floating environments, except `\\begin{tabular}` 
 #'   - "tabularray": Drop all LaTeX dependencies and floating environments, except `\\begin{tblr}` 
+#'   - Set globally with `options("tinytable_theme_tabular_style" = "tblr")`
 #'
 #' placement
 #' 
 #' + `horizontal` (Typst only): "l", "c", or "r" to align the table horizontally in the page.
-#'    - `options("tinytable_theme_placement_horizontal" = "l")`
+#'    - Set globally with `options("tinytable_theme_placement_horizontal" = "l")`
 #' + `latex_float`: String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp". The default value is controlled by a global option:
-#'    - `options("tinytable_theme_placement_latex_float" = "H")`
+#'    - Set globally with `options("tinytable_theme_placement_latex_float" = "H")`
+#' 
 #' 
 #' @examples
 #' library(tinytable)
@@ -348,7 +363,7 @@ theme_dictionary <- list(
 theme_tt <- function(x, theme, ...) {
     if (is.null(theme)) return(x)
     if (is.function(theme)) return(theme(x, ...))
-    td <- getOption("tinytable_themes", default = theme_dictionary)
+    td <- theme_dictionary
     na <- unique(sort(names(td)))
     assert_choice(theme, na)
     fn <- td[[theme]]

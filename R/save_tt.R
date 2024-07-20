@@ -103,13 +103,13 @@ save_tt <- function(x, output, overwrite = FALSE) {
     existing_log_files <- list.files(temp_wd, pattern = "\\.log$", full.names = TRUE)
 
     # render
-    engine <- getOption("tinytable_save_pdf_engine", default = "xelatex")
-    assert_choice(engine, c("xelatex", "pdflatex", "lualatex"), name = "tinytable_save_pdf_engine")
+    engine <- get_option("tinytable_pdf_engine", default = "xelatex")
+    assert_choice(engine, c("xelatex", "pdflatex", "lualatex"), name = "tinytable_pdf_engine")
     tinytex::latexmk(f, pdf_file = output, engine = engine)
 
     # clean
-    flag <- getOption("tinytable_save_pdf_clean", default = TRUE)
-    assert_flag(flag, name = "tinytable_save_pdf_clean")
+    flag <- get_option("tinytable_pdf_clean", default = TRUE)
+    assert_flag(flag, name = "tinytable_pdf_clean")
     if (flag) {
       new_log_files <- setdiff(
         list.files(temp_wd, pattern = "\\.log$", full.names = TRUE),

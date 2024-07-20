@@ -1,19 +1,6 @@
 #'
 #' @section Global options:
 #'
-#' ## Row names
-#'
-#' When the `x` data frame includes row names, `tinytable` can bind them to the first column (without an empty string string as column name). This global option triggers this behavior:
-#'
-#' ```r
-#' options(tinytable_tt_rownames = TRUE)
-#'
-#' x <- mtcars[1:3, 1:3]
-#' tt(x)
-#'
-#' options(tinytable_tt_rownames = FALSE)
-#' ```
-#'
 #' ## Quarto data processing
 #'
 #' The `format_tt(quarto=TRUE)` argument activates Quarto data processing for specific cells. This funcationality comes with  a few warnings:
@@ -39,6 +26,11 @@
 #'
 #' ## PDF
 #'
-#' * `options(tinytable_save_pdf_clean = TRUE)` deletes temporary and log files.
-#' * `options(tinytable_save_pdf_engine = "xelatex")`: "xelatex", "pdflatex", "lualatex"
+#' * `options(tinytable_pdf_clean = TRUE)` deletes temporary and log files.
+#' * `options(tinytable_pdf_engine = "xelatex")`: "xelatex", "pdflatex", "lualatex"
+#' 
+#' ## MARKDOWN
+#' 
+#' * `options(tinytable_markdown_hlines = TRUE)` sets whether gridlines are included in markdown tables. This should be true for `docx` conversion.
+#' 
 #'
