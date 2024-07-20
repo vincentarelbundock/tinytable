@@ -363,7 +363,7 @@ theme_dictionary <- list(
 theme_tt <- function(x, theme, ...) {
     if (is.null(theme)) return(x)
     if (is.function(theme)) return(theme(x, ...))
-    td <- getOption("tinytable_themes", default = theme_dictionary)
+    td <- theme_dictionary
     na <- unique(sort(names(td)))
     assert_choice(theme, na)
     fn <- td[[theme]]
