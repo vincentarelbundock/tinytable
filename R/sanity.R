@@ -52,9 +52,9 @@ sanitize_output <- function(output) {
   assert_choice(output, choice = c("tinytable", "markdown", "latex", "html", "typst", "dataframe"), null.ok = TRUE)
 
   # default output format
-  if (isTRUE(output == "tinytable")) {
+  if (is.null(output) || isTRUE(output == "tinytable")) {
     has_viewer <- interactive() && !is.null(getOption("viewer"))
-    out <- getOption("tt_output_default", default = if (has_viewer) "html" else "markdown")
+    out <- if (has_viewer) "html" else "markdown"
   } else {
     out <- output
   }
