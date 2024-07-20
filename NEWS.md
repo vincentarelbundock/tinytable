@@ -37,6 +37,7 @@ MathJax = {
 * `colnames(x)<-NULL` works on a `tinytable` object.
 * `format_tt(num_big_mark)` applies to integer columns.
 * Use `getOption("viewer")` instead of `rstudioapi::viewer()` for positron support
+* `glue::glue()` string is accepted by `format_tt()`. Thanks to @LukasWallrich for report #792 on the `modelsummary` repository.
 
 ### HTML
 

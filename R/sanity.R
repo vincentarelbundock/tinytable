@@ -316,7 +316,9 @@ check_atomic_vector <- function(x, null.ok = FALSE, name = as.character(substitu
   if (isTRUE(null.ok) && is.null(x)) {
     return(invisible(TRUE))
   }
-  flag <- is.atomic(x) && is.vector(x) && !is.list(x)
+  # doesn't work on glue::glue() output
+  # flag <- is.atomic(x) && is.vector(x) && !is.list(x)
+  flag <- is.atomic(x) && is.null(dim(x)) && length(x) > 0 && !is.list(x)
   if (flag) {
     out <- TRUE
   } else if (is.factor(x) && is.null(dim(x))) {
