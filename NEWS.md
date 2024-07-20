@@ -28,6 +28,7 @@ MathJax = {
 
 ### General
 
+* Global options are more consistent and better documented. Thanks to @kylebutts for PR #313.
 * Support Viewer Pane in Positron IDE. Thank to @kylebutts for code contribution in PR #299.
 * Improved documentation.
 * `format_tt(markdown=TRUE)` escapes groups and notes when `i` and `j` are `NULL`.
