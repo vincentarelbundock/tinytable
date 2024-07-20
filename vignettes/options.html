@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plot_tt – tinytable</title>
+<title>options – tinytable</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -30,8 +64,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../man/save_tt.html" rel="next">
-<link href="../man/group_tt.html" rel="prev">
 <link href="../favicon.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -161,7 +193,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/tt.html">Functions</a></li><li class="breadcrumb-item"><a href="../man/plot_tt.html"><code>plot_tt</code></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -246,13 +278,13 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/tt.html" class="sidebar-item-text sidebar-link">
@@ -285,7 +317,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/plot_tt.html" class="sidebar-item-text sidebar-link active">
+  <a href="../man/plot_tt.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>plot_tt</code></span></a>
   </div>
 </li>
@@ -337,13 +369,22 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#insert-images-and-inline-plots-into-tinytable-objects" id="toc-insert-images-and-inline-plots-into-tinytable-objects" class="nav-link active" data-scroll-target="#insert-images-and-inline-plots-into-tinytable-objects">Insert images and inline plots into tinytable objects</a>
+  <li><a href="#available-options" id="toc-available-options" class="nav-link active" data-scroll-target="#available-options">Available Options</a>
   <ul class="collapse">
-  <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
-  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
-  <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
-  <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a></li>
-  <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
+  <li><a href="#default-values-for-function-arguments" id="toc-default-values-for-function-arguments" class="nav-link" data-scroll-target="#default-values-for-function-arguments">Default values for function arguments</a>
+  <ul class="collapse">
+  <li><a href="#tt" id="toc-tt" class="nav-link" data-scroll-target="#tt"><code>tt()</code></a></li>
+  <li><a href="#format_tt" id="toc-format_tt" class="nav-link" data-scroll-target="#format_tt"><code>format_tt()</code></a></li>
+  <li><a href="#theme_tt" id="toc-theme_tt" class="nav-link" data-scroll-target="#theme_tt"><code>theme_tt()</code></a></li>
+  <li><a href="#print.tinytable" id="toc-print.tinytable" class="nav-link" data-scroll-target="#print.tinytable"><code>print.tinytable()</code></a></li>
+  </ul></li>
+  <li><a href="#global-options" id="toc-global-options" class="nav-link" data-scroll-target="#global-options">Global options</a>
+  <ul class="collapse">
+  <li><a href="#html" id="toc-html" class="nav-link" data-scroll-target="#html">HTML</a></li>
+  <li><a href="#pdf" id="toc-pdf" class="nav-link" data-scroll-target="#pdf">PDF</a></li>
+  <li><a href="#markdown" id="toc-markdown" class="nav-link" data-scroll-target="#markdown">Markdown</a></li>
+  <li><a href="#quarto" id="toc-quarto" class="nav-link" data-scroll-target="#quarto">Quarto</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -354,154 +395,98 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="insert-images-and-inline-plots-into-tinytable-objects" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="insert-images-and-inline-plots-into-tinytable-objects">Insert images and inline plots into tinytable objects</h2>
-<section id="description" class="level3">
-<h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>The <code>plot_tt()</code> function allows for the insertion of images and inline plots into tinytable objects. This function can handle both local and web-based images.</p>
-</section>
-<section id="usage" class="level3">
-<h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">plot_tt(
-  x,
-  i = NULL,
-  j = NULL,
-  fun = NULL,
-  data = NULL,
-  color = "black",
-  xlim = NULL,
-  height = 1,
-  asp = 1/3,
-  images = NULL,
-  assets = "tinytable_assets",
-  ...
-)
-</code></pre>
-</section>
-<section id="arguments" class="level3">
-<h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
-<table>
-<tbody><tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="x">x</code>
-</td>
-<td>
-A tinytable object.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="i">i</code>
-</td>
-<td>
-Integer vector, the row indices where images are to be inserted. If <code>NULL</code>, images will be inserted in all rows.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="j">j</code>
-</td>
-<td>
-Integer vector, the column indices where images are to be inserted. If <code>NULL</code>, images will be inserted in all columns.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="fun">fun</code>
-</td>
-<td>
-<p>String or function to generate inline plots.</p>
+<section id="available-options" class="level1">
+<h1>Available Options</h1>
+<p>Options can be set with <code>options()</code> and change the default behavior of tinytable. You can either set them in a script (usually at the top) or via <code>.Rprofile</code>. Note that you want to <a href="https://rstats.wtf/r-startup.html">be cautious</a> with putting things in <code>.Rprofile</code> since they might make results not reproducible (e.g.&nbsp;if you change <code>tinytable_format_digits</code> in <code>.Rprofile</code>, the table will be formatted differently).</p>
+<section id="default-values-for-function-arguments" class="level2">
+<h2 class="anchored" data-anchor-id="default-values-for-function-arguments">Default values for function arguments</h2>
+<p>Most options are function specific and allow you to set default values. These all start with <code>tinytable_X_</code> where X is <code>tt</code>/<code>format</code>/<code>theme</code>/<code>print</code>. See the corresponding help documentation for the what the argument looks like.</p>
+<section id="tt" class="level3">
+<h3 class="anchored" data-anchor-id="tt"><code>tt()</code></h3>
+<p>Sets default values for <code>tt()</code> arguments.</p>
 <ul>
-<li>
-<p>String: "histogram", "density", "bar", "line"</p>
-</li>
-<li>
-<p>Functions that return <code>ggplot2</code> objects.</p>
-</li>
-<li>
-<p>Functions that return another function which generates a base <code>R</code> plot, ex: <code>function(x) {function() hist(x)}</code></p>
-</li>
-<li>
-<p>See the tutorial on the <code>tinytable</code> website for more information.</p>
-</li>
+<li><code>tinytable_tt_digits</code></li>
+<li><code>tinytable_tt_caption</code></li>
+<li><code>tinytable_tt_notes</code></li>
+<li><code>tinytable_tt_width</code></li>
+<li><code>tinytable_tt_theme</code></li>
+<li><code>tinytable_tt_rownames</code></li>
 </ul>
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="data">data</code>
-</td>
-<td>
-a list of data frames or vectors to be used by the plotting functions in <code>fun</code>.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="color">color</code>
-</td>
-<td>
-string Name of color to use for inline plots (passed to the <code>col</code> argument base <code>graphics</code> plots in <code>R</code>).
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="xlim">xlim</code>
-</td>
-<td>
-Numeric vector of length 2.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="height">height</code>
-</td>
-<td>
-Numeric, the height of the images in the table in em units.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="asp">asp</code>
-</td>
-<td>
-Numeric, aspect ratio of the plots (height / width).
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="images">images</code>
-</td>
-<td>
-Character vector, the paths to the images to be inserted. Paths are relative to the main table file or Quarto (Rmarkdown) document.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="assets">assets</code>
-</td>
-<td>
-Path to the directory where generated assets are stored. This path is relative to the location where a table is saved.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="...">…</code>
-</td>
-<td>
-Extra arguments are passed to the function in <code>fun</code>. Important: Custom plotting functions must always have <code>…</code> as an argument.
-</td>
-</tr>
-</tbody></table>
 </section>
-<section id="details" class="level3">
-<h3 class="anchored" data-anchor-id="details">Details</h3>
-<p>The <code>plot_tt()</code> can insert images and inline plots into tables.</p>
+<section id="format_tt" class="level3">
+<h3 class="anchored" data-anchor-id="format_tt"><code>format_tt()</code></h3>
+<p>Sets default formats for different kinds of variables. see <code>format_tt()</code></p>
+<ul>
+<li><code>tinytable_format_digits</code></li>
+<li><code>tinytable_format_num_fmt</code></li>
+<li><code>tinytable_format_num_zero</code></li>
+<li><code>tinytable_format_num_suffix</code></li>
+<li><code>tinytable_format_num_mark_big</code></li>
+<li><code>tinytable_format_num_mark_dec</code></li>
+<li><code>tinytable_format_date</code></li>
+<li><code>tinytable_format_bool</code></li>
+<li><code>tinytable_format_other</code></li>
+<li><code>tinytable_format_replace</code></li>
+<li><code>tinytable_format_escape</code></li>
+<li><code>tinytable_format_markdown</code></li>
+<li><code>tinytable_format_quarto</code></li>
+<li><code>tinytable_format_fn</code></li>
+<li><code>tinytable_format_sprintf</code></li>
+</ul>
 </section>
-<section id="value" class="level3">
-<h3 class="anchored" data-anchor-id="value">Value</h3>
-<p>A modified tinytable object with images or plots inserted.</p>
+<section id="theme_tt" class="level3">
+<h3 class="anchored" data-anchor-id="theme_tt"><code>theme_tt()</code></h3>
+<p>When using <code>theme_tt(theme = "theme_name")</code>, this allows you to set default arguments to the corresponding theme. See <code>theme_tt()</code> for details.</p>
+<p>placement - <code>tinytable_theme_placement_float</code> - <code>tinytable_theme_placement_horizontal</code></p>
+<p>resize - <code>tinytable_theme_resize_width</code> - <code>tinytable_theme_resize_direction</code></p>
+<p>multipate - <code>tinytable_theme_multipage_rowhead</code> - <code>tinytable_theme_multipage_rowfoot</code></p>
+<p>tabular - <code>tinytable_theme_tabular_style</code></p>
+</section>
+<section id="print.tinytable" class="level3">
+<h3 class="anchored" data-anchor-id="print.tinytable"><code>print.tinytable()</code></h3>
+<p><code>tinytable_print_output</code></p>
+</section>
+</section>
+<section id="global-options" class="level2">
+<h2 class="anchored" data-anchor-id="global-options">Global options</h2>
+<p>The rest of the options are a set of global options that apply when the tables are being built.</p>
+<section id="html" class="level3">
+<h3 class="anchored" data-anchor-id="html">HTML</h3>
+<ul>
+<li>EXPERIMENTAL <code>options(tinytable_html_mathjax = TRUE)</code> inserts MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.</li>
+</ul>
+</section>
+<section id="pdf" class="level3">
+<h3 class="anchored" data-anchor-id="pdf">PDF</h3>
+<ul>
+<li><code>options(tinytable_pdf_clean = TRUE)</code> deletes temporary and log files.</li>
+<li><code>options(tinytable_pdf_engine = "xelatex")</code>: “xelatex”, “pdflatex”, “lualatex”</li>
+</ul>
+</section>
+<section id="markdown" class="level3">
+<h3 class="anchored" data-anchor-id="markdown">Markdown</h3>
+<ul>
+<li><code>options(tinytable_markdown_hlines = TRUE)</code> sets whether gridlines are included in markdown tables. This should be true for <code>docx</code> conversion.</li>
+</ul>
+</section>
+<section id="quarto" class="level3">
+<h3 class="anchored" data-anchor-id="quarto">Quarto</h3>
+<p>The <code>format_tt(quarto=TRUE)</code> argument activates Quarto data processing for specific cells. This funcationality comes with a few warnings:</p>
+<ol type="1">
+<li>Currently, Quarto provides a <code>\QuartoMarkdownBase64{}</code> LaTeX macro, but it does not appear to do anything with it. References and markdown codes may not be processed as expected in LaTeX.</li>
+<li>Quarto data processing can enter in conflict with <code>tinytable</code> styling or formatting options. See below for how to disable it.</li>
+</ol>
+<ul>
+<li><p><code>options(tinytable_quarto_disable_processing = TRUE)</code> disables Quarto processing of cell content.</p>
+<p>Setting this global option to <code>FALSE</code> may lead to conflicts with some <code>tinytable</code> features, but it also allows use of markdown and Quarto-specific code in table cells, such as cross-references.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Math =</span> <span class="st">"x^2^"</span>, <span class="at">Citation =</span> <span class="st">"@Lovelace1842"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>fn <span class="ot">&lt;-</span> <span class="cf">function</span>(z) <span class="fu">sprintf</span>(<span class="st">"&lt;span data-qmd='%s'&gt;&lt;/span&gt;"</span>, z)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x) <span class="sc">|&gt;</span> <span class="fu">format_tt</span>(<span class="at">i =</span> <span class="dv">1</span>, <span class="at">fn =</span> fn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>See this link for more details: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing</p></li>
+</ul>
 
 
+</section>
 </section>
 </section>
 
@@ -926,18 +911,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-      <a href="../man/group_tt.html" class="pagination-link" aria-label="`group_tt`">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>group_tt</code></span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../man/save_tt.html" class="pagination-link" aria-label="`save_tt`">
-        <span class="nav-page-text"><code>save_tt</code></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 

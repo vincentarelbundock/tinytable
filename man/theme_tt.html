@@ -161,6 +161,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Customization</span></a>
   </li>  
         <li>
+    <a class="dropdown-item" href="../vignettes/options.html">
+ <span class="dropdown-text">Available Options</span></a>
+  </li>  
+        <li>
     <a class="dropdown-item" href="../vignettes/faq.html">
  <span class="dropdown-text">FAQ</span></a>
   </li>  
@@ -462,18 +466,38 @@ Additional arguments passed the themeing function. See the "Arguments" section b
 <ul>
 <li>
 <p><code>width</code>: A numeric value between 0.01 and 1, representing the proportion of the line width to use</p>
+<ul>
+<li>
+<p>Set globally with <code>options(“tinytable_theme_resize_width” = 0.9)</code></p>
+</li>
+</ul>
 </li>
 <li>
 <p><code>direction</code>: "down", "up", "both" A string indicating if the table should be scaled in one direction. For example, "down" will only resize the table if it exceeds <code style="white-space: pre;"></code></p>
+<ul>
+<li>
+<p>Set globally with <code>options(“tinytable_theme_resize_direction” = “down”)</code></p>
+</li>
+</ul>
 </li>
 </ul>
 <p>multipage</p>
 <ul>
 <li>
 <p><code>rowhead</code>: Non-negative integer. The number of header rows to repeat on each page.</p>
+<ul>
+<li>
+<p>Set globally with <code>options(“tinytable_theme_multipage_rowhead” = 1L)</code></p>
+</li>
+</ul>
 </li>
 <li>
 <p><code>rowfoot</code>: Non-negative integer. The number of footer rows to repeat on each page.</p>
+<ul>
+<li>
+<p>Set globally with <code>options(“tinytable_theme_multipage_rowfoot” = 1L)</code></p>
+</li>
+</ul>
 </li>
 </ul>
 <p>tabular</p>
@@ -487,6 +511,9 @@ Additional arguments passed the themeing function. See the "Arguments" section b
 <li>
 <p>"tabularray": Drop all LaTeX dependencies and floating environments, except <code style="white-space: pre;">\begin{tblr}</code></p>
 </li>
+<li>
+<p>Set globally with <code>options(“tinytable_theme_tabular_style” = “tblr”)</code></p>
+</li>
 </ul>
 </li>
 </ul>
@@ -496,7 +523,7 @@ Additional arguments passed the themeing function. See the "Arguments" section b
 <p><code>horizontal</code> (Typst only): "l", "c", or "r" to align the table horizontally in the page.</p>
 <ul>
 <li>
-<p><code>options(“tinytable_theme_placement_horizontal” = “l”)</code></p>
+<p>Set globally with <code>options(“tinytable_theme_placement_horizontal” = “l”)</code></p>
 </li>
 </ul>
 </li>
@@ -504,7 +531,7 @@ Additional arguments passed the themeing function. See the "Arguments" section b
 <p><code>latex_float</code>: String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp". The default value is controlled by a global option:</p>
 <ul>
 <li>
-<p><code>options(“tinytable_theme_placement_latex_float” = “H”)</code></p>
+<p>Set globally with <code>options(“tinytable_theme_placement_latex_float” = “H”)</code></p>
 </li>
 </ul>
 </li>
@@ -525,12 +552,12 @@ Additional arguments passed the themeing function. See the "Arguments" section b
 <!-- preamble start -->
 
     <script>
-      function styleCell_wt01oqbp7sof6wyz5fsy(i, j, css_id) {
-        var table = document.getElementById("tinytable_wt01oqbp7sof6wyz5fsy");
+      function styleCell_arqy07422xlpk3wu4al9(i, j, css_id) {
+        var table = document.getElementById("tinytable_arqy07422xlpk3wu4al9");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_wt01oqbp7sof6wyz5fsy');
+        var table = document.getElementById('tinytable_arqy07422xlpk3wu4al9');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -538,8 +565,8 @@ Additional arguments passed the themeing function. See the "Arguments" section b
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_wt01oqbp7sof6wyz5fsy(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_wt01oqbp7sof6wyz5fsy");
+      function spanCell_arqy07422xlpk3wu4al9(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_arqy07422xlpk3wu4al9");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -570,7 +597,7 @@ Additional arguments passed the themeing function. See the "Arguments" section b
     <style>
     </style>
     <div class="container">
-      <table class="table table-striped" id="tinytable_wt01oqbp7sof6wyz5fsy" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-striped" id="tinytable_arqy07422xlpk3wu4al9" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -616,12 +643,12 @@ Additional arguments passed the themeing function. See the "Arguments" section b
 <!-- preamble start -->
 
     <script>
-      function styleCell_cfmntpugmwdprcnfq3jz(i, j, css_id) {
-        var table = document.getElementById("tinytable_cfmntpugmwdprcnfq3jz");
+      function styleCell_ede960i8cx6pw135kwsf(i, j, css_id) {
+        var table = document.getElementById("tinytable_ede960i8cx6pw135kwsf");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_cfmntpugmwdprcnfq3jz');
+        var table = document.getElementById('tinytable_ede960i8cx6pw135kwsf');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -629,8 +656,8 @@ Additional arguments passed the themeing function. See the "Arguments" section b
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_cfmntpugmwdprcnfq3jz(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_cfmntpugmwdprcnfq3jz");
+      function spanCell_ede960i8cx6pw135kwsf(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_ede960i8cx6pw135kwsf");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -656,17 +683,17 @@ Additional arguments passed the themeing function. See the "Arguments" section b
         targetCell.rowSpan = rowspan;
         targetCell.colSpan = colspan;
       }
-window.addEventListener('load', function () { styleCell_cfmntpugmwdprcnfq3jz(0, 0, 'tinytable_css_idkveozlm5kbv3gconk9ll') })
-window.addEventListener('load', function () { styleCell_cfmntpugmwdprcnfq3jz(0, 1, 'tinytable_css_idkveozlm5kbv3gconk9ll') })
-window.addEventListener('load', function () { styleCell_cfmntpugmwdprcnfq3jz(0, 2, 'tinytable_css_idkveozlm5kbv3gconk9ll') })
-window.addEventListener('load', function () { styleCell_cfmntpugmwdprcnfq3jz(0, 3, 'tinytable_css_idkveozlm5kbv3gconk9ll') })
+window.addEventListener('load', function () { styleCell_ede960i8cx6pw135kwsf(0, 0, 'tinytable_css_ids2v28clvk2noy8mwx3g1') })
+window.addEventListener('load', function () { styleCell_ede960i8cx6pw135kwsf(0, 1, 'tinytable_css_ids2v28clvk2noy8mwx3g1') })
+window.addEventListener('load', function () { styleCell_ede960i8cx6pw135kwsf(0, 2, 'tinytable_css_ids2v28clvk2noy8mwx3g1') })
+window.addEventListener('load', function () { styleCell_ede960i8cx6pw135kwsf(0, 3, 'tinytable_css_ids2v28clvk2noy8mwx3g1') })
     </script>
 
     <style>
-    .table td.tinytable_css_idkveozlm5kbv3gconk9ll, .table th.tinytable_css_idkveozlm5kbv3gconk9ll {  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_ids2v28clvk2noy8mwx3g1, .table th.tinytable_css_ids2v28clvk2noy8mwx3g1 {  border-bottom: solid 0.1em #d3d8dc; }
     </style>
     <div class="container">
-      <table class="table table-striped" id="tinytable_cfmntpugmwdprcnfq3jz" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-striped" id="tinytable_ede960i8cx6pw135kwsf" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
