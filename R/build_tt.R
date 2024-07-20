@@ -5,6 +5,8 @@
 # THE ORDER MATTERS A LOT!
 build_tt <- function(x, output = NULL) {
 
+  output <- sanitize_output(output)
+
   x <- switch(output,
     html = swap_class(x, "tinytable_bootstrap"),
     latex = swap_class(x, "tinytable_tabularray"),
