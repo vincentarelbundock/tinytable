@@ -1,0 +1,32 @@
+# Available Options
+
+Options can be set with `options()` and change the default behavior of tinytable. You can either set them in a script (usually at the top) or via `.Rprofile`. Note that you want to [be cautious](https://rstats.wtf/r-startup.html) with putting things in `.Rprofile` since they might make results not reproducible (e.g. if you change `tinytable_format_digits` in `.Rprofile`, the table will be formatted differently).
+
+First, you can set defaults for all the arguments in `tt()` and `format_tt()`. See the documentation for the what the argument looks like. 
+
+For `tt()`: `tinytable_tt_caption`, `tinytable_tt_digits`, `tinytable_tt_notes`, `tinytable_tt_rownames`, `tinytable_tt_theme`, `tinytable_tt_width`.
+
+For `format_tt()`: `tinytable_format_bool`, `tinytable_format_date`, `tinytable_format_digits`, `tinytable_format_escape`, `tinytable_format_fn`, `tinytable_format_markdown`, `tinytable_format_num_fmt`, `tinytable_format_num_mark_big`, `tinytable_format_num_mark_dec`, `tinytable_format_num_suffix`, `tinytable_format_num_zero`, `tinytable_format_other`, `tinytable_format_quarto`, `tinytable_format_replace`, `tinytable_format_sprintf`.
+
+There is a select few other options:
+
+```{r}
+#| echo: false
+#| tbl-cap: "Additional options"
+other_options <- tibble::tribble(
+  ~Option, ~`Value Description`,
+  
+  "`tinytable_print_output`", "String specifying default output format. See `print.tinytable()`",
+  "`tt_output_default`", "@TODO: Check this!",
+  "`tinytable_grid_hlines`", "TRUE/FALSE. determines whether to have horizontal lines in table.",
+  "`tinytable_html_mathjax`", "TRUE/FALSE. whether to include mathjax in scripts (Experimental, see News)",
+  "`tinytable_quarto_disable_processing`", "TRUE/FALSE. Disables quarto processing of tables. See `?global_options`",
+  "`tinytable_save_pdf_clean`", "TRUE/FALSE. Whether to clean auxiliary files created during pdf rendering. See `?global_options`",
+  "`tinytable_save_pdf_engine`", "String specifying which engine to use for latex rendering. See `?global_options`",
+  "`tinytable_theme_placement_latex_float`", "String specifying float preference for table. See `?theme_tt`",
+  "`tinytable_siunitx_table-format`", "String specifying the table format to use with the `siunitx` latex package.",
+  "`tinytable_themes`", "String specifying default table theme. See `?theme_tt`. @TODO: Check this!",
+)
+tinytable::tt(other_options) |>
+  tinytable::format_tt(j = "Option", markdown = TRUE)
+```
