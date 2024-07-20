@@ -203,8 +203,8 @@ theme_bootstrap <- function(x, ...) {
 
 
 theme_placement <- function(x, 
-                            horizontal = getOption("tinytable_theme_placement_horizontal", default = NULL),
-                            latex_float = getOption("tinytable_theme_placement_latex_float", default = NULL)) {
+                            horizontal = get_option("tinytable_theme_placement_horizontal", default = NULL),
+                            latex_float = get_option("tinytable_theme_placement_latex_float", default = NULL)) {
     # do not change the defaul theme
     if (identical(x@theme[[1]], "placement")) x@theme <- list("default")
     fn <- function(table) {

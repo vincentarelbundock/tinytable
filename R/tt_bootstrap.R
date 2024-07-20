@@ -5,7 +5,7 @@ setMethod(
 
   template <- readLines(system.file("templates/bootstrap.html", package = "tinytable"))
 
-  mathjax <- getOption("tinytable_html_mathjax", default = FALSE)
+  mathjax <- get_option("tinytable_html_mathjax", default = FALSE)
   assert_flag(mathjax, name = "tinytable_html_mathjax")
   if (isFALSE(mathjax)) {
     template <- paste(template, collapse = "\n")
@@ -15,7 +15,7 @@ setMethod(
     template <- strsplit(template, "\n")[[1]]
   }
 
-  quartoprocessing <- getOption("tinytable_quarto_disable_processing", default = TRUE)
+  quartoprocessing <- get_option("tinytable_quarto_disable_processing", default = TRUE)
   assert_flag(quartoprocessing, name = "tinytable_quarto_disable_processing")
   if (isFALSE(quartoprocessing)) {
       template <- sub("data-quarto-disable-processing='true'",

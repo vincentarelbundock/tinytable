@@ -4,7 +4,7 @@
 #' @return A string with class `knit_asis` to be printed in Rmarkdown or Quarto documents.
 #' @export
 knit_print.tinytable <- function(x,
-                                 output = getOption("tinytable_print_output", default = NULL),
+                                 output = get_option("tinytable_print_output", default = NULL),
                                  ...) {
   # lazy styles get evaluated here, at the very end
   x <- build_tt(x, output = output)
@@ -52,7 +52,7 @@ knit_print.tinytable <- function(x,
 #' @return launch a browser window or cat() the table to console.
 #' @export
 print.tinytable <- function(x,
-                            output = getOption("tinytable_print_output", default = NULL),
+                            output = get_option("tinytable_print_output", default = NULL),
                             ...) {
   if (is.null(output)) {
     output <- sanitize_output(x@output)
@@ -102,5 +102,5 @@ print.tinytable <- function(x,
 
 
 setMethod("show", "tinytable", function(object) {
-  print.tinytable(object, output = getOption("tinytable_print_output", default = NULL))
+  print.tinytable(object, output = get_option("tinytable_print_output", default = NULL))
 })
