@@ -67,16 +67,16 @@ The rest of the options are a set of global options that apply when the tables a
 
 ### HTML
 
-* EXPERIMENTAL `options(tinytable_save_html_mathjax = TRUE)` inserts MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.
+* EXPERIMENTAL `options(tinytable_html_mathjax = TRUE)` inserts MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.
 
 ### PDF
 
-* `options(tinytable_save_pdf_clean = TRUE)` deletes temporary and log files.
-* `options(tinytable_save_pdf_engine = "xelatex")`: "xelatex", "pdflatex", "lualatex"
+* `options(tinytable_pdf_clean = TRUE)` deletes temporary and log files.
+* `options(tinytable_pdf_engine = "xelatex")`: "xelatex", "pdflatex", "lualatex"
 
 ### Markdown
 
-* `options(tinytable_save_markdown_hlines = TRUE)` sets whether gridlines are included in markdown tables. This should be true for `docx` conversion.
+* `options(tinytable_markdown_hlines = TRUE)` sets whether gridlines are included in markdown tables. This should be true for `docx` conversion.
 
 ### Quarto
 
@@ -85,7 +85,7 @@ The `format_tt(quarto=TRUE)` argument activates Quarto data processing for speci
 1. Currently, Quarto provides a `\QuartoMarkdownBase64{}` LaTeX macro, but it does not appear to do anything with it. References and markdown codes may not be processed as expected in LaTeX.
 2. Quarto data processing can enter in conflict with `tinytable` styling or formatting options. See below for how to disable it.
 
-* `options(tinytable_save_disable_quarto_processing = TRUE)` disables Quarto processing of cell content. 
+* `options(tinytable_quarto_disable_processing = TRUE)` disables Quarto processing of cell content. 
 
   Setting this global option to `FALSE` may lead to conflicts with some `tinytable` features, but it also allows use of markdown and Quarto-specific code in table cells, such as cross-references.
 
