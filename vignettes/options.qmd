@@ -14,19 +14,36 @@ There is a select few other options:
 #| echo: false
 #| tbl-cap: "Additional options"
 other_options <- tibble::tribble(
-  ~Option, ~`Value Description`,
-  
+  ~Option, ~`Description`,
+  # Print default
   "`tinytable_print_output`", "String specifying default output format. See `print.tinytable()`",
-  "`tt_output_default`", "@TODO: Check this!",
+
+  # Available Themes
+  "`tinytable_themes`", "List of string/function pairs for themes. Changes what you can use with `tt(theme = 'name_of_theme')`. E.g. `list('simple' = theme_simpe)` where `theme_simple` is a custom function that accepts and returns a `tinytable` object.",
+  
+  # Pandoc Options
   "`tinytable_grid_hlines`", "TRUE/FALSE. determines whether to have horizontal lines in table.",
+  
+  # HTML Options
   "`tinytable_html_mathjax`", "TRUE/FALSE. whether to include mathjax in scripts (Experimental, see News)",
   "`tinytable_quarto_disable_processing`", "TRUE/FALSE. Disables quarto processing of tables. See `?global_options`",
+  
+  # Latex Options
   "`tinytable_save_pdf_clean`", "TRUE/FALSE. Whether to clean auxiliary files created during pdf rendering. See `?global_options`",
   "`tinytable_save_pdf_engine`", "String specifying which engine to use for latex rendering. See `?global_options`",
   "`tinytable_theme_placement_latex_float`", "String specifying float preference for table. See `?theme_tt`",
   "`tinytable_siunitx_table-format`", "String specifying the table format to use with the `siunitx` latex package.",
-  "`tinytable_themes`", "String specifying default table theme. See `?theme_tt`. @TODO: Check this!",
 )
+
 tinytable::tt(other_options) |>
-  tinytable::format_tt(j = "Option", markdown = TRUE)
+  tinytable::group_tt(
+    i = list(
+      "`print_tt()`" = 1,
+      "Available Themes" = 2,
+      "Pandoc Options" = 3,
+      "HTML Options" = 4,
+      "Latex Options" = 6
+    )
+  ) |> 
+  tinytable::format_tt(markdown = TRUE) 
 ```
