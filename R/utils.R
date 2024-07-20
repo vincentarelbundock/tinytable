@@ -8,7 +8,9 @@ get_id <- function(stem = "id") {
 get_option <- function(x, default = NULL) {
   deprecated = c(
     # old = new
-    "tinytable_grid_hlines" = "tinytable_markdown_hlines"
+    "tinytable_grid_hlines" = "tinytable_markdown_hlines",
+    "tinytable_save_pdf_clean" = "tinytable_pdf_clean",
+    "tinytable_save_pdf_engine" = "tinytable_pdf_engine"
   )
   if (x %in% names(deprecated)) {
     x_new = deprecated[x]

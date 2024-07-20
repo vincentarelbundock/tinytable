@@ -75,7 +75,7 @@ setMethod(
     if (length(align) == 1) align <- rep(align, length(jval))
 
     # explicit j input
-    siunitx <- get_option("tinytable_siunitx_format", default = "table-format=-%s.%s,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\\*+()}")
+    siunitx <- get_option("tinytable_siunitx_table_format", default = "table-format=-%s.%s,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\\*+()}")
     if ("j" %in% colnames(settings)) {
       for (idx in seq_along(jval)) {
         a_tmp <- align[idx]
