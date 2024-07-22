@@ -37,7 +37,10 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-pandoc@v2
+        with:
+          pandoc-version: '3.1.11' # The pandoc version to download (if necessary) and use.
 
       - name: Get Script
         run: curl -OLs https://eddelbuettel.github.io/r-ci/run.sh && chmod 0755 run.sh
@@ -56,9 +59,6 @@ jobs:
 
       - name: tinysnapshot dev
         run: ./run.sh install_github vincentarelbundock/tinysnapshot
-
-      - name: pandoc
-        run: Rscript -e "pandoc::pandoc_install()"
 
       - name: install tinytex
         run: Rscript -e "tinytex::install_tinytex()"

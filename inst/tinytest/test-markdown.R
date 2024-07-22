@@ -86,5 +86,13 @@ tab <- tt(x, notes = n)
 expect_snapshot_print(tab, label = "markdown-footnote")
 
 
+# GFM
+options(tinytable_print_output = "gfm")
+expect_snapshot_print(tt(head(iris)), label = "markdown-gfm_01")
+options(tinytable_markdown_hlines = TRUE)
+expect_snapshot_print(tt(head(iris)), label = "markdown-gfm_02")
+options(tinytable_markdown_hlines = NULL)
+options(tinytable_print_output = "markdown")
+
 
 options(tinytable_print_output = NULL)
