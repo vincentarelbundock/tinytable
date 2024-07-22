@@ -97,5 +97,16 @@ build_tt <- function(x, output = NULL) {
 
   x@table_string <- lines_drop_consecutive_empty(x@table_string)
 
+  if (output == "gfm") {
+    # Not having hlines prevents conversion to gfm, so temporarily disable this option
+    has_hlines <- get_option("tinytable_markdown_hlines")
+    if (isFALSE(has_hlines)) {
+      options(tinytable_markdown_hlines = TRUE)
+      on.exit(options(tinytable_markdown_hlines = FALSE))
+    }
+    assert_dependency("pandoc")
+    x@table_string <- paste(pandoc::pandoc_convert(text = x@table_string, to = "gfm"), collapse = "\n")
+  }
+
   return(x)
 }

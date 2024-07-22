@@ -66,25 +66,13 @@ print.tinytable <- function(x,
     x@output_dir <- dir
   }
 
-  # Not having hlines prevents conversion to gfm, so temporarily disable this option
-  if (output == "gfm") {
-    has_hlines <- get_option("tinytable_markdown_hlines")
-    if (isFALSE(has_hlines)) {
-      options(tinytable_markdown_hlines = TRUE)
-      on.exit(options(tinytable_markdown_hlines = FALSE))
-    }
-  }
-
   x <- build_tt(x, output = output)
 
   tab <- x@table_string
 
   # lazy styles get evaluated here by build_tt(), at the very end
-  if (output %in% c("latex", "typst", "markdown")) {
+  if (output %in% c("latex", "typst", "markdown", "gfm")) {
     cat(tab, "\n")
-  } else if (output == "gfm") {
-    assert_dependency("pandoc")
-    cat(pandoc::pandoc_convert(text = tab, to = "gfm"), sep = "\n")
   } else if (output == "html") {
     # need to change the output directory to a temporary directory
     # for plot_tt() inline plots to show up in RStudio

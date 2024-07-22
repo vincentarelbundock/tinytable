@@ -32,6 +32,9 @@ save_tt <- function(x, output, overwrite = FALSE) {
   if (identical(output, "markdown")) {
     out <- build_tt(x, output = "markdown")@table_string
     return(as.character(out))
+  } else if (identical(output, "gfm")) {
+    out <- build_tt(x, output = "gfm")@table_string
+    return(as.character(out))
   } else if (identical(output, "html")) {
     out <- build_tt(x, output = "html")@table_string
     return(as.character(out))

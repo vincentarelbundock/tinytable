@@ -39,6 +39,7 @@ MathJax = {
 * `format_tt(num_big_mark)` applies to integer columns.
 * Use `getOption("viewer")` instead of `rstudioapi::viewer()` for positron support
 * `glue::glue()` string is accepted by `format_tt()`. Thanks to @LukasWallrich for report #792 on the `modelsummary` repository.
+* Support Github Flavored Markdown (`gfm`) output. Thanks to @kylebutts for contribution #315. 
 
 ### HTML
 
