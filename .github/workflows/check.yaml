@@ -44,10 +44,10 @@ jobs:
 
       - name: Bootstrap
         run: ./run.sh bootstrap
-          
+
       - name: png (for svglite)
         run: sudo apt update -qq && sudo apt install --yes --no-install-recommends libpng-dev
-        
+
       - name: svglite from source
         run: Rscript -e "bspm::disable();install.packages('svglite', from = 'source');bspm::enable()"
 
@@ -56,6 +56,9 @@ jobs:
 
       - name: tinysnapshot dev
         run: ./run.sh install_github vincentarelbundock/tinysnapshot
+
+      - name: pandoc
+        run: Rscript -e "pandoc::pandoc_install()"
 
       - name: install tinytex
         run: Rscript -e "tinytex::install_tinytex()"
