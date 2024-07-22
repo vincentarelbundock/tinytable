@@ -61,16 +61,19 @@ sanitize_output <- function(output) {
 
   if (isTRUE(check_dependency("knitr"))) {
     if (isTRUE(knitr::pandoc_to() %in% c("latex", "beamer"))) {
-      usepackage_latex("float")
-      usepackage_latex("tabularray", extra_lines = c(
-        "\\usepackage[normalem]{ulem}",
-        "\\usepackage{graphicx}",
-        "\\UseTblrLibrary{booktabs}",
-        "\\UseTblrLibrary{siunitx}",
-        "\\NewTableCommand{\\tinytableDefineColor}[3]{\\definecolor{#1}{#2}{#3}}",
-        "\\newcommand{\\tinytableTabularrayUnderline}[1]{\\underline{#1}}",
-        "\\newcommand{\\tinytableTabularrayStrikeout}[1]{\\sout{#1}}"
-      ))
+      flag <- getOption("tinytable_latex_preamble", default = TRUE)
+      if (isTRUE(flag)) {
+          usepackage_latex("float")
+          usepackage_latex("tabularray", extra_lines = c(
+            "\\usepackage[normalem]{ulem}",
+            "\\usepackage{graphicx}",
+            "\\UseTblrLibrary{booktabs}",
+            "\\UseTblrLibrary{siunitx}",
+            "\\NewTableCommand{\\tinytableDefineColor}[3]{\\definecolor{#1}{#2}{#3}}",
+            "\\newcommand{\\tinytableTabularrayUnderline}[1]{\\underline{#1}}",
+            "\\newcommand{\\tinytableTabularrayStrikeout}[1]{\\sout{#1}}"
+          ))
+      }
       if (is.null(output)) out <- "latex"
     } else if (isTRUE(knitr::pandoc_to() %in% c("html", "revealjs"))) {
       if (is.null(output)) out <- "html"
