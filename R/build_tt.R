@@ -1,22 +1,22 @@
 # internal function
-# style_tt() stores style calls and we only want to evaluate them at the end because 
+# style_tt() stores style calls and we only want to evaluate them at the end because
 # some rows may be added, which changes how the style is applied
 #
 # THE ORDER MATTERS A LOT!
 build_tt <- function(x, output = NULL) {
-
   output <- sanitize_output(output)
 
   x <- switch(output,
     html = swap_class(x, "tinytable_bootstrap"),
     latex = swap_class(x, "tinytable_tabularray"),
     markdown = swap_class(x, "tinytable_grid"),
+    gfm = swap_class(x, "tinytable_grid"),
     typst = swap_class(x, "tinytable_typst"),
     dataframe = swap_class(x, "tinytable_dataframe"),
   )
-  
+
   x@output <- output
-  
+
   # groups must increment indices here
   for (idx in seq_along(x@lazy_group)) {
     l <- x@lazy_group[[idx]]
@@ -65,7 +65,7 @@ build_tt <- function(x, output = NULL) {
   }
 
   # markdown styles need to be applied before creating the table, otherwise there's annoying parsing, etc.
-  if (x@output %in% c("markdown", "dataframe")) {
+  if (x@output %in% c("markdown", "gfm", "dataframe")) {
     for (l in x@lazy_style) {
       l[["x"]] <- x
       x <- eval(l)
@@ -86,7 +86,7 @@ build_tt <- function(x, output = NULL) {
     x <- eval(l)
   }
 
-  if (!x@output %in% c("markdown", "dataframe")) {
+  if (!x@output %in% c("markdown", "gfm", "dataframe")) {
     for (l in x@lazy_style) {
       l[["x"]] <- x
       x <- eval(l)
@@ -99,7 +99,3 @@ build_tt <- function(x, output = NULL) {
 
   return(x)
 }
-
-
-
-

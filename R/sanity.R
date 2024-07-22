@@ -49,7 +49,7 @@ sanitize_j <- function(j, x) {
 }
 
 sanitize_output <- function(output) {
-  assert_choice(output, choice = c("tinytable", "markdown", "latex", "html", "typst", "dataframe"), null.ok = TRUE)
+  assert_choice(output, choice = c("tinytable", "markdown", "latex", "html", "typst", "dataframe", "gfm"), null.ok = TRUE)
 
   # default output format
   if (is.null(output) || isTRUE(output == "tinytable")) {
