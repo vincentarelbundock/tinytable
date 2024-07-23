@@ -26,6 +26,8 @@ MathJax = {
 ```
 ````
 
+* Option `tinytable_markdown_hlines` has been removed. To get a more minimal looking markdown table, use output "gfm" which is gfm compliant.
+
 ### General
 
 * Global options are more consistent and better documented. Thanks to @kylebutts for PR #313.
