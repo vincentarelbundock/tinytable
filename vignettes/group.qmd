@@ -67,6 +67,22 @@ tt(dat) |>
     bold = TRUE)
 ```
 
+### Automatic row groups
+
+We can use the `group_tt()` function to group rows and label them using spanners (almost) automatically. For example,
+
+```{r}
+# subset and sort data
+df <- mtcars |> head(10) |> sort_by(~ am)
+
+# identify row indices
+indices <- tapply(1:nrow(df), df$am, \(x) x[1], simplify = FALSE)
+
+# draw table
+tt(df) |> group_tt(i = indices)
+```
+
+
 ## Columns
 
 The syntax for column groups is very similar, but we use the `j` argument instead. The named list specifies the labels to appear in column-spanning labels, and the values must be a vector of consecutive and non-overlapping integers that indicate which columns are associated to which labels:
