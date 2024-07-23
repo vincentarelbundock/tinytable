@@ -28,9 +28,5 @@
 #'
 #' * `options(tinytable_pdf_clean = TRUE)` deletes temporary and log files.
 #' * `options(tinytable_pdf_engine = "xelatex")`: "xelatex", "pdflatex", "lualatex"
-#' 
-#' ## MARKDOWN
-#' 
-#' * `options(tinytable_markdown_hlines = TRUE)` sets whether gridlines are included in markdown tables. This should be true for `docx` conversion.
-#' 
+#'
 #'

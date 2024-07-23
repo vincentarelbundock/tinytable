@@ -127,12 +127,6 @@ See this link for more details: https://quarto.org/docs/authoring/tables.html#di
 \item \code{options(tinytable_pdf_engine = "xelatex")}: "xelatex", "pdflatex", "lualatex"
 }
 }
-
-\subsection{MARKDOWN}{
-\itemize{
-\item \code{options(tinytable_markdown_hlines = TRUE)} sets whether gridlines are included in markdown tables. This should be true for \code{docx} conversion.
-}
-}
 }
 
 \examples{

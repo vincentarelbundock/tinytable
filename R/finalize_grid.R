@@ -2,14 +2,7 @@ setMethod(
   f = "finalize",
   signature = "tinytable_grid",
   definition = function(x, ...) {
-
-    # formal grid specification in pandoc includes lines everywhere
-    # important for docx output
-    hlines <- get_option("tinytable_markdown_hlines", default = TRUE)
-    if (isTRUE(hlines)) {
-      x <- grid_hlines(x)
-    }
-
+    x <- grid_hlines(x)
     out <- x@table_string
 
     # notes
@@ -39,7 +32,7 @@ setMethod(
     # caption
     cap <- x@caption
     if (is.character(cap) && length(cap) == 1 && nchar(cap) > 0) {
-        out <- paste0(out, "\n", "Table: ", cap, "\n")
+      out <- paste0(out, "\n", "Table: ", cap, "\n")
     }
 
     x@table_string <- out
@@ -49,7 +42,8 @@ setMethod(
     }
 
     return(x)
-})
+  }
+)
 
 
 
