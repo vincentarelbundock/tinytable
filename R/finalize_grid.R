@@ -2,6 +2,7 @@ setMethod(
   f = "finalize",
   signature = "tinytable_grid",
   definition = function(x, ...) {
+    x <- grid_hlines(x)
     out <- x@table_string
 
     # notes
