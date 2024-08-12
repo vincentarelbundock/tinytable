@@ -100,6 +100,7 @@ tt(tmp) |> theme_tt("resize", width = .9)
 :::
 
 
+
 ## Placement
 
 ::: {.content-visible when-format="html"}
@@ -110,6 +111,7 @@ LaTeX only.
 The `placement` theme offers control over the positioning of the table in LaTeX documents, using floating parameters like `H` (from the `float` LaTeX package) to specify where the table should appear.
 
 ```{r placement-theme}
+options(tinytable_theme_placement_latex_float = NULL)
 tt(x) |>
   theme_tt("placement", latex_float = "H") |>
   print(output = "latex")
@@ -136,4 +138,14 @@ tt(tmp, width = .8, caption = cap) |>
 ```
 :::
 
+
+::: {.content-visible when-format="pdf"}
+## Rotate
+
+```{r}
+#| eval: false
+tt(head(iris), caption = "Rotated table.") |> 
+  theme_tt("rotate", angle = 45)
+```
+:::
 

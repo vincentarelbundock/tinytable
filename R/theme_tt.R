@@ -278,12 +278,49 @@ theme_multipage <- function(x,
 }
 
 
+theme_rotate <- function(x, angle = 90, ...) {
+    assert_numeric(angle, len = 1, lower = 0, upper = 360)
+    fn <- function(table) {
+        if (isTRUE(table@output == "latex")) {
+            rot <- sprintf("\\begin{table}\n\\rotatebox{%s}{", angle)
+            table@table_string <- sub(
+                "\\begin{table}",
+                rot,
+                table@table_string,
+                fixed = TRUE)
+            table@table_string <- sub(
+                "\\end{table}",
+                "}\n\\end{table}",
+                table@table_string,
+                fixed = TRUE)
+        } else if (isTRUE(table@output == "typst")) {
+            rot <- sprintf("#rotate(-%sdeg, reflow: true, [\n  #figure(", angle)
+            table@table_string <- sub(
+                "#figure(",
+                rot,
+                table@table_string,
+                fixed = TRUE)
+            table@table_string <- sub(
+                ") // end figure",
+                ") ]) // end figure",
+                table@table_string,
+                fixed = TRUE)
+        }
+        table <- style_tt(table, finalize = fn)
+        return(table)
+    }
+    x <- style_tt(x, finalize = fn)
+    return(x)
+}
+
+
 theme_dictionary <- list(
     "default" = theme_default,
     "grid" = theme_grid,
     "resize" = theme_resize,
     "multipage" = theme_multipage,
     "placement" = theme_placement,
+    "rotate" = theme_rotate,
     "striped" = theme_striped,
     "void" = theme_void,
     "bootstrap" = theme_bootstrap,
@@ -301,24 +338,17 @@ theme_dictionary <- list(
 #'
 #' @param x A `tinytable` object
 #' @param theme String. Name of the theme to apply. One of: 
-#'   + "grid": Vertical and horizontal rules around each cell.
-#'   + "void": No rules
 #'   + "bootstrap": Similar appearance to the default Bootstrap theme in HTML
-#'   + "striped": Grey stripes on alternating rows
-#'   + "tabular": Remove table environment (LaTeX) or Javascript/CSS (HTML)
-#'   + "resize": Scale a LaTeX `tinytable` to fit the `width` argument.
+#'   + "grid": Vertical and horizontal rules around each cell.
 #'   + "multipage": Long tables continue on the next page (LaTeX only)
 #'   + "placement": Position of the table environment (LaTeX)
+#'   + "rotate": Rotate a LaTeX or Typst table.
+#'   + "resize": Scale a LaTeX `tinytable` to fit the `width` argument.
+#'   + "striped": Grey stripes on alternating rows
+#'   + "tabular": Remove table environment (LaTeX) or Javascript/CSS (HTML)
+#'   + "void": No rules
 #' @param ... Additional arguments passed the themeing function. See the "Arguments" section below for a list of supported arguments for each theme.
 #' @section Arguments:
-#' 
-#' resize
-#' 
-#' + `width`: A numeric value between 0.01 and 1, representing the proportion of the line width to use
-#'   - Set globally with `options("tinytable_theme_resize_width" = 0.9)`
-#' + `direction`: "down", "up", "both" A string indicating if the table should be scaled in one direction. For example, "down" will only resize the table if it exceeds `\linewidth`
-#'   - Set globally with `options("tinytable_theme_resize_direction" = "down")`
-#' 
 #' 
 #' multipage
 #' 
@@ -341,6 +371,20 @@ theme_dictionary <- list(
 #' + `latex_float`: String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp". The default value is controlled by a global option:
 #'    - Set globally with `options("tinytable_theme_placement_latex_float" = "H")`
 #' 
+#' resize
+#' 
+#' + `width`: A numeric value between 0.01 and 1, representing the proportion of the line width to use
+#'   - Set globally with `options("tinytable_theme_resize_width" = 0.9)`
+#' + `direction`: "down", "up", "both" A string indicating if the table should be scaled in one direction. For example, "down" will only resize the table if it exceeds `\linewidth`
+#'   - Set globally with `options("tinytable_theme_resize_direction" = "down")`
+#' 
+#' rotate
+#' 
+#' + `angle`: Angle of the rotation. For example, `angle=90`` applies a half counter-clockwise turn.
+#' + Caveats: 
+#'   - LaTeX and Typst only.
+#'   - Typst: In Quarto documents, rotation does not work because Quarto takes over the figure environment.
+#'   - LaTeX: In Quarto documents, captions must be specified using the `caption` argument in `tt()` rather than via Quarto chunk options. 
 #' 
 #' @examples
 #' library(tinytable)
