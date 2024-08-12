@@ -68,6 +68,7 @@ sanitize_output <- function(output) {
             "\\usepackage[normalem]{ulem}",
             "\\usepackage{graphicx}",
             "\\UseTblrLibrary{booktabs}",
+            "\\UseTblrLibrary{rotating}",
             "\\UseTblrLibrary{siunitx}",
             "\\NewTableCommand{\\tinytableDefineColor}[3]{\\definecolor{#1}{#2}{#3}}",
             "\\newcommand{\\tinytableTabularrayUnderline}[1]{\\underline{#1}}",

@@ -133,6 +133,7 @@ When rendering a document from Quarto or Rmarkdown directly to PDF, \code{tinyta
 \if{html}{\out{<div class="sourceCode latex">}}\preformatted{\\usepackage\{tabularray\}
 \\usepackage\{float\}
 \\usepackage\{graphicx\}
+\\usepackage\{rotating\}
 \\usepackage[normalem]\{ulem\}
 \\UseTblrLibrary\{booktabs\}
 \\UseTblrLibrary\{siunitx\}

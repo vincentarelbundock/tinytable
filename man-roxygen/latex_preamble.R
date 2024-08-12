@@ -10,6 +10,7 @@
 #' \usepackage{tabularray}
 #' \usepackage{float}
 #' \usepackage{graphicx}
+#' \usepackage{rotating}
 #' \usepackage[normalem]{ulem}
 #' \UseTblrLibrary{booktabs}
 #' \UseTblrLibrary{siunitx}

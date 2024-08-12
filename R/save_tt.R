@@ -136,6 +136,7 @@ latex_standalone <- "
 \\documentclass{standalone}
 \\usepackage{tabularray}
 \\usepackage{graphicx}
+\\usepackage{rotating}
 \\usepackage{float}
 \\usepackage[normalem]{ulem}
 \\UseTblrLibrary{booktabs}
