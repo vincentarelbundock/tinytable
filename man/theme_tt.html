@@ -420,13 +420,22 @@ A <code>tinytable</code> object
 <p>String. Name of the theme to apply. One of:</p>
 <ul>
 <li>
+<p>"bootstrap": Similar appearance to the default Bootstrap theme in HTML</p>
+</li>
+<li>
 <p>"grid": Vertical and horizontal rules around each cell.</p>
 </li>
 <li>
-<p>"void": No rules</p>
+<p>"multipage": Long tables continue on the next page (LaTeX only)</p>
 </li>
 <li>
-<p>"bootstrap": Similar appearance to the default Bootstrap theme in HTML</p>
+<p>"placement": Position of the table environment (LaTeX)</p>
+</li>
+<li>
+<p>"rotate": Rotate a LaTeX or Typst table.</p>
+</li>
+<li>
+<p>"resize": Scale a LaTeX <code>tinytable</code> to fit the <code>width</code> argument.</p>
 </li>
 <li>
 <p>"striped": Grey stripes on alternating rows</p>
@@ -435,13 +444,7 @@ A <code>tinytable</code> object
 <p>"tabular": Remove table environment (LaTeX) or Javascript/CSS (HTML)</p>
 </li>
 <li>
-<p>"resize": Scale a LaTeX <code>tinytable</code> to fit the <code>width</code> argument.</p>
-</li>
-<li>
-<p>"multipage": Long tables continue on the next page (LaTeX only)</p>
-</li>
-<li>
-<p>"placement": Position of the table environment (LaTeX)</p>
+<p>"void": No rules</p>
 </li>
 </ul>
 </td>
@@ -462,25 +465,6 @@ Additional arguments passed the themeing function. See the "Arguments" section b
 </section>
 <section id="arguments-1" class="level3">
 <h3 class="anchored" data-anchor-id="arguments-1">Arguments</h3>
-<p>resize</p>
-<ul>
-<li>
-<p><code>width</code>: A numeric value between 0.01 and 1, representing the proportion of the line width to use</p>
-<ul>
-<li>
-<p>Set globally with <code>options(“tinytable_theme_resize_width” = 0.9)</code></p>
-</li>
-</ul>
-</li>
-<li>
-<p><code>direction</code>: "down", "up", "both" A string indicating if the table should be scaled in one direction. For example, "down" will only resize the table if it exceeds <code style="white-space: pre;"></code></p>
-<ul>
-<li>
-<p>Set globally with <code>options(“tinytable_theme_resize_direction” = “down”)</code></p>
-</li>
-</ul>
-</li>
-</ul>
 <p>multipage</p>
 <ul>
 <li>
@@ -536,6 +520,45 @@ Additional arguments passed the themeing function. See the "Arguments" section b
 </ul>
 </li>
 </ul>
+<p>resize</p>
+<ul>
+<li>
+<p><code>width</code>: A numeric value between 0.01 and 1, representing the proportion of the line width to use</p>
+<ul>
+<li>
+<p>Set globally with <code>options(“tinytable_theme_resize_width” = 0.9)</code></p>
+</li>
+</ul>
+</li>
+<li>
+<p><code>direction</code>: "down", "up", "both" A string indicating if the table should be scaled in one direction. For example, "down" will only resize the table if it exceeds <code style="white-space: pre;"></code></p>
+<ul>
+<li>
+<p>Set globally with <code>options(“tinytable_theme_resize_direction” = “down”)</code></p>
+</li>
+</ul>
+</li>
+</ul>
+<p>rotate</p>
+<ul>
+<li>
+<p><code>angle</code>: Angle of the rotation. For example, ’angle=90“ applies a half counter-clockwise turn.</p>
+</li>
+<li>
+<p>Caveats:</p>
+<ul>
+<li>
+<p>LaTeX and Typst only.</p>
+</li>
+<li>
+<p>Typst: In Quarto documents, rotation does not work because Quarto takes over the figure environment.</p>
+</li>
+<li>
+<p>LaTeX: In Quarto documents, captions must be specified using the <code>caption</code> argument in <code>tt()</code> rather than via Quarto chunk options.</p>
+</li>
+</ul>
+</li>
+</ul>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
@@ -552,12 +575,12 @@ Additional arguments passed the themeing function. See the "Arguments" section b
 <!-- preamble start -->
 
     <script>
-      function styleCell_lzhsvmgv1vcd4ycun9tj(i, j, css_id) {
-        var table = document.getElementById("tinytable_lzhsvmgv1vcd4ycun9tj");
+      function styleCell_9sfm3m3je89l0ggmjiki(i, j, css_id) {
+        var table = document.getElementById("tinytable_9sfm3m3je89l0ggmjiki");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_lzhsvmgv1vcd4ycun9tj');
+        var table = document.getElementById('tinytable_9sfm3m3je89l0ggmjiki');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -565,8 +588,8 @@ Additional arguments passed the themeing function. See the "Arguments" section b
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_lzhsvmgv1vcd4ycun9tj(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_lzhsvmgv1vcd4ycun9tj");
+      function spanCell_9sfm3m3je89l0ggmjiki(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_9sfm3m3je89l0ggmjiki");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -597,7 +620,7 @@ Additional arguments passed the themeing function. See the "Arguments" section b
     <style>
     </style>
     <div class="container">
-      <table class="table table-striped" id="tinytable_lzhsvmgv1vcd4ycun9tj" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-striped" id="tinytable_9sfm3m3je89l0ggmjiki" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -643,12 +666,12 @@ Additional arguments passed the themeing function. See the "Arguments" section b
 <!-- preamble start -->
 
     <script>
-      function styleCell_zytyi5lmacy4xf2i6e1v(i, j, css_id) {
-        var table = document.getElementById("tinytable_zytyi5lmacy4xf2i6e1v");
+      function styleCell_xcfk46cviypipn9e8a7n(i, j, css_id) {
+        var table = document.getElementById("tinytable_xcfk46cviypipn9e8a7n");
         table.rows[i].cells[j].classList.add(css_id);
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_zytyi5lmacy4xf2i6e1v');
+        var table = document.getElementById('tinytable_xcfk46cviypipn9e8a7n');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -656,8 +679,8 @@ Additional arguments passed the themeing function. See the "Arguments" section b
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_zytyi5lmacy4xf2i6e1v(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_zytyi5lmacy4xf2i6e1v");
+      function spanCell_xcfk46cviypipn9e8a7n(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_xcfk46cviypipn9e8a7n");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -683,17 +706,17 @@ Additional arguments passed the themeing function. See the "Arguments" section b
         targetCell.rowSpan = rowspan;
         targetCell.colSpan = colspan;
       }
-window.addEventListener('load', function () { styleCell_zytyi5lmacy4xf2i6e1v(0, 0, 'tinytable_css_idoxd9pg6xu33a6eqncoer') })
-window.addEventListener('load', function () { styleCell_zytyi5lmacy4xf2i6e1v(0, 1, 'tinytable_css_idoxd9pg6xu33a6eqncoer') })
-window.addEventListener('load', function () { styleCell_zytyi5lmacy4xf2i6e1v(0, 2, 'tinytable_css_idoxd9pg6xu33a6eqncoer') })
-window.addEventListener('load', function () { styleCell_zytyi5lmacy4xf2i6e1v(0, 3, 'tinytable_css_idoxd9pg6xu33a6eqncoer') })
+window.addEventListener('load', function () { styleCell_xcfk46cviypipn9e8a7n(0, 0, 'tinytable_css_idbu457es5akmeifdrz01v') })
+window.addEventListener('load', function () { styleCell_xcfk46cviypipn9e8a7n(0, 1, 'tinytable_css_idbu457es5akmeifdrz01v') })
+window.addEventListener('load', function () { styleCell_xcfk46cviypipn9e8a7n(0, 2, 'tinytable_css_idbu457es5akmeifdrz01v') })
+window.addEventListener('load', function () { styleCell_xcfk46cviypipn9e8a7n(0, 3, 'tinytable_css_idbu457es5akmeifdrz01v') })
     </script>
 
     <style>
-    .table td.tinytable_css_idoxd9pg6xu33a6eqncoer, .table th.tinytable_css_idoxd9pg6xu33a6eqncoer {  border-bottom: solid 0.1em #d3d8dc; }
+    .table td.tinytable_css_idbu457es5akmeifdrz01v, .table th.tinytable_css_idbu457es5akmeifdrz01v {  border-bottom: solid 0.1em #d3d8dc; }
     </style>
     <div class="container">
-      <table class="table table-striped" id="tinytable_zytyi5lmacy4xf2i6e1v" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-striped" id="tinytable_xcfk46cviypipn9e8a7n" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
