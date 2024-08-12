@@ -252,6 +252,29 @@ Caption goes here.
 :::
 ````
 
+### Sub-captions
+
+With version 0.4.0 of `tinytable` and versions above 1.6 of Quarto---only available [as a pre-release build at the time of writing](https://quarto.org/docs/download/prerelease.html)--- users can specify sub-captions for tables. This is done by adding a `tbl-subcap` chunk option to the table chunk. We also need to use a `tinytable` theme to remove built-in table structure and let Quarto handle the table construction. Here is a simple example document:
+
+````{verbatim}
+---
+format: pdf
+---
+
+```{r}
+#| label: tbl-example
+#| tbl-cap: "Example"
+#| tbl-subcap: 
+#|   - "Cars"
+#|   - "Pressure"
+#| layout-ncol: 2
+
+library(tinytable)
+tt(head(cars)) |> theme_tt("tabular", style = "tabularray")
+tt(head(pressure)) |> theme_tt("tabular", style = "tabularray")
+```
+````
+
 ### Same table, different styles
 
 In some cases, the user wants to print a single table multiple times with different styles in a single HTML document. This will sometimes cause issues, because the `style_tt()` function inserts several javascript functions to modify the same table, thus creating conflicts. A simple solution is to change the unique ID of the table object manually. 
