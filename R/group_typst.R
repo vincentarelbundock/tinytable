@@ -53,7 +53,7 @@ group_typst_col <- function(x, j, ihead, ...) {
   idx <- order(max_col)
   j <- j[idx]
   lab <- names(j)
-  len <- sapply(j, length)
+  len <- lengths(j)
   col <- ifelse(
     trimws(lab) == "",
     sprintf("[%s],", lab),

@@ -260,7 +260,7 @@ style_tt_lazy <- function (x,
       msg <- sprintf("`align` must be a single character or a string of length %s.", nalign)
       stop(msg, call. = FALSE)
     } 
-    if (any(!align %in% c("c", "l", "r", "d"))) {
+    if (!all(align %in% c("c", "l", "r", "d"))) {
       msg <- "`align` must be characters c, l, r, or d."
       stop(msg, call. = FALSE)
     }

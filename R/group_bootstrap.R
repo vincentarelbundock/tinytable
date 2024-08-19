@@ -50,7 +50,7 @@ group_bootstrap_col <- function(x, j, ihead, ...) {
   # midrule on numbered spans (not full columns of body)
   jnames <- names(j)
   jnames <- seq_along(jnames)[trimws(jnames) != ""]
-  x <- style_eval(x, i = ihead, j = jnames, line = "b", line_width = .05, line_color = "#d3d8dc")
+  x <- style_eval(x, i = ihead, j = jnames, line = "b", line_width = 0.05, line_color = "#d3d8dc")
 
   return(x)
 }

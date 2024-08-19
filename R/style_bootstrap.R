@@ -21,7 +21,7 @@ setMethod(
                         alignv = NULL,
                         line = NULL,
                         line_color = "black",
-                        line_width = .1,
+                        line_width = 0.1,
                         colspan = NULL,
                         rowspan = NULL,
                         indent = 0,

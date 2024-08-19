@@ -17,7 +17,7 @@ ttempdir <- function() {
 
 lines_drop_consecutive_empty <- function(x) {
   lines <- strsplit(x, "\n")[[1]]
-  tmp = rle(lines)
+  tmp <- rle(lines)
   tmp$lengths[trimws(tmp$values) == ""] <- 1
   lines <- inverse.rle(tmp) 
   x <- paste0(lines, collapse = "\n")
