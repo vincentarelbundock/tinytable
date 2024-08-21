@@ -20,7 +20,7 @@ setMethod(
                         align = NULL,
                         line = NULL,
                         line_color = "black",
-                        line_width = .1,
+                        line_width = 0.1,
                         colspan = NULL,
                         indent = 0,
                         midrule = FALSE, # undocumented, only used by `group_tt()`
@@ -132,7 +132,7 @@ setMethod(
             out <- lines_drop(out, "// tinytable align-default-array here", fixed = TRUE) 
             out <- lines_insert(out, align_default, "tinytable align-default-array after", "after")
         } else if (length(align_value) %in% c(1, length(ival) * length(jval))) {
-            if (length(align_value == 1)) align_value <- rep(align_value, length(ival) * length(jval))
+            if (length(align_value) == 1) align_value <- rep(align_value, length(ival) * length(jval))
             counter <- 0
             for (k in ival) {
                 for (w in jval) {

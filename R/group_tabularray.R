@@ -129,11 +129,11 @@ insert_values <- function(vec, values, positions) {
   positions <- positions[ord]
 
   # Create a vector of indices for the original vector
-  original_indices <- 1:length(vec)
+  original_indices <- seq_along(vec)
 
 
   # Insert values and update indices
-  for (i in 1:length(values)) {
+  for (i in seq_along(values)) {
     vec <- append(vec, values[i], after = positions[i] - 1)
     original_indices <- append(original_indices, NA, after = positions[i] - 1)
   }
