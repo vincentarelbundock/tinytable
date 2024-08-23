@@ -7,7 +7,7 @@
 #' + If `output` is "markdown", "latex", "html", or "typst", the table is returned in a string as an `R` object.
 #' + If `output` is a valid file path, the table is saved to file. The supported extensions are: .docx, .html, .png, .pdf, .tex, .typ, and .md (with aliases .txt, .Rmd and .qmd).
 #' @param overwrite A logical value indicating whether to overwrite an existing file.
-#' @return A string or `TRUE` when the table is written to file.
+#' @return A string with the table when `output` is a format, and the file path when `output` is a valid path.
 #' @export
 #' @examples
 #' library(tinytable)
@@ -126,7 +126,7 @@ save_tt <- function(x, output, overwrite = FALSE) {
     pandoc::pandoc_convert(text = x@table_string, to = "docx", output = output)
   }
 
-  return(invisible(TRUE))
+  return(invisible(path.expand(output)))
 }
 
 

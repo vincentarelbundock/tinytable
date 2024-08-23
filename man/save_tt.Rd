@@ -18,7 +18,7 @@ save_tt(x, output, overwrite = FALSE)
 \item{overwrite}{A logical value indicating whether to overwrite an existing file.}
 }
 \value{
-A string or \code{TRUE} when the table is written to file.
+A string with the table when \code{output} is a format, and the file path when \code{output} is a valid path.
 }
 \description{
 This function saves an object of class tinytable to a specified file and format, with an option to overwrite existing files.

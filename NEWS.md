@@ -43,6 +43,7 @@ MathJax = {
 * `glue::glue()` string is accepted by `format_tt()`. Thanks to @LukasWallrich for report #792 on the `modelsummary` repository.
 * Support Github Flavored Markdown (`gfm`) output. Thanks to @kylebutts for contribution #315. 
 * `theme_tt("rotate")` to rotate tables in LaTeX or Typst.
+* `save_tt("/path/to/file")` returns the file path invisibly. Thanks to @yjunechoe for issue #328.
 
 ### HTML
 
