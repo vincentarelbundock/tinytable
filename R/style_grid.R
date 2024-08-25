@@ -29,6 +29,8 @@ style_grid_internal <- function(x,
     settings <- expand.grid(i = ival, j = jval)
   }
 
+  # we only format the body, not headers
+  settings <- settings[settings$i > 0,]
 
   # Unlike other formats, Markdown inserts `group_tt()` row labels after styling. This aligns the `i` index to the full columns.
   gr <- x@lazy_group
