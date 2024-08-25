@@ -225,6 +225,14 @@ assert_integerish <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok
 }
 
 
+check_null <- function(x) {
+  is.null(x)
+}
+
+assert_null <- function(x, name = as.character(substitute(x))) {
+  if (!isTRUE(check_null(x))) stop(sprintf("%s should be NULL.", name), call. = FALSE)
+}
+
 check_numeric <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok = TRUE) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(TRUE)

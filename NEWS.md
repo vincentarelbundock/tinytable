@@ -1,5 +1,9 @@
 # News
 
+## Development
+
+* The `i` argument in `style_tt()` now accepts a logical matrix of same dimensions as `x`, to style specific cells, rather than all combinations of `i` and `j` vectors. Thanks to @dhicks for the feature request #329.
+
 ## 0.4.0
 
 ### Breaking change
