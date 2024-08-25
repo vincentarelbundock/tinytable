@@ -255,6 +255,15 @@ tt(k) |>
     color = "white")
 ```
 
+In versions *above* 0.4.0 of `tinytable`, users can also supply a logical matrix of the same size as `x` to indicate which cell should be styled. For example, we can change the colors of certain entries in a correlation matrix as follows:
+
+```{r}
+cormat <- data.frame(cor(mtcars[1:5]))
+tt(cormat, digits = 2) |>
+  style_tt(i = abs(cormat) > .8, background = "black", color = "white")
+```
+
+
 ## Vectorized styling (heatmaps)
 
 The `color`, `background`, and `fontsize` arguments are vectorized. This allows easy specification of different colors in a single call:
