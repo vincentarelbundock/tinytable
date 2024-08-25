@@ -26,16 +26,26 @@ setMethod(
 
   out <- x@table_string
 
-  ival <- sanitize_i(i, x)
-  jval <- sanitize_j(j, x)
-  inull <- isTRUE(attr(ival, "null"))
-  jnull <- isTRUE(attr(jval, "null"))
+  # i is a logical matrix mask
+  if (is.matrix(i) && is.logical(i) && nrow(i) == nrow(x) && ncol(i) == ncol(x)) {
+    assert_null(j)
+    settings <- which(i == TRUE, arr.ind = TRUE)
+    settings <- stats::setNames(data.frame(settings), c("i", "j"))
+    settings$tabularray <- ""
+    inull <- jnull <- FALSE
 
-  # order may be important for recycling 
-  settings <- expand.grid(i = ival, j = jval, tabularray = "", stringsAsFactors = FALSE)
-  if (inull && !jnull) {
-    settings <- settings[order(settings$i, settings$j), ]
+  } else {
+    ival <- sanitize_i(i, x)
+    jval <- sanitize_j(j, x)
+    # order may be important for recycling 
+    settings <- expand.grid(i = ival, j = jval, tabularray = "", stringsAsFactors = FALSE)
+    inull <- isTRUE(attr(ival, "null"))
+    jnull <- isTRUE(attr(jval, "null"))
+    if (inull && !jnull) {
+      settings <- settings[order(settings$i, settings$j), ]
+    }
   }
+
 
   # header index
   if ("i" %in% names(settings)) {

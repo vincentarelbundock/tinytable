@@ -31,13 +31,19 @@ setMethod(
                         ...) {
     out <- x@table_string
 
-    ival <- sanitize_i(i, x)
-    jval <- sanitize_j(j, x)
-
-    # order may be important for recycling
-    settings <- expand.grid(i = ival, j = jval, tabularray = "")
-    if (is.null(i) && !is.null(j)) {
-      settings <- settings[order(settings$i, settings$j), ]
+    # i is a logical matrix mask
+    if (is.matrix(i) && is.logical(i) && nrow(i) == nrow(x) && ncol(i) == ncol(x)) {
+      assert_null(j)
+      settings <- which(i == TRUE, arr.ind = TRUE)
+      settings <- stats::setNames(data.frame(settings), c("i", "j"))
+    } else {
+      ival <- sanitize_i(i, x)
+      jval <- sanitize_j(j, x)
+      # order may be important for recycling
+      settings <- expand.grid(i = ival, j = jval, tabularray = "")
+      if (is.null(i) && !is.null(j)) {
+        settings <- settings[order(settings$i, settings$j), ]
+      }
     }
 
     # JS 0-indexing
