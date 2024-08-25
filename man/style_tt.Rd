@@ -36,7 +36,7 @@ style_tt(
 \arguments{
 \item{x}{A table object created by \code{tt()}.}
 
-\item{i}{Row indices where the styling should be applied. Can be a single value or a vector. \code{i=0} is the header, and negative values are higher level headers. If \code{colspan} is used, \code{i} must be of length 1.}
+\item{i}{Row indices where the styling should be applied. Can be a single value, a vector, or a logical matrix with the same number of rows and columns as \code{x}. \code{i=0} is the header, and negative values are higher level headers.}
 
 \item{j}{Column indices where the styling should be applied. Can be:
 \itemize{
