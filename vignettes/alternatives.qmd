@@ -25,6 +25,7 @@ How does `tinytable` compare to alternative table-drawing packages in `R`? There
 * [`huxtable`](https://hughjonesd.github.io/huxtable/)
 * [`DT`](https://rstudio.github.io/DT/)
 * [`flextable`](https://davidgohel.github.io/flextable/)
+* [`reactable`](https://glin.github.io/reactable/)
 
 ```{r, include=FALSE}
 db <- tools::CRAN_package_db()
@@ -33,6 +34,7 @@ dep_gt <- length(tools::package_dependencies("gt", recursive=TRUE, db=db)[[1]])
 dep_flextable <- length(tools::package_dependencies("flextable", recursive=TRUE, db=db)[[1]])
 dep_huxtable <- length(tools::package_dependencies("huxtable", recursive=TRUE, db=db)[[1]])
 dep_DT <- length(tools::package_dependencies("DT", recursive=TRUE, db=db)[[1]])
+dep_reactable <- length(tools::package_dependencies("reactable", recursive=TRUE, db=db)[[1]])
 ```
 
 Here are a few totally biased (and possibly unfair) comments about each of them.
@@ -48,6 +50,8 @@ Now let's consider alternatives one by one.
 `huxtable` (`r dep_huxtable` dependencies) is an interesting and powerful-looking package, but I know it less well than the others. The key design decision of the author is that each feature is implemented with a distinct function. I understand that design impulse: going through the documentation of a function with 50 arguments can be daunting. That said, I feel that sifting through a manual with 300+ exported functions also makes for a steep learning curve. In addition, I prefer HTML and LaTeX code to be human-readable, in case I need to tweak them by hand before publication; `huxtable` tables are not that.
 
 `DT` (`r dep_DT` dependencies) is nice, but it only draws HTML table, so that's a non-starter for me. I need HTML, LaTeX, Word, PNG, PDF, and Typst output, depending on the project I am working on.
+
+`reactable` (`r dep_reactable` dependencies) is also nice, and also HTML-only. The main benefit of `reactable` is that it can create interactive tables with filtering, sorting, and pagination.
 
 `flextable` (`r dep_DT` dependencies) is nice, but it does not support LaTeX, and I need that format for "real work."
 
