@@ -27,10 +27,12 @@ ecosystem. Why release a new one? As [the maintainer of
 package which was:
 
 -   *Simple*: Streamlined, consistent, and uncluttered user interface,
-    with few functions to learn.
+    with only a few functions to learn.
 -   *Flexible*: Expressive frameworks to customize tables in HTML and
     LaTeX formats.[1]
 -   *Zero-dependency*: Avoid importing any other `R` package.[2]
+-   *Documented*: The website and documentation include 100s of examples
+    and tutorials.
 -   *Concise*: Draw beautiful tables without typing a lot of code.
 -   *Safe*: User inputs are checked thoroughly, and informative errors
     are returned early.
@@ -131,7 +133,7 @@ tt(x,
 
 ## Tutorial
 
-The `tinytable` 0.3.0.34 tutorial will take you much further. It is
+The `tinytable` 0.4.0.1 tutorial will take you much further. It is
 available in two formats:
 
 -   [Tutorial
