@@ -22,7 +22,7 @@ setMethod(
 group_typst_row <- function(x, i, indent, ...) {
   tab <- x@table_string
   tab <- strsplit(tab, split = "\\n")[[1]]
-  body_min <- utils::head(grep("tinytable cell content after", tab), 1) + x@nhead
+  body_min <- utils::head(grep("tinytable cell content after", tab), 1) + 1
   body_max <- utils::head(grep("end table", tab), 1) - 1
   body <- body_min:body_max
   top <- tab[1:(body_min - 1)]
