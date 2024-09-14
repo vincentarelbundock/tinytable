@@ -56,7 +56,7 @@ Users can also define their own themes to apply consistent visual tweaks to tabl
 
 ```{r}
 theme_vincent <- function(x, ...) {
-  out <- x |> 
+  out <- k |> 
     style_tt(color = "teal") |>
     theme_tt("placement")
   out@caption <- "Always use the same caption."
@@ -71,6 +71,25 @@ tt(mtcars[1:2, 1:2])
 tt(mtcars[1:3, 1:3])
 
 options(tinytable_tt_theme = NULL)
+```
+
+
+Here is a slightly more complex example. The benefit of this approach is that we apply a function via the `style_tt()` function and its `finalize` argument, so we can leverage some of the object components that are only available at the printing stage:
+
+```{r}
+#| eval: false
+theme_slides <- function(x, ...) {
+    fn <- function(table) {
+        if (isTRUE(table@output == "typst")) {
+          table@table_string <- paste0("#figure([\n", table@table_string, "\n])")
+        }
+        return(table)
+    }
+    x <- style_tt(x, finalize = fn)
+    return(x)
+}
+
+tt(head(iris), theme = theme_slides)
 ```
 
 
