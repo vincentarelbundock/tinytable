@@ -37,7 +37,7 @@ group_typst_row <- function(x, i, indent, ...) {
   tab <- c(top, mid, bot)
   tab <- paste(tab, collapse = "\n")
   x@table_string <- tab
-  idx_new <- i + seq_along(i) - 1
+  idx_new <- i + seq_along(i) + x@nhead - 2
   idx_old <- setdiff(seq_len(nrow(x)), idx_new)
   x <- style_tt(x, idx_old, indent = indent)
   return(x)
