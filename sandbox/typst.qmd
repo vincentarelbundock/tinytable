@@ -6,6 +6,18 @@ keep-typ: true
 
 ```{r}
 pkgload::load_all()
+
+theme_typst_figure <- function(x, ...) {
+    fn <- function(table) {
+        if (isTRUE(table@output == "typst")) {
+          table@table_string <- paste0("#figure([\n", table@table_string, "\n])")
+        }
+        return(table)
+    }
+    x <- style_tt(x, finalize = fn)
+    return(x)
+}
+options(theme_tt_tinytable = theme_typst_figure)
 ```
 
 ```{r}
