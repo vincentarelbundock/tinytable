@@ -1,0 +1,128 @@
+---
+title: "`tinytable` Typst examples"
+format: typst
+keep-typ: true
+---
+
+```{r}
+pkgload::load_all()
+```
+
+```{r}
+# Semi-complicated
+tab <- tt(mtcars[1:4, 1:5], caption = "Hell}}o World") |>
+  group_tt(j = list("Group 1" = 4:5, "Group 2" = 2:3)) |>
+  style_tt(j = 1:5, align = "lcccr") |>
+  style_tt(i = 2, j = 1:3, strikeout = TRUE, bold = TRUE, background = "black", color = "white") |>
+  style_tt(j = 1, color = "red", italic = TRUE)
+tab
+```
+
+```{r}
+# Issue #139
+tab <- tt(mtcars[1:10, 1:5]) |>
+  group_tt(i = list("Feta" = 2, "Brie" = 6)) |>
+  group_tt(j = list("First" = 2:3, "Second" = 4:5)) |>
+  style_tt(1:5, align = "c", background = "blue", color = "white")
+tab
+```
+
+```{r}
+# Theme striped
+x <- mtcars[1:4, 1:5]
+tab <- tt(x, theme = "striped")
+tab
+```
+
+
+```{r}
+# Formatting
+dat <- data.frame(
+  w = c(143002.2092, 201399.181, 100188.3883),
+  x = c(1.43402, 201.399, 0.134588),
+  y = as.Date(c(897, 232, 198), origin = "1970-01-01"),
+  z = c(TRUE, TRUE, FALSE))
+dat <- tt(dat, digits = 2)
+dat
+```
+
+```{r}
+# More formatting
+dat <- data.frame(
+  a = c("Burger", "Halloumi", "Tofu", "Beans"),
+  b = c(1.43202, 201.399, 0.146188, 0.0031),
+  c = c(98938272783457, 7288839482, 29111727, 93945))
+tab <- tt(dat) |>
+  format_tt(j = "a", sprintf = "Food: %s") |>
+  format_tt(j = 2, digits = 1) |>
+  format_tt(j = "c", digits = 2, num_suffix = TRUE)
+tab
+```
+
+```{r}
+# Significant cell
+dat <- data.frame(x = c(0.000123456789, 12.4356789))
+tab <- tt(dat) |> format_tt(digits = 2, num_fmt = "significant_cell")
+tab
+```
+
+```{r}
+# Missing value replacement
+tab <- tt(data.frame(a = c(NA, 1, 2), b = c(3, NA, 5)))
+tab <- format_tt(tab, replace = "-")
+tab
+```
+
+```{r}
+# Italic markdown
+dat <- data.frame(markdown = c("This is _italic_ text."))
+tab <- tt(dat) |>
+  format_tt(j = 1, markdown = TRUE) |>
+  style_tt(j = 1, align = "c")
+tab
+```
+
+```{r}
+# Font size
+dat <- tt(x) |> style_tt(j = "mpg|hp|qsec", fontsize = 1.5)
+dat
+```
+
+```{r}
+# No headers
+k <- x
+colnames(k) <- NULL
+k <- tt(k)
+k
+```
+
+```{r}
+# Group rows
+dat <- mtcars[1:9, 1:8]
+dat <- tt(dat) |>
+  group_tt(i = list(
+    "I like (fake) hamburgers" = 3,
+    "She prefers halloumi" = 4,
+    "They love tofu" = 7))
+dat
+```
+
+```{r}
+# Group columns
+dat <- mtcars[1:9, 1:8]
+tab <- tt(dat) |>
+  group_tt(
+    j = list(
+      "Hamburgers" = 1:3,
+      "Halloumi" = 4:5,
+      "Tofu" = 7))
+tab
+```
+
+````{comment}
+```{r}
+# Theme grid
+tab <- tt(x, theme = "grid")
+tab
+```
+````

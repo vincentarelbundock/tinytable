@@ -23,7 +23,7 @@ block[ // start block
   // tinytable align-default-array after
   #show table.cell: it => {
     let tmp = it
-    let data = style-array.find(data => data.x == it.x and data.y == it.y)
+    let data = style-array.find(data => data.x.contains(it.x) and data.y.contains(it.y))
     if data != none {
       set text(data.color)
       set text(data.fontsize)
@@ -44,7 +44,7 @@ block[ // start block
   #table( // tinytable table start
     stroke: none,
     align: (x, y) => {
-      let data = align-array.find(data => data.x == x and data.y == y)
+      let data = align-array.find(data => data.x.contains(x) and data.y.contains(y))
       if data != none {
         data.align
       } else {
@@ -52,7 +52,7 @@ block[ // start block
       }
     },
     fill: (x, y) => {
-      let data = fill-array.find(data => data.x == x and data.y == y)
+      let data = fill-array.find(data => data.x.contains(x) and data.y.contains(y))
       if data != none {
         data.fill
       }

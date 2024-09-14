@@ -86,22 +86,37 @@ setMethod(
       if (length(fontsize) == 1) fontsize <- rep(fontsize, nrow(settings))
       indent_value <- if (indent > 0) paste0(indent, "em") else "false"
       counter <- 0
-      for (idx in seq_len(nrow(settings))) {
-        k <- settings[idx, "i"]
-        w <- settings[idx, "j"]
+      settings$color <- color
+      settings$underline <- underline
+      settings$italic <- italic
+      settings$bold <- bold
+      settings$monospace <- monospace
+      settings$strikeout <- strikeout
+      settings$fontsize <- fontsize
+      settings$indent <- indent_value
+      sp <- split(settings, settings[, 3:ncol(settings)])
+      sp <- lapply(sp, function(x) {
+        x$i <- sprintf("(%s,)", paste(unique(x$i), collapse = ", "))
+        x$j <- sprintf("(%s,)", paste(unique(x$j), collapse = ", "))
+        x[1, , ]
+      })
+      sp <- do.call(rbind, sp)
+      for (idx in seq_len(nrow(sp))) {
+        k <- sp[idx, "i"]
+        w <- sp[idx, "j"]
         counter <- counter + 1
         style <- sprintf(
           "    (y: %s, x: %s, color: %s, underline: %s, italic: %s, bold: %s, mono: %s, strikeout: %s, fontsize: %s, indent: %s),",
           k,
           w,
-          color[counter],
-          tolower(underline[counter]),
-          tolower(italic[counter]),
-          tolower(bold[counter]),
-          tolower(monospace[counter]),
-          tolower(strikeout[counter]),
-          fontsize[counter],
-          indent_value
+          sp$color[counter],
+          tolower(sp$underline[counter]),
+          tolower(sp$italic[counter]),
+          tolower(sp$bold[counter]),
+          tolower(sp$monospace[counter]),
+          tolower(sp$strikeout[counter]),
+          sp$fontsize[counter],
+          sp$indent[counter]
         )
         out <- lines_insert(out, style, "tinytable cell style after", "after")
       }
@@ -110,15 +125,23 @@ setMethod(
     if (fill_style_flag) {
       if (length(background) == 1) background <- rep(background, nrow(settings))
       counter <- 0
-      for (idx in seq_len(nrow(settings))) {
-        k <- settings[idx, "i"]
-        w <- settings[idx, "j"]
+      settings$background <- background
+      sp <- split(settings, settings$background)
+      sp <- lapply(sp, function(x) {
+        x$i <- sprintf("(%s,)", paste(unique(x$i), collapse = ", "))
+        x$j <- sprintf("(%s,)", paste(unique(x$j), collapse = ", "))
+        x[1, , ]
+      })
+      sp <- do.call(rbind, sp)
+      for (idx in seq_len(nrow(sp))) {
+        k <- sp[idx, "i"]
+        w <- sp[idx, "j"]
         counter <- counter + 1
         fill <- sprintf(
           "    (y: %s, x: %s, fill: %s),",
           k,
           w,
-          background[counter])
+          sp$background[counter])
         out <- lines_insert(out, fill, "tinytable cell fill after", "after")
       }
     }
@@ -140,15 +163,23 @@ setMethod(
       } else if (length(align_value) %in% c(1, nrow(settings))) {
         if (length(align_value) == 1) align_value <- rep(align_value, nrow(settings))
         counter <- 0
-        for (idx in seq_len(nrow(settings))) {
-          k <- settings[idx, "i"]
-          w <- settings[idx, "j"]
+        settings$align <- align_value
+        sp <- split(settings, settings$align)
+        sp <- lapply(sp, function(x) {
+          x$i <- sprintf("(%s,)", paste(unique(x$i), collapse = ", "))
+          x$j <- sprintf("(%s,)", paste(unique(x$j), collapse = ", "))
+          x[1, , ]
+        })
+        sp <- do.call(rbind, sp)
+        for (idx in seq_len(nrow(sp))) {
+          k <- sp[idx, "i"]
+          w <- sp[idx, "j"]
           counter <- counter + 1
           fill <- sprintf(
             "    (y: %s, x: %s, align: %s),",
             k,
             w,
-            align_value[counter])
+            sp$align[counter])
           out <- lines_insert(out, fill, "tinytable cell align after", "after")
         }
       } else {
