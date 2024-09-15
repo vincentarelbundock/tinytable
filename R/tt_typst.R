@@ -33,6 +33,13 @@ setMethod(
 
   # notes
   if (length(x@notes) > 0) {
+    ft <- "
+    table.footer(
+      repeat: false,
+      // tinytable notes after
+    ),
+    "
+    out <- lines_insert(out, ft, "tinytable footer after", "after")
     notes <- rev(x@notes)
     # otherwise an empty caption is created automatically
     if (is.null(names(notes))) {

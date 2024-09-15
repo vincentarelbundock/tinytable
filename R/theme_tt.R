@@ -154,7 +154,7 @@ theme_grid <- function(x, ...) {
         } else if (isTRUE(table@output == "typst")) {
             table@table_string <- sub(
                 "stroke: none,",
-                "stroke: true,",
+                "stroke: (paint: black),",
                 table@table_string)
         }
         return(table)

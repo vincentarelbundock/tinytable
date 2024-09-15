@@ -67,10 +67,7 @@ block[ // start block
     // tinytable cell content after
 
 
-    table.footer(
-      repeat: false,
-      // tinytable notes after
-    ),
+    // tinytable footer after
 
   ) // end table
 
