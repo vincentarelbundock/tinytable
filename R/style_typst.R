@@ -58,8 +58,8 @@ setMethod(
     }
 
     # 0- & header-indexing
+    settings$j <- settings$j - 1
     if (x@nhead > 0) {
-      settings$j <- settings$j - 1
       settings$i <- settings$i - 1 + x@nhead
     }
 
@@ -205,7 +205,7 @@ setMethod(
         tmp <- sprintf(
           tmp,
           i,
-          min(settings$j),
+          settings$j,
           max(settings$j) + 1,
           line_width,
           line_color)
