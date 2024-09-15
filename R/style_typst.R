@@ -58,8 +58,10 @@ setMethod(
     }
 
     # 0- & header-indexing
-    settings$j <- settings$j - 1
-    settings$i <- settings$i - 1 + x@nhead
+    if (x@nhead > 0) {
+      settings$j <- settings$j - 1
+      settings$i <- settings$i - 1 + x@nhead
+    }
 
     if (isTRUE(grepl("^#", background))) background <- sprintf('rgb("%s")', background)
     if (isTRUE(grepl("^#", line_color))) line_color <- sprintf('rgb("%s")', line_color)
