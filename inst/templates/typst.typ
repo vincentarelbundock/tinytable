@@ -12,10 +12,10 @@ block[ // start block
 
 
   #let fill-array = ( 
-    // tinytable cell fill before
+    // tinytable cell fill after
   )
   #let style-array = ( 
-    // tinytable cell style before
+    // tinytable cell style after
   )
   #let align-array = (
     // tinytable cell align before

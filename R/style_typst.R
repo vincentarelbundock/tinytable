@@ -120,7 +120,7 @@ setMethod(
           sp$fontsize[counter],
           sp$indent[counter]
         )
-        out <- lines_insert(out, style, "tinytable cell style before", "before")
+        out <- lines_insert(out, style, "tinytable cell style after", "after")
       }
     }
 
@@ -144,7 +144,7 @@ setMethod(
           k,
           w,
           sp$background[counter])
-        out <- lines_insert(out, fill, "tinytable cell fill before", "before")
+        out <- lines_insert(out, fill, "tinytable cell fill after", "after")
       }
     }
 
