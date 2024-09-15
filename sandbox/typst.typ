@@ -1251,9 +1251,8 @@ block[ // start block
     },
 
     // tinytable lines after
-table.hline(y: 4, start: 0, end: 5, stroke: 0.1em + black),
-table.hline(y: 0, start: 0, end: 5, stroke: 0.05em + black),
-table.hline(y: 0, start: 0, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 0, end: 5, stroke: 0.1em + black),
+table.hline(y: 1, start: 0, end: 5, stroke: 0.1em + black),
 
     table.header(
       repeat: true,
@@ -1477,97 +1476,6 @@ table.cell(stroke: (bottom: .05em + black), colspan: 3, align: center)[Hamburger
 [14.3], [8], [360.0], [245], [3.21], [3.570], [15.84], [0],
 [24.4], [4], [146.7], [ 62], [3.69], [3.190], [20.00], [1],
 [22.8], [4], [140.8], [ 95], [3.92], [3.150], [22.90], [1],
-
-    table.footer(
-      repeat: false,
-      // tinytable notes after
-    ),
-
-  ) // end table
-
-  ]) // end align
-
-] // end block
-) // end figure
-```r
-# Theme grid
-tab <- tt(x, theme = "grid")
-tab
-```
-
-#show figure: set block(breakable: true)
-#figure( // start figure preamble
-  
-  kind: "tinytable",
-  supplement: "Table", // end figure preamble
-
-block[ // start block
-
-#let nhead = 1;
-#let nrow = 4;
-#let ncol = 5;
-
-  #let fill-array = ( 
-    // tinytable cell fill after
-  )
-  #let style-array = ( 
-    // tinytable cell style after
-  )
-  #let align-array = (
-    // tinytable cell align after
-  )
-  // tinytable align-default-array after
-  #let align-default-array = ( left, left, left, left, left, ) // tinytable align-default-array here
-  #show table.cell: it => {
-    let tmp = it
-    let data = style-array.find(data => data.x.contains(it.x) and data.y.contains(it.y))
-    if data != none {
-      set text(data.color)
-      set text(data.fontsize)
-      if data.indent != false { tmp = pad(left: data.indent, tmp) }
-      if data.underline == true { tmp = underline(tmp) }
-      if data.italic == true { tmp = emph(tmp) }
-      if data.bold == true { tmp = strong(tmp) }
-      if data.mono == true { tmp = math.mono(tmp) }
-      if data.strikeout == true { tmp = strike(tmp) }
-      tmp
-    } else {
-      tmp
-    }
-  }
-
-  #align(center, [
-
-  #table( // tinytable table start
-    columns: (auto, auto, auto, auto, auto),
-    stroke: true,
-    align: (x, y) => {
-      let data = align-array.find(data => data.x.contains(x) and data.y.contains(y))
-      if data != none {
-        data.align
-      } else {
-        align-default-array.at(x)
-      }
-    },
-    fill: (x, y) => {
-      let data = fill-array.find(data => data.x.contains(x) and data.y.contains(y))
-      if data != none {
-        data.fill
-      }
-    },
-
-    // tinytable lines after
-
-    table.header(
-      repeat: true,
-[mpg], [cyl], [disp], [hp], [drat],
-    ),
-
-    // tinytable cell content after
-[21.0], [6], [160], [110], [3.90],
-[21.0], [6], [160], [110], [3.90],
-[22.8], [4], [108], [ 93], [3.85],
-[21.4], [6], [258], [110], [3.08],
 
     table.footer(
       repeat: false,
