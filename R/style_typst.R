@@ -67,7 +67,7 @@ setMethod(
     if (isTRUE(grepl("^#", line_color))) line_color <- sprintf('rgb("%s")', line_color)
 
     if (is.null(color)) {
-      color <- "black"
+      color <- "none"
     } else if (isTRUE(grepl("^#", color))) {
       color <- sprintf('rgb("%s")', color)
     }
@@ -120,7 +120,7 @@ setMethod(
           sp$fontsize[counter],
           sp$indent[counter]
         )
-        out <- lines_insert(out, style, "tinytable cell style after", "after")
+        out <- lines_insert(out, style, "tinytable cell style before", "before")
       }
     }
 
@@ -144,7 +144,7 @@ setMethod(
           k,
           w,
           sp$background[counter])
-        out <- lines_insert(out, fill, "tinytable cell fill after", "after")
+        out <- lines_insert(out, fill, "tinytable cell fill before", "before")
       }
     }
 
@@ -161,7 +161,7 @@ setMethod(
           "  #let align-default-array = ( %s ,) // tinytable align-default-array here",
           paste(align_value, collapse = ", "))
         out <- lines_drop(out, "// tinytable align-default-array here", fixed = TRUE)
-        out <- lines_insert(out, align_default, "tinytable align-default-array after", "after")
+        out <- lines_insert(out, align_default, "tinytable align-default-array before", "before")
       } else if (length(align_value) %in% c(1, nrow(settings))) {
         if (length(align_value) == 1) align_value <- rep(align_value, nrow(settings))
         counter <- 0
@@ -182,7 +182,7 @@ setMethod(
             k,
             w,
             sp$align[counter])
-          out <- lines_insert(out, fill, "tinytable cell align after", "after")
+          out <- lines_insert(out, fill, "tinytable cell align before", "before")
         }
       } else {
         stop("Wrong number of elements in `align` argument.", call. = FALSE)
@@ -209,7 +209,7 @@ setMethod(
           max(settings$j) + 1,
           line_width,
           line_color)
-        out <- lines_insert(out, tmp, "tinytable lines after", "after")
+        out <- lines_insert(out, tmp, "tinytable lines before", "before")
       }
 
       jline <- NULL
@@ -224,7 +224,7 @@ setMethod(
           max(settings$i) + 1,
           line_width,
           line_color)
-        out <- lines_insert(out, tmp, "tinytable lines after", "after")
+        out <- lines_insert(out, tmp, "tinytable lines before", "before")
       }
     }
 

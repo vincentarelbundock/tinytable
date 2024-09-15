@@ -12,21 +12,21 @@ block[ // start block
 
 
   #let fill-array = ( 
-    // tinytable cell fill after
+    // tinytable cell fill before
   )
   #let style-array = ( 
-    // tinytable cell style after
+    // tinytable cell style before
   )
   #let align-array = (
-    // tinytable cell align after
+    // tinytable cell align before
   )
-  // tinytable align-default-array after
+  // tinytable align-default-array before
   #show table.cell: it => {
     let tmp = it
     let data = style-array.find(data => data.x.contains(it.x) and data.y.contains(it.y))
     if data != none {
-      set text(data.color)
-      set text(data.fontsize)
+      if data.fontsize != none { tmp = text(size: data.fontsize, tmp) }
+      if data.color != none { tmp = text(fill: data.color, tmp) }
       if data.indent != false { tmp = pad(left: data.indent, tmp) }
       if data.underline == true { tmp = underline(tmp) }
       if data.italic == true { tmp = emph(tmp) }
@@ -58,7 +58,7 @@ block[ // start block
       }
     },
 
-    // tinytable lines after
+    // tinytable lines before
 
     table.header(
       repeat: true,
@@ -67,7 +67,7 @@ block[ // start block
     // tinytable cell content after
 
 
-    // tinytable footer after
+    // tinytable footer before
 
   ) // end table
 
