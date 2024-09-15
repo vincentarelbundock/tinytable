@@ -65,7 +65,7 @@ setMethod(
   out <- lines_insert(
         out,
         align_default,
-        "// tinytable align-default-array after",
+        "// tinytable align-default-array before",
         "after")
 
   x@table_string <- out
