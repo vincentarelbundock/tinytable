@@ -186,6 +186,16 @@ tab <- data.frame(
 expect_snapshot_print(print_html(dat), "html-issue297")
 
 
+# Issue #340: plot_tt should be able to create self-contained HTML
+dat <- data.frame(
+  Name = c("bar", "line"),
+  Image = "") |>
+  tt() |>
+  plot_tt(i = 1, j = 2, fun = "bar", data = list(2)) |>
+  plot_tt(i = 2, j = 2, fun = "line", data = list(data.frame(x = 1:3, y = 3:1)))
+expect_snapshot_print(print_html(dat, portable = TRUE), "html-images-portable.html")
+
+
 # # Built-in plots
 # # cannot be tested because the names of plots are random and set seed doesn't work
 # set.seed(1024)
