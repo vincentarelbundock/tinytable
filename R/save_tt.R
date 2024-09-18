@@ -7,6 +7,7 @@
 #' + If `output` is "markdown", "latex", "html", or "typst", the table is returned in a string as an `R` object.
 #' + If `output` is a valid file path, the table is saved to file. The supported extensions are: .docx, .html, .png, .pdf, .tex, .typ, and .md (with aliases .txt, .Rmd and .qmd).
 #' @param overwrite A logical value indicating whether to overwrite an existing file.
+#' @param portable **experimental** When the output is HTML, embeds images as base64 encoded string, creating a portable self-contained HTML.
 #' @return A string with the table when `output` is a format, and the file path when `output` is a valid path.
 #' @export
 #' @examples
@@ -20,7 +21,7 @@
 #' filename <- file.path(tempdir(), "table.tex")
 #' tt(mtcars[1:4, 1:4]) |> save_tt(filename)
 #'
-save_tt <- function(x, output, overwrite = FALSE) {
+save_tt <- function(x, output, overwrite = FALSE, portable = FALSE) {
   assert_class(x, "tinytable")
   assert_string(output)
   assert_flag(overwrite)
@@ -37,6 +38,8 @@ save_tt <- function(x, output, overwrite = FALSE) {
     return(as.character(out))
   } else if (identical(output, "html")) {
     out <- build_tt(x, output = "html")@table_string
+    if(portable)
+      out <- make_portable(out)
     return(as.character(out))
   } else if (identical(output, "latex")) {
     out <- build_tt(x, output = "latex")@table_string
@@ -70,7 +73,10 @@ save_tt <- function(x, output, overwrite = FALSE) {
   # evaluate styles at the very end of the pipeline, just before writing
   x <- build_tt(x, output = output_format)
 
-  if (file_ext %in% c("html", "tex", "md", "Rmd", "qmd", "txt", "typ")) {
+  if(file_ext == "html" && portable){
+    out <- make_portable(x@table_string, dirname(output))
+    write(out, file = output)
+  } else if(file_ext %in% c("html", "tex", "md", "Rmd", "qmd", "txt", "typ")) {
     write(x@table_string, file = output)
   } else if (file_ext == "png") {
     assert_dependency("webshot2")
@@ -150,3 +156,43 @@ latex_standalone <- "
 \\endminipage
 \\end{document}
 "
+
+remove_empty_dir = function(x){
+  .remove_empty_dir = function(y){
+    if(length(dir(y, all.files = TRUE, no.. = TRUE)) == 0)
+      unlink(y, recursive = TRUE)
+  }
+
+  sapply(x, .remove_empty_dir)
+
+  invisible(NULL)
+}
+
+
+make_portable = function(html, dir = NULL){
+  assert_dependency("base64enc")
+
+  lines <- strsplit(html, "\n", fixed = TRUE)[[1]]
+  src_lines <- grep("<img src=", lines)
+  images <- sub(".*<img src=\"([^\"]*)\".*", "\\1", lines[src_lines])
+
+  if(!is.null(dir)){
+    images <- file.path(dir, images)
+    }
+
+  encoded_images <- sapply(images, base64enc::base64encode)
+
+  new_lines <- unlist(Map(
+      sub,
+      "(.*<img src=\")[^\"]*(\".*)",
+      paste0("\\1data:image/png;base64, ", encoded_images, "\\2"),
+      lines[src_lines]
+      ))
+  lines[src_lines] = new_lines
+
+  # remove images that were encoded and the asset library, if it is empty
+  file.remove(images)
+  remove_empty_dir(unique(dirname(images)))
+
+  paste0(lines, collapse = "\n")
+}
