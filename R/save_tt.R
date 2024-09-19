@@ -76,7 +76,7 @@ save_tt <- function(x, output, overwrite = FALSE, portable = FALSE) {
   # evaluate styles at the very end of the pipeline, just before writing
   x <- build_tt(x, output = output_format)
 
-  if(file_ext %in% c("html", "tex", "md", "Rmd", "qmd", "txt", "typ")) {
+  if (file_ext %in% c("html", "tex", "md", "Rmd", "qmd", "txt", "typ")) {
     write(x@table_string, file = output)
   } else if (file_ext == "png") {
     assert_dependency("webshot2")
@@ -156,14 +156,3 @@ latex_standalone <- "
 \\endminipage
 \\end{document}
 "
-
-remove_empty_dir = function(x){
-  .remove_empty_dir = function(y){
-    if(length(dir(y, all.files = TRUE, no.. = TRUE)) == 0)
-      unlink(y, recursive = TRUE)
-  }
-
-  sapply(x, .remove_empty_dir)
-
-  invisible(NULL)
-}
