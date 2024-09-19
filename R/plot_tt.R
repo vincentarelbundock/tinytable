@@ -179,7 +179,7 @@ plot_tt_lazy <- function(x,
     assert_dependency("base64enc")
 
     http <- grepl("^http", trimws(images))
-    images[!http] = encode(images[!http])
+    images[!http] <- encode(images[!http])
     cell <- sprintf('<img src="%s" style="height: %sem;">', images, height)
   } else if (isTRUE(x@output == "html")) {
     cell <- ifelse(
@@ -241,10 +241,10 @@ tiny_line <- function(d, xlim = 0:1, color = "black", ...) {
 
 encode <- function(images) {
   assert_dependency("base64enc")
-  ext = tools::file_ext(images)
+  ext <- tools::file_ext(images)
 
-  if(any(ext == "")) stop("Unknown extension")
+  if(any(ext == "")) stop("Empty image extensions are not allowed", call. = FALSE)
 
-  encoded = sapply(images, base64enc::base64encode)
+  encoded <- sapply(images, base64enc::base64encode)
   sprintf("data:image/%s;base64, %s", ext, encoded)
 }

@@ -32,7 +32,7 @@ save_tt <- function(x, output, overwrite = FALSE, portable = FALSE) {
 
   if(isTRUE(portable)){
     assert_dependency("base64enc")
-    x@portable = TRUE
+    x@portable <- TRUE
   }
 
   if (identical(output, "markdown")) {
