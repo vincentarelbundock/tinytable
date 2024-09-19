@@ -10,10 +10,6 @@ block[ // start block
 #let nrow = $TINYTABLE_TYPST_NROW;
 #let ncol = $TINYTABLE_TYPST_NCOL;
 
-
-  #let fill-array = ( 
-    // tinytable cell fill after
-  )
   #let style-array = ( 
     // tinytable cell style after
   )
@@ -27,12 +23,12 @@ block[ // start block
     if data != none {
       if data.fontsize != none { tmp = text(size: data.fontsize, tmp) }
       if data.color != none { tmp = text(fill: data.color, tmp) }
-      if data.indent != false { tmp = pad(left: data.indent, tmp) }
-      if data.underline == true { tmp = underline(tmp) }
-      if data.italic == true { tmp = emph(tmp) }
-      if data.bold == true { tmp = strong(tmp) }
-      if data.mono == true { tmp = math.mono(tmp) }
-      if data.strikeout == true { tmp = strike(tmp) }
+      if data.indent != none { tmp = pad(left: data.indent, tmp) }
+      if data.underline != none { tmp = underline(tmp) }
+      if data.italic != none { tmp = emph(tmp) }
+      if data.bold != none { tmp = strong(tmp) }
+      if data.mono != none { tmp = math.mono(tmp) }
+      if data.strikeout != none { tmp = strike(tmp) }
       tmp
     } else {
       tmp
@@ -43,18 +39,18 @@ block[ // start block
 
   #table( // tinytable table start
     stroke: none,
-    align: (x, y) => {
-      let data = align-array.find(data => data.x.contains(x) and data.y.contains(y))
-      if data != none {
-        data.align
-      } else {
-        align-default-array.at(x)
-      }
-    },
+    // align: (x, y) => {
+    //   let data = align-array.find(data => data.x.contains(x) and data.y.contains(y))
+    //   if data != none {
+    //     data.align
+    //   } else {
+    //     align-default-array.at(x)
+    //   }
+    // },
     fill: (x, y) => {
-      let data = fill-array.find(data => data.x.contains(x) and data.y.contains(y))
-      if data != none {
-        data.fill
+      let data = style-array.find(data => data.x.contains(x) and data.y.contains(y))
+      if data != none and data.background != none { 
+            data.background
       }
     },
 

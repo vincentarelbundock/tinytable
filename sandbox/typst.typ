@@ -274,32 +274,9 @@
 )
 
 
-#block[
-```r
-pkgload::load_all()
-```
-
-#block[
-```
-ℹ Loading tinytable
-Creating a generic function for 'nrow' from package 'base' in package 'tinytable'
-
-Creating a generic function for 'ncol' from package 'base' in package 'tinytable'
-
-Creating a generic function for 'colnames' from package 'base' in package 'tinytable'
-
-Creating a generic function for 'colnames<-' from package 'base' in package 'tinytable'
-```
-
-]
-```r
-options(tinytable_quarto_figure = TRUE)
-```
-
-]
 ```r
 # Semi-complicated
-tab <- tt(mtcars[1:4, 1:5], caption = "Hell}}o World") |>
+tab <- tt(mtcars[1:4, 1:5], caption = "Hello World") |>
   group_tt(j = list("Group 1" = 4:5, "Group 2" = 2:3)) |>
   style_tt(j = 1:5, align = "lcccr") |>
   style_tt(i = 2, j = 1:3, strikeout = TRUE, bold = TRUE, background = "black", color = "white") |>
@@ -309,7 +286,7 @@ tab
 
 #show figure: set block(breakable: true)
 #figure( // start figure preamble
-  caption: [Hell}}o World],
+  caption: [Hello World],
   kind: "tinytable",
   supplement: "Table", // end figure preamble
 
@@ -329,16 +306,16 @@ block[ // start block
     (y: (3,), x: (0, 1, 2,), color: white, underline: false, italic: false, bold: true, mono: false, strikeout: true, fontsize: 1em, indent: false),
   )
   #let align-array = (
-    // tinytable cell align after
+    // tinytable cell align before
   )
-  // tinytable align-default-array after
   #let align-default-array = ( left, center, center, center, right ,) // tinytable align-default-array here
+  // tinytable align-default-array before
   #show table.cell: it => {
     let tmp = it
     let data = style-array.find(data => data.x.contains(it.x) and data.y.contains(it.y))
     if data != none {
-      set text(data.color)
-      set text(data.fontsize)
+      if data.fontsize != none { tmp = text(size: data.fontsize, tmp) }
+      if data.color != none { tmp = text(fill: data.color, tmp) }
       if data.indent != false { tmp = pad(left: data.indent, tmp) }
       if data.underline == true { tmp = underline(tmp) }
       if data.italic == true { tmp = emph(tmp) }
@@ -371,10 +348,22 @@ block[ // start block
       }
     },
 
-    // tinytable lines after
-table.hline(y: 6, start: 0, end: 5, stroke: 0.1em + black),
-table.hline(y: 2, start: 0, end: 5, stroke: 0.05em + black),
 table.hline(y: 0, start: 0, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 1, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 2, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 3, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 4, end: 5, stroke: 0.1em + black),
+table.hline(y: 6, start: 0, end: 5, stroke: 0.1em + black),
+table.hline(y: 6, start: 1, end: 5, stroke: 0.1em + black),
+table.hline(y: 6, start: 2, end: 5, stroke: 0.1em + black),
+table.hline(y: 6, start: 3, end: 5, stroke: 0.1em + black),
+table.hline(y: 6, start: 4, end: 5, stroke: 0.1em + black),
+table.hline(y: 2, start: 0, end: 5, stroke: 0.05em + black),
+table.hline(y: 2, start: 1, end: 5, stroke: 0.05em + black),
+table.hline(y: 2, start: 2, end: 5, stroke: 0.05em + black),
+table.hline(y: 2, start: 3, end: 5, stroke: 0.05em + black),
+table.hline(y: 2, start: 4, end: 5, stroke: 0.05em + black),
+    // tinytable lines before
 
     table.header(
       repeat: true,
@@ -388,10 +377,7 @@ table.hline(y: 0, start: 0, end: 5, stroke: 0.1em + black),
 [22.8], [4], [108], [ 93], [3.85],
 [21.4], [6], [258], [110], [3.08],
 
-    table.footer(
-      repeat: false,
-      // tinytable notes after
-    ),
+    // tinytable footer before
 
   ) // end table
 
@@ -426,21 +412,21 @@ block[ // start block
   )
   #let style-array = ( 
     // tinytable cell style after
-    (y: (2, 3, 5, 6, 7, 8, 10, 11, 12, 13,), x: (0, 1, 2, 3, 4,), color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1em, indent: 1em),
+    (y: (2, 3, 5, 6, 7, 8, 10, 11, 12, 13,), x: (0, 1, 2, 3, 4,), color: none, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1em, indent: 1em),
     (y: (2, 3, 4, 5, 6,), x: (0, 1, 2, 3, 4,), color: white, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1em, indent: false),
   )
   #let align-array = (
-    // tinytable cell align after
     (y: (2, 3, 4, 5, 6,), x: (0, 1, 2, 3, 4,), align: center),
+    // tinytable cell align before
   )
-  // tinytable align-default-array after
+  // tinytable align-default-array before
   #let align-default-array = ( left, left, left, left, left, ) // tinytable align-default-array here
   #show table.cell: it => {
     let tmp = it
     let data = style-array.find(data => data.x.contains(it.x) and data.y.contains(it.y))
     if data != none {
-      set text(data.color)
-      set text(data.fontsize)
+      if data.fontsize != none { tmp = text(size: data.fontsize, tmp) }
+      if data.color != none { tmp = text(fill: data.color, tmp) }
       if data.indent != false { tmp = pad(left: data.indent, tmp) }
       if data.underline == true { tmp = underline(tmp) }
       if data.italic == true { tmp = emph(tmp) }
@@ -473,10 +459,22 @@ block[ // start block
       }
     },
 
-    // tinytable lines after
-table.hline(y: 14, start: 0, end: 5, stroke: 0.1em + black),
-table.hline(y: 2, start: 0, end: 5, stroke: 0.05em + black),
 table.hline(y: 0, start: 0, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 1, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 2, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 3, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 4, end: 5, stroke: 0.1em + black),
+table.hline(y: 14, start: 0, end: 5, stroke: 0.1em + black),
+table.hline(y: 14, start: 1, end: 5, stroke: 0.1em + black),
+table.hline(y: 14, start: 2, end: 5, stroke: 0.1em + black),
+table.hline(y: 14, start: 3, end: 5, stroke: 0.1em + black),
+table.hline(y: 14, start: 4, end: 5, stroke: 0.1em + black),
+table.hline(y: 2, start: 0, end: 5, stroke: 0.05em + black),
+table.hline(y: 2, start: 1, end: 5, stroke: 0.05em + black),
+table.hline(y: 2, start: 2, end: 5, stroke: 0.05em + black),
+table.hline(y: 2, start: 3, end: 5, stroke: 0.05em + black),
+table.hline(y: 2, start: 4, end: 5, stroke: 0.05em + black),
+    // tinytable lines before
 
     table.header(
       repeat: true,
@@ -497,10 +495,7 @@ table.cell(colspan: 5)[Brie],
 [24.4], [4], [146.7], [ 62], [3.69],
 [22.8], [4], [140.8], [ 95], [3.92],
 [19.2], [6], [167.6], [123], [3.92],
-    table.footer(
-      repeat: false,
-      // tinytable notes after
-    ),
+    // tinytable footer before
   ) // end table
 
   ]) // end align
@@ -534,16 +529,16 @@ block[ // start block
     // tinytable cell style after
   )
   #let align-array = (
-    // tinytable cell align after
+    // tinytable cell align before
   )
-  // tinytable align-default-array after
+  // tinytable align-default-array before
   #let align-default-array = ( left, left, left, left, left, ) // tinytable align-default-array here
   #show table.cell: it => {
     let tmp = it
     let data = style-array.find(data => data.x.contains(it.x) and data.y.contains(it.y))
     if data != none {
-      set text(data.color)
-      set text(data.fontsize)
+      if data.fontsize != none { tmp = text(size: data.fontsize, tmp) }
+      if data.color != none { tmp = text(fill: data.color, tmp) }
       if data.indent != false { tmp = pad(left: data.indent, tmp) }
       if data.underline == true { tmp = underline(tmp) }
       if data.italic == true { tmp = emph(tmp) }
@@ -576,13 +571,37 @@ block[ // start block
       }
     },
 
-    // tinytable lines after
-table.hline(y: 5, start: 0, end: 5, stroke: 0.1em + black),
-table.hline(y: 1, start: 0, end: 5, stroke: 0.05em + black),
 table.hline(y: 0, start: 0, end: 5, stroke: 0.1em + black),
-table.hline(y: 5, start: 0, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 1, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 2, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 3, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 4, end: 5, stroke: 0.1em + black),
 table.hline(y: 1, start: 0, end: 5, stroke: 0.05em + black),
+table.hline(y: 1, start: 1, end: 5, stroke: 0.05em + black),
+table.hline(y: 1, start: 2, end: 5, stroke: 0.05em + black),
+table.hline(y: 1, start: 3, end: 5, stroke: 0.05em + black),
+table.hline(y: 1, start: 4, end: 5, stroke: 0.05em + black),
+table.hline(y: 5, start: 0, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 1, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 2, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 3, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 4, end: 5, stroke: 0.1em + black),
 table.hline(y: 0, start: 0, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 1, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 2, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 3, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 4, end: 5, stroke: 0.1em + black),
+table.hline(y: 1, start: 0, end: 5, stroke: 0.05em + black),
+table.hline(y: 1, start: 1, end: 5, stroke: 0.05em + black),
+table.hline(y: 1, start: 2, end: 5, stroke: 0.05em + black),
+table.hline(y: 1, start: 3, end: 5, stroke: 0.05em + black),
+table.hline(y: 1, start: 4, end: 5, stroke: 0.05em + black),
+table.hline(y: 5, start: 0, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 1, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 2, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 3, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 4, end: 5, stroke: 0.1em + black),
+    // tinytable lines before
 
     table.header(
       repeat: true,
@@ -595,10 +614,7 @@ table.hline(y: 0, start: 0, end: 5, stroke: 0.1em + black),
 [22.8], [4], [108], [ 93], [3.85],
 [21.4], [6], [258], [110], [3.08],
 
-    table.footer(
-      repeat: false,
-      // tinytable notes after
-    ),
+    // tinytable footer before
 
   ) // end table
 
@@ -636,16 +652,16 @@ block[ // start block
     // tinytable cell style after
   )
   #let align-array = (
-    // tinytable cell align after
+    // tinytable cell align before
   )
-  // tinytable align-default-array after
+  // tinytable align-default-array before
   #let align-default-array = ( left, left, left, left, ) // tinytable align-default-array here
   #show table.cell: it => {
     let tmp = it
     let data = style-array.find(data => data.x.contains(it.x) and data.y.contains(it.y))
     if data != none {
-      set text(data.color)
-      set text(data.fontsize)
+      if data.fontsize != none { tmp = text(size: data.fontsize, tmp) }
+      if data.color != none { tmp = text(fill: data.color, tmp) }
       if data.indent != false { tmp = pad(left: data.indent, tmp) }
       if data.underline == true { tmp = underline(tmp) }
       if data.italic == true { tmp = emph(tmp) }
@@ -678,10 +694,19 @@ block[ // start block
       }
     },
 
-    // tinytable lines after
-table.hline(y: 4, start: 0, end: 4, stroke: 0.1em + black),
-table.hline(y: 1, start: 0, end: 4, stroke: 0.05em + black),
 table.hline(y: 0, start: 0, end: 4, stroke: 0.1em + black),
+table.hline(y: 0, start: 1, end: 4, stroke: 0.1em + black),
+table.hline(y: 0, start: 2, end: 4, stroke: 0.1em + black),
+table.hline(y: 0, start: 3, end: 4, stroke: 0.1em + black),
+table.hline(y: 4, start: 0, end: 4, stroke: 0.1em + black),
+table.hline(y: 4, start: 1, end: 4, stroke: 0.1em + black),
+table.hline(y: 4, start: 2, end: 4, stroke: 0.1em + black),
+table.hline(y: 4, start: 3, end: 4, stroke: 0.1em + black),
+table.hline(y: 1, start: 0, end: 4, stroke: 0.05em + black),
+table.hline(y: 1, start: 1, end: 4, stroke: 0.05em + black),
+table.hline(y: 1, start: 2, end: 4, stroke: 0.05em + black),
+table.hline(y: 1, start: 3, end: 4, stroke: 0.05em + black),
+    // tinytable lines before
 
     table.header(
       repeat: true,
@@ -693,10 +718,7 @@ table.hline(y: 0, start: 0, end: 4, stroke: 0.1em + black),
 [201399], [201.4 ], [1970-08-21], [True ],
 [100188], [  0.13], [1970-07-18], [False],
 
-    table.footer(
-      repeat: false,
-      // tinytable notes after
-    ),
+    // tinytable footer before
 
   ) // end table
 
@@ -736,16 +758,16 @@ block[ // start block
     // tinytable cell style after
   )
   #let align-array = (
-    // tinytable cell align after
+    // tinytable cell align before
   )
-  // tinytable align-default-array after
+  // tinytable align-default-array before
   #let align-default-array = ( left, left, left, ) // tinytable align-default-array here
   #show table.cell: it => {
     let tmp = it
     let data = style-array.find(data => data.x.contains(it.x) and data.y.contains(it.y))
     if data != none {
-      set text(data.color)
-      set text(data.fontsize)
+      if data.fontsize != none { tmp = text(size: data.fontsize, tmp) }
+      if data.color != none { tmp = text(fill: data.color, tmp) }
       if data.indent != false { tmp = pad(left: data.indent, tmp) }
       if data.underline == true { tmp = underline(tmp) }
       if data.italic == true { tmp = emph(tmp) }
@@ -778,10 +800,16 @@ block[ // start block
       }
     },
 
-    // tinytable lines after
-table.hline(y: 5, start: 0, end: 3, stroke: 0.1em + black),
-table.hline(y: 1, start: 0, end: 3, stroke: 0.05em + black),
 table.hline(y: 0, start: 0, end: 3, stroke: 0.1em + black),
+table.hline(y: 0, start: 1, end: 3, stroke: 0.1em + black),
+table.hline(y: 0, start: 2, end: 3, stroke: 0.1em + black),
+table.hline(y: 5, start: 0, end: 3, stroke: 0.1em + black),
+table.hline(y: 5, start: 1, end: 3, stroke: 0.1em + black),
+table.hline(y: 5, start: 2, end: 3, stroke: 0.1em + black),
+table.hline(y: 1, start: 0, end: 3, stroke: 0.05em + black),
+table.hline(y: 1, start: 1, end: 3, stroke: 0.05em + black),
+table.hline(y: 1, start: 2, end: 3, stroke: 0.05em + black),
+    // tinytable lines before
 
     table.header(
       repeat: true,
@@ -794,10 +822,7 @@ table.hline(y: 0, start: 0, end: 3, stroke: 0.1em + black),
 [Food: Tofu], [  0.146], [29M],
 [Food: Beans], [  0.003], [94K],
 
-    table.footer(
-      repeat: false,
-      // tinytable notes after
-    ),
+    // tinytable footer before
 
   ) // end table
 
@@ -831,16 +856,16 @@ block[ // start block
     // tinytable cell style after
   )
   #let align-array = (
-    // tinytable cell align after
+    // tinytable cell align before
   )
-  // tinytable align-default-array after
+  // tinytable align-default-array before
   #let align-default-array = ( left, ) // tinytable align-default-array here
   #show table.cell: it => {
     let tmp = it
     let data = style-array.find(data => data.x.contains(it.x) and data.y.contains(it.y))
     if data != none {
-      set text(data.color)
-      set text(data.fontsize)
+      if data.fontsize != none { tmp = text(size: data.fontsize, tmp) }
+      if data.color != none { tmp = text(fill: data.color, tmp) }
       if data.indent != false { tmp = pad(left: data.indent, tmp) }
       if data.underline == true { tmp = underline(tmp) }
       if data.italic == true { tmp = emph(tmp) }
@@ -873,10 +898,10 @@ block[ // start block
       }
     },
 
-    // tinytable lines after
+table.hline(y: 0, start: 0, end: 1, stroke: 0.1em + black),
 table.hline(y: 3, start: 0, end: 1, stroke: 0.1em + black),
 table.hline(y: 1, start: 0, end: 1, stroke: 0.05em + black),
-table.hline(y: 0, start: 0, end: 1, stroke: 0.1em + black),
+    // tinytable lines before
 
     table.header(
       repeat: true,
@@ -887,10 +912,7 @@ table.hline(y: 0, start: 0, end: 1, stroke: 0.1em + black),
 [0.00012],
 [12],
 
-    table.footer(
-      repeat: false,
-      // tinytable notes after
-    ),
+    // tinytable footer before
 
   ) // end table
 
@@ -924,16 +946,16 @@ block[ // start block
     // tinytable cell style after
   )
   #let align-array = (
-    // tinytable cell align after
+    // tinytable cell align before
   )
-  // tinytable align-default-array after
+  // tinytable align-default-array before
   #let align-default-array = ( left, left, ) // tinytable align-default-array here
   #show table.cell: it => {
     let tmp = it
     let data = style-array.find(data => data.x.contains(it.x) and data.y.contains(it.y))
     if data != none {
-      set text(data.color)
-      set text(data.fontsize)
+      if data.fontsize != none { tmp = text(size: data.fontsize, tmp) }
+      if data.color != none { tmp = text(fill: data.color, tmp) }
       if data.indent != false { tmp = pad(left: data.indent, tmp) }
       if data.underline == true { tmp = underline(tmp) }
       if data.italic == true { tmp = emph(tmp) }
@@ -966,10 +988,13 @@ block[ // start block
       }
     },
 
-    // tinytable lines after
-table.hline(y: 4, start: 0, end: 2, stroke: 0.1em + black),
-table.hline(y: 1, start: 0, end: 2, stroke: 0.05em + black),
 table.hline(y: 0, start: 0, end: 2, stroke: 0.1em + black),
+table.hline(y: 0, start: 1, end: 2, stroke: 0.1em + black),
+table.hline(y: 4, start: 0, end: 2, stroke: 0.1em + black),
+table.hline(y: 4, start: 1, end: 2, stroke: 0.1em + black),
+table.hline(y: 1, start: 0, end: 2, stroke: 0.05em + black),
+table.hline(y: 1, start: 1, end: 2, stroke: 0.05em + black),
+    // tinytable lines before
 
     table.header(
       repeat: true,
@@ -981,10 +1006,7 @@ table.hline(y: 0, start: 0, end: 2, stroke: 0.1em + black),
 [ 1], [-],
 [ 2], [ 5],
 
-    table.footer(
-      repeat: false,
-      // tinytable notes after
-    ),
+    // tinytable footer before
 
   ) // end table
 
@@ -1020,16 +1042,16 @@ block[ // start block
     // tinytable cell style after
   )
   #let align-array = (
-    // tinytable cell align after
+    // tinytable cell align before
   )
-  // tinytable align-default-array after
   #let align-default-array = ( center ,) // tinytable align-default-array here
+  // tinytable align-default-array before
   #show table.cell: it => {
     let tmp = it
     let data = style-array.find(data => data.x.contains(it.x) and data.y.contains(it.y))
     if data != none {
-      set text(data.color)
-      set text(data.fontsize)
+      if data.fontsize != none { tmp = text(size: data.fontsize, tmp) }
+      if data.color != none { tmp = text(fill: data.color, tmp) }
       if data.indent != false { tmp = pad(left: data.indent, tmp) }
       if data.underline == true { tmp = underline(tmp) }
       if data.italic == true { tmp = emph(tmp) }
@@ -1062,10 +1084,10 @@ block[ // start block
       }
     },
 
-    // tinytable lines after
+table.hline(y: 0, start: 0, end: 1, stroke: 0.1em + black),
 table.hline(y: 2, start: 0, end: 1, stroke: 0.1em + black),
 table.hline(y: 1, start: 0, end: 1, stroke: 0.05em + black),
-table.hline(y: 0, start: 0, end: 1, stroke: 0.1em + black),
+    // tinytable lines before
 
     table.header(
       repeat: true,
@@ -1075,10 +1097,7 @@ table.hline(y: 0, start: 0, end: 1, stroke: 0.1em + black),
     // tinytable cell content after
 [This is _italic_ text.],
 
-    table.footer(
-      repeat: false,
-      // tinytable notes after
-    ),
+    // tinytable footer before
 
   ) // end table
 
@@ -1109,19 +1128,19 @@ block[ // start block
   )
   #let style-array = ( 
     // tinytable cell style after
-    (y: (0, 1, 2, 3, 4,), x: (0, 3,), color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, indent: false),
+    (y: (0, 1, 2, 3, 4,), x: (0, 3,), color: none, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1.5em, indent: false),
   )
   #let align-array = (
-    // tinytable cell align after
+    // tinytable cell align before
   )
-  // tinytable align-default-array after
+  // tinytable align-default-array before
   #let align-default-array = ( left, left, left, left, left, ) // tinytable align-default-array here
   #show table.cell: it => {
     let tmp = it
     let data = style-array.find(data => data.x.contains(it.x) and data.y.contains(it.y))
     if data != none {
-      set text(data.color)
-      set text(data.fontsize)
+      if data.fontsize != none { tmp = text(size: data.fontsize, tmp) }
+      if data.color != none { tmp = text(fill: data.color, tmp) }
       if data.indent != false { tmp = pad(left: data.indent, tmp) }
       if data.underline == true { tmp = underline(tmp) }
       if data.italic == true { tmp = emph(tmp) }
@@ -1154,10 +1173,22 @@ block[ // start block
       }
     },
 
-    // tinytable lines after
-table.hline(y: 5, start: 0, end: 5, stroke: 0.1em + black),
-table.hline(y: 1, start: 0, end: 5, stroke: 0.05em + black),
 table.hline(y: 0, start: 0, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 1, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 2, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 3, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 4, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 0, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 1, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 2, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 3, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 4, end: 5, stroke: 0.1em + black),
+table.hline(y: 1, start: 0, end: 5, stroke: 0.05em + black),
+table.hline(y: 1, start: 1, end: 5, stroke: 0.05em + black),
+table.hline(y: 1, start: 2, end: 5, stroke: 0.05em + black),
+table.hline(y: 1, start: 3, end: 5, stroke: 0.05em + black),
+table.hline(y: 1, start: 4, end: 5, stroke: 0.05em + black),
+    // tinytable lines before
 
     table.header(
       repeat: true,
@@ -1170,10 +1201,110 @@ table.hline(y: 0, start: 0, end: 5, stroke: 0.1em + black),
 [22.8], [4], [108], [ 93], [3.85],
 [21.4], [6], [258], [110], [3.08],
 
-    table.footer(
-      repeat: false,
-      // tinytable notes after
+    // tinytable footer before
+
+  ) // end table
+
+  ]) // end align
+
+] // end block
+) // end figure
+```r
+tt(x) |> style_tt(i = 2, j = 2:3, line = "b", line_color = "green")
+```
+
+#show figure: set block(breakable: true)
+#figure( // start figure preamble
+  
+  kind: "tinytable",
+  supplement: "Table", // end figure preamble
+
+block[ // start block
+
+#let nhead = 1;
+#let nrow = 4;
+#let ncol = 5;
+
+  #let fill-array = ( 
+    // tinytable cell fill after
+  )
+  #let style-array = ( 
+    // tinytable cell style after
+  )
+  #let align-array = (
+    // tinytable cell align before
+  )
+  // tinytable align-default-array before
+  #let align-default-array = ( left, left, left, left, left, ) // tinytable align-default-array here
+  #show table.cell: it => {
+    let tmp = it
+    let data = style-array.find(data => data.x.contains(it.x) and data.y.contains(it.y))
+    if data != none {
+      if data.fontsize != none { tmp = text(size: data.fontsize, tmp) }
+      if data.color != none { tmp = text(fill: data.color, tmp) }
+      if data.indent != false { tmp = pad(left: data.indent, tmp) }
+      if data.underline == true { tmp = underline(tmp) }
+      if data.italic == true { tmp = emph(tmp) }
+      if data.bold == true { tmp = strong(tmp) }
+      if data.mono == true { tmp = math.mono(tmp) }
+      if data.strikeout == true { tmp = strike(tmp) }
+      tmp
+    } else {
+      tmp
+    }
+  }
+
+  #align(center, [
+
+  #table( // tinytable table start
+    columns: (auto, auto, auto, auto, auto),
+    stroke: none,
+    align: (x, y) => {
+      let data = align-array.find(data => data.x.contains(x) and data.y.contains(y))
+      if data != none {
+        data.align
+      } else {
+        align-default-array.at(x)
+      }
+    },
+    fill: (x, y) => {
+      let data = fill-array.find(data => data.x.contains(x) and data.y.contains(y))
+      if data != none {
+        data.fill
+      }
+    },
+
+table.hline(y: 3, start: 1, end: 3, stroke: 0.1em + green),
+table.hline(y: 3, start: 2, end: 3, stroke: 0.1em + green),
+table.hline(y: 0, start: 0, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 1, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 2, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 3, end: 5, stroke: 0.1em + black),
+table.hline(y: 0, start: 4, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 0, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 1, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 2, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 3, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 4, end: 5, stroke: 0.1em + black),
+table.hline(y: 1, start: 0, end: 5, stroke: 0.05em + black),
+table.hline(y: 1, start: 1, end: 5, stroke: 0.05em + black),
+table.hline(y: 1, start: 2, end: 5, stroke: 0.05em + black),
+table.hline(y: 1, start: 3, end: 5, stroke: 0.05em + black),
+table.hline(y: 1, start: 4, end: 5, stroke: 0.05em + black),
+    // tinytable lines before
+
+    table.header(
+      repeat: true,
+[mpg], [cyl], [disp], [hp], [drat],
     ),
+
+    // tinytable cell content after
+[21.0], [6], [160], [110], [3.90],
+[21.0], [6], [160], [110], [3.90],
+[22.8], [4], [108], [ 93], [3.85],
+[21.4], [6], [258], [110], [3.08],
+
+    // tinytable footer before
 
   ) // end table
 
@@ -1186,7 +1317,7 @@ table.hline(y: 0, start: 0, end: 5, stroke: 0.1em + black),
 k <- x
 colnames(k) <- NULL
 k <- tt(k)
-k
+k |> style_tt(i = 2, j = 2:3, line = "b", line_color = "green")
 ```
 
 #show figure: set block(breakable: true)
@@ -1208,16 +1339,16 @@ block[ // start block
     // tinytable cell style after
   )
   #let align-array = (
-    // tinytable cell align after
+    // tinytable cell align before
   )
-  // tinytable align-default-array after
+  // tinytable align-default-array before
   #let align-default-array = ( left, left, left, left, left, ) // tinytable align-default-array here
   #show table.cell: it => {
     let tmp = it
     let data = style-array.find(data => data.x.contains(it.x) and data.y.contains(it.y))
     if data != none {
-      set text(data.color)
-      set text(data.fontsize)
+      if data.fontsize != none { tmp = text(size: data.fontsize, tmp) }
+      if data.color != none { tmp = text(fill: data.color, tmp) }
       if data.indent != false { tmp = pad(left: data.indent, tmp) }
       if data.underline == true { tmp = underline(tmp) }
       if data.italic == true { tmp = emph(tmp) }
@@ -1250,9 +1381,19 @@ block[ // start block
       }
     },
 
-    // tinytable lines after
-table.hline(y: 5, start: 0, end: 5, stroke: 0.1em + black),
+table.hline(y: 3, start: 1, end: 3, stroke: 0.1em + green),
+table.hline(y: 3, start: 2, end: 3, stroke: 0.1em + green),
 table.hline(y: 1, start: 0, end: 5, stroke: 0.1em + black),
+table.hline(y: 1, start: 1, end: 5, stroke: 0.1em + black),
+table.hline(y: 1, start: 2, end: 5, stroke: 0.1em + black),
+table.hline(y: 1, start: 3, end: 5, stroke: 0.1em + black),
+table.hline(y: 1, start: 4, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 0, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 1, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 2, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 3, end: 5, stroke: 0.1em + black),
+table.hline(y: 5, start: 4, end: 5, stroke: 0.1em + black),
+    // tinytable lines before
 
     table.header(
       repeat: true,
@@ -1264,10 +1405,7 @@ table.hline(y: 1, start: 0, end: 5, stroke: 0.1em + black),
 [22.8], [4], [108], [ 93], [3.85],
 [21.4], [6], [258], [110], [3.08],
 
-    table.footer(
-      repeat: false,
-      // tinytable notes after
-    ),
+    // tinytable footer before
 
   ) // end table
 
@@ -1303,19 +1441,19 @@ block[ // start block
   )
   #let style-array = ( 
     // tinytable cell style after
-    (y: (1, 2, 4, 6, 7, 8, 10, 11, 12,), x: (0, 1, 2, 3, 4, 5, 6, 7,), color: black, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1em, indent: 1em),
+    (y: (1, 2, 4, 6, 7, 8, 10, 11, 12,), x: (0, 1, 2, 3, 4, 5, 6, 7,), color: none, underline: false, italic: false, bold: false, mono: false, strikeout: false, fontsize: 1em, indent: 1em),
   )
   #let align-array = (
-    // tinytable cell align after
+    // tinytable cell align before
   )
-  // tinytable align-default-array after
+  // tinytable align-default-array before
   #let align-default-array = ( left, left, left, left, left, left, left, left, ) // tinytable align-default-array here
   #show table.cell: it => {
     let tmp = it
     let data = style-array.find(data => data.x.contains(it.x) and data.y.contains(it.y))
     if data != none {
-      set text(data.color)
-      set text(data.fontsize)
+      if data.fontsize != none { tmp = text(size: data.fontsize, tmp) }
+      if data.color != none { tmp = text(fill: data.color, tmp) }
       if data.indent != false { tmp = pad(left: data.indent, tmp) }
       if data.underline == true { tmp = underline(tmp) }
       if data.italic == true { tmp = emph(tmp) }
@@ -1348,10 +1486,31 @@ block[ // start block
       }
     },
 
-    // tinytable lines after
-table.hline(y: 13, start: 0, end: 8, stroke: 0.1em + black),
-table.hline(y: 1, start: 0, end: 8, stroke: 0.05em + black),
 table.hline(y: 0, start: 0, end: 8, stroke: 0.1em + black),
+table.hline(y: 0, start: 1, end: 8, stroke: 0.1em + black),
+table.hline(y: 0, start: 2, end: 8, stroke: 0.1em + black),
+table.hline(y: 0, start: 3, end: 8, stroke: 0.1em + black),
+table.hline(y: 0, start: 4, end: 8, stroke: 0.1em + black),
+table.hline(y: 0, start: 5, end: 8, stroke: 0.1em + black),
+table.hline(y: 0, start: 6, end: 8, stroke: 0.1em + black),
+table.hline(y: 0, start: 7, end: 8, stroke: 0.1em + black),
+table.hline(y: 13, start: 0, end: 8, stroke: 0.1em + black),
+table.hline(y: 13, start: 1, end: 8, stroke: 0.1em + black),
+table.hline(y: 13, start: 2, end: 8, stroke: 0.1em + black),
+table.hline(y: 13, start: 3, end: 8, stroke: 0.1em + black),
+table.hline(y: 13, start: 4, end: 8, stroke: 0.1em + black),
+table.hline(y: 13, start: 5, end: 8, stroke: 0.1em + black),
+table.hline(y: 13, start: 6, end: 8, stroke: 0.1em + black),
+table.hline(y: 13, start: 7, end: 8, stroke: 0.1em + black),
+table.hline(y: 1, start: 0, end: 8, stroke: 0.05em + black),
+table.hline(y: 1, start: 1, end: 8, stroke: 0.05em + black),
+table.hline(y: 1, start: 2, end: 8, stroke: 0.05em + black),
+table.hline(y: 1, start: 3, end: 8, stroke: 0.05em + black),
+table.hline(y: 1, start: 4, end: 8, stroke: 0.05em + black),
+table.hline(y: 1, start: 5, end: 8, stroke: 0.05em + black),
+table.hline(y: 1, start: 6, end: 8, stroke: 0.05em + black),
+table.hline(y: 1, start: 7, end: 8, stroke: 0.05em + black),
+    // tinytable lines before
 
     table.header(
       repeat: true,
@@ -1371,10 +1530,7 @@ table.cell(colspan: 8)[They love tofu],
 [14.3], [8], [360.0], [245], [3.21], [3.570], [15.84], [0],
 [24.4], [4], [146.7], [ 62], [3.69], [3.190], [20.00], [1],
 [22.8], [4], [140.8], [ 95], [3.92], [3.150], [22.90], [1],
-    table.footer(
-      repeat: false,
-      // tinytable notes after
-    ),
+    // tinytable footer before
   ) // end table
 
   ]) // end align
@@ -1412,16 +1568,16 @@ block[ // start block
     // tinytable cell style after
   )
   #let align-array = (
-    // tinytable cell align after
+    // tinytable cell align before
   )
-  // tinytable align-default-array after
+  // tinytable align-default-array before
   #let align-default-array = ( left, left, left, left, left, left, left, left, ) // tinytable align-default-array here
   #show table.cell: it => {
     let tmp = it
     let data = style-array.find(data => data.x.contains(it.x) and data.y.contains(it.y))
     if data != none {
-      set text(data.color)
-      set text(data.fontsize)
+      if data.fontsize != none { tmp = text(size: data.fontsize, tmp) }
+      if data.color != none { tmp = text(fill: data.color, tmp) }
       if data.indent != false { tmp = pad(left: data.indent, tmp) }
       if data.underline == true { tmp = underline(tmp) }
       if data.italic == true { tmp = emph(tmp) }
@@ -1455,10 +1611,31 @@ block[ // start block
       }
     },
 
-    // tinytable lines after
-table.hline(y: 11, start: 0, end: 8, stroke: 0.1em + black),
-table.hline(y: 2, start: 0, end: 8, stroke: 0.05em + black),
 table.hline(y: 0, start: 0, end: 8, stroke: 0.1em + black),
+table.hline(y: 0, start: 1, end: 8, stroke: 0.1em + black),
+table.hline(y: 0, start: 2, end: 8, stroke: 0.1em + black),
+table.hline(y: 0, start: 3, end: 8, stroke: 0.1em + black),
+table.hline(y: 0, start: 4, end: 8, stroke: 0.1em + black),
+table.hline(y: 0, start: 5, end: 8, stroke: 0.1em + black),
+table.hline(y: 0, start: 6, end: 8, stroke: 0.1em + black),
+table.hline(y: 0, start: 7, end: 8, stroke: 0.1em + black),
+table.hline(y: 11, start: 0, end: 8, stroke: 0.1em + black),
+table.hline(y: 11, start: 1, end: 8, stroke: 0.1em + black),
+table.hline(y: 11, start: 2, end: 8, stroke: 0.1em + black),
+table.hline(y: 11, start: 3, end: 8, stroke: 0.1em + black),
+table.hline(y: 11, start: 4, end: 8, stroke: 0.1em + black),
+table.hline(y: 11, start: 5, end: 8, stroke: 0.1em + black),
+table.hline(y: 11, start: 6, end: 8, stroke: 0.1em + black),
+table.hline(y: 11, start: 7, end: 8, stroke: 0.1em + black),
+table.hline(y: 2, start: 0, end: 8, stroke: 0.05em + black),
+table.hline(y: 2, start: 1, end: 8, stroke: 0.05em + black),
+table.hline(y: 2, start: 2, end: 8, stroke: 0.05em + black),
+table.hline(y: 2, start: 3, end: 8, stroke: 0.05em + black),
+table.hline(y: 2, start: 4, end: 8, stroke: 0.05em + black),
+table.hline(y: 2, start: 5, end: 8, stroke: 0.05em + black),
+table.hline(y: 2, start: 6, end: 8, stroke: 0.05em + black),
+table.hline(y: 2, start: 7, end: 8, stroke: 0.05em + black),
+    // tinytable lines before
 
     table.header(
       repeat: true,
@@ -1477,10 +1654,95 @@ table.cell(stroke: (bottom: .05em + black), colspan: 3, align: center)[Hamburger
 [24.4], [4], [146.7], [ 62], [3.69], [3.190], [20.00], [1],
 [22.8], [4], [140.8], [ 95], [3.92], [3.150], [22.90], [1],
 
-    table.footer(
-      repeat: false,
-      // tinytable notes after
+    // tinytable footer before
+
+  ) // end table
+
+  ]) // end align
+
+] // end block
+) // end figure
+```r
+# Theme grid
+tab <- tt(x, theme = "grid")
+tab
+```
+
+#show figure: set block(breakable: true)
+#figure( // start figure preamble
+  
+  kind: "tinytable",
+  supplement: "Table", // end figure preamble
+
+block[ // start block
+
+#let nhead = 1;
+#let nrow = 4;
+#let ncol = 5;
+
+  #let fill-array = ( 
+    // tinytable cell fill after
+  )
+  #let style-array = ( 
+    // tinytable cell style after
+  )
+  #let align-array = (
+    // tinytable cell align before
+  )
+  // tinytable align-default-array before
+  #let align-default-array = ( left, left, left, left, left, ) // tinytable align-default-array here
+  #show table.cell: it => {
+    let tmp = it
+    let data = style-array.find(data => data.x.contains(it.x) and data.y.contains(it.y))
+    if data != none {
+      if data.fontsize != none { tmp = text(size: data.fontsize, tmp) }
+      if data.color != none { tmp = text(fill: data.color, tmp) }
+      if data.indent != false { tmp = pad(left: data.indent, tmp) }
+      if data.underline == true { tmp = underline(tmp) }
+      if data.italic == true { tmp = emph(tmp) }
+      if data.bold == true { tmp = strong(tmp) }
+      if data.mono == true { tmp = math.mono(tmp) }
+      if data.strikeout == true { tmp = strike(tmp) }
+      tmp
+    } else {
+      tmp
+    }
+  }
+
+  #align(center, [
+
+  #table( // tinytable table start
+    columns: (auto, auto, auto, auto, auto),
+    stroke: (paint: black),
+    align: (x, y) => {
+      let data = align-array.find(data => data.x.contains(x) and data.y.contains(y))
+      if data != none {
+        data.align
+      } else {
+        align-default-array.at(x)
+      }
+    },
+    fill: (x, y) => {
+      let data = fill-array.find(data => data.x.contains(x) and data.y.contains(y))
+      if data != none {
+        data.fill
+      }
+    },
+
+    // tinytable lines before
+
+    table.header(
+      repeat: true,
+[mpg], [cyl], [disp], [hp], [drat],
     ),
+
+    // tinytable cell content after
+[21.0], [6], [160], [110], [3.90],
+[21.0], [6], [160], [110], [3.90],
+[22.8], [4], [108], [ 93], [3.85],
+[21.4], [6], [258], [110], [3.08],
+
+    // tinytable footer before
 
   ) // end table
 

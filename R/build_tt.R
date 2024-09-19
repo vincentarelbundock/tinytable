@@ -93,6 +93,10 @@ build_tt <- function(x, output = NULL) {
     }
   }
 
+  if (x@output == "typst") {
+    x <- style_apply_typst(x)
+  }
+
   x <- finalize(x)
 
   x@table_string <- lines_drop_consecutive_empty(x@table_string)
