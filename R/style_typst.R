@@ -71,112 +71,11 @@ setMethod(
         background = background,
         line = line,
         line_width = line_width,
-        line_color = line_color)
+        line_color = line_color,
+        align = align)
 
     x@style <- unique(rbind(x@style, sett))
 
-    # # 0- & header-indexing
-    # settings$j <- settings$j - 1
-    # if (x@nhead > 0) {
-    #     settings$i <- settings$i - 1 + x@nhead
-    # }
-    #
-    #
-    # if (text_style_flag) {
-    #   counter <- 
-    #   sp <- split(settings, settings[, 3:ncol(settings)])
-    #   sp <- lapply(sp, function(x) {
-    #     x$i <- sprintf("(%s,)", paste(unique(x$i), collapse = ", "))
-    #     x$j <- sprintf("(%s,)", paste(unique(x$j), collapse = ", "))
-    #     x[1, , ]
-    #   }
-    #   sp <- do.call(rbind, sp)
-    #   for (idx in seq_len(nrow(sp))) {
-    #     k <- sp[idx, "i"]
-    #     w <- sp[idx, "j"]
-    #     counter <- counter + 1
-    #     style <- sprintf(
-    #       "    (y: %s, x: %s, color: %s, underline: %s, italic: %s, bold: %s, mono: %s, strikeout: %s, fontsize: %s, indent: %s),",
-    #       k,
-    #       w,
-    #       sp$color[counter],
-    #       tolower(sp$underline[counter]),
-    #       tolower(sp$italic[counter]),
-    #       tolower(sp$bold[counter]),
-    #       tolower(sp$monospace[counter]),
-    #       tolower(sp$strikeout[counter]),
-    #       sp$fontsize[counter],
-    #       sp$indent[counter]
-    #     )
-    #     out <- lines_insert(out, style, "tinytable cell style after", "after")
-    #   }
-    # }
-    #
-    # if (fill_style_flag) {
-    #   if (length(background) == 1) background <- rep(background, nrow(settings))
-    #   counter <- 0
-    #   settings$background <- background
-    #   sp <- split(settings, settings$background)
-    #   sp <- lapply(sp, function(x) {
-    #     x$i <- sprintf("(%s,)", paste(unique(x$i), collapse = ", "))
-    #     x$j <- sprintf("(%s,)", paste(unique(x$j), collapse = ", "))
-    #     x[1, , ]
-    #   })
-    #   sp <- do.call(rbind, sp)
-    #   for (idx in seq_len(nrow(sp))) {
-    #     k <- sp[idx, "i"]
-    #     w <- sp[idx, "j"]
-    #     counter <- counter + 1
-    #     fill <- sprintf(
-    #       "    (y: %s, x: %s, fill: %s),",
-    #       k,
-    #       w,
-    #       sp$background[counter])
-    #     out <- lines_insert(out, fill, "tinytable cell fill after", "after")
-    #   }
-    # }
-    #
-    # if (!is.null(align)) {
-    #   align_value <- sapply(align,
-    #     switch,
-    #     c = "center",
-    #     d = "center",
-    #     r = "right",
-    #     l = "left")
-    #   # reset defaults for all columns
-    #   if (is.null(i) && length(align_value) == length(jval) && length(align_value) == ncol(x)) {
-    #     align_default <- sprintf(
-    #       "  #let align-default-array = ( %s ,) // tinytable align-default-array here",
-    #       paste(align_value, collapse = ", "))
-    #     out <- lines_drop(out, "// tinytable align-default-array here", fixed = TRUE)
-    #     out <- lines_insert(out, align_default, "tinytable align-default-array before", "before")
-    #   } else if (length(align_value) %in% c(1, nrow(settings))) {
-    #     if (length(align_value) == 1) align_value <- rep(align_value, nrow(settings))
-    #     counter <- 0
-    #     settings$align <- align_value
-    #     sp <- split(settings, settings$align)
-    #     sp <- lapply(sp, function(x) {
-    #       x$i <- sprintf("(%s,)", paste(unique(x$i), collapse = ", "))
-    #       x$j <- sprintf("(%s,)", paste(unique(x$j), collapse = ", "))
-    #       x[1, , ]
-    #     })
-    #     sp <- do.call(rbind, sp)
-    #     for (idx in seq_len(nrow(sp))) {
-    #       k <- sp[idx, "i"]
-    #       w <- sp[idx, "j"]
-    #       counter <- counter + 1
-    #       fill <- sprintf(
-    #         "    (y: %s, x: %s, align: %s),",
-    #         k,
-    #         w,
-    #         sp$align[counter])
-    #       out <- lines_insert(out, fill, "tinytable cell align before", "before")
-    #     }
-    #   } else {
-    #     stop("Wrong number of elements in `align` argument.", call. = FALSE)
-    #   }
-    # }
-    #
     # # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
     # if (!is.null(line)) {
     #   iline <- NULL
@@ -229,7 +128,10 @@ style_apply_typst <- function(x) {
     no_style <- apply(sty[, 3:ncol(sty)], 1, function(k) {
         all(is.na(k) | k == FALSE)
     })
-    sty <- sty[!no_style,]
+
+    if (all(no_style)) return(x)
+
+    sty <- sty[!no_style,, drop = FALSE]
 
     last_style <- function(x) {
         if (all(is.na(x))) {
@@ -273,7 +175,7 @@ style_apply_typst <- function(x) {
 
     for (row in seq_len(nrow(sty))) {
         style <- sprintf(
-            "    (y: %s, x: %s, color: %s, underline: %s, italic: %s, bold: %s, mono: %s, strikeout: %s, fontsize: %s, indent: %s, background: %s),",
+            "    (y: %s, x: %s, color: %s, underline: %s, italic: %s, bold: %s, mono: %s, strikeout: %s, fontsize: %s, indent: %s, background: %s, align: %s),",
             sty$i[row],
             sty$j[row],
             sty$color[row],
@@ -284,7 +186,8 @@ style_apply_typst <- function(x) {
             sty$strikeout[row],
             sty$fontsize[row],
             sty$indent[row],
-            sty$background[row]
+            sty$background[row],
+            sty$align[row]
         )
         x@table_string <- lines_insert(x@table_string, style, "tinytable cell style after", "after")
     }
@@ -292,7 +195,7 @@ style_apply_typst <- function(x) {
     return(x)
 }
 
-style_settings_typst <- function(x, i, j, color, underline, italic, bold, monospace, strikeout, fontsize, indent, background, line, line_color, line_width) {
+style_settings_typst <- function(x, i, j, color, underline, italic, bold, monospace, strikeout, fontsize, indent, background, line, line_color, line_width, align) {
     if (is.matrix(i) && is.logical(i) && nrow(i) == nrow(x) && ncol(i) == ncol(x)) {
         assert_null(j)
         settings <- which(i == TRUE, arr.ind = TRUE)
@@ -316,5 +219,16 @@ style_settings_typst <- function(x, i, j, color, underline, italic, bold, monosp
     settings[["line"]] <- line
     settings[["line_color"]] <- line_color
     settings[["line_width"]] <- line_width
+
+    if (!is.null(align)) {
+        settings[["align"]] <- sapply(align,
+            switch,
+            c = "center",
+            d = "center",
+            r = "right",
+            l = "left")
+    } else {
+        settings[["align"]] <- NA
+    }
     return(settings)
 }

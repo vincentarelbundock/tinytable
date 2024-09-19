@@ -13,9 +13,7 @@ block[ // start block
   #let style-array = ( 
     // tinytable cell style after
   )
-  #let align-array = (
-    // tinytable cell align before
-  )
+
   // tinytable align-default-array before
   #show table.cell: it => {
     let tmp = it
@@ -39,14 +37,14 @@ block[ // start block
 
   #table( // tinytable table start
     stroke: none,
-    // align: (x, y) => {
-    //   let data = align-array.find(data => data.x.contains(x) and data.y.contains(y))
-    //   if data != none {
-    //     data.align
-    //   } else {
-    //     align-default-array.at(x)
-    //   }
-    // },
+    align: (x, y) => {
+      let data = style-array.find(data => data.x.contains(x) and data.y.contains(y))
+      if data != none and data.align != none {
+        data.align
+      } else {
+        left
+      }
+    },
     fill: (x, y) => {
       let data = style-array.find(data => data.x.contains(x) and data.y.contains(y))
       if data != none and data.background != none { 
