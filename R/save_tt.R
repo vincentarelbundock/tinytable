@@ -30,6 +30,11 @@ save_tt <- function(x, output, overwrite = FALSE, portable = FALSE) {
     stop("File already exists and overwrite is set to FALSE.", call. = FALSE)
   }
 
+  if(isTRUE(portable)){
+    assert_dependency("base64enc")
+    x@portable = TRUE
+  }
+
   if (identical(output, "markdown")) {
     out <- build_tt(x, output = "markdown")@table_string
     return(as.character(out))
@@ -38,8 +43,6 @@ save_tt <- function(x, output, overwrite = FALSE, portable = FALSE) {
     return(as.character(out))
   } else if (identical(output, "html")) {
     out <- build_tt(x, output = "html")@table_string
-    if(portable)
-      out <- make_portable(out)
     return(as.character(out))
   } else if (identical(output, "latex")) {
     out <- build_tt(x, output = "latex")@table_string
@@ -73,10 +76,7 @@ save_tt <- function(x, output, overwrite = FALSE, portable = FALSE) {
   # evaluate styles at the very end of the pipeline, just before writing
   x <- build_tt(x, output = output_format)
 
-  if(file_ext == "html" && portable){
-    out <- make_portable(x@table_string, dirname(output))
-    write(out, file = output)
-  } else if(file_ext %in% c("html", "tex", "md", "Rmd", "qmd", "txt", "typ")) {
+  if(file_ext %in% c("html", "tex", "md", "Rmd", "qmd", "txt", "typ")) {
     write(x@table_string, file = output)
   } else if (file_ext == "png") {
     assert_dependency("webshot2")
@@ -166,33 +166,4 @@ remove_empty_dir = function(x){
   sapply(x, .remove_empty_dir)
 
   invisible(NULL)
-}
-
-
-make_portable = function(html, dir = NULL){
-  assert_dependency("base64enc")
-
-  lines <- strsplit(html, "\n", fixed = TRUE)[[1]]
-  src_lines <- grep("<img src=", lines)
-  images <- sub(".*<img src=\"([^\"]*)\".*", "\\1", lines[src_lines])
-
-  if(!is.null(dir)){
-    images <- file.path(dir, images)
-    }
-
-  encoded_images <- sapply(images, base64enc::base64encode)
-
-  new_lines <- unlist(Map(
-      sub,
-      "(.*<img src=\")[^\"]*(\".*)",
-      paste0("\\1data:image/png;base64, ", encoded_images, "\\2"),
-      lines[src_lines]
-      ))
-  lines[src_lines] = new_lines
-
-  # remove images that were encoded and the asset library, if it is empty
-  file.remove(images)
-  remove_empty_dir(unique(dirname(images)))
-
-  paste0(lines, collapse = "\n")
 }
