@@ -92,8 +92,6 @@ style_apply_typst <- function(x) {
         all(is.na(k) | k == FALSE)
     })
 
-    if (all(no_style)) return(x)
-
     sty <- sty[!no_style,, drop = FALSE]
 
     last_style <- function(x) {
@@ -125,34 +123,35 @@ style_apply_typst <- function(x) {
     }
 
     # array representation for duplicate styles = cleaner .typ file
-    idx <- apply(sty[, 3:ncol(sty)], 1, paste, collapse = "|")
-    sty <- split(sty, idx, drop = FALSE)
-    sty <- lapply(sty, function(k) {
-        k$i <- sprintf("(%s,)", paste(unique(k$i), collapse = ", "))
-        k$j <- sprintf("(%s,)", paste(unique(k$j), collapse = ", "))
-        k[1,]
-    })
-    sty <- do.call(rbind, sty)
+    if (!all(no_style)) {
+        idx <- apply(sty[, 3:ncol(sty)], 1, paste, collapse = "|")
+        sty <- split(sty, idx, drop = FALSE)
+        sty <- lapply(sty, function(k) {
+            k$i <- sprintf("(%s,)", paste(unique(k$i), collapse = ", "))
+            k$j <- sprintf("(%s,)", paste(unique(k$j), collapse = ", "))
+            k[1,]
+        })
+        sty <- do.call(rbind, sty)
 
 
-    for (row in seq_len(nrow(sty))) {
-        style <- sprintf(
-            "    (y: %s, x: %s, color: %s, underline: %s, italic: %s, bold: %s, mono: %s, strikeout: %s, fontsize: %s, indent: %s, background: %s, align: %s),",
-            sty$i[row],
-            sty$j[row],
-            sty$color[row],
-            sty$underline[row],
-            sty$italic[row],
-            sty$bold[row],
-            sty$monospace[row],
-            sty$strikeout[row],
-            sty$fontsize[row],
-            sty$indent[row],
-            sty$background[row],
-            sty$align[row]
-        )
-        x@table_string <- lines_insert(x@table_string, style, "tinytable cell style after", "after")
-
+        for (row in seq_len(nrow(sty))) {
+            style <- sprintf(
+                "    (y: %s, x: %s, color: %s, underline: %s, italic: %s, bold: %s, mono: %s, strikeout: %s, fontsize: %s, indent: %s, background: %s, align: %s),",
+                sty$i[row],
+                sty$j[row],
+                sty$color[row],
+                sty$underline[row],
+                sty$italic[row],
+                sty$bold[row],
+                sty$monospace[row],
+                sty$strikeout[row],
+                sty$fontsize[row],
+                sty$indent[row],
+                sty$background[row],
+                sty$align[row]
+            )
+            x@table_string <- lines_insert(x@table_string, style, "tinytable cell style after", "after")
+        }
     }
 
     lin$i <- lin$i + x@nhead

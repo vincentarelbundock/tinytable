@@ -1,16 +1,4 @@
 theme_default <- function(x, ...) {
-    fn <- function(table) {
-        if (isTRUE(table@output == "typst")) {
-            table <- style_eval(table, i = 1 - table@nhead, line = "t", line_width = 0.1)
-            table <- style_eval(table, i = nrow(table), line = "b", line_width = 0.1)
-            if (table@nhead > 0) {
-                table <- style_eval(table, i = 0, line = "b", line_width = 0.05)
-            }
-        }
-
-        return(table)
-    }
-    x <- style_tt(x, finalize = fn)
     x <- theme_tt(x, "placement")
     return(x)
 }
