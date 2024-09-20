@@ -76,54 +76,19 @@ setMethod(
 
     x@style <- unique(rbind(x@style, sett))
 
-    # # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
-    # if (!is.null(line)) {
-    #   iline <- NULL
-    #   if (grepl("b", line)) iline <- c(iline, settings$i + 1) # -1 for 0-indexing
-    #   if (grepl("t", line)) iline <- c(iline, settings$i)
-    #   iline <- unique(iline)
-    #   for (i in iline) {
-    #     # TODO: `expand` in #tablex does not seem available in #table
-    #     if (midrule) {
-    #       tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %sem + %s),"
-    #     } else {
-    #       tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %sem + %s),"
-    #     }
-    #     tmp <- sprintf(
-    #       tmp,
-    #       i,
-    #       settings$j,
-    #       max(settings$j) + 1,
-    #       line_width,
-    #       line_color)
-    #     out <- lines_insert(out, tmp, "tinytable lines before", "before")
-    #   }
-    #
-    #   jline <- NULL
-    #   if (grepl("r", line)) jline <- c(jline, settings$j + 1)
-    #   if (grepl("l", line)) jline <- c(jline, settings$j)
-    #   jline <- unique(jline)
-    #   for (j in jline) {
-    #     tmp <- sprintf(
-    #       "table.vline(x: %s, start: %s, end: %s, stroke: %sem + %s),",
-    #       j,
-    #       min(settings$i),
-    #       max(settings$i) + 1,
-    #       line_width,
-    #       line_color)
-    #     out <- lines_insert(out, tmp, "tinytable lines before", "before")
-    #   }
-    # }
-    #
-    # x@table_string <- out
-    #
     return(x)
   })
 
 
 
 style_apply_typst <- function(x) {
-    sty <- unique(x@style)
+    sty <- x@style
+
+    lin <- sty[, c("i", "j", "line", "line_color", "line_width")]
+    lin <- unique(lin[!is.na(lin$line),])
+
+    sty <- sty[, !colnames(sty) %in% c("line", "line_color", "line_width")]
+    sty <- unique(sty)
 
     no_style <- apply(sty[, 3:ncol(sty)], 1, function(k) {
         all(is.na(k) | k == FALSE)
@@ -150,10 +115,7 @@ style_apply_typst <- function(x) {
     # Typst-specific stuff
 
     # 0- & header-indexing
-    sty$j <- sty$j - 1
-    if (x@nhead > 0) {
-        sty$i <- sty$i - 1 + x@nhead
-    }
+    sty$i <- sty$i + x@nhead - 1
 
     for (col in colnames(sty)) {
         if (is.logical(sty[[col]])) {
@@ -173,6 +135,7 @@ style_apply_typst <- function(x) {
     })
     sty <- do.call(rbind, sty)
 
+
     for (row in seq_len(nrow(sty))) {
         style <- sprintf(
             "    (y: %s, x: %s, color: %s, underline: %s, italic: %s, bold: %s, mono: %s, strikeout: %s, fontsize: %s, indent: %s, background: %s, align: %s),",
@@ -190,10 +153,43 @@ style_apply_typst <- function(x) {
             sty$align[row]
         )
         x@table_string <- lines_insert(x@table_string, style, "tinytable cell style after", "after")
+
+    }
+
+    lin$i <- lin$i + x@nhead
+    lin_split <- split(lin, lin[, 3:ncol(lin)])
+    for (ls in lin_split) {
+        line_h <- "table.hline(y: %s, start: %s, end: %s, stroke: %sem + %s),"
+        line_v <- "table.vline(x: %s, start: %s, end: %s, stroke: %sem + %s),"
+        if (any(grepl("b", ls$line))) {
+            for (h in unique(ls$i)) {
+                template <- sprintf(line_h, h, min(ls$j) - 1, max(ls$j) + 1, ls$line_width[1], ls$line_color[1])
+                x@table_string <- lines_insert(x@table_string, template, "tinytable lines before", "before")
+            }
+        }
+        if (any(grepl("t", ls$line))) {
+            for (h in unique(ls$i)) {
+                template <- sprintf(line_h, h - 1, min(ls$j) - 1, max(ls$j) + 1, ls$line_width[1], ls$line_color[1])
+                x@table_string <- lines_insert(x@table_string, template, "tinytable lines before", "before")
+            }
+        }
+        if (any(grepl("l", ls$line))) {
+            for (v in unique(ls$j)) {
+                template <- sprintf(line_v, v - 1, min(ls$i) - 1, max(ls$i), ls$line_width[1], ls$line_color[1])
+                x@table_string <- lines_insert(x@table_string, template, "tinytable lines before", "before")
+            }
+        }
+        if (any(grepl("r", ls$line))) {
+            for (v in unique(ls$j)) {
+                template <- sprintf(line_v, v - 1, min(ls$i), max(ls$i) + 1, ls$line_width[1], ls$line_color[1])
+                x@table_string <- lines_insert(x@table_string, template, "tinytable lines before", "before")
+            }
+        }
     }
 
     return(x)
 }
+
 
 style_settings_typst <- function(x, i, j, color, underline, italic, bold, monospace, strikeout, fontsize, indent, background, line, line_color, line_width, align) {
     if (is.matrix(i) && is.logical(i) && nrow(i) == nrow(x) && ncol(i) == ncol(x)) {
@@ -232,3 +228,12 @@ style_settings_typst <- function(x, i, j, color, underline, italic, bold, monosp
     }
     return(settings)
 }
+
+
+
+# Lines are not part of cellspec/rowspec/columnspec. Do this separately.
+
+
+
+
+
