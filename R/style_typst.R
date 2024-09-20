@@ -27,11 +27,9 @@ setMethod(
                         ...) {
     out <- x@table_string
 
-    text_style_flag <- isTRUE(bold) || isTRUE(italic) || isTRUE(monospace) || isTRUE(underline) || isTRUE(strikeout) || !is.null(color) || !is.null(fontsize) || indent > 0
-    fill_style_flag <- !is.null(background)
 
     # gutters are used for group_tt(j) but look ugly with cell fill
-    if (fill_style_flag) {
+    if (!is.null(background)) {
       x <- style_tt(x, finalize = function(x) {
         x@table_string <- lines_drop(
           x@table_string,
@@ -116,6 +114,7 @@ style_apply_typst <- function(x) {
 
     # 0- & header-indexing
     sty$i <- sty$i + x@nhead - 1
+    sty$j <- sty$j - 1
 
     for (col in colnames(sty)) {
         if (is.logical(sty[[col]])) {
@@ -181,7 +180,7 @@ style_apply_typst <- function(x) {
         }
         if (any(grepl("r", ls$line))) {
             for (v in unique(ls$j)) {
-                template <- sprintf(line_v, v - 1, min(ls$i), max(ls$i) + 1, ls$line_width[1], ls$line_color[1])
+                template <- sprintf(line_v, v, min(ls$i) - 1, max(ls$i), ls$line_width[1], ls$line_color[1])
                 x@table_string <- lines_insert(x@table_string, template, "tinytable lines before", "before")
             }
         }
@@ -209,7 +208,7 @@ style_settings_typst <- function(x, i, j, color, underline, italic, bold, monosp
     settings[["bold"]] <- bold
     settings[["monospace"]] <- monospace
     settings[["strikeout"]] <- strikeout
-    settings[["fontsize"]] <- fontsize
+    settings[["fontsize"]] <- if (!is.na(fontsize)) sprintf("%sem", fontsize) else NA
     settings[["indent"]] <- indent
     settings[["background"]] <- background
     settings[["line"]] <- line
