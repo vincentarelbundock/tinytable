@@ -13,6 +13,7 @@ Typst:
 * Table code is much more concise and efficient.
 * Fix indexing bug for groups. Issue #323 and #343.
 * `style_tt()` can override cell styling with successive calls, and the call order is respected.
+* `options(tinytable_quarto_figure = FALSE)` wraps Typst tables in a `figure` environment in Quarto documents.
 
 ## 0.4.0
 
