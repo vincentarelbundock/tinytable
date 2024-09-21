@@ -155,19 +155,22 @@ style_apply_typst <- function(x) {
     }
 
     lin$i <- lin$i + x@nhead
+    # not sure why, but seems necessary
+    if (x@nhead == 0) lin$i <- lin$i + 1
+
     lin_split <- split(lin, lin[, 3:ncol(lin)])
     for (ls in lin_split) {
         line_h <- "table.hline(y: %s, start: %s, end: %s, stroke: %sem + %s),"
         line_v <- "table.vline(x: %s, start: %s, end: %s, stroke: %sem + %s),"
         if (any(grepl("b", ls$line))) {
             for (h in unique(ls$i)) {
-                template <- sprintf(line_h, h, min(ls$j) - 1, max(ls$j) + 1, ls$line_width[1], ls$line_color[1])
+                template <- sprintf(line_h, h, min(ls$j) - 1, max(ls$j), ls$line_width[1], ls$line_color[1])
                 x@table_string <- lines_insert(x@table_string, template, "tinytable lines before", "before")
             }
         }
         if (any(grepl("t", ls$line))) {
             for (h in unique(ls$i)) {
-                template <- sprintf(line_h, h - 1, min(ls$j) - 1, max(ls$j) + 1, ls$line_width[1], ls$line_color[1])
+                template <- sprintf(line_h, h - 1, min(ls$j) - 1, max(ls$j), ls$line_width[1], ls$line_color[1])
                 x@table_string <- lines_insert(x@table_string, template, "tinytable lines before", "before")
             }
         }
