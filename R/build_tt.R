@@ -97,8 +97,6 @@ build_tt <- function(x, output = NULL) {
       } else {
         x <- style_tt(x, i = 1, line = "t", line_width = 0.1)
       }
-
-      x@lazy_style <- c(x@lazy_style[(length(x@lazy_style) - 3):length(x@lazy_style)], ls)
     }
   }
 
