@@ -12,6 +12,7 @@ Typst:
 
 * Table code is much more concise and efficient.
 * Fix indexing bug for groups. Issue #323 and #343.
+* `style_tt()` can override cell styling with successive calls, and the call order is respected.
 
 ## 0.4.0
 
