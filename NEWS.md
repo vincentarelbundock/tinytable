@@ -3,6 +3,7 @@
 ## Development
 
 * The `i` argument in `style_tt()` now accepts a logical matrix of same dimensions as `x`, to style specific cells, rather than all combinations of `i` and `j` vectors. Thanks to @dhicks for the feature request #329.
+* `style_tt()` gets new `output` argument for conditional styling based on output format.
 
 ## 0.4.0
 

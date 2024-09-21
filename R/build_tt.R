@@ -87,7 +87,7 @@ build_tt <- function(x, output = NULL) {
   }
 
   if (x@output == "typst") {
-    if (is.null(x@theme[[1]]) || is.function(x@theme[[1]]) || isTRUE("default" %in% x@theme[[1]])) {
+    if (is.null(x@theme[[1]]) || is.function(x@theme[[1]]) || isTRUE(x@theme[[1]] %in% c("default", "striped"))) {
       # reverse the order of the lines to allow overwriting defaults
       ls <- x@lazy_style 
       x <- style_tt(x, i = -x@nhead + 1, line = "t", line_width = 0.1)
@@ -100,7 +100,10 @@ build_tt <- function(x, output = NULL) {
   if (!x@output %in% c("markdown", "gfm", "dataframe")) {
     for (l in x@lazy_style) {
       l[["x"]] <- x
-      x <- eval(l)
+      # output-specific styling
+      if (is.null(l$output) || isTRUE(x@output == l$output)) {
+        x <- eval(l)
+      }
     }
   }
 

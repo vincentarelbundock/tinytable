@@ -156,23 +156,15 @@ theme_grid <- function(x, ...) {
 
 theme_striped <- function(x, ...) {
     assert_class(x, "tinytable")
-    fn <- function(table) {
-        if (isTRUE(table@output == "typst")) {
-            table <- style_eval(table, i = 1 - table@nhead, line = "t", line_width = 0.1)
-            table <- style_eval(table, i = 0, line = "b", line_width = 0.05)
-            table <- style_eval(table, i = nrow(table), line = "b", line_width = 0.1)
-            table <- style_eval(table, i = 1 - table@nhead, line = "t", line_width = 0.1)
-            table <- style_eval(table, i = 0, line = "b", line_width = 0.05)
-            table <- style_eval(table, i = nrow(table), line = "b", line_width = 0.1)
-            table <- style_eval(table, i = seq(1, nrow(table), by = 2), background = "#ededed")
-        }
-        return(table)
-    }
     x <- style_tt(x,
-        finalize = fn, 
         tabularray_inner = "row{even}={bg=black!5!white}",
-        bootstrap_class = "table table-striped")
-    x <- theme_tt(x, "placement")
+        bootstrap_class = "table table-striped",
+        output = "latex")
+    x <- style_tt(x, 
+        i = seq(1, nrow(x), by = 2),
+        background = "#ededed",
+        output = "typst")
+    x <- theme_tt(x, "default")
     return(x)
 }
 
