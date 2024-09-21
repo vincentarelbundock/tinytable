@@ -193,8 +193,10 @@ dat <- data.frame(
   tt() |>
   plot_tt(i = 1, j = 2, fun = "bar", data = list(2)) |>
   plot_tt(i = 2, j = 2, fun = "line", data = list(data.frame(x = 1:3, y = 3:1)))
-expect_snapshot_print(print_html(dat, portable = TRUE), "html-images-portable.html")
-
+expect_snapshot_print(print_html(dat, "html_portable"), "html-images-portable.html")
+op = options("tinytable_html_portable" = TRUE)
+expect_snapshot_print(print_html(dat, "html"), "html-images-portable.html")
+options(op)
 
 # # Built-in plots
 # # cannot be tested because the names of plots are random and set seed doesn't work

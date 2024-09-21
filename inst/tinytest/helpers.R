@@ -20,10 +20,11 @@ print.custom_html_string <- function(x, ...) {
     invisible(x)
 }
 
-print_html <- function(x, ...) {
+print_html <- function(x, output = c("html", "html_portable")) {
+  output <- match.arg(output)
   # random table IDs
   set.seed(1024)
-  x <- tinytable::save_tt(x, output = "html", ...)
+  x <- tinytable::save_tt(x, output = output)
   # x <- gsub("tinytable_\\w+\\b", "tinytable", x)
   # x <- gsub("styleCell_\\w+\\b", "tinytable", x)
   # x <- gsub("spanCell_\\w+\\b", "tinytable", x)

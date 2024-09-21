@@ -129,7 +129,14 @@ plot_tt_lazy <- function(x,
   if (!is.null(data)) {
     assert_dependency("ggplot2")
     images <- NULL
-    path_full <- if(isTRUE(x@portable)) tempdir() else file.path(x@output_dir, assets)
+
+    if(isTRUE(x@output == "html") && isTRUE(x@portable)) {
+        path_full <- tempdir()
+        assets <- tempdir()
+    } else {
+      path_full <- file.path(x@output_dir, assets)
+    }
+
     if (!dir.exists(path_full)) {
       dir.create(path_full)
     }
@@ -175,7 +182,7 @@ plot_tt_lazy <- function(x,
   if (isTRUE(x@output == "latex")) {
     cell <- "\\includegraphics[height=%sem]{%s}"
     cell <- sprintf(cell, height, images)
-  } else if(isTRUE(x@output == "html") && isTRUE(x@portable)){
+  } else if(isTRUE(x@output == "html") && isTRUE(x@portable)) {
     assert_dependency("base64enc")
 
     http <- grepl("^http", trimws(images))
