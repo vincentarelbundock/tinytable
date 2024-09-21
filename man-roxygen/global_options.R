@@ -1,7 +1,13 @@
 #'
 #' @section Global options:
 #'
-#' ## Quarto data processing
+#' ## Quarto
+#' 
+#' ### Figure environment
+#' 
+#' * `options("tinytable_quarto_figure" = FALSE)`: Typst only. Normally, it is best to allow Quarto to define the figure environment, so the default behavior is to not include one. 
+#' 
+#' ### Data Processing
 #'
 #' The `format_tt(quarto=TRUE)` argument activates Quarto data processing for specific cells. This funcationality comes with  a few warnings:
 #'
@@ -22,7 +28,7 @@
 #'
 #' ## HTML
 #'
-#' * EXPERIMENTAL `options(tinytable_html_mathjax = TRUE)` inserts MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.
+#' * `options(tinytable_html_mathjax = TRUE)` inserts MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.
 #'
 #' ## PDF
 #'
