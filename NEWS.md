@@ -2,8 +2,15 @@
 
 ## Development
 
+New:
+
 * The `i` argument in `style_tt()` now accepts a logical matrix of same dimensions as `x`, to style specific cells, rather than all combinations of `i` and `j` vectors. Thanks to @dhicks for the feature request #329.
 * `style_tt()` gets new `output` argument for conditional styling based on output format.
+
+Typst:
+
+* Table code is much more concise and efficient.
+* Fix indexing bug for groups. Issue #323 and #343.
 
 ## 0.4.0
 
