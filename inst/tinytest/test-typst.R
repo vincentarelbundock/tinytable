@@ -93,6 +93,30 @@ tab <- tt(dat) |>
       "Hamburgers" = 1:3,
       "Halloumi" = 4:5,
       "Tofu" = 7))
-expect_snapshot_print(dat, label = "group_columns")
+expect_snapshot_print(dat, label = "typst-group_columns")
+
+
+# issue #323
+dat <- mtcars[1:9, 1:8]
+tab <- tt(dat) |> 
+  group_tt(
+    i = list("I like (fake) hamburgers" = 3,
+             "She prefers halloumi" = 4,
+             "They love tofu" = 7),
+    j = list("Hamburgers" = 1:3,
+             "Halloumi" = 4:5,
+             "Tofu" = 7)) |>
+  style_tt(
+    i = c(3, 5, 9),
+    align = "c",
+    background = "black",
+    color = "orange") |>
+  style_tt(i = -1, color = "orange")
+tab@output <- "typst"
+expect_snapshot_print(tab, label = "typst-issue323_group_tt_style_tt")
+
+
 
 options(tinytable_print_output = NULL)
+
+

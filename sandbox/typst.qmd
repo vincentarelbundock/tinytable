@@ -131,3 +131,36 @@ tab
 tab <- tt(x, theme = "grid")
 tab
 ```
+
+
+```{r}
+#| messages: false
+#| warnings: false
+# issue #323
+dat <- mtcars[1:9, 1:8]
+tab <- tt(dat) |> 
+  group_tt(
+    i = list("I like (fake) hamburgers" = 3,
+             "She prefers halloumi" = 4,
+             "They love tofu" = 7),
+    j = list("Hamburgers" = 1:3,
+             "Halloumi" = 4:5,
+             "Tofu" = 7)) |>
+  style_tt(
+    i = c(3, 5, 9),
+    align = "c",
+    background = "black",
+    color = "orange") |>
+  style_tt(i = -1, color = "orange")
+tab
+```
+
+```{r} 
+# issue #259 01
+tt(head(iris)) |> group_tt(i = list("hello" = 1))
+```
+
+```{r} 
+# issue #259 02
+tt(head(iris)) |> group_tt(i = list("hello" = 2, "world" = 2))
+```
