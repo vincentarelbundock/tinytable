@@ -105,6 +105,12 @@ setMethod("ncol", "tinytable", function(x) return(x@ncol))
 #' @export
 setMethod("colnames", "tinytable", function(x) return(x@names))
 
+#' Method for a tinytable S4 object
+#' 
+#' @inheritParams tt
+#' @keywords internal
+#' @export
+setMethod("names", "tinytable", function(x) return(x@names))
 
 #' Method for a tinytable S4 object
 #' 
@@ -126,6 +132,25 @@ setReplaceMethod("colnames",
                  }
 )
 
+#' Method for a tinytable S4 object
+#' 
+#' @inheritParams tt
+#' @keywords internal
+#' @export
+setReplaceMethod("names",
+                 signature = "tinytable", 
+                 definition = function(x, value) {
+                   # Issue #306
+                   if (length(value) == 0) value <- NULL
+                   if (!is.null(value)) {
+                     assert_character(value, len = length(x@names))
+                   } else {
+                     if (x@nhead == 1) x@nhead <- 0
+                   }
+                   x@names <- value
+                   return(x)
+                 }
+)
 
 #' Dimensions a tinytable S4 object
 #' 
