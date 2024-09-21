@@ -95,7 +95,14 @@ If this function is applied several times to the same cell, the last transformat
 }
 \section{Global options}{
 
-\subsection{Quarto data processing}{
+\subsection{Quarto}{
+\subsection{Figure environment}{
+\itemize{
+\item \code{options("tinytable_quarto_figure" = FALSE)}: Typst only. Normally, it is best to allow Quarto to define the figure environment, so the default behavior is to not include one.
+}
+}
+
+\subsection{Data Processing}{
 
 The \code{format_tt(quarto=TRUE)} argument activates Quarto data processing for specific cells. This funcationality comes with  a few warnings:
 \enumerate{
@@ -115,9 +122,11 @@ tt(x) |> format_tt(i = 1, fn = fn)
 See this link for more details: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing
 }
 
+}
+
 \subsection{HTML}{
 \itemize{
-\item EXPERIMENTAL \code{options(tinytable_html_mathjax = TRUE)} inserts MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.
+\item \code{options(tinytable_html_mathjax = TRUE)} inserts MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.
 }
 }
 

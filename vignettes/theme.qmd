@@ -74,6 +74,26 @@ options(tinytable_tt_theme = NULL)
 ```
 
 
+Here is a slightly more complex example. The benefit of this approach is that we apply a function via the `style_tt()` function and its `finalize` argument, so we can leverage some of the object components that are only available at the printing stage:
+
+```{r}
+#| eval: false
+theme_slides <- function(x, ...) {
+    fn <- function(table) {
+        if (isTRUE(table@output == "typst")) {
+          table@table_string <- paste0("#figure([\n", table@table_string, "\n])")
+        }
+        return(table)
+    }
+    x <- style_tt(x, finalize = fn)
+    x <- theme_tt(x, theme = "default")
+    return(x)
+}
+
+tt(head(iris), theme = theme_slides)
+```
+
+
 ## Tabular
 
 The `tabular` theme is designed to provide a more "raw" table, without a floating table environment in LaTeX, and without CSS or Javascript in HTML. 
