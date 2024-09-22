@@ -70,6 +70,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -375,6 +404,7 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="development">Development</h2>
 <p>New:</p>
 <ul>
+<li><code>format_tt()</code> gets a <code>math</code> argument to wrap cell content in <span class="math inline">\(...\)</span> math mode.</li>
 <li><code>group_tt(i = vec)</code> accepts a vector of labels of length equal to the number of rows in the dataset.</li>
 <li><code>tt()</code> gets an <code>escape</code> argument. Thanks to Cameron Patrick for the feature request.</li>
 <li>The <code>i</code> argument in <code>style_tt()</code> now accepts a logical matrix of same dimensions as <code>x</code>, to style specific cells, rather than all combinations of <code>i</code> and <code>j</code> vectors. Thanks to <a href="https://github.com/dhicks"><span class="citation" data-cites="dhicks">@dhicks</span></a> for the feature request <a href="https://github.com/vincentarelbundock/tinytable/issues/329">#329</a>.</li>
