@@ -286,13 +286,6 @@ nrow(a)
 colnames(a)
 ```
 
-Rename columns:
-
-```{r}
-colnames(a) <- c("a", "b")
-a
-```
-
 Tables can be combined with the usual `rbind()` function:
 
 ```{r}
@@ -316,5 +309,24 @@ Bind tables by position rather than column names:
 
 ```{r}
 rbind2(a, b, use_names = FALSE)
+```
+
+
+## Renaming columns
+
+As noted above, `tinytable` tries to be standards-compliant, by defining methods for many base `R` functions. The benefit of this approach is that instead of having to learn a `tinytable`-specific syntax, users can rename columns using all the tools they already know:
+
+```{r}
+a <- tt(mtcars[1:2, 1:2])
+colnames(a) <- c("a", "b")
+a
+```
+
+In a pipe-based workflow, we can use the `setNames()` function from base `R`:
+
+```{r} 
+mtcars[1:2, 1:2] |>
+    tt() |>
+    setNames(c("a", "b"))
 ```
 

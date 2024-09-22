@@ -2,6 +2,15 @@ source("helpers.R")
 using("tinysnapshot")
 
 
+# vector row labels
+set.seed(48103)
+dat <- data.frame(
+    label = c("a", "a", "a", "b", "b", "c", "a", "a"),
+    x1 = rnorm(8),
+    x2 = rnorm(8))
+tab <- tt(dat[, 2:3]) |> group_tt(i = dat$label)
+expect_snapshot_print(tab, label = "group_tt-vector_row_labels.md")
+
 # 3 level: markdown
 options(tinytable_print_output = "markdown")
 x <- mtcars[1:3, 1:5]

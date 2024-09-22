@@ -9,7 +9,7 @@ group_tt(x, i = NULL, j = NULL, indent = 1, ...)
 \arguments{
 \item{x}{A data frame or data table to be rendered as a table.}
 
-\item{i}{A named list of row indices to group. The names of the list will be used as labels. The indices represent the position where labels should be inserted in the original table. For example,
+\item{i}{A vector of labels with length equal to the number of rows in \code{x}, or a named list of row indices to group. The names of the list will be used as labels. The indices represent the position where labels should be inserted in the original table. For example,
 \itemize{
 \item \code{i=list("Hello"=5)}: insert the "Hello" label after the 4th row in the original table.
 \item \code{i=list("Hello"=2, "World"=2)}: insert the two labels consecutively after the 1st row in the original table.
@@ -33,6 +33,14 @@ Warning: The \code{style_tt()} can normally be used to style the group headers, 
 }
 \examples{
 
+# vector of row labels
+dat <- data.frame(
+    label = c("a", "a", "a", "b", "b", "c", "a", "a"),
+    x1 = rnorm(8),
+    x2 = rnorm(8))
+tt(dat[, 2:3]) |> group_tt(i = dat$label)
+
+# named lists of labels
 tt(mtcars[1:10, 1:5]) |>
   group_tt(
     i = list(
