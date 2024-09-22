@@ -27,6 +27,7 @@
 #' * A named list inserts a list with the name as superscript: `list("a" = list("Hello World"))`
 #' * A named list with positions inserts markers as superscripts inside table cells: `list("a" = list(i = 0:1, j = 2, text = "Hello World"))`
 #' @param rownames Logical. If `TRUE`, rownames are included as the first column
+#' @param escape Logical. If `TRUE`, escape special characters in the table. Equivalent to `format_tt(tt(x), escape = TRUE)`.
 #' @param ... Additional arguments are ignored
 #' @return An object of class `tt` representing the table.
 #' 
@@ -62,6 +63,7 @@ tt <- function(x,
                width = get_option("tinytable_tt_width", default = NULL),
                theme = get_option("tinytable_tt_theme", default = NULL),
                rownames = get_option("tinytable_tt_rownames", default = FALSE),
+               escape = get_option("tinytable_tt_escape", default = FALSE),
                ...) {
 
 
@@ -138,6 +140,10 @@ tt <- function(x,
 
   if ("placement" %in% names(dots)) {
     out <- theme_tt(out, "placement", latex_float = dots[["placement"]])
+  }
+
+  if (isTRUE(escape)) {
+    out <- format_tt(out, escape = TRUE)
   }
 
   return(out)
