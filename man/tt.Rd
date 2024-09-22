@@ -12,6 +12,7 @@ tt(
   width = get_option("tinytable_tt_width", default = NULL),
   theme = get_option("tinytable_tt_theme", default = NULL),
   rownames = get_option("tinytable_tt_rownames", default = FALSE),
+  escape = get_option("tinytable_tt_escape", default = FALSE),
   ...
 )
 }
@@ -43,6 +44,8 @@ tt(
 }}
 
 \item{rownames}{Logical. If \code{TRUE}, rownames are included as the first column}
+
+\item{escape}{Logical. If \code{TRUE}, escape special characters in the table. Equivalent to \code{format_tt(tt(x), escape = TRUE)}.}
 
 \item{...}{Additional arguments are ignored}
 }
