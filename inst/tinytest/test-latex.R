@@ -250,6 +250,12 @@ tab <- tt(head(iris)) |>
 expect_snapshot_print(tab, label = "latex-issue307.tex")
 
 
+# format_tt math
+dat <- data.frame("y^2 = e^x" = c(-2, -pi), check.names = FALSE)
+tab <- tt(dat, digits = 3) |> format_tt(math = TRUE)
+expect_snapshot_print(tab, label = "latex-format_tt_math.tex")
+
+
 options(tinytable_print_output = NULL)
 
 

@@ -158,58 +158,6 @@ tt(x, caption = "Blah blah.\\label{tbl-blah}")
 options(tinytable_theme_placement_latex_float = "H")
 ```
 
-## Math
-
-To insert LaTeX-style mathematical expressions in a `tinytable`, we enclose the expression in dollar signs: `$...$`. Note that you must double backslashes in mathematical expressions in R strings.
-
-In LaTeX, expression enclosed between `$$` will automatically rendered as a mathematical expression.
-
-In HTML, users must first load the MathJax JavaScript library to render math. This can be done in two ways. First, one can use a global option. This will insert MathJax scripts alongside every table, which is convenient, but could enter in conflict with other scripts if the user (or notebook) has already inserted MathJax code:
-
-```r
-options(tinytable_html_mathjax = TRUE)
-```
-
-Alternatively, users can load MathJax explicitly in their HTML file. In a Quarto notebook, this can be done by using a code chunk like this:
-
-````
-```{=html}
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<script>
-MathJax = {
-  tex: {
-    inlineMath: [['$', '$'], ['\\(', '\\)']]
-  },
-  svg: {
-    fontCache: 'global'
-  }
-};
-</script>
-```
-````
-
-Then, we can do:
-
-```{r}
-dat <- data.frame(Math = c(
-  "$x^2 + y^2 = z^2$",
-  "$\\frac{1}{2}$"
-))
-tt(dat) |> style_tt(j = 1, align = "c")
-```
-
-::: {.content-visible when-format="pdf"}
-In LaTeX (PDF), you can also use the `mode` inner setting from `tabularray` to render math in tables without delimiters (see @sec-tabularray for details on `tabularray`):
-
-```{r, eval = knitr::is_latex_output()}
-
-dat <- data.frame(Math = c("x^2 + y^2 = z^2", "\\frac{1}{2}"))
-tt(dat) |>
-  style_tt(j = 1, align = "c", tabularray_inner = "column{1}={mode=math},")
-```
-:::
-
-
 ## Line breaks and text wrapping
 
 Manual line breaks work sligthly different in LaTeX (PDF) or HTML. This table shows the two strategies. For HTML, we insert a `<br>` tag. For LaTeX, we wrap the string in curly braces `{}`, and then insert two (escaped) backslashes: `\\\\`

@@ -4,6 +4,7 @@
 
 New:
 
+* `format_tt()` gets a `math` argument to wrap cell content in $...$ math mode.
 * `group_tt(i = vec)` accepts a vector of labels of length equal to the number of rows in the dataset.
 * `tt()` gets an `escape` argument. Thanks to Cameron Patrick for the feature request.
 * The `i` argument in `style_tt()` now accepts a logical matrix of same dimensions as `x`, to style specific cells, rather than all combinations of `i` and `j` vectors. Thanks to @dhicks for the feature request #329.

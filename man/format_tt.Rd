@@ -18,6 +18,7 @@ format_tt(
   date = get_option("tinytable_format_date", default = "\%Y-\%m-\%d"),
   bool = get_option("tinytable_format_bool", default = function(column)
     tools::toTitleCase(tolower(column))),
+  math = get_option("tinytable_format_math", default = FALSE),
   other = get_option("tinytable_format_other", default = as.character),
   replace = get_option("tinytable_format_replace", default = TRUE),
   escape = get_option("tinytable_format_escape", default = FALSE),
@@ -55,6 +56,8 @@ format_tt(
 \item{date}{A string passed to the \code{format()} function, such as "\%Y-\%m-\%d". See the "Details" section in \code{?strptime}}
 
 \item{bool}{A function to format logical columns. Defaults to title case.}
+
+\item{math}{Logical. If TRUE, wrap cell values in math mode \verb{$..$}. This is useful for LaTeX output or with HTML MathJax \code{options(tinytable_html_mathjax=TRUE)}.}
 
 \item{other}{A function to format columns of other types. Defaults to \code{as.character()}.}
 
