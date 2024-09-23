@@ -1,0 +1,88 @@
+<!-- preamble start -->
+<!DOCTYPE html> 
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytable_dcq09jxgyitf4or5kg1s</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+<!-- preamble end -->
+
+    <script>
+      function styleCell_dcq09jxgyitf4or5kg1s(i, j, css_id) {
+        var table = document.getElementById("tinytable_dcq09jxgyitf4or5kg1s");
+        table.rows[i].cells[j].classList.add(css_id);
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_dcq09jxgyitf4or5kg1s');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret <br>
+        newCell.innerHTML = content;
+      }
+      function spanCell_dcq09jxgyitf4or5kg1s(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_dcq09jxgyitf4or5kg1s");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r < rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c > 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r > 0) {
+            for (let c = colspan - 1; c >= 0; c--) {
+              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+window.addEventListener('load', function () { styleCell_dcq09jxgyitf4or5kg1s(0, 0, 'tinytable_css_id5jsz1u1bau6rax203jg7') })
+window.addEventListener('load', function () { styleCell_dcq09jxgyitf4or5kg1s(0, 1, 'tinytable_css_id5jsz1u1bau6rax203jg7') })
+    </script>
+
+    <style>
+    .table td.tinytable_css_id5jsz1u1bau6rax203jg7, .table th.tinytable_css_id5jsz1u1bau6rax203jg7 {  border-bottom: solid 0.1em #d3d8dc; }
+    </style>
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_dcq09jxgyitf4or5kg1s" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
+        <thead>
+        
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Image</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td>bar </td>
+                  <td><img src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAA+gAAAFNCAMAAACkM7WiAAAAFVBMVEUAAACJiYmKioqZmZnu7u7v7+////9mu0MIAAABmklEQVR4nO3TwQ2DABADwYMA/ZdMFRHS7UwF9mPnAdabrwcA/yd0CBA6BAgdAoQOAUKHAKFDgNAhQOgQIHQImAvY7h4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFjvAra75wHWEzoECB0ChA4BQocAoUOA0CFA6BAgdAgQOgTM8Ys6PM/pPj9fr4YXOuQl1awAAAAASUVORK5CYII=" style="height: 1em;"></td>
+                </tr>
+                <tr>
+                  <td>line</td>
+                  <td><img src="data:image/png;base64, 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" style="height: 1em;"></td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- postamble start -->
+  </body>
+
+</html>
+<!-- postamble end -->
+<!-- hack to avoid NA insertion in last line -->

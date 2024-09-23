@@ -4,8 +4,10 @@
 #'
 #' @param x The tinytable object to be saved.
 #' @param output String or file path.
-#' + If `output` is "markdown", "latex", "html", or "typst", the table is returned in a string as an `R` object.
+#' + If `output` is "markdown", "latex", "html", "html_portable", or "typst", the table is returned in a string as an `R` object.
 #' + If `output` is a valid file path, the table is saved to file. The supported extensions are: .docx, .html, .png, .pdf, .tex, .typ, and .md (with aliases .txt, .Rmd and .qmd).
+#' + If `output` is "html_portable" or the global option `tinytable_html_portable` is `TRUE`,
+#' the images are included in the HTML as base64 encoded string instead of link to a local file.
 #' @param overwrite A logical value indicating whether to overwrite an existing file.
 #' @return A string with the table when `output` is a format, and the file path when `output` is a valid path.
 #' @export
@@ -27,6 +29,17 @@ save_tt <- function(x, output, overwrite = FALSE) {
 
   if (file.exists(output) && !overwrite) {
     stop("File already exists and overwrite is set to FALSE.", call. = FALSE)
+  }
+
+  if (isTRUE(getOption("tinytable_html_portable", default = FALSE))) {
+      assert_dependency("base64enc")
+      x@portable <- TRUE
+  }
+
+  if (identical(output, "html_portable")) {
+    assert_dependency("base64enc")
+    output <- "html"
+    x@portable <- TRUE
   }
 
   if (identical(output, "markdown")) {

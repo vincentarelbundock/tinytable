@@ -46,7 +46,8 @@ setClass(
         lazy_group = "list",
         lazy_style = "list",
         lazy_plot = "list",
-        lazy_finalize = "list"
+        lazy_finalize = "list",
+        portable = "logical"
         )
 )
 
@@ -77,6 +78,7 @@ setMethod("initialize", "tinytable", function(
   .Object@output <- "tinytable"
   .Object@output_dir <- getwd()
   .Object@css <- data.frame(i = NA, j = NA, bootstrap = NA, id = NA)
+  .Object@portable <- FALSE
   .Object@style <- data.frame()
   # conditional: allows NULL user input
   if (!is.null(placement)) .Object@placement <- placement

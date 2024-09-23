@@ -129,7 +129,14 @@ plot_tt_lazy <- function(x,
   if (!is.null(data)) {
     assert_dependency("ggplot2")
     images <- NULL
-    path_full <- file.path(x@output_dir, assets)
+
+    if(isTRUE(x@output == "html") && isTRUE(x@portable)) {
+        path_full <- tempdir()
+        assets <- tempdir()
+    } else {
+      path_full <- file.path(x@output_dir, assets)
+    }
+
     if (!dir.exists(path_full)) {
       dir.create(path_full)
     }
@@ -175,6 +182,12 @@ plot_tt_lazy <- function(x,
   if (isTRUE(x@output == "latex")) {
     cell <- "\\includegraphics[height=%sem]{%s}"
     cell <- sprintf(cell, height, images)
+  } else if(isTRUE(x@output == "html") && isTRUE(x@portable)) {
+    assert_dependency("base64enc")
+
+    http <- grepl("^http", trimws(images))
+    images[!http] <- encode(images[!http])
+    cell <- sprintf('<img src="%s" style="height: %sem;">', images, height)
   } else if (isTRUE(x@output == "html")) {
     cell <- ifelse(
       grepl("^http", trimws(images)),
@@ -230,4 +243,15 @@ tiny_line <- function(d, xlim = 0:1, color = "black", ...) {
     }
     plot(d$x, d$y, type = "l", col = color, axes = FALSE, ann = FALSE, lwd = 50)
   }
+}
+
+
+encode <- function(images) {
+  assert_dependency("base64enc")
+  ext <- tools::file_ext(images)
+
+  if(any(ext == "")) stop("Empty image extensions are not allowed", call. = FALSE)
+
+  encoded <- sapply(images, base64enc::base64encode)
+  sprintf("data:image/%s;base64, %s", ext, encoded)
 }

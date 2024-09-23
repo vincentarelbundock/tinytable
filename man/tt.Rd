@@ -120,7 +120,8 @@ See this link for more details: https://quarto.org/docs/authoring/tables.html#di
 
 \subsection{HTML}{
 \itemize{
-\item \code{options(tinytable_html_mathjax = TRUE)} inserts MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.
+\item \code{options(tinytable_html_mathjax = TRUE)}: insert MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.
+\item \code{options(tinytable_html_portable = TRUE)}: \code{plot_tt()} inserts base 64 encoded images directly in the HTML file rather than use external links.
 }
 }
 
