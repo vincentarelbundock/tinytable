@@ -11,8 +11,10 @@ save_tt(x, output, overwrite = FALSE)
 
 \item{output}{String or file path.
 \itemize{
-\item If \code{output} is "markdown", "latex", "html", or "typst", the table is returned in a string as an \code{R} object.
+\item If \code{output} is "markdown", "latex", "html", "html_portable", or "typst", the table is returned in a string as an \code{R} object.
 \item If \code{output} is a valid file path, the table is saved to file. The supported extensions are: .docx, .html, .png, .pdf, .tex, .typ, and .md (with aliases .txt, .Rmd and .qmd).
+\item If \code{output} is "html_portable" or the global option \code{tinytable_html_portable} is \code{TRUE},
+the images are included in the HTML as base64 encoded string instead of link to a local file.
 }}
 
 \item{overwrite}{A logical value indicating whether to overwrite an existing file.}

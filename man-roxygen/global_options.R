@@ -28,7 +28,8 @@
 #'
 #' ## HTML
 #'
-#' * `options(tinytable_html_mathjax = TRUE)` inserts MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.
+#' * `options(tinytable_html_mathjax = TRUE)`: insert MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.
+#' * `options(tinytable_html_portable = TRUE)`: `plot_tt()` inserts base 64 encoded images directly in the HTML file rather than use external links.
 #'
 #' ## PDF
 #'
