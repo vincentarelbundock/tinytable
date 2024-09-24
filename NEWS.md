@@ -19,6 +19,10 @@ Typst:
 * `style_tt()` can override cell styling with successive calls, and the call order is respected.
 * `options(tinytable_quarto_figure = FALSE)` wraps Typst tables in a `figure` environment in Quarto documents.
 
+Bugs:
+
+* `theme_tabular()` is no longer greedy in replacing `cmidrule`. Thanks to @jsr-p for code submission #349.
+
 ## 0.4.0
 
 ### Breaking change
