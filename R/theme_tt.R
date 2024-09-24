@@ -29,7 +29,7 @@ theme_tabular <- function(x,
                 tab <- lines_drop(tab, regex = "tabularray inner open", position = "equal")
                 tab <- lines_drop(tab, regex = "tabularray inner close", position = "equal")
                 tab <- lines_drop(tab, regex = "^colspec=\\{", position = "equal")
-                tab <- gsub("cmidrule\\[(.*)\\]", "cmidrule(\\1)", tab)
+                tab <- gsub("cmidrule\\[(.*?)\\]", "cmidrule(\\1)", tab)
                 tab <- gsub("\\{tblr\\}\\[*", "{tabular}", tab)
                 tab <- gsub("\\{talltblr\\}\\[", "{tabular}", tab)
                 tab <- gsub("\\{talltblr\\}", "{tabular}", tab)
