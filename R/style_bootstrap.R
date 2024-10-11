@@ -29,7 +29,6 @@ setMethod(
                         bootstrap_css = NULL,
                         bootstrap_css_rule = NULL,
                         ...) {
-    out <- x@table_string
 
     # i is a logical matrix mask
     if (is.matrix(i) && is.logical(i) && nrow(i) == nrow(x) && ncol(i) == ncol(x)) {
@@ -50,112 +49,27 @@ setMethod(
     settings$j <- settings$j - 1
     settings$i <- settings$i - 1 + x@nhead
 
+    settings[["color"]] <- color
+    settings[["color"]] <- if (is.null(color)) NA else color
+    settings[["background"]] <- if (is.null(background)) NA else background
+    settings[["fontsize"]] <- if (is.null(fontsize)) NA else sprintf("%sem", fontsize)
+    settings[["align"]] <- if (is.null(align)) NA else align
+    settings[["alignv"]] <- if (is.null(alignv)) NA else alignv
+    settings[["line"]] <- if (is.null(line)) NA else line
+    settings[["line_color"]] <- line_color
+    settings[["line_width"]] <- line_width
+    settings[["bold"]] <- bold
+    settings[["italic"]] <- italic
+    settings[["monospace"]] <- monospace
+    settings[["strikeout"]] <- strikeout
+    settings[["underline"]] <- underline
+    settings[["fontsize"]] <- if (!is.null(fontsize)) sprintf("%sem", fontsize) else NA
+    settings[["indent"]] <- indent
+    settings[["bootstrap_class"]] <- if (!is.null(bootstrap_class)) bootstrap_class else NA
+    settings[["bootstrap_css_rule"]] <- if (!is.null(bootstrap_css_rule)) bootstrap_css_rule else NA
+    settings[["bootstrap_css"]] <- if (!is.null(bootstrap_css)) bootstrap_css else NA
 
-    # settings have a different size for latex, so bootstrap breaks
-    vectorize_bootstrap <- function(setting, userinput, string) {
-      # simple cases
-      if (is.null(userinput) || isFALSE(userinput)) {
-        return(setting)
-      }
-      if (isTRUE(userinput)) {
-        return(paste(setting, string))
-      }
-
-      # logical vector
-      if (is.logical(userinput)) {
-        out <- paste(setting, ifelse(userinput, string, ""))
-        return(out)
-      }
-
-      # character vector means the user inputs actual values
-      if (is.character(userinput)) {
-        out <- sprintf(string, userinput)
-        out <- paste(setting, out)
-        return(out)
-      }
-      stop("here be dragons")
-    }
-
-    if (!is.null(align)) {
-      align_bootstrap <- ifelse(align == "c", "center", align)
-      align_bootstrap <- ifelse(align == "d", "center", align_bootstrap)
-      align_bootstrap <- ifelse(align == "l", "left", align_bootstrap)
-      align_bootstrap <- ifelse(align == "r", "right", align_bootstrap)
-    } else {
-      align_bootstrap <- align
-    }
-
-    if (!is.null(alignv)) {
-      alignv_bootstrap <- switch(alignv,
-        "t" = "top",
-        "m" = "middle",
-        "b" = "bottom"
-      )
-    } else {
-      alignv_bootstrap <- alignv
-    }
-
-    if (!is.null(fontsize)) {
-      fontsize_bootstrap <- sprintf("%sem", fontsize)
-    } else {
-      fontsize_bootstrap <- fontsize
-    }
-
-    settings$bootstrap <- ""
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, bold, "font-weight: bold;")
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, italic, "font-style: italic;")
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, underline, "text-decoration: underline;")
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, strikeout, "text-decoration: line-through;")
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, monospace, "font-family: monospace;")
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, fontsize_bootstrap, "font-size: %s;")
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, align_bootstrap, "text-align: %s;")
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, alignv_bootstrap, "vertical-align: %s;")
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, color, "color: %s;")
-    settings$bootstrap <- vectorize_bootstrap(settings$bootstrap, background, "background-color: %s;")
-    if (indent > 0) {
-      settings$bootstrap <- paste(settings$bootstrap, sprintf("padding-left: %sem;", indent), sep = "")
-    }
-
-    if (!is.null(line)) {
-      tmp <- sprintf(": solid %s %s;", paste0(line_width, "em"), line_color)
-      if (grepl("t", line)) settings$bootstrap <- paste0(settings$bootstrap, " border-top", tmp)
-      if (grepl("b", line)) settings$bootstrap <- paste0(settings$bootstrap, " border-bottom", tmp)
-      if (grepl("l", line)) settings$bootstrap <- paste0(settings$bootstrap, " border-left", tmp)
-      if (grepl("r", line)) settings$bootstrap <- paste0(settings$bootstrap, " border-right", tmp)
-    }
-
-    # unique IDs for each CSS style combination
-    id <- sapply(unique(settings$bootstrap), function(k) get_id(stem = "tinytable_css_"))
-    settings$id <- id[match(settings$bootstrap, names(id))]
-
-    if (is.null(rowspan)) rowspan <- 1
-    if (is.null(colspan)) colspan <- 1
-
-    # CSS style for cell
-    css_done <- NULL
-
-    x@css <- rbind(x@css, settings[, c("i", "j", "bootstrap", "id")])
-
-    if (!is.null(bootstrap_css)) {
-        tmp <- settings[, c("i", "j", "bootstrap", "id")]
-        tmp$bootstrap <- bootstrap_css
-        x@css <- rbind(x@css, tmp)
-    }
-
-    # spans
-    for (row in seq_len(nrow(settings))) {
-        if (rowspan != 1 || colspan != 1) {
-            listener <- "window.addEventListener('load', function () { spanCell_%s(%s, %s, %s, %s) })"
-            listener <- sprintf(listener, settings$id[row], settings$i[row], settings$j[row], rowspan, colspan)
-            out <- bootstrap_setting(out, listener, component = "cell")
-        }
-    }
-
-    if (!is.null(bootstrap_css_rule)) {
-      out <- bootstrap_setting(out, bootstrap_css_rule, component = "css")
-    }
-
-    x@table_string <- out
+    x@style <- unique(rbind(x@style, settings))
 
     if (!is.null(bootstrap_class)) {
       x@bootstrap_class <- bootstrap_class
@@ -163,3 +77,62 @@ setMethod(
 
     return(x)
   })
+
+
+
+style_apply_bootstrap <- function(x) {
+    sty <- x@style
+
+    lin <- sty[, c("i", "j", "line", "line_color", "line_width")]
+    lin <- unique(lin[!is.na(lin$line),])
+
+    sty <- sty[, !colnames(sty) %in% c("line", "line_color", "line_width")]
+
+    sty <- last_style(sty)
+
+    css_arguments <- rep("", nrow(sty))
+    idx <- which(sty$bold)
+    css_arguments[idx] <- paste(css_arguments[idx], "font-weight: bold;")
+    idx <- which(sty$italic)
+    css_arguments[idx] <- paste(css_arguments[idx], "font-style: italic;")
+    idx <- which(sty$underline)
+    css_arguments[idx] <- paste(css_arguments[idx], "text-decoration: underline;")
+    idx <- which(sty$strikeout)
+    css_arguments[idx] <- paste(css_arguments[idx], "text-decoration: line-through;")
+    idx <- which(sty$monospace)
+    css_arguments[idx] <- paste(css_arguments[idx], "font-family: monospace;")
+    idx <- which(!is.na(sty$color))
+    css_arguments[idx] <- paste(css_arguments[idx], paste0("color: ", sty$color[idx], ";"))
+    idx <- which(!is.na(sty$background))
+    css_arguments[idx] <- paste(css_arguments[idx], paste0("background-color: ", sty$background[idx], ";"))
+    idx <- which(!is.na(sty$fontsize))
+    css_arguments[idx] <- paste(css_arguments[idx], paste0("font-size: ", sty$fontsize[idx], "em;"))
+    idx <- which(!is.na(sty$align))
+    css_arguments[idx] <- paste(css_arguments[idx], paste0("text-align: ", sty$align[idx], ";"))
+    idx <- which(!is.na(sty$alignv))
+    css_arguments[idx] <- paste(css_arguments[idx], paste0("vertical-align: ", sty$alignv[idx], ";"))
+    idx <- which(sty$indent != 0)
+    css_arguments[idx] <- paste(css_arguments[idx], paste0("padding-left: ", sty$indent[idx], "em;"))
+
+    sty$css_arguments <- trimws(css_arguments)
+
+    css_table <- data.frame(css_arguments = unique(sty$css_arguments))
+    css_table$id <- sapply(seq_len(nrow(css_table)), function(i) get_id(stem = "tinytable_css_"))
+    idx <- merge(sty[, c("i", "j", "css_arguments")], css_table)
+
+    arrays <- list()
+    idx <- split(idx, idx$id)
+    for (i in seq_along(idx)) {
+        id <- idx[[i]]$id[1]
+        arr <- sprintf("{ i: %s, j: %s }, ", idx[[1]]$i, idx[[1]]$j)
+        arr <- c("          {", " positions: [ ", arr, " ],", " css_id: '", id, "',", "}, ")
+        arr <- paste(arr, collapse = "")
+        x@table_string <- lines_insert(x@table_string, arr, "tinytable style arrays after", "after")
+        entry <- sprintf("      .table td.%s, .table th.%s { %s }", id, id, idx[[i]]$css_arguments[1])
+        x@table_string <- lines_insert(x@table_string, entry, "tinytable css entries after", "after")
+    }
+
+    return(x)
+}
+
+
