@@ -60,8 +60,7 @@ block[ // start block
 
     // tinytable cell content after
 
-
-    // tinytable footer before
+    // tinytable footer after
 
   ) // end table
 
