@@ -118,8 +118,8 @@ expect_snapshot_print(tab, label = "typst-issue323_group_tt_style_tt")
 
 
 # Issue #357
-pkgload::load_all()
-tt(head(iris), notes = "blah") |> print("typst")
+tab <- tt(head(iris), notes = "blah") |> save_tt("typst")
+expect_true(grepl('blah', tab))
 
 
 options(tinytable_print_output = NULL)
