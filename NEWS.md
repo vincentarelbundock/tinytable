@@ -1,5 +1,11 @@
 # News
 
+## Development
+
+Bugs:
+
+* Typst notes returned an error since the last release. Thanks to @DominikVogel for report #357.
+
 ## 0.5.0
 
 New:
