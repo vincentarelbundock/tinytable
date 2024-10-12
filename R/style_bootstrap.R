@@ -83,12 +83,26 @@ setMethod(
 style_apply_bootstrap <- function(x) {
     sty <- x@style
 
-    lin <- sty[, c("i", "j", "line", "line_color", "line_width")]
-    lin <- unique(lin[!is.na(lin$line),])
-
-    sty <- sty[, !colnames(sty) %in% c("line", "line_color", "line_width")]
-
     sty <- last_style(sty)
+
+    sty$line_color <- ifelse(sty$line_color == "black", NA, sty$line_color)
+
+    sty$alignv <- ifelse(is.na(sty$alignv), NA,
+        sapply(sty$alignv, function(z) {
+            switch(z, 
+            "t" = "top", 
+            "m" = "middle", 
+            "b" = "bottom")
+        }
+        )
+    )
+
+    sty$align <- ifelse(is.na(sty$align), NA,
+        sapply(sty$alignv, function(z) switch(z, 
+            "l" = "left", 
+            "c" = "center", 
+            "d" = "center", 
+            "r" = "right")))
 
     css_arguments <- rep("", nrow(sty))
     idx <- which(sty$bold)
@@ -107,14 +121,35 @@ style_apply_bootstrap <- function(x) {
     css_arguments[idx] <- paste(css_arguments[idx], paste0("background-color: ", sty$background[idx], ";"))
     idx <- which(!is.na(sty$fontsize))
     css_arguments[idx] <- paste(css_arguments[idx], paste0("font-size: ", sty$fontsize[idx], "em;"))
-    idx <- which(!is.na(sty$align))
-    css_arguments[idx] <- paste(css_arguments[idx], paste0("text-align: ", sty$align[idx], ";"))
     idx <- which(!is.na(sty$alignv))
     css_arguments[idx] <- paste(css_arguments[idx], paste0("vertical-align: ", sty$alignv[idx], ";"))
+    idx <- which(!is.na(sty$align))
+    css_arguments[idx] <- paste(css_arguments[idx], paste0("text-align: ", sty$align[idx], ";"))
     idx <- which(sty$indent != 0)
     css_arguments[idx] <- paste(css_arguments[idx], paste0("padding-left: ", sty$indent[idx], "em;"))
 
-    sty$css_arguments <- trimws(css_arguments)
+    lincol <- ifelse(is.na(sty$line_color), 
+        sprintf("solid %sem", sty$line_width),
+        sprintf("solid %s %sem", sty$line_color, sty$line_width))
+    lin <- rep("", nrow(sty))
+    lin <- ifelse(!grepl("t", sty$line), lin, paste0(lin, sprintf("border-top: %s;", lincol)))
+    lin <- ifelse(!grepl("b", sty$line), lin, paste0(lin, sprintf("border-bottom: %s;", lincol)))
+    lin <- ifelse(!grepl("l", sty$line), lin, paste0(lin, sprintf("border-left: %s;", lincol)))
+    lin <- ifelse(!grepl("r", sty$line), lin, paste0(lin, sprintf("border-right: %s;", lincol)))
+    directions <- ifelse(is.na(sty$line), 0, sapply(strsplit(sty$line, ""), function(x) length(unique(x))))
+    idx <- which(directions == 4)
+    lin[idx] <- sprintf("border: %s;", lincol[idx])
+    css_arguments <- ifelse(directions == 0,
+        css_arguments,
+        paste(css_arguments, lin, sep = "; "))
+
+    css_arguments <- gsub(";+", ";", css_arguments)
+    css_arguments <- gsub(" +;", ";", css_arguments)
+    css_arguments <- gsub(" +", " ", css_arguments)
+    css_arguments <- trimws(css_arguments)
+
+    sty$css_arguments <- css_arguments
+    sty <- sty[sty$css_arguments != "",, drop = FALSE]
 
     css_table <- data.frame(css_arguments = unique(sty$css_arguments))
     css_table$id <- sapply(seq_len(nrow(css_table)), function(i) get_id(stem = "tinytable_css_"))
@@ -124,7 +159,7 @@ style_apply_bootstrap <- function(x) {
     idx <- split(idx, idx$id)
     for (i in seq_along(idx)) {
         id <- idx[[i]]$id[1]
-        arr <- sprintf("{ i: %s, j: %s }, ", idx[[1]]$i, idx[[1]]$j)
+        arr <- sprintf("{ i: %s, j: %s }, ", idx[[i]]$i, idx[[i]]$j)
         arr <- c("          {", " positions: [ ", arr, " ],", " css_id: '", id, "',", "}, ")
         arr <- paste(arr, collapse = "")
         x@table_string <- lines_insert(x@table_string, arr, "tinytable style arrays after", "after")
