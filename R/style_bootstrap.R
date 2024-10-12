@@ -85,24 +85,16 @@ style_apply_bootstrap <- function(x) {
 
     sty <- last_style(sty)
 
-    sty$line_color <- ifelse(sty$line_color == "black", NA, sty$line_color)
+    sty$line_color[which(sty$line_color == "black")] <- NA
 
-    sty$alignv <- ifelse(is.na(sty$alignv), NA,
-        sapply(sty$alignv, function(z) {
-            switch(z, 
-            "t" = "top", 
-            "m" = "middle", 
-            "b" = "bottom")
-        }
-        )
-    )
+    sty$alignv[which(sty$alignv == "t")] <- "top"
+    sty$alignv[which(sty$alignv == "b")] <- "bottom"
+    sty$alignv[which(sty$alignv == "m")] <- "middle"
 
-    sty$align <- ifelse(is.na(sty$align), NA,
-        sapply(sty$alignv, function(z) switch(z, 
-            "l" = "left", 
-            "c" = "center", 
-            "d" = "center", 
-            "r" = "right")))
+    sty$align[which(sty$align == "l")] <- "left"
+    sty$align[which(sty$align == "c")] <- "center"
+    sty$align[which(sty$align == "d")] <- "center"
+    sty$align[which(sty$align == "r")] <- "right"
 
     css_arguments <- rep("", nrow(sty))
     idx <- which(sty$bold)
