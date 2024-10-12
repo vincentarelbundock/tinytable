@@ -83,6 +83,10 @@ setMethod(
 style_apply_bootstrap <- function(x) {
     sty <- x@style
 
+    if (any(!is.na(sty$bootstrap_class))) {
+        x@bootstrap_class <- last_style_vec(sty$bootstrap_class)
+    }
+
     sty <- last_style(sty)
 
     sty$line_color[which(sty$line_color == "black")] <- NA
@@ -147,16 +151,18 @@ style_apply_bootstrap <- function(x) {
     css_table$id <- sapply(seq_len(nrow(css_table)), function(i) get_id(stem = "tinytable_css_"))
     idx <- merge(sty[, c("i", "j", "css_arguments")], css_table)
 
-    arrays <- list()
-    idx <- split(idx, idx$id)
-    for (i in seq_along(idx)) {
-        id <- idx[[i]]$id[1]
-        arr <- sprintf("{ i: %s, j: %s }, ", idx[[i]]$i, idx[[i]]$j)
-        arr <- c("          {", " positions: [ ", arr, " ],", " css_id: '", id, "',", "}, ")
-        arr <- paste(arr, collapse = "")
-        x@table_string <- lines_insert(x@table_string, arr, "tinytable style arrays after", "after")
-        entry <- sprintf("      .table td.%s, .table th.%s { %s }", id, id, idx[[i]]$css_arguments[1])
-        x@table_string <- lines_insert(x@table_string, entry, "tinytable css entries after", "after")
+    if (nrow(idx) > 0) {
+        arrays <- list()
+        idx <- split(idx, idx$id)
+        for (i in seq_along(idx)) {
+            id <- idx[[i]]$id[1]
+            arr <- sprintf("{ i: %s, j: %s }, ", idx[[i]]$i, idx[[i]]$j)
+            arr <- c("          {", " positions: [ ", arr, " ],", " css_id: '", id, "',", "}, ")
+            arr <- paste(arr, collapse = "")
+            x@table_string <- lines_insert(x@table_string, arr, "tinytable style arrays after", "after")
+            entry <- sprintf("      .table td.%s, .table th.%s { %s }", id, id, idx[[i]]$css_arguments[1])
+            x@table_string <- lines_insert(x@table_string, entry, "tinytable css entries after", "after")
+        }
     }
 
     return(x)
