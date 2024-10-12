@@ -39,7 +39,7 @@ setMethod(
       ival <- sanitize_i(i, x)
       jval <- sanitize_j(j, x)
       # order may be important for recycling
-      settings <- expand.grid(i = ival, j = jval, tabularray = "")
+      settings <- expand.grid(i = ival, j = jval)
       if (is.null(i) && !is.null(j)) {
         settings <- settings[order(settings$i, settings$j), ]
       }
