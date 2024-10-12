@@ -39,7 +39,7 @@ setMethod(
       ival <- sanitize_i(i, x)
       jval <- sanitize_j(j, x)
       # order may be important for recycling
-      settings <- expand.grid(i = ival, j = jval)
+      settings <- expand.grid(i = ival, j = jval, tabularray = "")
       if (is.null(i) && !is.null(j)) {
         settings <- settings[order(settings$i, settings$j), ]
       }
@@ -69,7 +69,11 @@ setMethod(
     settings[["bootstrap_css_rule"]] <- if (!is.null(bootstrap_css_rule)) bootstrap_css_rule else NA
     settings[["bootstrap_css"]] <- if (!is.null(bootstrap_css)) bootstrap_css else NA
 
-    x@style <- unique(rbind(x@style, settings))
+    a <- x@style
+    b <- settings
+    if (!"tabularray" %in% colnames(a)) a$tabularray <- ""
+    if (!"tabularray" %in% colnames(b)) b$tabularray <- ""
+    x@style <- unique(rbind(a, b[, colnames(a)]))
 
     if (!is.null(bootstrap_class)) {
       x@bootstrap_class <- bootstrap_class
