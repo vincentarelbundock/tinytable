@@ -56,8 +56,8 @@ setMethod(
     settings[["align"]] <- if (is.null(align)) NA else align
     settings[["alignv"]] <- if (is.null(alignv)) NA else alignv
     settings[["line"]] <- if (is.null(line)) NA else line
-    settings[["line_color"]] <- line_color
-    settings[["line_width"]] <- line_width
+    settings[["line_color"]] <- if (is.null(line)) NA else line_color
+    settings[["line_width"]] <- if (is.null(line)) NA else line_width
     settings[["bold"]] <- bold
     settings[["italic"]] <- italic
     settings[["monospace"]] <- monospace
@@ -96,9 +96,6 @@ style_apply_bootstrap <- function(x) {
         x@bootstrap_class <- last_style_vec(sty$bootstrap_class)
     }
 
-    sty <- last_style(sty)
-
-    sty$line_color[which(sty$line_color == "black")] <- NA
 
     sty$alignv[which(sty$alignv == "t")] <- "top"
     sty$alignv[which(sty$alignv == "b")] <- "bottom"
@@ -108,6 +105,8 @@ style_apply_bootstrap <- function(x) {
     sty$align[which(sty$align == "c")] <- "center"
     sty$align[which(sty$align == "d")] <- "center"
     sty$align[which(sty$align == "r")] <- "right"
+
+    sty <- last_style(sty)
 
     css_arguments <- rep("", nrow(sty))
     idx <- which(sty$bold)
@@ -134,7 +133,7 @@ style_apply_bootstrap <- function(x) {
     css_arguments[idx] <- paste(css_arguments[idx], paste0("padding-left: ", sty$indent[idx], "em;"))
 
     lincol <- ifelse(is.na(sty$line_color), 
-        sprintf("solid %sem", sty$line_width),
+        sprintf("solid %sem; border-color: black;", sty$line_width),
         sprintf("solid %s %sem", sty$line_color, sty$line_width))
     lin <- rep("", nrow(sty))
     lin <- ifelse(!grepl("t", sty$line), lin, paste0(lin, sprintf("border-top: %s;", lincol)))
@@ -144,32 +143,54 @@ style_apply_bootstrap <- function(x) {
     directions <- ifelse(is.na(sty$line), 0, sapply(strsplit(sty$line, ""), function(x) length(unique(x))))
     idx <- which(directions == 4)
     lin[idx] <- sprintf("border: %s;", lincol[idx])
-    css_arguments <- ifelse(directions == 0,
-        css_arguments,
-        paste(css_arguments, lin, sep = "; "))
 
-    css_arguments <- gsub(";+", ";", css_arguments)
-    css_arguments <- gsub(" +;", ";", css_arguments)
-    css_arguments <- gsub(" +", " ", css_arguments)
-    css_arguments <- trimws(css_arguments)
+    clean <- function(x) {
+        x <- gsub(";+", ";", x)
+        x <- gsub(" +;", ";", x)
+        x <- gsub(" +", " ", x)
+        x <- trimws(x)
+        x
+    }
+    css_arguments <- clean(css_arguments)
+    lin <- clean(lin)
 
     sty$css_arguments <- css_arguments
-    sty <- sty[sty$css_arguments != "",, drop = FALSE]
+    sty$lin_arguments <- lin
 
-    css_table <- data.frame(css_arguments = unique(sty$css_arguments))
-    css_table$id <- sapply(seq_len(nrow(css_table)), function(i) get_id(stem = "tinytable_css_"))
-    idx <- merge(sty[, c("i", "j", "css_arguments")], css_table)
-
+    # line styles 
+    lin <- sty[sty$lin_arguments != "",, drop = FALSE]
+    lin_table <- data.frame(lin_arguments = unique(lin$lin_arguments))
+    lin_table$id_lin <- sapply(seq_len(nrow(lin_table)), function(i) get_id(stem = "tinytable_css_"))
+    idx <- merge(lin[, c("i", "j", "lin_arguments")], lin_table, all.x = TRUE)
     if (nrow(idx) > 0) {
         arrays <- list()
         idx <- split(idx, idx$id)
         for (i in seq_along(idx)) {
-            id <- idx[[i]]$id[1]
+            id_lin <- idx[[i]]$id[1]
             arr <- sprintf("{ i: %s, j: %s }, ", idx[[i]]$i, idx[[i]]$j)
-            arr <- c("          {", " positions: [ ", arr, " ],", " css_id: '", id, "',", "}, ")
+            arr <- c("          {", " positions: [ ", arr, " ],", " css_id: '", id_lin, "',", "}, ")
             arr <- paste(arr, collapse = "")
             x@table_string <- lines_insert(x@table_string, arr, "tinytable style arrays after", "after")
-            entry <- sprintf("      .table td.%s, .table th.%s { %s }", id, id, idx[[i]]$css_arguments[1])
+            entry <- sprintf("      .table td.%s, .table th.%s { %s }", id_lin, id_lin, idx[[i]]$lin_arguments[1])
+            x@table_string <- lines_insert(x@table_string, entry, "tinytable css entries after", "after")
+        }
+    }
+
+    # non-line styles 
+    css <- sty[sty$css_arguments != "",, drop = FALSE]
+    css_table <- data.frame(css_arguments = unique(css$css_arguments))
+    css_table$id_css <- sapply(seq_len(nrow(css_table)), function(i) get_id(stem = "tinytable_css_"))
+    idx <- merge(css[, c("i", "j", "css_arguments")], css_table, all.x = TRUE)
+    if (nrow(idx) > 0) {
+        arrays <- list()
+        idx <- split(idx, idx$id)
+        for (i in seq_along(idx)) {
+            id_css <- idx[[i]]$id[1]
+            arr <- sprintf("{ i: %s, j: %s }, ", idx[[i]]$i, idx[[i]]$j)
+            arr <- c("          {", " positions: [ ", arr, " ],", " css_id: '", id_css, "',", "}, ")
+            arr <- paste(arr, collapse = "")
+            x@table_string <- lines_insert(x@table_string, arr, "tinytable style arrays after", "after")
+            entry <- sprintf("      .table td.%s, .table th.%s { %s }", id_css, id_css, idx[[i]]$css_arguments[1])
             x@table_string <- lines_insert(x@table_string, entry, "tinytable css entries after", "after")
         }
     }
