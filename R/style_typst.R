@@ -202,6 +202,7 @@ style_settings_typst <- function(x, i, j, color, underline, italic, bold, monosp
         ival <- sanitize_i(i, x)
         jval <- sanitize_j(j, x)
     }
+    fontsize
     settings <- expand.grid(i = ival, j = jval)
     settings <- settings[order(settings$i, settings$j),]
     settings[["color"]] <- color
@@ -210,7 +211,7 @@ style_settings_typst <- function(x, i, j, color, underline, italic, bold, monosp
     settings[["bold"]] <- bold
     settings[["monospace"]] <- monospace
     settings[["strikeout"]] <- strikeout
-    settings[["fontsize"]] <- if (!is.na(fontsize)) sprintf("%sem", fontsize) else NA
+    settings[["fontsize"]] <- ifelse(!is.na(fontsize), sprintf("%sem", fontsize), NA)
     settings[["indent"]] <- indent
     settings[["background"]] <- background
     settings[["line"]] <- line

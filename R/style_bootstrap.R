@@ -48,11 +48,9 @@ setMethod(
     # JS 0-indexing
     settings$j <- settings$j - 1
     settings$i <- settings$i - 1 + x@nhead
-
-    settings[["color"]] <- color
-    settings[["color"]] <- if (is.null(color)) NA else color
-    settings[["background"]] <- if (is.null(background)) NA else background
-    settings[["fontsize"]] <- if (is.null(fontsize)) NA else sprintf("%sem", fontsize)
+    settings[["color"]] <- if (is.null(color)) NA else as.vector(color)
+    settings[["background"]] <- if (is.null(background)) NA else as.vector(background)
+    settings[["fontsize"]] <- if (is.null(fontsize)) NA else as.vector(fontsize)
     settings[["align"]] <- if (is.null(align)) NA else align
     settings[["alignv"]] <- if (is.null(alignv)) NA else alignv
     settings[["line"]] <- if (is.null(line)) NA else line
@@ -63,7 +61,6 @@ setMethod(
     settings[["monospace"]] <- monospace
     settings[["strikeout"]] <- strikeout
     settings[["underline"]] <- underline
-    settings[["fontsize"]] <- if (!is.null(fontsize)) sprintf("%sem", fontsize) else NA
     settings[["indent"]] <- indent
     settings[["bootstrap_class"]] <- if (!is.null(bootstrap_class)) bootstrap_class else NA
     settings[["bootstrap_css_rule"]] <- if (!is.null(bootstrap_css_rule)) bootstrap_css_rule else NA
