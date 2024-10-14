@@ -109,7 +109,6 @@ style_apply_bootstrap <- function(x) {
     lin_table$id_lin <- sapply(seq_len(nrow(lin_table)), function(i) get_id(stem = "tinytable_css_"))
     idx <- merge(lin[, c("i", "j", "lin_arguments")], lin_table, all.x = TRUE)
     if (nrow(idx) > 0) {
-        arrays <- list()
         idx <- split(idx, idx$id)
         for (i in seq_along(idx)) {
             id_lin <- idx[[i]]$id[1]
@@ -128,7 +127,6 @@ style_apply_bootstrap <- function(x) {
     css_table$id_css <- sapply(seq_len(nrow(css_table)), function(i) get_id(stem = "tinytable_css_"))
     idx <- merge(css[, c("i", "j", "css_arguments")], css_table, all.x = TRUE)
     if (nrow(idx) > 0) {
-        arrays <- list()
         idx <- split(idx, idx$id)
         for (i in seq_along(idx)) {
             id_css <- idx[[i]]$id[1]
