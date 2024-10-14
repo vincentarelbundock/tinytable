@@ -141,6 +141,18 @@ style_apply_bootstrap <- function(x) {
         }
     }
 
+    # spans
+    for (row in seq_len(nrow(sty))) {
+        rowspan <- if (!is.na(sty$rowspan[row])) sty$rowspan[row] else 1
+        colspan <- if (!is.na(sty$colspan[row])) sty$colspan[row] else 1
+        if (rowspan > 1 || colspan > 1) {
+            id <- get_id(stem = "spanCell_")
+            listener <- "window.addEventListener('load', function () { %s(%s, %s, %s, %s) })"
+            listener <- sprintf(listener, id, sty$i[row], sty$j[row], rowspan, colspan)
+            x@table_string <- bootstrap_setting(x@table_string, listener, component = "cell")
+        }
+    }
+
     return(x)
 }
 
