@@ -30,57 +30,6 @@ setMethod(
                         bootstrap_css_rule = NULL,
                         ...) {
 
-    # i is a logical matrix mask
-    if (is.matrix(i) && is.logical(i) && nrow(i) == nrow(x) && ncol(i) == ncol(x)) {
-      assert_null(j)
-      settings <- which(i == TRUE, arr.ind = TRUE)
-      settings <- stats::setNames(data.frame(settings), c("i", "j"))
-    } else {
-      ival <- sanitize_i(i, x)
-      jval <- sanitize_j(j, x)
-      # order may be important for recycling
-      settings <- expand.grid(i = ival, j = jval, tabularray = "")
-      if (is.null(i) && !is.null(j)) {
-        settings <- settings[order(settings$i, settings$j), ]
-      }
-    }
-
-    # JS 0-indexing
-    settings$j <- settings$j - 1
-    settings$i <- settings$i - 1 + x@nhead
-    settings[["color"]] <- if (is.null(color)) NA else as.vector(color)
-    settings[["background"]] <- if (is.null(background)) NA else as.vector(background)
-    settings[["fontsize"]] <- if (is.null(fontsize)) NA else as.vector(fontsize)
-    settings[["align"]] <- if (is.null(align)) NA else align
-    settings[["alignv"]] <- if (is.null(alignv)) NA else alignv
-    settings[["line"]] <- if (is.null(line)) NA else line
-    settings[["line_color"]] <- if (is.null(line)) NA else line_color
-    settings[["line_width"]] <- if (is.null(line)) NA else line_width
-    settings[["bold"]] <- bold
-    settings[["italic"]] <- italic
-    settings[["monospace"]] <- monospace
-    settings[["strikeout"]] <- strikeout
-    settings[["underline"]] <- underline
-    settings[["indent"]] <- indent
-    settings[["bootstrap_class"]] <- if (!is.null(bootstrap_class)) bootstrap_class else NA
-    settings[["bootstrap_css_rule"]] <- if (!is.null(bootstrap_css_rule)) bootstrap_css_rule else NA
-    settings[["bootstrap_css"]] <- if (!is.null(bootstrap_css)) bootstrap_css else NA
-
-    if (nrow(x@style) > 0 && nrow(settings) > 0 && ncol(x@style) != ncol(settings)) {
-        a <- x@style
-        b <- settings
-        if (!"tabularray" %in% colnames(a)) a$tabularray <- ""
-        if (!"tabularray" %in% colnames(b)) b$tabularray <- ""
-        settings <- rbind(a, b[, colnames(a)])
-        x@style <- unique(settings)
-    } else if (nrow(settings) > 0) {
-        x@style <- rbind(x@style, settings)
-    }
-
-    if (!is.null(bootstrap_class)) {
-      x@bootstrap_class <- bootstrap_class
-    }
-
     return(x)
   })
 

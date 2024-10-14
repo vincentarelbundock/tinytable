@@ -27,7 +27,6 @@ setMethod(
                         ...) {
     out <- x@table_string
 
-
     # gutters are used for group_tt(j) but look ugly with cell fill
     if (!is.null(background)) {
       x <- style_tt(x, finalize = function(x) {
@@ -39,41 +38,6 @@ setMethod(
       })
     }
 
-    if (is.null(line)) {
-        line <- NA
-        line_color <- NA
-        line_width <- NA
-    }
-    if (is.null(color)) color <- NA
-    if (is.null(background)) background <- NA
-    color <- ifelse(grepl("^#", color), sprintf('rgb("%s")', color), color)
-    line_color <- ifelse(grepl("^#", line_color), sprintf('rgb("%s")', line_color), line_color)
-    background <- ifelse(grepl("^#", background), sprintf('rgb("%s")', background), background)
-
-    if (is.null(color)) color <- NA
-    if (is.null(fontsize)) fontsize <- NA
-    indent <- if (indent > 0) paste0(indent, "em") else NA
-
-    sett <- style_settings_typst(
-        x = x,
-        i = i,
-        j = j,
-        color = color,
-        underline = underline,
-        italic = italic,
-        bold = bold,
-        monospace = monospace,
-        strikeout = strikeout,
-        fontsize = fontsize,
-        indent = indent,
-        background = background,
-        line = line,
-        line_width = line_width,
-        line_color = line_color,
-        align = align)
-
-    x@style <- unique(rbind(x@style, sett))
-
     return(x)
   })
 
@@ -81,6 +45,13 @@ setMethod(
 
 style_apply_typst <- function(x) {
     sty <- x@style
+
+    sty$align <- ifelse(is.na(sty$align), NA, 
+        sapply(sty$align, function(k) switch(k,
+            c = "center",
+            d = "center",
+            r = "right",
+            l = "left")))
 
     lin <- sty[, c("i", "j", "line", "line_color", "line_width")]
     lin <- unique(lin[!is.na(lin$line),])
@@ -154,6 +125,7 @@ style_apply_typst <- function(x) {
         }
     }
 
+    # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
     lin$i <- lin$i + x@nhead
     # not sure why, but seems necessary
     if (x@nhead == 0) lin$i <- lin$i + 1
@@ -190,52 +162,5 @@ style_apply_typst <- function(x) {
 
     return(x)
 }
-
-
-style_settings_typst <- function(x, i, j, color, underline, italic, bold, monospace, strikeout, fontsize, indent, background, line, line_color, line_width, align) {
-    if (is.matrix(i) && is.logical(i) && nrow(i) == nrow(x) && ncol(i) == ncol(x)) {
-        assert_null(j)
-        settings <- which(i == TRUE, arr.ind = TRUE)
-        settings <- stats::setNames(data.frame(settings), c("i", "j"))
-        jval <- NULL
-    } else {
-        ival <- sanitize_i(i, x)
-        jval <- sanitize_j(j, x)
-    }
-    fontsize
-    settings <- expand.grid(i = ival, j = jval)
-    settings <- settings[order(settings$i, settings$j),]
-    settings[["color"]] <- color
-    settings[["underline"]] <- underline
-    settings[["italic"]] <- italic
-    settings[["bold"]] <- bold
-    settings[["monospace"]] <- monospace
-    settings[["strikeout"]] <- strikeout
-    settings[["fontsize"]] <- ifelse(!is.na(fontsize), sprintf("%sem", fontsize), NA)
-    settings[["indent"]] <- indent
-    settings[["background"]] <- background
-    settings[["line"]] <- line
-    settings[["line_color"]] <- line_color
-    settings[["line_width"]] <- line_width
-
-    if (!is.null(align)) {
-        settings[["align"]] <- sapply(align,
-            switch,
-            c = "center",
-            d = "center",
-            r = "right",
-            l = "left")
-    } else {
-        settings[["align"]] <- NA
-    }
-    return(settings)
-}
-
-
-
-# Lines are not part of cellspec/rowspec/columnspec. Do this separately.
-
-
-
 
 
