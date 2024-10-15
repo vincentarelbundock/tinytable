@@ -42,7 +42,6 @@ style_apply_bootstrap <- function(x) {
         x@bootstrap_class <- last_style_vec(sty$bootstrap_class)
     }
 
-
     sty$alignv[which(sty$alignv == "t")] <- "top"
     sty$alignv[which(sty$alignv == "b")] <- "bottom"
     sty$alignv[which(sty$alignv == "m")] <- "middle"
