@@ -135,7 +135,7 @@ style_tt <- function (x,
                       alignv = NULL,
                       colspan = NULL,
                       rowspan = NULL,
-                      indent = 0,
+                      indent = NULL,
                       line = NULL,
                       line_color = "black",
                       line_width = 0.1,
@@ -187,7 +187,7 @@ style_tt <- function (x,
     settings[["monospace"]] <- monospace
     settings[["strikeout"]] <- strikeout
     settings[["underline"]] <- underline
-    settings[["indent"]] <- indent
+    settings[["indent"]] <- if (is.null(indent)) NA else as.vector(indent)
     settings[["colspan"]] <- if (is.null(colspan)) NA else colspan
     settings[["rowspan"]] <- if (is.null(rowspan)) NA else rowspan
     settings[["bootstrap_class"]] <- if (!is.null(bootstrap_class)) bootstrap_class else NA
@@ -371,7 +371,7 @@ assert_style_tt <- function (x,
 
     assert_integerish(colspan, len = 1, lower = 2, null.ok = TRUE)
     assert_integerish(rowspan, len = 1, lower = 2, null.ok = TRUE)
-    assert_numeric(indent, len = 1, lower = 0)
+    assert_numeric(indent, len = 1, lower = 0, null.ok = TRUE)
     assert_character(background, null.ok = TRUE)
     assert_character(color, null.ok = TRUE)
     assert_numeric(fontsize, null.ok = TRUE)

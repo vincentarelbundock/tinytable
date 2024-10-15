@@ -81,7 +81,7 @@ style_apply_bootstrap <- function(x) {
     css_arguments[idx] <- paste(css_arguments[idx], paste0("vertical-align: ", sty$alignv[idx], ";"))
     idx <- which(!is.na(sty$align))
     css_arguments[idx] <- paste(css_arguments[idx], paste0("text-align: ", sty$align[idx], ";"))
-    idx <- which(sty$indent != 0)
+    idx <- which(!is.na(sty$indent))
     css_arguments[idx] <- paste(css_arguments[idx], paste0("padding-left: ", sty$indent[idx], "em;"))
     idx <- which(!is.na(sty$bootstrap_css))
     css_arguments[idx] <- paste(css_arguments[idx], sty$bootstrap_css[idx])
