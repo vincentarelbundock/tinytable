@@ -31,9 +31,13 @@ setMethod(
                         ...) {
 
 
-    # complete rule
+    # bootstrap classes and rules
     if (!is.null(bootstrap_css_rule)) {
       x@table_string <- bootstrap_setting(x@table_string, bootstrap_css_rule, component = "css")
+    }
+
+    if (!is.null(bootstrap_class)) {
+        x@bootstrap_class <- bootstrap_class
     }
 
     return(x)
@@ -44,9 +48,6 @@ setMethod(
 style_apply_bootstrap <- function(x) {
     sty <- x@style
 
-    if (any(!is.na(sty$bootstrap_class))) {
-        x@bootstrap_class <- last_style_vec(sty$bootstrap_class)
-    }
 
     sty$alignv[which(sty$alignv == "t")] <- "top"
     sty$alignv[which(sty$alignv == "b")] <- "bottom"
@@ -82,6 +83,8 @@ style_apply_bootstrap <- function(x) {
     css_arguments[idx] <- paste(css_arguments[idx], paste0("text-align: ", sty$align[idx], ";"))
     idx <- which(sty$indent != 0)
     css_arguments[idx] <- paste(css_arguments[idx], paste0("padding-left: ", sty$indent[idx], "em;"))
+    idx <- which(!is.na(sty$bootstrap_css))
+    css_arguments[idx] <- paste(css_arguments[idx], sty$bootstrap_css[idx])
 
     lincol <- ifelse(is.na(sty$line_color), 
         sprintf("solid %sem; border-color: black;", sty$line_width),

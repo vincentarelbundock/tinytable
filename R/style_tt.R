@@ -205,9 +205,6 @@ style_tt <- function (x,
         out@style <- rbind(out@style, settings)
     }
 
-    if (!is.null(bootstrap_class)) {
-        out@bootstrap_class <- bootstrap_class
-    }
 
 
     ## issue #759: reuse object with different styles across RevealJS slides requires new ID every time style_tt is called
