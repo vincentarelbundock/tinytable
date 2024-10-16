@@ -135,7 +135,7 @@ style_tt <- function (x,
                       alignv = NULL,
                       colspan = NULL,
                       rowspan = NULL,
-                      indent = 0,
+                      indent = NULL,
                       line = NULL,
                       line_color = "black",
                       line_width = 0.1,
@@ -213,7 +213,7 @@ style_tt <- function (x,
             align_string <- data.frame(j = jval - 1, align = align)
             settings <- merge(settings, align_string, by = "j", all.x = TRUE)
         } else {
-            msg <- sprintf("`align` must be a single character or a string of length %s.", nalign)
+            msg <- sprintf("`align` must be a single character or a string of length %s.", length(jval))
             stop(msg, call. = FALSE)
         }
     } else {
@@ -305,43 +305,16 @@ style_tt_lazy <- function (x,
 
     out <- x
 
-    jval <- sanitize_j(j, x)
-    jnull <- isTRUE(attr(jval, "null"))
-
     # alignv can only be a single character for now
     assert_choice(alignv, c("t", "m", "b"), null.ok = TRUE)
 
-    # align can be "c" or "clrrlc" takes many possible values
-    assert_string(align, null.ok = TRUE)
-
-    if (!is.null(align)) {
-        if (nchar(align) == 1) {
-            assert_choice(align, c("c", "l", "r", "d"))
-        } else {
-            align_split <- strsplit(align, split = "")[[1]]
-            for (align_character in align_split){
-                assert_choice(align_character, c("c", "l", "r", "d"))
-            }
-            if (jnull) {
-                j <- seq_len(x@ncol)
-            }
-        }
-    }
-
-    if (x@output == "typst") {
-        nalign <- x@ncol
-    } else {
-        nalign <- if (jnull) x@ncol else length(jval)
-    }
-
     assert_style_tt(
         x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
-        color = color, background = background, fontsize = fontsize, align = align, alignv = alignv, 
+        color = color, background = background, fontsize = fontsize, align = align,
         colspan = colspan, rowspan = rowspan, indent = indent,
         line = line, line_color = line_color, line_width = line_width,
         tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css,
         bootstrap_css_rule = bootstrap_css_rule)
-
 
     out <- style_eval(x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout, color = color, background = background, fontsize = fontsize, align = align, alignv = alignv, colspan = colspan, rowspan = rowspan, indent = indent, tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule, line = line, line_color = line_color, line_width = line_width)
 
@@ -361,7 +334,6 @@ assert_style_tt <- function (x,
                              background,
                              fontsize,
                              align,
-                             alignv,
                              colspan,
                              rowspan,
                              indent,

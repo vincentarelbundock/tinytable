@@ -70,6 +70,16 @@ group_tt <- function(x, i = NULL, j = NULL, indent = 1, ...) {
   # we don't need this as a list, and we use some sorting later
   i <- unlist(i)
 
+  if (!is.null(i)) {
+    if (isTRUE(x@group_tt_i)) {
+      stop("Only one row-wise `group_tt(i = ...)` call is allowed.", call. = FALSE)
+    }
+    x@group_tt_i <- TRUE
+    idx_indent <- i + cumsum(rep(1, length(i))) - 1
+    idx_indent <- setdiff(seq_len(nrow(x) + length(i)), idx_indent)
+    x <- style_tt(x, i = idx_indent, j = 1, indent = indent)
+  }
+
   x@ngroupi <- x@ngroupi + length(i)
 
   cal <- call("group_eval", i = i, j = j, indent = indent)

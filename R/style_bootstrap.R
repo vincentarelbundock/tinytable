@@ -80,6 +80,8 @@ style_apply_bootstrap <- function(x) {
     idx <- which(!is.na(sty$bootstrap_css))
     css_arguments[idx] <- paste(css_arguments[idx], sty$bootstrap_css[idx])
 
+  browser()
+
     lincol <- ifelse(is.na(sty$line_color), 
         sprintf("solid %sem; border-color: black;", sty$line_width),
         sprintf("solid %s %sem", sty$line_color, sty$line_width))

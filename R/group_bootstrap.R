@@ -67,8 +67,6 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
 
   out <- x@table_string
 
-  tab <- strsplit(out, "\\n")[[1]]
-
   for (g in seq_along(i)) {
     js <- sprintf(
       "window.addEventListener('load', function () { insertSpanRow(%s, %s, '%s') });",
@@ -88,26 +86,11 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
     fixed = TRUE)
 
   idx <- insert_values(seq_len(nrow(x)), rep(NA, length(i)), i)
-  idx_old <- idx$new[!is.na(idx$old)]
-  idx_new <- idx$new[is.na(idx$old)]
-
-  # limit index ot number of rows to avoid styling header or footer
-  idx_old <- idx_old[idx_old <= nrow(x)]
 
   x@table_string <- out
 
-  # should not be style_tt, because we already have a string bootstrap table at this stage
-  x <- style_tt(x, i = idx_old, j = 1, indent = indent)
-
   # if there's a two-level header column multi-span, we want it centered.
   x <- style_tt(x, i = -1, align = "c")
-
-  dots <- list(...)
-  dots[["j"]] <- NULL
-  if (length(dots) > 0) {
-    args <- c(list(x = x, i = idx$new[is.na(idx$old)]), dots)
-    x <- do.call(style_tt, args)
-  }
 
   # do not override meta since we modified it here above
   return(x)

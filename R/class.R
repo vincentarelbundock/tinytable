@@ -48,6 +48,7 @@ setClass(
         lazy_style = "list",
         lazy_plot = "list",
         lazy_finalize = "list",
+        group_tt_i = "logical",
         portable = "logical"
         )
 )
@@ -81,6 +82,7 @@ setMethod("initialize", "tinytable", function(
   .Object@css <- data.frame(i = NA, j = NA, bootstrap = NA, id = NA)
   .Object@portable <- FALSE
   .Object@style <- data.frame()
+  .Object@group_tt_i <- FALSE
   # conditional: allows NULL user input
   if (!is.null(placement)) .Object@placement <- placement
   if (!is.null(caption)) .Object@caption <- caption
