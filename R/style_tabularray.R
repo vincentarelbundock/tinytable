@@ -26,6 +26,12 @@ setMethod(
 
   out <- x@table_string
 
+        # TODO:
+        # if (any(align == "d")) {
+        #     tmp <- paste(sprintf("row{%s}={guard},", seq_len(x@nhead)), collapse = "\n")
+        #     tabularray_inner <- paste(tabularray_inner, tmp)
+        # }
+
   # i is a logical matrix mask
   if (is.matrix(i) && is.logical(i) && nrow(i) == nrow(x) && ncol(i) == ncol(x)) {
     assert_null(j)
