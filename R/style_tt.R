@@ -150,6 +150,13 @@ style_tt <- function (x,
 
     out <- x
 
+    if (!is.null(bootstrap_class)) {
+        out@bootstrap_class <- bootstrap_class
+    }
+    if (!is.null(bootstrap_css_rule)) {
+        out@bootstrap_css_rule <- bootstrap_css_rule
+    }
+
     assert_choice(output, c("typst", "latex", "html", "markdown", "gfm"), null.ok = TRUE)
 
     if ("width" %in% names(list(...))) {
@@ -177,7 +184,6 @@ style_tt <- function (x,
     settings[["color"]] <- if (is.null(color)) NA else as.vector(color)
     settings[["background"]] <- if (is.null(background)) NA else as.vector(background)
     settings[["fontsize"]] <- if (is.null(fontsize)) NA else as.vector(fontsize)
-    settings[["align"]] <- if (is.null(align)) NA else align
     settings[["alignv"]] <- if (is.null(alignv)) NA else alignv
     settings[["line"]] <- if (is.null(line)) NA else line
     settings[["line_color"]] <- if (is.null(line)) NA else line_color
@@ -190,9 +196,29 @@ style_tt <- function (x,
     settings[["indent"]] <- if (is.null(indent)) NA else as.vector(indent)
     settings[["colspan"]] <- if (is.null(colspan)) NA else colspan
     settings[["rowspan"]] <- if (is.null(rowspan)) NA else rowspan
-    settings[["bootstrap_class"]] <- if (!is.null(bootstrap_class)) bootstrap_class else NA
     settings[["bootstrap_css_rule"]] <- if (!is.null(bootstrap_css_rule)) bootstrap_css_rule else NA
     settings[["bootstrap_css"]] <- if (!is.null(bootstrap_css)) bootstrap_css else NA
+
+    if (!is.null(align)) {
+        if (nchar(align) == length(jval)) {
+            align_string <- strsplit(align, "")[[1]]
+            if (!all(align_string %in% c("c", "l", "r", "d"))) {
+                msg <- "`align` must be characters c, l, r, or d."
+                stop(msg, call. = FALSE)
+            }
+            align_string <- data.frame(j = jval - 1, align = align_string)
+            settings <- merge(settings, align_string, by = "j", all.x = TRUE)
+        } else if (nchar(align) == 1) {
+            assert_choice(align, c("c", "l", "r", "d"))
+            align_string <- data.frame(j = jval - 1, align = align)
+            settings <- merge(settings, align_string, by = "j", all.x = TRUE)
+        } else {
+            msg <- sprintf("`align` must be a single character or a string of length %s.", nalign)
+            stop(msg, call. = FALSE)
+        }
+    } else {
+        settings[["align"]] <- NA
+    }
 
     if (nrow(out@style) > 0 && nrow(settings) > 0 && ncol(out@style) != ncol(settings)) {
         a <- out@style
@@ -204,8 +230,6 @@ style_tt <- function (x,
     } else if (nrow(settings) > 0) {
         out@style <- rbind(out@style, settings)
     }
-
-
 
     ## issue #759: reuse object with different styles across RevealJS slides requires new ID every time style_tt is called
     # This is a very bad idea. Breaks a ton of things. We need unique IDs.
@@ -234,7 +258,6 @@ style_tt <- function (x,
         line_width = line_width,
         tabularray_inner = tabularray_inner,
         tabularray_outer = tabularray_outer,
-        bootstrap_class = bootstrap_class,
         bootstrap_css = bootstrap_css,
         bootstrap_css_rule = bootstrap_css_rule,
         output = output)
@@ -276,7 +299,6 @@ style_tt_lazy <- function (x,
                            line_width,
                            tabularray_inner,
                            tabularray_outer,
-                           bootstrap_class,
                            bootstrap_css,
                            bootstrap_css_rule,
                            output) {
@@ -312,33 +334,16 @@ style_tt_lazy <- function (x,
         nalign <- if (jnull) x@ncol else length(jval)
     }
 
-    if (!is.null(align)) {
-        align <- strsplit(align, split = "")[[1]]
-        if (length(align) != 1 && length(align) != nalign) {
-            msg <- sprintf("`align` must be a single character or a string of length %s.", nalign)
-            stop(msg, call. = FALSE)
-        } 
-        if (!all(align %in% c("c", "l", "r", "d"))) {
-            msg <- "`align` must be characters c, l, r, or d."
-            stop(msg, call. = FALSE)
-        }
-
-        if (any(align == "d")) {
-            tmp <- paste(sprintf("row{%s}={guard},", seq_len(x@nhead)), collapse = "\n")
-            tabularray_inner <- paste(tabularray_inner, tmp)
-        }
-    }
-
     assert_style_tt(
         x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
         color = color, background = background, fontsize = fontsize, align = align, alignv = alignv, 
         colspan = colspan, rowspan = rowspan, indent = indent,
         line = line, line_color = line_color, line_width = line_width,
         tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css,
-        bootstrap_css_rule = bootstrap_css_rule, bootstrap_class = bootstrap_class)
+        bootstrap_css_rule = bootstrap_css_rule)
 
 
-    out <- style_eval(x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout, color = color, background = background, fontsize = fontsize, align = align, alignv = alignv, colspan = colspan, rowspan = rowspan, indent = indent, tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule, bootstrap_class = bootstrap_class, line = line, line_color = line_color, line_width = line_width)
+    out <- style_eval(x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout, color = color, background = background, fontsize = fontsize, align = align, alignv = alignv, colspan = colspan, rowspan = rowspan, indent = indent, tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule, line = line, line_color = line_color, line_width = line_width)
 
     return(out)
 }
@@ -411,7 +416,7 @@ assert_style_tt <- function (x,
         assert_length(underline, len = 1)
         assert_length(strikeout, len = 1)
 
-        # 1 or #rows
+    # 1 or #rows
     } else if (!inull && jnull) {
         assert_length(color, len = c(1, length(ival)), null.ok = TRUE)
         assert_length(background, len = c(1, length(ival)), null.ok = TRUE)
@@ -422,7 +427,7 @@ assert_style_tt <- function (x,
         assert_length(underline, len = c(1, length(ival)))
         assert_length(strikeout, len = c(1, length(ival)))
 
-        # 1 or #cols
+    # 1 or #cols
     } else if (inull && !jnull) {
         assert_length(color, len = c(1, length(jval)), null.ok = TRUE)
         assert_length(background, len = c(1, length(jval)), null.ok = TRUE)
@@ -433,7 +438,7 @@ assert_style_tt <- function (x,
         assert_length(underline, len = c(1, length(jval)))
         assert_length(strikeout, len = c(1, length(jval)))
 
-        # 1 or #cells
+    # 1 or #cells
     } else if (!inull && !jnull) {
         assert_length(color, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
         assert_length(background, len = c(1, length(ival) * length(jval)), null.ok = TRUE)

@@ -30,16 +30,6 @@ setMethod(
                         bootstrap_css_rule = NULL,
                         ...) {
 
-
-    # bootstrap classes and rules
-    if (!is.null(bootstrap_css_rule)) {
-      x@table_string <- bootstrap_setting(x@table_string, bootstrap_css_rule, component = "css")
-    }
-
-    if (!is.null(bootstrap_class)) {
-        x@bootstrap_class <- bootstrap_class
-    }
-
     return(x)
   })
 
@@ -48,6 +38,10 @@ setMethod(
 style_apply_bootstrap <- function(x) {
     sty <- x@style
 
+    # bootstrap classes and rules
+    if (length(x@bootstrap_css_rule) == 1) {
+      x@table_string <- bootstrap_setting(x@table_string, x@bootstrap_css_rule, component = "css")
+    }
 
     sty$alignv[which(sty$alignv == "t")] <- "top"
     sty$alignv[which(sty$alignv == "b")] <- "bottom"

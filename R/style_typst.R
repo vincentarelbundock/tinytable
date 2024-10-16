@@ -25,18 +25,6 @@ setMethod(
                         indent = 0,
                         midrule = FALSE, # undocumented, only used by `group_tt()`
                         ...) {
-    out <- x@table_string
-
-    # gutters are used for group_tt(j) but look ugly with cell fill
-    if (!is.null(background)) {
-      x <- style_tt(x, finalize = function(x) {
-        x@table_string <- lines_drop(
-          x@table_string,
-          "column-gutter:",
-          fixed = TRUE)
-        return(x)
-      })
-    }
 
     return(x)
   })
@@ -45,6 +33,11 @@ setMethod(
 
 style_apply_typst <- function(x) {
     sty <- x@style
+
+    # gutters are used for group_tt(j) but look ugly with cell fill
+    if (!all(is.na(sty$background))) {
+        x@table_string <- lines_drop(x@table_string, "column-gutter:", fixed = TRUE)
+    }
 
     sty$align <- ifelse(is.na(sty$align), NA, 
         sapply(sty$align, function(k) switch(k,

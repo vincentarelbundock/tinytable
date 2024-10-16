@@ -40,6 +40,7 @@ setClass(
         output_dir = "character",
         id = "character",
         bootstrap_class = "character",
+        bootstrap_css_rule = "character",
         css = "data.frame",
         style = "data.frame",
         lazy_format = "list",

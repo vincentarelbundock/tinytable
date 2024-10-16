@@ -67,13 +67,5 @@ group_typst_col <- function(x, j, ihead, ...) {
 
   x@table_string <- out
 
-  # # midrule
-  # jrule <- lapply(names(j), function(n) if (trimws(n) != "") j[[n]])
-  # jrule <- Filter(function(k) !is.null(k), jrule)
-  # for (jr in jrule) {
-  #   # 0 indexing
-  #   x <- style_eval(x, i = ihead, j = jr, line = "b", line_width = .05, midrule = TRUE)
-  # }
-
   return(x)
 }
