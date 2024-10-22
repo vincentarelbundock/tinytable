@@ -7,12 +7,15 @@ usepackage_latex <- function(name, options = NULL, extra_lines = NULL) {
 sanitize_i <- function(i, x, pre_group_i = FALSE) {
     if (is.null(i)) {
         out <- NA
+        attr(out, "null") <- TRUE
+        attr(out, "body") <- seq_len(nrow(x))
+        attr(out, "head") <- integer()
     } else {
         out <- i
+        attr(out, "null") <- TRUE
+        attr(out, "body") <- out[out > 0]
+        attr(out, "head") <- out[out < 1]
     }
-    attr(out, "null") <- is.null(i)
-    attr(out, "body") <- out[out > 0]
-    attr(out, "head") <- out[out < 1]
     return(out)
 }
 
