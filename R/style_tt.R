@@ -222,8 +222,13 @@ style_tt <- function (x,
 
     empty <- settings[, 4:ncol(settings)]
     empty <- sapply(empty, function(x) is.na(x) | (is.logical(x) && !any(x)))
-    empty <- apply(empty, 1, all)
-    settings <- settings[!empty, , drop = FALSE]
+    if (nrow(settings) == 1) {
+        empty <- all(empty)
+        settings <- settings[!empty, , drop = FALSE]
+    } else {
+        empty <- apply(empty, 1, all)
+        settings <- settings[!empty, , drop = FALSE]
+    }
 
     if (nrow(out@style) > 0 && nrow(settings) > 0 && ncol(out@style) != ncol(settings)) {
         a <- out@style
