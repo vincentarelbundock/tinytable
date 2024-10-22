@@ -35,6 +35,7 @@ setClass(
         ncol = "numeric",
         nhead = "numeric",
         ngroupi = "numeric",
+        group_i_idx = "numeric",
         names = "NULLorCharacter",
         output = "character",
         output_dir = "character",

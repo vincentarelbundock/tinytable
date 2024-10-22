@@ -81,6 +81,7 @@ group_tt <- function(x, i = NULL, j = NULL, indent = 1, ...) {
   }
 
   x@ngroupi <- x@ngroupi + length(i)
+  x@group_i_idx <- as.numeric(unlist(i))
 
   cal <- call("group_eval", i = i, j = j, indent = indent)
 

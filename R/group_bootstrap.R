@@ -74,7 +74,8 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
       i[g] + x@nhead - 1,
       ncol(x),
       names(i)[g])
-    out <- bootstrap_setting(out, new = js, component = "cell")
+    out <- lines_insert(out, js, "tinytable span after", "after")
+    # out <- bootstrap_setting(out, new = js, component = "cell")
   }
 
   # need unique function names in case there are

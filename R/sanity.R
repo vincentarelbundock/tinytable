@@ -6,14 +6,7 @@ usepackage_latex <- function(name, options = NULL, extra_lines = NULL) {
 
 sanitize_i <- function(i, x, pre_group_i = FALSE) {
     if (is.null(i)) {
-        if (pre_group_i && inherits(x, "tinytable")) {
-            out <- seq_len(nrow(x) - x@ngroupi)
-        } else {
-            out <- seq_len(nrow(x))
-        }
-        if (inherits(x, "tinytable") && x@nhead > 0) {
-            out <- c(-1 * (1:x@nhead - 1), out)
-        }
+        out <- NA
     } else {
         out <- i
     }

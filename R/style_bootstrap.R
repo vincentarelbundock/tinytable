@@ -38,10 +38,32 @@ setMethod(
 style_apply_bootstrap <- function(x) {
     sty <- x@style
 
+    x@ngroupi
+
     # bootstrap classes and rules
     if (length(x@bootstrap_css_rule) == 1) {
       x@table_string <- bootstrap_setting(x@table_string, x@bootstrap_css_rule, component = "css")
     }
+
+    # i=NULL includes groups
+    idx <- is.na(sty$i)
+    styna <- sty[idx, -1, drop = FALSE]
+    if (nrow(styna) > 0) {
+        idx_i <- seq_len(x@nrow + x@ngroupi)
+        if (x@nhead > 0) idx_i <- sort(unique(c(-(0:(x@nhead - 1)), idx_i)))
+        idx_i <- data.frame(i = idx_i)
+        idx_i <- merge(idx_i, styna, all = TRUE)
+        sty <- rbind(idx_i, sty[!idx,, drop = FALSE])
+    }
+
+        # if (pre_group_i && inherits(x, "tinytable")) {
+        #     out <- seq_len(nrow(x) - x@ngroupi)
+        # } else {
+        #     out <- seq_len(nrow(x))
+        # }
+        # if (inherits(x, "tinytable") && x@nhead > 0) {
+        #     out <- c(-1 * (1:x@nhead - 1), out)
+        # }
 
     sty$alignv[which(sty$alignv == "t")] <- "top"
     sty$alignv[which(sty$alignv == "b")] <- "bottom"
@@ -79,8 +101,6 @@ style_apply_bootstrap <- function(x) {
     css_arguments[idx] <- paste(css_arguments[idx], paste0("padding-left: ", sty$indent[idx], "em;"))
     idx <- which(!is.na(sty$bootstrap_css))
     css_arguments[idx] <- paste(css_arguments[idx], sty$bootstrap_css[idx])
-
-  browser()
 
     lincol <- ifelse(is.na(sty$line_color), 
         sprintf("solid %sem; border-color: black;", sty$line_width),
@@ -149,9 +169,10 @@ style_apply_bootstrap <- function(x) {
         colspan <- if (!is.na(sty$colspan[row])) sty$colspan[row] else 1
         if (rowspan > 1 || colspan > 1) {
             id <- get_id(stem = "spanCell_")
-            listener <- "window.addEventListener('load', function () { %s(%s, %s, %s, %s) })"
+            listener <- "      window.addEventListener('load', function () { %s(%s, %s, %s, %s) })"
             listener <- sprintf(listener, id, sty$i[row], sty$j[row], rowspan, colspan)
-            x@table_string <- bootstrap_setting(x@table_string, listener, component = "cell")
+            x@table_string <- lines_insert(x@table_string, listener, "tinytable span after", "after")
+            # x@table_string <- bootstrap_setting(x@table_string, listener, component = "cell")
         }
     }
 

@@ -25,22 +25,17 @@
     <!-- tinytable mathjax end -->
 
     <script>
-      function styleCell(i, j, css_id) {
-        var table = document.getElementById("$tinytable_TABLE_ID");
-        table.rows[i].cells[j].classList.add(css_id);
-      }
-      window.addEventListener('load', function () {
-          var cellsToStyle = [
-            // tinytable style arrays after
-          ];
 
-          // Loop over the arrays to style the cells
-          cellsToStyle.forEach(function (group) {
-              group.positions.forEach(function (cell) {
-                  styleCell_xsjwx284ljc2lem7zsd2(cell.i, cell.j, group.css_id);
-              });
-          });
-      });
+      function styleCell(i, j, css_id) {
+          var table = document.getElementById("$tinytable_TABLE_ID");
+          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+          if (cell) {
+              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
+              cell.classList.add(css_id);
+          } else {
+              console.warn(`Cell at (${i}, ${j}) not found.`);
+          }
+      }
       function insertSpanRow(i, colspan, content) {
         var table = document.getElementById('$tinytable_TABLE_ID');
         var newRow = table.insertRow(i);
@@ -77,6 +72,19 @@
         targetCell.rowSpan = rowspan;
         targetCell.colSpan = colspan;
       }
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  styleCell_xsjwx284ljc2lem7zsd2(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
     </script>
 
     <style>
