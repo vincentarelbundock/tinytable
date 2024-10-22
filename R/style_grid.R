@@ -25,7 +25,7 @@ style_grid_internal <- function(x,
     settings <- stats::setNames(data.frame(settings), c("i", "j"))
   } else {
     jval <- sanitize_j(j, x)
-    ival <- sanitize_i(i, x)
+    ival <- sanitize_i(i, x, lazy = FALSE)
     settings <- expand.grid(i = ival, j = jval)
   }
 
