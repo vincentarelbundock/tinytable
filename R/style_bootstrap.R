@@ -38,8 +38,6 @@ setMethod(
 style_apply_bootstrap <- function(x) {
     sty <- x@style
 
-    x@ngroupi
-
     # bootstrap classes and rules
     if (length(x@bootstrap_css_rule) == 1) {
       x@table_string <- bootstrap_setting(x@table_string, x@bootstrap_css_rule, component = "css")
@@ -75,6 +73,8 @@ style_apply_bootstrap <- function(x) {
     sty$align[which(sty$align == "r")] <- "right"
 
     sty <- last_style(sty)
+
+    if (!isTRUE(nrow(sty) > 0)) return(x)
 
     css_arguments <- rep("", nrow(sty))
     idx <- which(sty$bold)
