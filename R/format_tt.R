@@ -207,7 +207,7 @@ format_tt_lazy <- function(x,
     replace <- sanitize_replace(replace)
     sanity_num_mark(digits, num_mark_big, num_mark_dec)
 
-    i <- sanitize_i(i, x, pre_group_i = TRUE)
+    i <- sanitize_i(i, x, pre_group_i = TRUE, lazy = FALSE)
     j <- sanitize_j(j, x)
     ibody <- attr(i, "body")
     inull <- isTRUE(attr(i, "null"))
