@@ -45,7 +45,7 @@ style_apply_bootstrap <- function(x) {
 
     # i=NULL includes groups
     idx <- is.na(sty$i)
-    styna <- sty[idx, -1, drop = FALSE]
+    styna <- sty[idx, !colnames(sty) %in% "i", drop = FALSE]
     if (nrow(styna) > 0) {
         idx_i <- seq_len(x@nrow + x@ngroupi)
         if (x@nhead > 0) idx_i <- sort(unique(c(-(0:(x@nhead - 1)), idx_i)))
