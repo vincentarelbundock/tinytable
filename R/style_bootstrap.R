@@ -54,14 +54,15 @@ style_apply_bootstrap <- function(x) {
         sty <- rbind(idx_i, sty[!idx,, drop = FALSE])
     }
 
-        # if (pre_group_i && inherits(x, "tinytable")) {
-        #     out <- seq_len(nrow(x) - x@ngroupi)
-        # } else {
-        #     out <- seq_len(nrow(x))
-        # }
-        # if (inherits(x, "tinytable") && x@nhead > 0) {
-        #     out <- c(-1 * (1:x@nhead - 1), out)
-        # }
+    # not sure what this is, but it seems complicated so I kept it to avoid thinking
+    # if (pre_group_i && inherits(x, "tinytable")) {
+    #     out <- seq_len(nrow(x) - x@ngroupi)
+    # } else {
+    #     out <- seq_len(nrow(x))
+    # }
+    # if (inherits(x, "tinytable") && x@nhead > 0) {
+    #     out <- c(-1 * (1:x@nhead - 1), out)
+    # }
 
     sty$alignv[which(sty$alignv == "t")] <- "top"
     sty$alignv[which(sty$alignv == "b")] <- "bottom"
