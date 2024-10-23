@@ -5,13 +5,16 @@ usepackage_latex <- function(name, options = NULL, extra_lines = NULL) {
 
 
 sanitize_i <- function(i, x, pre_group_i = FALSE, lazy = TRUE) {
+    out <- seq_len(nrow(x))
     if (is.null(i) && isTRUE(lazy)) {
         out <- NA
         attr(out, "null") <- TRUE
         attr(out, "body") <- seq_len(nrow(x))
         attr(out, "head") <- integer()
     } else {
-        out <- seq_len(nrow(x))
+        if (!is.null(i)) {
+            out <- i
+        }
         attr(out, "null") <- FALSE
         attr(out, "body") <- out[out > 0]
         attr(out, "head") <- out[out < 1]
