@@ -12,7 +12,7 @@ sanitize_i <- function(i, x, pre_group_i = FALSE, lazy = TRUE) {
         attr(out, "head") <- integer()
     } else {
         out <- seq_len(nrow(x))
-        attr(out, "null") <- TRUE
+        attr(out, "null") <- FALSE
         attr(out, "body") <- out[out > 0]
         attr(out, "head") <- out[out < 1]
     }
