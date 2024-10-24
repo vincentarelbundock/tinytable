@@ -203,7 +203,7 @@ style_tt <- function (x,
                 msg <- "`align` must be characters c, l, r, or d."
                 stop(msg, call. = FALSE)
             }
-            align_string <- data.frame(j = jval - 1, align = align_string)
+            align_string <- data.frame(j = jval, align = align_string)
             settings <- merge(settings, align_string, by = "j", all.x = TRUE)
         } else if (nchar(align) == 1) {
             assert_choice(align, c("c", "l", "r", "d"))
