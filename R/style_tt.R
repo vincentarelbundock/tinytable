@@ -379,7 +379,7 @@ assert_style_tt <- function (x,
         }
     }
 
-    ival <- sanitize_i(i, x, pre_group_i = TRUE)
+    ival <- sanitize_i(i, x)
     jval <- sanitize_j(j, x)
     inull <- isTRUE(attr(ival, "null"))
     jnull <- isTRUE(attr(jval, "null"))

@@ -122,7 +122,9 @@ format_tt <- function(x,
             escape = escape,
             markdown = markdown,
             quarto = quarto,
-            other = other)
+            other = other,
+            inull = is.null(i),
+            jnull = is.null(j))
         out@lazy_format <- c(out@lazy_format, list(cal))
     } else {
 
@@ -145,7 +147,9 @@ format_tt <- function(x,
             other = other,
             escape = escape,
             quarto = quarto,
-            markdown = markdown)
+            markdown = markdown,
+            inull = is.null(i),
+            jnull = is.null(j))
     }
 
     return(out)
@@ -170,7 +174,9 @@ format_tt_lazy <- function(x,
                            escape = FALSE,
                            markdown = FALSE,
                            quarto = quarto,
-                           other = as.character
+                           other = as.character,
+                           inull = FALSE,
+                           jnull = FALSE
                            ) {
 
     # format_tt() supports vectors
@@ -207,11 +213,9 @@ format_tt_lazy <- function(x,
     replace <- sanitize_replace(replace)
     sanity_num_mark(digits, num_mark_big, num_mark_dec)
 
-    i <- sanitize_i(i, x, pre_group_i = TRUE, lazy = FALSE)
+    i <- sanitize_i(i, x, lazy = FALSE)
     j <- sanitize_j(j, x)
     ibody <- attr(i, "body")
-    inull <- isTRUE(attr(i, "null"))
-    jnull <- isTRUE(attr(j, "null"))
 
     # In sanity_tt(), we fill in missing NULL `j` in the format-specific versions,
     # because tabularray can do whole column styling. Here, we need to fill in
