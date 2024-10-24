@@ -76,7 +76,9 @@ group_tt <- function(x, i = NULL, j = NULL, indent = 1, ...) {
     }
     x@group_tt_i <- TRUE
     if (isTRUE(indent > 0)) {
-      idx_indent <- setdiff(seq_len(nrow(x) + length(i)), i)
+      idx_indent <- setdiff(
+        seq_len(nrow(x) + length(i)), 
+        i + seq_along(i) - 1)
       x <- style_tt(x, i = idx_indent, j = 1, indent = indent)
     }
   }

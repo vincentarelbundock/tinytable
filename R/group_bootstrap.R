@@ -59,12 +59,6 @@ group_bootstrap_col <- function(x, j, ihead, ...) {
 group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
   label <- names(i)
 
-  # reverse order is important
-  i <- rev(sort(i))
-
-  # # i = list("a" = 2, "b" = 3, "c" = 4) should be displayed consecutively
-  # i <- i - (rev(seq_along(i)) - 1)
-
   out <- x@table_string
 
   for (g in seq_along(i)) {
