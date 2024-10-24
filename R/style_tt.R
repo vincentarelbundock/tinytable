@@ -207,7 +207,7 @@ style_tt <- function (x,
             settings <- merge(settings, align_string, by = "j", all.x = TRUE)
         } else if (nchar(align) == 1) {
             assert_choice(align, c("c", "l", "r", "d"))
-            align_string <- data.frame(j = jval - 1, align = align)
+            align_string <- data.frame(j = jval, align = align)
             settings <- merge(settings, align_string, by = "j", all.x = TRUE)
         } else {
             msg <- sprintf("`align` must be a single character or a string of length %s.", length(jval))

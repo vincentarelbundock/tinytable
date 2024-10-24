@@ -36,143 +36,118 @@ setMethod(
 
 
 style_apply_bootstrap <- function(x) {
-    sty <- x@style
 
-    # bootstrap classes and rules
-    if (length(x@bootstrap_css_rule) == 1) {
-      x@table_string <- bootstrap_setting(x@table_string, x@bootstrap_css_rule, component = "css")
+  # bootstrap classes and rules
+  if (length(x@bootstrap_css_rule) == 1) {
+    x@table_string <- bootstrap_setting(x@table_string, x@bootstrap_css_rule, component = "css")
+  }
+
+  sty <- x@style
+
+  sty$alignv[which(sty$alignv == "t")] <- "top"
+  sty$alignv[which(sty$alignv == "b")] <- "bottom"
+  sty$alignv[which(sty$alignv == "m")] <- "middle"
+
+  sty$align[which(sty$align == "l")] <- "left"
+  sty$align[which(sty$align == "c")] <- "center"
+  sty$align[which(sty$align == "d")] <- "center"
+  sty$align[which(sty$align == "r")] <- "right"
+
+  rec <- expand.grid(
+    i = c(-(seq_len(x@nhead) - 1), seq_len(x@nrow)),
+    j = seq_len(x@ncol)
+  )
+  css <- rep("", nrow(rec))
+
+  for (row in seq_len(nrow(sty))) {
+
+    # index: sty vs rec
+    idx_i <- sty$i[row]
+    if (is.na(idx_i)) idx_i <- unique(rec$i)
+    idx_j <- sty$j[row]
+    if (is.na(idx_j)) idx_j <- unique(rec$j)
+    idx <- rec$i == idx_i & rec$j == idx_j
+
+    if (isTRUE(sty[row, "bold"])) css[idx] <- paste(css[idx], "font-weight: bold;")
+    if (isTRUE(sty[row, "italic"])) css[idx] <- paste(css[idx], "font-style: italic;")
+    if (isTRUE(sty[row, "underline"])) css[idx] <- paste(css[idx], "text-decoration: underline;")
+    if (isTRUE(sty[row, "strikeout"])) css[idx] <- paste(css[idx], "text-decoration: line-through;")
+    if (isTRUE(sty[row, "monospace"])) css[idx] <- paste(css[idx], "font-family: monospace;")
+    if (!is.na(sty[row, "color"])) css[idx] <- paste(css[idx], paste0("color: ", sty[row, "color"], ";"))
+    if (!is.na(sty[row, "background"])) css[idx] <- paste(css[idx], paste0("background-color: ", sty[row, "background"], ";"))
+    if (!is.na(sty[row, "fontsize"])) css[idx] <- paste(css[idx], paste0("font-size: ", sty[row, "fontsize"], "em;"))
+    if (!is.na(sty[row, "alignv"])) css[idx] <- paste(css[idx], paste0("vertical-align: ", sty[row, "alignv"], ";"))
+    if (!is.na(sty[row, "align"])) css[idx] <- paste(css[idx], paste0("text-align: ", sty[row, "align"], ";"))
+    if (!is.na(sty[row, "indent"])) css[idx] <- paste(css[idx], paste0("padding-left: ", sty[row, "indent"], "em;"))
+    if (!is.na(sty[row, "bootstrap_css"])) css[idx] <- paste(css[idx], sty[row, "bootstrap_css"])
+
+    lin <- ""
+    line <- sty$line[row]
+    line_width <- sty$line_width[row]
+    line_color <- sty$line_color[row]
+    left <- grepl("l", line)
+    right <- grepl("r",line)
+    top <- grepl("t", line)
+    bottom <- grepl("b", line)
+    if (all(c(left, right, top, bottom))) {
+      lin <- paste(lin, sprintf("border: solid %s %sem;", line_color, line_width))
+    } else {
+      if (left) lin <- paste(lin, sprintf("border-left: solid %s %sem;", line_color, line_width))
+      if (right) lin <- paste(lin, sprintf("border-right: solid %s %sem;", line_color, line_width))
+      if (top) lin <- paste(lin, sprintf("border-top: solid %s %sem;", line_color, line_width))
+      if (bottom) lin <- paste(lin, sprintf("border-bottom: solid %s %sem;", line_color, line_width))
     }
-
-    # i=NULL includes groups
-    idx <- is.na(sty$i)
-    styna <- sty[idx, !colnames(sty) %in% "i", drop = FALSE]
-    if (nrow(styna) > 0) {
-        idx_i <- seq_len(x@nrow + x@ngroupi)
-        if (x@nhead > 0) idx_i <- sort(unique(c(-(0:(x@nhead - 1)), idx_i)))
-        idx_i <- data.frame(i = idx_i)
-        idx_i <- merge(idx_i, styna, all = TRUE)
-        sty <- rbind(idx_i, sty[!idx,, drop = FALSE])
+    if (!is.na(line_color[row])) {
+      lin <- paste(lin, sprintf("border-color: %s;", line_color))
     }
-
-    # JS 0-indexing
-    sty$j <- sty$j - 1
-    sty$i <- sty$i - 1 + x@nhead
-
-    sty$alignv[which(sty$alignv == "t")] <- "top"
-    sty$alignv[which(sty$alignv == "b")] <- "bottom"
-    sty$alignv[which(sty$alignv == "m")] <- "middle"
-
-    sty$align[which(sty$align == "l")] <- "left"
-    sty$align[which(sty$align == "c")] <- "center"
-    sty$align[which(sty$align == "d")] <- "center"
-    sty$align[which(sty$align == "r")] <- "right"
-
-    sty <- last_style(sty)
-
-    if (!isTRUE(nrow(sty) > 0)) return(x)
-
-    css_arguments <- rep("", nrow(sty))
-    idx <- which(sty$bold)
-    css_arguments[idx] <- paste(css_arguments[idx], "font-weight: bold;")
-    idx <- which(sty$italic)
-    css_arguments[idx] <- paste(css_arguments[idx], "font-style: italic;")
-    idx <- which(sty$underline)
-    css_arguments[idx] <- paste(css_arguments[idx], "text-decoration: underline;")
-    idx <- which(sty$strikeout)
-    css_arguments[idx] <- paste(css_arguments[idx], "text-decoration: line-through;")
-    idx <- which(sty$monospace)
-    css_arguments[idx] <- paste(css_arguments[idx], "font-family: monospace;")
-    idx <- which(!is.na(sty$color))
-    css_arguments[idx] <- paste(css_arguments[idx], paste0("color: ", sty$color[idx], ";"))
-    idx <- which(!is.na(sty$background))
-    css_arguments[idx] <- paste(css_arguments[idx], paste0("background-color: ", sty$background[idx], ";"))
-    idx <- which(!is.na(sty$fontsize))
-    css_arguments[idx] <- paste(css_arguments[idx], paste0("font-size: ", sty$fontsize[idx], "em;"))
-    idx <- which(!is.na(sty$alignv))
-    css_arguments[idx] <- paste(css_arguments[idx], paste0("vertical-align: ", sty$alignv[idx], ";"))
-    idx <- which(!is.na(sty$align))
-    css_arguments[idx] <- paste(css_arguments[idx], paste0("text-align: ", sty$align[idx], ";"))
-    idx <- which(!is.na(sty$indent))
-    css_arguments[idx] <- paste(css_arguments[idx], paste0("padding-left: ", sty$indent[idx], "em;"))
-    idx <- which(!is.na(sty$bootstrap_css))
-    css_arguments[idx] <- paste(css_arguments[idx], sty$bootstrap_css[idx])
-
-    lincol <- ifelse(is.na(sty$line_color), 
-        sprintf("solid %sem; border-color: black;", sty$line_width),
-        sprintf("solid %s %sem", sty$line_color, sty$line_width))
-    lin <- rep("", nrow(sty))
-    lin <- ifelse(!grepl("t", sty$line), lin, paste0(lin, sprintf("border-top: %s;", lincol)))
-    lin <- ifelse(!grepl("b", sty$line), lin, paste0(lin, sprintf("border-bottom: %s;", lincol)))
-    lin <- ifelse(!grepl("l", sty$line), lin, paste0(lin, sprintf("border-left: %s;", lincol)))
-    lin <- ifelse(!grepl("r", sty$line), lin, paste0(lin, sprintf("border-right: %s;", lincol)))
-    directions <- ifelse(is.na(sty$line), 0, sapply(strsplit(sty$line, ""), function(x) length(unique(x))))
-    idx <- which(directions == 4)
-    lin[idx] <- sprintf("border: %s;", lincol[idx])
-
-    clean <- function(x) {
-        x <- gsub(";+", ";", x)
-        x <- gsub(" +;", ";", x)
-        x <- gsub(" +", " ", x)
-        x <- trimws(x)
-        x
+    if (!is.na(line_width[row])) {
+      lin <- paste(lin, sprintf("border-width: %sem;", line_width))
     }
-    css_arguments <- clean(css_arguments)
-    lin <- clean(lin)
+    css[idx] <- paste(css[idx], lin)
+  }
 
-    sty$css_arguments <- css_arguments
-    sty$lin_arguments <- lin
+  css <- gsub(" +", " ", trimws(css))
 
-    # line styles 
-    lin <- sty[sty$lin_arguments != "",, drop = FALSE]
-    lin_table <- data.frame(lin_arguments = unique(lin$lin_arguments))
-    lin_table$id_lin <- sapply(seq_len(nrow(lin_table)), function(i) get_id(stem = "tinytable_css_"))
-    idx <- merge(lin[, c("i", "j", "lin_arguments")], lin_table, all.x = TRUE)
-    if (nrow(idx) > 0) {
-        idx <- split(idx, idx$id)
-        for (i in seq_along(idx)) {
-            id_lin <- idx[[i]]$id[1]
-            arr <- sprintf("{ i: %s, j: %s }, ", idx[[i]]$i, idx[[i]]$j)
-            arr <- c("          {", " positions: [ ", arr, " ],", " css_id: '", id_lin, "',", "}, ")
-            arr <- paste(arr, collapse = "")
-            x@table_string <- lines_insert(x@table_string, arr, "tinytable style arrays after", "after")
-            entry <- sprintf("      .table td.%s, .table th.%s { %s }", id_lin, id_lin, idx[[i]]$lin_arguments[1])
-            x@table_string <- lines_insert(x@table_string, entry, "tinytable css entries after", "after")
-        }
+  # JS 0-indexing
+  rec$i <- rec$i - 1 + x@nhead
+  rec$j <- rec$j - 1
+
+  rec$css_arguments <- css
+  rec <- rec[rec$css_arguments != "", , drop = FALSE]
+  if (nrow(rec) == 0) return(x)
+
+  # Unique CSS arguments assigne by arrays
+  css_table <- unique(rec[, c("css_arguments"), drop = FALSE])
+  css_table$id_css <- sapply(seq_len(nrow(css_table)), function(i) get_id(stem = "tinytable_css_"))
+  idx <- merge(rec[, c("i", "j", "css_arguments")], css_table, all.x = TRUE)
+  if (nrow(idx) > 0) {
+    idx <- split(idx, idx$id)
+    for (i in seq_along(idx)) {
+      id_css <- idx[[i]]$id[1]
+      arr <- sprintf("{ i: %s, j: %s }, ", idx[[i]]$i, idx[[i]]$j)
+      arr <- c("          {", " positions: [ ", arr, " ],", " css_id: '", id_css, "',", "}, ")
+      arr <- paste(arr, collapse = "")
+      x@table_string <- lines_insert(x@table_string, arr, "tinytable style arrays after", "after")
+      entry <- sprintf("      .table td.%s, .table th.%s { %s }", id_css, id_css, idx[[i]]$css_arguments[1])
+      x@table_string <- lines_insert(x@table_string, entry, "tinytable css entries after", "after")
     }
+  }
 
-    # non-line styles 
-    css <- sty[sty$css_arguments != "",, drop = FALSE]
-    css_table <- data.frame(css_arguments = unique(css$css_arguments))
-    css_table$id_css <- sapply(seq_len(nrow(css_table)), function(i) get_id(stem = "tinytable_css_"))
-    idx <- merge(css[, c("i", "j", "css_arguments")], css_table, all.x = TRUE)
-    if (nrow(idx) > 0) {
-        idx <- split(idx, idx$id)
-        for (i in seq_along(idx)) {
-            id_css <- idx[[i]]$id[1]
-            arr <- sprintf("{ i: %s, j: %s }, ", idx[[i]]$i, idx[[i]]$j)
-            arr <- c("          {", " positions: [ ", arr, " ],", " css_id: '", id_css, "',", "}, ")
-            arr <- paste(arr, collapse = "")
-            x@table_string <- lines_insert(x@table_string, arr, "tinytable style arrays after", "after")
-            entry <- sprintf("      .table td.%s, .table th.%s { %s }", id_css, id_css, idx[[i]]$css_arguments[1])
-            x@table_string <- lines_insert(x@table_string, entry, "tinytable css entries after", "after")
-        }
-    }
+  # # spans
+  # for (row in seq_len(nrow(sty))) {
+  #   rowspan <- if (!is.na(sty$rowspan[row])) sty$rowspan[row] else 1
+  #   colspan <- if (!is.na(sty$colspan[row])) sty$colspan[row] else 1
+  #   if (rowspan > 1 || colspan > 1) {
+  #     id <- get_id(stem = "spanCell_")
+  #     listener <- "      window.addEventListener('load', function () { %s(%s, %s, %s, %s) })"
+  #     listener <- sprintf(listener, id, sty$i[row], sty$j[row], rowspan, colspan)
+  #     x@table_string <- lines_insert(x@table_string, listener, "tinytable span after", "after")
+  #     # x@table_string <- bootstrap_setting(x@table_string, listener, component = "cell")
+  #   }
+  # }
+  #
 
-    # spans
-    for (row in seq_len(nrow(sty))) {
-        rowspan <- if (!is.na(sty$rowspan[row])) sty$rowspan[row] else 1
-        colspan <- if (!is.na(sty$colspan[row])) sty$colspan[row] else 1
-        if (rowspan > 1 || colspan > 1) {
-            id <- get_id(stem = "spanCell_")
-            listener <- "      window.addEventListener('load', function () { %s(%s, %s, %s, %s) })"
-            listener <- sprintf(listener, id, sty$i[row], sty$j[row], rowspan, colspan)
-            x@table_string <- lines_insert(x@table_string, listener, "tinytable span after", "after")
-            # x@table_string <- bootstrap_setting(x@table_string, listener, component = "cell")
-        }
-    }
-
-
-    return(x)
+  return(x)
 }
 
 
