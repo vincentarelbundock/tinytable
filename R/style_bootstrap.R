@@ -84,24 +84,22 @@ style_apply_bootstrap <- function(x) {
     line <- sty$line[row]
     line_width <- sty$line_width[row]
     line_color <- sty$line_color[row]
+    if (is.na(line_color)) "black" else line_color
+    if (is.na(line_width)) 0.1 else line_width
     left <- grepl("l", line)
     right <- grepl("r",line)
     top <- grepl("t", line)
     bottom <- grepl("b", line)
     if (all(c(left, right, top, bottom))) {
-      lin <- paste(lin, sprintf("border: solid %s %sem;", line_color, line_width))
+      template <- "border: solid %s %sem;"
     } else {
-      if (left) lin <- paste(lin, sprintf("border-left: solid %s %sem;", line_color, line_width))
-      if (right) lin <- paste(lin, sprintf("border-right: solid %s %sem;", line_color, line_width))
-      if (top) lin <- paste(lin, sprintf("border-top: solid %s %sem;", line_color, line_width))
-      if (bottom) lin <- paste(lin, sprintf("border-bottom: solid %s %sem;", line_color, line_width))
+      template <- "border: solid %s %sem;"
+      if (left) template <- "border-left: solid %s %sem;"
+      if (right) template <- "border-right: solid %s %sem;"
+      if (top) template <- "border-top: solid %s %sem;"
+      if (bottom) template <- "border-bottom: solid %s %sem;"
     }
-    if (!is.na(line_color[row])) {
-      lin <- paste(lin, sprintf("border-color: %s;", line_color))
-    }
-    if (!is.na(line_width[row])) {
-      lin <- paste(lin, sprintf("border-width: %sem;", line_width))
-    }
+    lin <- paste(lin, sprintf(template, line_color, line_width))
     css[idx] <- paste(css[idx], lin)
   }
 
