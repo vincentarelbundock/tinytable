@@ -26,6 +26,12 @@ setMethod(
 
   out <- x@table_string
 
+        # TODO:
+        # if (any(align == "d")) {
+        #     tmp <- paste(sprintf("row{%s}={guard},", seq_len(x@nhead)), collapse = "\n")
+        #     tabularray_inner <- paste(tabularray_inner, tmp)
+        # }
+
   # i is a logical matrix mask
   if (is.matrix(i) && is.logical(i) && nrow(i) == nrow(x) && ncol(i) == ncol(x)) {
     assert_null(j)
@@ -79,7 +85,7 @@ setMethod(
 
   # convert to tabularray now that we've filled the bootstrap settings
   if (is.numeric(fontsize)) settings$tabularray <- sprintf("%s font=\\fontsize{%sem}{%sem}\\selectfont,", settings$tabularray, fontsize, fontsize + 0.3) 
-  if (indent > 0) settings$tabularray <- sprintf("%s preto={\\hspace{%sem}},", settings$tabularray, indent)
+  if (isTRUE(indent > 0)) settings$tabularray <- sprintf("%s preto={\\hspace{%sem}},", settings$tabularray, indent)
 
   if (!is.null(align)) {
     if (length(align) == 1) align <- rep(align, length(jval))

@@ -122,7 +122,9 @@ format_tt <- function(x,
             escape = escape,
             markdown = markdown,
             quarto = quarto,
-            other = other)
+            other = other,
+            inull = is.null(i),
+            jnull = is.null(j))
         out@lazy_format <- c(out@lazy_format, list(cal))
     } else {
 
@@ -145,7 +147,9 @@ format_tt <- function(x,
             other = other,
             escape = escape,
             quarto = quarto,
-            markdown = markdown)
+            markdown = markdown,
+            inull = is.null(i),
+            jnull = is.null(j))
     }
 
     return(out)
@@ -170,7 +174,9 @@ format_tt_lazy <- function(x,
                            escape = FALSE,
                            markdown = FALSE,
                            quarto = quarto,
-                           other = as.character
+                           other = as.character,
+                           inull = FALSE,
+                           jnull = FALSE
                            ) {
 
     # format_tt() supports vectors
@@ -207,11 +213,9 @@ format_tt_lazy <- function(x,
     replace <- sanitize_replace(replace)
     sanity_num_mark(digits, num_mark_big, num_mark_dec)
 
-    i <- sanitize_i(i, x, pre_group_i = TRUE)
+    i <- sanitize_i(i, x, lazy = FALSE)
     j <- sanitize_j(j, x)
     ibody <- attr(i, "body")
-    inull <- isTRUE(attr(i, "null"))
-    jnull <- isTRUE(attr(j, "null"))
 
     # In sanity_tt(), we fill in missing NULL `j` in the format-specific versions,
     # because tabularray can do whole column styling. Here, we need to fill in
@@ -312,18 +316,6 @@ format_tt_lazy <- function(x,
             o <- FALSE
         }
 
-        # body
-        for (row in ibody) {
-            for (col in j) {
-                out[row, col] <- escape_text(out[row, col], output = o)
-            }
-        }
-
-        # column names
-        if (0 %in% i) {
-            colnames(x) <- escape_text(colnames(x), output = o)
-        }
-
         # caption & groups: if i and j are both null
         if (inull && jnull) {
             if (inherits(x, "tinytable")) {
@@ -350,7 +342,25 @@ format_tt_lazy <- function(x,
                     x@lazy_group[[idx]] <- g
                 }
             }
+            colnames(x) <- escape_text(colnames(x), output = o)
+            for (col in seq_len(ncol(out))) {
+                out[, col] <- escape_text(out[, col], output = o)
+            }
+
+        } else {
+            # body
+            for (row in ibody) {
+                for (col in j) {
+                    out[row, col] <- escape_text(out[row, col], output = o)
+                }
+            }
+
+            # column names
+            if (0 %in% i) {
+                colnames(x) <- escape_text(colnames(x), output = o)
+            }
         }
+
     }
 
     # markdown and quarto at the very end

@@ -112,6 +112,8 @@ build_tt <- function(x, output = NULL) {
 
   if (x@output == "typst") {
     x <- style_apply_typst(x)
+  } else if (x@output == "html") {
+    x <- style_apply_bootstrap(x)
   }
 
   x <- finalize(x)

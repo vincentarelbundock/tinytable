@@ -35,11 +35,13 @@ setClass(
         ncol = "numeric",
         nhead = "numeric",
         ngroupi = "numeric",
+        group_i_idx = "numeric",
         names = "NULLorCharacter",
         output = "character",
         output_dir = "character",
         id = "character",
         bootstrap_class = "character",
+        bootstrap_css_rule = "character",
         css = "data.frame",
         style = "data.frame",
         lazy_format = "list",
@@ -47,6 +49,7 @@ setClass(
         lazy_style = "list",
         lazy_plot = "list",
         lazy_finalize = "list",
+        group_tt_i = "logical",
         portable = "logical"
         )
 )
@@ -80,6 +83,7 @@ setMethod("initialize", "tinytable", function(
   .Object@css <- data.frame(i = NA, j = NA, bootstrap = NA, id = NA)
   .Object@portable <- FALSE
   .Object@style <- data.frame()
+  .Object@group_tt_i <- FALSE
   # conditional: allows NULL user input
   if (!is.null(placement)) .Object@placement <- placement
   if (!is.null(caption)) .Object@caption <- caption
