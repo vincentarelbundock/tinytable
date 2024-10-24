@@ -84,22 +84,26 @@ style_apply_bootstrap <- function(x) {
     line <- sty$line[row]
     line_width <- sty$line_width[row]
     line_color <- sty$line_color[row]
-    if (is.na(line_color)) "black" else line_color
-    if (is.na(line_width)) 0.1 else line_width
+    line_color <- if (is.na(line_color)) "black" else line_color
+    line_width <- if (is.na(line_width)) 0.1 else line_width
     left <- grepl("l", line)
     right <- grepl("r",line)
     top <- grepl("t", line)
     bottom <- grepl("b", line)
     if (all(c(left, right, top, bottom))) {
       template <- "border: solid %s %sem;"
-    } else {
+    } else if (any(c(left, right, top, bottom))) {
       template <- "border: solid %s %sem;"
       if (left) template <- "border-left: solid %s %sem;"
       if (right) template <- "border-right: solid %s %sem;"
       if (top) template <- "border-top: solid %s %sem;"
       if (bottom) template <- "border-bottom: solid %s %sem;"
+    } else {
+      template <- ""
     }
-    lin <- paste(lin, sprintf(template, line_color, line_width))
+    if (template != "") {
+      lin <- paste(lin, sprintf(template, line_color, line_width))
+    }
     css[idx] <- paste(css[idx], lin)
   }
 
@@ -130,19 +134,19 @@ style_apply_bootstrap <- function(x) {
     }
   }
 
-  # # spans
-  # for (row in seq_len(nrow(sty))) {
-  #   rowspan <- if (!is.na(sty$rowspan[row])) sty$rowspan[row] else 1
-  #   colspan <- if (!is.na(sty$colspan[row])) sty$colspan[row] else 1
-  #   if (rowspan > 1 || colspan > 1) {
-  #     id <- get_id(stem = "spanCell_")
-  #     listener <- "      window.addEventListener('load', function () { %s(%s, %s, %s, %s) })"
-  #     listener <- sprintf(listener, id, sty$i[row], sty$j[row], rowspan, colspan)
-  #     x@table_string <- lines_insert(x@table_string, listener, "tinytable span after", "after")
-  #     # x@table_string <- bootstrap_setting(x@table_string, listener, component = "cell")
-  #   }
-  # }
-  #
+  # spans
+  for (row in seq_len(nrow(sty))) {
+    rowspan <- if (!is.na(sty$rowspan[row])) sty$rowspan[row] else 1
+    colspan <- if (!is.na(sty$colspan[row])) sty$colspan[row] else 1
+    if (rowspan > 1 || colspan > 1) {
+      id <- get_id(stem = "spanCell_")
+      listener <- "      window.addEventListener('load', function () { %s(%s, %s, %s, %s) })"
+      listener <- sprintf(listener, id, sty$i[row], sty$j[row] - 1, rowspan, colspan)
+      x@table_string <- lines_insert(x@table_string, listener, "tinytable span after", "after")
+      # x@table_string <- bootstrap_setting(x@table_string, listener, component = "cell")
+    }
+  }
+
 
   return(x)
 }
