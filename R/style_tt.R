@@ -178,9 +178,6 @@ style_tt <- function (x,
         }
     }
 
-    # JS 0-indexing
-    settings$j <- settings$j - 1
-    settings$i <- settings$i - 1 + x@nhead
     settings[["color"]] <- if (is.null(color)) NA else as.vector(color)
     settings[["background"]] <- if (is.null(background)) NA else as.vector(background)
     settings[["fontsize"]] <- if (is.null(fontsize)) NA else as.vector(fontsize)
