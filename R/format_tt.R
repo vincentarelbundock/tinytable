@@ -316,18 +316,6 @@ format_tt_lazy <- function(x,
             o <- FALSE
         }
 
-        # body
-        for (row in ibody) {
-            for (col in j) {
-                out[row, col] <- escape_text(out[row, col], output = o)
-            }
-        }
-
-        # column names
-        if (0 %in% i) {
-            colnames(x) <- escape_text(colnames(x), output = o)
-        }
-
         # caption & groups: if i and j are both null
         if (inull && jnull) {
             if (inherits(x, "tinytable")) {
@@ -354,7 +342,25 @@ format_tt_lazy <- function(x,
                     x@lazy_group[[idx]] <- g
                 }
             }
+            colnames(x) <- escape_text(colnames(x), output = o)
+            for (col in seq_len(ncol(out))) {
+                out[, col] <- escape_text(out[, col], output = o)
+            }
+
+        } else {
+            # body
+            for (row in ibody) {
+                for (col in j) {
+                    out[row, col] <- escape_text(out[row, col], output = o)
+                }
+            }
+
+            # column names
+            if (0 %in% i) {
+                colnames(x) <- escape_text(colnames(x), output = o)
+            }
         }
+
     }
 
     # markdown and quarto at the very end
