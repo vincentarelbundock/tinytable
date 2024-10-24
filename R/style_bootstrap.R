@@ -37,7 +37,6 @@ setMethod(
 
 style_apply_bootstrap <- function(x) {
 
-  # bootstrap classes and rules
   if (length(x@bootstrap_css_rule) == 1) {
     x@table_string <- bootstrap_setting(x@table_string, x@bootstrap_css_rule, component = "css")
   }
