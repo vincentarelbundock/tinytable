@@ -113,6 +113,21 @@ style_apply_bootstrap <- function(x) {
   rec$i <- rec$i - 1 + x@nhead
   rec$j <- rec$j - 1
 
+
+  # spans: before styles because we return(x) if there is no style
+  for (row in seq_len(nrow(sty))) {
+    rowspan <- if (!is.na(sty$rowspan[row])) sty$rowspan[row] else 1
+    colspan <- if (!is.na(sty$colspan[row])) sty$colspan[row] else 1
+    if (rowspan > 1 || colspan > 1) {
+      id <- get_id(stem = "spanCell_")
+      listener <- "      window.addEventListener('load', function () { %s(%s, %s, %s, %s) })"
+      listener <- sprintf(listener, id, sty$i[row], sty$j[row] - 1, rowspan, colspan)
+      x@table_string <- lines_insert(x@table_string, listener, "tinytable span after", "after")
+      # x@table_string <- bootstrap_setting(x@table_string, listener, component = "cell")
+    }
+  }
+
+
   rec$css_arguments <- css
   rec <- rec[rec$css_arguments != "", , drop = FALSE]
   if (nrow(rec) == 0) return(x)
@@ -133,20 +148,6 @@ style_apply_bootstrap <- function(x) {
       x@table_string <- lines_insert(x@table_string, entry, "tinytable css entries after", "after")
     }
   }
-
-  # spans
-  for (row in seq_len(nrow(sty))) {
-    rowspan <- if (!is.na(sty$rowspan[row])) sty$rowspan[row] else 1
-    colspan <- if (!is.na(sty$colspan[row])) sty$colspan[row] else 1
-    if (rowspan > 1 || colspan > 1) {
-      id <- get_id(stem = "spanCell_")
-      listener <- "      window.addEventListener('load', function () { %s(%s, %s, %s, %s) })"
-      listener <- sprintf(listener, id, sty$i[row], sty$j[row] - 1, rowspan, colspan)
-      x@table_string <- lines_insert(x@table_string, listener, "tinytable span after", "after")
-      # x@table_string <- bootstrap_setting(x@table_string, listener, component = "cell")
-    }
-  }
-
 
   return(x)
 }
