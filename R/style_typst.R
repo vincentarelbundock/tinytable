@@ -71,11 +71,29 @@ style_apply_typst <- function(x) {
         if (isTRUE(sty[row, "underline"])) css[idx] <- insert_field(css[idx], "underline", "true")
         if (isTRUE(sty[row, "strikeout"])) css[idx] <- insert_field(css[idx], "strikeout", "true")
         if (isTRUE(sty[row, "monospace"])) css[idx] <- insert_field(css[idx], "monospace", "true")
-        if (!is.na(sty[row, "color"])) css[idx] <- insert_field(css[idx], "color", sty[row, "color"])
-        if (!is.na(sty[row, "background"])) css[idx] <- insert_field(css[idx], "background", sty[row, "background"])
-        if (!is.na(sty[row, "fontsize"])) css[idx] <- insert_field(css[idx], "fontsize", sty[row, "fontsize"])
-        if (!is.na(sty[row, "indent"])) css[idx] <- insert_field(css[idx], "indent", sty[row, "indent"])
         if (!is.na(sty[row, "align"])) css[idx] <- insert_field(css[idx], "align", sty[row, "align"])
+
+        fs <- sty[row, "indent"]
+        if (!is.na(fs)) {
+            css[idx] <- insert_field(css[idx], "indent", sprintf("%sem", fs))
+        }
+
+        fs <- sty[row, "fontsize"]
+        if (!is.na(fs)) {
+            css[idx] <- insert_field(css[idx], "fontsize", sprintf("%sem", fs))
+        }
+
+        col <- sty[row, "color"]
+        if (!is.na(col)) {
+            if (grepl("^#", col)) col <- sprintf('rgb("%s")', col)
+            css[idx] <- insert_field(css[idx], "color", col)
+        }
+
+        bg <- sty[row, "background"]
+        if (!is.na(bg)) {
+            if (grepl("^#", bg)) bg <- sprintf('rgb("%s")', bg)
+            css[idx] <- insert_field(css[idx], "background", bg)
+        }
     }
 
     css <- gsub(" +", " ", trimws(css))
