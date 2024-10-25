@@ -51,26 +51,37 @@ style_apply_typst <- function(x) {
     )
     css <- rep("", nrow(rec))
 
+    insert_field <- function(x, name = "bold", value = "true") {
+        old <- sprintf("%s: .*,", name)
+        new <- sprintf("%s: %s,", name, value)
+        out <- ifelse(grepl(old, x), 
+            sub(old, new, x),
+            sprintf("%s, %s", x, new))
+        return(out)
+    }
+
     for (row in seq_len(nrow(sty))) {
         idx_i <- sty$i[row]
         if (is.na(idx_i)) idx_i <- unique(rec$i)
         idx_j <- sty$j[row]
         if (is.na(idx_j)) idx_j <- unique(rec$j)
         idx <- rec$i == idx_i & rec$j == idx_j
-        if (isTRUE(sty[row, "bold"])) css[idx] <- paste(css[idx], "bold: true,")
-        if (isTRUE(sty[row, "italic"])) css[idx] <- paste(css[idx], "italic: true,")
-        if (isTRUE(sty[row, "underline"])) css[idx] <- paste(css[idx], "underline: true,")
-        if (isTRUE(sty[row, "strikeout"])) css[idx] <- paste(css[idx], "strikeout: true,")
-        if (isTRUE(sty[row, "monospace"])) css[idx] <- paste(css[idx], "monospace: true,")
-        if (!is.na(sty[row, "color"])) css[idx] <- paste(css[idx], paste0("color: ", sty[row, "color"], ","))
-        if (!is.na(sty[row, "background"])) css[idx] <- paste(css[idx], paste0("background: ", sty[row, "background"], ","))
-        if (!is.na(sty[row, "fontsize"])) css[idx] <- paste(css[idx], paste0("fontsize: ", sty[row, "fontsize"], ","))
-        if (!is.na(sty[row, "indent"])) css[idx] <- paste(css[idx], paste0("indent: ", sty[row, "indent"], ","))
-        if (!is.na(sty[row, "align"])) css[idx] <- paste(css[idx], paste0("align: ", sty[row, "align"], ","))
-
+        if (isTRUE(sty[row, "bold"])) css[idx] <- insert_field(css[idx], "bold", "true")
+        if (isTRUE(sty[row, "italic"])) css[idx] <- insert_field(css[idx], "italic", "true")
+        if (isTRUE(sty[row, "underline"])) css[idx] <- insert_field(css[idx], "underline", "true")
+        if (isTRUE(sty[row, "strikeout"])) css[idx] <- insert_field(css[idx], "strikeout", "true")
+        if (isTRUE(sty[row, "monospace"])) css[idx] <- insert_field(css[idx], "monospace", "true")
+        if (!is.na(sty[row, "color"])) css[idx] <- insert_field(css[idx], "color", sty[row, "color"])
+        if (!is.na(sty[row, "background"])) css[idx] <- insert_field(css[idx], "background", sty[row, "background"])
+        if (!is.na(sty[row, "fontsize"])) css[idx] <- insert_field(css[idx], "fontsize", sty[row, "fontsize"])
+        if (!is.na(sty[row, "indent"])) css[idx] <- insert_field(css[idx], "indent", sty[row, "indent"])
+        if (!is.na(sty[row, "align"])) css[idx] <- insert_field(css[idx], "align", sty[row, "align"])
     }
 
-    rec$css <- gsub(" +", " ", trimws(css))
+    css <- gsub(" +", " ", trimws(css))
+    css <- sub("^,", "", trimws(css))
+    css <- gsub(",+", ",", trimws(css))
+    rec$css <- css
     rec <- rec[rec$css != "", ]
     # TODO: spans before styles, as in bootstrap
 
@@ -85,8 +96,6 @@ style_apply_typst <- function(x) {
         x@table_string <- lines_insert(x@table_string, s, "tinytable cell style after", "after")
     }
 
-
-#(y: (1, 3,), x: (0, 1, 2, 3, 4,), color: none, underline: none, italic: none, bold: none, mono: none, strikeout: none, fontsize: none, indent: none, background: rgb("#ededed"), align: none),
     #
     # # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
     # lin$i <- lin$i + x@nhead
