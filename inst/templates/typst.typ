@@ -37,21 +37,24 @@ block[ // start block
 
   #table( // tinytable table start
     stroke: none,
-    // align: (x, y) => {
-    //   let data = style-array.find(data => data.x.contains(x) and data.y.contains(y))
-    //   if data != none and data.align != none {
-    //     data.align
-    //   } else {
-    //     left
-    //   }
-    // },
-    // fill: (x, y) => {
-    //   let data = style-array.find(data => data.x.contains(x) and data.y.contains(y))
-    //   if data != none and data.background != none { 
-    //         data.background
-    //   }
-    // },
-
+    align: (x, y) => {
+      for style in style-array {
+        let m = style.pairs.find(k => k.at(0) == x and k.at(1) == y)
+        if m != none and ("align" in style) {
+          style.align
+        } else {
+          left
+        }
+      }
+    },
+    fill: (x, y) => {
+      for style in style-array {
+        let m = style.pairs.find(k => k.at(0) == x and k.at(1) == y)
+        if m != none and ("background" in style) {
+          style.background
+        }
+      }
+    },
     // tinytable lines before
 
     table.header(
