@@ -112,6 +112,7 @@ style_apply_typst <- function(x) {
 
     for (s in styles) {
         x@table_string <- lines_insert(x@table_string, s, "tinytable cell style after", "after")
+        x@table_string <- lines_insert(x@table_string, s, "tinytable cell align after", "after")
     }
 
     #
