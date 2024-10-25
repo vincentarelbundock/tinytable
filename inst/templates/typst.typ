@@ -16,20 +16,24 @@ block[ // start block
 
   // tinytable align-default-array before
   #show table.cell: it => {
-    for style in style-array {
-      let tmp = it
-      let m = style.pairs.find(k => k.at(0) == it.x and k.at(1) == it.y)
-      if m != none {
-        if ("fontsize" in style) { tmp = text(size: style.fontsize, tmp) }
-        if ("color" in style) { tmp = text(fill: style.color, tmp) }
-        if ("indent" in style) { tmp = pad(left: style.indent, tmp) }
-        if ("underline" in style) { tmp = underline(tmp) }
-        if ("italic" in style) { tmp = emph(tmp) }
-        if ("bold" in style) { tmp = strong(tmp) }
-        if ("mono" in style) { tmp = math.mono(tmp) }
-        if ("strikeout" in style) { tmp = strike(tmp) }
+    if style-array.len() == 0 {
+      it 
+    } else {
+      for style in style-array {
+        let tmp = it
+        let m = style.pairs.find(k => k.at(0) == it.x and k.at(1) == it.y)
+        if m != none {
+          if ("fontsize" in style) { tmp = text(size: style.fontsize, tmp) }
+          if ("color" in style) { tmp = text(fill: style.color, tmp) }
+          if ("indent" in style) { tmp = pad(left: style.indent, tmp) }
+          if ("underline" in style) { tmp = underline(tmp) }
+          if ("italic" in style) { tmp = emph(tmp) }
+          if ("bold" in style) { tmp = strong(tmp) }
+          if ("mono" in style) { tmp = math.mono(tmp) }
+          if ("strikeout" in style) { tmp = strike(tmp) }
+        }
+        tmp
       }
-      tmp
     }
   }
 
@@ -38,13 +42,19 @@ block[ // start block
   #table( // tinytable table start
     stroke: none,
     align: (x, y) => {
-      for style in style-array {
-        let m = style.pairs.find(k => k.at(0) == x and k.at(1) == y)
-        if m != none and ("align" in style) {
-          style.align
-        } else {
-          left
+      if style-array.len() == 0 {
+        left
+      } else {
+        let a = left
+        for style in style-array {
+          let m = style.pairs.find(k => k.at(0) == x and k.at(1) == y)
+          if m != none and ("align" in style) {
+            let a = style.align
+          } else {
+            let a = left
+          }
         }
+        a
       }
     },
     fill: (x, y) => {
