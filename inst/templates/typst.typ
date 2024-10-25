@@ -16,19 +16,19 @@ block[ // start block
 
   // tinytable align-default-array before
   #show table.cell: it => {
-    let tmp = it
-    let data = style-array.find(data => data.x.contains(it.x) and data.y.contains(it.y))
-    if data != none {
-      if data.fontsize != none { tmp = text(size: data.fontsize, tmp) }
-      if data.color != none { tmp = text(fill: data.color, tmp) }
-      if data.indent != none { tmp = pad(left: data.indent, tmp) }
-      if data.underline != none { tmp = underline(tmp) }
-      if data.italic != none { tmp = emph(tmp) }
-      if data.bold != none { tmp = strong(tmp) }
-      if data.mono != none { tmp = math.mono(tmp) }
-      if data.strikeout != none { tmp = strike(tmp) }
-      tmp
-    } else {
+    for style in style-array {
+      let tmp = it
+      let m = style.pairs.find(k => k.at(0) == it.x and k.at(1) == it.y)
+      if m != none {
+        if ("fontsize" in style) { tmp = text(size: style.fontsize, tmp) }
+        if ("color" in style) { tmp = text(fill: style.color, tmp) }
+        if ("indent" in style) { tmp = pad(left: style.indent, tmp) }
+        if ("underline" in style) { tmp = underline(tmp) }
+        if ("italic" in style) { tmp = emph(tmp) }
+        if ("bold" in style) { tmp = strong(tmp) }
+        if ("mono" in style) { tmp = math.mono(tmp) }
+        if ("strikeout" in style) { tmp = strike(tmp) }
+      }
       tmp
     }
   }
@@ -37,20 +37,20 @@ block[ // start block
 
   #table( // tinytable table start
     stroke: none,
-    align: (x, y) => {
-      let data = style-array.find(data => data.x.contains(x) and data.y.contains(y))
-      if data != none and data.align != none {
-        data.align
-      } else {
-        left
-      }
-    },
-    fill: (x, y) => {
-      let data = style-array.find(data => data.x.contains(x) and data.y.contains(y))
-      if data != none and data.background != none { 
-            data.background
-      }
-    },
+    // align: (x, y) => {
+    //   let data = style-array.find(data => data.x.contains(x) and data.y.contains(y))
+    //   if data != none and data.align != none {
+    //     data.align
+    //   } else {
+    //     left
+    //   }
+    // },
+    // fill: (x, y) => {
+    //   let data = style-array.find(data => data.x.contains(x) and data.y.contains(y))
+    //   if data != none and data.background != none { 
+    //         data.background
+    //   }
+    // },
 
     // tinytable lines before
 
