@@ -76,9 +76,8 @@ style_apply_typst <- function(x) {
 
     # Unique style arrays
     uni <- split(rec, rec$css)
-    browser()
 
-    pairs <- sapply(uni, function(x) paste(sprintf("(%s, %s),", x$i, x$j), collapse = " "))
+    pairs <- sapply(uni, function(x) paste(sprintf("(%s, %s),", x$j, x$i), collapse = " "))
     styles <- sapply(uni, function(x) x$css[1])
     styles <- sprintf("(pairs: (%s), %s),", pairs, styles) 
 
