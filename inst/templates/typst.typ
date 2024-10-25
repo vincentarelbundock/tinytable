@@ -42,20 +42,19 @@ block[ // start block
   #table( // tinytable table start
     stroke: none,
     align: (x, y) => {
+      let a = left
       if style-array.len() == 0 {
-        left
-      } else {
-        let a = left
-        for style in style-array {
-          let m = style.pairs.find(k => k.at(0) == x and k.at(1) == y)
-          if m != none and ("align" in style) {
-            let a = style.align
-          } else {
-            let a = left
-          }
-        }
-        a
+        let a = right
       }
+      if style-array.len() > 0 {
+        // for style in style-array {
+        //   let m = style.pairs.find(k => k.at(0) == x and k.at(1) == y)
+        //   if m != none and ("align" in style) {
+        //     let a = style.align
+        //   }
+        // }
+      }
+      a
     },
     fill: (x, y) => {
       for style in style-array {
