@@ -150,7 +150,6 @@ style_apply_typst <- function(x) {
     }
 
     vlines <- function(x) {
-        j <- sort(x$i)
         idx <- split_chunks(x$i)
         color <- if (is.na(x$line_color[1])) "black" else x$line_color[1]
         width <- if (is.na(x$line_width[1])) 0.1 else x$line_width[1]
@@ -158,12 +157,12 @@ style_apply_typst <- function(x) {
         out <- ""
         if (grepl("l", x$line[1])) {
             tmp <- "table.vline(x: %s, start: %s, end: %s, stroke: %s + %s),"
-            tmp <- sprintf(tmp, x$i[1], idx$min, idx$max, width, color)
+            tmp <- sprintf(tmp, x$j[1], idx$min, idx$max, width, color)
             out <- paste(out, tmp)
         }
         if (grepl("r", x$line[1])) {
-            tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %s + %s),"
-            tmp <- sprintf(tmp, x$i[1] + 1, idx$min, idx$max, width, color)
+            tmp <- "table.vline(x: %s, start: %s, end: %s, stroke: %s + %s),"
+            tmp <- sprintf(tmp, x$j[1] + 1, idx$min, idx$max, width, color)
             out <- paste(out, tmp)
         }
         return(out)
