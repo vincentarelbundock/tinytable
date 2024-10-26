@@ -43,10 +43,10 @@ style_apply_typst <- function(x) {
     sty$align[which(sty$align == "d")] <- "center"
     sty$align[which(sty$align == "r")] <- "right"
 
-    sty$i <- sty$i
+    sty$i <- sty$i - 1 + x@nhead
     sty$j <- sty$j - 1
     rec <- expand.grid(
-        i = c(-(seq_len(x@nhead) - 1), seq_len(x@nrow)),
+        i = seq_len(x@nhead + x@nrow + x@ngroupi) - 1,
         j = seq_len(x@ncol) - 1
     )
     css <- rep("", nrow(rec))
@@ -119,7 +119,7 @@ style_apply_typst <- function(x) {
     if (nrow(lin) > 0) {
         lin <- split(lin, list(lin$i, lin$line, lin$line_color, lin$line_width))
         lin <- Filter(function(x) nrow(x) > 0, lin)
-        lin <- lapply(lin, hlines, nhead = x@nhead)
+        lin <- lapply(lin, hlines)
         for (l in lin) {
             x@table_string <- lines_insert(x@table_string, l, "tinytable lines before", "before")
         }
@@ -153,11 +153,11 @@ split_chunks <- function(x) {
 }
 
 
-hlines <- function(k, nhead = 1) {
+hlines <- function(k) {
     xmin <- split_chunks(k$j)$min
     xmax <- split_chunks(k$j)$max
-    ymin <- k$i[1] + nhead - 1
-    ymax <- k$i[1] + nhead
+    ymin <- k$i[1]
+    ymax <- k$i[1] + 1
     line <- k$line[1]
     color <- if (is.na(k$line_color[1])) "black" else k$line_color[1]
     width <- if (is.na(k$line_width[1])) 0.1 else k$line_width[1]
@@ -178,7 +178,7 @@ hlines <- function(k, nhead = 1) {
 
 
 
-vlines <- function(k, nhead = 1) {
+vlines <- function(k) {
     ymin <- split_chunks(k$i)$min 
     ymax <- split_chunks(k$i)$max 
     xmin <- k$j[1]
