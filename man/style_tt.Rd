@@ -20,7 +20,7 @@ style_tt(
   alignv = NULL,
   colspan = NULL,
   rowspan = NULL,
-  indent = 0,
+  indent = NULL,
   line = NULL,
   line_color = "black",
   line_width = 0.1,
