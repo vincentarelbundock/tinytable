@@ -22,14 +22,16 @@ block[ // start block
       let tmp = it
       for style in style-array {
         let m = style.pairs.find(k => k.at(0) == it.x and k.at(1) == it.y)
-        if ("fontsize" in style) { tmp = text(size: style.fontsize, tmp) }
-        if ("color" in style) { tmp = text(fill: style.color, tmp) }
-        if ("indent" in style) { tmp = pad(left: style.indent, tmp) }
-        if ("underline" in style) { tmp = underline(tmp) }
-        if ("italic" in style) { tmp = emph(tmp) }
-        if ("bold" in style) { tmp = strong(tmp) }
-        if ("mono" in style) { tmp = math.mono(tmp) }
-        if ("strikeout" in style) { tmp = strike(tmp) }
+        if m != none {
+          if ("fontsize" in style) { tmp = text(size: style.fontsize, tmp) }
+          if ("color" in style) { tmp = text(fill: style.color, tmp) }
+          if ("indent" in style) { tmp = pad(left: style.indent, tmp) }
+          if ("underline" in style) { tmp = underline(tmp) }
+          if ("italic" in style) { tmp = emph(tmp) }
+          if ("bold" in style) { tmp = strong(tmp) }
+          if ("mono" in style) { tmp = math.mono(tmp) }
+          if ("strikeout" in style) { tmp = strike(tmp) }
+        }
       }
       tmp
     }
