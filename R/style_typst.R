@@ -169,16 +169,18 @@ style_apply_typst <- function(x) {
         return(out)
     }
 
-    if (sum(!is.na(sty$line)) > 0) {
-        lin <- sty[grepl("l|r", sty$line),, drop = FALSE]
+    lin <- sty[grepl("b|t", sty$line),, drop = FALSE]
+    if (nrow(lin) > 0) {
         lin <- split(lin, list(lin$i, lin$line, lin$line_color, lin$line_width))
         lin <- Filter(function(x) nrow(x) > 0, lin)
         lin <- lapply(lin, hlines)
         for (l in lin) {
             x@table_string <- lines_insert(x@table_string, l, "tinytable lines before", "before")
         }
+    }
 
-        lin <- sty[grepl("l|r", sty$line),, drop = FALSE]
+    lin <- sty[grepl("l|r", sty$line),, drop = FALSE]
+    if (nrow(lin) > 0) {
         lin <- split(lin, list(lin$j, lin$line, lin$line_color, lin$line_width))
         lin <- Filter(function(x) nrow(x) > 0, lin)
         lin <- lapply(lin, vlines)
@@ -187,42 +189,6 @@ style_apply_typst <- function(x) {
         }
     }
 
-    #
-    # # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
-    # lin$i <- lin$i + x@nhead
-    # # not sure why, but seems necessary
-    # if (x@nhead == 0) lin$i <- lin$i + 1
-    #
-    # lin_split <- split(lin, lin[, 3:ncol(lin)])
-    # for (ls in lin_split) {
-    #     line_h <- "table.hline(y: %s, start: %s, end: %s, stroke: %sem + %s),"
-    #     line_v <- "table.vline(x: %s, start: %s, end: %s, stroke: %sem + %s),"
-    #     if (any(grepl("b", ls$line))) {
-    #         for (h in unique(ls$i)) {
-    #             template <- sprintf(line_h, h, min(ls$j) - 1, max(ls$j), ls$line_width[1], ls$line_color[1])
-    #             x@table_string <- lines_insert(x@table_string, template, "tinytable lines before", "before")
-    #         }
-    #     }
-    #     if (any(grepl("t", ls$line))) {
-    #         for (h in unique(ls$i)) {
-    #             template <- sprintf(line_h, h - 1, min(ls$j) - 1, max(ls$j), ls$line_width[1], ls$line_color[1])
-    #             x@table_string <- lines_insert(x@table_string, template, "tinytable lines before", "before")
-    #         }
-    #     }
-    #     if (any(grepl("l", ls$line))) {
-    #         for (v in unique(ls$j)) {
-    #             template <- sprintf(line_v, v - 1, min(ls$i) - 1, max(ls$i), ls$line_width[1], ls$line_color[1])
-    #             x@table_string <- lines_insert(x@table_string, template, "tinytable lines before", "before")
-    #         }
-    #     }
-    #     if (any(grepl("r", ls$line))) {
-    #         for (v in unique(ls$j)) {
-    #             template <- sprintf(line_v, v, min(ls$i) - 1, max(ls$i), ls$line_width[1], ls$line_color[1])
-    #             x@table_string <- lines_insert(x@table_string, template, "tinytable lines before", "before")
-    #         }
-    #     }
-    # }
-    #
     return(x)
 }
 
