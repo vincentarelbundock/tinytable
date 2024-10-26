@@ -112,7 +112,79 @@ style_apply_typst <- function(x) {
 
     for (s in styles) {
         x@table_string <- lines_insert(x@table_string, s, "tinytable cell style after", "after")
-        x@table_string <- lines_insert(x@table_string, s, "tinytable cell align after", "after")
+        # x@table_string <- lines_insert(x@table_string, s, "tinytable cell align after", "after")
+    }
+
+
+    split_chunks <- function(x) {
+        x <- sort(x)
+        breaks <- c(0, which(diff(x) != 1), length(x))
+        result <- list()
+        for (i in seq_along(breaks)[-length(breaks)]) {
+            chunk <- x[(breaks[i] + 1):breaks[i + 1]]
+            result[[i]] <- c(min = min(chunk), max = max(chunk))
+        }
+        out <- data.frame(do.call(rbind, result))
+        out$max <- out$max + 1
+        return(out)
+    }
+
+    hlines <- function(x) {
+        j <- sort(x$j)
+        idx <- split_chunks(x$j)
+        color <- if (is.na(x$line_color[1])) "black" else x$line_color[1]
+        width <- if (is.na(x$line_width[1])) 0.1 else x$line_width[1]
+        width <- sprintf("%sem", width)
+        out <- ""
+        if (grepl("t", x$line[1])) {
+            tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %s + %s),"
+            tmp <- sprintf(tmp, x$i[1], idx$min, idx$max, width, color)
+            out <- paste(out, tmp)
+        }
+        if (grepl("b", x$line[1])) {
+            tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %s + %s),"
+            tmp <- sprintf(tmp, x$i[1] + 1, idx$min, idx$max, width, color)
+            out <- paste(out, tmp)
+        }
+        return(out)
+    }
+
+    vlines <- function(x) {
+        j <- sort(x$i)
+        idx <- split_chunks(x$i)
+        color <- if (is.na(x$line_color[1])) "black" else x$line_color[1]
+        width <- if (is.na(x$line_width[1])) 0.1 else x$line_width[1]
+        width <- sprintf("%sem", width)
+        out <- ""
+        if (grepl("l", x$line[1])) {
+            tmp <- "table.vline(x: %s, start: %s, end: %s, stroke: %s + %s),"
+            tmp <- sprintf(tmp, x$i[1], idx$min, idx$max, width, color)
+            out <- paste(out, tmp)
+        }
+        if (grepl("r", x$line[1])) {
+            tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %s + %s),"
+            tmp <- sprintf(tmp, x$i[1] + 1, idx$min, idx$max, width, color)
+            out <- paste(out, tmp)
+        }
+        return(out)
+    }
+
+    if (sum(!is.na(sty$line)) > 0) {
+        lin <- sty[grepl("l|r", sty$line),, drop = FALSE]
+        lin <- split(lin, list(lin$i, lin$line, lin$line_color, lin$line_width))
+        lin <- Filter(function(x) nrow(x) > 0, lin)
+        lin <- lapply(lin, hlines)
+        for (l in lin) {
+            x@table_string <- lines_insert(x@table_string, l, "tinytable lines before", "before")
+        }
+
+        lin <- sty[grepl("l|r", sty$line),, drop = FALSE]
+        lin <- split(lin, list(lin$j, lin$line, lin$line_color, lin$line_width))
+        lin <- Filter(function(x) nrow(x) > 0, lin)
+        lin <- lapply(lin, vlines)
+        for (l in lin) {
+            x@table_string <- lines_insert(x@table_string, l, "tinytable lines before", "before")
+        }
     }
 
     #

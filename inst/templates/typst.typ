@@ -48,14 +48,13 @@ block[ // start block
       if align-array.len() == 0 {
         left
       } else {
-        let a = right
+        left
         // for style in style-array {
         //   let m = style.pairs.find(k => k.at(0) == x and k.at(1) == y)
         //   if m != none and ("align" in style) {
         //     let a = style.align
         //   }
         // }
-        a
       }
     },
     fill: (x, y) => {
