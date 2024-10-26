@@ -40,7 +40,7 @@ group_typst_row <- function(x, i, indent, ...) {
   idx_new <- i + seq_along(i) - 1
   idx_all <- seq_len(nrow(x) + length(i))
   idx <- setdiff(idx_all, idx_new)
-  x <- style_tt(x, idx, indent = indent)
+  # x <- style_tt(x, idx, indent = indent)
   return(x)
 }
 

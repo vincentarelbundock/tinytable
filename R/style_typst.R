@@ -100,7 +100,7 @@ style_apply_typst <- function(x) {
     css <- sub("^,", "", trimws(css))
     css <- gsub(",+", ",", trimws(css))
     rec$css <- css
-    rec <- rec[rec$css != "", ]
+
     # TODO: spans before styles, as in bootstrap
 
     # Unique style arrays
