@@ -45,6 +45,8 @@ style_apply_typst <- function(x) {
 
     sty$i <- sty$i - 1 + x@nhead
     sty$j <- sty$j - 1
+    if (length(x@names) == 0) sty$i <- sty$i + 1
+
     rec <- expand.grid(
         i = seq_len(x@nhead + x@nrow + x@ngroupi) - 1,
         j = seq_len(x@ncol) - 1
@@ -52,7 +54,7 @@ style_apply_typst <- function(x) {
     css <- rep("", nrow(rec))
 
     insert_field <- function(x, name = "bold", value = "true") {
-        old <- sprintf("%s: .*,", name)
+        old <- sprintf("%s: [^,]*,", name)
         new <- sprintf("%s: %s,", name, value)
         out <- ifelse(grepl(old, x), 
             sub(old, new, x),
