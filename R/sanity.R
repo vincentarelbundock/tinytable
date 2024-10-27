@@ -14,6 +14,8 @@ sanitize_i <- function(i, x, pre_group_i = FALSE, lazy = TRUE) {
     } else {
         if (!is.null(i)) {
             out <- i
+        } else if (inherits(x, "tinytable")) {
+            out <- seq_len(nrow(x@table_dataframe))
         }
         attr(out, "null") <- FALSE
         attr(out, "body") <- out[out > 0]
