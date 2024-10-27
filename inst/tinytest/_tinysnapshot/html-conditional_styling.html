@@ -11,9 +11,16 @@
 <!-- preamble end -->
 
     <script>
+
       function styleCell_m4thvn8u3cwpmj8hiuwk(i, j, css_id) {
-        var table = document.getElementById("tinytable_m4thvn8u3cwpmj8hiuwk");
-        table.rows[i].cells[j].classList.add(css_id);
+          var table = document.getElementById("tinytable_m4thvn8u3cwpmj8hiuwk");
+          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+          if (cell) {
+              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
+              cell.classList.add(css_id);
+          } else {
+              console.warn(`Cell at (${i}, ${j}) not found.`);
+          }
       }
       function insertSpanRow(i, colspan, content) {
         var table = document.getElementById('tinytable_m4thvn8u3cwpmj8hiuwk');
@@ -51,23 +58,27 @@
         targetCell.rowSpan = rowspan;
         targetCell.colSpan = colspan;
       }
-window.addEventListener('load', function () { styleCell_m4thvn8u3cwpmj8hiuwk(0, 0, 'tinytable_css_idevu8i6m1snsv5kmmasu3') })
-window.addEventListener('load', function () { styleCell_m4thvn8u3cwpmj8hiuwk(0, 1, 'tinytable_css_idevu8i6m1snsv5kmmasu3') })
-window.addEventListener('load', function () { styleCell_m4thvn8u3cwpmj8hiuwk(0, 2, 'tinytable_css_idevu8i6m1snsv5kmmasu3') })
-window.addEventListener('load', function () { styleCell_m4thvn8u3cwpmj8hiuwk(3, 0, 'tinytable_css_id5jsz1u1bau6rax203jg7') })
-window.addEventListener('load', function () { styleCell_m4thvn8u3cwpmj8hiuwk(3, 1, 'tinytable_css_id5jsz1u1bau6rax203jg7') })
-window.addEventListener('load', function () { styleCell_m4thvn8u3cwpmj8hiuwk(3, 2, 'tinytable_css_id5jsz1u1bau6rax203jg7') })
-window.addEventListener('load', function () { styleCell_m4thvn8u3cwpmj8hiuwk(5, 0, 'tinytable_css_id5jsz1u1bau6rax203jg7') })
-window.addEventListener('load', function () { styleCell_m4thvn8u3cwpmj8hiuwk(5, 1, 'tinytable_css_id5jsz1u1bau6rax203jg7') })
-window.addEventListener('load', function () { styleCell_m4thvn8u3cwpmj8hiuwk(5, 2, 'tinytable_css_id5jsz1u1bau6rax203jg7') })
-window.addEventListener('load', function () { styleCell_m4thvn8u3cwpmj8hiuwk(7, 0, 'tinytable_css_id5jsz1u1bau6rax203jg7') })
-window.addEventListener('load', function () { styleCell_m4thvn8u3cwpmj8hiuwk(7, 1, 'tinytable_css_id5jsz1u1bau6rax203jg7') })
-window.addEventListener('load', function () { styleCell_m4thvn8u3cwpmj8hiuwk(7, 2, 'tinytable_css_id5jsz1u1bau6rax203jg7') })
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 10, j: 0 }, { i: 10, j: 1 }, { i: 10, j: 2 },  ], css_id: 'tinytable_css_qnddps3hrarwxnclv9tv',}, 
+          { positions: [ { i: 7, j: 0 }, { i: 5, j: 1 }, { i: 7, j: 1 }, { i: 3, j: 0 }, { i: 5, j: 0 }, { i: 3, j: 2 }, { i: 5, j: 2 }, { i: 7, j: 2 }, { i: 3, j: 1 },  ], css_id: 'tinytable_css_dcq09jxgyitf4or5kg1s',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  styleCell_m4thvn8u3cwpmj8hiuwk(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
     </script>
 
     <style>
-    .table td.tinytable_css_idevu8i6m1snsv5kmmasu3, .table th.tinytable_css_idevu8i6m1snsv5kmmasu3 {  border-bottom: solid 0.1em #d3d8dc; }
-    .table td.tinytable_css_id5jsz1u1bau6rax203jg7, .table th.tinytable_css_id5jsz1u1bau6rax203jg7 {  color: white; background-color: teal; }
+      /* tinytable css entries after */
+      .table td.tinytable_css_qnddps3hrarwxnclv9tv, .table th.tinytable_css_qnddps3hrarwxnclv9tv { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_dcq09jxgyitf4or5kg1s, .table th.tinytable_css_dcq09jxgyitf4or5kg1s { color: white; background-color: teal; }
     </style>
     <div class="container">
       <table class="table table-borderless" id="tinytable_m4thvn8u3cwpmj8hiuwk" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
