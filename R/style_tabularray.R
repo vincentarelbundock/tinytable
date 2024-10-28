@@ -30,11 +30,11 @@ setMethod(
 
 style_apply_tabularray <- function(x) {
 
-
   sty <- x@style
+  sty$i <- sty$i + x@nhead
 
   rec <- expand.grid(
-    i = c(-(seq_len(x@nhead) - 1), seq_len(x@nrow)),
+    i = c(seq_len(x@nrow + x@nhead)),
     j = seq_len(x@ncol)
   )
 
@@ -42,9 +42,9 @@ style_apply_tabularray <- function(x) {
   sty$alignv[which(sty$alignv == "t")] <- "h"
   sty$alignv[which(sty$alignv == "m")] <- "m"
 
-  for (row in seq_len(nrow(sty))) {
+  set <- rep("", nrow(rec))
 
-    cmd <- ""
+  for (row in seq_len(nrow(sty))) {
 
     # index: sty vs rec
     idx_i <- sty$i[row]
@@ -60,18 +60,6 @@ style_apply_tabularray <- function(x) {
     if (isTRUE(sty$strikeout[row])) cmd <- paste0(cmd, "\\tinytableTabularrayStrikeout")
     if (isTRUE(sty$monospace[row])) cmd <- paste0(cmd, "\\texttt")
 
-    color_to_preamble <- function(x, col) {
-      if (grepl("^#", col)) { # hex color need to be defined in LaTeX
-        col <- sub("^#", "c", col)
-        regex <- sprintf("DefineColor.*%s", col)
-        if (!grepl(regex, x@table_string)) {
-          b <- sprintf("\\tinytableDefineColor{%s}{HTML}{%s}", col, sub("^c", "", col))
-          x@table_string <- tabularray_insert(x@table_string, content = b, type = "body")
-        }
-      }
-      return(x)
-    }
-
     col <- sty$color[row]
     if (!is.na(col)) {
       x <- color_to_preamble(x, col)
@@ -86,19 +74,47 @@ style_apply_tabularray <- function(x) {
       cmd <- sprintf("%s, bg=%s", cmd, bg)
     }
 
-  # if (!is.null(background)) {
-  #   settings$tabularray <- sprintf("%s bg=%s,", settings$tabularray, sub("^#", "c", background))
-  # }
+    if (cmd != "") set[idx] <- sprintf("%s, cmd=%s, ", set[idx], cmd)
 
-    if (cmd != "") {
-      if (is.na(sty$i[row])) {
-        spec <- sprintf("column{%s}={cmd=%s}", idx_j, cmd)
-      } else {
-        spec <- sprintf("cell{%s}{%s}={cmd=%s}", idx_i, idx_j, cmd)
-      }
-      x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
+    fontsize <- sty$fontsize[row]
+    if (is.na(is.numeric(fontsize))) {
+      set[idx] <- sprintf(
+        "%s font=\\fontsize{%sem}{%sem}\\selectfont,", 
+        set[idx], fontsize, fontsize + 0.3) 
     }
 
+    indent <- sty$indent[row] 
+    if (isTRUE(indent > 0)) {
+      set[idx] <- sprintf("%s preto={\\hspace{%sem}},", set[idx], indent)
+    }
+
+  }
+
+  set <- gsub("^\\s*,", "", set)
+  set <- gsub("\\s+", " ", set)
+  set <- gsub(",+", ",", set)
+  set <- trimws(set)
+
+  rec$set <- set
+
+  rec <- rec[rec$set != "", , drop = FALSE]
+
+  recj <- split(rec, rec$j)
+  for (rj in recj) {
+    all_i <- seq_len(x@nrow + x@nhead)
+    flag <- nrow(rj) == length(all_i) && all(rj$i == all_i) && length(unique(rj$set)) == 1
+    # prioritize unique columns because tables usually have more rows than columns
+    if (isTRUE(flag)) {
+      spec <- sprintf("column{%s}={%s}", rj$j[1], rj$set[1])
+      x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
+    } else {
+      for (rj_i in seq_len(nrow(rj))) {
+        if (rj$set[rj_i] != "") {
+          spec <- sprintf("cell{%s}{%s}={%s}", rj$i[rj_i], rj$j[rj_i], rj$set[rj_i])
+          x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
+        }
+      }
+    }
   }
 
   return(x)
@@ -112,9 +128,6 @@ style_apply_tabularray <- function(x) {
   # span <- if (!is.null(rowspan)) paste0(span, "r=", rowspan, ",") else span
   #
   #
-  # # convert to tabularray now that we've filled the bootstrap settings
-  # if (is.numeric(fontsize)) settings$tabularray <- sprintf("%s font=\\fontsize{%sem}{%sem}\\selectfont,", settings$tabularray, fontsize, fontsize + 0.3) 
-  # if (isTRUE(indent > 0)) settings$tabularray <- sprintf("%s preto={\\hspace{%sem}},", settings$tabularray, indent)
   #
   # if (!is.null(align)) {
   #   if (length(align) == 1) align <- rep(align, length(jval))
@@ -168,32 +181,6 @@ style_apply_tabularray <- function(x) {
   #     }
   #   }
   #
-  #
-  # # hex must be treated differently in LaTeX
-  # cols <- c(color, background, line_color)
-  # cols_done <- NULL
-  # if (!is.null(cols)) {
-  #   hex <- cols[grepl("^#", cols)]
-  #   for (h in hex) {
-  #     b <- sprintf(
-  #       "\\tinytableDefineColor{%s}{HTML}{%s}",
-  #       sub("^#", "c", h), sub("^#", "", h))
-  #     if (!b %in% cols_done) {
-  #       out <- tabularray_insert(out, content = b, type = "body")
-  #       cols_done <- c(cols_done, b)
-  #     }
-  #   }
-  # }
-  # if (!is.null(background)) {
-  #   settings$tabularray <- sprintf("%s bg=%s,", settings$tabularray, sub("^#", "c", background))
-  # }
-  # if (!is.null(color)) {
-  #   settings$tabularray <- sprintf("%s fg=%s,", settings$tabularray, sub("^#", "c", color))
-  # }
-  #
-  # settings$tabularray <- trimws(gsub("cmd=,", "", settings$tabularray))
-  # settings$tabularray <- trimws(gsub("\\s+", "", settings$tabularray))
-  # settings$tabularray <- trimws(gsub(",+", ",", settings$tabularray))
   #
   #
   # if (!all(settings$tabularray == ",") || span != "") {
@@ -279,6 +266,17 @@ tabularray_insert <- function(x, content = NULL, type = "body") {
 }
 
 
+color_to_preamble <- function(x, col) {
+  if (grepl("^#", col)) { # hex color need to be defined in LaTeX
+    col <- sub("^#", "c", col)
+    regex <- sprintf("DefineColor.*%s", col)
+    if (!grepl(regex, x@table_string)) {
+      b <- sprintf("\\tinytableDefineColor{%s}{HTML}{%s}", col, sub("^c", "", col))
+      x@table_string <- tabularray_insert(x@table_string, content = b, type = "body")
+    }
+  }
+  return(x)
+}
 
 ## not longer used, but took a while to collect and might be useful in the future
 # out <- list(
