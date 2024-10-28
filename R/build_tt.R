@@ -114,6 +114,8 @@ build_tt <- function(x, output = NULL) {
     x <- style_apply_typst(x)
   } else if (x@output == "html") {
     x <- style_apply_bootstrap(x)
+  } else if (x@output == "latex") {
+    x <- style_apply_tabularray(x)
   }
 
   x <- finalize(x)

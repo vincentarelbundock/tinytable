@@ -2,245 +2,253 @@ setMethod(
   f = "style_eval",
   signature = "tinytable_tabularray",
   definition = function(x,
-                             i = NULL,
-                             j = NULL,
-                             bold = FALSE,
-                             italic = FALSE,
-                             monospace = FALSE,
-                             underline = FALSE,
-                             strikeout = FALSE,
-                             color = NULL,
-                             background = NULL,
-                             fontsize = NULL,
-                             align = NULL,
-                             alignv = NULL,
-                             line = NULL,
-                             line_color = "black",
-                             line_width = 0.1,
-                             colspan = NULL,
-                             rowspan = NULL,
-                             indent = 0,
-                             tabularray_inner = NULL,
-                             tabularray_outer = NULL,
-                             ...) {
+                        i = NULL,
+                        j = NULL,
+                        bold = FALSE,
+                        italic = FALSE,
+                        monospace = FALSE,
+                        underline = FALSE,
+                        strikeout = FALSE,
+                        color = NULL,
+                        background = NULL,
+                        fontsize = NULL,
+                        align = NULL,
+                        alignv = NULL,
+                        line = NULL,
+                        line_color = "black",
+                        line_width = 0.1,
+                        colspan = NULL,
+                        rowspan = NULL,
+                        indent = 0,
+                        tabularray_inner = NULL,
+                        tabularray_outer = NULL,
+                        ...) {
 
-  out <- x@table_string
-
-        # TODO:
-        # if (any(align == "d")) {
-        #     tmp <- paste(sprintf("row{%s}={guard},", seq_len(x@nhead)), collapse = "\n")
-        #     tabularray_inner <- paste(tabularray_inner, tmp)
-        # }
-
-  # i is a logical matrix mask
-  if (is.matrix(i) && is.logical(i) && nrow(i) == nrow(x) && ncol(i) == ncol(x)) {
-    assert_null(j)
-    settings <- which(i == TRUE, arr.ind = TRUE)
-    settings <- stats::setNames(data.frame(settings), c("i", "j"))
-    settings$tabularray <- ""
-    inull <- jnull <- FALSE
-
-  } else {
-    ival <- sanitize_i(i, x)
-    jval <- sanitize_j(j, x)
-    # order may be important for recycling 
-    settings <- expand.grid(i = ival, j = jval, tabularray = "", stringsAsFactors = FALSE)
-    inull <- isTRUE(attr(ival, "null"))
-    jnull <- isTRUE(attr(jval, "null"))
-    if (inull && !jnull) {
-      settings <- settings[order(settings$i, settings$j), ]
-    }
-  }
+    return(x)
+  })
 
 
-  # header index
-  if ("i" %in% names(settings)) {
-    settings$i <- settings$i + x@nhead
-  }
+style_apply_tabularray <- function(x) {
 
-  # colspan and rowspan require cell level, so we keep the full settings DF, even
-  # in tabularray, where we can sometimes use rowspec or colspec when one is empty
-  if (is.null(colspan) && is.null(rowspan)) {
-    if (inull && jnull) {
-      settings <- unique(settings[, c("i", "tabularray"), drop = FALSE])
-    } else if (inull) {
-      settings <- unique(settings[, c("j", "tabularray"), drop = FALSE])
-    } else if (jnull) {
-      settings <- unique(settings[, c("i", "tabularray"), drop = FALSE])
-    }
-  }
 
-  span <- ""
-  span <- if (!is.null(colspan)) paste0(span, "c=", colspan, ",") else span
-  span <- if (!is.null(rowspan)) paste0(span, "r=", rowspan, ",") else span
+  sty <- x@style
 
-  if (!is.null(alignv)) {
-    alignv_tabularray <- switch(alignv,
-      "b" = "f",
-      "t" = "h",
-      "m" = "m"
-    )
-    settings$tabularray <- sprintf("%s valign=%s,", settings$tabularray, alignv_tabularray)
-  }
+  rec <- expand.grid(
+    i = c(-(seq_len(x@nhead) - 1), seq_len(x@nrow)),
+    j = seq_len(x@ncol)
+  )
 
-  # convert to tabularray now that we've filled the bootstrap settings
-  if (is.numeric(fontsize)) settings$tabularray <- sprintf("%s font=\\fontsize{%sem}{%sem}\\selectfont,", settings$tabularray, fontsize, fontsize + 0.3) 
-  if (isTRUE(indent > 0)) settings$tabularray <- sprintf("%s preto={\\hspace{%sem}},", settings$tabularray, indent)
+  sty$alignv[which(sty$alignv == "b")] <- "f"
+  sty$alignv[which(sty$alignv == "t")] <- "h"
+  sty$alignv[which(sty$alignv == "m")] <- "m"
 
-  if (!is.null(align)) {
-    if (length(align) == 1) align <- rep(align, length(jval))
+  for (row in seq_len(nrow(sty))) {
 
-    # explicit j input
-    siunitx <- get_option("tinytable_siunitx_table_format", default = "table-format=-%s.%s,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\\*+()}")
-    if ("j" %in% colnames(settings)) {
-      for (idx in seq_along(jval)) {
-        a_tmp <- align[idx]
-        j_tmp <- jval[idx]
-        rowidx <- settings$j == j_tmp
-        if (a_tmp == "d") {
-          num <- x@table_dataframe[[j_tmp]]
-          num <- strsplit(num, "\\.")
-          num <- lapply(num, function(k) if (length(k) == 1) c(k, " ") else k)
-          left <- sapply(num, function(k) k[[1]])
-          right <- sapply(num, function(k) k[[2]])
-          left <- max(nchar(gsub("\\D", "", left)))
-          right <- max(nchar(gsub("\\D", "", right)))
-          tmp <- sprintf(siunitx, left, right)
-          settings$tabularray <- ifelse(
-            rowidx,
-            sprintf("%s si={%s},", settings$tabularray, tmp),
-            settings$tabularray)
-        } else {
-          settings$tabularray <- ifelse(
-            rowidx,
-            sprintf("%s halign=%s,", settings$tabularray, a_tmp),
-            settings$tabularray)
+    cmd <- ""
+
+    # index: sty vs rec
+    idx_i <- sty$i[row]
+    if (is.na(idx_i)) idx_i <- unique(rec$i)
+    idx_j <- sty$j[row]
+    if (is.na(idx_j)) idx_j <- unique(rec$j)
+    idx <- rec$i == idx_i & rec$j == idx_j
+
+    cmd <- ""
+    if (isTRUE(sty$bold[row])) cmd <- paste0(cmd, "\\bfseries")
+    if (isTRUE(sty$italic[row])) cmd <- paste0(cmd, "\\textit")
+    if (isTRUE(sty$underline[row])) cmd <- paste0(cmd, "\\tinytableTabularrayUnderline")
+    if (isTRUE(sty$strikeout[row])) cmd <- paste0(cmd, "\\tinytableTabularrayStrikeout")
+    if (isTRUE(sty$monospace[row])) cmd <- paste0(cmd, "\\texttt")
+
+    color_to_preamble <- function(x, col) {
+      if (grepl("^#", col)) { # hex color need to be defined in LaTeX
+        col <- sub("^#", "c", col)
+        regex <- sprintf("DefineColor.*%s", col)
+        if (!grepl(regex, x@table_string)) {
+          b <- sprintf("\\tinytableDefineColor{%s}{HTML}{%s}", col, sub("^c", "", col))
+          x@table_string <- tabularray_insert(x@table_string, content = b, type = "body")
         }
       }
+      return(x)
+    }
 
-      # no explicit j input
+    col <- sty$color[row]
+    if (!is.na(col)) {
+      x <- color_to_preamble(x, col)
+      if (grepl("^#", col)) col <- sub("^#", "c", col)
+      cmd <- sprintf("%s, fg=%s", cmd, col)
+    }
+
+    bg <- sty$background[row]
+    if (!is.na(bg)) {
+      x <- color_to_preamble(x, bg)
+      if (grepl("^#", bg)) bg <- sub("^#", "c", bg)
+      cmd <- sprintf("%s, bg=%s", cmd, bg)
+    }
+
+  # if (!is.null(background)) {
+  #   settings$tabularray <- sprintf("%s bg=%s,", settings$tabularray, sub("^#", "c", background))
+  # }
+
+    if (cmd != "") {
+      if (is.na(sty$i[row])) {
+        spec <- sprintf("column{%s}={cmd=%s}", idx_j, cmd)
       } else {
-        a_tmp <- align[1]
-        if (a_tmp == "d") {
-          num <- unlist(x@table_dataframe[, jval])
-          num <- strsplit(num, "\\.")
-          num <- lapply(num, function(k) if (length(k) == 1) c(k, " ") else k)
-          left <- sapply(num, function(k) k[[1]])
-          right <- sapply(num, function(k) k[[2]])
-          left <- max(nchar(gsub("\\D", "", left)))
-          right <- max(nchar(gsub("\\D", "", right)))
-          tmp <- sprintf(siunitx, left, right)
-          settings$tabularray <- sprintf("%s si={%s},", settings$tabularray, tmp)
-        } else {
-          settings$tabularray <- sprintf(
-            "%s halign=%s,",
-            settings$tabularray, a_tmp)
-        }
+        spec <- sprintf("cell{%s}{%s}={cmd=%s}", idx_i, idx_j, cmd)
       }
+      x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
     }
 
-  vectorize_tabularray <- function(z) {
-    if (is.null(z)) {
-      return(rep(FALSE, nrow(settings)))
-    }
-    if (check_flag(z))  {
-      return(rep(z, nrow(settings)))
-    }
-    return(z)
   }
-
-  bold <- vectorize_tabularray(bold)
-  italic <- vectorize_tabularray(italic)
-  underline <- vectorize_tabularray(underline)
-  strikeout <- vectorize_tabularray(strikeout)
-  monospace <- vectorize_tabularray(monospace)
-  cmd <- rep("", nrow(settings))
-  cmd <- ifelse(bold, paste0(cmd, "\\bfseries"), cmd)
-  cmd <- ifelse(italic, paste0(cmd, "\\textit"), cmd)
-  cmd <- ifelse(underline, paste0(cmd, "\\tinytableTabularrayUnderline"), cmd)
-  cmd <- ifelse(strikeout, paste0(cmd, "\\tinytableTabularrayStrikeout"), cmd)
-  cmd <- ifelse(monospace, paste0(cmd, "\\texttt"), cmd)
-  settings$tabularray <- sprintf("%s, cmd=%s,", settings$tabularray, cmd)
-
-  # hex must be treated differently in LaTeX
-  cols <- c(color, background, line_color)
-  cols_done <- NULL
-  if (!is.null(cols)) {
-    hex <- cols[grepl("^#", cols)]
-    for (h in hex) {
-      b <- sprintf(
-        "\\tinytableDefineColor{%s}{HTML}{%s}",
-        sub("^#", "c", h), sub("^#", "", h))
-      if (!b %in% cols_done) {
-        out <- tabularray_insert(out, content = b, type = "body")
-        cols_done <- c(cols_done, b)
-      }
-    }
-  }
-  if (!is.null(background)) {
-    settings$tabularray <- sprintf("%s bg=%s,", settings$tabularray, sub("^#", "c", background))
-  }
-  if (!is.null(color)) {
-    settings$tabularray <- sprintf("%s fg=%s,", settings$tabularray, sub("^#", "c", color))
-  }
-
-  settings$tabularray <- trimws(gsub("cmd=,", "", settings$tabularray))
-  settings$tabularray <- trimws(gsub("\\s+", "", settings$tabularray))
-  settings$tabularray <- trimws(gsub(",+", ",", settings$tabularray))
-
-
-  if (!all(settings$tabularray == ",") || span != "") {
-    for (k in seq_len(nrow(settings))) {
-      if (all(c("i", "j") %in% colnames(settings))) {
-        spec <- sprintf("cell{%s}{%s}={%s}{%s},", settings$i[k], settings$j[k], span, settings$tabularray[k])
-      } else if ("i" %in% colnames(settings)) {
-        spec <- sprintf("row{%s}={%s},", settings$i[k], settings$tabularray[k])
-      } else if ("j" %in% colnames(settings)) {
-        spec <- sprintf("column{%s}={%s},", settings$j[k], settings$tabularray[k])
-      }
-      out <- tabularray_insert(out, content = spec, type = "inner")
-    }
-  }
-
-  # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
-  if (!is.null(line)) {
-    iline <- jline <- NULL
-    if (grepl("t", line)) iline <- c(iline, ival + x@nhead)
-    if (grepl("b", line)) iline <- c(iline, ival + x@nhead + 1)
-    if (grepl("l", line)) jline <- c(jline, jval)
-    if (grepl("r", line)) jline <- c(jline, jval + 1)
-    iline <- unique(iline)
-    jline <- unique(jline)
-    line_width <- paste0(line_width, "em")
-    if (!is.null(iline)) {
-      tmp <- sprintf(
-        "hline{%s}={%s}{solid, %s, %s},",
-        paste(iline, collapse = ","),
-        paste(jval, collapse = ","),
-        line_width,
-        sub("^#", "c", line_color)
-      )
-      out <- tabularray_insert(out, content = tmp, type = "inner")
-    }
-    if (!is.null(jline)) {
-      tmp <- sprintf(
-        "vline{%s}={%s}{solid, %s, %s},",
-        paste(jline, collapse = ","),
-        paste(ival + x@nhead, collapse = ","),
-        line_width,
-        sub("^#", "c", line_color)
-      )
-      out <- tabularray_insert(out, content = tmp, type = "inner")
-    }
-  }
-
-  out <- tabularray_insert(out, content = tabularray_inner, type = "inner")
-  out <- tabularray_insert(out, content = tabularray_outer, type = "outer")
-
-  x@table_string <- out
 
   return(x)
-})  
+}
+  #     out <- tabularray_insert(out, content = spec, type = "inner")
+
+  
+  #   settings$tabularray <- sprintf("%s valign=%s,", settings$tabularray, alignv_tabularray)
+  # span <- ""
+  # span <- if (!is.null(colspan)) paste0(span, "c=", colspan, ",") else span
+  # span <- if (!is.null(rowspan)) paste0(span, "r=", rowspan, ",") else span
+  #
+  #
+  # # convert to tabularray now that we've filled the bootstrap settings
+  # if (is.numeric(fontsize)) settings$tabularray <- sprintf("%s font=\\fontsize{%sem}{%sem}\\selectfont,", settings$tabularray, fontsize, fontsize + 0.3) 
+  # if (isTRUE(indent > 0)) settings$tabularray <- sprintf("%s preto={\\hspace{%sem}},", settings$tabularray, indent)
+  #
+  # if (!is.null(align)) {
+  #   if (length(align) == 1) align <- rep(align, length(jval))
+  #
+  #   # explicit j input
+  #   siunitx <- get_option("tinytable_siunitx_table_format", default = "table-format=-%s.%s,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\\*+()}")
+  #   if ("j" %in% colnames(settings)) {
+  #     for (idx in seq_along(jval)) {
+  #       a_tmp <- align[idx]
+  #       j_tmp <- jval[idx]
+  #       rowidx <- settings$j == j_tmp
+  #       if (a_tmp == "d") {
+  #         num <- x@table_dataframe[[j_tmp]]
+  #         num <- strsplit(num, "\\.")
+  #         num <- lapply(num, function(k) if (length(k) == 1) c(k, " ") else k)
+  #         left <- sapply(num, function(k) k[[1]])
+  #         right <- sapply(num, function(k) k[[2]])
+  #         left <- max(nchar(gsub("\\D", "", left)))
+  #         right <- max(nchar(gsub("\\D", "", right)))
+  #         tmp <- sprintf(siunitx, left, right)
+  #         settings$tabularray <- ifelse(
+  #           rowidx,
+  #           sprintf("%s si={%s},", settings$tabularray, tmp),
+  #           settings$tabularray)
+  #       } else {
+  #         settings$tabularray <- ifelse(
+  #           rowidx,
+  #           sprintf("%s halign=%s,", settings$tabularray, a_tmp),
+  #           settings$tabularray)
+  #       }
+  #     }
+  #
+  #     # no explicit j input
+  #     } else {
+  #       a_tmp <- align[1]
+  #       if (a_tmp == "d") {
+  #         num <- unlist(x@table_dataframe[, jval])
+  #         num <- strsplit(num, "\\.")
+  #         num <- lapply(num, function(k) if (length(k) == 1) c(k, " ") else k)
+  #         left <- sapply(num, function(k) k[[1]])
+  #         right <- sapply(num, function(k) k[[2]])
+  #         left <- max(nchar(gsub("\\D", "", left)))
+  #         right <- max(nchar(gsub("\\D", "", right)))
+  #         tmp <- sprintf(siunitx, left, right)
+  #         settings$tabularray <- sprintf("%s si={%s},", settings$tabularray, tmp)
+  #       } else {
+  #         settings$tabularray <- sprintf(
+  #           "%s halign=%s,",
+  #           settings$tabularray, a_tmp)
+  #       }
+  #     }
+  #   }
+  #
+  #
+  # # hex must be treated differently in LaTeX
+  # cols <- c(color, background, line_color)
+  # cols_done <- NULL
+  # if (!is.null(cols)) {
+  #   hex <- cols[grepl("^#", cols)]
+  #   for (h in hex) {
+  #     b <- sprintf(
+  #       "\\tinytableDefineColor{%s}{HTML}{%s}",
+  #       sub("^#", "c", h), sub("^#", "", h))
+  #     if (!b %in% cols_done) {
+  #       out <- tabularray_insert(out, content = b, type = "body")
+  #       cols_done <- c(cols_done, b)
+  #     }
+  #   }
+  # }
+  # if (!is.null(background)) {
+  #   settings$tabularray <- sprintf("%s bg=%s,", settings$tabularray, sub("^#", "c", background))
+  # }
+  # if (!is.null(color)) {
+  #   settings$tabularray <- sprintf("%s fg=%s,", settings$tabularray, sub("^#", "c", color))
+  # }
+  #
+  # settings$tabularray <- trimws(gsub("cmd=,", "", settings$tabularray))
+  # settings$tabularray <- trimws(gsub("\\s+", "", settings$tabularray))
+  # settings$tabularray <- trimws(gsub(",+", ",", settings$tabularray))
+  #
+  #
+  # if (!all(settings$tabularray == ",") || span != "") {
+  #   for (k in seq_len(nrow(settings))) {
+  #     if (all(c("i", "j") %in% colnames(settings))) {
+  #       spec <- sprintf("cell{%s}{%s}={%s}{%s},", settings$i[k], settings$j[k], span, settings$tabularray[k])
+  #     } else if ("i" %in% colnames(settings)) {
+  #       spec <- sprintf("row{%s}={%s},", settings$i[k], settings$tabularray[k])
+  #     } else if ("j" %in% colnames(settings)) {
+  #       spec <- sprintf("column{%s}={%s},", settings$j[k], settings$tabularray[k])
+  #     }
+  #     out <- tabularray_insert(out, content = spec, type = "inner")
+  #   }
+  # }
+  #
+  # # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
+  # if (!is.null(line)) {
+  #   iline <- jline <- NULL
+  #   if (grepl("t", line)) iline <- c(iline, ival + x@nhead)
+  #   if (grepl("b", line)) iline <- c(iline, ival + x@nhead + 1)
+  #   if (grepl("l", line)) jline <- c(jline, jval)
+  #   if (grepl("r", line)) jline <- c(jline, jval + 1)
+  #   iline <- unique(iline)
+  #   jline <- unique(jline)
+  #   line_width <- paste0(line_width, "em")
+  #   if (!is.null(iline)) {
+  #     tmp <- sprintf(
+  #       "hline{%s}={%s}{solid, %s, %s},",
+  #       paste(iline, collapse = ","),
+  #       paste(jval, collapse = ","),
+  #       line_width,
+  #       sub("^#", "c", line_color)
+  #     )
+  #     out <- tabularray_insert(out, content = tmp, type = "inner")
+  #   }
+  #   if (!is.null(jline)) {
+  #     tmp <- sprintf(
+  #       "vline{%s}={%s}{solid, %s, %s},",
+  #       paste(jline, collapse = ","),
+  #       paste(ival + x@nhead, collapse = ","),
+  #       line_width,
+  #       sub("^#", "c", line_color)
+  #     )
+  #     out <- tabularray_insert(out, content = tmp, type = "inner")
+  #   }
+  # }
+  #
+  # out <- tabularray_insert(out, content = tabularray_inner, type = "inner")
+  # out <- tabularray_insert(out, content = tabularray_outer, type = "outer")
+  #
+  # x@table_string <- out
+  #
+#   return(x)
+# }  
+
 
 tabularray_insert <- function(x, content = NULL, type = "body") {
 
