@@ -42,7 +42,7 @@ style_apply_tabularray <- function(x) {
   sty$alignv[which(sty$alignv == "t")] <- "h"
   sty$alignv[which(sty$alignv == "m")] <- "m"
 
-  set <- rep("", nrow(rec))
+  set <- span <- rep("", nrow(rec))
 
   for (row in seq_len(nrow(sty))) {
 
@@ -88,29 +88,53 @@ style_apply_tabularray <- function(x) {
       set[idx] <- sprintf("%s preto={\\hspace{%sem}},", set[idx], indent)
     }
 
+    if (!is.na(sty$colspan[row])) {
+      span[idx] <- paste0(span[idx], "c=", sty$colspan[row], ",")
+    }
+
+    if (!is.na(sty$rowspan[row])) {
+      span[idx] <- paste0(span[idx], "r=", sty$rowspan[row], ",")
+    }
+
   }
 
-  set <- gsub("^\\s*,", "", set)
-  set <- gsub("\\s+", " ", set)
-  set <- gsub(",+", ",", set)
-  set <- trimws(set)
+  clean <- function(x) {
+    x <- gsub("^\\s*,", "", x)
+    x <- gsub("\\s+", " ", x)
+    x <- gsub(",+", ",", x)
+    x <- trimws(x)
+    return(x)
+  }
 
-  rec$set <- set
+  rec$set <- clean(set)
+  rec$span <- clean(span)
 
   rec <- rec[rec$set != "", , drop = FALSE]
 
   recj <- split(rec, rec$j)
   for (rj in recj) {
     all_i <- seq_len(x@nrow + x@nhead)
-    flag <- nrow(rj) == length(all_i) && all(rj$i == all_i) && length(unique(rj$set)) == 1
+
+    flag <- nrow(rj) == length(all_i) && 
+      all(rj$i == all_i) && 
+      length(unique(rj$set)) == 1 &&
+      length(unique(rj$span)) == 1
+
     # prioritize unique columns because tables usually have more rows than columns
     if (isTRUE(flag)) {
-      spec <- sprintf("column{%s}={%s}", rj$j[1], rj$set[1])
+      spec <- sprintf("column{%s}={%s}{%s}", 
+        rj$j[1], 
+        rj$span[1],
+        rj$set[1])
       x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
     } else {
       for (rj_i in seq_len(nrow(rj))) {
         if (rj$set[rj_i] != "") {
-          spec <- sprintf("cell{%s}{%s}={%s}", rj$i[rj_i], rj$j[rj_i], rj$set[rj_i])
+          spec <- sprintf("cell{%s}{%s}={%s}{%s}", 
+            rj$i[rj_i], 
+            rj$j[rj_i], 
+            rj$span[rj_i],
+            rj$set[rj_i])
           x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
         }
       }
