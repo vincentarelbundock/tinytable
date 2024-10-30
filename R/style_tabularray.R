@@ -85,7 +85,12 @@ style_apply_tabularray <- function(x) {
 
     halign <- sty$align[row]
     if (!is.na(halign)) {
-        set[idx] <- sprintf("%s, halign=%s,", set[idx], halign)
+        if (!identical(halign, "d")) {
+            set[idx] <- sprintf("%s, halign=%s,", set[idx], halign)
+        } else {
+            dcol <- get_dcolumn(rec[row]$j[1], x)
+            set[idx] <- sprintf("%s, %s", set[idx], dcol)
+        }
     }
 
     indent <- sty$indent[row] 
@@ -187,15 +192,6 @@ style_apply_tabularray <- function(x) {
   #     } else {
   #       a_tmp <- align[1]
   #       if (a_tmp == "d") {
-  #         num <- unlist(x@table_dataframe[, jval])
-  #         num <- strsplit(num, "\\.")
-  #         num <- lapply(num, function(k) if (length(k) == 1) c(k, " ") else k)
-  #         left <- sapply(num, function(k) k[[1]])
-  #         right <- sapply(num, function(k) k[[2]])
-  #         left <- max(nchar(gsub("\\D", "", left)))
-  #         right <- max(nchar(gsub("\\D", "", right)))
-  #         tmp <- sprintf(siunitx, left, right)
-  #         settings$tabularray <- sprintf("%s si={%s},", settings$tabularray, tmp)
   #       } else {
   #         settings$tabularray <- sprintf(
   #           "%s halign=%s,",
@@ -203,22 +199,9 @@ style_apply_tabularray <- function(x) {
   #       }
   #     }
   #   }
-  #
-  #
-  #
-  # if (!all(settings$tabularray == ",") || span != "") {
-  #   for (k in seq_len(nrow(settings))) {
-  #     if (all(c("i", "j") %in% colnames(settings))) {
-  #       spec <- sprintf("cell{%s}{%s}={%s}{%s},", settings$i[k], settings$j[k], span, settings$tabularray[k])
-  #     } else if ("i" %in% colnames(settings)) {
-  #       spec <- sprintf("row{%s}={%s},", settings$i[k], settings$tabularray[k])
-  #     } else if ("j" %in% colnames(settings)) {
-  #       spec <- sprintf("column{%s}={%s},", settings$j[k], settings$tabularray[k])
-  #     }
-  #     out <- tabularray_insert(out, content = spec, type = "inner")
-  #   }
-  # }
-  #
+
+
+
   # # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
   # if (!is.null(line)) {
   #   iline <- jline <- NULL
@@ -312,3 +295,18 @@ color_to_preamble <- function(x, col) {
 #   inner_specs_keys = c("rulesep", "hlines", "vline", "hline", "vlines", "stretch", "abovesep", "belowsep", "rowsep", "leftsep", "rightsep", "colsep", "hspan", "vspan", "baseline"),
 #   span = c("r", "c")
 # )
+
+
+get_dcolumn <- function(j, x) {
+    siunitx <- get_option("tinytable_siunitx_table_format", default = "table-format=-%s.%s,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\\*+()}")
+    num <- unlist(x@table_dataframe[, j])
+    num <- strsplit(num, "\\.")
+    num <- lapply(num, function(k) if (length(k) == 1) c(k, " ") else k)
+    left <- sapply(num, function(k) k[[1]])
+    right <- sapply(num, function(k) k[[2]])
+    left <- max(nchar(gsub("\\D", "", left)))
+    right <- max(nchar(gsub("\\D", "", right)))
+    out <- sprintf(siunitx, left, right)
+    out <- sprintf("si={%s},", out)
+    return(out)
+}

@@ -4,6 +4,14 @@ usepackage_latex <- function(name, options = NULL, extra_lines = NULL) {
 }
 
 
+sanity_align <- function(align, i) {
+    if (any(grepl("d", align)) && !is.null(i)) {
+        msg <- "d column alignment can only be applied to entire columns. `i` must be `NULL`."
+        stop(msg, call. = FALSE)
+    }
+}
+
+
 sanitize_i <- function(i, x, pre_group_i = FALSE, lazy = TRUE) {
     out <- seq_len(nrow(x))
     if (is.null(i) && isTRUE(lazy)) {

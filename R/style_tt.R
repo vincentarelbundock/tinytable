@@ -157,6 +157,8 @@ style_tt <- function (x,
         out@bootstrap_css_rule <- bootstrap_css_rule
     }
 
+    sanity_align(align, i)
+
     assert_choice(output, c("typst", "latex", "html", "markdown", "gfm"), null.ok = TRUE)
 
     if ("width" %in% names(list(...))) {
