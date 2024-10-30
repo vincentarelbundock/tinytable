@@ -160,48 +160,6 @@ style_apply_tabularray <- function(x) {
   # if (!is.null(align)) {
   #   if (length(align) == 1) align <- rep(align, length(jval))
   #
-  #   # explicit j input
-  #   siunitx <- get_option("tinytable_siunitx_table_format", default = "table-format=-%s.%s,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\\*+()}")
-  #   if ("j" %in% colnames(settings)) {
-  #     for (idx in seq_along(jval)) {
-  #       a_tmp <- align[idx]
-  #       j_tmp <- jval[idx]
-  #       rowidx <- settings$j == j_tmp
-  #       if (a_tmp == "d") {
-  #         num <- x@table_dataframe[[j_tmp]]
-  #         num <- strsplit(num, "\\.")
-  #         num <- lapply(num, function(k) if (length(k) == 1) c(k, " ") else k)
-  #         left <- sapply(num, function(k) k[[1]])
-  #         right <- sapply(num, function(k) k[[2]])
-  #         left <- max(nchar(gsub("\\D", "", left)))
-  #         right <- max(nchar(gsub("\\D", "", right)))
-  #         tmp <- sprintf(siunitx, left, right)
-  #         settings$tabularray <- ifelse(
-  #           rowidx,
-  #           sprintf("%s si={%s},", settings$tabularray, tmp),
-  #           settings$tabularray)
-  #       } else {
-  #         settings$tabularray <- ifelse(
-  #           rowidx,
-  #           sprintf("%s halign=%s,", settings$tabularray, a_tmp),
-  #           settings$tabularray)
-  #       }
-  #     }
-  #
-  #     # no explicit j input
-  #     } else {
-  #       a_tmp <- align[1]
-  #       if (a_tmp == "d") {
-  #       } else {
-  #         settings$tabularray <- sprintf(
-  #           "%s halign=%s,",
-  #           settings$tabularray, a_tmp)
-  #       }
-  #     }
-  #   }
-
-
-
   # # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
   # if (!is.null(line)) {
   #   iline <- jline <- NULL
