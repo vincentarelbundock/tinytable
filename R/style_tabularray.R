@@ -83,6 +83,11 @@ style_apply_tabularray <- function(x) {
         set[idx], fontsize, fontsize + 0.3) 
     }
 
+    halign <- sty$align[row]
+    if (!is.na(halign)) {
+        set[idx] <- sprintf("%s, halign=%s,", set[idx], halign)
+    }
+
     indent <- sty$indent[row] 
     if (isTRUE(indent > 0)) {
       set[idx] <- sprintf("%s preto={\\hspace{%sem}},", set[idx], indent)
@@ -100,6 +105,7 @@ style_apply_tabularray <- function(x) {
 
   clean <- function(x) {
     x <- gsub("^\\s*,", "", x)
+    x <- gsub(",\\s*,", ",,", x)
     x <- gsub("\\s+", " ", x)
     x <- gsub(",+", ",", x)
     x <- trimws(x)
@@ -146,13 +152,6 @@ style_apply_tabularray <- function(x) {
   #     out <- tabularray_insert(out, content = spec, type = "inner")
 
   
-  #   settings$tabularray <- sprintf("%s valign=%s,", settings$tabularray, alignv_tabularray)
-  # span <- ""
-  # span <- if (!is.null(colspan)) paste0(span, "c=", colspan, ",") else span
-  # span <- if (!is.null(rowspan)) paste0(span, "r=", rowspan, ",") else span
-  #
-  #
-  #
   # if (!is.null(align)) {
   #   if (length(align) == 1) align <- rep(align, length(jval))
   #
