@@ -93,7 +93,7 @@ style_apply_tabularray <- function(x) {
         if (!identical(halign, "d")) {
             set[idx] <- sprintf("%s, halign=%s,", set[idx], halign)
         } else {
-            dcol <- get_dcolumn(rec[row]$j[1], x)
+            dcol <- get_dcolumn(rec[row, "j"], x)
             set[idx] <- sprintf("%s, %s", set[idx], dcol)
         }
     }
