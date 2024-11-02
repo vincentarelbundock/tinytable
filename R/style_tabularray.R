@@ -156,53 +156,75 @@ style_apply_tabularray <- function(x) {
     }
   }
 
+  lin <- sty[grepl("b|t", sty$line),, drop = FALSE]
+  if (nrow(lin) > 0) {
+    lin <- split(lin, list(lin$i, lin$line, lin$line_color, lin$line_width))
+    lin <- Filter(function(x) nrow(x) > 0, lin)
+    lin <- lapply(lin, hlines_tabularray)
+    lin <- unlist(lin)
+    for (l in lin) {
+      x@table_string <- tabularray_insert(x@table_string, l, type = "inner")
+    }
+  }
+
+  lin <- sty[grepl("l|r", sty$line),, drop = FALSE]
+  if (nrow(lin) > 0) {
+    lin <- split(lin, list(lin$j, lin$line, lin$line_color, lin$line_width))
+    lin <- Filter(function(x) nrow(x) > 0, lin)
+    lin <- lapply(lin, vlines_tabularray)
+    lin <- unlist(lin)
+    for (l in lin) {
+      x@table_string <- tabularray_insert(x@table_string, l, type = "inner")
+    }
+  }
+
+  for (spec in stats::na.omit(sty$tabularray_inner)) {
+    x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
+  }
+  for (spec in stats::na.omit(sty$tabularray_outer)) {
+    x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
+  }
+
   return(x)
 }
-  #     out <- tabularray_insert(out, content = spec, type = "inner")
 
-  
-  # if (!is.null(align)) {
-  #   if (length(align) == 1) align <- rep(align, length(jval))
-  #
-  # # Lines are not part of cellspec/rowspec/columnspec. Do this separately.
-  # if (!is.null(line)) {
-  #   iline <- jline <- NULL
-  #   if (grepl("t", line)) iline <- c(iline, ival + x@nhead)
-  #   if (grepl("b", line)) iline <- c(iline, ival + x@nhead + 1)
-  #   if (grepl("l", line)) jline <- c(jline, jval)
-  #   if (grepl("r", line)) jline <- c(jline, jval + 1)
-  #   iline <- unique(iline)
-  #   jline <- unique(jline)
-  #   line_width <- paste0(line_width, "em")
-  #   if (!is.null(iline)) {
-  #     tmp <- sprintf(
-  #       "hline{%s}={%s}{solid, %s, %s},",
-  #       paste(iline, collapse = ","),
-  #       paste(jval, collapse = ","),
-  #       line_width,
-  #       sub("^#", "c", line_color)
-  #     )
-  #     out <- tabularray_insert(out, content = tmp, type = "inner")
-  #   }
-  #   if (!is.null(jline)) {
-  #     tmp <- sprintf(
-  #       "vline{%s}={%s}{solid, %s, %s},",
-  #       paste(jline, collapse = ","),
-  #       paste(ival + x@nhead, collapse = ","),
-  #       line_width,
-  #       sub("^#", "c", line_color)
-  #     )
-  #     out <- tabularray_insert(out, content = tmp, type = "inner")
-  #   }
-  # }
-  #
-  # out <- tabularray_insert(out, content = tabularray_inner, type = "inner")
-  # out <- tabularray_insert(out, content = tabularray_outer, type = "outer")
-  #
-  # x@table_string <- out
-  #
-#   return(x)
-# }  
+
+hlines_tabularray <- function(k) {
+  color <- if (is.na(k$line_color[1])) "black" else k$line_color[1]
+  width <- if (is.na(k$line_width[1])) 0.1 else k$line_width[1]
+  if (grepl("b", k$line[1]) && grepl("t", k$line[1])) {
+    k <- rbind(k, transform(k, i = i + 1))
+  } else if (grepl("b", k$line[1])) {
+    k <- transform(k, i = i + -1)
+  }
+  out <- sprintf(
+    "hline{%s}={%s}{solid, %sem, %s},",
+    paste(unique(k$i), collapse = ","),
+    paste(unique(k$j), collapse = ","),
+    width,
+    sub("^#", "c", color)
+  )
+  return(out)
+}
+
+vlines_tabularray <- function(k) {
+  color <- if (is.na(k$line_color[1])) "black" else k$line_color[1]
+  width <- if (is.na(k$line_width[1])) 0.1 else k$line_width[1]
+  if (grepl("l", k$line[1]) && grepl("r", k$line[1])) {
+    k <- rbind(k, transform(k, j = j + 1))
+  } else if (grepl("r", k$line[1])) {
+    k <- transform(k, j = j + 1)
+  }
+  out <- sprintf(
+    "vline{%s}={%s}{solid, %sem, %s},",
+    paste(unique(k$j), collapse = ","),
+    paste(unique(k$i), collapse = ","),
+    width,
+    sub("^#", "c", color)
+  )
+  return(out)
+}
+
 
 
 tabularray_insert <- function(x, content = NULL, type = "body") {
@@ -246,17 +268,6 @@ color_to_preamble <- function(x, col) {
   return(x)
 }
 
-## not longer used, but took a while to collect and might be useful in the future
-# out <- list(
-#   rows_keys = c("halign", "valign", "ht", "bg", "fg", "font", "mode", "cmd", "abovesep", "belowsep", "rowsep", "preto", "appto", "indent"),
-#   columns_keys = c("halign", "valign", "wd", "co", "bg", "fg", "font", "mode", "cmd", "leftsep", "rightsep", "colsep", "preto", "appto", "indent"),
-#   hborders_keys = c("pagebreak", "abovespace", "belowspace"),
-#   vborders_keys = c("leftspace", "rightspace"),
-#   cells_keys = c("halign", "valign", "wd", "bg", "fg", "font", "mode", "cmd", "preto", "appto"),
-#   outer_specs_keys = c("baseline", "long", "tall", "expand"),
-#   inner_specs_keys = c("rulesep", "hlines", "vline", "hline", "vlines", "stretch", "abovesep", "belowsep", "rowsep", "leftsep", "rightsep", "colsep", "hspan", "vspan", "baseline"),
-#   span = c("r", "c")
-# )
 
 
 get_dcolumn <- function(j, x) {
@@ -272,3 +283,16 @@ get_dcolumn <- function(j, x) {
     out <- sprintf("si={%s},", out)
     return(out)
 }
+
+
+## not longer used, but took a while to collect and might be useful in the future
+# out <- list(
+#   rows_keys = c("halign", "valign", "ht", "bg", "fg", "font", "mode", "cmd", "abovesep", "belowsep", "rowsep", "preto", "appto", "indent"),
+#   columns_keys = c("halign", "valign", "wd", "co", "bg", "fg", "font", "mode", "cmd", "leftsep", "rightsep", "colsep", "preto", "appto", "indent"),
+#   hborders_keys = c("pagebreak", "abovespace", "belowspace"),
+#   vborders_keys = c("leftspace", "rightspace"),
+#   cells_keys = c("halign", "valign", "wd", "bg", "fg", "font", "mode", "cmd", "preto", "appto"),
+#   outer_specs_keys = c("baseline", "long", "tall", "expand"),
+#   inner_specs_keys = c("rulesep", "hlines", "vline", "hline", "vlines", "stretch", "abovesep", "belowsep", "rowsep", "leftsep", "rightsep", "colsep", "hspan", "vspan", "baseline"),
+#   span = c("r", "c")
+# )
