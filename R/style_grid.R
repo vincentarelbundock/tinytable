@@ -1,6 +1,3 @@
-
-
-
 #' tinytable S4 method
 #' 
 #' @keywords internal
@@ -90,5 +87,5 @@ style_grid_internal <- function(x,
 setMethod(
           f = "style_eval",
           signature = "tinytable_grid",
-          definition = style_grid_internal
+          definition = identity
 )

@@ -53,7 +53,7 @@ group_tabularray_col <- function(x, j, ihead, ...) {
       j = z,
       align = "c",
       colspan = max(j[[k]]) - min(j[[k]]) + 1)
-    x <- do.call(style_eval, args)
+    x <- do.call(style_tt, args)
   }
 
   return(x)

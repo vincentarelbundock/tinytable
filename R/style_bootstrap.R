@@ -30,12 +30,6 @@ setMethod(
                         bootstrap_css_rule = NULL,
                         ...) {
 
-    return(x)
-  })
-
-
-
-style_apply_bootstrap <- function(x) {
 
   if (length(x@bootstrap_css_rule) == 1) {
     x@table_string <- bootstrap_setting(x@table_string, x@bootstrap_css_rule, component = "css")
@@ -150,6 +144,6 @@ style_apply_bootstrap <- function(x) {
   }
 
   return(x)
-}
+})
 
 

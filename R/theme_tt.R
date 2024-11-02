@@ -193,7 +193,7 @@ theme_bootstrap <- function(x, ...) {
             tab <- gsub("|", " ", tab, fixed = TRUE)
             table@table_string <- paste(tab, collapse = "\n")
         } else if (isTRUE(table@output == "typst")) {
-            table <- style_eval(table, i = 0:nrow(table), line = "bt", line_width = 0.05, line_color = "silver")
+            table <- style_tt(table, i = 0:nrow(table), line = "bt", line_width = 0.05, line_color = "silver")
         }
         return(table)
     }
@@ -257,14 +257,14 @@ theme_multipage <- function(x,
 
         table@table_string <- tab
 
-        table <- style_eval(table, tabularray_outer = cap)
+        table <- style_tt(table, tabularray_outer = cap)
 
         if (rowhead > 0) {
-            table <- style_eval(table, tabularray_inner = sprintf("rowhead=%s", rowhead))
+            table <- style_tt(table, tabularray_inner = sprintf("rowhead=%s", rowhead))
         }
 
         if (rowfoot > 0) {
-            table <- style_eval(table, tabularray_inner = sprintf("rowfoot=%s", rowfoot))
+            table <- style_tt(table, tabularray_inner = sprintf("rowfoot=%s", rowfoot))
         }
 
         return(table)

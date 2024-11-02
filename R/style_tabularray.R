@@ -24,11 +24,7 @@ setMethod(
                         tabularray_outer = NULL,
                         ...) {
 
-    return(x)
-  })
 
-
-style_apply_tabularray <- function(x) {
 
   sty <- x@style
   sty$i <- sty$i + x@nhead
@@ -113,14 +109,14 @@ style_apply_tabularray <- function(x) {
 
   }
 
-  clean <- function(x) {
-    x <- gsub("^\\s*,", "", x)
-    x <- gsub(",\\s*,", ",,", x)
-    x <- gsub("\\s+", " ", x)
-    x <- gsub(",+", ",", x)
-    x <- gsub("^[,|\\s]*", "", x, perl = TRUE)
-    x <- trimws(x)
-    return(x)
+  clean <- function(k) {
+    k <- gsub("^\\s*,", "", k)
+    k <- gsub(",\\s*,", ",,", k)
+    k <- gsub("\\s+", " ", k)
+    k <- gsub(",+", ",", k)
+    k <- gsub("^[,|\\s]*", "", k, perl = TRUE)
+    k <- trimws(k)
+    return(k)
   }
 
   rec$set <- clean(set)
@@ -186,7 +182,8 @@ style_apply_tabularray <- function(x) {
   }
 
   return(x)
-}
+
+})
 
 
 hlines_tabularray <- function(k) {

@@ -25,12 +25,8 @@ setMethod(
                         indent = 0,
                         midrule = FALSE, # undocumented, only used by `group_tt()`
                         ...) {
-    return(x)
-  })
 
 
-
-style_apply_typst <- function(x) {
     sty <- x@style
 
     # gutters are used for group_tt(j) but look ugly with cell fill
@@ -138,7 +134,7 @@ style_apply_typst <- function(x) {
     }
 
     return(x)
-}
+})
 
 
 split_chunks <- function(x) {

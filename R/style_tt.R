@@ -150,6 +150,17 @@ style_tt <- function (x,
 
     out <- x
 
+    assert_choice(alignv, c("t", "m", "b"), null.ok = TRUE)
+
+    assert_style_tt(
+        x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
+        color = color, background = background, fontsize = fontsize, align = align,
+        colspan = colspan, rowspan = rowspan, indent = indent,
+        line = line, line_color = line_color, line_width = line_width,
+        tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css,
+        bootstrap_css_rule = bootstrap_css_rule)
+
+
     if (!is.null(bootstrap_class)) {
         out@bootstrap_class <- bootstrap_class
     }
@@ -246,39 +257,6 @@ style_tt <- function (x,
     # This is a very bad idea. Breaks a ton of things. We need unique IDs.
     # out@id <- get_id("tinytable_")
 
-    cal <- call("style_tt_lazy",
-        # out <- style_tt_lazy(
-        # x should not be in here otherwise the object becomes very big
-        i = i,
-        j = j,
-        bold = bold,
-        italic = italic,
-        monospace = monospace,
-        underline = underline,
-        strikeout = strikeout,
-        color = color,
-        background = background,
-        fontsize = fontsize,
-        align = align,
-        alignv = alignv,
-        colspan = colspan,
-        rowspan = rowspan,
-        indent = indent,
-        line = line,
-        line_color = line_color,
-        line_width = line_width,
-        tabularray_inner = tabularray_inner,
-        tabularray_outer = tabularray_outer,
-        bootstrap_css = bootstrap_css,
-        bootstrap_css_rule = bootstrap_css_rule,
-        output = output)
-
-    if (isTRUE(list(...)[["tt_build_now"]])) {
-        out <- eval(cal)
-    } else {
-        out@lazy_style <- c(out@lazy_style, list(cal))
-    }
-
     assert_function(finalize, null.ok = TRUE)
     if (is.function(finalize)) {
         out@lazy_finalize <- c(out@lazy_finalize, list(finalize))
@@ -287,50 +265,6 @@ style_tt <- function (x,
     return(out)
 }
 
-
-
-style_tt_lazy <- function (x,
-                           i,
-                           j,
-                           bold,
-                           italic,
-                           monospace,
-                           underline,
-                           strikeout,
-                           color,
-                           background,
-                           fontsize,
-                           align,
-                           alignv,
-                           colspan,
-                           rowspan,
-                           indent,
-                           line,
-                           line_color,
-                           line_width,
-                           tabularray_inner,
-                           tabularray_outer,
-                           bootstrap_css,
-                           bootstrap_css_rule,
-                           output) {
-
-    out <- x
-
-    # alignv can only be a single character for now
-    assert_choice(alignv, c("t", "m", "b"), null.ok = TRUE)
-
-    assert_style_tt(
-        x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout,
-        color = color, background = background, fontsize = fontsize, align = align,
-        colspan = colspan, rowspan = rowspan, indent = indent,
-        line = line, line_color = line_color, line_width = line_width,
-        tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css,
-        bootstrap_css_rule = bootstrap_css_rule)
-
-    out <- style_eval(x = out, i = i, j = j, bold = bold, italic = italic, monospace = monospace, underline = underline, strikeout = strikeout, color = color, background = background, fontsize = fontsize, align = align, alignv = alignv, colspan = colspan, rowspan = rowspan, indent = indent, tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css, bootstrap_css_rule = bootstrap_css_rule, line = line, line_color = line_color, line_width = line_width)
-
-    return(out)
-}
 
 
 assert_style_tt <- function (x,

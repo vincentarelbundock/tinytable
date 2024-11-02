@@ -66,10 +66,7 @@ build_tt <- function(x, output = NULL) {
 
   # markdown styles need to be applied before creating the table, otherwise there's annoying parsing, etc.
   if (x@output %in% c("markdown", "gfm", "dataframe")) {
-    for (l in x@lazy_style) {
-      l[["x"]] <- x
-      x <- eval(l)
-    }
+        # TODO
   }
 
   # draw the table
@@ -86,18 +83,18 @@ build_tt <- function(x, output = NULL) {
     x <- eval(l)
   }
 
-  if (x@output == "typst") {
-    if (is.null(x@theme[[1]]) || is.function(x@theme[[1]]) || isTRUE(x@theme[[1]] %in% c("default", "striped"))) {
-      # reverse the order of the lines to allow overwriting defaults
-      x <- style_tt(x, i = nrow(x), line = "b", line_width = 0.1)
-      if (x@nhead > 0) {
-        x <- style_tt(x, i = -x@nhead + 1, line = "t", line_width = 0.1)
-        x <- style_tt(x, i = 1, line = "t", line_width = 0.05)
-      } else {
-        x <- style_tt(x, i = 1, line = "t", line_width = 0.1)
-      }
-    }
-  }
+  # if (x@output == "typst") {
+  #   if (is.null(x@theme[[1]]) || is.function(x@theme[[1]]) || isTRUE(x@theme[[1]] %in% c("default", "striped"))) {
+  #     # reverse the order of the lines to allow overwriting defaults
+  #     x <- style_tt(x, i = nrow(x), line = "b", line_width = 0.1)
+  #     if (x@nhead > 0) {
+  #       x <- style_tt(x, i = -x@nhead + 1, line = "t", line_width = 0.1)
+  #       x <- style_tt(x, i = 1, line = "t", line_width = 0.05)
+  #     } else {
+  #       x <- style_tt(x, i = 1, line = "t", line_width = 0.1)
+  #     }
+  #   }
+  # }
 
   if (!x@output %in% c("markdown", "gfm", "dataframe")) {
     for (l in x@lazy_style) {
@@ -109,13 +106,7 @@ build_tt <- function(x, output = NULL) {
     }
   }
 
-  if (x@output == "typst") {
-    x <- style_apply_typst(x)
-  } else if (x@output == "html") {
-    x <- style_apply_bootstrap(x)
-  } else if (x@output == "latex") {
-    x <- style_apply_tabularray(x)
-  }
+  x <- style_eval(x)  
 
   x <- finalize(x)
 
