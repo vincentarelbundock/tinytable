@@ -89,7 +89,6 @@ build_tt <- function(x, output = NULL) {
   if (x@output == "typst") {
     if (is.null(x@theme[[1]]) || is.function(x@theme[[1]]) || isTRUE(x@theme[[1]] %in% c("default", "striped"))) {
       # reverse the order of the lines to allow overwriting defaults
-      ls <- x@lazy_style 
       x <- style_tt(x, i = nrow(x), line = "b", line_width = 0.1)
       if (x@nhead > 0) {
         x <- style_tt(x, i = -x@nhead + 1, line = "t", line_width = 0.1)
