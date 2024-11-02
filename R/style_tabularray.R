@@ -74,7 +74,12 @@ style_apply_tabularray <- function(x) {
       cmd <- sprintf("%s, bg=%s", cmd, bg)
     }
 
-    if (cmd != "") set[idx] <- sprintf("%s, cmd=%s, ", set[idx], cmd)
+    if (grepl("^,", cmd)) {
+        tmp <- "%s, %s, "
+    } else {
+        tmp <- "%s, cmd=%s, "
+    }
+    if (trimws(cmd) != "") set[idx] <- sprintf(tmp, set[idx], cmd)
 
     fontsize <- sty$fontsize[row]
     if (is.na(is.numeric(fontsize))) {
@@ -113,6 +118,7 @@ style_apply_tabularray <- function(x) {
     x <- gsub(",\\s*,", ",,", x)
     x <- gsub("\\s+", " ", x)
     x <- gsub(",+", ",", x)
+    x <- gsub("^[,|\\s]*", "", x, perl = TRUE)
     x <- trimws(x)
     return(x)
   }
@@ -139,15 +145,13 @@ style_apply_tabularray <- function(x) {
         rj$set[1])
       x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
     } else {
-      for (rj_i in seq_len(nrow(rj))) {
-        if (rj$set[rj_i] != "") {
-          spec <- sprintf("cell{%s}{%s}={%s}{%s}", 
-            rj$i[rj_i], 
-            rj$j[rj_i], 
-            rj$span[rj_i],
-            rj$set[rj_i])
-          x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
-        }
+      if (rj$set[1] != "") {
+        spec <- sprintf("cell{%s}{%s}={%s}{%s}", 
+            paste(rj$i, collapse = ","),
+            rj$j[1], 
+            rj$span[1],
+            rj$set[1])
+        x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
       }
     }
   }
