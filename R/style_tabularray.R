@@ -163,7 +163,7 @@ setMethod(
 
   idx <- rec$span != "" | rec$set != ""
 
-  # complete columns
+  # complete columns (first because of d-column)
   cols <- unique(rec[idx & rec$complete_column, c("j", "set", "span"), drop = FALSE])
   spec <- by(cols, list(cols$set, cols$span), function(k) {
     sprintf("column{%s}={%s}{%s}", paste(k$j, collapse = ","), k$span, k$set)
@@ -174,7 +174,10 @@ setMethod(
   }
 
   # complete rows
-  rows <- unique(rec[idx & rec$complete_row, c("i", "set", "span"), drop = FALSE])
+  rows <- unique(rec[
+    idx & rec$complete_row & !rec$complete_column,
+    c("i", "set", "span"),
+    drop = FALSE])
   spec <- by(rows, list(rows$set, rows$span), function(k) {
     sprintf("row{%s}={%s}{%s}", paste(k$i, collapse = ","), k$span, k$set)
   })
