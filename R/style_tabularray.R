@@ -31,7 +31,10 @@ setMethod(
 
   rec <- expand.grid(
     i = c(seq_len(x@nrow + x@nhead)),
-    j = seq_len(x@ncol)
+    j = seq_len(x@ncol),
+    line = NA,
+    line_color = NA,
+    line_width = NA
   )
 
   sty$alignv[which(sty$alignv == "b")] <- "f"
@@ -131,7 +134,6 @@ setMethod(
     if (!is.na(sty$line_width[row])) {
       rec$line_width[idx] <- sty$line_width[row]
     }
-
   }
 
   clean <- function(k) {
@@ -148,95 +150,108 @@ setMethod(
 
   lin <- rec
 
-  rec <- rec[rec$set != "" | rec$span != "", , drop = FALSE]
-
   all_i <- seq_len(x@nrow + x@nhead)
   all_j <- seq_len(x@ncol)
 
+  # complete rows and columns
+  rec <- do.call(rbind, by(rec, list(rec$j, rec$set, rec$span), function(k) {
+    transform(k, complete_column = all(all_i %in% k$i))
+  }))
+  rec <- do.call(rbind, by(rec, list(rec$i, rec$set, rec$span), function(k) {
+    transform(k, complete_row = all(all_j %in% k$j))
+  }))
+
+  idx <- rec$span != "" | rec$set != ""
+
   # complete columns
-  if (nrow(rec) > 0) {
-    rec <- do.call(rbind, by(rec, list(rec$j, rec$set, rec$span), function(k) {
-      transform(k, complete_column = all(all_i %in% k$i))
-    }))
-    cols <- unique(rec[rec$complete_column, c("j", "set", "span")])
-    if (nrow(cols) > 0) {
-      cols <- do.call(rbind, by(cols, list(cols$set, cols$span), function(k) {
-        k <- transform(k, j = paste(unique(k$j), collapse = ","))
-        unique(k)
-      }))
-    }
-    spec <- sprintf("column{%s}={%s}{%s}", cols$j, cols$span, cols$set)
-    for (s in spec) {
-      x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
-    }
-    rec <- rec[!rec$complete_column, , drop = FALSE]
+  cols <- unique(rec[idx & rec$complete_column, c("j", "set", "span"), drop = FALSE])
+  spec <- by(cols, list(cols$set, cols$span), function(k) {
+    sprintf("column{%s}={%s}{%s}", paste(k$j, collapse = ","), k$span, k$set)
+  })
+  spec <- unique(as.vector(unlist(spec)))
+  for (s in spec) {
+    x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
   }
 
   # complete rows
-  if (nrow(rec) > 0) {
-    rec <- do.call(rbind, by(rec, list(rec$i, rec$set, rec$span), function(k) {
-      transform(k, complete_row = all(all_j %in% k$j))
-    }))
-    rows <- unique(rec[rec$complete_row, colnames(rec) != "j"])
-    rows <- do.call(rbind, by(rows, list(rows$set, rows$span), function(k) {
-      if (all(all_j %in% k$j)) {
-        jval <- "{}"
-      } else {
-        jval <- sprintf("{%s}", paste(sort(unique(k$j)), collapse = ","))
-      }
-      if (all(all_i %in% k$i)) {
-        ival <- "{}"
-      } else {
-        ival <- sprintf("{%s}", paste(sort(unique(k$i)), collapse = ","))
-      }
-      sprintf("row%s={%s}{%s}", ival, k$span, k$set)
-    }))
-    spec <- unique(as.vector(rows))
-    for (s in spec) {
-      x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
-    }
-    rec <- rec[!rec$complete_row,, drop = FALSE]
+  rows <- unique(rec[idx & rec$complete_row, c("i", "set", "span"), drop = FALSE])
+  spec <- by(rows, list(rows$set, rows$span), function(k) {
+    sprintf("row{%s}={%s}{%s}", paste(k$i, collapse = ","), k$span, k$set)
+  })
+  spec <- unique(as.vector(unlist(spec)))
+  for (s in spec) {
+    x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
   }
 
   # cells
-  if (nrow(rec) > 0) {
-    spec <- sprintf("cell{%s}{%s}={%s}{%s}", rec$i, rec$j, rec$span, rec$set)
-    for (s in spec) {
-      x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
-    }
+  cells <- unique(rec[idx & !rec$complete_row & !rec$complete_column, , drop = FALSE])
+  spec <- by(cells, list(cells$set, cells$span), function(k) {
+    ival <- paste(sort(unique(k$i)), collapse = ",")
+    sprintf("cell{%s}{%s}={%s}{%s}", ival, k$j, k$span, k$set)
+  })
+  spec <- unique(as.vector(unlist(spec)))
+  for (s in spec) {
+    x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
   }
 
   # lines
-  lin <- lin[!is.na(lin$line),, drop = FALSE]
-  lin$lin <- "solid, "
-  lin$lin <- ifelse(!is.na(lin$line_color), 
-      paste0(lin$lin, lin$line_color), lin$lin)
-  lin$lin <- ifelse(!is.na(lin$line_width), 
-      paste0(lin$lin, sprintf(", %sem", lin$line_width)), lin$lin)
+  rec$lin <- "solid, "
+  rec$lin <- ifelse(!is.na(rec$line_color), 
+      paste0(rec$lin, rec$line_color), rec$lin)
+  rec$lin <- ifelse(!is.na(rec$line_width), 
+      paste0(rec$lin, sprintf(", %sem", rec$line_width)), rec$lin)
+  rec$lin[is.na(rec$line)] <- NA
 
   # horizontal lines
-  tmp <- lin[grepl("t|b", lin$line),]
-
-  if (nrow(tmp) > 0) {
-    tmp <- do.call(rbind, by(tmp, list(tmp$i, tmp$lin), function(k) {
-      if (all(all_j %in% k$j)) {
-        jval <- ""
-      } else {
-        jval <- paste(sort(unique(k$j)), collapse = ",")
-      }
-      k <- transform(k, j = jval)
-      unique(k[, c("i", "j", "lin")])
-    }))
-    tmp <- by(tmp, list(tmp$j, tmp$lin), function(k) {
-      k$i <- paste(sort(unique(k$i)), collapse = ",")
-      k <- unique(k)
-      spec <- sprintf("hline{%s}={%s}{%s},", k$i, k$j, k$lin)
-    })
-    for (l in tmp) {
-      l <- sub("{}", "", l, fixed = TRUE)
-      x@table_string <- tabularray_insert(x@table_string, l, type = "inner")
-    }
+  horizontal <- rec[grepl("b|t", rec$line), c("i", "j", "lin", "line"), drop = FALSE]
+  horizontal <- rbind(
+    horizontal[grepl("t", horizontal$line),, drop = FALSE],
+    transform(horizontal[grepl("b", horizontal$line),, drop = FALSE], i = i + 1)
+  )
+  spec <- by(horizontal, list(horizontal$i, horizontal$lin), function(k) {
+    jval <- paste(sort(unique(k$j)), collapse = ",")
+    sprintf("hline{%s}={%s}{%s}", k$i, jval, k$lin)
+  })
+  spec <- unique(as.vector(unlist(spec)))
+  for (s in spec) {
+    x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
   }
+
+  # vertical lines
+  vertical <- rec[grepl("l|r", rec$line), c("i", "j", "lin", "line"), drop = FALSE]
+  vertical <- rbind(
+    vertical[grepl("l", vertical$line),, drop = FALSE],
+    transform(vertical[grepl("r", vertical$line),, drop = FALSE], j = j + 1)
+  )
+  spec <- by(vertical, list(vertical$j, vertical$lin), function(k) {
+    ival <- paste(sort(unique(k$i)), collapse = ",")
+    sprintf("vline{%s}={%s}{%s}", k$j, ival, k$lin)
+  })
+  spec <- unique(as.vector(unlist(spec)))
+  for (s in spec) {
+    x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
+  }
+
+  # if (nrow(tmp) > 0) {
+  #   tmp <- do.call(rbind, by(tmp, list(tmp$i, tmp$lin), function(k) {
+  #     if (all(all_j %in% k$j)) {
+  #       jval <- ""
+  #     } else {
+  #       jval <- paste(sort(unique(k$j)), collapse = ",")
+  #     }
+  #     k <- transform(k, j = jval)
+  #     unique(k[, c("i", "j", "lin")])
+  #   }))
+  #   tmp <- by(tmp, list(tmp$j, tmp$lin), function(k) {
+  #     k$i <- paste(sort(unique(k$i)), collapse = ",")
+  #     k <- unique(k)
+  #     spec <- sprintf("hline{%s}={%s}{%s},", k$i, k$j, k$lin)
+  #   })
+  #   for (l in tmp) {
+  #     l <- sub("{}", "", l, fixed = TRUE)
+  #     x@table_string <- tabularray_insert(x@table_string, l, type = "inner")
+  #   }
+  # }
 
   # by(tmp, list(tmp$lin), function(k) {
   #   # 
