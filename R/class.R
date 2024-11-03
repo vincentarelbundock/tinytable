@@ -85,7 +85,7 @@ setMethod("initialize", "tinytable", function(
   .Object@portable <- FALSE
   .Object@style <- data.frame()
   .Object@group_tt_i <- FALSE
-  .Object@lazy_theme <- list(list(identity, list()))
+  .Object@lazy_theme <- list()
   # conditional: allows NULL user input
   if (!is.null(placement)) .Object@placement <- placement
   if (!is.null(caption)) .Object@caption <- caption

@@ -68,9 +68,6 @@ tt <- function(x,
 
 
   dots <- list(...)
-  if ("placement" %in% names(dots)) {
-    warning("The `placement` argument in `tt()` is deprecated. Please use this instead: `theme_tt(table, 'placement')`", call. = FALSE)
-  }
 
   # sanity checks
   assert_string(caption, null.ok = TRUE)
@@ -134,6 +131,7 @@ tt <- function(x,
 
   if (is.null(theme)) {
     out <- theme_tt(out, theme = "default")
+    out <- theme_tt(out, theme = "placement")
   } else {
     out <- theme_tt(out, theme = theme)
   }

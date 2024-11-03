@@ -1,5 +1,5 @@
 theme_default <- function(x, ...) {
-    if (isTRUE(x@output == "html")) {
+    if (isTRUE(x@output %in% c("html", "typst"))) {
       x <- style_tt(x, 
           bootstrap_class = "table table-borderless",
           i = nrow(x), 
@@ -13,7 +13,6 @@ theme_default <- function(x, ...) {
           line_color = "#d3d8dc", 
           line_width = 0.1)
     }
-    x <- theme_tt(x, "placement")
     return(x)
 }
 
@@ -109,7 +108,6 @@ theme_resize <- function(x,
     }
 
     x <- style_tt(x, finalize = fn)
-    x <- theme_tt(x, "placement")
     return(x)
 }
 
@@ -139,7 +137,6 @@ theme_void <- function(x, ...) {
     }
     x <- style_tt(x, finalize = fn,
                   bootstrap_class = "table table-borderless")
-    x <- theme_tt(x, "placement")
     return(x)
 }
 
@@ -163,7 +160,6 @@ theme_grid <- function(x, ...) {
     }
     x <- style_tt(x, tabularray_inner = "hlines, vlines,", finalize = fn,
         bootstrap_class = "table table-bordered")
-    x <- theme_tt(x, "placement")
     return(x)
 }
 

@@ -158,6 +158,7 @@ hlines <- function(k) {
     ymax <- k$i[1] + 1
     line <- k$line[1]
     color <- if (is.na(k$line_color[1])) "black" else k$line_color[1]
+    if (grepl("^#", color)) color <- sprintf('rgb("%s")', color)
     width <- if (is.na(k$line_width[1])) 0.1 else k$line_width[1]
     width <- sprintf("%sem", width)
     out <- ""
