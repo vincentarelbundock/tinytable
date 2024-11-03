@@ -38,6 +38,14 @@ setMethod(
   sty$alignv[which(sty$alignv == "t")] <- "h"
   sty$alignv[which(sty$alignv == "m")] <- "m"
 
+  for (spec in stats::na.omit(sty$tabularray_inner)) {
+    x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
+  }
+
+  for (spec in stats::na.omit(sty$tabularray_outer)) {
+    x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
+  }
+
   set <- span <- rep("", nrow(rec))
 
   for (row in seq_len(nrow(sty))) {
@@ -115,11 +123,10 @@ setMethod(
   }
 
   clean <- function(k) {
-    k <- gsub("^\\s*,", "", k)
-    k <- gsub(",\\s*,", ",,", k)
-    k <- gsub("\\s+", " ", k)
+    k <- gsub("\\s*", "", k)
     k <- gsub(",+", ",", k)
-    k <- gsub("^[,|\\s]*", "", k, perl = TRUE)
+    k <- gsub("^,", "", k, perl = TRUE)
+    k <- gsub(",", ", ", k)
     k <- trimws(k)
     return(k)
   }
@@ -131,6 +138,7 @@ setMethod(
 
   # complete columns
   all_i <- seq_len(x@nrow + x@nhead)
+        browser()
   rec <- do.call(rbind, by(rec, list(rec$j, rec$set, rec$span), function(k) {
     transform(k, complete_column = all(all_i %in% k$i))
   }))
@@ -139,32 +147,32 @@ setMethod(
   for (s in spec) {
     x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
   }
-  rec <- rec[!rec$complete_column,, drop = FALSE]
+  rec <- rec[!rec$complete_column, , drop = FALSE]
 
   # complete rows
-  all_j <- seq_len(x@ncol)
-  rec <- do.call(rbind, by(rec, list(rec$i, rec$set, rec$span), function(k) {
-    transform(k, complete_row = all(all_j %in% k$j))
-  }))
-  rows <- unique(rec[rec$complete_row, colnames(rec) != "j"])
-  spec <- sprintf("row{%s}={%s}{%s}", rows$i, rows$span, rows$set)
-  for (s in spec) {
-    x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
+  if (nrow(rec) > 0) {
+    all_j <- seq_len(x@ncol)
+    rec <- do.call(rbind, by(rec, list(rec$i, rec$set, rec$span), function(k) {
+      transform(k, complete_row = all(all_j %in% k$j))
+    }))
+    rows <- unique(rec[rec$complete_row, colnames(rec) != "j"])
+    spec <- sprintf("row{%s}={%s}{%s}", rows$i, rows$span, rows$set)
+    for (s in spec) {
+      x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
+    }
+    rec <- rec[!rec$complete_row,, drop = FALSE]
   }
-  rec <- rec[!rec$complete_row,, drop = FALSE]
 
   # cells
-  spec <- sprintf("cell{%s}{%s}={%s}{%s}", rec$i, rec$j, rec$span, rec$set)
-  for (s in spec) {
-    x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
+  if (nrow(rec) > 0) {
+    spec <- sprintf("cell{%s}{%s}={%s}{%s}", rec$i, rec$j, rec$span, rec$set)
+    for (s in spec) {
+      x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
+    }
   }
 
-  for (spec in stats::na.omit(sty$tabularray_inner)) {
-    x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
-  }
-  for (spec in stats::na.omit(sty$tabularray_outer)) {
-    x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
-  }
+  # horizontal lines
+
 
   return(x)
 
