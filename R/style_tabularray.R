@@ -78,7 +78,7 @@ setMethod(
     if (trimws(cmd) != "") set[idx] <- sprintf(tmp, set[idx], cmd)
 
     fontsize <- sty$fontsize[row]
-    if (is.na(is.numeric(fontsize))) {
+    if (!is.na(as.numeric(fontsize))) {
       set[idx] <- sprintf(
         "%s font=\\fontsize{%sem}{%sem}\\selectfont,", 
         set[idx], fontsize, fontsize + 0.3) 
@@ -92,6 +92,11 @@ setMethod(
             dcol <- get_dcolumn(rec[row, "j"], x)
             set[idx] <- sprintf("%s, %s", set[idx], dcol)
         }
+    }
+
+    alignv <- sty$alignv[row]
+    if (!is.na(alignv)) {
+      set[idx] <- sprintf("%s, valign=%s,", set[idx], alignv)
     }
 
     indent <- sty$indent[row] 
@@ -122,7 +127,7 @@ setMethod(
   rec$set <- clean(set)
   rec$span <- clean(span)
 
-  rec <- rec[rec$set != "", , drop = FALSE]
+  rec <- rec[rec$set != "" | rec$span != "", , drop = FALSE]
 
   recj <- split(rec, rec$j)
   for (rj in recj) {
@@ -141,7 +146,7 @@ setMethod(
         rj$set[1])
       x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
     } else {
-      if (rj$set[1] != "") {
+      if (rj$set[1] != "" | rj$span[1] != "") {
         spec <- sprintf("cell{%s}{%s}={%s}{%s}", 
             paste(rj$i, collapse = ","),
             rj$j[1], 

@@ -407,7 +407,8 @@ theme_tt <- function(x, theme, ...) {
     na <- unique(sort(names(td)))
     assert_choice(theme, na)
     fn <- td[[theme]]
-    out <- fn(x, ...)
-    return(out)
+    out <- list(list(fn, list(...)))
+    x@lazy_theme <- c(x@lazy_theme, out)
+    return(x)
 }
 

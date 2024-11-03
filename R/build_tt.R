@@ -17,6 +17,10 @@ build_tt <- function(x, output = NULL) {
 
   x@output <- output
 
+  # for (th in x@lazy_theme) {
+  #   x <- do.call(th[[1]], th[2])
+  # }
+
   # groups must increment indices here
   for (idx in seq_along(x@lazy_group)) {
     l <- x@lazy_group[[idx]]
