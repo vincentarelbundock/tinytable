@@ -10,7 +10,7 @@ tt(
   caption = get_option("tinytable_tt_caption", default = NULL),
   notes = get_option("tinytable_tt_notes", default = NULL),
   width = get_option("tinytable_tt_width", default = NULL),
-  theme = get_option("tinytable_tt_theme", default = NULL),
+  theme = get_option("tinytable_tt_theme", default = c("default", "placement")),
   rownames = get_option("tinytable_tt_rownames", default = FALSE),
   escape = get_option("tinytable_tt_escape", default = FALSE),
   ...

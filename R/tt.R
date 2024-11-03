@@ -61,7 +61,7 @@ tt <- function(x,
                caption = get_option("tinytable_tt_caption", default = NULL),
                notes = get_option("tinytable_tt_notes", default = NULL),
                width = get_option("tinytable_tt_width", default = NULL),
-               theme = get_option("tinytable_tt_theme", default = NULL),
+               theme = get_option("tinytable_tt_theme", default = c("default", "placement")),
                rownames = get_option("tinytable_tt_rownames", default = FALSE),
                escape = get_option("tinytable_tt_escape", default = FALSE),
                ...) {
@@ -133,7 +133,16 @@ tt <- function(x,
     out <- theme_tt(out, theme = "default")
     out <- theme_tt(out, theme = "placement")
   } else {
-    out <- theme_tt(out, theme = theme)
+    if (is.character(theme)) {
+      for (th in theme) {
+        out <- theme_tt(out, theme = th)
+      }
+    } else if (is.function(theme)) {
+      out <- theme_tt(out, theme = theme)
+    } else {
+      stop("The `theme` argument must be a string or function.")
+    }
+
   }
 
   if ("placement" %in% names(dots)) {

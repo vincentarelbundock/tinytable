@@ -30,22 +30,22 @@ x <- mtcars[1:4, 1:5]
 To begin, let's explore a few of the basic looks supplied by themes:
 
 ```{r}
-tt(x, theme = "striped")
+tt(x, theme = c("striped", "placement"))
 
 tt(x) |> theme_tt("striped")
 ```
 
 ```{r}
-tt(x, theme = "grid")
+tt(x, theme = c("grid", "placement"))
 ```
 
 ```{r}
-tt(x, theme = "bootstrap")
+tt(x, theme = c("bootstrap", "placement"))
 ```
 
 ::: {.content-visible when-format="pdf"}
 ```{r}
-tt(x, theme = "void")
+tt(x, theme = c("void", "placement"))
 ```
 :::
 
@@ -57,8 +57,7 @@ Users can also define their own themes to apply consistent visual tweaks to tabl
 ```{r}
 theme_vincent <- function(x, ...) {
   out <- x |> 
-    style_tt(color = "teal") |>
-    theme_tt("placement")
+    style_tt(color = "teal")
   out@caption <- "Always use the same caption."
   out@width <- .5
   return(out)

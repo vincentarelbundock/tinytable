@@ -1,0 +1,17 @@
+theme_bootstrap <- function(x, ...) {
+    fn <- function(table) {
+        if (isTRUE(table@output == "markdown")) {
+            tab <- table@table_string
+            tab <- strsplit(tab, "\n")[[1]]
+            tab <- tab[!grepl("^[\\+|-]+$", tab)]
+            tab <- gsub("|", " ", tab, fixed = TRUE)
+            table@table_string <- paste(tab, collapse = "\n")
+        } else if (isTRUE(table@output == "typst")) {
+            table <- style_tt(table, i = 0:nrow(table), line = "bt", line_width = 0.05, line_color = "silver")
+        }
+        return(table)
+    }
+    x <- theme_tt(x, theme = "void") # only affects LaTeX
+    x <- style_tt(x, tabularray_inner = "hlines={gray8},", finalize = fn)
+    return(x)
+}
