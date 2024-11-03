@@ -61,7 +61,7 @@ tt <- function(x,
                caption = get_option("tinytable_tt_caption", default = NULL),
                notes = get_option("tinytable_tt_notes", default = NULL),
                width = get_option("tinytable_tt_width", default = NULL),
-               theme = get_option("tinytable_tt_theme", default = c("default", "placement")),
+               theme = get_option("tinytable_tt_theme", default = "default"),
                rownames = get_option("tinytable_tt_rownames", default = FALSE),
                escape = get_option("tinytable_tt_escape", default = FALSE),
                ...) {
@@ -73,6 +73,10 @@ tt <- function(x,
   assert_string(caption, null.ok = TRUE)
   assert_integerish(digits, len = 1, null.ok = TRUE)
   notes <- sanitize_notes(notes)
+
+  if (!isTRUE(check_function(theme)) && !isTRUE(check_string(theme))) {
+    stop("The `theme` argument must be a function or a string.", call. = FALSE)
+  }
 
   # x should be a data frame, not a tibble or slopes, for indexing convenience
   assert_data_frame(x, min_rows = 1, min_cols = 1)
@@ -131,18 +135,8 @@ tt <- function(x,
 
   if (is.null(theme)) {
     out <- theme_tt(out, theme = "default")
-    out <- theme_tt(out, theme = "placement")
   } else {
-    if (is.character(theme)) {
-      for (th in theme) {
-        out <- theme_tt(out, theme = th)
-      }
-    } else if (is.function(theme)) {
-      out <- theme_tt(out, theme = theme)
-    } else {
-      stop("The `theme` argument must be a string or function.")
-    }
-
+    out <- theme_tt(out, theme = theme)
   }
 
   if ("placement" %in% names(dots)) {

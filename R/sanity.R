@@ -174,6 +174,23 @@ assert_flag <- function(x, null.ok = FALSE, name = as.character(substitute(x))) 
     }
 }
 
+check_function <- function(x, null.ok = FALSE) {
+    if (is.null(x) && isTRUE(null.ok)) {
+        return(TRUE)
+    }
+    if (is.function(x)) {
+        return(TRUE)
+    }
+    return(FALSE)
+}
+
+assert_function <- function(x, null.ok = FALSE, name = as.character(substitute(x))) {
+    msg <- sprintf("`%s` must be a function.", name)
+    if (!isTRUE(check_function(x, null.ok = null.ok))) {
+        stop(msg, call. = FALSE)
+    }
+}
+
 assert_length <- function(x, len = 1, null.ok = FALSE, name = as.character(substitute(x))) {
     if (is.null(x) && isTRUE(null.ok)) {
         return(invisible(TRUE))

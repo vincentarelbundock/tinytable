@@ -1,11 +1,7 @@
 theme_grid <- function(x, ...) {
     fn <- function(table) {
         if (isTRUE(table@output == "latex")) {
-            s <- table@table_string
-            s <- lines_drop(s, regex = "\\\\bottomrule", position = "equal")
-            s <- lines_drop(s, regex = "\\\\midrule", position = "equal")
-            s <- lines_drop(s, regex = "\\\\toprule", position = "equal")
-            table@table_string <- s
+            table <- theme_void_fn(table)
         } else if (isTRUE(table@output == "typst")) {
             table@table_string <- sub(
                 "stroke: none,",
