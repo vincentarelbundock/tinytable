@@ -120,6 +120,18 @@ setMethod(
       span[idx] <- paste0(span[idx], "r=", sty$rowspan[row], ",")
     }
 
+    if (!is.na(sty$line[row])) {
+      rec$line[idx] <- sty$line[row]
+    }
+
+    if (!is.na(sty$line_color[row])) {
+      rec$line_color[idx] <- sty$line_color[row]
+    }
+
+    if (!is.na(sty$line_width[row])) {
+      rec$line_width[idx] <- sty$line_width[row]
+    }
+
   }
 
   clean <- function(k) {
@@ -134,29 +146,52 @@ setMethod(
   rec$set <- clean(set)
   rec$span <- clean(span)
 
+  lin <- rec
+
   rec <- rec[rec$set != "" | rec$span != "", , drop = FALSE]
 
-  # complete columns
   all_i <- seq_len(x@nrow + x@nhead)
-        browser()
-  rec <- do.call(rbind, by(rec, list(rec$j, rec$set, rec$span), function(k) {
-    transform(k, complete_column = all(all_i %in% k$i))
-  }))
-  cols <- unique(rec[rec$complete_column, colnames(rec) != "i"])
-  spec <- sprintf("column{%s}={%s}{%s}", cols$j, cols$span, cols$set)
-  for (s in spec) {
-    x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
+  all_j <- seq_len(x@ncol)
+
+  # complete columns
+  if (nrow(rec) > 0) {
+    rec <- do.call(rbind, by(rec, list(rec$j, rec$set, rec$span), function(k) {
+      transform(k, complete_column = all(all_i %in% k$i))
+    }))
+    cols <- unique(rec[rec$complete_column, c("j", "set", "span")])
+    if (nrow(cols) > 0) {
+      cols <- do.call(rbind, by(cols, list(cols$set, cols$span), function(k) {
+        k <- transform(k, j = paste(unique(k$j), collapse = ","))
+        unique(k)
+      }))
+    }
+    spec <- sprintf("column{%s}={%s}{%s}", cols$j, cols$span, cols$set)
+    for (s in spec) {
+      x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
+    }
+    rec <- rec[!rec$complete_column, , drop = FALSE]
   }
-  rec <- rec[!rec$complete_column, , drop = FALSE]
 
   # complete rows
   if (nrow(rec) > 0) {
-    all_j <- seq_len(x@ncol)
     rec <- do.call(rbind, by(rec, list(rec$i, rec$set, rec$span), function(k) {
       transform(k, complete_row = all(all_j %in% k$j))
     }))
     rows <- unique(rec[rec$complete_row, colnames(rec) != "j"])
-    spec <- sprintf("row{%s}={%s}{%s}", rows$i, rows$span, rows$set)
+    rows <- do.call(rbind, by(rows, list(rows$set, rows$span), function(k) {
+      if (all(all_j %in% k$j)) {
+        jval <- "{}"
+      } else {
+        jval <- sprintf("{%s}", paste(sort(unique(k$j)), collapse = ","))
+      }
+      if (all(all_i %in% k$i)) {
+        ival <- "{}"
+      } else {
+        ival <- sprintf("{%s}", paste(sort(unique(k$i)), collapse = ","))
+      }
+      sprintf("row%s={%s}{%s}", ival, k$span, k$set)
+    }))
+    spec <- unique(as.vector(rows))
     for (s in spec) {
       x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
     }
@@ -171,8 +206,63 @@ setMethod(
     }
   }
 
-  # horizontal lines
+  # lines
+  lin <- lin[!is.na(lin$line),, drop = FALSE]
+  lin$lin <- "solid, "
+  lin$lin <- ifelse(!is.na(lin$line_color), 
+      paste0(lin$lin, lin$line_color), lin$lin)
+  lin$lin <- ifelse(!is.na(lin$line_width), 
+      paste0(lin$lin, sprintf(", %sem", lin$line_width)), lin$lin)
 
+  # horizontal lines
+  tmp <- lin[grepl("t|b", lin$line),]
+
+  if (nrow(tmp) > 0) {
+    tmp <- do.call(rbind, by(tmp, list(tmp$i, tmp$lin), function(k) {
+      if (all(all_j %in% k$j)) {
+        jval <- ""
+      } else {
+        jval <- paste(sort(unique(k$j)), collapse = ",")
+      }
+      k <- transform(k, j = jval)
+      unique(k[, c("i", "j", "lin")])
+    }))
+    tmp <- by(tmp, list(tmp$j, tmp$lin), function(k) {
+      k$i <- paste(sort(unique(k$i)), collapse = ",")
+      k <- unique(k)
+      spec <- sprintf("hline{%s}={%s}{%s},", k$i, k$j, k$lin)
+    })
+    for (l in tmp) {
+      l <- sub("{}", "", l, fixed = TRUE)
+      x@table_string <- tabularray_insert(x@table_string, l, type = "inner")
+    }
+  }
+
+  # by(tmp, list(tmp$lin), function(k) {
+  #   # 
+  #   flag <- all(all_j %in% k$j) && nrow(k) == length(all_j) * length(unique(k$i))
+  #
+  #   if () {
+  #     k <- unique(k[, colnames(k) != "j"])
+  #     ival <- paste(
+  #     spec <- sprintf(
+  #       "hline{%s}={}{solid, %sem, %s},",
+  #       ival,
+  #       jval,
+  #       width,
+  #       sub("^#", "c", color))
+  # })
+  #
+  # if (nrow(tmp) > 0) {
+  #
+  #     spec <- sprintf("top={%s}", tmp$lin[1])
+  #
+  #
+  #     } else {
+  #       ival <- sprintf("{%s}", paste(unique(tmp$i), collapse = ","))
+  #     }
+  #   }
+  #
 
   return(x)
 
