@@ -129,7 +129,7 @@ setMethod(
 
   rec <- rec[rec$set != "" | rec$span != "", , drop = FALSE]
 
-  recj <- split(rec, rec$j)
+  recj <- split(rec, list(rec$j, rec$set, rec$span))
   for (rj in recj) {
     all_i <- seq_len(x@nrow + x@nhead)
 
