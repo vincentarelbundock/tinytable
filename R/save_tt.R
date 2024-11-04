@@ -24,7 +24,7 @@
 #'
 save_tt <- function(x,
                     output, 
-                    overwrite = get_option("tinytable_print_output", default = FALSE)) {
+                    overwrite = get_option("tinytable_save_overwrite", default = FALSE)) {
   assert_class(x, "tinytable")
   assert_string(output)
   assert_flag(overwrite)
