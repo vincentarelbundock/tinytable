@@ -69,9 +69,8 @@ block[ // start block
         }
       }
     },
- table.hline(y: 4, start: 0, end: 5, stroke: 0.05em + black),
- table.hline(y: 7, start: 0, end: 5, stroke: 0.1em + black),
- table.hline(y: 0, start: 0, end: 5, stroke: 0.1em + black),
+ table.hline(y: 7, start: 0, end: 5, stroke: 0.1em + rgb("#d3d8dc")),
+ table.hline(y: 3, start: 0, end: 5, stroke: 0.1em + rgb("#d3d8dc")), table.hline(y: 4, start: 0, end: 5, stroke: 0.1em + rgb("#d3d8dc")),
     // tinytable lines before
 
     table.header(
