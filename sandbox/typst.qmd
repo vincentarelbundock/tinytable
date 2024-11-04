@@ -12,6 +12,14 @@ options(tinytable_print_output = "typst")
 ```
 
 ```{r}
+dat <- data.frame(
+  a = c("a", "aa", "aaa"),
+  b = c("b", "bb", "bbb"),
+  c = c("c", "cc", "ccc"))
+tt(dat) |> style_tt(j = 1:3, align = "lcr")
+```
+
+```{r}
 # Semi-complicated
 tab <- tt(mtcars[1:4, 1:5], caption = "Hello World") |>
   group_tt(j = list("Group 1" = 4:5, "Group 2" = 2:3)) |>

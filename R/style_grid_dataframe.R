@@ -3,7 +3,7 @@
 #' @keywords internal
 setMethod(f = "style_eval",
           signature = "tinytable_dataframe",
-          definition = identity
+          definition = style_eval_grid
 )
 
 

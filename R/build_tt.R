@@ -73,7 +73,7 @@ build_tt <- function(x, output = NULL) {
 
   # markdown styles need to be applied before creating the table, otherwise there's annoying parsing, etc.
   if (x@output %in% c("markdown", "gfm", "dataframe")) {
-        # TODO
+    x <- style_eval(x)
   }
 
   # draw the table
