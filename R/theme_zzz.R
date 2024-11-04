@@ -1,14 +1,15 @@
 theme_dictionary <- list(
     "default" = theme_default,
+    "bootstrap" = theme_bootstrap,
     "grid" = theme_grid,
-    "resize" = theme_resize,
     "multipage" = theme_multipage,
     "placement" = theme_placement,
+    "resize" = theme_resize,
     "rotate" = theme_rotate,
+    "spacing" = theme_spacing,
     "striped" = theme_striped,
-    "void" = theme_void,
-    "bootstrap" = theme_bootstrap,
-    "tabular" = theme_tabular
+    "tabular" = theme_tabular,
+    "void" = theme_void
 )
 
 
