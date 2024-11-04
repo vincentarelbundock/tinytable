@@ -7,7 +7,7 @@
 save_tt(
   x,
   output,
-  overwrite = get_option("tinytable_print_output", default = FALSE)
+  overwrite = get_option("tinytable_save_overwrite", default = FALSE)
 )
 }
 \arguments{
