@@ -89,6 +89,11 @@ When rendering a document from Quarto or Rmarkdown directly to PDF, \code{tinyta
 
 \section{Global options}{
 
+
+Many global options can be used to set the default argument values of \code{tinytable} functions.
+For a full list, see:
+
+https://vincentarelbundock.github.io/tinytable/vignettes/options.html
 \subsection{Quarto}{
 \subsection{Figure environment}{
 \itemize{
@@ -120,15 +125,27 @@ See this link for more details: https://quarto.org/docs/authoring/tables.html#di
 
 \subsection{HTML}{
 \itemize{
-\item \code{options(tinytable_html_mathjax = TRUE)}: insert MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.
-\item \code{options(tinytable_html_portable = TRUE)}: \code{plot_tt()} inserts base 64 encoded images directly in the HTML file rather than use external links.
+\item \code{options(tinytable_html_mathjax = TRUE)}
+\itemize{
+\item insert MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.
+}
+\item \code{options(tinytable_html_portable = TRUE)}
+\itemize{
+\item \code{plot_tt()} inserts base 64 encoded images directly in the HTML file rather than use external links.
+}
 }
 }
 
 \subsection{PDF}{
 \itemize{
-\item \code{options(tinytable_pdf_clean = TRUE)} deletes temporary and log files.
-\item \code{options(tinytable_pdf_engine = "xelatex")}: "xelatex", "pdflatex", "lualatex"
+\item \code{options(tinytable_pdf_clean = TRUE)}
+\itemize{
+\item deletes temporary and log files.
+}
+\item \code{options(tinytable_pdf_engine = "xelatex")}
+\itemize{
+\item "xelatex", "pdflatex", "lualatex"
+}
 }
 }
 }

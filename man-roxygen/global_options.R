@@ -1,6 +1,11 @@
 #'
 #' @section Global options:
 #'
+#' Many global options can be used to set the default argument values of `tinytable` functions.
+#' For a full list, see:
+#'
+#' https://vincentarelbundock.github.io/tinytable/vignettes/options.html
+#'
 #' ## Quarto
 #' 
 #' ### Figure environment
@@ -28,12 +33,16 @@
 #'
 #' ## HTML
 #'
-#' * `options(tinytable_html_mathjax = TRUE)`: insert MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.
-#' * `options(tinytable_html_portable = TRUE)`: `plot_tt()` inserts base 64 encoded images directly in the HTML file rather than use external links.
+#' * `options(tinytable_html_mathjax = TRUE)`
+#'   - insert MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.
+#' * `options(tinytable_html_portable = TRUE)`
+#'   - `plot_tt()` inserts base 64 encoded images directly in the HTML file rather than use external links.
 #'
 #' ## PDF
 #'
-#' * `options(tinytable_pdf_clean = TRUE)` deletes temporary and log files.
-#' * `options(tinytable_pdf_engine = "xelatex")`: "xelatex", "pdflatex", "lualatex"
+#' * `options(tinytable_pdf_clean = TRUE)`
+#'   - deletes temporary and log files.
+#' * `options(tinytable_pdf_engine = "xelatex")`
+#'   - "xelatex", "pdflatex", "lualatex"
 #'
 #'

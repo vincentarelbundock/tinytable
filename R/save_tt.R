@@ -22,7 +22,9 @@
 #' filename <- file.path(tempdir(), "table.tex")
 #' tt(mtcars[1:4, 1:4]) |> save_tt(filename)
 #'
-save_tt <- function(x, output, overwrite = FALSE) {
+save_tt <- function(x,
+                    output, 
+                    overwrite = get_option("tinytable_print_output", default = FALSE)) {
   assert_class(x, "tinytable")
   assert_string(output)
   assert_flag(overwrite)

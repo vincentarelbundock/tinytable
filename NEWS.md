@@ -7,6 +7,7 @@ Misc:
 
 * Major refactor of the style internals. HTML, LaTeX, and Typst documents should be much more concise and efficient.
 * `style_tt()`: the `i` and `j` indices are now consistent in all formats. They refer to rows *after* the insertion of  row groups.
+* `save_tt()` respects `options(tinytable_save_overwrite=TRUE)`
 
 Bugs:
 
