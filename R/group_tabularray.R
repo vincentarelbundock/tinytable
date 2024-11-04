@@ -20,8 +20,8 @@ group_tabularray_col <- function(x, j, ihead, ...) {
   out <- strsplit(x@table_string, split = "\\n")[[1]]
 
   header <- rep("", ncol(x))
-  for (n in names(j)) {
-    header[min(j[[n]])] <- n
+  for (idx in seq_along(j)) {
+    header[min(j[[idx]])] <- names(j)[idx]
   }
   header <- paste(header, collapse = " & ")
 

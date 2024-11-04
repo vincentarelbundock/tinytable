@@ -29,6 +29,7 @@ tab <- tt(x) |>
     group_tt(j = list("a" = 2:3, "b" = 4:5)) |>
     group_tt(j = list("c" = 1:2, "d" = 3:5)) |>
     group_tt(j = list("e" = 1:3, "f" = 4))
+tab@output <- "latex"
 expect_snapshot_print(tab, label = "group_tt-3level.tex")
 options(tinytable_print_output = NULL)
 
@@ -103,3 +104,12 @@ for (o in c("latex", "typst", "markdown", "html")) {
 
     options(tinytable_print_output = NULL)
 }
+
+
+# Issue #362: group_tt with duplicate column group labels in latex
+tab <- data.frame(sub1 = 1, sub2 = 2, sub1 = 3, sub2 = 4, check.names = FALSE) |>
+    tt() |>
+    group_tt(j = list(a = 1:2, a = 3:4))
+tab@output <- "latex"
+expect_snapshot_print(tab, "group_tt-issue362_duplicate_colum_labels.tex")
+
