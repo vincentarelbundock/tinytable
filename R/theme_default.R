@@ -6,14 +6,15 @@ theme_default <- function(x, ...) {
   x <- style_tt(x, finalize = fn)
 
   if (isTRUE(x@output %in% c("html", "typst"))) {
+    bc <- if (length(x@bootstrap_class) == 0) "table table-borderless" else x@bootstrap_class
     x <- style_tt(x, 
-      bootstrap_class = "table table-borderless",
+      bootstrap_class = bc,
       i = nrow(x), 
       line = "b", 
       line_color = "#d3d8dc", 
       line_width = 0.1)
     x <- style_tt(x, 
-      bootstrap_class = "table table-borderless",
+      bootstrap_class = bc,
       i = 0, 
       line = "bt", 
       line_color = "#d3d8dc", 

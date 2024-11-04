@@ -37,6 +37,7 @@ setMethod(
 
   sty <- x@style
 
+
   sty$alignv[which(sty$alignv == "t")] <- "top"
   sty$alignv[which(sty$alignv == "b")] <- "bottom"
   sty$alignv[which(sty$alignv == "m")] <- "middle"
