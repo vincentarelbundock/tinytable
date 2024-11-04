@@ -1,21 +1,10 @@
-#' tinytable S4 method
-#' 
-#' @keywords internal
-style_eval_grid <- function(x,
-                            i = NULL,
-                            j = NULL,
-                            bold = FALSE,
-                            italic = FALSE,
-                            monospace = FALSE,
-                            underline = FALSE,
-                            strikeout = FALSE,
-                            rowspan = NULL,
-                            colspan = NULL,
-                            ...) {
+style_eval_grid <- function(x) {
 
 
   out <- x@table_dataframe
   sty <- x@style
+
+  if (nrow(sty) == 0) return(x)
 
   all_i <- seq_len(nrow(x))
   idx_g <- x@group_i_idx + cumsum(rep(1, length(x@group_i_idx))) - 1
