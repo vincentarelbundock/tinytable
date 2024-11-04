@@ -24,8 +24,6 @@ setMethod(
                         tabularray_outer = NULL,
                         ...) {
 
-
-
   sty <- x@style
   sty$i <- sty$i + x@nhead
 
@@ -186,10 +184,7 @@ setMethod(
 
   # cells
   cells <- unique(rec[idx & !rec$complete_row & !rec$complete_column, , drop = FALSE])
-  spec <- by(cells, list(cells$set, cells$span), function(k) {
-    ival <- paste(sort(unique(k$i)), collapse = ",")
-    sprintf("cell{%s}{%s}={%s}{%s}", ival, k$j, k$span, k$set)
-  })
+  spec <- sprintf("cell{%s}{%s}={%s}{%s}", cells$i, cells$j, cells$span, cells$set)
   spec <- unique(as.vector(unlist(spec)))
   for (s in spec) {
     x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
