@@ -375,6 +375,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#tt" id="toc-tt" class="nav-link" data-scroll-target="#tt"><code>tt()</code></a></li>
   <li><a href="#format_tt" id="toc-format_tt" class="nav-link" data-scroll-target="#format_tt"><code>format_tt()</code></a></li>
+  <li><a href="#save_tt" id="toc-save_tt" class="nav-link" data-scroll-target="#save_tt"><code>save_tt()</code></a></li>
   <li><a href="#theme_tt" id="toc-theme_tt" class="nav-link" data-scroll-target="#theme_tt"><code>theme_tt()</code></a></li>
   <li><a href="#print.tinytable" id="toc-print.tinytable" class="nav-link" data-scroll-target="#print.tinytable"><code>print.tinytable()</code></a></li>
   </ul></li>
@@ -396,7 +397,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="available-options" class="level1">
 <h1>Available Options</h1>
-<p>Options can be set with <code>options()</code> and change the default behavior of tinytable. You can either set them in a script (usually at the top) or via <code>.Rprofile</code>. Note that you want to <a href="https://rstats.wtf/r-startup.html">be cautious</a> with putting things in <code>.Rprofile</code> since they might make results not reproducible (e.g.&nbsp;if you change <code>tinytable_format_digits</code> in <code>.Rprofile</code>, the table will be formatted differently).</p>
+<p>Options can be set with <code>options()</code> and change the default behavior of tinytable. For example, to format all tables to 4 digits when calling <code>tt()</code>, we can do:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tinytable_tt_digits =</span> <span class="dv">4</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(<span class="fu">head</span>(iris))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You can either set options in a script (usually at the top) or via <code>.Rprofile</code>. Note that you want to <a href="https://rstats.wtf/r-startup.html">be cautious</a> with putting things in <code>.Rprofile</code> since they might make results not reproducible (e.g.&nbsp;if you change <code>tinytable_format_digits</code> in <code>.Rprofile</code>, the table will be formatted differently).</p>
 <section id="default-values-for-function-arguments" class="level2">
 <h2 class="anchored" data-anchor-id="default-values-for-function-arguments">Default values for function arguments</h2>
 <p>Most options are function specific and allow you to set default values. These all start with <code>tinytable_X_</code> where X is <code>tt</code>/<code>format</code>/<code>theme</code>/<code>print</code>. See the corresponding help documentation for the what the argument looks like.</p>
@@ -433,13 +437,34 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><code>tinytable_format_sprintf</code></li>
 </ul>
 </section>
+<section id="save_tt" class="level3">
+<h3 class="anchored" data-anchor-id="save_tt"><code>save_tt()</code></h3>
+<ul>
+<li><code>tinytable_save_overwrite</code></li>
+</ul>
+</section>
 <section id="theme_tt" class="level3">
 <h3 class="anchored" data-anchor-id="theme_tt"><code>theme_tt()</code></h3>
 <p>When using <code>theme_tt(theme = "theme_name")</code>, this allows you to set default arguments to the corresponding theme. See <code>theme_tt()</code> for details.</p>
-<p>placement - <code>tinytable_theme_placement_float</code> - <code>tinytable_theme_placement_horizontal</code></p>
-<p>resize - <code>tinytable_theme_resize_width</code> - <code>tinytable_theme_resize_direction</code></p>
-<p>multipate - <code>tinytable_theme_multipage_rowhead</code> - <code>tinytable_theme_multipage_rowfoot</code></p>
-<p>tabular - <code>tinytable_theme_tabular_style</code></p>
+<p>placement:</p>
+<ul>
+<li><code>tinytable_theme_placement_float</code></li>
+<li><code>tinytable_theme_placement_horizontal</code></li>
+</ul>
+<p>resize:</p>
+<ul>
+<li><code>tinytable_theme_resize_width</code></li>
+<li><code>tinytable_theme_resize_direction</code></li>
+</ul>
+<p>multipage:</p>
+<ul>
+<li><code>tinytable_theme_multipage_rowhead</code></li>
+<li><code>tinytable_theme_multipage_rowfoot</code></li>
+</ul>
+<p>tabular:</p>
+<ul>
+<li><code>tinytable_theme_tabular_style</code></li>
+</ul>
 </section>
 <section id="print.tinytable" class="level3">
 <h3 class="anchored" data-anchor-id="print.tinytable"><code>print.tinytable()</code></h3>
@@ -452,15 +477,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="html" class="level3">
 <h3 class="anchored" data-anchor-id="html">HTML</h3>
 <ul>
-<li><code>options(tinytable_html_mathjax = TRUE)</code>: insert MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.</li>
-<li><code>options(tinytable_html_portable = TRUE)</code>: <code>plot_tt()</code> inserts base 64-encoded images directly in the HTML file rather than use external links.</li>
+<li><code>options(tinytable_html_mathjax = TRUE)</code>
+<ul>
+<li>insert MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.</li>
+</ul></li>
+<li><code>options(tinytable_html_portable = TRUE)</code>
+<ul>
+<li><code>plot_tt()</code> inserts base 64-encoded images directly in the HTML file rather than use external links.</li>
+</ul></li>
 </ul>
 </section>
 <section id="pdf" class="level3">
 <h3 class="anchored" data-anchor-id="pdf">PDF</h3>
 <ul>
-<li><code>options(tinytable_pdf_clean = TRUE)</code> deletes temporary and log files.</li>
-<li><code>options(tinytable_pdf_engine = "xelatex")</code>: “xelatex”, “pdflatex”, “lualatex”</li>
+<li><code>options(tinytable_pdf_clean = TRUE)</code>
+<ul>
+<li>deletes temporary and log files.</li>
+</ul></li>
+<li><code>options(tinytable_pdf_engine = "xelatex")</code>
+<ul>
+<li><code>"xelatex"</code>, <code>"pdflatex"</code>, <code>"lualatex"</code></li>
+</ul></li>
 </ul>
 </section>
 <section id="quarto" class="level3">
@@ -471,12 +508,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Quarto data processing can enter in conflict with <code>tinytable</code> styling or formatting options. See below for how to disable it.</li>
 </ol>
 <ul>
-<li><p><code>options(tinytable_quarto_disable_processing = TRUE)</code> disables Quarto processing of cell content.</p></li>
-<li><p><code>options(tinytable_quarto_figure = FALSE)</code> by default, do not include Typst tables in a figure environment in Quarto.</p>
+<li><p><code>options(tinytable_quarto_disable_processing = TRUE)</code></p>
+<ul>
+<li>disables Quarto processing of cell content.</li>
+</ul></li>
+<li><p><code>options(tinytable_quarto_figure = FALSE)</code></p>
+<ul>
+<li>by default, do not include Typst tables in a figure environment in Quarto.</li>
+</ul>
 <p>Setting this global option to <code>FALSE</code> may lead to conflicts with some <code>tinytable</code> features, but it also allows use of markdown and Quarto-specific code in table cells, such as cross-references.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Math =</span> <span class="st">"x^2^"</span>, <span class="at">Citation =</span> <span class="st">"@Lovelace1842"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>fn <span class="ot">&lt;-</span> <span class="cf">function</span>(z) <span class="fu">sprintf</span>(<span class="st">"&lt;span data-qmd='%s'&gt;&lt;/span&gt;"</span>, z)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x) <span class="sc">|&gt;</span> <span class="fu">format_tt</span>(<span class="at">i =</span> <span class="dv">1</span>, <span class="at">fn =</span> fn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Math =</span> <span class="st">"x^2^"</span>, <span class="at">Citation =</span> <span class="st">"@Lovelace1842"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>fn <span class="ot">&lt;-</span> <span class="cf">function</span>(z) <span class="fu">sprintf</span>(<span class="st">"&lt;span data-qmd='%s'&gt;&lt;/span&gt;"</span>, z)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x) <span class="sc">|&gt;</span> <span class="fu">format_tt</span>(<span class="at">i =</span> <span class="dv">1</span>, <span class="at">fn =</span> fn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>See this link for more details: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing</p></li>
 </ul>
 
