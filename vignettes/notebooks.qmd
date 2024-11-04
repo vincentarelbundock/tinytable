@@ -1,4 +1,4 @@
-# Notebooks (Quarto, Rmarkdown, Bookdown, etc.)
+# Notebooks
 
 
 ## Quarto
@@ -109,12 +109,13 @@ tab |> style_tt(i = 5, background = "orange")
 The `bookdown` package uses a special syntax to handle cross-references, and it does not recognize `tinytable` objects as tables automatically. To include cross-references to tables, it is thus necessary to use the `caption` argument of `tinytable::tt()`, and to insert a `bookdown` label in that caption. Here is an example:
 
 
-````
+````{verbatim}
 Table \@ref(tab:tinytableref)
 
-```{r tinytableref}
+```{r}
 library(tinytable)
-tt(head(iris), caption = "(#tab:tinytableref) Hello world!") |> style_tt(color = "blue")
+tt(head(iris), caption = "(#tab:tinytableref) Hello world!") |> 
+    style_tt(color = "blue")
 ```
 ````
 
