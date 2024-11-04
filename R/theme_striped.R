@@ -1,8 +1,15 @@
 theme_striped <- function(x, ...) {
+
+    fn <- theme_placement_factory(
+        horizontal = get_option("tinytable_theme_default_horizontal", "center"),
+        latex_float = get_option("tinytable_theme_placement_latex_float", default = NULL))
+    x <- style_tt(x, finalize = fn)
+
     x <- style_tt(x,
         tabularray_inner = "row{even}={bg=black!5!white}",
         bootstrap_class = "table table-striped",
         output = "latex")
+
     x <- style_tt(x, 
         i = seq(1, nrow(x), by = 2),
         background = "#ededed",

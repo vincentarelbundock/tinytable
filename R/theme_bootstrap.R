@@ -1,4 +1,10 @@
 theme_bootstrap <- function(x, ...) {
+
+    fn <- theme_placement_factory(
+        horizontal = get_option("tinytable_theme_default_horizontal", "center"),
+        latex_float = get_option("tinytable_theme_placement_latex_float", default = NULL))
+    x <- style_tt(x, finalize = fn)
+
     fn <- function(table) {
         if (isTRUE(table@output == "markdown")) {
             tab <- table@table_string
