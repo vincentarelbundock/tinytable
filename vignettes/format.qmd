@@ -54,6 +54,7 @@ tt(dat) |>
     digits = 2,
     num_mark_big = " ",
     num_mark_dec = ",",
+    num_zero = TRUE,
     num_fmt = "decimal")
 ```
 
@@ -269,7 +270,7 @@ On top of the built-in features of `format_tt`, a custom formatting function can
 
 ```{r}
 tt(x) |> 
-  format_tt(j = "mpg", fn = function(x) paste0(x, " mpg")) |>
+  format_tt(j = "mpg", fn = function(x) paste(x, "mi/gal")) |>
   format_tt(j = "drat", fn = \(x) signif(x, 2))
 ```
 

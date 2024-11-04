@@ -2,9 +2,16 @@
 
 ## Development
 
+
+Misc:
+
+* Major refactor of the style internals. HTML, LaTeX, and Typst documents should be much more concise and efficient.
+* `style_tt()`: the `i` and `j` indices are now consistent in all formats. They refer to rows *after* the insertion of  row groups.
+
 Bugs:
 
 * Typst notes returned an error since the last release. Thanks to @DominikVogel for report #357.
+
 
 ## 0.5.0
 

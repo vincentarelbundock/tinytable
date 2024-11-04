@@ -45,12 +45,12 @@ group_bootstrap_col <- function(x, j, ihead, ...) {
 
   x@table_string <- out
 
-  x <- style_eval(x, i = ihead, align = "c")
+  x <- style_tt(x, i = ihead, align = "c")
 
   # midrule on numbered spans (not full columns of body)
   jnames <- names(j)
   jnames <- seq_along(jnames)[trimws(jnames) != ""]
-  x <- style_eval(x, i = ihead, j = jnames, line = "b", line_width = 0.05, line_color = "#d3d8dc")
+  x <- style_tt(x, i = ihead, j = jnames, line = "b", line_width = 0.05, line_color = "#d3d8dc")
 
   return(x)
 }
@@ -59,15 +59,7 @@ group_bootstrap_col <- function(x, j, ihead, ...) {
 group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
   label <- names(i)
 
-  # reverse order is important
-  i <- rev(sort(i))
-
-  # # i = list("a" = 2, "b" = 3, "c" = 4) should be displayed consecutively
-  # i <- i - (rev(seq_along(i)) - 1)
-
   out <- x@table_string
-
-  tab <- strsplit(out, "\\n")[[1]]
 
   for (g in seq_along(i)) {
     js <- sprintf(
@@ -76,7 +68,8 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
       i[g] + x@nhead - 1,
       ncol(x),
       names(i)[g])
-    out <- bootstrap_setting(out, new = js, component = "cell")
+    out <- lines_insert(out, js, "tinytable span after", "after")
+    # out <- bootstrap_setting(out, new = js, component = "cell")
   }
 
   # need unique function names in case there are
@@ -88,26 +81,11 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
     fixed = TRUE)
 
   idx <- insert_values(seq_len(nrow(x)), rep(NA, length(i)), i)
-  idx_old <- idx$new[!is.na(idx$old)]
-  idx_new <- idx$new[is.na(idx$old)]
-
-  # limit index ot number of rows to avoid styling header or footer
-  idx_old <- idx_old[idx_old <= nrow(x)]
 
   x@table_string <- out
 
-  # should not be style_tt, because we already have a string bootstrap table at this stage
-  x <- style_eval(x, i = idx_old, j = 1, indent = indent)
-
   # if there's a two-level header column multi-span, we want it centered.
-  x <- style_eval(x, i = -1, align = "c")
-
-  dots <- list(...)
-  dots[["j"]] <- NULL
-  if (length(dots) > 0) {
-    args <- c(list(x = x, i = idx$new[is.na(idx$old)]), dots)
-    x <- do.call(style_tt, args)
-  }
+  x <- style_tt(x, i = -1, align = "c")
 
   # do not override meta since we modified it here above
   return(x)

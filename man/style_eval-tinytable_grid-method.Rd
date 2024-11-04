@@ -4,19 +4,7 @@
 \alias{style_eval,tinytable_grid-method}
 \title{tinytable S4 method}
 \usage{
-\S4method{style_eval}{tinytable_grid}(
-  x,
-  i = NULL,
-  j = NULL,
-  bold = FALSE,
-  italic = FALSE,
-  monospace = FALSE,
-  underline = FALSE,
-  strikeout = FALSE,
-  rowspan = NULL,
-  colspan = NULL,
-  ...
-)
+\S4method{style_eval}{tinytable_grid}(x)
 }
 \description{
 tinytable S4 method

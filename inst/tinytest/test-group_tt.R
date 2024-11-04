@@ -18,7 +18,7 @@ tab <- tt(x) |>
     group_tt(j = list("a" = 2:3, "b" = 4:5)) |>
     group_tt(j = list("c" = 1:2, "d" = 3:5)) |>
     group_tt(j = list("e" = 1:3, "f" = 4))
-expect_snapshot_print(tab, label = "group_tt-3level_md")
+expect_snapshot_print(tab, label = "group_tt-3level.md")
 options(tinytable_print_output = NULL)
 
 
@@ -29,7 +29,7 @@ tab <- tt(x) |>
     group_tt(j = list("a" = 2:3, "b" = 4:5)) |>
     group_tt(j = list("c" = 1:2, "d" = 3:5)) |>
     group_tt(j = list("e" = 1:3, "f" = 4))
-expect_snapshot_print(tab, label = "group_tt-3level_tex")
+expect_snapshot_print(tab, label = "group_tt-3level.tex")
 options(tinytable_print_output = NULL)
 
 

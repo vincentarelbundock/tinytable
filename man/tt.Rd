@@ -10,7 +10,7 @@ tt(
   caption = get_option("tinytable_tt_caption", default = NULL),
   notes = get_option("tinytable_tt_notes", default = NULL),
   width = get_option("tinytable_tt_width", default = NULL),
-  theme = get_option("tinytable_tt_theme", default = NULL),
+  theme = get_option("tinytable_tt_theme", default = "default"),
   rownames = get_option("tinytable_tt_rownames", default = FALSE),
   escape = get_option("tinytable_tt_escape", default = FALSE),
   ...
@@ -52,7 +52,7 @@ tt(
 \value{
 An object of class \code{tt} representing the table.
 
-The table object has S4 slots which hold information about the structure of the table. This meta-data can be accessed with the usual \code{@} accessor. In general, modifying the content of these slots is not recommended, but it can be useful to some developers, such as those who want to force print to a specific output format without calling \code{print()}.
+The table object has S4 slots which hold information about the structure of the table. Relying on or modifying the contents of these slots is strongly discouraged. Their names and contents could change at any time, and the \code{tinytable} developers do not consider changes to the internal structure of the output object to be a "breaking  change" for versioning or changelog purposes.
 }
 \description{
 The \code{tt} function renders a table in different formats with various styling options: HTML, Markdown, LaTeX, Word, PDF, PNG, or Typst. The table can be customized with additional functions:

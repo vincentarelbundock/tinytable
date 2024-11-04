@@ -31,7 +31,7 @@
 #' @param ... Additional arguments are ignored
 #' @return An object of class `tt` representing the table.
 #' 
-#' The table object has S4 slots which hold information about the structure of the table. This meta-data can be accessed with the usual `@` accessor. In general, modifying the content of these slots is not recommended, but it can be useful to some developers, such as those who want to force print to a specific output format without calling `print()`.
+#' The table object has S4 slots which hold information about the structure of the table. Relying on or modifying the contents of these slots is strongly discouraged. Their names and contents could change at any time, and the `tinytable` developers do not consider changes to the internal structure of the output object to be a "breaking  change" for versioning or changelog purposes.
 #' @template latex_preamble
 #' @template global_options
 #' 
@@ -61,21 +61,22 @@ tt <- function(x,
                caption = get_option("tinytable_tt_caption", default = NULL),
                notes = get_option("tinytable_tt_notes", default = NULL),
                width = get_option("tinytable_tt_width", default = NULL),
-               theme = get_option("tinytable_tt_theme", default = NULL),
+               theme = get_option("tinytable_tt_theme", default = "default"),
                rownames = get_option("tinytable_tt_rownames", default = FALSE),
                escape = get_option("tinytable_tt_escape", default = FALSE),
                ...) {
 
 
   dots <- list(...)
-  if ("placement" %in% names(dots)) {
-    warning("The `placement` argument in `tt()` is deprecated. Please use this instead: `theme_tt(table, 'placement')`", call. = FALSE)
-  }
 
   # sanity checks
   assert_string(caption, null.ok = TRUE)
   assert_integerish(digits, len = 1, null.ok = TRUE)
   notes <- sanitize_notes(notes)
+
+  if (!isTRUE(check_function(theme)) && !isTRUE(check_string(theme))) {
+    stop("The `theme` argument must be a function or a string.", call. = FALSE)
+  }
 
   # x should be a data frame, not a tibble or slopes, for indexing convenience
   assert_data_frame(x, min_rows = 1, min_cols = 1)

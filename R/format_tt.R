@@ -122,7 +122,9 @@ format_tt <- function(x,
             escape = escape,
             markdown = markdown,
             quarto = quarto,
-            other = other)
+            other = other,
+            inull = is.null(i),
+            jnull = is.null(j))
         out@lazy_format <- c(out@lazy_format, list(cal))
     } else {
 
@@ -145,7 +147,9 @@ format_tt <- function(x,
             other = other,
             escape = escape,
             quarto = quarto,
-            markdown = markdown)
+            markdown = markdown,
+            inull = is.null(i),
+            jnull = is.null(j))
     }
 
     return(out)
@@ -170,7 +174,9 @@ format_tt_lazy <- function(x,
                            escape = FALSE,
                            markdown = FALSE,
                            quarto = quarto,
-                           other = as.character
+                           other = as.character,
+                           inull = FALSE,
+                           jnull = FALSE
                            ) {
 
     # format_tt() supports vectors
@@ -207,11 +213,8 @@ format_tt_lazy <- function(x,
     replace <- sanitize_replace(replace)
     sanity_num_mark(digits, num_mark_big, num_mark_dec)
 
-    i <- sanitize_i(i, x, pre_group_i = TRUE)
+    i <- sanitize_i(i, x, lazy = FALSE)
     j <- sanitize_j(j, x)
-    ibody <- attr(i, "body")
-    inull <- isTRUE(attr(i, "null"))
-    jnull <- isTRUE(attr(j, "null"))
 
     # In sanity_tt(), we fill in missing NULL `j` in the format-specific versions,
     # because tabularray can do whole column styling. Here, we need to fill in
@@ -223,37 +226,37 @@ format_tt_lazy <- function(x,
     for (col in j) {
         # sprintf() is self-contained
         if (!is.null(sprintf)) {
-            out[ibody, col] <- base::sprintf(sprintf, ori[ibody, col, drop = TRUE])
+            out[i, col] <- base::sprintf(sprintf, ori[i, col, drop = TRUE])
 
         } else {
             # logical
-            if (is.logical(ori[ibody, col])) {
-                out[ibody, col] <- bool(ori[ibody, col, drop = TRUE])
+            if (is.logical(ori[i, col])) {
+                out[i, col] <- bool(ori[i, col, drop = TRUE])
 
                 # date
-            } else if (inherits(ori[ibody, col], "Date")) {
-                out[ibody, col] <- format(ori[ibody, col, drop = TRUE], date)
+            } else if (inherits(ori[i, col], "Date")) {
+                out[i, col] <- format(ori[i, col, drop = TRUE], date)
 
                 # numeric
-            } else if (is.numeric(ori[ibody, col, drop = TRUE])) {
-                tmp <- format_numeric(ori[ibody, col], 
+            } else if (is.numeric(ori[i, col, drop = TRUE])) {
+                tmp <- format_numeric(ori[i, col], 
                     num_suffix = num_suffix, 
                     digits = digits, 
                     num_mark_big = num_mark_big, 
                     num_mark_dec = num_mark_dec, 
                     num_zero = num_zero, 
                     num_fmt = num_fmt)
-                if (!is.null(tmp)) out[ibody, col] <- tmp
+                if (!is.null(tmp)) out[i, col] <- tmp
 
                 # other
             } else {
-                out[ibody, col] <- other(ori[ibody, col, drop = TRUE])
+                out[i, col] <- other(ori[i, col, drop = TRUE])
             }
         }
 
         for (k in seq_along(replace)) {
-            idx <- ori[ibody, col, drop = TRUE] %in% replace[[k]]
-            out[ibody, col][idx] <- names(replace)[[k]]
+            idx <- ori[i, col, drop = TRUE] %in% replace[[k]]
+            out[i, col][idx] <- names(replace)[[k]]
         }
 
     } # loop over columns
@@ -262,12 +265,12 @@ format_tt_lazy <- function(x,
     # before escaping
     if (is.function(fn)) {
         for (col in j) {
-            out[ibody, col] <- fn(ori[ibody, col, drop = TRUE])
+            out[i, col] <- fn(ori[i, col, drop = TRUE])
         }
     }
 
     if (isTRUE(math)) {
-        for (row in ibody) {
+        for (row in i) {
             for (col in j) {
                 out[row, col] <- format_math(out[row, col], math)
             }
@@ -312,18 +315,6 @@ format_tt_lazy <- function(x,
             o <- FALSE
         }
 
-        # body
-        for (row in ibody) {
-            for (col in j) {
-                out[row, col] <- escape_text(out[row, col], output = o)
-            }
-        }
-
-        # column names
-        if (0 %in% i) {
-            colnames(x) <- escape_text(colnames(x), output = o)
-        }
-
         # caption & groups: if i and j are both null
         if (inull && jnull) {
             if (inherits(x, "tinytable")) {
@@ -350,7 +341,25 @@ format_tt_lazy <- function(x,
                     x@lazy_group[[idx]] <- g
                 }
             }
+            colnames(x) <- escape_text(colnames(x), output = o)
+            for (col in seq_len(ncol(out))) {
+                out[, col] <- escape_text(out[, col], output = o)
+            }
+
+        } else {
+            # body
+            for (row in i) {
+                for (col in j) {
+                    out[row, col] <- escape_text(out[row, col], output = o)
+                }
+            }
+
+            # column names
+            if (0 %in% i) {
+                colnames(x) <- escape_text(colnames(x), output = o)
+            }
         }
+
     }
 
     # markdown and quarto at the very end

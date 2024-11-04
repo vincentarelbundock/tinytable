@@ -30,6 +30,7 @@ format_numeric <- function(value, num_suffix, digits, num_mark_big, num_mark_dec
   } else {
     out <- NULL
   }
+  if (is.character(out)) out <- trimws(out)
   return(out)
 }
 

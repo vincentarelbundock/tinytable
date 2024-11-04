@@ -20,7 +20,7 @@ style_tt(
   alignv = NULL,
   colspan = NULL,
   rowspan = NULL,
-  indent = 0,
+  indent = NULL,
   line = NULL,
   line_color = "black",
   line_width = 0.1,
@@ -37,7 +37,7 @@ style_tt(
 \arguments{
 \item{x}{A table object created by \code{tt()}.}
 
-\item{i}{Row indices where the styling should be applied. Can be a single value, a vector, or a logical matrix with the same number of rows and columns as \code{x}. \code{i=0} is the header, and negative values are higher level headers.}
+\item{i}{Row indices where the styling should be applied. Can be a single value, a vector, or a logical matrix with the same number of rows and columns as \code{x}. \code{i=0} is the header, and negative values are higher level headers. Row indices refer to rows \emph{after} the insertion of row labels by \code{group_tt()}, when applicable.}
 
 \item{j}{Column indices where the styling should be applied. Can be:
 \itemize{

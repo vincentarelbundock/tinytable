@@ -57,8 +57,7 @@ Users can also define their own themes to apply consistent visual tweaks to tabl
 ```{r}
 theme_vincent <- function(x, ...) {
   out <- x |> 
-    style_tt(color = "teal") |>
-    theme_tt("placement")
+    style_tt(color = "teal")
   out@caption <- "Always use the same caption."
   out@width <- .5
   return(out)
@@ -86,7 +85,6 @@ theme_slides <- function(x, ...) {
         return(table)
     }
     x <- style_tt(x, finalize = fn)
-    x <- theme_tt(x, theme = "default")
     return(x)
 }
 
@@ -182,12 +180,14 @@ Warning: The substitution code is very simple and it may not work properly when 
 theme_mitex <- function(x, ...) {
     fn <- function(table) {
         if (isTRUE(table@output == "typst")) {
-          table@table_string <- gsub("\\$(.*?)\\$", "#mitex(`\\1`)", table@table_string)
+          table@table_string <- gsub(
+            "\\$(.*?)\\$",
+            "#mitex(`\\1`)",
+            table@table_string)
         }
         return(table)
     }
     x <- style_tt(x, finalize = fn)
-    x <- theme_tt(x, theme = "default")
     return(x)
 }
 ```

@@ -70,12 +70,27 @@ group_tt <- function(x, i = NULL, j = NULL, indent = 1, ...) {
   # we don't need this as a list, and we use some sorting later
   i <- unlist(i)
 
-  x@ngroupi <- x@ngroupi + length(i)
+  if (!is.null(i)) {
+    if (isTRUE(x@group_tt_i)) {
+      stop("Only one row-wise `group_tt(i = ...)` call is allowed.", call. = FALSE)
+    }
+    x@group_tt_i <- TRUE
+    if (isTRUE(indent > 0)) {
+      idx_indent <- setdiff(
+        seq_len(nrow(x) + length(i)), 
+        i + seq_along(i) - 1)
+      x <- style_tt(x, i = idx_indent, j = 1, indent = indent)
+    }
+  }
+
+  if (!is.null(i)) {
+    x@ngroupi <- x@ngroupi + length(i)
+    x@group_i_idx <- as.numeric(unlist(i))
+  }
 
   cal <- call("group_eval", i = i, j = j, indent = indent)
 
   x@lazy_group <- c(x@lazy_group, list(cal))
-
 
   return(x)
 }

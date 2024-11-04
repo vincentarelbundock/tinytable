@@ -25,216 +25,177 @@ setMethod(
                         indent = 0,
                         midrule = FALSE, # undocumented, only used by `group_tt()`
                         ...) {
-    out <- x@table_string
 
 
-    # gutters are used for group_tt(j) but look ugly with cell fill
-    if (!is.null(background)) {
-      x <- style_tt(x, finalize = function(x) {
-        x@table_string <- lines_drop(
-          x@table_string,
-          "column-gutter:",
-          fixed = TRUE)
-        return(x)
-      })
-    }
-
-    if (is.null(line)) {
-        line <- NA
-        line_color <- NA
-        line_width <- NA
-    }
-    if (is.null(color)) color <- NA
-    if (is.null(background)) background <- NA
-    color <- ifelse(grepl("^#", color), sprintf('rgb("%s")', color), color)
-    line_color <- ifelse(grepl("^#", line_color), sprintf('rgb("%s")', line_color), line_color)
-    background <- ifelse(grepl("^#", background), sprintf('rgb("%s")', background), background)
-
-    if (is.null(color)) color <- NA
-    if (is.null(fontsize)) fontsize <- NA
-    indent <- if (indent > 0) paste0(indent, "em") else NA
-
-    sett <- style_settings_typst(
-        x = x,
-        i = i,
-        j = j,
-        color = color,
-        underline = underline,
-        italic = italic,
-        bold = bold,
-        monospace = monospace,
-        strikeout = strikeout,
-        fontsize = fontsize,
-        indent = indent,
-        background = background,
-        line = line,
-        line_width = line_width,
-        line_color = line_color,
-        align = align)
-
-    x@style <- unique(rbind(x@style, sett))
-
-    return(x)
-  })
-
-
-
-style_apply_typst <- function(x) {
     sty <- x@style
 
-    lin <- sty[, c("i", "j", "line", "line_color", "line_width")]
-    lin <- unique(lin[!is.na(lin$line),])
-
-    sty <- sty[, !colnames(sty) %in% c("line", "line_color", "line_width")]
-    sty <- unique(sty)
-
-    no_style <- apply(sty[, 3:ncol(sty)], 1, function(k) {
-        all(is.na(k) | k == FALSE)
-    })
-
-    sty <- sty[!no_style,, drop = FALSE]
-
-    last_style <- function(x) {
-        if (all(is.na(x))) {
-            x <- NA
-        } else if (is.logical(x)) {
-            x <- any(x[!is.na(x)])
-        } else {
-            x <- utils::tail(x[!is.na(x)], 1)
-        }
-        return(x)
+    # gutters are used for group_tt(j) but look ugly with cell fill
+    if (!all(is.na(sty$background))) {
+        x@table_string <- lines_drop(x@table_string, "column-gutter:", fixed = TRUE)
     }
-    sty <- split(sty, list(sty$i, sty$j))
-    sty <- lapply(sty, function(k) lapply(k, last_style))
-    sty <- do.call(rbind, lapply(sty, data.frame))
 
-    # Typst-specific stuff
+    sty$align[which(sty$align == "l")] <- "left"
+    sty$align[which(sty$align == "c")] <- "center"
+    sty$align[which(sty$align == "d")] <- "center"
+    sty$align[which(sty$align == "r")] <- "right"
 
-    # 0- & header-indexing
-    sty$i <- sty$i + x@nhead - 1
+    sty$i <- sty$i - 1 + x@nhead
     sty$j <- sty$j - 1
+    if (length(x@names) == 0) sty$i <- sty$i + 1
 
-    for (col in colnames(sty)) {
-        if (is.logical(sty[[col]])) {
-            sty[[col]] <- ifelse(sty[[col]] & !is.na(sty[[col]]), "true", "none")
-        } else {
-            sty[[col]][is.na(sty[[col]])] <- "none"
+    rec <- expand.grid(
+        i = seq_len(x@nhead + x@nrow + x@ngroupi) - 1,
+        j = seq_len(x@ncol) - 1
+    )
+    css <- rep("", nrow(rec))
+
+    insert_field <- function(x, name = "bold", value = "true") {
+        old <- sprintf("%s: [^,]*,", name)
+        new <- sprintf("%s: %s,", name, value)
+        out <- ifelse(grepl(old, x), 
+            sub(old, new, x),
+            sprintf("%s, %s", x, new))
+        return(out)
+    }
+
+    for (row in seq_len(nrow(sty))) {
+        idx_i <- sty$i[row]
+        if (is.na(idx_i)) idx_i <- unique(rec$i)
+        idx_j <- sty$j[row]
+        if (is.na(idx_j)) idx_j <- unique(rec$j)
+        idx <- rec$i == idx_i & rec$j == idx_j
+        if (isTRUE(sty[row, "bold"])) css[idx] <- insert_field(css[idx], "bold", "true")
+        if (isTRUE(sty[row, "italic"])) css[idx] <- insert_field(css[idx], "italic", "true")
+        if (isTRUE(sty[row, "underline"])) css[idx] <- insert_field(css[idx], "underline", "true")
+        if (isTRUE(sty[row, "strikeout"])) css[idx] <- insert_field(css[idx], "strikeout", "true")
+        if (isTRUE(sty[row, "monospace"])) css[idx] <- insert_field(css[idx], "monospace", "true")
+        if (!is.na(sty[row, "align"])) css[idx] <- insert_field(css[idx], "align", sty[row, "align"])
+
+        fs <- sty[row, "indent"]
+        if (!is.na(fs)) {
+            css[idx] <- insert_field(css[idx], "indent", sprintf("%sem", fs))
+        }
+
+        fs <- sty[row, "fontsize"]
+        if (!is.na(fs)) {
+            css[idx] <- insert_field(css[idx], "fontsize", sprintf("%sem", fs))
+        }
+
+        col <- sty[row, "color"]
+        if (!is.na(col)) {
+            if (grepl("^#", col)) col <- sprintf('rgb("%s")', col)
+            css[idx] <- insert_field(css[idx], "color", col)
+        }
+
+        bg <- sty[row, "background"]
+        if (!is.na(bg)) {
+            if (grepl("^#", bg)) bg <- sprintf('rgb("%s")', bg)
+            css[idx] <- insert_field(css[idx], "background", bg)
         }
     }
 
-    # array representation for duplicate styles = cleaner .typ file
-    if (!all(no_style)) {
-        idx <- apply(sty[, 3:ncol(sty)], 1, paste, collapse = "|")
-        sty <- split(sty, idx, drop = FALSE)
-        sty <- lapply(sty, function(k) {
-            k$i <- sprintf("(%s,)", paste(unique(k$i), collapse = ", "))
-            k$j <- sprintf("(%s,)", paste(unique(k$j), collapse = ", "))
-            k[1,]
-        })
-        sty <- do.call(rbind, sty)
+    css <- gsub(" +", " ", trimws(css))
+    css <- sub("^,", "", trimws(css))
+    css <- gsub(",+", ",", trimws(css))
+    rec$css <- css
 
+    # TODO: spans before styles, as in bootstrap
 
-        for (row in seq_len(nrow(sty))) {
-            style <- sprintf(
-                "    (y: %s, x: %s, color: %s, underline: %s, italic: %s, bold: %s, mono: %s, strikeout: %s, fontsize: %s, indent: %s, background: %s, align: %s),",
-                sty$i[row],
-                sty$j[row],
-                sty$color[row],
-                sty$underline[row],
-                sty$italic[row],
-                sty$bold[row],
-                sty$monospace[row],
-                sty$strikeout[row],
-                sty$fontsize[row],
-                sty$indent[row],
-                sty$background[row],
-                sty$align[row]
-            )
-            x@table_string <- lines_insert(x@table_string, style, "tinytable cell style after", "after")
+    # Unique style arrays
+    uni <- split(rec, rec$css)
+
+    pairs <- sapply(uni, function(x) paste(sprintf("(%s, %s),", x$j, x$i), collapse = " "))
+    styles <- sapply(uni, function(x) x$css[1])
+    styles <- sprintf("(pairs: (%s), %s),", pairs, styles) 
+
+    for (s in styles) {
+        x@table_string <- lines_insert(x@table_string, s, "tinytable cell style after", "after")
+        # x@table_string <- lines_insert(x@table_string, s, "tinytable cell align after", "after")
+    }
+
+    lin <- sty[grepl("b|t", sty$line),, drop = FALSE]
+    if (nrow(lin) > 0) {
+        lin <- split(lin, list(lin$i, lin$line, lin$line_color, lin$line_width))
+        lin <- Filter(function(x) nrow(x) > 0, lin)
+        lin <- lapply(lin, hlines)
+        for (l in lin) {
+            x@table_string <- lines_insert(x@table_string, l, "tinytable lines before", "before")
         }
     }
 
-    lin$i <- lin$i + x@nhead
-    # not sure why, but seems necessary
-    if (x@nhead == 0) lin$i <- lin$i + 1
-
-    lin_split <- split(lin, lin[, 3:ncol(lin)])
-    for (ls in lin_split) {
-        line_h <- "table.hline(y: %s, start: %s, end: %s, stroke: %sem + %s),"
-        line_v <- "table.vline(x: %s, start: %s, end: %s, stroke: %sem + %s),"
-        if (any(grepl("b", ls$line))) {
-            for (h in unique(ls$i)) {
-                template <- sprintf(line_h, h, min(ls$j) - 1, max(ls$j), ls$line_width[1], ls$line_color[1])
-                x@table_string <- lines_insert(x@table_string, template, "tinytable lines before", "before")
-            }
-        }
-        if (any(grepl("t", ls$line))) {
-            for (h in unique(ls$i)) {
-                template <- sprintf(line_h, h - 1, min(ls$j) - 1, max(ls$j), ls$line_width[1], ls$line_color[1])
-                x@table_string <- lines_insert(x@table_string, template, "tinytable lines before", "before")
-            }
-        }
-        if (any(grepl("l", ls$line))) {
-            for (v in unique(ls$j)) {
-                template <- sprintf(line_v, v - 1, min(ls$i) - 1, max(ls$i), ls$line_width[1], ls$line_color[1])
-                x@table_string <- lines_insert(x@table_string, template, "tinytable lines before", "before")
-            }
-        }
-        if (any(grepl("r", ls$line))) {
-            for (v in unique(ls$j)) {
-                template <- sprintf(line_v, v, min(ls$i) - 1, max(ls$i), ls$line_width[1], ls$line_color[1])
-                x@table_string <- lines_insert(x@table_string, template, "tinytable lines before", "before")
-            }
+    lin <- sty[grepl("l|r", sty$line),, drop = FALSE]
+    if (nrow(lin) > 0) {
+        lin <- split(lin, list(lin$j, lin$line, lin$line_color, lin$line_width))
+        lin <- Filter(function(x) nrow(x) > 0, lin)
+        lin <- lapply(lin, vlines)
+        for (l in lin) {
+            x@table_string <- lines_insert(x@table_string, l, "tinytable lines before", "before")
         }
     }
 
     return(x)
+})
+
+
+split_chunks <- function(x) {
+    x <- sort(x)
+    breaks <- c(0, which(diff(x) != 1), length(x))
+    result <- list()
+    for (i in seq_along(breaks)[-length(breaks)]) {
+        chunk <- x[(breaks[i] + 1):breaks[i + 1]]
+        result[[i]] <- c(min = min(chunk), max = max(chunk))
+    }
+    out <- data.frame(do.call(rbind, result))
+    out$max <- out$max + 1
+    return(out)
 }
 
 
-style_settings_typst <- function(x, i, j, color, underline, italic, bold, monospace, strikeout, fontsize, indent, background, line, line_color, line_width, align) {
-    if (is.matrix(i) && is.logical(i) && nrow(i) == nrow(x) && ncol(i) == ncol(x)) {
-        assert_null(j)
-        settings <- which(i == TRUE, arr.ind = TRUE)
-        settings <- stats::setNames(data.frame(settings), c("i", "j"))
-        jval <- NULL
-    } else {
-        ival <- sanitize_i(i, x)
-        jval <- sanitize_j(j, x)
+hlines <- function(k) {
+    xmin <- split_chunks(k$j)$min
+    xmax <- split_chunks(k$j)$max
+    ymin <- k$i[1]
+    ymax <- k$i[1] + 1
+    line <- k$line[1]
+    color <- if (is.na(k$line_color[1])) "black" else k$line_color[1]
+    if (grepl("^#", color)) color <- sprintf('rgb("%s")', color)
+    width <- if (is.na(k$line_width[1])) 0.1 else k$line_width[1]
+    width <- sprintf("%sem", width)
+    out <- ""
+    if (grepl("t", line)) {
+        tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %s + %s),"
+        tmp <- sprintf(tmp, ymin, xmin, xmax, width, color)
+        out <- paste(out, tmp)
     }
-    settings <- expand.grid(i = ival, j = jval)
-    settings <- settings[order(settings$i, settings$j),]
-    settings[["color"]] <- color
-    settings[["underline"]] <- underline
-    settings[["italic"]] <- italic
-    settings[["bold"]] <- bold
-    settings[["monospace"]] <- monospace
-    settings[["strikeout"]] <- strikeout
-    settings[["fontsize"]] <- if (!is.na(fontsize)) sprintf("%sem", fontsize) else NA
-    settings[["indent"]] <- indent
-    settings[["background"]] <- background
-    settings[["line"]] <- line
-    settings[["line_color"]] <- line_color
-    settings[["line_width"]] <- line_width
-
-    if (!is.null(align)) {
-        settings[["align"]] <- sapply(align,
-            switch,
-            c = "center",
-            d = "center",
-            r = "right",
-            l = "left")
-    } else {
-        settings[["align"]] <- NA
+    if (grepl("b", line)) {
+        tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %s + %s),"
+        tmp <- sprintf(tmp, ymax, xmin, xmax, width, color)
+        out <- paste(out, tmp)
     }
-    return(settings)
+    return(out)
 }
 
 
 
-# Lines are not part of cellspec/rowspec/columnspec. Do this separately.
-
-
-
-
-
+vlines <- function(k) {
+    ymin <- split_chunks(k$i)$min 
+    ymax <- split_chunks(k$i)$max 
+    xmin <- k$j[1]
+    xmax <- xmin + 1
+    line <- k$line[1]
+    color <- if (is.na(k$line_color[1])) "black" else k$line_color[1]
+    width <- if (is.na(k$line_width[1])) 0.1 else k$line_width[1]
+    width <- sprintf("%sem", width)
+    out <- ""
+    if (grepl("l", line)) {
+        tmp <- "table.vline(x: %s, start: %s, end: %s, stroke: %s + %s),"
+        tmp <- sprintf(tmp, xmin, ymin, ymax, width, color)
+        out <- paste(out, tmp)
+    }
+    if (grepl("r", line)) {
+        tmp <- "table.vline(x: %s, start: %s, end: %s, stroke: %s + %s),"
+        tmp <- sprintf(tmp, xmax, ymin, ymax, width, color)
+        out <- paste(out, tmp)
+    }
+    return(out)
+}
