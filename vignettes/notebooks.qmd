@@ -1,0 +1,121 @@
+# Notebooks (Quarto, Rmarkdown, Bookdown, etc.)
+
+
+## Quarto
+
+### Custom crossref styles
+
+In `Quarto`, it is possible to create a custom crossref type for things like appendix tables. One challenge, is that LaTeX will not allow users to nest a `tblr` environment, inside a `table` environment, inside the new environment that `Quarto` creates for the crossref. Therefore, when rendering a table to LaTeX/PDF, it is important to drop the `\begin{table}` environment. This can be done using the `theme_tt()` function.
+
+In the example below, we call `theme_tt()` explicitly for a single table, but the [themes vignette](https://vincentarelbundock.github.io/tinytable/vignettes/theme.html) shows how to set a global theme using the `tinytable_tt_theme` option.
+
+````{verbatim}
+---
+title: "Crossref Example"
+format:
+  pdf: default
+  html: default
+crossref:
+  custom:
+    - kind: float
+      key: apptbl
+      latex-env: apptbl
+      reference-prefix: Table A
+      space-before-numbering: false
+      latex-list-of-description: Appendix Table
+apptbl-cap-location: top
+---
+
+See @apptbl-testing
+
+::: {#apptbl-testing}
+
+```{r}
+library(tinytable)
+
+tt(mtcars[1:5,]) |> theme_tt("tabular", style = "tabularray")
+```
+
+Caption goes here.
+
+:::
+````
+
+### Sub-captions
+
+With version 0.4.0 of `tinytable` and versions above 1.6 of Quarto---only available [as a pre-release build at the time of writing](https://quarto.org/docs/download/prerelease.html)--- users can specify sub-captions for tables. This is done by adding a `tbl-subcap` chunk option to the table chunk. We also need to use a `tinytable` theme to remove built-in table structure and let Quarto handle the table construction. Here is a simple example document:
+
+````{verbatim}
+---
+format: pdf
+---
+
+See @tbl-example, @tbl-example-1, or @tbl-example-2.
+
+```{r}
+#| label: tbl-example
+#| tbl-cap: "Example"
+#| tbl-subcap: 
+#|   - "Cars"
+#|   - "Pressure"
+#| layout-ncol: 2
+
+library(tinytable)
+tt(head(cars)) |> theme_tt("tabular", style = "tabularray")
+tt(head(pressure)) |> theme_tt("tabular", style = "tabularray")
+```
+````
+
+### Same table, different styles
+
+In some cases, the user wants to print a single table multiple times with different styles in a single HTML document. This will sometimes cause issues, because the `style_tt()` function inserts several javascript functions to modify the same table, thus creating conflicts. A simple solution is to change the unique ID of the table object manually. 
+
+Consider this RevalJS slideshow in which we sequentially highlight different rows of the data frame:
+
+````{verbatim}
+---
+format: revealjs
+---
+
+## Page 1
+
+```{r}
+library(tinytable)
+
+tab <- tt(head(iris))
+tab
+```
+
+## Page 2
+
+```{r}
+tab@id <- "table_01"
+tab |> style_tt(i = 3, background = "skyblue")
+```
+
+## Page 3
+
+```{r}
+tab@id <- "table_02"
+tab |> style_tt(i = 5, background = "orange")
+```
+````
+
+
+## Bookdown
+
+### Cross-references
+
+The `bookdown` package uses a special syntax to handle cross-references, and it does not recognize `tinytable` objects as tables automatically. To include cross-references to tables, it is thus necessary to use the `caption` argument of `tinytable::tt()`, and to insert a `bookdown` label in that caption. Here is an example:
+
+
+````
+Table \@ref(tab:tinytableref)
+
+```{r tinytableref}
+library(tinytable)
+tt(head(iris), caption = "(#tab:tinytableref) Hello world!") |> style_tt(color = "blue")
+```
+````
+
+
