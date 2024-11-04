@@ -97,6 +97,8 @@ group_tabularray_row <- function(x, i, indent) {
   tab <- c(top, idx$vec, bot)
   tab <- paste(tab, collapse = "\n")
 
+  # colspan for row groups
+  # can't figure out how to use style_tt() here. Maybe build order?
   cellspec <- sprintf(
     "cell{%s}{%s}={%s}{%s},",
     idx$new[is.na(idx$old)] + x@nhead,
@@ -104,12 +106,6 @@ group_tabularray_row <- function(x, i, indent) {
     paste0("c=", ncol(x)),
     ""
   )
-  cellspec <- paste(cellspec, collapse = "")
-  tab <- tabularray_insert(tab, content = cellspec, type = "inner")
-
-  # we also want to indent the header
-  i <- idx$new[!is.na(idx$old)] + x@nhead
-  cellspec <- sprintf("cell{%s}{%s}={%s},\n", i, 1, sprintf("preto={\\hspace{%sem}}", indent))
   cellspec <- paste(cellspec, collapse = "")
   tab <- tabularray_insert(tab, content = cellspec, type = "inner")
 

@@ -148,8 +148,6 @@ setMethod(
   rec$set <- clean(set)
   rec$span <- clean(span)
 
-  lin <- rec
-
   all_i <- seq_len(x@nrow + x@nhead)
   all_j <- seq_len(x@ncol)
 
