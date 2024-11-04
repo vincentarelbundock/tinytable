@@ -4,7 +4,7 @@ theme_resize <- function(x,
                          ...) {
 
     fn <- theme_placement_factory(
-        horizontal = get_option("tinytable_theme_default_horizontal", "center"),
+        horizontal = get_option("tinytable_theme_default_horizontal", "c"),
         latex_float = get_option("tinytable_theme_placement_latex_float", default = NULL))
     x <- style_tt(x, finalize = fn)
 
