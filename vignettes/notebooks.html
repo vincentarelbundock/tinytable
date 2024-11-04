@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>plot_tt – tinytable</title>
+<title>notebooks – tinytable</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -30,8 +64,6 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../man/save_tt.html" rel="next">
-<link href="../man/group_tt.html" rel="prev">
 <link href="../favicon.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -165,7 +197,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/tt.html">Functions</a></li><li class="breadcrumb-item"><a href="../man/plot_tt.html"><code>plot_tt</code></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -250,13 +282,13 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/tt.html" class="sidebar-item-text sidebar-link">
@@ -289,7 +321,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/plot_tt.html" class="sidebar-item-text sidebar-link active">
+  <a href="../man/plot_tt.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>plot_tt</code></span></a>
   </div>
 </li>
@@ -341,13 +373,18 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#insert-images-and-inline-plots-into-tinytable-objects" id="toc-insert-images-and-inline-plots-into-tinytable-objects" class="nav-link active" data-scroll-target="#insert-images-and-inline-plots-into-tinytable-objects">Insert images and inline plots into tinytable objects</a>
+  <li><a href="#notebooks-quarto-rmarkdown-bookdown-etc." id="toc-notebooks-quarto-rmarkdown-bookdown-etc." class="nav-link active" data-scroll-target="#notebooks-quarto-rmarkdown-bookdown-etc.">Notebooks (Quarto, Rmarkdown, Bookdown, etc.)</a>
   <ul class="collapse">
-  <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
-  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
-  <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
-  <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a></li>
-  <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
+  <li><a href="#quarto" id="toc-quarto" class="nav-link" data-scroll-target="#quarto">Quarto</a>
+  <ul class="collapse">
+  <li><a href="#custom-crossref-styles" id="toc-custom-crossref-styles" class="nav-link" data-scroll-target="#custom-crossref-styles">Custom crossref styles</a></li>
+  <li><a href="#sub-captions" id="toc-sub-captions" class="nav-link" data-scroll-target="#sub-captions">Sub-captions</a></li>
+  <li><a href="#same-table-different-styles" id="toc-same-table-different-styles" class="nav-link" data-scroll-target="#same-table-different-styles">Same table, different styles</a></li>
+  </ul></li>
+  <li><a href="#bookdown" id="toc-bookdown" class="nav-link" data-scroll-target="#bookdown">Bookdown</a>
+  <ul class="collapse">
+  <li><a href="#cross-references" id="toc-cross-references" class="nav-link" data-scroll-target="#cross-references">Cross-references</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -358,154 +395,254 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="insert-images-and-inline-plots-into-tinytable-objects" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="insert-images-and-inline-plots-into-tinytable-objects">Insert images and inline plots into tinytable objects</h2>
-<section id="description" class="level3">
-<h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>The <code>plot_tt()</code> function allows for the insertion of images and inline plots into tinytable objects. This function can handle both local and web-based images.</p>
+<section id="notebooks-quarto-rmarkdown-bookdown-etc." class="level1">
+<h1>Notebooks (Quarto, Rmarkdown, Bookdown, etc.)</h1>
+<section id="quarto" class="level2">
+<h2 class="anchored" data-anchor-id="quarto">Quarto</h2>
+<section id="custom-crossref-styles" class="level3">
+<h3 class="anchored" data-anchor-id="custom-crossref-styles">Custom crossref styles</h3>
+<p>In <code>Quarto</code>, it is possible to create a custom crossref type for things like appendix tables. One challenge, is that LaTeX will not allow users to nest a <code>tblr</code> environment, inside a <code>table</code> environment, inside the new environment that <code>Quarto</code> creates for the crossref. Therefore, when rendering a table to LaTeX/PDF, it is important to drop the <code>\begin{table}</code> environment. This can be done using the <code>theme_tt()</code> function.</p>
+<p>In the example below, we call <code>theme_tt()</code> explicitly for a single table, but the <a href="https://vincentarelbundock.github.io/tinytable/vignettes/theme.html">themes vignette</a> shows how to set a global theme using the <code>tinytable_tt_theme</code> option.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>title: "Crossref Example"</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>format:</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  pdf: default</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  html: default</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>crossref:</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  custom:</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    - kind: float</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>      key: apptbl</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>      latex-env: apptbl</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>      reference-prefix: Table A</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      space-before-numbering: false</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      latex-list-of-description: Appendix Table</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>apptbl-cap-location: top</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>See @apptbl-testing</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>::: {#apptbl-testing}</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>```{r}</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>library(tinytable)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>tt(mtcars[1:5,]) |&gt; theme_tt("tabular", style = "tabularray")</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>```</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>Caption goes here.</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>:::</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="usage" class="level3">
-<h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">plot_tt(
-  x,
-  i = NULL,
-  j = NULL,
-  fun = NULL,
-  data = NULL,
-  color = "black",
-  xlim = NULL,
-  height = 1,
-  asp = 1/3,
-  images = NULL,
-  assets = "tinytable_assets",
-  ...
-)
-</code></pre>
+<section id="sub-captions" class="level3">
+<h3 class="anchored" data-anchor-id="sub-captions">Sub-captions</h3>
+<p>With version 0.4.0 of <code>tinytable</code> and versions above 1.6 of Quarto—only available <a href="https://quarto.org/docs/download/prerelease.html">as a pre-release build at the time of writing</a>— users can specify sub-captions for tables. This is done by adding a <code>tbl-subcap</code> chunk option to the table chunk. We also need to use a <code>tinytable</code> theme to remove built-in table structure and let Quarto handle the table construction. Here is a simple example document:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>format: pdf</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>See @tbl-example, @tbl-example-1, or @tbl-example-2.</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>```{r}</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>#| label: tbl-example</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>#| tbl-cap: "Example"</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>#| tbl-subcap: </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>#|   - "Cars"</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>#|   - "Pressure"</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>#| layout-ncol: 2</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>library(tinytable)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>tt(head(cars)) |&gt; theme_tt("tabular", style = "tabularray")</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>tt(head(pressure)) |&gt; theme_tt("tabular", style = "tabularray")</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>```</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="arguments" class="level3">
-<h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
-<table>
-<tbody><tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="x">x</code>
-</td>
-<td>
-A tinytable object.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="i">i</code>
-</td>
-<td>
-Integer vector, the row indices where images are to be inserted. If <code>NULL</code>, images will be inserted in all rows.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="j">j</code>
-</td>
-<td>
-Integer vector, the column indices where images are to be inserted. If <code>NULL</code>, images will be inserted in all columns.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="fun">fun</code>
-</td>
-<td>
-<p>String or function to generate inline plots.</p>
-<ul>
-<li>
-<p>String: "histogram", "density", "bar", "line"</p>
-</li>
-<li>
-<p>Functions that return <code>ggplot2</code> objects.</p>
-</li>
-<li>
-<p>Functions that return another function which generates a base <code>R</code> plot, ex: <code>function(x) {function() hist(x)}</code></p>
-</li>
-<li>
-<p>See the tutorial on the <code>tinytable</code> website for more information.</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="data">data</code>
-</td>
-<td>
-a list of data frames or vectors to be used by the plotting functions in <code>fun</code>.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="color">color</code>
-</td>
-<td>
-string Name of color to use for inline plots (passed to the <code>col</code> argument base <code>graphics</code> plots in <code>R</code>).
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="xlim">xlim</code>
-</td>
-<td>
-Numeric vector of length 2.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="height">height</code>
-</td>
-<td>
-Numeric, the height of the images in the table in em units.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="asp">asp</code>
-</td>
-<td>
-Numeric, aspect ratio of the plots (height / width).
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="images">images</code>
-</td>
-<td>
-Character vector, the paths to the images to be inserted. Paths are relative to the main table file or Quarto (Rmarkdown) document.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="assets">assets</code>
-</td>
-<td>
-Path to the directory where generated assets are stored. This path is relative to the location where a table is saved.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="...">…</code>
-</td>
-<td>
-Extra arguments are passed to the function in <code>fun</code>. Important: Custom plotting functions must always have <code>…</code> as an argument.
-</td>
-</tr>
-</tbody></table>
+<section id="same-table-different-styles" class="level3">
+<h3 class="anchored" data-anchor-id="same-table-different-styles">Same table, different styles</h3>
+<p>In some cases, the user wants to print a single table multiple times with different styles in a single HTML document. This will sometimes cause issues, because the <code>style_tt()</code> function inserts several javascript functions to modify the same table, thus creating conflicts. A simple solution is to change the unique ID of the table object manually.</p>
+<p>Consider this RevalJS slideshow in which we sequentially highlight different rows of the data frame:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>format: revealjs</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>## Page 1</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>```{r}</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>library(tinytable)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>tab &lt;- tt(head(iris))</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>tab</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>```</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>## Page 2</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>```{r}</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>tab@id &lt;- "table_01"</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>tab |&gt; style_tt(i = 3, background = "skyblue")</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>```</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>## Page 3</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>```{r}</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>tab@id &lt;- "table_02"</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>tab |&gt; style_tt(i = 5, background = "orange")</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>```</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="details" class="level3">
-<h3 class="anchored" data-anchor-id="details">Details</h3>
-<p>The <code>plot_tt()</code> can insert images and inline plots into tables.</p>
 </section>
-<section id="value" class="level3">
-<h3 class="anchored" data-anchor-id="value">Value</h3>
-<p>A modified tinytable object with images or plots inserted.</p>
+<section id="bookdown" class="level2">
+<h2 class="anchored" data-anchor-id="bookdown">Bookdown</h2>
+<section id="cross-references" class="level3">
+<h3 class="anchored" data-anchor-id="cross-references">Cross-references</h3>
+<p>The <code>bookdown</code> package uses a special syntax to handle cross-references, and it does not recognize <code>tinytable</code> objects as tables automatically. To include cross-references to tables, it is thus necessary to use the <code>caption</code> argument of <code>tinytable::tt()</code>, and to insert a <code>bookdown</code> label in that caption. Here is an example:</p>
+<pre><code>Table \@ref(tab:tinytableref)
+
+::: {.cell}
+
+```{.r .cell-code}
+library(tinytable)
+tt(head(iris), caption = "(#tab:tinytableref) Hello world!") |&gt; style_tt(color = "blue")
+```
+
+::: {.cell-output-display}
+
+```{=html}
+&lt;!-- preamble start --&gt;
+
+    &lt;script&gt;
+
+      function styleCell_frpqc9ghwr94po5zsann(i, j, css_id) {
+          var table = document.getElementById("tinytable_frpqc9ghwr94po5zsann");
+          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+          if (cell) {
+              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
+              cell.classList.add(css_id);
+          } else {
+              console.warn(`Cell at (${i}, ${j}) not found.`);
+          }
+      }
+      function insertSpanRow(i, colspan, content) {
+        var table = document.getElementById('tinytable_frpqc9ghwr94po5zsann');
+        var newRow = table.insertRow(i);
+        var newCell = newRow.insertCell(0);
+        newCell.setAttribute("colspan", colspan);
+        // newCell.innerText = content;
+        // this may be unsafe, but innerText does not interpret &lt;br&gt;
+        newCell.innerHTML = content;
+      }
+      function spanCell_frpqc9ghwr94po5zsann(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_frpqc9ghwr94po5zsann");
+        const targetRow = table.rows[i];
+        const targetCell = targetRow.cells[j];
+        for (let r = 0; r &lt; rowspan; r++) {
+          // Only start deleting cells to the right for the first row (r == 0)
+          if (r === 0) {
+            // Delete cells to the right of the target cell in the first row
+            for (let c = colspan - 1; c &gt; 0; c--) {
+              if (table.rows[i + r].cells[j + c]) {
+                table.rows[i + r].deleteCell(j + c);
+              }
+            }
+          }
+          // For rows below the first, delete starting from the target column
+          if (r &gt; 0) {
+            for (let c = colspan - 1; c &gt;= 0; c--) {
+              if (table.rows[i + r] &amp;&amp; table.rows[i + r].cells[j]) {
+                table.rows[i + r].deleteCell(j);
+              }
+            }
+          }
+        }
+        // Set rowspan and colspan of the target cell
+        targetCell.rowSpan = rowspan;
+        targetCell.colSpan = colspan;
+      }
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: 1, j: 0 }, { i: 3, j: 0 }, { i: 4, j: 0 }, { i: 5, j: 0 }, { i: 2, j: 0 }, { i: 4, j: 1 }, { i: 1, j: 1 }, { i: 2, j: 1 }, { i: 3, j: 1 }, { i: 1, j: 2 }, { i: 5, j: 1 }, { i: 3, j: 2 }, { i: 4, j: 2 }, { i: 5, j: 2 }, { i: 2, j: 2 }, { i: 4, j: 3 }, { i: 1, j: 3 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 1, j: 4 }, { i: 5, j: 3 }, { i: 3, j: 4 }, { i: 4, j: 4 }, { i: 5, j: 4 }, { i: 2, j: 4 },  ], css_id: 'tinytable_css_xqcl18io8ec76x2kix8x',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 6, j: 1 }, { i: 6, j: 0 }, { i: 0, j: 1 }, { i: 6, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 2 }, { i: 6, j: 3 }, { i: 0, j: 4 }, { i: 6, j: 4 },  ], css_id: 'tinytable_css_chziz26k3z98stuppmlz',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  styleCell_frpqc9ghwr94po5zsann(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    &lt;/script&gt;
+
+    &lt;style&gt;
+      /* tinytable css entries after */
+      .table td.tinytable_css_xqcl18io8ec76x2kix8x, .table th.tinytable_css_xqcl18io8ec76x2kix8x { color: blue; }
+      .table td.tinytable_css_chziz26k3z98stuppmlz, .table th.tinytable_css_chziz26k3z98stuppmlz { color: blue; border-bottom: solid #d3d8dc 0.1em; }
+    &lt;/style&gt;
+    &lt;div class="container"&gt;
+      &lt;table class="table table-borderless" id="tinytable_frpqc9ghwr94po5zsann" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'&gt;
+        &lt;thead&gt;
+        &lt;caption&gt;(#tab:tinytableref) Hello world!&lt;/caption&gt;
+              &lt;tr&gt;
+                &lt;th scope="col"&gt;Sepal.Length&lt;/th&gt;
+                &lt;th scope="col"&gt;Sepal.Width&lt;/th&gt;
+                &lt;th scope="col"&gt;Petal.Length&lt;/th&gt;
+                &lt;th scope="col"&gt;Petal.Width&lt;/th&gt;
+                &lt;th scope="col"&gt;Species&lt;/th&gt;
+              &lt;/tr&gt;
+        &lt;/thead&gt;
+        
+        &lt;tbody&gt;
+                &lt;tr&gt;
+                  &lt;td&gt;5.1&lt;/td&gt;
+                  &lt;td&gt;3.5&lt;/td&gt;
+                  &lt;td&gt;1.4&lt;/td&gt;
+                  &lt;td&gt;0.2&lt;/td&gt;
+                  &lt;td&gt;setosa&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                  &lt;td&gt;4.9&lt;/td&gt;
+                  &lt;td&gt;3.0&lt;/td&gt;
+                  &lt;td&gt;1.4&lt;/td&gt;
+                  &lt;td&gt;0.2&lt;/td&gt;
+                  &lt;td&gt;setosa&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                  &lt;td&gt;4.7&lt;/td&gt;
+                  &lt;td&gt;3.2&lt;/td&gt;
+                  &lt;td&gt;1.3&lt;/td&gt;
+                  &lt;td&gt;0.2&lt;/td&gt;
+                  &lt;td&gt;setosa&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                  &lt;td&gt;4.6&lt;/td&gt;
+                  &lt;td&gt;3.1&lt;/td&gt;
+                  &lt;td&gt;1.5&lt;/td&gt;
+                  &lt;td&gt;0.2&lt;/td&gt;
+                  &lt;td&gt;setosa&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                  &lt;td&gt;5.0&lt;/td&gt;
+                  &lt;td&gt;3.6&lt;/td&gt;
+                  &lt;td&gt;1.4&lt;/td&gt;
+                  &lt;td&gt;0.2&lt;/td&gt;
+                  &lt;td&gt;setosa&lt;/td&gt;
+                &lt;/tr&gt;
+                &lt;tr&gt;
+                  &lt;td&gt;5.4&lt;/td&gt;
+                  &lt;td&gt;3.9&lt;/td&gt;
+                  &lt;td&gt;1.7&lt;/td&gt;
+                  &lt;td&gt;0.4&lt;/td&gt;
+                  &lt;td&gt;setosa&lt;/td&gt;
+                &lt;/tr&gt;
+        &lt;/tbody&gt;
+      &lt;/table&gt;
+    &lt;/div&gt;
+&lt;!-- hack to avoid NA insertion in last line --&gt;
+```
+
+:::
+:::</code></pre>
 
 
+</section>
 </section>
 </section>
 
@@ -930,18 +1067,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-      <a href="../man/group_tt.html" class="pagination-link" aria-label="`group_tt`">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>group_tt</code></span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../man/save_tt.html" class="pagination-link" aria-label="`save_tt`">
-        <span class="nav-page-text"><code>save_tt</code></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 
