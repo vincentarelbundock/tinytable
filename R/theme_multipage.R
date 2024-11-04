@@ -6,8 +6,8 @@ theme_multipage <- function(x,
     if (identical(x@theme[[1]], "multipage")) x@theme <- list("default")
     assert_integerish(rowhead, lower = 0, len = 1)
     assert_integerish(rowfoot, lower = 0, len = 1)
-    cap <- sprintf("caption={%s}", x@caption)
-    x@caption <- ""
+    # cap <- sprintf("caption={%s}", x@caption)
+    # x@caption <- ""
     fn <- function(table) {
         if (!isTRUE(table@output == "latex")) return(table)
 
@@ -22,7 +22,7 @@ theme_multipage <- function(x,
 
         table@table_string <- tab
 
-        table <- style_tt(table, tabularray_outer = cap)
+        # table <- style_tt(table, tabularray_outer = cap)
 
         if (rowhead > 0) {
             table <- style_tt(table, tabularray_inner = sprintf("rowhead=%s", rowhead))
