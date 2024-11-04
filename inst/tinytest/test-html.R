@@ -3,7 +3,6 @@ using("tinysnapshot")
 options(tinytable_print_output = "html")
 
 
-
 x <- mtcars[1:4, 1:5]
 
 tab <- tt(x, theme = "striped")
@@ -199,6 +198,16 @@ if (Sys.info()["user"] == "vincent") {
     expect_snapshot_print(print_html(dat, "html"), "html-images-portable.html")
     options(op)
 }
+
+
+# Issue #355: indices are changed after cells are merged with rowspan
+tab <- tt(head(iris)) |> 
+    style_tt(j = 1, i = 1, rowspan = 2, colspan = 2) |> 
+    style_tt(i = 1, color = "blue") |> 
+    style_tt(j = 1, color = "orange", italic = TRUE)
+expect_snapshot_print(print_html(tab, "html"), "html-issue355_colors_and_spans.html")
+
+
 
 # # Built-in plots
 # # cannot be tested because the names of plots are random and set seed doesn't work
