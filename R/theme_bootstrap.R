@@ -18,6 +18,9 @@ theme_bootstrap <- function(x, ...) {
         return(table)
     }
     x <- style_tt(x, finalize = theme_void_fn) # only affects LaTeX
-    x <- style_tt(x, tabularray_inner = "hlines={gray8},", finalize = fn)
+    x <- style_tt(x, 
+        tabularray_inner = "hlines={gray8},", 
+        bootstrap_class = "table",
+        finalize = fn)
     return(x)
 }

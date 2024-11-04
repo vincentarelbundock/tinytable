@@ -9,7 +9,7 @@ theme_default <- function(x, ...) {
     bc <- if (length(x@bootstrap_class) == 0) "table table-borderless" else x@bootstrap_class
     x <- style_tt(x, 
       bootstrap_class = bc,
-      i = nrow(x), 
+      i = nrow(x) + x@ngroupi, 
       line = "b", 
       line_color = "#d3d8dc", 
       line_width = 0.1)
