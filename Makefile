@@ -24,8 +24,7 @@ test: install ## test
 typst: ## compile typst example
 	quarto render sandbox/typst.qmd
 
-website: install ## render vignettes and website
+website: install typst ## render vignettes and website
 	rm -rf _quarto
 	rm -rf docs
-	quarto render sandbox
 	Rscript -e "altdoc::render_docs(verbose = TRUE, freeze = TRUE, autolink = TRUE)"

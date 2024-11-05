@@ -146,6 +146,8 @@ available in two formats:
     -   [Plots and
         images](https://vincentarelbundock.github.io/tinytable/vignettes/plot.html)
     -   [Themes](https://vincentarelbundock.github.io/tinytable/vignettes/theme.html)
+    -   [Notebooks (Quarto, Rmarkdown, Bookdown,
+        etc.)](https://vincentarelbundock.github.io/tinytable/vignettes/notebooks.html)
     -   [Customization](https://vincentarelbundock.github.io/tinytable/vignettes/custom.html)
     -   [FAQ](https://vincentarelbundock.github.io/tinytable/vignettes/faq.html)
     -   [Alternatives](https://vincentarelbundock.github.io/tinytable/vignettes/alternatives.html)
