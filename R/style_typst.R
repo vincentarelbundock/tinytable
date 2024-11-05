@@ -44,7 +44,7 @@ setMethod(
     if (length(x@names) == 0) sty$i <- sty$i + 1
 
     rec <- expand.grid(
-        i = seq_len(x@nhead + x@nrow + x@ngroupi) - 1,
+        i = seq_len(x@nhead + x@nrow) - 1,
         j = seq_len(x@ncol) - 1
     )
     css <- rep("", nrow(rec))

@@ -35,6 +35,7 @@ setClass(
         ncol = "numeric",
         nhead = "numeric",
         ngroupi = "numeric",
+        ngroupj = "numeric",
         group_i_idx = "numeric",
         names = "NULLorCharacter",
         output = "character",
@@ -50,7 +51,6 @@ setClass(
         lazy_plot = "list",
         lazy_finalize = "list",
         lazy_theme = "list",
-        group_tt_i = "logical",
         portable = "logical"
         )
 )
@@ -77,6 +77,7 @@ setMethod("initialize", "tinytable", function(
   .Object@ncol <- ncol(.Object@data)
   .Object@nhead <- if (is.null(colnames(data))) 0 else 1
   .Object@ngroupi <- 0
+  .Object@ngroupj <- 0
   .Object@names <- if (is.null(colnames(data))) character() else colnames(data)
   .Object@id <- get_id("tinytable_")
   .Object@output <- "tinytable"
@@ -84,7 +85,6 @@ setMethod("initialize", "tinytable", function(
   .Object@css <- data.frame(i = NA, j = NA, bootstrap = NA, id = NA)
   .Object@portable <- FALSE
   .Object@style <- data.frame()
-  .Object@group_tt_i <- FALSE
   .Object@lazy_theme <- list()
   # conditional: allows NULL user input
   if (!is.null(placement)) .Object@placement <- placement

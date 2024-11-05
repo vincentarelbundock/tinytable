@@ -67,29 +67,30 @@ group_tt <- function(x, i = NULL, j = NULL, indent = 1, ...) {
   i <- sanitize_group_index(i, hi = nrow(x) + 1, orientation = "row")
   j <- sanitize_group_index(j, hi = ncol(x), orientation = "column")
 
-  # we don't need this as a list, and we use some sorting later
+  # increment indices eagerly
   i <- unlist(i)
 
   if (!is.null(i)) {
-    if (isTRUE(x@group_tt_i)) {
+    if (x@ngroupi > 0) {
       stop("Only one row-wise `group_tt(i = ...)` call is allowed.", call. = FALSE)
     }
-    x@group_tt_i <- TRUE
+
+    x@ngroupi <- length(i)
+    x@nrow <- x@nrow + x@ngroupi
+    x@group_i_idx <- as.numeric(i)
+    
     if (isTRUE(indent > 0)) {
-      idx_indent <- setdiff(
-        seq_len(nrow(x) + length(i)), 
-        i + seq_along(i) - 1)
+      idx_indent <- setdiff(seq_len(nrow(x)), i + seq_along(i) - 1)
       x <- style_tt(x, i = idx_indent, j = 1, indent = indent)
     }
   }
 
-  if (!is.null(i)) {
-    x@ngroupi <- x@ngroupi + length(i)
-    x@group_i_idx <- as.numeric(unlist(i))
+  if (!is.null(j)) {
+    x@nhead <- x@nhead + 1
   }
 
+  # apply group labels lazily
   cal <- call("group_eval", i = i, j = j, indent = indent)
-
   x@lazy_group <- c(x@lazy_group, list(cal))
 
   return(x)
