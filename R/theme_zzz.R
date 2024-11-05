@@ -4,6 +4,7 @@ theme_dictionary <- list(
     "grid" = theme_grid,
     "multipage" = theme_multipage,
     "placement" = theme_placement,
+    "revealjs" = theme_revealjs,
     "resize" = theme_resize,
     "rotate" = theme_rotate,
     "spacing" = theme_spacing,
