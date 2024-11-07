@@ -134,6 +134,7 @@ setMethod(
     }
   }
 
+
   clean <- function(k) {
     k <- gsub("\\s*", "", k)
     k <- gsub(",+", ",", k)
@@ -188,6 +189,15 @@ setMethod(
   spec <- unique(as.vector(unlist(spec)))
   for (s in spec) {
     x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
+  }
+
+  # d-alignment breaks on row headers (after alignment settings)
+  if (any(grepl("d", sty$align))) {
+    rows <- paste(sprintf("row{%s}={guard},", seq_len(x@nhead)), collapse = "\n")
+    x@table_string <- lines_insert(x@table_string, 
+            rows, 
+            "%% tabularray inner close",
+            position = "before")
   }
 
   # lines
@@ -278,7 +288,7 @@ color_to_preamble <- function(x, col) {
 
 
 get_dcolumn <- function(j, x) {
-    siunitx <- get_option("tinytable_siunitx_table_format", default = "table-format=-%s.%s,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\\*+()}")
+    siunitx <- get_option("tinytable_siunitx_table_format", default = "table-format=-%s.%s,table-align-text-before=false,table-align-text-after=false,input-digits={0123456789-,\\*+()}")
     num <- unlist(x@table_dataframe[, j])
     num <- strsplit(num, "\\.")
     num <- lapply(num, function(k) if (length(k) == 1) c(k, " ") else k)
@@ -287,6 +297,7 @@ get_dcolumn <- function(j, x) {
     left <- max(nchar(gsub("\\D", "", left)))
     right <- max(nchar(gsub("\\D", "", right)))
     out <- sprintf(siunitx, left, right)
+    out <- sprintf(siunitx, 1, 1)
     out <- sprintf("si={%s},", out)
     return(out)
 }
