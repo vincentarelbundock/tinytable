@@ -72,7 +72,9 @@ The \code{tt} function renders a table in different formats with various styling
 
 \code{tinytable} uses the \code{tabularray} package from your LaTeX distribution to draw tables. \code{tabularray}, in turn, uses the special \code{tblr}, \code{talltblr}, and \code{longtblr} environments.
 
-When rendering a document from Quarto or Rmarkdown directly to PDF, \code{tinytable} will populate the LaTeX preamble automatically with all the required packages (except when code chunks are cached). For standalone LaTeX documents, these commands should be inserted in the preamble manually:
+When rendering a document from Quarto or Rmarkdown directly to PDF, \code{tinytable} will populate the LaTeX preamble automatically with all the required packages. For standalone LaTeX documents, these commands should be inserted in the preamble manually:
+
+Note: Your document will fail to compile to PDF in Quarto if you enable caching and you use tinytable due to missing LaTeX headers. To avoid this problem, set the option \verb{#| cache: false} for the chunk(s) where you use tinytable.
 
 \if{html}{\out{<div class="sourceCode latex">}}\preformatted{\\usepackage\{tabularray\}
 \\usepackage\{float\}

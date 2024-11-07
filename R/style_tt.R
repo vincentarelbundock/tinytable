@@ -49,7 +49,6 @@
 #' @param output Apply style only to the output format specified by this argument. `NULL` means that we apply to all formats. 
 #' @param ... extra arguments are ignored
 #' @return An object of class `tt` representing the table.
-#' @template latex_preamble
 #' @export
 #' @examplesIf knitr::is_html_output()
 #' @examples
