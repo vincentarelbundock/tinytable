@@ -16,14 +16,28 @@ group_tabularray_col <- function(x, j, ihead, ...) {
   if (is.null(j)) {
     return(x)
   }
-
+  
   out <- strsplit(x@table_string, split = "\\n")[[1]]
 
-  header <- rep("", ncol(x))
-  for (idx in seq_along(j)) {
-    header[min(j[[idx]])] <- names(j)[idx]
+  if ((x@theme[[1]] == "default") && (x@output == "latex")) {
+    # Tabular theme; use `multicolumn` to center text
+    header <- paste(mapply(
+      function(name, x) {
+        sprintf(
+          "\\multicolumn{%s}{c}{%s}",
+          max(x) - min(x) + 1,
+          name
+        )
+      },
+      names(j), j
+    ), collapse = " & ")
+  } else {
+    header <- rep("", ncol(x))
+    for (idx in seq_along(j)) {
+      header[min(j[[idx]])] <- names(j)[idx]
+    }
+    header <- paste(header, collapse = " & ")
   }
-  header <- paste(header, collapse = " & ")
 
   # \toprule -> \midrule
   midr <- sapply(j, function(x) sprintf("\\cmidrule[lr]{%s-%s}", min(x), max(x)))
