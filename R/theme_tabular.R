@@ -32,7 +32,12 @@ theme_tabular <- function(x,
                 tab <- sub("\\s*%% tabularray outer open", "", tab)
                 tab <- sub("\\s*%% TinyTableHeader", "", tab)
                 # align
-                a <- sprintf("begin{tabular}{%s}", strrep("l", ncol(table)))
+                if (!is.null(table@style$align)) {
+                    alignment_string <- paste(table@style$align, collapse = "")
+                    a <- sprintf("begin{tabular}{%s}", alignment_string)
+                } else {
+                    a <- sprintf("begin{tabular}{%s}", strrep("l", ncol(table)))
+                }
                 tab <- sub("begin{tabular}", a, tab, fixed = TRUE)
             }
 
