@@ -2,11 +2,8 @@
 
 ## Development
 
-
-Misc:
-
-* `theme_tt("spacing")`: Change the row and column spacing to create more compact or airy tables. LaTeX and HTML only. Thanks to @statzhero for feature request #353.
 * Major refactor of the style internals. HTML, LaTeX, and Typst documents should be much more concise and efficient.
+* `theme_tt("spacing")`: Change the row and column spacing to create more compact or airy tables. LaTeX and HTML only. Thanks to @statzhero for feature request #353.
 * `style_tt()`: the `i` and `j` indices are now consistent in all formats. They refer to rows *after* the insertion of  row groups.
 * `save_tt()` respects `options(tinytable_save_overwrite=TRUE)`
 * LaTeX: Guard header rows when using `style_tt(align="d")`. Issue #367
