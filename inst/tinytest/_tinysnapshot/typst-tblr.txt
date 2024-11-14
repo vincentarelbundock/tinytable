@@ -45,27 +45,19 @@ block[ // start block
     columns: (auto, auto, auto, auto, auto),
     stroke: none,
     align: (x, y) => {
-      let align-array = ( 
-        // tinytable cell align after
-      )
-      if align-array.len() == 0 {
-        left
+      let sarray = style-array.filter(a => "align" in a)
+      let sarray = sarray.filter(a => a.pairs.find(p => p.at(0) == x and p.at(1) == y) != none)
+      if sarray.len() > 0 {
+        sarray.last().align
       } else {
         left
-        // for style in style-array {
-        //   let m = style.pairs.find(k => k.at(0) == x and k.at(1) == y)
-        //   if m != none and ("align" in style) {
-        //     let a = style.align
-        //   }
-        // }
       }
     },
     fill: (x, y) => {
-      for style in style-array {
-        let m = style.pairs.find(k => k.at(0) == x and k.at(1) == y)
-        if m != none and ("background" in style) {
-          style.background
-        }
+      let sarray = style-array.filter(a => "background" in a)
+      let sarray = sarray.filter(a => a.pairs.find(p => p.at(0) == x and p.at(1) == y) != none)
+      if sarray.len() > 0 {
+        sarray.last().background
       }
     },
  table.hline(y: 1, start: 0, end: 5, stroke: 0.05em + black),
