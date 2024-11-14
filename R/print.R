@@ -36,7 +36,6 @@ knit_print.tinytable <- function(x,
   return(out)
 }
 
-
 #' Print, display, or convert a tinytable object
 #'
 #' This function is called automatically by `R` whenever a `tinytable` object is anprinted to the console or in an HTML viewer pane.
@@ -73,7 +72,19 @@ print.tinytable <- function(x,
   # lazy styles get evaluated here by build_tt(), at the very end
   if (output %in% c("latex", "typst", "markdown", "gfm")) {
     cat(tab, "\n")
+
   } else if (output == "html") {
+
+    if (is_posit_notebook()) {
+      tinytable_print_rstudio <- getOption("tinytable_print_rstudio", default = "inline")
+      assert_choice(tinytable_print_rstudio, c("inline", "viewer"))
+      if (tinytable_print_rstudio == "inline") {
+        tab = sprintf("\n```{=html}\n%s\n```\n`", tab)
+        print(knitr::asis_output(tab))
+        return(invisible(x))
+      }
+    }
+
     # need to change the output directory to a temporary directory
     # for plot_tt() inline plots to show up in RStudio
     htmlFile <- file.path(dir, "index.html")
