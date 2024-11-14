@@ -47,10 +47,10 @@ expect_snapshot_print(
 
 
 # Lazy style: group after style is respected
-a <- tt(mtcars[1:4, 1:4]) |> 
+a <- tt(mtcars[1:4, 1:4]) |>
   style_tt(color = "orange", background = "black") |>
   group_tt(j = list("blah" = 1:2, "bar" = 3:4))
-b <- tt(mtcars[1:4, 1:4]) |> 
+b <- tt(mtcars[1:4, 1:4]) |>
   group_tt(j = list("blah" = 1:2, "bar" = 3:4)) |>
   style_tt(color = "orange", background = "black")
 expect_snapshot_print(a, label = "latex-group_style_order")
@@ -59,13 +59,18 @@ expect_equal(as.character(a@table_string), as.character(b@table_string))
 
 x <- data.frame(pi = c(pi * 100, pi * 1000, pi * 10000, pi * 100000))
 tab <- tt(x) |>
-    format_tt(j = 1, digits = 8, num_fmt = "significant_cell") |>
-    style_tt(j = 1, align = "d")
+  format_tt(j = 1, digits = 8, num_fmt = "significant_cell") |>
+  style_tt(j = 1, align = "d")
 expect_snapshot_print(tab, label = "latex-align_d")
 
 
+dat = data.frame(a = c("(03.1)", "(3.14)**", "(003.1416)+"))
+tt(dat) |> style_tt(align = "d")
+expect_snapshot_print(tab, label = "latex-align_d_02")
+
+
 # bug discovered with vignette
-x <- tt(mtcars[1:9, 1:8]) |> 
+x <- tt(mtcars[1:9, 1:8]) |>
   group_tt(
     i = list(
       "I like (fake) hamburgers" = 3,
@@ -76,8 +81,8 @@ x <- tt(mtcars[1:9, 1:8]) |>
     align = "c",
     color = "white",
     background = "gray",
-    bold = TRUE) |> 
-    save_tt("latex")
+    bold = TRUE) |>
+  save_tt("latex")
 expect_inherits(x, "character")
 
 # Footnotes
@@ -147,7 +152,7 @@ dat <- data.frame(
   ),
   check.names = FALSE
 )
-dat<-tt(dat) |> format_tt(j = 1, markdown = TRUE)
+dat <- tt(dat) |> format_tt(j = 1, markdown = TRUE)
 expect_snapshot_print(
   dat,
   label = "latex-formatting_url")
@@ -156,22 +161,22 @@ expect_snapshot_print(
 x <- mtcars[1:4, 1:5]
 expect_snapshot_print(
   (tt(x) |>
-     style_tt(
-       i = 2:3,
-       j = c(1, 3, 4),
-       italic = TRUE,
-       background = "green",
-       color = "orange")),
+    style_tt(
+      i = 2:3,
+      j = c(1, 3, 4),
+      italic = TRUE,
+      background = "green",
+      color = "orange")),
   label = "latex-style")
 
-# Font size 
+# Font size
 expect_snapshot_print(
   (tt(x) |> style_tt(j = "mpg|hp|qsec", fontsize = 1.5)),
   label = "latex-font_size")
 
 # Merging cells
 expect_snapshot_print(
-  (tt(x)|> style_tt(
+  (tt(x) |> style_tt(
     i = 2, j = 2,
     colspan = 3,
     rowspan = 2,
@@ -184,20 +189,20 @@ expect_snapshot_print(
 
 # Spanning cells
 tab <- aggregate(mpg ~ cyl + am, FUN = mean, data = mtcars)
-tab <- tab[order(tab$cyl, tab$am),]
+tab <- tab[order(tab$cyl, tab$am), ]
 expect_snapshot_print(
   (tt(tab, digits = 2) |>
-     style_tt(i = c(1, 3, 5), j = 1, rowspan = 2, alignv = "t")),
+    style_tt(i = c(1, 3, 5), j = 1, rowspan = 2, alignv = "t")),
   label = "latex-spanning_cells")
 
 # Conditional styling
 k <- mtcars[1:10, c("mpg", "am", "vs")]
 expect_snapshot_print(
   (tt(k) |>
-     style_tt(
-       i = which(k$am == k$vs),
-       background = "teal",
-       color = "white")),
+    style_tt(
+      i = which(k$am == k$vs),
+      background = "teal",
+      color = "white")),
   label = "latex-conditional_styling")
 
 # Heatmaps
@@ -208,13 +213,13 @@ bg <- hcl.colors(20, "Inferno")
 fg <- ifelse(as.matrix(k) < 1.7, tail(bg, 1), head(bg, 1))
 expect_snapshot_print(
   (tt(k, width = .7, theme = "void") |>
-     style_tt(j = 1:5, align = "ccccc") |>
-     style_tt(
-       i = 1:4,
-       j = 1:5,
-       color = fg,
-       background = bg,
-       fontsize = fs)),
+    style_tt(j = 1:5, align = "ccccc") |>
+    style_tt(
+      i = 1:4,
+      j = 1:5,
+      color = fg,
+      background = bg,
+      fontsize = fs)),
   label = "latex-heatmaps")
 
 # Borders
@@ -239,12 +244,14 @@ expect_snapshot_print(tab, label = "latex-issue242")
 x <- data.frame(x = 1:5)
 x <- data.frame(x = 1:5)
 colnames(x) <- NULL
-tab <- tt(x) |> format_tt() |> save_tt("latex")
+tab <- tt(x) |>
+  format_tt() |>
+  save_tt("latex")
 expect_inherits(tab, "character")
 
 
 # Issue #307
-tab <- tt(head(iris)) |> 
+tab <- tt(head(iris)) |>
   group_tt(j = list("blah" = 1:2)) |>
   theme_tt("tabular")
 expect_snapshot_print(tab, label = "latex-issue307.tex")
@@ -257,5 +264,3 @@ expect_snapshot_print(tab, label = "latex-format_tt_math.tex")
 
 
 options(tinytable_print_output = NULL)
-
-
