@@ -72,11 +72,9 @@ print.tinytable <- function(x,
   # lazy styles get evaluated here by build_tt(), at the very end
   if (output %in% c("latex", "typst", "markdown", "gfm")) {
     cat(tab, "\n")
-
   } else if (output == "html") {
-
-    if (is_posit_notebook()) {
-      tinytable_print_rstudio <- getOption("tinytable_print_rstudio", default = "inline")
+    if (is_rstudio_notebook()) {
+      tinytable_print_rstudio <- getOption("tinytable_print_rstudio_notebook", default = "inline")
       assert_choice(tinytable_print_rstudio, c("inline", "viewer"))
       if (tinytable_print_rstudio == "inline") {
         tab = sprintf("\n```{=html}\n%s\n```\n`", tab)

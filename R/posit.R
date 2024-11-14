@@ -1,6 +1,7 @@
 # hack to detect Rstudio vs. Positron
 is_rstudio <- function() {
-  tryCatch(rstudioapi::getThemeInfo(), error = function(e) FALSE)
+  flag <- tryCatch(rstudioapi::getThemeInfo(), error = function(e) FALSE)
+  !isFALSE(flag)
 }
 
 is_rstudio_notebook <- function() {

@@ -100,6 +100,7 @@ https://vincentarelbundock.github.io/tinytable/vignettes/options.html
 \subsection{Figure environment}{
 \itemize{
 \item \code{options("tinytable_quarto_figure" = FALSE)}: Typst only. Normally, it is best to allow Quarto to define the figure environment, so the default behavior is to not include one.
+\item \code{options(tinytable_print_rstudio_notebook = "inline")}: Display tables "inline" or in the "viewer" in RStudio notebooks.
 }
 }
 

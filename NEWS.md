@@ -7,6 +7,7 @@
 * `style_tt()`: the `i` and `j` indices are now consistent in all formats. They refer to rows *after* the insertion of  row groups.
 * `save_tt()` respects `options(tinytable_save_overwrite=TRUE)`
 * LaTeX: Guard header rows when using `style_tt(align="d")`. Issue #367
+* Inline display in Quarto and Rmarkdown notebooks. `options(tinytable_print_rstudio_notebook = "inline")` or `"viewer"`
 
 Bugs:
 
