@@ -401,6 +401,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#style_tt-does-not-apply-to-row-headers" id="toc-style_tt-does-not-apply-to-row-headers" class="nav-link" data-scroll-target="#style_tt-does-not-apply-to-row-headers"><code>style_tt()</code> does not apply to row headers</a></li>
   <li><a href="#rowspan-and-colspan" id="toc-rowspan-and-colspan" class="nav-link" data-scroll-target="#rowspan-and-colspan"><code>rowspan</code> and <code>colspan</code></a></li>
   </ul></li>
+  <li><a href="#word-.docx" id="toc-word-.docx" class="nav-link" data-scroll-target="#word-.docx">Word (<code>.docx</code>)</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -584,9 +585,42 @@ MathJax = {
 <h3 class="anchored" data-anchor-id="rowspan-and-colspan"><code>rowspan</code> and <code>colspan</code></h3>
 <p>These arguments are already implemented in the form of “pseudo-spans”, meaning that we flush the content of adjacent cells, but do not modify the row or column borders. This is probably adequate for most needs.</p>
 <p>One alternative would be to remove line segments in finalize_grid(). I tried this but it is tricky and the results were brittle, so I rolled it back. I’m open to considering a PR if someone wants to contribute code, but please discuss the feature design in an issue with me before working on this.</p>
-
-
 </section>
+</section>
+<section id="word-.docx" class="level2">
+<h2 class="anchored" data-anchor-id="word-.docx">Word (<code>.docx</code>)</h2>
+<p>Word document documents are created in two steps:</p>
+<ol type="1">
+<li>Generates a markdown table.</li>
+<li>Call the external <a href="https://pandoc.org/">Pandoc software</a> to convert the markdown table to a Word document.</li>
+</ol>
+<p>This workflow limits the range of styling options available in Word. Indeed, many arguments in the <code>style_tt()</code> function do not have formal markdown notation to represent them, and are thus not available. For example, while <code>italic</code>, <code>bold</code>, and <code>strikeout</code>, are supported, <code>color</code> and <code>background</code> are not.</p>
+<p>Note that other <code>tinytable</code> functions such as <code>group_tt()</code> and <code>format_tt()</code> and <code>plot_tt()</code> should work as expected in Word.</p>
+<p>Users who want full styling capabilities in Word can save tables as image files and insert them in their documents. Here is an example Quarto notebook illustrating this workflow.</p>
+<pre class="verbatim"><code>---
+format: docx
+---
+
+::: {.cell}
+
+```{.r .cell-code}
+library(tinytable)
+
+options(tinytable_save_overwrite = TRUE)
+
+tt(mtcars[1:10, 1:5]) |&gt;
+  style_tt(j = 2:3, background = "black", color = "white") |&gt;
+  save_tt("table_01.png")
+
+knitr::include_graphics("table_01.png")
+```
+
+::: {.cell-output-display}
+![](table_01.png){width=50%}
+:::
+:::</code></pre>
+
+
 </section>
 </section>
 
