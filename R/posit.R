@@ -5,8 +5,8 @@ is_posit <- function() {
 is_posit_notebook <- function() {
   flag <- FALSE
   if (is_posit()) {
-    con <-  rstudioapi::getActiveDocumentContext()
-    if (isTRUE(grepl("\\.qmd$|\\.Rmd$", con[["path"]]))) {
+    con <-  rstudioapi::getSourceEditorContext()[["path"]]
+    if (isTRUE(grepl("\\.qmd$|\\.Rmd$", con))) {
       flag <- TRUE
     }
   }
