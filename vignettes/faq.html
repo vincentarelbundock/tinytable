@@ -597,28 +597,22 @@ MathJax = {
 <p>This workflow limits the range of styling options available in Word. Indeed, many arguments in the <code>style_tt()</code> function do not have formal markdown notation to represent them, and are thus not available. For example, while <code>italic</code>, <code>bold</code>, and <code>strikeout</code>, are supported, <code>color</code> and <code>background</code> are not.</p>
 <p>Note that other <code>tinytable</code> functions such as <code>group_tt()</code> and <code>format_tt()</code> and <code>plot_tt()</code> should work as expected in Word.</p>
 <p>Users who want full styling capabilities in Word can save tables as image files and insert them in their documents. Here is an example Quarto notebook illustrating this workflow.</p>
-<pre class="verbatim"><code>---
-format: docx
----
-
-::: {.cell}
-
-```{.r .cell-code}
-library(tinytable)
-
-options(tinytable_save_overwrite = TRUE)
-
-tt(mtcars[1:10, 1:5]) |&gt;
-  style_tt(j = 2:3, background = "black", color = "white") |&gt;
-  save_tt("table_01.png")
-
-knitr::include_graphics("table_01.png")
-```
-
-::: {.cell-output-display}
-![](table_01.png){width=50%}
-:::
-:::</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>format: docx</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>```{r}</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>#| out-width: "50%"</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>library(tinytable)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>options(tinytable_save_overwrite = TRUE)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>tt(mtcars[1:10, 1:5]) |&gt;</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  style_tt(j = 2:3, background = "black", color = "white") |&gt;</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  save_tt("table_01.png")</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>knitr::include_graphics("table_01.png")</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>```</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
