@@ -518,20 +518,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>Quarto data processing can enter in conflict with <code>tinytable</code> styling or formatting options. See below for how to disable it.</li>
 </ol>
 <ul>
-<li><p><code>options(tinytable_quarto_disable_processing = TRUE)</code></p>
+<li><code>options(tinytable_quarto_disable_processing = TRUE)</code>
 <ul>
 <li>disables Quarto processing of cell content.</li>
 </ul></li>
-<li><p><code>options(tinytable_quarto_figure = FALSE)</code></p>
+<li><code>options(tinytable_print_rstudio_notebook = "inline")</code> or <code>"viewer"</code>
+<ul>
+<li>Display tables inline in the notebook or in the viewer. Inline is an RStudio-only feature.</li>
+</ul></li>
+<li><code>options(tinytable_quarto_figure = FALSE)</code>
 <ul>
 <li>by default, do not include Typst tables in a figure environment in Quarto.</li>
+</ul></li>
 </ul>
 <p>Setting this global option to <code>FALSE</code> may lead to conflicts with some <code>tinytable</code> features, but it also allows use of markdown and Quarto-specific code in table cells, such as cross-references.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Math =</span> <span class="st">"x^2^"</span>, <span class="at">Citation =</span> <span class="st">"@Lovelace1842"</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>fn <span class="ot">&lt;-</span> <span class="cf">function</span>(z) <span class="fu">sprintf</span>(<span class="st">"&lt;span data-qmd='%s'&gt;&lt;/span&gt;"</span>, z)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x) <span class="sc">|&gt;</span> <span class="fu">format_tt</span>(<span class="at">i =</span> <span class="dv">1</span>, <span class="at">fn =</span> fn)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>See this link for more details: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing</p></li>
-</ul>
+<p>See this link for more details: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing</p>
 
 
 </section>
