@@ -7,11 +7,12 @@
 #' https://vincentarelbundock.github.io/tinytable/vignettes/options.html
 #'
 #' ## Quarto
-#' 
+#'
 #' ### Figure environment
-#' 
-#' * `options("tinytable_quarto_figure" = FALSE)`: Typst only. Normally, it is best to allow Quarto to define the figure environment, so the default behavior is to not include one. 
-#' 
+#'
+#' * `options("tinytable_quarto_figure" = FALSE)`: Typst only. Normally, it is best to allow Quarto to define the figure environment, so the default behavior is to not include one.
+#' * `options(tinytable_print_rstudio_notebook = "inline")`: Display tables "inline" or in the "viewer" in RStudio notebooks.
+#'
 #' ### Data Processing
 #'
 #' The `format_tt(quarto=TRUE)` argument activates Quarto data processing for specific cells. This funcationality comes with  a few warnings:
