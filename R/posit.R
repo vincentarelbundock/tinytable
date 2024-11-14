@@ -5,7 +5,10 @@ is_posit <- function() {
 is_posit_notebook <- function() {
   flag <- FALSE
   if (is_posit()) {
-    con <-  rstudioapi::getSourceEditorContext()[["path"]]
+    ## this returns a .Rmd/.qmd path in Positron, but Positron doesn't support inline tables
+    ## TODO: this is a very ugly hack: https://github.com/rstudio/rstudioapi/issues/310
+    # con <-  rstudioapi::getSourceEditorContext()[["path"]]
+    con <-  rstudioapi::getActiveDocumentContext()[["path"]]
     if (isTRUE(grepl("\\.qmd$|\\.Rmd$", con))) {
       flag <- TRUE
     }
