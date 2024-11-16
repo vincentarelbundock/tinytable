@@ -1,5 +1,9 @@
 # News
 
+## 0.6.1
+
+* Bug fix: d-column LaTeX generated an error in some cases.
+
 ## 0.6.0
 
 * Major refactor of the style internals. HTML, LaTeX, and Typst documents should be much more concise and efficient.
