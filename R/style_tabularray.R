@@ -54,7 +54,7 @@ setMethod(
       dcol_j <- if (length(dcol_j) == 0) NULL else unique(dcol_j)
       for (idx_j in dcol_j) {
         spec <- get_dcolumn(idx_j, x)
-        spec <- sprintf("column{%s}={%s}\n", dcol_j, spec)
+        spec <- sprintf("column{%s}={%s}\n", idx_j, spec)
         x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
         for (idx_i in seq_len(x@nhead)) {
           spec <- paste(sprintf("cell{%s}{%s}={guard,halign=c,},", idx_i, idx_j), collapse = "\n")
