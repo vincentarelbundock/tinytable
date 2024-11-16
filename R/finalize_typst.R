@@ -19,10 +19,11 @@ setMethod(
 
   # Quarto cross-references
   if (isTRUE(check_dependency("knitr"))) {
-    quarto_caption <- isTRUE(knitr::pandoc_to("typst")) &&
-                      isFALSE(getOption("tinytable_quarto_figure", default = FALSE))
-                      (!is.null(knitr::opts_current$get()[["label"]]) ||
-                       !is.null(knitr::opts_current$get()[["tbl-cap"]]))
+    flag_typst <- isTRUE(knitr::pandoc_to("typst"))
+    flag_option <- isTRUE(getOption("tinytable_quarto_figure", default = FALSE))
+    flag_chunk_label <- isTRUE(grepl("^tbl-", knitr::opts_current$get()[["label"]]))
+    flag_chunk_caption <- !is.null(knitr::opts_current$get()[["tbl-cap"]])
+    quarto_caption <- flag_typst && flag_option && (!flag_chunk_label || !flag_chunk_caption) 
     if (quarto_caption) {
        out <- lines_drop_between(out, 
                     regex_start = "// start figure preamble",
