@@ -20,7 +20,7 @@ format_numeric <- function(value, num_suffix, digits, num_mark_big, num_mark_dec
       num_zero = num_zero,
       num_fmt = num_fmt)
   # integer
-  } else if (isTRUE(check_integerish(value)) && !is.null(digits)) {
+  } else if (isTRUE(check_integerish(value))) {
     out <- format_integer(value, 
       digits = digits, 
       num_mark_big = num_mark_big, 
