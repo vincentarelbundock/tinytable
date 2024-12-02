@@ -1,5 +1,15 @@
 # News
 
+## Development
+
+Bugs:
+
+* `save_tt("file.pdf")` works with colors. Thanks to @olivedv for the report and solution #395.
+
+Misc:
+
+* Documentation improvements
+
 ## 0.6.1
 
 * Bug fix: d-column LaTeX generated an error in some cases.
