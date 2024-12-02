@@ -387,6 +387,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
   <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
+  <li><a href="#dependencies" id="toc-dependencies" class="nav-link" data-scroll-target="#dependencies">Dependencies</a></li>
+  <li><a href="#latex-preamble" id="toc-latex-preamble" class="nav-link" data-scroll-target="#latex-preamble">LaTeX preamble</a></li>
+  <li><a href="#global-options" id="toc-global-options" class="nav-link" data-scroll-target="#global-options">Global options</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
@@ -456,6 +459,121 @@ A logical value indicating whether to overwrite an existing file.
 <section id="value" class="level3">
 <h3 class="anchored" data-anchor-id="value">Value</h3>
 <p>A string with the table when <code>output</code> is a format, and the file path when <code>output</code> is a valid path.</p>
+</section>
+<section id="dependencies" class="level3">
+<h3 class="anchored" data-anchor-id="dependencies">Dependencies</h3>
+<ul>
+<li>
+<p><code>.pdf</code> output requires a full LaTeX installation on the local computer.</p>
+</li>
+<li>
+<p><code>.png</code> output requires the <code>webshot2</code> package.</p>
+</li>
+<li>
+<p><code>.html</code> self-contained files require the <code>base64enc</code> package.</p>
+</li>
+</ul>
+</section>
+<section id="latex-preamble" class="level3">
+<h3 class="anchored" data-anchor-id="latex-preamble">LaTeX preamble</h3>
+<p><code>tinytable</code> uses the <code>tabularray</code> package from your LaTeX distribution to draw tables. <code>tabularray</code>, in turn, uses the special <code>tblr</code>, <code>talltblr</code>, and <code>longtblr</code> environments.</p>
+<p>When rendering a document from Quarto or Rmarkdown directly to PDF, <code>tinytable</code> will populate the LaTeX preamble automatically with all the required packages. For standalone LaTeX documents, these commands should be inserted in the preamble manually:</p>
+<p>Note: Your document will fail to compile to PDF in Quarto if you enable caching and you use tinytable due to missing LaTeX headers. To avoid this problem, set the option <code style="white-space: pre;">#| cache: false</code> for the chunk(s) where you use tinytable.</p>
+<div class="sourceCode latex">
+<pre>\usepackage{tabularray}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\UseTblrLibrary{booktabs}
+\UseTblrLibrary{siunitx}
+\newcommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}
+\newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
+\NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
+</pre>
+</div>
+</section>
+<section id="global-options" class="level3">
+<h3 class="anchored" data-anchor-id="global-options">Global options</h3>
+<p>Many global options can be used to set the default argument values of <code>tinytable</code> functions. For a full list, see:</p>
+<p>https://vincentarelbundock.github.io/tinytable/vignettes/options.html</p>
+<h4 class="anchored">
+Quarto
+</h4>
+<h5 class="anchored">
+Figure environment
+</h5>
+<ul>
+<li>
+<p><code>options(“tinytable_quarto_figure” = FALSE)</code>: Typst only. Normally, it is best to allow Quarto to define the figure environment, so the default behavior is to not include one.</p>
+</li>
+<li>
+<p><code>options(tinytable_print_rstudio_notebook = “inline”)</code>: Display tables "inline" or in the "viewer" in RStudio notebooks.</p>
+</li>
+</ul>
+<h5 class="anchored">
+Data Processing
+</h5>
+<p>The <code>format_tt(quarto=TRUE)</code> argument activates Quarto data processing for specific cells. This funcationality comes with a few warnings:</p>
+<ol>
+<li>
+<p>Currently, Quarto provides a <code style="white-space: pre;"></code> LaTeX macro, but it does not appear to do anything with it. References and markdown codes may not be processed as expected in LaTeX.</p>
+</li>
+<li>
+<p>Quarto data processing can enter in conflict with <code>tinytable</code> styling or formatting options. See below for how to disable it.</p>
+</li>
+</ol>
+<p><code>options(tinytable_quarto_disable_processing = TRUE)</code></p>
+<p>Disable Quarto processing of cell content. Setting this global option to <code>FALSE</code> may lead to conflicts with some <code>tinytable</code> features, but it also allows use of markdown and Quarto-specific code in table cells, such as cross-references.</p>
+<div class="sourceCode r">
+<pre>x &lt;- data.frame(Math = "x^2^", Citation = "@Lovelace1842")
+fn &lt;- function(z) sprintf("&lt;span data-qmd='%s'&gt;&lt;/span&gt;", z)
+tt(x) |&gt; format_tt(i = 1, fn = fn)
+</pre>
+</div>
+<p>See this link for more details: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing</p>
+<h4 class="anchored">
+HTML
+</h4>
+<ul>
+<li>
+<p><code>options(tinytable_html_mathjax = TRUE)</code></p>
+<ul>
+<li>
+<p>insert MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><code>options(tinytable_html_portable = TRUE)</code></p>
+<ul>
+<li>
+<p><code>plot_tt()</code> inserts base 64 encoded images directly in the HTML file rather than use external links.</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 class="anchored">
+PDF
+</h4>
+<ul>
+<li>
+<p><code>options(tinytable_pdf_clean = TRUE)</code></p>
+<ul>
+<li>
+<p>deletes temporary and log files.</p>
+</li>
+</ul>
+</li>
+<li>
+<p><code>options(tinytable_pdf_engine = “xelatex”)</code></p>
+<ul>
+<li>
+<p>"xelatex", "pdflatex", "lualatex"</p>
+</li>
+</ul>
+</li>
+</ul>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
