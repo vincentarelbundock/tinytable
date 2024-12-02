@@ -32,6 +32,7 @@
 #' @return An object of class `tt` representing the table.
 #' 
 #' The table object has S4 slots which hold information about the structure of the table. Relying on or modifying the contents of these slots is strongly discouraged. Their names and contents could change at any time, and the `tinytable` developers do not consider changes to the internal structure of the output object to be a "breaking  change" for versioning or changelog purposes.
+#' @template dependencies
 #' @template latex_preamble
 #' @template global_options
 #' 

@@ -67,6 +67,15 @@ The \code{tt} function renders a table in different formats with various styling
 
 \code{tinytable} attempts to determine the appropriate way to print the table based on interactive use, RStudio availability, and output format in RMarkdown or Quarto documents. Users can call \code{print(x, output="markdown")} to print the table in a specific format. Alternatively, they can set a global option: \code{options("tinytable_print_output"="markdown")}
 }
+\section{Dependencies}{
+
+\itemize{
+\item \code{.pdf} output requires a full LaTeX installation on the local computer.
+\item \code{.png} output requires the \code{webshot2} package.
+\item \code{.html} self-contained files require the \code{base64enc} package.
+}
+}
+
 \section{LaTeX preamble}{
 
 

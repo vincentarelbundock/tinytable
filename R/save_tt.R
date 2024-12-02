@@ -10,6 +10,9 @@
 #' the images are included in the HTML as base64 encoded string instead of link to a local file.
 #' @param overwrite A logical value indicating whether to overwrite an existing file.
 #' @return A string with the table when `output` is a format, and the file path when `output` is a valid path.
+#' @template dependencies
+#' @template latex_preamble
+#' @template global_options
 #' @export
 #' @examples
 #' library(tinytable)

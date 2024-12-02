@@ -29,6 +29,101 @@ A string with the table when \code{output} is a format, and the file path when \
 \description{
 This function saves an object of class tinytable to a specified file and format, with an option to overwrite existing files.
 }
+\section{Dependencies}{
+
+\itemize{
+\item \code{.pdf} output requires a full LaTeX installation on the local computer.
+\item \code{.png} output requires the \code{webshot2} package.
+\item \code{.html} self-contained files require the \code{base64enc} package.
+}
+}
+
+\section{LaTeX preamble}{
+
+
+\code{tinytable} uses the \code{tabularray} package from your LaTeX distribution to draw tables. \code{tabularray}, in turn, uses the special \code{tblr}, \code{talltblr}, and \code{longtblr} environments.
+
+When rendering a document from Quarto or Rmarkdown directly to PDF, \code{tinytable} will populate the LaTeX preamble automatically with all the required packages. For standalone LaTeX documents, these commands should be inserted in the preamble manually:
+
+Note: Your document will fail to compile to PDF in Quarto if you enable caching and you use tinytable due to missing LaTeX headers. To avoid this problem, set the option \verb{#| cache: false} for the chunk(s) where you use tinytable.
+
+\if{html}{\out{<div class="sourceCode latex">}}\preformatted{\\usepackage\{tabularray\}
+\\usepackage\{float\}
+\\usepackage\{graphicx\}
+\\usepackage\{rotating\}
+\\usepackage[normalem]\{ulem\}
+\\UseTblrLibrary\{booktabs\}
+\\UseTblrLibrary\{siunitx\}
+\newcommand{\tinytableTabularrayUnderline}[1]\{\\underline\{#1\}\}
+\newcommand{\tinytableTabularrayStrikeout}[1]\{\\sout\{#1\}\}
+\\NewTableCommand\{\\tinytableDefineColor\}[3]\{\\definecolor\{#1\}\{#2\}\{#3\}\}
+}\if{html}{\out{</div>}}
+}
+
+\section{Global options}{
+
+
+Many global options can be used to set the default argument values of \code{tinytable} functions.
+For a full list, see:
+
+https://vincentarelbundock.github.io/tinytable/vignettes/options.html
+\subsection{Quarto}{
+\subsection{Figure environment}{
+\itemize{
+\item \code{options("tinytable_quarto_figure" = FALSE)}: Typst only. Normally, it is best to allow Quarto to define the figure environment, so the default behavior is to not include one.
+\item \code{options(tinytable_print_rstudio_notebook = "inline")}: Display tables "inline" or in the "viewer" in RStudio notebooks.
+}
+}
+
+\subsection{Data Processing}{
+
+The \code{format_tt(quarto=TRUE)} argument activates Quarto data processing for specific cells. This funcationality comes with  a few warnings:
+\enumerate{
+\item Currently, Quarto provides a \verb{\\QuartoMarkdownBase64\{\}} LaTeX macro, but it does not appear to do anything with it. References and markdown codes may not be processed as expected in LaTeX.
+\item Quarto data processing can enter in conflict with \code{tinytable} styling or formatting options. See below for how to disable it.
+}
+
+\code{options(tinytable_quarto_disable_processing = TRUE)}
+
+Disable Quarto processing of cell content. Setting this global option to \code{FALSE} may lead to conflicts with some \code{tinytable} features, but it also allows use of markdown and Quarto-specific code in table cells, such as cross-references.
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{x <- data.frame(Math = "x^2^", Citation = "@Lovelace1842")
+fn <- function(z) sprintf("<span data-qmd='\%s'></span>", z)
+tt(x) |> format_tt(i = 1, fn = fn)
+}\if{html}{\out{</div>}}
+
+See this link for more details: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing
+}
+
+}
+
+\subsection{HTML}{
+\itemize{
+\item \code{options(tinytable_html_mathjax = TRUE)}
+\itemize{
+\item insert MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.
+}
+\item \code{options(tinytable_html_portable = TRUE)}
+\itemize{
+\item \code{plot_tt()} inserts base 64 encoded images directly in the HTML file rather than use external links.
+}
+}
+}
+
+\subsection{PDF}{
+\itemize{
+\item \code{options(tinytable_pdf_clean = TRUE)}
+\itemize{
+\item deletes temporary and log files.
+}
+\item \code{options(tinytable_pdf_engine = "xelatex")}
+\itemize{
+\item "xelatex", "pdflatex", "lualatex"
+}
+}
+}
+}
+
 \examples{
 library(tinytable)
 x <- mtcars[1:4, 1:5]
