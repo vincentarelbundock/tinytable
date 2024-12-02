@@ -142,6 +142,52 @@ tab |> style_tt(i = 5, background = "orange")
 See [the FAQ on Typst](https://vincentarelbundock.github.io/tinytable/vignettes/faq.html#typst) for important notes on using Typst in Quarto documents.
 
 
+
+## Rmarkdown
+
+
+### `papaja`
+
+
+`papaja` is a package to assist in the preparation of APA manuscripts. Cross-references can be a bit challenging to implement when using this package with `tinytable`. When the target format is PDF, one workaround is to use raw LaTeX code to make renferences and labels.
+
+For example:
+
+````{verbatim}
+---
+output            : 
+  papaja::apa6_pdf:
+    latex_engine: xelatex
+    fig_caption: yes
+    keep_tex: false
+header-includes   :
+  - \usepackage{tabularray}
+  - \usepackage{graphicx}
+  - \UseTblrLibrary{booktabs}
+  - \UseTblrLibrary{siunitx}
+  - \newcommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}
+  - \newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
+  - \NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
+  - \usepackage{caption,fixltx2e}
+  - \usepackage[table]{xcolor}
+---
+
+# tidytable
+
+Table \ref{tab:tinytableref}
+
+```{r}
+library(tinytable)
+tt(head(iris), caption = "\\label{tab:tinytableref} Hello world!") |>
+  style_tt(color = "blue")
+```
+```{r}
+````
+
+
+
+
+
 ## Bookdown
 
 ### Cross-references
