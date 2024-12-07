@@ -13,7 +13,11 @@ sanity_align <- function(align, i) {
 
 
 sanitize_i <- function(i, x, pre_group_i = FALSE, lazy = TRUE) {
+    if (identical(i, "notes")) {
+        return(i)
+    }
     out <- seq_len(nrow(x))
+    assert_numeric(i, null.ok = TRUE, name = "i")
     if (is.null(i) && isTRUE(lazy)) {
         out <- NA
         attr(out, "null") <- TRUE
