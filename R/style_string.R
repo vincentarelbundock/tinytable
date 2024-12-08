@@ -44,7 +44,37 @@ style_string_latex <- function(n, styles) {
         n <- sprintf("\\textcolor{%s}{%s}", styles[["color"]], n)
     }
     if (!is.null(styles[["fontsize"]])) {
-        n <- sprintf("{\\fontsize{%s}{%s}\\selectfont %s}", styles[["fontsize"]], styles[["fontsize"]], n)
+        n <- sprintf("{\\fontsize{%sem}{%sem}\\selectfont %s}", styles[["fontsize"]], styles[["fontsize"]], n)
     }
     n
+}
+
+
+style_string_typst <- function(n, styles) {
+    sty <- NULL
+    if (isTRUE(styles[["italic"]])) {
+        sty <- c(sty, 'style: "italic"')
+    }
+    if (isTRUE(styles[["bold"]])) {
+        sty <- c(sty, 'weight: "bold"')
+    }
+    if (isTRUE(styles[["strikeout"]])) {
+        # not sure how to do this
+    }
+    if (isTRUE(styles[["underline"]])) {
+        # not sure how to do this
+    }
+    if (!is.null(styles[["fontsize"]])) {
+        fs <- sprintf("size: %sem", styles[["fontsize"]])
+        sty <- c(sty, fs)
+    }
+    if (!is.null(styles[["color"]])) {
+        col <- styles[["color"]]
+        if (grepl("^#", col)) col <- sprintf('rgb("%s")', col)
+        col <- sprintf("fill: %s", col)
+        sty <- c(sty, col)
+    }
+    template <- paste0("text(", paste(sty, collapse = ", "), ", [%s])")
+    out <- sprintf(template, n)
+    return(out)
 }
