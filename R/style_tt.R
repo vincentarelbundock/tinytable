@@ -158,8 +158,8 @@ style_tt <- function(x,
         tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css,
         bootstrap_css_rule = bootstrap_css_rule)
 
-    if (identical(i, "notes")) {
-        out@style_notes <- list(
+    if (isTRUE(i %in% c("notes", "caption"))) {
+        tmp <- list(
             color = color,
             fontsize = fontsize,
             italic = italic,
@@ -167,6 +167,8 @@ style_tt <- function(x,
             strikeout = strikeout,
             underline = underline
         )
+        if (identical(i, "notes")) out@style_notes <- tmp
+        if (identical(i, "caption")) out@style_caption <- tmp
         return(out)
     }
 

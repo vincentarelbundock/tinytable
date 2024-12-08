@@ -20,6 +20,7 @@ build_tt <- function(x, output = NULL) {
 
     # apply the style_notes
     x <- style_notes(x)
+    x <- style_caption(x)
 
     for (th in x@lazy_theme) {
         fn <- th[[1]]

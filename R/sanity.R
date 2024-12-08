@@ -13,7 +13,8 @@ sanity_align <- function(align, i) {
 
 
 sanitize_i <- function(i, x, pre_group_i = FALSE, lazy = TRUE) {
-    if (identical(i, "notes")) {
+    if (is.character(i)) {
+        assert_choice(i, c("notes", "caption"))
         return(i)
     }
     out <- seq_len(nrow(x))
