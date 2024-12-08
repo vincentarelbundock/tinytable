@@ -160,8 +160,12 @@ style_tt <- function(x,
 
     if (identical(i, "notes")) {
         out@style_notes <- list(
+            color = color,
+            fontsize = fontsize,
             italic = italic,
-            bold = bold
+            monospace = monospace,
+            strikeout = strikeout,
+            underline = underline
         )
         return(out)
     }

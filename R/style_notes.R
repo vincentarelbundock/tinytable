@@ -18,12 +18,7 @@ setMethod(
     signature = "tinytable_bootstrap",
     definition = function(x, ...) {
         styles <- x@style_notes
-        if (isTRUE(styles[["italic"]])) {
-            x@notes <- lapply(x@notes, function(n) sprintf("<i>%s</i>", n))
-        }
-        if (isTRUE(styles[["bold"]])) {
-            x@notes <- lapply(x@notes, function(n) sprintf("<b>%s</b>", n))
-        }
+        x@notes <- lapply(x@notes, style_string_html, styles)
         return(x)
     })
 
@@ -34,12 +29,7 @@ setMethod(
     signature = "tinytable_tabularray",
     definition = function(x, ...) {
         styles <- x@style_notes
-        if (isTRUE(styles[["italic"]])) {
-            x@notes <- lapply(x@notes, function(n) sprintf("\\emph{%s}", n))
-        }
-        if (isTRUE(styles[["bold"]])) {
-            x@notes <- lapply(x@notes, function(n) sprintf("\\textbf{%s}", n))
-        }
+        x@notes <- lapply(x@notes, style_string_html, styles)
         return(x)
     })
 
@@ -69,3 +59,30 @@ setMethod(
 
         return(x)
     })
+
+
+
+style_string_html <- function(n, styles) {
+    if (isTRUE(styles[["italic"]])) {
+        n <- sprintf("<i>%s</i>", n)
+    }
+    if (isTRUE(styles[["strikeout"]])) {
+        n <- sprintf("<s>%s</s>", n)
+    }
+    if (isTRUE(styles[["underline"]])) {
+        n <- sprintf("<u>%s</u>", n)
+    }
+    if (isTRUE(styles[["bold"]])) {
+        n <- sprintf("<b>%s</b>", n)
+    }
+    if (isTRUE(styles[["monospace"]])) {
+        n <- sprintf("<code>%s</code>", n)
+    }
+    if (!is.null(styles[["color"]])) {
+        n <- sprintf("<span style='color:%s'>%s</span>", styles[["color"]], n)
+    }
+    if (!is.null(styles[["fontsize"]])) {
+        n <- sprintf("<span style='font-size:%s'>%s</span>", styles[["fontsize"]], n)
+    }
+    n
+}
