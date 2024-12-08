@@ -52,8 +52,12 @@ setMethod(
                 if (lab[k] == "") {
                     tmp <- sprintf("    table.cell(align: left, colspan: %s, %s),", ncol(x), notes[k])
                 } else {
-                    tmp <- sprintf("    table.cell(align: left, colspan: %s, [#super[%s] %s]),", ncol(x), lab[k], notes[k])
+                    n <- notes[k]
+                    l <- sprintf("[#super[%s] ", lab[k])
+                    n <- sub("[", l, n, fixed = TRUE)
+                    tmp <- sprintf("    table.cell(align: left, colspan: %s, %s),", ncol(x), n)
                 }
+                tmp <- sub("text(, ", "text(", tmp, fixed = TRUE)
                 out <- lines_insert(out, tmp, "tinytable notes after", "after")
             }
         }
