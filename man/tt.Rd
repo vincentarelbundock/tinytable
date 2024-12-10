@@ -98,6 +98,17 @@ Note: Your document will fail to compile to PDF in Quarto if you enable caching 
 }\if{html}{\out{</div>}}
 }
 
+\section{Word and Markdown limitations}{
+
+
+Markdown and Word tables only support these styles: italic, bold, strikeout. The \code{width} arugment is also unavailable
+Moreover, the \code{style_tt()} function cannot be used to style headers inserted by the \code{group_tt()} function;
+instead, you should style the headers directly in the header definition using markdown syntax:
+\code{group_tt(i = list("*italic header*" = 2))}. These limitations are due to the fact that there is no markdown
+syntax for the other options, and that we create Word documents by converting a markdown table to .docx
+via the Pandoc software.
+}
+
 \section{Global options}{
 
 
@@ -169,9 +180,9 @@ x <- mtcars[1:4, 1:5]
 tt(x)
 
 tt(x,
-   theme = "striped",
-   width = 0.5,
-   caption = "Data about cars.")
+  theme = "striped",
+  width = 0.5,
+  caption = "Data about cars.")
 
 tt(x, notes = "Hello World!")
 
@@ -180,6 +191,6 @@ tab <- tt(x, notes = list("*" = fn))
 print(tab, "latex")
 
 k <- data.frame(x = c(0.000123456789, 12.4356789))
-tt(k, digits=2)
+tt(k, digits = 2)
 
 }
