@@ -11,6 +11,7 @@
 #' @param ... Other arguments are ignored.
 #' @return An object of class `tt` representing the table.
 #' @param indent integer number of `pt` to use when indenting the non-labelled rows.
+#' @template limitations_word_markdown
 #' @details
 #' Warning: The `style_tt()` can normally be used to style the group headers, as expected, but that feature is not available for Markdown and Word tables.
 #' @examples
@@ -19,8 +20,7 @@
 #' dat <- data.frame(
 #'   label = c("a", "a", "a", "b", "b", "c", "a", "a"),
 #'   x1 = rnorm(8),
-#'   x2 = rnorm(8)
-#' )
+#'   x2 = rnorm(8))
 #' tt(dat[, 2:3]) |> group_tt(i = dat$label)
 #'
 #' # named lists of labels

@@ -3,8 +3,6 @@
 #' @details
 #' This function applies styling to a table created by `tt()`. It allows customization of text style (bold, italic, monospace), text and background colors, font size, cell width, text alignment, column span, and indentation. The function also supports passing native instructions to LaTeX (tabularray) and HTML (bootstrap) formats.
 #'
-#' Note: Markdown and Word tables only support these styles: italic, bold, strikeout. Moreover, the `style_tt()` function cannot be used to style headers inserted by the `group_tt()` function; instead, you should style the headers directly in the header definition using markdown syntax: `group_tt(i = list("*italic header*" = 2))`. These limitations are due to the fact that there is no markdown syntax for the other options, and that we create Word documents by converting a markdown table to .docx via the Pandoc software.
-#'
 #' @param x A table object created by `tt()`.
 #' @param i Row indices where the styling should be applied. Can be a single value, a vector, or a logical matrix with the same number of rows and columns as `x`. `i=0` is the header, and negative values are higher level headers. Row indices refer to rows *after* the insertion of row labels by `group_tt()`, when applicable.
 #' @param j Column indices where the styling should be applied. Can be:
@@ -49,6 +47,7 @@
 #' @param output Apply style only to the output format specified by this argument. `NULL` means that we apply to all formats.
 #' @param ... extra arguments are ignored
 #' @return An object of class `tt` representing the table.
+#' @template limitations_word_markdown
 #' @export
 #' @examplesIf knitr::is_html_output()
 #' @examples
@@ -85,8 +84,7 @@
 #'     alignv = "m",
 #'     color = "white",
 #'     background = "black",
-#'     bold = TRUE
-#'   )
+#'     bold = TRUE)
 #'
 #' tt(mtcars[1:5, 1:6], theme = "void") |>
 #'   style_tt(
@@ -94,16 +92,14 @@
 #'     j = 1:3,
 #'     line = "tblr",
 #'     line_width = 0.4,
-#'     line_color = "teal"
-#'   )
+#'     line_color = "teal")
 #'
 #' tt(mtcars[1:5, 1:6], theme = "bootstrap") |>
 #'   style_tt(
 #'     i = c(2, 5),
 #'     j = 3,
 #'     strikeout = TRUE,
-#'     fontsize = 0.7
-#'   )
+#'     fontsize = 0.7)
 #'
 #' tt(mtcars[1:5, 1:6]) |>
 #'   style_tt(bootstrap_class = "table table-dark table-hover")
@@ -159,8 +155,7 @@ style_tt <- function(x,
     colspan = colspan, rowspan = rowspan, indent = indent,
     line = line, line_color = line_color, line_width = line_width,
     tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css,
-    bootstrap_css_rule = bootstrap_css_rule
-  )
+    bootstrap_css_rule = bootstrap_css_rule)
 
   if (isTRUE(i %in% c("notes", "caption"))) {
     tmp <- list(
