@@ -161,10 +161,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Customization</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../vignettes/options.html">
- <span class="dropdown-text">Available Options</span></a>
-  </li>  
-        <li>
     <a class="dropdown-item" href="../vignettes/notebooks.html">
  <span class="dropdown-text">Notebooks</span></a>
   </li>  
@@ -591,89 +587,202 @@ Additional arguments are ignored
 </section>
 <section id="word-and-markdown-limitations" class="level3">
 <h3 class="anchored" data-anchor-id="word-and-markdown-limitations">Word and Markdown limitations</h3>
-<p>Markdown and Word tables only support these styles: italic, bold, strikeout. The <code>width</code> arugment is also unavailable Moreover, the <code>style_tt()</code> function cannot be used to style headers inserted by the <code>group_tt()</code> function; instead, you should style the headers directly in the header definition using markdown syntax: <code>group_tt(i = list(“<em>italic header</em>” = 2))</code>. These limitations are due to the fact that there is no markdown syntax for the other options, and that we create Word documents by converting a markdown table to .docx via the Pandoc software.</p>
+<p>Markdown and Word tables only support these styles: italic, bold, strikeout. The <code>width</code> argument is also unavailable Moreover, the <code>style_tt()</code> function cannot be used to style headers inserted by the <code>group_tt()</code> function; instead, you should style the headers directly in the header definition using markdown syntax: <code>group_tt(i = list(“<em>italic header</em>” = 2))</code>. These limitations are due to the fact that there is no markdown syntax for the other options, and that we create Word documents by converting a markdown table to .docx via the Pandoc software.</p>
 </section>
 <section id="global-options" class="level3">
 <h3 class="anchored" data-anchor-id="global-options">Global options</h3>
-<p>Many global options can be used to set the default argument values of <code>tinytable</code> functions. For a full list, see:</p>
-<p>https://vincentarelbundock.github.io/tinytable/vignettes/options.html</p>
+<p>Options can be set with <code>options()</code> and change the default behavior of tinytable. For example:</p>
+<div class="sourceCode r">
+<pre>options(tinytable_tt_digits = 4)
+tt(head(iris))
+</pre>
+</div>
+<p>You can set options in a script or via <code>.Rprofile</code>. Note: be cautious with <code>.Rprofile</code> settings as they may affect reproducibility.</p>
 <h4 class="anchored">
-Quarto
+Default values for function arguments
 </h4>
 <h5 class="anchored">
-Figure environment
+tt()
 </h5>
 <ul>
 <li>
-<p><code>options(“tinytable_quarto_figure” = FALSE)</code>: Typst only. Normally, it is best to allow Quarto to define the figure environment, so the default behavior is to not include one.</p>
+<p><code>tinytable_tt_digits</code></p>
 </li>
 <li>
-<p><code>options(tinytable_print_rstudio_notebook = “inline”)</code>: Display tables "inline" or in the "viewer" in RStudio notebooks.</p>
+<p><code>tinytable_tt_caption</code></p>
+</li>
+<li>
+<p><code>tinytable_tt_notes</code></p>
+</li>
+<li>
+<p><code>tinytable_tt_width</code></p>
+</li>
+<li>
+<p><code>tinytable_tt_theme</code></p>
+</li>
+<li>
+<p><code>tinytable_tt_rownames</code></p>
 </li>
 </ul>
 <h5 class="anchored">
-Data Processing
+format_tt()
 </h5>
-<p>The <code>format_tt(quarto=TRUE)</code> argument activates Quarto data processing for specific cells. This funcationality comes with a few warnings:</p>
+<ul>
+<li>
+<p><code>tinytable_format_digits</code></p>
+</li>
+<li>
+<p><code>tinytable_format_num_fmt</code></p>
+</li>
+<li>
+<p><code>tinytable_format_num_zero</code></p>
+</li>
+<li>
+<p><code>tinytable_format_num_suffix</code></p>
+</li>
+<li>
+<p><code>tinytable_format_num_mark_big</code></p>
+</li>
+<li>
+<p><code>tinytable_format_num_mark_dec</code></p>
+</li>
+<li>
+<p><code>tinytable_format_date</code></p>
+</li>
+<li>
+<p><code>tinytable_format_bool</code></p>
+</li>
+<li>
+<p><code>tinytable_format_other</code></p>
+</li>
+<li>
+<p><code>tinytable_format_replace</code></p>
+</li>
+<li>
+<p><code>tinytable_format_escape</code></p>
+</li>
+<li>
+<p><code>tinytable_format_markdown</code></p>
+</li>
+<li>
+<p><code>tinytable_format_quarto</code></p>
+</li>
+<li>
+<p><code>tinytable_format_fn</code></p>
+</li>
+<li>
+<p><code>tinytable_format_sprintf</code></p>
+</li>
+</ul>
+<h5 class="anchored">
+save_tt()
+</h5>
+<ul>
+<li>
+<p><code>tinytable_save_overwrite</code></p>
+</li>
+</ul>
+<h5 class="anchored">
+theme_tt()
+</h5>
+<p>Placement:</p>
+<ul>
+<li>
+<p><code>tinytable_theme_placement_float</code></p>
+</li>
+<li>
+<p><code>tinytable_theme_placement_horizontal</code></p>
+</li>
+</ul>
+<p>Resize:</p>
+<ul>
+<li>
+<p><code>tinytable_theme_resize_width</code></p>
+</li>
+<li>
+<p><code>tinytable_theme_resize_direction</code></p>
+</li>
+</ul>
+<p>Multipage:</p>
+<ul>
+<li>
+<p><code>tinytable_theme_multipage_rowhead</code></p>
+</li>
+<li>
+<p><code>tinytable_theme_multipage_rowfoot</code></p>
+</li>
+</ul>
+<p>Tabular:</p>
+<ul>
+<li>
+<p><code>tinytable_theme_tabular_style</code></p>
+</li>
+</ul>
+<h5 class="anchored">
+print.tinytable()
+</h5>
+<ul>
+<li>
+<p><code>tinytable_print_output</code></p>
+</li>
+</ul>
+<h4 class="anchored">
+Output-specific options
+</h4>
+<h5 class="anchored">
+HTML
+</h5>
+<ul>
+<li>
+<p><code>tinytable_html_mathjax</code>: Insert MathJax scripts (warning: may conflict if MathJax is loaded elsewhere)</p>
+</li>
+<li>
+<p><code>tinytable_html_portable</code>: Insert base64 encoded images directly in HTML for <code>plot_tt()</code></p>
+</li>
+</ul>
+<h5 class="anchored">
+PDF
+</h5>
+<ul>
+<li>
+<p><code>tinytable_pdf_clean</code>: Delete temporary and log files</p>
+</li>
+<li>
+<p><code>tinytable_pdf_engine</code>: Choose between "xelatex", "pdflatex", "lualatex"</p>
+</li>
+</ul>
+<h5 class="anchored">
+Quarto
+</h5>
+<p>The <code>format_tt(quarto=TRUE)</code> argument enables Quarto data processing with some limitations:</p>
 <ol>
 <li>
-<p>Currently, Quarto provides a <code style="white-space: pre;"></code> LaTeX macro, but it does not appear to do anything with it. References and markdown codes may not be processed as expected in LaTeX.</p>
+<p>The <code style="white-space: pre;"></code> LaTeX macro may not process references and markdown as expected</p>
 </li>
 <li>
-<p>Quarto data processing can enter in conflict with <code>tinytable</code> styling or formatting options. See below for how to disable it.</p>
+<p>Quarto processing may conflict with <code>tinytable</code> styling/formatting</p>
 </li>
 </ol>
-<p><code>options(tinytable_quarto_disable_processing = TRUE)</code></p>
-<p>Disable Quarto processing of cell content. Setting this global option to <code>FALSE</code> may lead to conflicts with some <code>tinytable</code> features, but it also allows use of markdown and Quarto-specific code in table cells, such as cross-references.</p>
+<p>Options:</p>
+<ul>
+<li>
+<p><code>tinytable_quarto_disable_processing</code>: Disable Quarto cell processing</p>
+</li>
+<li>
+<p><code>tinytable_print_rstudio_notebook</code>: Display tables "inline" or in "viewer" for RStudio notebooks</p>
+</li>
+<li>
+<p><code>tinytable_quarto_figure</code>: Control Typst figure environment in Quarto</p>
+</li>
+</ul>
+<p>Example of Quarto-specific code in cells:</p>
 <div class="sourceCode r">
 <pre>x &lt;- data.frame(Math = "x^2^", Citation = "@Lovelace1842")
 fn &lt;- function(z) sprintf("&lt;span data-qmd='%s'&gt;&lt;/span&gt;", z)
 tt(x) |&gt; format_tt(i = 1, fn = fn)
 </pre>
 </div>
-<p>See this link for more details: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing</p>
-<h4 class="anchored">
-HTML
-</h4>
-<ul>
-<li>
-<p><code>options(tinytable_html_mathjax = TRUE)</code></p>
-<ul>
-<li>
-<p>insert MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.</p>
-</li>
-</ul>
-</li>
-<li>
-<p><code>options(tinytable_html_portable = TRUE)</code></p>
-<ul>
-<li>
-<p><code>plot_tt()</code> inserts base 64 encoded images directly in the HTML file rather than use external links.</p>
-</li>
-</ul>
-</li>
-</ul>
-<h4 class="anchored">
-PDF
-</h4>
-<ul>
-<li>
-<p><code>options(tinytable_pdf_clean = TRUE)</code></p>
-<ul>
-<li>
-<p>deletes temporary and log files.</p>
-</li>
-</ul>
-</li>
-<li>
-<p><code>options(tinytable_pdf_engine = “xelatex”)</code></p>
-<ul>
-<li>
-<p>"xelatex", "pdflatex", "lualatex"</p>
-</li>
-</ul>
-</li>
-</ul>
+<p>For more details on Quarto table processing: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
@@ -689,8 +798,8 @@ PDF
 
     <script>
 
-      function styleCell_2x56hj667akqzzlb1wcl(i, j, css_id) {
-          var table = document.getElementById("tinytable_2x56hj667akqzzlb1wcl");
+      function styleCell_xvwz8k1fsp5y93odbtk2(i, j, css_id) {
+          var table = document.getElementById("tinytable_xvwz8k1fsp5y93odbtk2");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -700,7 +809,7 @@ PDF
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_2x56hj667akqzzlb1wcl');
+        var table = document.getElementById('tinytable_xvwz8k1fsp5y93odbtk2');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -708,8 +817,8 @@ PDF
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_2x56hj667akqzzlb1wcl(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_2x56hj667akqzzlb1wcl");
+      function spanCell_xvwz8k1fsp5y93odbtk2(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_xvwz8k1fsp5y93odbtk2");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -739,14 +848,14 @@ PDF
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 4, j: 0 }, { i: 4, j: 1 }, { i: 4, j: 2 }, { i: 4, j: 3 }, { i: 4, j: 4 },  ], css_id: 'tinytable_css_bs2niydcf7wqxbjh8zbb',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_6yg6dek3kh4h7e2gvacl',}, 
+          { positions: [ { i: 4, j: 0 }, { i: 4, j: 1 }, { i: 4, j: 2 }, { i: 4, j: 3 }, { i: 4, j: 4 },  ], css_id: 'tinytable_css_ifdjr09s39hb1ast7fub',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_g0xt8sj4urrdclpjr0qn',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_2x56hj667akqzzlb1wcl(cell.i, cell.j, group.css_id);
+                  styleCell_xvwz8k1fsp5y93odbtk2(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -754,11 +863,11 @@ PDF
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_bs2niydcf7wqxbjh8zbb, .table th.tinytable_css_bs2niydcf7wqxbjh8zbb { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_6yg6dek3kh4h7e2gvacl, .table th.tinytable_css_6yg6dek3kh4h7e2gvacl { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_ifdjr09s39hb1ast7fub, .table th.tinytable_css_ifdjr09s39hb1ast7fub { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_g0xt8sj4urrdclpjr0qn, .table th.tinytable_css_g0xt8sj4urrdclpjr0qn { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_2x56hj667akqzzlb1wcl" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_xvwz8k1fsp5y93odbtk2" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -813,8 +922,8 @@ PDF
 
     <script>
 
-      function styleCell_w4e51h6b7uek3rkasdqt(i, j, css_id) {
-          var table = document.getElementById("tinytable_w4e51h6b7uek3rkasdqt");
+      function styleCell_a2o93hv6nszoequ01r56(i, j, css_id) {
+          var table = document.getElementById("tinytable_a2o93hv6nszoequ01r56");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -824,7 +933,7 @@ PDF
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_w4e51h6b7uek3rkasdqt');
+        var table = document.getElementById('tinytable_a2o93hv6nszoequ01r56');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -832,8 +941,8 @@ PDF
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_w4e51h6b7uek3rkasdqt(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_w4e51h6b7uek3rkasdqt");
+      function spanCell_a2o93hv6nszoequ01r56(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_a2o93hv6nszoequ01r56");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -863,14 +972,14 @@ PDF
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 0, j: 0 }, { i: 4, j: 0 }, { i: 0, j: 1 }, { i: 4, j: 1 }, { i: 0, j: 2 }, { i: 4, j: 2 }, { i: 0, j: 3 }, { i: 4, j: 3 }, { i: 0, j: 4 }, { i: 4, j: 4 },  ], css_id: 'tinytable_css_y0xe3dkswfj2m5kaw31o',}, 
-          { positions: [ { i: 1, j: 0 }, { i: 3, j: 0 }, { i: 1, j: 1 }, { i: 3, j: 1 }, { i: 1, j: 2 }, { i: 3, j: 2 }, { i: 1, j: 3 }, { i: 3, j: 3 }, { i: 1, j: 4 }, { i: 3, j: 4 },  ], css_id: 'tinytable_css_8mf1v2bg92g5j87b9gxy',}, 
+          { positions: [ { i: 1, j: 0 }, { i: 3, j: 0 }, { i: 1, j: 1 }, { i: 3, j: 1 }, { i: 1, j: 2 }, { i: 3, j: 2 }, { i: 1, j: 3 }, { i: 3, j: 3 }, { i: 1, j: 4 }, { i: 3, j: 4 },  ], css_id: 'tinytable_css_996q8jfe6b8gi5wjpnt2',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 4, j: 0 }, { i: 0, j: 1 }, { i: 4, j: 1 }, { i: 0, j: 2 }, { i: 4, j: 2 }, { i: 0, j: 3 }, { i: 4, j: 3 }, { i: 0, j: 4 }, { i: 4, j: 4 },  ], css_id: 'tinytable_css_1pwcxwlloi8159nt0w7i',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_w4e51h6b7uek3rkasdqt(cell.i, cell.j, group.css_id);
+                  styleCell_a2o93hv6nszoequ01r56(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -878,11 +987,11 @@ PDF
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_y0xe3dkswfj2m5kaw31o, .table th.tinytable_css_y0xe3dkswfj2m5kaw31o { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_8mf1v2bg92g5j87b9gxy, .table th.tinytable_css_8mf1v2bg92g5j87b9gxy { background-color: #ededed; }
+      .table td.tinytable_css_996q8jfe6b8gi5wjpnt2, .table th.tinytable_css_996q8jfe6b8gi5wjpnt2 { background-color: #ededed; }
+      .table td.tinytable_css_1pwcxwlloi8159nt0w7i, .table th.tinytable_css_1pwcxwlloi8159nt0w7i { border-bottom: solid #d3d8dc 0.1em; }
     </style>
     <div class="container">
-      <table class="table table-striped" id="tinytable_w4e51h6b7uek3rkasdqt" style="table-layout: fixed; width: 50% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-striped" id="tinytable_a2o93hv6nszoequ01r56" style="table-layout: fixed; width: 50% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         </thead><caption>Data about cars.</caption>
               <tbody><tr>
@@ -934,8 +1043,8 @@ PDF
 
     <script>
 
-      function styleCell_wyt09f6z046yo8ps1zj9(i, j, css_id) {
-          var table = document.getElementById("tinytable_wyt09f6z046yo8ps1zj9");
+      function styleCell_gfowyo3v4mgms0pghirn(i, j, css_id) {
+          var table = document.getElementById("tinytable_gfowyo3v4mgms0pghirn");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -945,7 +1054,7 @@ PDF
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_wyt09f6z046yo8ps1zj9');
+        var table = document.getElementById('tinytable_gfowyo3v4mgms0pghirn');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -953,8 +1062,8 @@ PDF
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_wyt09f6z046yo8ps1zj9(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_wyt09f6z046yo8ps1zj9");
+      function spanCell_gfowyo3v4mgms0pghirn(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_gfowyo3v4mgms0pghirn");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -984,14 +1093,14 @@ PDF
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_p0aescg7t7tsh1juf9h0',}, 
-          { positions: [ { i: 4, j: 0 }, { i: 4, j: 1 }, { i: 4, j: 2 }, { i: 4, j: 3 }, { i: 4, j: 4 },  ], css_id: 'tinytable_css_mrnfb1xmnvcx17e72l2t',}, 
+          { positions: [ { i: 4, j: 0 }, { i: 4, j: 1 }, { i: 4, j: 2 }, { i: 4, j: 3 }, { i: 4, j: 4 },  ], css_id: 'tinytable_css_wlmudz27s4baod3fhe2a',}, 
+          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_jno2vrtknh6etrxsjuah',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_wyt09f6z046yo8ps1zj9(cell.i, cell.j, group.css_id);
+                  styleCell_gfowyo3v4mgms0pghirn(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -999,11 +1108,11 @@ PDF
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_p0aescg7t7tsh1juf9h0, .table th.tinytable_css_p0aescg7t7tsh1juf9h0 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_mrnfb1xmnvcx17e72l2t, .table th.tinytable_css_mrnfb1xmnvcx17e72l2t { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_wlmudz27s4baod3fhe2a, .table th.tinytable_css_wlmudz27s4baod3fhe2a { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_jno2vrtknh6etrxsjuah, .table th.tinytable_css_jno2vrtknh6etrxsjuah { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_wyt09f6z046yo8ps1zj9" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_gfowyo3v4mgms0pghirn" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -1079,8 +1188,8 @@ mpg &amp; cyl\textsuperscript{*} &amp; disp &amp; hp &amp; drat \\ \midrule %% T
 
     <script>
 
-      function styleCell_dh9s6gvvyoj8sd8c9k5u(i, j, css_id) {
-          var table = document.getElementById("tinytable_dh9s6gvvyoj8sd8c9k5u");
+      function styleCell_umcg589adiwaovnw12lm(i, j, css_id) {
+          var table = document.getElementById("tinytable_umcg589adiwaovnw12lm");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -1090,7 +1199,7 @@ mpg &amp; cyl\textsuperscript{*} &amp; disp &amp; hp &amp; drat \\ \midrule %% T
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_dh9s6gvvyoj8sd8c9k5u');
+        var table = document.getElementById('tinytable_umcg589adiwaovnw12lm');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -1098,8 +1207,8 @@ mpg &amp; cyl\textsuperscript{*} &amp; disp &amp; hp &amp; drat \\ \midrule %% T
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_dh9s6gvvyoj8sd8c9k5u(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_dh9s6gvvyoj8sd8c9k5u");
+      function spanCell_umcg589adiwaovnw12lm(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_umcg589adiwaovnw12lm");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -1129,14 +1238,14 @@ mpg &amp; cyl\textsuperscript{*} &amp; disp &amp; hp &amp; drat \\ \midrule %% T
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 2, j: 0 },  ], css_id: 'tinytable_css_xvpaz4z5bcunuwd31c37',}, 
-          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_c91gbphd3kd2zhc9kgdf',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_jqtxrea62hkih6or0wjj',}, 
+          { positions: [ { i: 2, j: 0 },  ], css_id: 'tinytable_css_13ewcnq53cn9tlq814iq',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_dh9s6gvvyoj8sd8c9k5u(cell.i, cell.j, group.css_id);
+                  styleCell_umcg589adiwaovnw12lm(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1144,11 +1253,11 @@ mpg &amp; cyl\textsuperscript{*} &amp; disp &amp; hp &amp; drat \\ \midrule %% T
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_xvpaz4z5bcunuwd31c37, .table th.tinytable_css_xvpaz4z5bcunuwd31c37 { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_c91gbphd3kd2zhc9kgdf, .table th.tinytable_css_c91gbphd3kd2zhc9kgdf { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_jqtxrea62hkih6or0wjj, .table th.tinytable_css_jqtxrea62hkih6or0wjj { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_13ewcnq53cn9tlq814iq, .table th.tinytable_css_13ewcnq53cn9tlq814iq { border-bottom: solid #d3d8dc 0.1em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_dh9s6gvvyoj8sd8c9k5u" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_umcg589adiwaovnw12lm" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>

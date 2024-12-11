@@ -161,10 +161,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Customization</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../vignettes/options.html">
- <span class="dropdown-text">Available Options</span></a>
-  </li>  
-        <li>
     <a class="dropdown-item" href="../vignettes/notebooks.html">
  <span class="dropdown-text">Notebooks</span></a>
   </li>  
@@ -495,85 +491,198 @@ A logical value indicating whether to overwrite an existing file.
 </section>
 <section id="global-options" class="level3">
 <h3 class="anchored" data-anchor-id="global-options">Global options</h3>
-<p>Many global options can be used to set the default argument values of <code>tinytable</code> functions. For a full list, see:</p>
-<p>https://vincentarelbundock.github.io/tinytable/vignettes/options.html</p>
+<p>Options can be set with <code>options()</code> and change the default behavior of tinytable. For example:</p>
+<div class="sourceCode r">
+<pre>options(tinytable_tt_digits = 4)
+tt(head(iris))
+</pre>
+</div>
+<p>You can set options in a script or via <code>.Rprofile</code>. Note: be cautious with <code>.Rprofile</code> settings as they may affect reproducibility.</p>
 <h4 class="anchored">
-Quarto
+Default values for function arguments
 </h4>
 <h5 class="anchored">
-Figure environment
+tt()
 </h5>
 <ul>
 <li>
-<p><code>options(“tinytable_quarto_figure” = FALSE)</code>: Typst only. Normally, it is best to allow Quarto to define the figure environment, so the default behavior is to not include one.</p>
+<p><code>tinytable_tt_digits</code></p>
 </li>
 <li>
-<p><code>options(tinytable_print_rstudio_notebook = “inline”)</code>: Display tables "inline" or in the "viewer" in RStudio notebooks.</p>
+<p><code>tinytable_tt_caption</code></p>
+</li>
+<li>
+<p><code>tinytable_tt_notes</code></p>
+</li>
+<li>
+<p><code>tinytable_tt_width</code></p>
+</li>
+<li>
+<p><code>tinytable_tt_theme</code></p>
+</li>
+<li>
+<p><code>tinytable_tt_rownames</code></p>
 </li>
 </ul>
 <h5 class="anchored">
-Data Processing
+format_tt()
 </h5>
-<p>The <code>format_tt(quarto=TRUE)</code> argument activates Quarto data processing for specific cells. This funcationality comes with a few warnings:</p>
+<ul>
+<li>
+<p><code>tinytable_format_digits</code></p>
+</li>
+<li>
+<p><code>tinytable_format_num_fmt</code></p>
+</li>
+<li>
+<p><code>tinytable_format_num_zero</code></p>
+</li>
+<li>
+<p><code>tinytable_format_num_suffix</code></p>
+</li>
+<li>
+<p><code>tinytable_format_num_mark_big</code></p>
+</li>
+<li>
+<p><code>tinytable_format_num_mark_dec</code></p>
+</li>
+<li>
+<p><code>tinytable_format_date</code></p>
+</li>
+<li>
+<p><code>tinytable_format_bool</code></p>
+</li>
+<li>
+<p><code>tinytable_format_other</code></p>
+</li>
+<li>
+<p><code>tinytable_format_replace</code></p>
+</li>
+<li>
+<p><code>tinytable_format_escape</code></p>
+</li>
+<li>
+<p><code>tinytable_format_markdown</code></p>
+</li>
+<li>
+<p><code>tinytable_format_quarto</code></p>
+</li>
+<li>
+<p><code>tinytable_format_fn</code></p>
+</li>
+<li>
+<p><code>tinytable_format_sprintf</code></p>
+</li>
+</ul>
+<h5 class="anchored">
+save_tt()
+</h5>
+<ul>
+<li>
+<p><code>tinytable_save_overwrite</code></p>
+</li>
+</ul>
+<h5 class="anchored">
+theme_tt()
+</h5>
+<p>Placement:</p>
+<ul>
+<li>
+<p><code>tinytable_theme_placement_float</code></p>
+</li>
+<li>
+<p><code>tinytable_theme_placement_horizontal</code></p>
+</li>
+</ul>
+<p>Resize:</p>
+<ul>
+<li>
+<p><code>tinytable_theme_resize_width</code></p>
+</li>
+<li>
+<p><code>tinytable_theme_resize_direction</code></p>
+</li>
+</ul>
+<p>Multipage:</p>
+<ul>
+<li>
+<p><code>tinytable_theme_multipage_rowhead</code></p>
+</li>
+<li>
+<p><code>tinytable_theme_multipage_rowfoot</code></p>
+</li>
+</ul>
+<p>Tabular:</p>
+<ul>
+<li>
+<p><code>tinytable_theme_tabular_style</code></p>
+</li>
+</ul>
+<h5 class="anchored">
+print.tinytable()
+</h5>
+<ul>
+<li>
+<p><code>tinytable_print_output</code></p>
+</li>
+</ul>
+<h4 class="anchored">
+Output-specific options
+</h4>
+<h5 class="anchored">
+HTML
+</h5>
+<ul>
+<li>
+<p><code>tinytable_html_mathjax</code>: Insert MathJax scripts (warning: may conflict if MathJax is loaded elsewhere)</p>
+</li>
+<li>
+<p><code>tinytable_html_portable</code>: Insert base64 encoded images directly in HTML for <code>plot_tt()</code></p>
+</li>
+</ul>
+<h5 class="anchored">
+PDF
+</h5>
+<ul>
+<li>
+<p><code>tinytable_pdf_clean</code>: Delete temporary and log files</p>
+</li>
+<li>
+<p><code>tinytable_pdf_engine</code>: Choose between "xelatex", "pdflatex", "lualatex"</p>
+</li>
+</ul>
+<h5 class="anchored">
+Quarto
+</h5>
+<p>The <code>format_tt(quarto=TRUE)</code> argument enables Quarto data processing with some limitations:</p>
 <ol>
 <li>
-<p>Currently, Quarto provides a <code style="white-space: pre;"></code> LaTeX macro, but it does not appear to do anything with it. References and markdown codes may not be processed as expected in LaTeX.</p>
+<p>The <code style="white-space: pre;"></code> LaTeX macro may not process references and markdown as expected</p>
 </li>
 <li>
-<p>Quarto data processing can enter in conflict with <code>tinytable</code> styling or formatting options. See below for how to disable it.</p>
+<p>Quarto processing may conflict with <code>tinytable</code> styling/formatting</p>
 </li>
 </ol>
-<p><code>options(tinytable_quarto_disable_processing = TRUE)</code></p>
-<p>Disable Quarto processing of cell content. Setting this global option to <code>FALSE</code> may lead to conflicts with some <code>tinytable</code> features, but it also allows use of markdown and Quarto-specific code in table cells, such as cross-references.</p>
+<p>Options:</p>
+<ul>
+<li>
+<p><code>tinytable_quarto_disable_processing</code>: Disable Quarto cell processing</p>
+</li>
+<li>
+<p><code>tinytable_print_rstudio_notebook</code>: Display tables "inline" or in "viewer" for RStudio notebooks</p>
+</li>
+<li>
+<p><code>tinytable_quarto_figure</code>: Control Typst figure environment in Quarto</p>
+</li>
+</ul>
+<p>Example of Quarto-specific code in cells:</p>
 <div class="sourceCode r">
 <pre>x &lt;- data.frame(Math = "x^2^", Citation = "@Lovelace1842")
 fn &lt;- function(z) sprintf("&lt;span data-qmd='%s'&gt;&lt;/span&gt;", z)
 tt(x) |&gt; format_tt(i = 1, fn = fn)
 </pre>
 </div>
-<p>See this link for more details: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing</p>
-<h4 class="anchored">
-HTML
-</h4>
-<ul>
-<li>
-<p><code>options(tinytable_html_mathjax = TRUE)</code></p>
-<ul>
-<li>
-<p>insert MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.</p>
-</li>
-</ul>
-</li>
-<li>
-<p><code>options(tinytable_html_portable = TRUE)</code></p>
-<ul>
-<li>
-<p><code>plot_tt()</code> inserts base 64 encoded images directly in the HTML file rather than use external links.</p>
-</li>
-</ul>
-</li>
-</ul>
-<h4 class="anchored">
-PDF
-</h4>
-<ul>
-<li>
-<p><code>options(tinytable_pdf_clean = TRUE)</code></p>
-<ul>
-<li>
-<p>deletes temporary and log files.</p>
-</li>
-</ul>
-</li>
-<li>
-<p><code>options(tinytable_pdf_engine = “xelatex”)</code></p>
-<ul>
-<li>
-<p>"xelatex", "pdflatex", "lualatex"</p>
-</li>
-</ul>
-</li>
-</ul>
+<p>For more details on Quarto table processing: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing</p>
 </section>
 <section id="examples" class="level3">
 <h3 class="anchored" data-anchor-id="examples">Examples</h3>
