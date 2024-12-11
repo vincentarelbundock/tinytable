@@ -1,28 +1,95 @@
 #'
 #' @section Global options:
 #'
-#' Many global options can be used to set the default argument values of `tinytable` functions.
-#' For a full list, see:
+#' Options can be set with `options()` and change the default behavior of tinytable. For example:
 #'
-#' https://vincentarelbundock.github.io/tinytable/vignettes/options.html
+#' ```r
+#' options(tinytable_tt_digits = 4)
+#' tt(head(iris))
+#' ```
 #'
-#' ## Quarto
+#' You can set options in a script or via `.Rprofile`. Note: be cautious with `.Rprofile` settings as they may affect reproducibility.
 #'
-#' ### Figure environment
+#' ## Default values for function arguments
 #'
-#' * `options("tinytable_quarto_figure" = FALSE)`: Typst only. Normally, it is best to allow Quarto to define the figure environment, so the default behavior is to not include one.
-#' * `options(tinytable_print_rstudio_notebook = "inline")`: Display tables "inline" or in the "viewer" in RStudio notebooks.
+#' ### tt()
 #'
-#' ### Data Processing
+#' * `tinytable_tt_digits`
+#' * `tinytable_tt_caption`
+#' * `tinytable_tt_notes`
+#' * `tinytable_tt_width`
+#' * `tinytable_tt_theme`
+#' * `tinytable_tt_rownames`
 #'
-#' The `format_tt(quarto=TRUE)` argument activates Quarto data processing for specific cells. This funcationality comes with  a few warnings:
+#' ### format_tt()
 #'
-#' 1. Currently, Quarto provides a `\QuartoMarkdownBase64{}` LaTeX macro, but it does not appear to do anything with it. References and markdown codes may not be processed as expected in LaTeX.
-#' 2. Quarto data processing can enter in conflict with `tinytable` styling or formatting options. See below for how to disable it.
+#' * `tinytable_format_digits`
+#' * `tinytable_format_num_fmt`
+#' * `tinytable_format_num_zero`
+#' * `tinytable_format_num_suffix`
+#' * `tinytable_format_num_mark_big`
+#' * `tinytable_format_num_mark_dec`
+#' * `tinytable_format_date`
+#' * `tinytable_format_bool`
+#' * `tinytable_format_other`
+#' * `tinytable_format_replace`
+#' * `tinytable_format_escape`
+#' * `tinytable_format_markdown`
+#' * `tinytable_format_quarto`
+#' * `tinytable_format_fn`
+#' * `tinytable_format_sprintf`
 #'
-#' `options(tinytable_quarto_disable_processing = TRUE)`
+#' ### save_tt()
 #'
-#' Disable Quarto processing of cell content. Setting this global option to `FALSE` may lead to conflicts with some `tinytable` features, but it also allows use of markdown and Quarto-specific code in table cells, such as cross-references.
+#' * `tinytable_save_overwrite`
+#'
+#' ### theme_tt()
+#'
+#' Placement:
+#' * `tinytable_theme_placement_float`
+#' * `tinytable_theme_placement_horizontal`
+#'
+#' Resize:
+#' * `tinytable_theme_resize_width`
+#' * `tinytable_theme_resize_direction`
+#'
+#' Multipage:
+#' * `tinytable_theme_multipage_rowhead`
+#' * `tinytable_theme_multipage_rowfoot`
+#'
+#' Tabular:
+#' * `tinytable_theme_tabular_style`
+#'
+#' ### print.tinytable()
+#'
+#' * `tinytable_print_output`
+#'
+#' ## Output-specific options
+#'
+#' ### HTML
+#'
+#' * `tinytable_html_mathjax`: Insert MathJax scripts (warning: may conflict if MathJax is loaded elsewhere)
+#' * `tinytable_html_portable`: Insert base64 encoded images directly in HTML for `plot_tt()`
+#'
+#' ### PDF
+#'
+#' * `tinytable_pdf_clean`: Delete temporary and log files
+#' * `tinytable_pdf_engine`: Choose between "xelatex", "pdflatex", "lualatex"
+#'
+#' ### Quarto
+#'
+#' The `format_tt(quarto=TRUE)` argument enables Quarto data processing with some limitations:
+#'
+#' 1. The `\QuartoMarkdownBase64{}` LaTeX macro may not process references and markdown as expected
+#' 2. Quarto processing may conflict with `tinytable` styling/formatting
+#'
+#' Options:
+#'
+#' * `tinytable_quarto_disable_processing`: Disable Quarto cell processing
+#' * `tinytable_print_rstudio_notebook`: Display tables "inline" or in "viewer" for RStudio notebooks
+#' * `tinytable_quarto_figure`: Control Typst figure environment in Quarto
+#'
+#' Example of Quarto-specific code in cells:
 #'
 #' ```r
 #' x <- data.frame(Math = "x^2^", Citation = "@Lovelace1842")
@@ -30,20 +97,5 @@
 #' tt(x) |> format_tt(i = 1, fn = fn)
 #' ```
 #'
-#' See this link for more details: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing
-#'
-#' ## HTML
-#'
-#' * `options(tinytable_html_mathjax = TRUE)`
-#'   - insert MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.
-#' * `options(tinytable_html_portable = TRUE)`
-#'   - `plot_tt()` inserts base 64 encoded images directly in the HTML file rather than use external links.
-#'
-#' ## PDF
-#'
-#' * `options(tinytable_pdf_clean = TRUE)`
-#'   - deletes temporary and log files.
-#' * `options(tinytable_pdf_engine = "xelatex")`
-#'   - "xelatex", "pdflatex", "lualatex"
-#'
+#' For more details on Quarto table processing: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing
 #'

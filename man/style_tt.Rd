@@ -127,7 +127,7 @@ This function applies styling to a table created by \code{tt()}. It allows custo
 \section{Word and Markdown limitations}{
 
 
-Markdown and Word tables only support these styles: italic, bold, strikeout. The \code{width} arugment is also unavailable
+Markdown and Word tables only support these styles: italic, bold, strikeout. The \code{width} argument is also unavailable
 Moreover, the \code{style_tt()} function cannot be used to style headers inserted by the \code{group_tt()} function;
 instead, you should style the headers directly in the header definition using markdown syntax:
 \code{group_tt(i = list("*italic header*" = 2))}. These limitations are due to the fact that there is no markdown
