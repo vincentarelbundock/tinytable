@@ -15,8 +15,8 @@
 #' @param x A data frame or data table to be rendered as a table.
 #' @param digits Number of significant digits to keep for numeric variables. When `digits` is an integer, `tt()` calls `format_tt(x, digits = digits)` before proceeding to draw the table. Note that this will apply all default argument values of `format_tt()`, such as replacing `NA` by "". Users who need more control can use the `format_tt()` function instead.
 #' @param caption A string that will be used as the caption of the table. This argument should *not* be used in Quarto or Rmarkdown documents. In that context, please use the appropriate chunk options.
-#' @param width Table or column width. 
-#' - Single numeric value smaller than or equal to 1 determines the full table width, in proportion of line width. 
+#' @param width Table or column width.
+#' - Single numeric value smaller than or equal to 1 determines the full table width, in proportion of line width.
 #' - Numeric vector of length equal to the number of columns in `x` determines the width of each column, in proportion of line width. If the sum of `width` exceeds 1, each element is divided by `sum(width)`. This makes the table full-width with relative column sizes.
 #' @param theme Function or string.
 #' - String: `r paste(setdiff(names(theme_dictionary), "default"), collapse = ", ")`
@@ -30,32 +30,33 @@
 #' @param escape Logical. If `TRUE`, escape special characters in the table. Equivalent to `format_tt(tt(x), escape = TRUE)`.
 #' @param ... Additional arguments are ignored
 #' @return An object of class `tt` representing the table.
-#' 
+#'
 #' The table object has S4 slots which hold information about the structure of the table. Relying on or modifying the contents of these slots is strongly discouraged. Their names and contents could change at any time, and the `tinytable` developers do not consider changes to the internal structure of the output object to be a "breaking  change" for versioning or changelog purposes.
 #' @template dependencies
 #' @template latex_preamble
 #' @template global_options
-#' 
+#'
 #' @examples
 #' library(tinytable)
 #' x <- mtcars[1:4, 1:5]
 #'
 #' tt(x)
-#' 
+#'
 #' tt(x,
-#'    theme = "striped",
-#'    width = 0.5,
-#'    caption = "Data about cars.")
-#' 
+#'   theme = "striped",
+#'   width = 0.5,
+#'   caption = "Data about cars."
+#' )
+#'
 #' tt(x, notes = "Hello World!")
 #'
 #' fn <- list(i = 0:1, j = 2, text = "Hello World!")
 #' tab <- tt(x, notes = list("*" = fn))
 #' print(tab, "latex")
-#' 
+#'
 #' k <- data.frame(x = c(0.000123456789, 12.4356789))
-#' tt(k, digits=2)
-#' 
+#' tt(k, digits = 2)
+#'
 #' @export
 tt <- function(x,
                digits = get_option("tinytable_tt_digits", default = NULL),
@@ -66,8 +67,6 @@ tt <- function(x,
                rownames = get_option("tinytable_tt_rownames", default = FALSE),
                escape = get_option("tinytable_tt_escape", default = FALSE),
                ...) {
-
-
   dots <- list(...)
 
   # sanity checks
@@ -91,20 +90,20 @@ tt <- function(x,
   # it might be dangerous to leave non-numerics, but what about dates and other character-coercibles?
   for (i in seq_along(x)) {
     if (is.factor(x[[i]])) {
-       x[[i]] <- as.character(x[[i]])
+      x[[i]] <- as.character(x[[i]])
     }
   }
 
   assert_numeric(width, lower = 0, null.ok = TRUE)
   if (!length(width) %in% c(0, 1, ncol(x))) {
-      msg <- sprintf("The `width` argument must have length 1 or %s.", ncol(x))
-      stop(msg, call. = FALSE)
+    msg <- sprintf("The `width` argument must have length 1 or %s.", ncol(x))
+    stop(msg, call. = FALSE)
   }
   if (sum(width) > 1) {
-      width <- width / sum(width)
+    width <- width / sum(width)
   }
 
-  # bind the row names if the user explicitly asks for it in global option. 
+  # bind the row names if the user explicitly asks for it in global option.
   # Same name as tibble::rownames_to_column()
   assert_flag(rownames)
   if (isTRUE(rownames) && !is.null(row.names(x))) {
@@ -132,7 +131,8 @@ tt <- function(x,
     caption = caption,
     notes = notes,
     theme = list(theme),
-    width = width)
+    width = width
+  )
 
   if (is.null(theme)) {
     out <- theme_tt(out, theme = "default")

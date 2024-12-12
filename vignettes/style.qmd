@@ -54,7 +54,8 @@ tt(x) |>
     i = 2,
     j = 3,
     background = "black",
-    color = "white")
+    color = "white"
+  )
 ```
 
 The `i` and `j` accept vectors of integers to modify several cells at once:
@@ -65,7 +66,8 @@ tt(x) |>
     i = 2:3,
     j = c(1, 3, 4),
     italic = TRUE,
-    color = "orange")
+    color = "orange"
+  )
 ```
 
 We can style all cells in a table by omitting both the `i` and `j` arguments:
@@ -104,7 +106,7 @@ tt(x) |> style_tt(j = "^(?!drat|mpg)", color = "orange")
 Of course, we can also call the `style_tt()` function several times to apply different styles to different parts of the table:
 
 ```{r}
-tt(x) |> 
+tt(x) |>
   style_tt(i = 1, j = 1:2, color = "orange") |>
   style_tt(i = 1, j = 3:4, color = "green")
 ```
@@ -143,7 +145,8 @@ To align columns, we use a single character, or a string where each letter repre
 dat <- data.frame(
   a = c("a", "aa", "aaa"),
   b = c("b", "bb", "bbb"),
-  c = c("c", "cc", "ccc"))
+  c = c("c", "cc", "ccc")
+)
 
 tt(dat) |> style_tt(j = 1:3, align = "c")
 
@@ -155,8 +158,8 @@ In LaTeX documents (only), we can use decimal-alignment:
 ```{r}
 z <- data.frame(pi = c(pi * 100, pi * 1000, pi * 10000, pi * 100000))
 tt(z) |>
-    format_tt(j = 1, digits = 8, num_fmt = "significant_cell") |>
-    style_tt(j = 1, align = "d")
+  format_tt(j = 1, digits = 8, num_fmt = "significant_cell") |>
+  style_tt(j = 1, align = "d")
 ```
 
 
@@ -173,7 +176,7 @@ tt(x) |> style_tt(j = "mpg|hp|qsec", fontsize = 1.5)
 Sometimes, it can be useful to make a cell stretch across multiple colums or rows, for example when we want to insert a label. To achieve this, we can use the `colspan` argument. Here, we make the 2nd cell of the 2nd row stretch across three columns and two rows:
 
 ```{r}
-tt(x)|> style_tt(
+tt(x) |> style_tt(
   i = 2, j = 2,
   colspan = 3,
   rowspan = 2,
@@ -181,7 +184,8 @@ tt(x)|> style_tt(
   alignv = "m",
   color = "white",
   background = "black",
-  bold = TRUE)
+  bold = TRUE
+)
 ```
 
 Here is the original table for comparison:
@@ -194,7 +198,7 @@ Spanning cells can be particularly useful when we want to suppress redundant lab
 
 ```{r}
 tab <- aggregate(mpg ~ cyl + am, FUN = mean, data = mtcars)
-tab <- tab[order(tab$cyl, tab$am),]
+tab <- tab[order(tab$cyl, tab$am), ]
 tab
 
 tt(tab, digits = 2) |>
@@ -207,15 +211,15 @@ The `rowspan` feature is also useful to create multi-row labels. For example, in
 tab <- data.frame(Letters = c("A<br>B", ""), Numbers = c("First", "Second"))
 
 tt(tab) |>
-    style_tt(bootstrap_class = "table-bordered")
+  style_tt(bootstrap_class = "table-bordered")
 ```
 
 Now, we use `colspan` to ensure that that cells in the first column take up less space and are combined into one:
 
 ```{r} 
 tt(tab) |>
-    style_tt(bootstrap_class = "table-bordered") |>
-    style_tt(1, 1, rowspan = 2)
+  style_tt(bootstrap_class = "table-bordered") |>
+  style_tt(1, 1, rowspan = 2)
 ```
 
 ## Headers
@@ -248,11 +252,12 @@ We can use the standard `which` function from Base `R` to create indices and app
 ```{r}
 k <- mtcars[1:10, c("mpg", "am", "vs")]
 
-tt(k) |> 
+tt(k) |>
   style_tt(
     i = which(k$am == k$vs),
     background = "teal",
-    color = "white")
+    color = "white"
+  )
 ```
 
 In versions *above* 0.4.0 of `tinytable`, users can also supply a logical matrix of the same size as `x` to indicate which cell should be styled. For example, we can change the colors of certain entries in a correlation matrix as follows:
@@ -272,7 +277,8 @@ The `color`, `background`, and `fontsize` arguments are vectorized. This allows 
 tt(x) |>
   style_tt(
     i = 1:4,
-    color = c("red", "blue", "green", "orange"))
+    color = c("red", "blue", "green", "orange")
+  )
 ```
 
 When using a single value for a vectorized argument, it gets applied to all values:
@@ -282,7 +288,8 @@ tt(x) |>
   style_tt(
     j = 2:3,
     color = c("orange", "green"),
-    background = "black")
+    background = "black"
+  )
 ```
 
 We can also produce more complex heatmap-like tables to illustrate different font sizes in em units:
@@ -307,7 +314,8 @@ tt(k, width = .7, theme = "void") |>
     j = 1:5,
     color = fg,
     background = bg,
-    fontsize = fs)
+    fontsize = fs
+  )
 ```
 
 
@@ -328,21 +336,22 @@ Here is an example where we draw lines around every border ("t", "b", "l", and "
 
 ```{r}
 tt(x, theme = "void") |>
-    style_tt(
-        i = 0:3,
-        j = 1:3,
-        line = "tblr",
-        line_width = 0.4,
-        line_color = "orange")
+  style_tt(
+    i = 0:3,
+    j = 1:3,
+    line = "tblr",
+    line_width = 0.4,
+    line_color = "orange"
+  )
 ```
 
 And here is an example with horizontal rules:
 
 ```{r}
 tt(x, theme = "void") |>
-    style_tt(i = 0, line = "t", line_color = "orange", line_width = 0.4) |>
-    style_tt(i = 1, line = "t", line_color = "purple", line_width = 0.2) |>
-    style_tt(i = 4, line = "b", line_color = "orange", line_width = 0.4)
+  style_tt(i = 0, line = "t", line_color = "orange", line_width = 0.4) |>
+  style_tt(i = 1, line = "t", line_color = "purple", line_width = 0.2) |>
+  style_tt(i = 4, line = "b", line_color = "orange", line_width = 0.4)
 ```
 
 
@@ -350,10 +359,11 @@ tt(x, theme = "void") |>
 dat <- data.frame(1:2, 3:4, 5:6, 7:8)
 colnames(dat) <- NULL
 
-tt(dat, theme = "void") |> 
+tt(dat, theme = "void") |>
   style_tt(
     line = "tblr", line_color = "white", line_width = 0.5,
-    background = "blue", color = "white")
+    background = "blue", color = "white"
+  )
 ```
 
 ## Markdown and Word

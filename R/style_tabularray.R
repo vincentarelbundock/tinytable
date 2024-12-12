@@ -103,7 +103,8 @@ setMethod(
       if (!is.na(as.numeric(fontsize))) {
         set[idx] <- sprintf(
           "%s font=\\fontsize{%sem}{%sem}\\selectfont,",
-          set[idx], fontsize, fontsize + 0.3)
+          set[idx], fontsize, fontsize + 0.3
+        )
       }
 
       halign <- sty$align[row]
@@ -181,7 +182,8 @@ setMethod(
     rows <- unique(rec[
       idx & rec$complete_row & !rec$complete_column,
       c("i", "set", "span"),
-      drop = FALSE])
+      drop = FALSE
+    ])
     spec <- by(rows, list(rows$set, rows$span), function(k) {
       sprintf("row{%s}={%s}{%s}", paste(k$i, collapse = ","), k$span, k$set)
     })
@@ -201,9 +203,11 @@ setMethod(
     # lines
     rec$lin <- "solid, "
     rec$lin <- ifelse(!is.na(rec$line_color),
-      paste0(rec$lin, rec$line_color), rec$lin)
+      paste0(rec$lin, rec$line_color), rec$lin
+    )
     rec$lin <- ifelse(!is.na(rec$line_width),
-      paste0(rec$lin, sprintf(", %sem", rec$line_width)), rec$lin)
+      paste0(rec$lin, sprintf(", %sem", rec$line_width)), rec$lin
+    )
     rec$lin[is.na(rec$line)] <- NA
 
     # horizontal lines
@@ -237,7 +241,8 @@ setMethod(
     }
 
     return(x)
-  })
+  }
+)
 
 
 

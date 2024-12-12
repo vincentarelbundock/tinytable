@@ -1,8 +1,8 @@
-theme_revealjs <- function(x,
-    fontsize = get_option("tinytable_theme_revealjs_fontsize", default = 0.8), 
+theme_revealjs <- function(
+    x,
+    fontsize = get_option("tinytable_theme_revealjs_fontsize", default = 0.8),
     fontsize_caption = get_option("tinytable_theme_revealjs_fontsize_caption", default = 1)) {
-
-    css <- "
+  css <- "
 // tables
 
 .reveal table {
@@ -38,8 +38,7 @@ theme_revealjs <- function(x,
   font-size: %emem;
 }
 "
-    css <- sprintf(css, fontsize, fontsize_caption)
-    x <- style_tt(x, bootstrap_css_rule = css)
-    return(x)
+  css <- sprintf(css, fontsize, fontsize_caption)
+  x <- style_tt(x, bootstrap_css_rule = css)
+  return(x)
 }
-

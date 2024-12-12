@@ -17,9 +17,10 @@
 #'
 #' # vector of row labels
 #' dat <- data.frame(
-#'     label = c("a", "a", "a", "b", "b", "c", "a", "a"),
-#'     x1 = rnorm(8),
-#'     x2 = rnorm(8))
+#'   label = c("a", "a", "a", "b", "b", "c", "a", "a"),
+#'   x1 = rnorm(8),
+#'   x2 = rnorm(8)
+#' )
 #' tt(dat[, 2:3]) |> group_tt(i = dat$label)
 #'
 #' # named lists of labels
@@ -51,7 +52,6 @@
 #'   group_tt(j = list("Hello" = 1:2, "World" = 3:4, "Hello" = 5:6)) |>
 #'   group_tt(j = list("Foo" = 1:3, "Bar" = 4:6))
 #'
-
 group_tt <- function(x, i = NULL, j = NULL, indent = 1, ...) {
   # ... is important for ihead passing
 
@@ -78,7 +78,7 @@ group_tt <- function(x, i = NULL, j = NULL, indent = 1, ...) {
     x@ngroupi <- length(i)
     x@nrow <- x@nrow + x@ngroupi
     x@group_i_idx <- as.numeric(i)
-    
+
     if (isTRUE(indent > 0)) {
       idx_indent <- setdiff(seq_len(nrow(x)), i + seq_along(i) - 1)
       x <- style_tt(x, i = idx_indent, j = 1, indent = indent)

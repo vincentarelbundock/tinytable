@@ -1,10 +1,10 @@
 style_eval_grid <- function(x) {
-
-
   out <- x@table_dataframe
   sty <- x@style
 
-  if (nrow(sty) == 0) return(x)
+  if (nrow(sty) == 0) {
+    return(x)
+  }
 
   all_i <- seq_len(nrow(x))
   idx_g <- x@group_i_idx + cumsum(rep(1, length(x@group_i_idx))) - 1
@@ -15,13 +15,17 @@ style_eval_grid <- function(x) {
     alli <- data.frame(i = seq_len(nrow(x)))
     alli <- merge(alli, sty[is.na(sty$i), colnames(sty) != "i"], all = TRUE)
     sty <- rbind(sty, alli)
-    sty <- sty[!is.na(sty$i),]
-    sty <- sty[order(sty$i, sty$j),]
+    sty <- sty[!is.na(sty$i), ]
+    sty <- sty[order(sty$i, sty$j), ]
   }
-  
+
   last <- function(k) {
-    if (all(is.na(k))) return(NA)
-    if (is.logical(k)) return(as.logical(max(k, na.rm = TRUE)))
+    if (all(is.na(k))) {
+      return(NA)
+    }
+    if (is.logical(k)) {
+      return(as.logical(max(k, na.rm = TRUE)))
+    }
     return(utils::tail(stats::na.omit(k), 1))
   }
   sty <- do.call(rbind, by(sty, list(sty$i, sty$j), function(k) {
@@ -29,12 +33,14 @@ style_eval_grid <- function(x) {
   }))
 
   # TODO: style groups
-  sty <- sty[which(!sty$i %in% idx_g),]
+  sty <- sty[which(!sty$i %in% idx_g), ]
 
-  if (nrow(sty) == 0) return(x)
+  if (nrow(sty) == 0) {
+    return(x)
+  }
 
   # user-supplied indices are post-groups
-  # adjust indices to match original data rows since we only operate on those 
+  # adjust indices to match original data rows since we only operate on those
   for (g in rev(idx_g)) {
     sty[sty$i > g, "i"] <- sty[sty$i > g, "i"] - 1
   }
@@ -83,10 +89,10 @@ style_eval_grid <- function(x) {
 
 
 #' tinytable S4 method
-#' 
+#'
 #' @keywords internal
 setMethod(
-          f = "style_eval",
-          signature = "tinytable_grid",
-          definition = style_eval_grid
+  f = "style_eval",
+  signature = "tinytable_grid",
+  definition = style_eval_grid
 )

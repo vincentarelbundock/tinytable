@@ -9,7 +9,8 @@ setMethod(
     x <- group_tabularray_col(x, j, ...)
     x <- group_tabularray_row(x, i, indent)
     return(x)
-  })
+  }
+)
 
 
 group_tabularray_col <- function(x, j, ihead, ...) {
@@ -38,7 +39,8 @@ group_tabularray_col <- function(x, j, ihead, ...) {
     out[1:idx],
     # empty lines can break latex
     trimws(header),
-    out[(idx + 1):length(out)])
+    out[(idx + 1):length(out)]
+  )
   out <- paste(out, collapse = "\n")
 
   # rebuild including meta before style_tt
@@ -54,7 +56,8 @@ group_tabularray_col <- function(x, j, ihead, ...) {
       i = ihead,
       j = z,
       align = "c",
-      colspan = cs)
+      colspan = cs
+    )
     x <- do.call(style_tt, args)
   }
 
