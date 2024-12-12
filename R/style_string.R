@@ -76,6 +76,7 @@ style_string_typst <- function(n, styles) {
   }
   template <- paste0("text(", paste(sty, collapse = ", "), ", [%s])")
   out <- sprintf(template, n)
+  out <- sub("text(, ", "text(", out, fixed = TRUE)
   return(out)
 }
 
