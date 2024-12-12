@@ -8,7 +8,7 @@ Bugs:
 
 New:
 
-* `style_tt("notes")` can style footnotes.
+* `style_tt("notes")` and `style_tt("caption")` can style footnotes and captions. Note: This will only style captions handled by the `caption` argument in `tt()`, and not captions created by Quarto.
 
 Misc:
 

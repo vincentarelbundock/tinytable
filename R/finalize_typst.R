@@ -10,7 +10,7 @@ setMethod(
 
     cap <- x@caption
     if (length(cap) == 1) {
-      out <- sub("$TINYTABLE_TYPST_CAPTION", sprintf("caption: [%s],", cap), out, fixed = TRUE)
+      out <- sub("$TINYTABLE_TYPST_CAPTION", sprintf("caption: %s,", cap), out, fixed = TRUE)
     } else {
       out <- sub("$TINYTABLE_TYPST_CAPTION", "", out, fixed = TRUE)
     }
