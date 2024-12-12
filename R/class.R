@@ -16,6 +16,7 @@ setClassUnion("NULLorCharacter", c("NULL", "character"))
 
 #' tinytable S4 class
 #'
+#'
 #' @keywords internal
 #' @export
 setClass(
