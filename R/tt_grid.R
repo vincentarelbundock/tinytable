@@ -6,8 +6,7 @@ grid_line <- function(width_cols, char = "-") {
 }
 
 
-tt_eval_grid  <- function(x, width_cols = NULL, ...) {
-
+tt_eval_grid <- function(x, width_cols = NULL, ...) {
   is_matrix <- is.matrix(x)
   if (is_matrix) {
     tab <- x
@@ -16,7 +15,7 @@ tt_eval_grid  <- function(x, width_cols = NULL, ...) {
   }
 
   if (is.null(width_cols)) {
-      width_cols <- x@width_cols
+    width_cols <- x@width_cols
   }
 
   tthead <- inherits(x, "tinytable") && isTRUE(x@nhead > 0)
@@ -81,7 +80,9 @@ tt_eval_grid  <- function(x, width_cols = NULL, ...) {
 
   out <- paste(tab, collapse = "\n")
 
-  if (is_matrix) return(out)
+  if (is_matrix) {
+    return(out)
+  }
 
   # rebuild output
   x@width_cols <- width_cols
@@ -140,14 +141,17 @@ grid_hlines <- function(x) {
 setMethod(
   f = "tt_eval",
   signature = "tinytable_grid",
-  definition = tt_eval_grid)
+  definition = tt_eval_grid
+)
 
 setMethod(
   f = "tt_eval",
   signature = "matrix",
-  definition = tt_eval_grid)
+  definition = tt_eval_grid
+)
 
 setMethod(
   f = "tt_eval",
   signature = "tinytable_dataframe",
-  definition = tt_eval_grid)
+  definition = tt_eval_grid
+)

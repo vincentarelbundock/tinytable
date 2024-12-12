@@ -26,7 +26,7 @@
 #' tt(mtcars[1:4, 1:4]) |> save_tt(filename)
 #'
 save_tt <- function(x,
-                    output, 
+                    output,
                     overwrite = get_option("tinytable_save_overwrite", default = FALSE)) {
   assert_class(x, "tinytable")
   assert_string(output)
@@ -37,8 +37,8 @@ save_tt <- function(x,
   }
 
   if (isTRUE(getOption("tinytable_html_portable", default = FALSE))) {
-      assert_dependency("base64enc")
-      x@portable <- TRUE
+    assert_dependency("base64enc")
+    x@portable <- TRUE
   }
 
   if (identical(output, "html_portable")) {
@@ -100,7 +100,8 @@ save_tt <- function(x,
       file = output,
       selector = "body > div > table",
       zoom = 4,
-      quiet = TRUE)
+      quiet = TRUE
+    )
     unlink(tmp)
   } else if (file_ext == "pdf") {
     assert_dependency("tinytex")

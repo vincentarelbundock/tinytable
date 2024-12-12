@@ -42,8 +42,8 @@ This function relies on the \code{rbindlist()} function from the \code{data.tabl
 }
 \examples{
 library(tinytable)
-x = tt(mtcars[1:3, 1:2], caption = "Combine two tiny tables.")
-y = tt(mtcars[4:5, 8:10]) 
+x <- tt(mtcars[1:3, 1:2], caption = "Combine two tiny tables.")
+y <- tt(mtcars[4:5, 8:10])
 
 # rbind() does not support additional aarguments
 # rbind2() supports additional arguments

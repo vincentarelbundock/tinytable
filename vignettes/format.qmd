@@ -33,10 +33,11 @@ In a very simple case---such as printing 2 significant digits of all numeric var
 
 ```{r}
 dat <- data.frame(
-     w = c(143002.2092, 201399.181, 100188.3883),
-     x = c(1.43402, 201.399, 0.134588),
-     y = as.Date(sample(1:1000, 3), origin = "1970-01-01"),
-     z = c(TRUE, TRUE, FALSE))
+  w = c(143002.2092, 201399.181, 100188.3883),
+  x = c(1.43402, 201.399, 0.134588),
+  y = as.Date(sample(1:1000, 3), origin = "1970-01-01"),
+  z = c(TRUE, TRUE, FALSE)
+)
 
 tt(dat, digits = 2)
 ```
@@ -44,27 +45,30 @@ tt(dat, digits = 2)
 We can get more fine-grained control over formatting by calling `format_tt()` after `tt()`, optionally by specifying the columns to format with `j`:
 
 ```{r}
-tt(dat) |> 
+tt(dat) |>
   format_tt(
     j = 2:4,
     digits = 1,
-    date = "%B %d %Y") |>
+    date = "%B %d %Y"
+  ) |>
   format_tt(
     j = 1,
     digits = 2,
     num_mark_big = " ",
     num_mark_dec = ",",
     num_zero = TRUE,
-    num_fmt = "decimal")
+    num_fmt = "decimal"
+  )
 ```
 
 We can use a regular expression in `j` to select columns, and the `?sprintf` function to format strings, numbers, and to do [string interpolation](https://en.wikipedia.org/wiki/String_interpolation) (similar to the `glue` package, but using Base `R`):
 
 ```{r}
 dat <- data.frame(
-     a = c("Burger", "Halloumi", "Tofu", "Beans"),
-     b = c(1.43202, 201.399, 0.146188, 0.0031),
-     c = c(98938272783457, 7288839482, 29111727, 93945))
+  a = c("Burger", "Halloumi", "Tofu", "Beans"),
+  b = c(1.43202, 201.399, 0.146188, 0.0031),
+  c = c(98938272783457, 7288839482, 29111727, 93945)
+)
 tt(dat) |>
   format_tt(j = "a", sprintf = "Food: %s") |>
   format_tt(j = 2, digits = 1) |>
@@ -199,8 +203,8 @@ LaTeX and HTML use special characters to indicate strings which should be interp
 
 ```{r}
 dat <- data.frame(
-    "LaTeX" = c("Dollars $", "Percent %", "Underscore _"),
-    "HTML" = c("<br>", "<sup>4</sup>", "<emph>blah</emph>")
+  "LaTeX" = c("Dollars $", "Percent %", "Underscore _"),
+  "HTML" = c("<br>", "<sup>4</sup>", "<emph>blah</emph>")
 )
 
 tt(dat) |> format_tt(escape = TRUE)
@@ -217,10 +221,10 @@ format_tt("_ Dollars $", escape = "latex")
 Markdown can be rendered in cells by using the `markdown` argument of the `format_tt()` function (note: this requires installing the `markdown` as an optional dependency). 
 
 ```{r}
-dat <- data.frame( markdown = c(
+dat <- data.frame(markdown = c(
   "This is _italic_ text.",
-  "This sentence ends with a superscript.^2^")
-)
+  "This sentence ends with a superscript.^2^"
+))
 
 tt(dat) |>
   format_tt(j = 1, markdown = TRUE) |>
@@ -269,7 +273,7 @@ tt(dat) |> format_tt(j = 1, markdown = TRUE)
 On top of the built-in features of `format_tt`, a custom formatting function can be specified via the `fn` argument. The `fn` argument takes a function that accepts a single vector and returns a string (or something that coerces to a string like a number).  
 
 ```{r}
-tt(x) |> 
+tt(x) |>
   format_tt(j = "mpg", fn = function(x) paste(x, "mi/gal")) |>
   format_tt(j = "drat", fn = \(x) signif(x, 2))
 ```
@@ -290,9 +294,9 @@ thumbdrives <- data.frame(
 tt(thumbdrives) |>
   format_tt(j = 1, fn = scales::label_date("%e %b", locale = "fr")) |>
   format_tt(j = 2, fn = scales::label_currency()) |>
-  format_tt(j = 3, fn = scales::label_ordinal()) |> 
-  format_tt(j = 4, fn = scales::label_bytes()) |> 
-  format_tt(j = 5, fn = scales::label_percent())  |>
+  format_tt(j = 3, fn = scales::label_ordinal()) |>
+  format_tt(j = 4, fn = scales::label_bytes()) |>
+  format_tt(j = 5, fn = scales::label_percent()) |>
   format_tt(escape = TRUE)
 ```
 
