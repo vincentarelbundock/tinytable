@@ -16,6 +16,8 @@ sanitize_i <- function(i, x, pre_group_i = FALSE, lazy = TRUE) {
   if (is.character(i)) {
     assert_choice(i, c("notes", "caption"))
     return(i)
+  } else if (is.matrix(i) && is.logical(i)) {
+    return(i)
   }
   out <- seq_len(nrow(x))
   assert_numeric(i, null.ok = TRUE, name = "i")
