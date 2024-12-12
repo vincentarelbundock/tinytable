@@ -45,6 +45,8 @@ setClass(
     bootstrap_css_rule = "character",
     css = "data.frame",
     style = "data.frame",
+    style_caption = "list",
+    style_notes = "list",
     lazy_format = "list",
     lazy_group = "list",
     lazy_style = "list",

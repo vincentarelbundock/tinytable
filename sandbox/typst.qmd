@@ -12,6 +12,13 @@ options(tinytable_print_output = "typst")
 ```
 
 ```{r}
+tt(head(iris), caption = "Hello World", notes = "This is a note") |>
+  style_tt("notes", color = "orange", italic = TRUE) |>
+  style_tt("caption", color = "green", bold = TRUE, strikeout = TRUE)
+```
+
+
+```{r}
 # Semi-complicated
 tab <- tt(mtcars[1:4, 1:5], caption = "Hello World") |>
   group_tt(j = list("Group 1" = 4:5, "Group 2" = 2:3)) |>

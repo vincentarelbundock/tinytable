@@ -131,7 +131,8 @@ tt <- function(x,
     caption = caption,
     notes = notes,
     theme = list(theme),
-    width = width)
+    width = width
+  )
 
   if (is.null(theme)) {
     out <- theme_tt(out, theme = "default")

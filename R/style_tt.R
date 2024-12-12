@@ -4,7 +4,10 @@
 #' This function applies styling to a table created by `tt()`. It allows customization of text style (bold, italic, monospace), text and background colors, font size, cell width, text alignment, column span, and indentation. The function also supports passing native instructions to LaTeX (tabularray) and HTML (bootstrap) formats.
 #'
 #' @param x A table object created by `tt()`.
-#' @param i Row indices where the styling should be applied. Can be a single value, a vector, or a logical matrix with the same number of rows and columns as `x`. `i=0` is the header, and negative values are higher level headers. Row indices refer to rows *after* the insertion of row labels by `group_tt()`, when applicable.
+#' @param i Numeric vector, logical matrix, or string..
+#'   - Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.
+#'   - Logical matrix: A matrix with the same number of rows and columns as `x`. `i=0` is the header, and negative values are higher level headers. Row indices refer to rows *after* the insertion of row labels by `group_tt()`, when applicable.
+#'   - String: "notes" or "caption".
 #' @param j Column indices where the styling should be applied. Can be:
 #' + Integer vectors indicating column positions.
 #' + Character vector indicating column names.
@@ -157,6 +160,19 @@ style_tt <- function(x,
     tabularray_inner = tabularray_inner, tabularray_outer = tabularray_outer, bootstrap_css = bootstrap_css,
     bootstrap_css_rule = bootstrap_css_rule)
 
+  if (isTRUE(i %in% c("notes", "caption"))) {
+    tmp <- list(
+      color = color,
+      fontsize = fontsize,
+      italic = italic,
+      monospace = monospace,
+      strikeout = strikeout,
+      underline = underline
+    )
+    if (identical(i, "notes")) out@style_notes <- tmp
+    if (identical(i, "caption")) out@style_caption <- tmp
+    return(out)
+  }
 
   if (!is.null(bootstrap_class)) {
     out@bootstrap_class <- bootstrap_class
