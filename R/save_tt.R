@@ -158,7 +158,7 @@ latex_standalone <- "
 \\usepackage{rotating}
 \\usepackage{float}
 \\usepackage[normalem]{ulem}
-\\usepackage[HTML]{xcolor}
+\\usepackage[x11names, svgnames]{xcolor}
 \\UseTblrLibrary{booktabs}
 \\UseTblrLibrary{siunitx}
 \\newcommand{\\tinytableTabularrayUnderline}[1]{\\underline{#1}}

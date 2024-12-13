@@ -81,19 +81,6 @@ style_string_typst <- function(n, styles) {
 }
 
 
-
-style_notes <- function(x) {
-  fun <- switch(x@output,
-    "typst" = style_string_typst,
-    "html" = style_string_html,
-    "html_portable" = style_string_html,
-    "latex" = style_string_latex,
-    function(k, ...) identity(k)
-  )
-  x@notes <- lapply(x@notes, fun, x@style_notes)
-  return(x)
-}
-
 style_notes <- function(x) {
   fun <- switch(x@output,
     "typst" = style_string_typst,
