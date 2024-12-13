@@ -165,17 +165,24 @@ With these changes, the table should appear with colors as expected.
 
 ## Typst
 
-### Captions and labels
+### Quarto
 
-Due to a quirk in Quarto [reported here,](https://github.com/quarto-dev/quarto-cli/issues/9369) captions in Typst and Quarto documents need to be specified using *both* the `tbl-cap` and the `label` chunk option:
+By default `tinytable` uses Quarto's own figure handling to set captions and figure blocks. This allows cross-references to work. For this to work well, users should specify _both_ the table label and the table caption explicitly using chunk options. Note that the label must imperatively start with `tbl-`:
 
-````{verbatim}
-```{r}
-#| tbl-cap: "blah blah blah"
-#| label: tbl-blah
-tinytable::tt(head(iris, 5))
+```r
+#| label: tbl-example
+#| tbl-cap: This is an example table
+library(tinytable)
+tt(head(iris))
 ```
-````
+
+Alternatively, users can disable Quarto table handling and rely on internal `tinytable` options instead.
+
+```r
+options(tinytable_quarto_figure = FALSE)
+```
+
+Doing this will prevent styles to bleed over from one table to the next.
 
 ### Multi-page long tables
 

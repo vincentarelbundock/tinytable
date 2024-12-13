@@ -16,7 +16,8 @@ setMethod(
     }
 
     return(out)
-  })
+  }
+)
 
 
 group_typst_row <- function(x, i, indent, ...) {
@@ -31,7 +32,8 @@ group_typst_row <- function(x, i, indent, ...) {
   for (idx in rev(seq_along(i))) {
     mid <- append(mid,
       sprintf("table.cell(colspan: %s)[%s],", ncol(x), names(i)[idx]),
-      after = i[idx] - 1)
+      after = i[idx] - 1
+    )
   }
   tab <- c(top, mid, bot)
   tab <- paste(tab, collapse = "\n")
@@ -56,7 +58,8 @@ group_typst_col <- function(x, j, ihead, ...) {
   col <- ifelse(
     trimws(lab) == "",
     sprintf("[%s],", lab),
-    sprintf("table.cell(stroke: (bottom: .05em + black), colspan: %s, align: center)[%s],", len, lab))
+    sprintf("table.cell(stroke: (bottom: .05em + black), colspan: %s, align: center)[%s],", len, lab)
+  )
   col <- paste(col, collapse = "")
   out <- lines_insert(out, col, "repeat: true", "after")
   if (!any(grepl("column-gutter", out))) {

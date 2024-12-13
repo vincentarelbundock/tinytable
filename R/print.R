@@ -1,6 +1,7 @@
 #' Print a tinytable object in knitr
 #'
 #' @keywords internal
+#' @rawNamespace S3method(knitr::knit_print, tinytable)
 #' @return A string with class `knit_asis` to be printed in Rmarkdown or Quarto documents.
 #' @export
 knit_print.tinytable <- function(x,
@@ -77,7 +78,7 @@ print.tinytable <- function(x,
       tinytable_print_rstudio <- getOption("tinytable_print_rstudio_notebook", default = "inline")
       assert_choice(tinytable_print_rstudio, c("inline", "viewer"))
       if (tinytable_print_rstudio == "inline") {
-        tab = sprintf("\n```{=html}\n%s\n```\n`", tab)
+        tab <- sprintf("\n```{=html}\n%s\n```\n`", tab)
         print(knitr::asis_output(tab))
         return(invisible(x))
       }

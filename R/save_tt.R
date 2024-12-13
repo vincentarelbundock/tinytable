@@ -10,6 +10,9 @@
 #' the images are included in the HTML as base64 encoded string instead of link to a local file.
 #' @param overwrite A logical value indicating whether to overwrite an existing file.
 #' @return A string with the table when `output` is a format, and the file path when `output` is a valid path.
+#' @template dependencies
+#' @template latex_preamble
+#' @template global_options
 #' @export
 #' @examples
 #' library(tinytable)
@@ -23,7 +26,7 @@
 #' tt(mtcars[1:4, 1:4]) |> save_tt(filename)
 #'
 save_tt <- function(x,
-                    output, 
+                    output,
                     overwrite = get_option("tinytable_save_overwrite", default = FALSE)) {
   assert_class(x, "tinytable")
   assert_string(output)
@@ -34,8 +37,8 @@ save_tt <- function(x,
   }
 
   if (isTRUE(getOption("tinytable_html_portable", default = FALSE))) {
-      assert_dependency("base64enc")
-      x@portable <- TRUE
+    assert_dependency("base64enc")
+    x@portable <- TRUE
   }
 
   if (identical(output, "html_portable")) {
@@ -97,7 +100,8 @@ save_tt <- function(x,
       file = output,
       selector = "body > div > table",
       zoom = 4,
-      quiet = TRUE)
+      quiet = TRUE
+    )
     unlink(tmp)
   } else if (file_ext == "pdf") {
     assert_dependency("tinytex")
@@ -154,6 +158,7 @@ latex_standalone <- "
 \\usepackage{rotating}
 \\usepackage{float}
 \\usepackage[normalem]{ulem}
+\\usepackage[x11names, svgnames]{xcolor}
 \\UseTblrLibrary{booktabs}
 \\UseTblrLibrary{siunitx}
 \\newcommand{\\tinytableTabularrayUnderline}[1]{\\underline{#1}}

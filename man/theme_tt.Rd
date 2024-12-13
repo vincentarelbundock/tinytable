@@ -17,6 +17,7 @@ theme_tt(x, theme, ...)
 \item "placement": Position of the table environment (LaTeX)
 \item "rotate": Rotate a LaTeX or Typst table.
 \item "resize": Scale a LaTeX \code{tinytable} to fit the \code{width} argument.
+\item "spacing": Draw more compact or airy tables.
 \item "striped": Grey stripes on alternating rows
 \item "tabular": Remove table environment (LaTeX) or Javascript/CSS (HTML)
 \item "void": No rules
@@ -91,6 +92,12 @@ rotate
 \item LaTeX: In Quarto documents, captions must be specified using the \code{caption} argument in \code{tt()} rather than via Quarto chunk options.
 }
 }
+
+spacing
+\itemize{
+\item \code{rowsep}: Row spacing
+\item \code{colsep}: Column spacing
+}
 }
 
 \examples{
@@ -104,7 +111,7 @@ tt(x, theme = "striped")
 tt(x) |> theme_tt("striped")
 
 # resize w/ argument
-x <- cbind(mtcars[1:10,], mtcars[1:10,])
+x <- cbind(mtcars[1:10, ], mtcars[1:10, ])
 tt(x) |>
   theme_tt("resize", width = .9) |>
   print("latex")

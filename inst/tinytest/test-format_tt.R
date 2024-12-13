@@ -193,3 +193,26 @@ x <- tt(x) |>
   format_tt(replace = "!", quarto = TRUE) |>
   save_tt("latex")
 expect_true(grepl("IQ==", x))
+
+
+# Website scaling example
+thumbdrives <- data.frame(
+  date_lookup = as.Date(c("2024-01-15", "2024-01-18", "2024-01-14", "2024-01-16")),
+  price = c(18.49, 19.99, 24.99, 24.99),
+  price_rank = c(1, 2, 3, 3),
+  memory = c(16e9, 12e9, 10e9, 8e9),
+  speed_benchmark = c(0.6, 0.73, 0.82, 0.99)
+)
+tab <- tt(thumbdrives) |>
+  format_tt(j = 1, fn = scales::date_format("%B %y", locale = "fr")) |>
+  format_tt(j = 2, fn = scales::label_currency()) |>
+  format_tt(j = 3, fn = scales::label_ordinal()) |>
+  format_tt(j = 4, fn = scales::label_bytes()) |>
+  format_tt(j = 5, fn = scales::label_percent()) |>
+  format_tt(escape = TRUE) |>
+  print("dataframe")
+expect_true("$18.49" %in% tab$price)
+expect_true("16 GB" %in% tab$memory)
+expect_true("99%" %in% tab$speed_benchmark)
+expect_false("2024-01-15" %in% tab$date_lookup)
+

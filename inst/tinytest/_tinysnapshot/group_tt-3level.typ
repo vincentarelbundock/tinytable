@@ -77,7 +77,7 @@ table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[c],table.
     // tinytable cell content after
 [21.0], [6], [160], [110], [3.90],
 [21.0], [6], [160], [110], [3.90],
-[22.8], [4], [108], [ 93], [3.85],
+[22.8], [4], [108], [93], [3.85],
 
     // tinytable footer after
 

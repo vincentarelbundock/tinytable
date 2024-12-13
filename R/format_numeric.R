@@ -9,8 +9,9 @@ format_numeric <- function(value, num_suffix, digits, num_mark_big, num_mark_dec
       num_mark_big = num_mark_big,
       num_mark_dec = num_mark_dec,
       num_zero = num_zero,
-      num_fmt = num_fmt)
-  # non-integer numeric
+      num_fmt = num_fmt
+    )
+    # non-integer numeric
   } else if (is.numeric(value) && !isTRUE(check_integerish(value)) && !is.null(digits)) {
     out <- format_non_integer_numeric(
       value,
@@ -18,15 +19,17 @@ format_numeric <- function(value, num_suffix, digits, num_mark_big, num_mark_dec
       num_mark_big = num_mark_big,
       num_mark_dec = num_mark_dec,
       num_zero = num_zero,
-      num_fmt = num_fmt)
-  # integer
-  } else if (isTRUE(check_integerish(value)) && !is.null(digits)) {
-    out <- format_integer(value, 
-      digits = digits, 
-      num_mark_big = num_mark_big, 
-      num_mark_dec = num_mark_dec, 
-      num_zero = num_zero, 
-      num_fmt = num_fmt)
+      num_fmt = num_fmt
+    )
+    # integer
+  } else if (isTRUE(check_integerish(value))) {
+    out <- format_integer(value,
+      digits = digits,
+      num_mark_big = num_mark_big,
+      num_mark_dec = num_mark_dec,
+      num_zero = num_zero,
+      num_fmt = num_fmt
+    )
   } else {
     out <- NULL
   }
@@ -46,7 +49,8 @@ format_num_suffix <- function(x, digits, num_mark_big, num_mark_dec, num_zero, n
       format(k,
         digits = digits, drop0trailing = !num_zero, type = "f",
         big.mark = num_mark_big, decimal.mark = num_mark_dec,
-        scientific = FALSE)
+        scientific = FALSE
+      )
     })
   }
   number <- fun(x)

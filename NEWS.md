@@ -1,5 +1,23 @@
 # News
 
+## Development
+
+Breaking change:
+
+* `format_tt()` is now stricter, applying no formatting at all by default. Users must specify an argument explicitly or set a global option to change the table.
+
+Bugs:
+
+* `save_tt("file.pdf")` works with colors. Thanks to @olivedv for the report and solution #395.
+
+New:
+
+* `style_tt("notes")` and `style_tt("caption")` can style footnotes and captions. Note: This will only style captions handled by the `caption` argument in `tt()`, and not captions created by Quarto.
+
+Misc:
+
+* Documentation improvements
+
 ## 0.6.1
 
 * Bug fix: d-column LaTeX generated an error in some cases.
@@ -83,7 +101,7 @@ MathJax = {
 * `format_tt(num_big_mark)` applies to integer columns.
 * Use `getOption("viewer")` instead of `rstudioapi::viewer()` for positron support
 * `glue::glue()` string is accepted by `format_tt()`. Thanks to @LukasWallrich for report #792 on the `modelsummary` repository.
-* Support Github Flavored Markdown (`gfm`) output. Thanks to @kylebutts for contribution #315. 
+* Support Github Flavored Markdown (`gfm`) output. Thanks to @kylebutts for contribution #315.
 * `theme_tt("rotate")` to rotate tables in LaTeX or Typst.
 * `save_tt("/path/to/file")` returns the file path invisibly. Thanks to @yjunechoe for issue #328.
 
@@ -188,7 +206,7 @@ New features:
 
 * `rbind()` and `rbind2()` can be used to stack `tinytable` objects. `rbind2()` is more flexible than `rbind()`. See `?tinytable::rbind2`
 * New output format in `print()`: "dataframe"
-* Rename table headers: `colnames(tab) <- c("a", "b", "c")` 
+* Rename table headers: `colnames(tab) <- c("a", "b", "c")`
 * `theme_tt("resize")` gets a `direction` argument with "up", "down", "both" options. Thanks to @MarcoPortmann for feature request #207
 
 Minor:
@@ -207,7 +225,7 @@ New function `theme_tt()`:
 
 * Function to apply collections of transformations to a `tinytable`.
 * Visual themes:
-  - grid, void, striped, bootstrap, default 
+  - grid, void, striped, bootstrap, default
 * `resize`: Insert a LaTeX table in a `resizebox` environment to ensure a table fits the page, or to scale it to a fraction of `\linewidth`
 * `placement`: Determine where a LaTeX table float is positioned. Ex: `[H]`, `[htbp]`
 * `multipage`: Split long LaTeX tables across multiple pages with (optional) repeated headers/footers. Uses the `longtblr` environment from `tabularray`.
@@ -275,7 +293,7 @@ Bugfix:
 
 New:
 
-- `Typst` tables are now supported using the `tablex` extension: 
+- `Typst` tables are now supported using the `tablex` extension:
   - https://typst.app/
   - https://github.com/PgBiel/typst-tablex
 - `escape` argument in `format_tt()` escapes or substitutes special characters in LaTeX or HTML output to prevent compilation and rendering errors.
@@ -306,7 +324,7 @@ Bug fixes:
 
 Documentation:
 
-- Improved vignette on the package website. 
+- Improved vignette on the package website.
 - Various documentation updates.
 - Math in $$ is the new recommendation.
 

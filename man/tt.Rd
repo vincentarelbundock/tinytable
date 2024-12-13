@@ -67,6 +67,15 @@ The \code{tt} function renders a table in different formats with various styling
 
 \code{tinytable} attempts to determine the appropriate way to print the table based on interactive use, RStudio availability, and output format in RMarkdown or Quarto documents. Users can call \code{print(x, output="markdown")} to print the table in a specific format. Alternatively, they can set a global option: \code{options("tinytable_print_output"="markdown")}
 }
+\section{Dependencies}{
+
+\itemize{
+\item \code{.pdf} output requires a full LaTeX installation on the local computer.
+\item \code{.png} output requires the \code{webshot2} package.
+\item \code{.html} self-contained files require the \code{base64enc} package.
+}
+}
+
 \section{LaTeX preamble}{
 
 
@@ -89,67 +98,139 @@ Note: Your document will fail to compile to PDF in Quarto if you enable caching 
 }\if{html}{\out{</div>}}
 }
 
+\section{Word and Markdown limitations}{
+
+
+Markdown and Word tables only support these styles: italic, bold, strikeout. The \code{width} argument is also unavailable
+Moreover, the \code{style_tt()} function cannot be used to style headers inserted by the \code{group_tt()} function;
+instead, you should style the headers directly in the header definition using markdown syntax:
+\code{group_tt(i = list("*italic header*" = 2))}. These limitations are due to the fact that there is no markdown
+syntax for the other options, and that we create Word documents by converting a markdown table to .docx
+via the Pandoc software.
+}
+
 \section{Global options}{
 
 
-Many global options can be used to set the default argument values of \code{tinytable} functions.
-For a full list, see:
+Options can be set with \code{options()} and change the default behavior of tinytable. For example:
 
-https://vincentarelbundock.github.io/tinytable/vignettes/options.html
-\subsection{Quarto}{
-\subsection{Figure environment}{
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(tinytable_tt_digits = 4)
+tt(head(iris))
+}\if{html}{\out{</div>}}
+
+You can set options in a script or via \code{.Rprofile}. Note: be cautious with \code{.Rprofile} settings as they may affect reproducibility.
+\subsection{Default values for function arguments}{
+\subsection{tt()}{
 \itemize{
-\item \code{options("tinytable_quarto_figure" = FALSE)}: Typst only. Normally, it is best to allow Quarto to define the figure environment, so the default behavior is to not include one.
-\item \code{options(tinytable_print_rstudio_notebook = "inline")}: Display tables "inline" or in the "viewer" in RStudio notebooks.
+\item \code{tinytable_tt_digits}
+\item \code{tinytable_tt_caption}
+\item \code{tinytable_tt_notes}
+\item \code{tinytable_tt_width}
+\item \code{tinytable_tt_theme}
+\item \code{tinytable_tt_rownames}
 }
 }
 
-\subsection{Data Processing}{
+\subsection{format_tt()}{
+\itemize{
+\item \code{tinytable_format_digits}
+\item \code{tinytable_format_num_fmt}
+\item \code{tinytable_format_num_zero}
+\item \code{tinytable_format_num_suffix}
+\item \code{tinytable_format_num_mark_big}
+\item \code{tinytable_format_num_mark_dec}
+\item \code{tinytable_format_date}
+\item \code{tinytable_format_bool}
+\item \code{tinytable_format_other}
+\item \code{tinytable_format_replace}
+\item \code{tinytable_format_escape}
+\item \code{tinytable_format_markdown}
+\item \code{tinytable_format_quarto}
+\item \code{tinytable_format_fn}
+\item \code{tinytable_format_sprintf}
+}
+}
 
-The \code{format_tt(quarto=TRUE)} argument activates Quarto data processing for specific cells. This funcationality comes with  a few warnings:
+\subsection{save_tt()}{
+\itemize{
+\item \code{tinytable_save_overwrite}
+}
+}
+
+\subsection{theme_tt()}{
+
+Placement:
+\itemize{
+\item \code{tinytable_theme_placement_float}
+\item \code{tinytable_theme_placement_horizontal}
+}
+
+Resize:
+\itemize{
+\item \code{tinytable_theme_resize_width}
+\item \code{tinytable_theme_resize_direction}
+}
+
+Multipage:
+\itemize{
+\item \code{tinytable_theme_multipage_rowhead}
+\item \code{tinytable_theme_multipage_rowfoot}
+}
+
+Tabular:
+\itemize{
+\item \code{tinytable_theme_tabular_style}
+}
+}
+
+\subsection{print.tinytable()}{
+\itemize{
+\item \code{tinytable_print_output}
+}
+}
+
+}
+
+\subsection{Output-specific options}{
+\subsection{HTML}{
+\itemize{
+\item \code{tinytable_html_mathjax}: Insert MathJax scripts (warning: may conflict if MathJax is loaded elsewhere)
+\item \code{tinytable_html_portable}: Insert base64 encoded images directly in HTML for \code{plot_tt()}
+}
+}
+
+\subsection{PDF}{
+\itemize{
+\item \code{tinytable_pdf_clean}: Delete temporary and log files
+\item \code{tinytable_pdf_engine}: Choose between "xelatex", "pdflatex", "lualatex"
+}
+}
+
+\subsection{Quarto}{
+
+The \code{format_tt(quarto=TRUE)} argument enables Quarto data processing with some limitations:
 \enumerate{
-\item Currently, Quarto provides a \verb{\\QuartoMarkdownBase64\{\}} LaTeX macro, but it does not appear to do anything with it. References and markdown codes may not be processed as expected in LaTeX.
-\item Quarto data processing can enter in conflict with \code{tinytable} styling or formatting options. See below for how to disable it.
+\item The \verb{\\QuartoMarkdownBase64\{\}} LaTeX macro may not process references and markdown as expected
+\item Quarto processing may conflict with \code{tinytable} styling/formatting
 }
 
-\code{options(tinytable_quarto_disable_processing = TRUE)}
+Options:
+\itemize{
+\item \code{tinytable_quarto_disable_processing}: Disable Quarto cell processing
+\item \code{tinytable_print_rstudio_notebook}: Display tables "inline" or in "viewer" for RStudio notebooks
+\item \code{tinytable_quarto_figure}: Control Typst figure environment in Quarto
+}
 
-Disable Quarto processing of cell content. Setting this global option to \code{FALSE} may lead to conflicts with some \code{tinytable} features, but it also allows use of markdown and Quarto-specific code in table cells, such as cross-references.
+Example of Quarto-specific code in cells:
 
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{x <- data.frame(Math = "x^2^", Citation = "@Lovelace1842")
 fn <- function(z) sprintf("<span data-qmd='\%s'></span>", z)
 tt(x) |> format_tt(i = 1, fn = fn)
 }\if{html}{\out{</div>}}
 
-See this link for more details: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing
+For more details on Quarto table processing: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing
 }
 
-}
-
-\subsection{HTML}{
-\itemize{
-\item \code{options(tinytable_html_mathjax = TRUE)}
-\itemize{
-\item insert MathJax scripts in the HTML document. Warning: This may conflict with other elements of the page if MathJax is otherwise loaded.
-}
-\item \code{options(tinytable_html_portable = TRUE)}
-\itemize{
-\item \code{plot_tt()} inserts base 64 encoded images directly in the HTML file rather than use external links.
-}
-}
-}
-
-\subsection{PDF}{
-\itemize{
-\item \code{options(tinytable_pdf_clean = TRUE)}
-\itemize{
-\item deletes temporary and log files.
-}
-\item \code{options(tinytable_pdf_engine = "xelatex")}
-\itemize{
-\item "xelatex", "pdflatex", "lualatex"
-}
-}
 }
 }
 
@@ -160,9 +241,9 @@ x <- mtcars[1:4, 1:5]
 tt(x)
 
 tt(x,
-   theme = "striped",
-   width = 0.5,
-   caption = "Data about cars.")
+  theme = "striped",
+  width = 0.5,
+  caption = "Data about cars.")
 
 tt(x, notes = "Hello World!")
 
@@ -171,6 +252,6 @@ tab <- tt(x, notes = list("*" = fn))
 print(tab, "latex")
 
 k <- data.frame(x = c(0.000123456789, 12.4356789))
-tt(k, digits=2)
+tt(k, digits = 2)
 
 }

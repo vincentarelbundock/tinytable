@@ -37,7 +37,12 @@ style_tt(
 \arguments{
 \item{x}{A table object created by \code{tt()}.}
 
-\item{i}{Row indices where the styling should be applied. Can be a single value, a vector, or a logical matrix with the same number of rows and columns as \code{x}. \code{i=0} is the header, and negative values are higher level headers. Row indices refer to rows \emph{after} the insertion of row labels by \code{group_tt()}, when applicable.}
+\item{i}{Numeric vector, logical matrix, or string..
+\itemize{
+\item Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.
+\item Logical matrix: A matrix with the same number of rows and columns as \code{x}. \code{i=0} is the header, and negative values are higher level headers. Row indices refer to rows \emph{after} the insertion of row labels by \code{group_tt()}, when applicable.
+\item String: "notes" or "caption".
+}}
 
 \item{j}{Column indices where the styling should be applied. Can be:
 \itemize{
@@ -123,9 +128,18 @@ Style a Tiny Table
 }
 \details{
 This function applies styling to a table created by \code{tt()}. It allows customization of text style (bold, italic, monospace), text and background colors, font size, cell width, text alignment, column span, and indentation. The function also supports passing native instructions to LaTeX (tabularray) and HTML (bootstrap) formats.
-
-Note: Markdown and Word tables only support these styles: italic, bold, strikeout. Moreover, the \code{style_tt()} function cannot be used to style headers inserted by the \code{group_tt()} function; instead, you should style the headers directly in the header definition using markdown syntax: \code{group_tt(i = list("*italic header*" = 2))}. These limitations are due to the fact that there is no markdown syntax for the other options, and that we create Word documents by converting a markdown table to .docx via the Pandoc software.
 }
+\section{Word and Markdown limitations}{
+
+
+Markdown and Word tables only support these styles: italic, bold, strikeout. The \code{width} argument is also unavailable
+Moreover, the \code{style_tt()} function cannot be used to style headers inserted by the \code{group_tt()} function;
+instead, you should style the headers directly in the header definition using markdown syntax:
+\code{group_tt(i = list("*italic header*" = 2))}. These limitations are due to the fact that there is no markdown
+syntax for the other options, and that we create Word documents by converting a markdown table to .docx
+via the Pandoc software.
+}
+
 \examples{
 \dontshow{if (knitr::is_html_output()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontshow{\}) # examplesIf}
@@ -136,15 +150,15 @@ library(tinytable)
 tt(mtcars[1:5, 1:6])
 
 # Alignment
-tt(mtcars[1:5, 1:6]) |> 
+tt(mtcars[1:5, 1:6]) |>
   style_tt(j = 1:5, align = "lcccr")
 
 # Colors and styles
-tt(mtcars[1:5, 1:6]) |> 
+tt(mtcars[1:5, 1:6]) |>
   style_tt(i = 2:3, background = "black", color = "orange", bold = TRUE)
 
 # column selection with `j``
-tt(mtcars[1:5, 1:6]) |> 
+tt(mtcars[1:5, 1:6]) |>
   style_tt(j = 5:6, background = "pink")
 
 tt(mtcars[1:5, 1:6]) |>
@@ -158,27 +172,27 @@ tt(mtcars[1:5, 1:6], theme = "void") |>
     i = 2, j = 2,
     colspan = 3,
     rowspan = 2,
-    align="c",
+    align = "c",
     alignv = "m",
     color = "white",
     background = "black",
     bold = TRUE)
-  
+
 tt(mtcars[1:5, 1:6], theme = "void") |>
   style_tt(
-    i=0:3,
-    j=1:3,
-    line="tblr",
-    line_width=0.4,
-    line_color="teal")
-    
+    i = 0:3,
+    j = 1:3,
+    line = "tblr",
+    line_width = 0.4,
+    line_color = "teal")
+
 tt(mtcars[1:5, 1:6], theme = "bootstrap") |>
-    style_tt(
-      i = c(2,5),
-      j = 3,
-      strikeout = TRUE,
-      fontsize = 0.7)
-      
+  style_tt(
+    i = c(2, 5),
+    j = 3,
+    strikeout = TRUE,
+    fontsize = 0.7)
+
 tt(mtcars[1:5, 1:6]) |>
   style_tt(bootstrap_class = "table table-dark table-hover")
 
