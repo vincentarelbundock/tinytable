@@ -196,6 +196,7 @@ expect_true(grepl("IQ==", x))
 
 
 # Website scaling example
+pkgload::load_all()
 thumbdrives <- data.frame(
   date_lookup = as.Date(c("2024-01-15", "2024-01-18", "2024-01-14", "2024-01-16")),
   price = c(18.49, 19.99, 24.99, 24.99),
@@ -211,6 +212,8 @@ tab <- tt(thumbdrives) |>
   format_tt(j = 5, fn = scales::label_percent()) |>
   format_tt(escape = TRUE) |>
   print("dataframe")
+tab
+
 expect_true("$18.49" %in% tab$price)
 expect_true("16 GB" %in% tab$memory)
 expect_true("99%" %in% tab$speed_benchmark)

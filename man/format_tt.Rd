@@ -15,18 +15,16 @@ format_tt(
   num_mark_big = get_option("tinytable_format_num_mark_big", default = ""),
   num_mark_dec = get_option("tinytable_format_num_mark_dec", default =
     getOption("OutDec", default = ".")),
-  date = get_option("tinytable_format_date", default = "\%Y-\%m-\%d"),
-  bool = get_option("tinytable_format_bool", default = function(column)
-    tools::toTitleCase(tolower(column))),
+  date = get_option("tinytable_format_date", default = NULL),
+  bool = get_option("tinytable_format_bool", default = NULL),
   math = get_option("tinytable_format_math", default = FALSE),
-  other = get_option("tinytable_format_other", default = as.character),
-  replace = get_option("tinytable_format_replace", default = TRUE),
+  other = get_option("tinytable_format_other", default = NULL),
+  replace = get_option("tinytable_format_replace", default = FALSE),
   escape = get_option("tinytable_format_escape", default = FALSE),
   markdown = get_option("tinytable_format_markdown", default = FALSE),
   quarto = get_option("tinytable_format_quarto", default = FALSE),
   fn = get_option("tinytable_format_fn", default = NULL),
-  sprintf = get_option("tinytable_format_sprintf", default = NULL),
-  ...
+  sprintf = get_option("tinytable_format_sprintf", default = NULL)
 )
 }
 \arguments{
@@ -84,8 +82,6 @@ format_tt(
 \item{fn}{Function for custom formatting. Accepts a vector and returns a character vector of the same length.}
 
 \item{sprintf}{String passed to the \code{?sprintf} function to format numbers or interpolate strings with a user-defined pattern (similar to the \code{glue} package, but using Base R).}
-
-\item{...}{Additional arguments are ignored.}
 }
 \value{
 A data frame with formatted columns.
