@@ -38,14 +38,6 @@ setMethod(
     sty$alignv[which(sty$alignv == "t")] <- "h"
     sty$alignv[which(sty$alignv == "m")] <- "m"
 
-    for (spec in stats::na.omit(sty$tabularray_inner)) {
-      x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
-    }
-
-    for (spec in stats::na.omit(sty$tabularray_outer)) {
-      x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
-    }
-
     set <- span <- rep("", nrow(rec))
 
     # d-column are column-wise, so we treat them here
@@ -239,6 +231,15 @@ setMethod(
     for (s in spec) {
       x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
     }
+
+    for (spec in unique(stats::na.omit(sty$tabularray_inner))) {
+      x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
+    }
+
+    for (spec in unique(stats::na.omit(sty$tabularray_outer))) {
+      x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
+    }
+
 
     return(x)
   }

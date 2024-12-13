@@ -36,6 +36,7 @@ Bugs:
 * Typst notes returned an error since the last release. Thanks to @DominikVogel for report #357.
 * Duplicate group labels are allowed in LaTeX with `group_tt()`. Thanks to @eeemda for report #362.
 
+
 ## 0.5.0
 
 New:
