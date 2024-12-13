@@ -123,6 +123,7 @@ tt <- function(x,
   # twice because format() leaves Date type, which cannot be partially reasigned
   # with indexed format_tt(i)
   tab <- data.frame(lapply(tab, format))
+  tab <- data.frame(lapply(tab, trimws))
   colnames(tab) <- colnames(x)
 
   out <- methods::new("tinytable",
