@@ -2,6 +2,10 @@
 
 ## Development
 
+Breaking change:
+
+* `format_tt()` is now stricter, applying no formatting at all by default. Users must specify an argument explicitly or set a global option to change the table.
+
 Bugs:
 
 * `save_tt("file.pdf")` works with colors. Thanks to @olivedv for the report and solution #395.
