@@ -1,0 +1,16 @@
+---
+format: pdf
+---
+
+```{r}
+pkgload::load_all()
+dat <- data.frame(a = c("(03.1)", "(3.14)**", "(003.1416)+"))
+tt(dat) |> style_tt(align = "d")
+```
+
+```{r}
+dat <- data.frame(a = c("(03.1)", "(3.14)**", "(003.1416)+"))
+tt(dat) |>
+  group_tt(j = list("blah" = 1)) |>
+  style_tt(align = "d")
+```

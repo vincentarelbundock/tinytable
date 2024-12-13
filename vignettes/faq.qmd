@@ -165,17 +165,24 @@ With these changes, the table should appear with colors as expected.
 
 ## Typst
 
-### Captions and labels
+### Quarto
 
-Due to a quirk in Quarto [reported here,](https://github.com/quarto-dev/quarto-cli/issues/9369) captions in Typst and Quarto documents need to be specified using *both* the `tbl-cap` and the `label` chunk option:
+By default `tinytable` uses Quarto's own figure handling to set captions and figure blocks. This allows cross-references to work. For this to work well, users should specify _both_ the table label and the table caption explicitly using chunk options. Note that the label must imperatively start with `tbl-`:
 
-````{verbatim}
-```{r}
-#| tbl-cap: "blah blah blah"
-#| label: tbl-blah
-tinytable::tt(head(iris, 5))
+```r
+#| label: tbl-example
+#| tbl-cap: This is an example table
+library(tinytable)
+tt(head(iris))
 ```
-````
+
+Alternatively, users can disable Quarto table handling and rely on internal `tinytable` options instead.
+
+```r
+options(tinytable_quarto_figure = FALSE)
+```
+
+Doing this will prevent styles to bleed over from one table to the next.
 
 ### Multi-page long tables
 
@@ -213,103 +220,38 @@ These arguments are already implemented in the form of "pseudo-spans", meaning t
 
 One alternative would be to remove line segments in finalize_grid(). I tried this but it is tricky and the results were brittle, so I rolled it back. I'm open to considering a PR if someone wants to contribute code, but please discuss the feature design in an issue with me before working on this.
 
-## Quarto
 
-### Custom crossref styles
 
-In `Quarto`, it is possible to create a custom crossref type for things like appendix tables. One challenge, is that LaTeX will not allow users to nest a `tblr` environment, inside a `table` environment, inside the new environment that `Quarto` creates for the crossref. Therefore, when rendering a table to LaTeX/PDF, it is important to drop the `\begin{table}` environment. This can be done using the `theme_tt()` function.
+## Word (`.docx`)
 
-In the example below, we call `theme_tt()` explicitly for a single table, but the [themes vignette](https://vincentarelbundock.github.io/tinytable/vignettes/theme.html) shows how to set a global theme using the `tinytable_tt_theme` option.
+Word document documents are created in two steps:
 
-````{verbatim}
----
-title: "Crossref Example"
-format:
-  pdf: default
-  html: default
-crossref:
-  custom:
-    - kind: float
-      key: apptbl
-      latex-env: apptbl
-      reference-prefix: Table A
-      space-before-numbering: false
-      latex-list-of-description: Appendix Table
-apptbl-cap-location: top
----
+1. Generates a markdown table.
+2. Call the external [Pandoc software](https://pandoc.org/) to convert the markdown table to a Word document.
 
-See @apptbl-testing
+This workflow limits the range of styling options available in Word. Indeed, many arguments in the `style_tt()` function do not have formal markdown notation to represent them, and are thus not available. For example, while `italic`, `bold`, and `strikeout`, are supported, `color` and `background` are not.
 
-::: {#apptbl-testing}
+Note that other `tinytable` functions such as `group_tt()` and `format_tt()` and `plot_tt()` should work as expected in Word.
 
-```{r}
-library(tinytable)
-
-tt(mtcars[1:5,]) |> theme_tt("tabular", style = "tabularray")
-```
-
-Caption goes here.
-
-:::
-````
-
-### Sub-captions
-
-With version 0.4.0 of `tinytable` and versions above 1.6 of Quarto---only available [as a pre-release build at the time of writing](https://quarto.org/docs/download/prerelease.html)--- users can specify sub-captions for tables. This is done by adding a `tbl-subcap` chunk option to the table chunk. We also need to use a `tinytable` theme to remove built-in table structure and let Quarto handle the table construction. Here is a simple example document:
+Users who want full styling capabilities in Word can save tables as image files and insert them in their documents. Here is an example Quarto notebook illustrating this workflow.
 
 ````{verbatim}
 ---
-format: pdf
+format: docx
 ---
 
-See @tbl-example, @tbl-example-1, or @tbl-example-2.
-
 ```{r}
-#| label: tbl-example
-#| tbl-cap: "Example"
-#| tbl-subcap: 
-#|   - "Cars"
-#|   - "Pressure"
-#| layout-ncol: 2
-
+#| out-width: "50%"
 library(tinytable)
-tt(head(cars)) |> theme_tt("tabular", style = "tabularray")
-tt(head(pressure)) |> theme_tt("tabular", style = "tabularray")
+
+options(tinytable_save_overwrite = TRUE)
+
+tt(mtcars[1:10, 1:5]) |>
+  style_tt(j = 2:3, background = "black", color = "white") |>
+  save_tt("table_01.png")
+
+knitr::include_graphics("table_01.png")
 ```
 ````
 
-### Same table, different styles
-
-In some cases, the user wants to print a single table multiple times with different styles in a single HTML document. This will sometimes cause issues, because the `style_tt()` function inserts several javascript functions to modify the same table, thus creating conflicts. A simple solution is to change the unique ID of the table object manually. 
-
-Consider this RevalJS slideshow in which we sequentially highlight different rows of the data frame:
-
-````{verbatim}
----
-format: revealjs
----
-
-## Page 1
-
-```{r}
-library(tinytable)
-
-tab <- tt(head(iris))
-tab
-```
-
-## Page 2
-
-```{r}
-tab@id <- "table_01"
-tab |> style_tt(i = 3, background = "skyblue")
-```
-
-## Page 3
-
-```{r}
-tab@id <- "table_02"
-tab |> style_tt(i = 5, background = "orange")
-```
-````
 

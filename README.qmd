@@ -1,4 +1,6 @@
-
+---
+format: gfm
+---
 
 <p align="center">
 <img src="man/figures/gallery/tinytable_gallery.gif" height = "250" class = "center">
@@ -12,7 +14,7 @@
 
 ## What?
 
-`tinytable` is a small but powerful `R` package to draw beautiful tables in a variety of formats: HTML, LaTeX, Word, PDF, PNG, Markdown, and Typst. The user interface is minimalist and easy to learn, while giving users access to powerful frameworks to create endlessly customizable tables.
+`tinytable` is a small but powerful `R` package to draw beautiful tables in a variety of formats: HTML, LaTeX, Word^[Styling options in Word are somewhat limited. See the FAQ page and the `style_tt()` documentation for details.], PDF, PNG, Markdown, and Typst. The user interface is minimalist and easy to learn, while giving users access to powerful frameworks to create endlessly customizable tables.
 
 <https://vincentarelbundock.github.io/tinytable/>
 
@@ -20,10 +22,10 @@
 
 ```{r, include=FALSE}
 db <- tools::CRAN_package_db()
-dep_ke <- tools::package_dependencies(c("kableExtra"), recursive=TRUE, db=db)[[1]] |> length()
-dep_hux <- tools::package_dependencies(c("huxtable"), recursive=TRUE, db=db)[[1]] |> length()
-dep_dt <- tools::package_dependencies(c("DT"), recursive=TRUE, db=db)[[1]] |> length()
-dep_gt <- tools::package_dependencies(c("gt"), recursive=TRUE, db=db)[[1]] |> length()
+dep_ke <- tools::package_dependencies(c("kableExtra"), recursive = TRUE, db = db)[[1]] |> length()
+dep_hux <- tools::package_dependencies(c("huxtable"), recursive = TRUE, db = db)[[1]] |> length()
+dep_dt <- tools::package_dependencies(c("DT"), recursive = TRUE, db = db)[[1]] |> length()
+dep_gt <- tools::package_dependencies(c("gt"), recursive = TRUE, db = db)[[1]] |> length()
 ```
 
 There are already many excellent table-drawing packages in the `R` ecosystem. Why release a new one? As [the maintainer of `modelsummary`](https://modelsummary.com), I needed a table-drawing package which was:
@@ -117,6 +119,7 @@ The `tinytable` `r packageVersion("tinytable")` tutorial will take you much furt
   - [Group labels](https://vincentarelbundock.github.io/tinytable/vignettes/group.html)
   - [Plots and images](https://vincentarelbundock.github.io/tinytable/vignettes/plot.html)
   - [Themes](https://vincentarelbundock.github.io/tinytable/vignettes/theme.html)
+  - [Notebooks (Quarto, Rmarkdown, Bookdown, etc.)](https://vincentarelbundock.github.io/tinytable/vignettes/notebooks.html)
   - [Customization](https://vincentarelbundock.github.io/tinytable/vignettes/custom.html)
   - [FAQ](https://vincentarelbundock.github.io/tinytable/vignettes/faq.html)
   - [Alternatives](https://vincentarelbundock.github.io/tinytable/vignettes/alternatives.html)

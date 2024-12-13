@@ -9,7 +9,8 @@ setMethod(
     x <- group_grid_row(x, i)
     x <- group_grid_col(x, j)
     return(x)
-  })
+  }
+)
 
 
 group_grid_col <- function(x, j, ...) {

@@ -36,7 +36,7 @@ lines_drop_consecutive_empty <- function(x) {
   lines <- strsplit(x, "\n")[[1]]
   tmp <- rle(lines)
   tmp$lengths[trimws(tmp$values) == ""] <- 1
-  lines <- inverse.rle(tmp) 
+  lines <- inverse.rle(tmp)
   x <- paste0(lines, collapse = "\n")
   return(x)
 }
@@ -78,7 +78,7 @@ lines_drop_between <- function(text, regex_start, regex_end, fixed = FALSE) {
   if (idx_start >= idx_end) {
     stop("`regex_start` matches a line after `regex_end`.", call. = FALSE)
   }
-  lines_to_keep <- c(1:(idx_start-1), (idx_end+1):length(lines))
+  lines_to_keep <- c(1:(idx_start - 1), (idx_end + 1):length(lines))
   output <- lines[lines_to_keep]
   out <- paste(output, collapse = "\n")
   return(out)
@@ -86,19 +86,19 @@ lines_drop_between <- function(text, regex_start, regex_end, fixed = FALSE) {
 
 
 lines_insert <- function(old, new, regex, position = "before") {
-    lines <- strsplit(old, "\n")[[1]]
-    idx <- grep(regex, lines)
-    if (length(idx) != 1 || anyNA(idx)) {
-          stop("The `regex` supplied `lines_insert()` did not match a unique line.", call. = FALSE)
-    }
-    if (position == "before") {
-        top <- lines[1:(idx - 1)]
-        bot <- lines[idx:length(lines)]
-    } else if (position == "after") {
-        top <- lines[1:idx]
-        bot <- lines[(idx + 1):length(lines)]
-    }
-    lines <- c(top, new, bot)
-    out <- paste(lines, collapse = "\n")
-    return(out)
+  lines <- strsplit(old, "\n")[[1]]
+  idx <- grep(regex, lines)
+  if (length(idx) != 1 || anyNA(idx)) {
+    stop("The `regex` supplied `lines_insert()` did not match a unique line.", call. = FALSE)
+  }
+  if (position == "before") {
+    top <- lines[1:(idx - 1)]
+    bot <- lines[idx:length(lines)]
+  } else if (position == "after") {
+    top <- lines[1:idx]
+    bot <- lines[(idx + 1):length(lines)]
+  }
+  lines <- c(top, new, bot)
+  out <- paste(lines, collapse = "\n")
+  return(out)
 }

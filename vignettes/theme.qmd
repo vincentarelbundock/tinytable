@@ -43,6 +43,10 @@ tt(x, theme = "grid")
 tt(x, theme = "bootstrap")
 ```
 
+```{r}
+tt(x, theme = "spacing")
+```
+
 ::: {.content-visible when-format="pdf"}
 ```{r}
 tt(x, theme = "void")
@@ -56,7 +60,7 @@ Users can also define their own themes to apply consistent visual tweaks to tabl
 
 ```{r}
 theme_vincent <- function(x, ...) {
-  out <- x |> 
+  out <- x |>
     style_tt(color = "teal")
   out@caption <- "Always use the same caption."
   out@width <- .5
@@ -78,14 +82,14 @@ Here is a slightly more complex example. The benefit of this approach is that we
 ```{r}
 #| eval: false
 theme_slides <- function(x, ...) {
-    fn <- function(table) {
-        if (isTRUE(table@output == "typst")) {
-          table@table_string <- paste0("#figure([\n", table@table_string, "\n])")
-        }
-        return(table)
+  fn <- function(table) {
+    if (isTRUE(table@output == "typst")) {
+      table@table_string <- paste0("#figure([\n", table@table_string, "\n])")
     }
-    x <- style_tt(x, finalize = fn)
-    return(x)
+    return(table)
+  }
+  x <- style_tt(x, finalize = fn)
+  return(x)
 }
 
 tt(head(iris), theme = theme_slides)
@@ -97,7 +101,9 @@ tt(head(iris), theme = theme_slides)
 The `tabular` theme is designed to provide a more "raw" table, without a floating table environment in LaTeX, and without CSS or Javascript in HTML. 
 
 ```{r tabular-theme}
-tt(x) |> theme_tt("tabular") |> print("latex")
+tt(x) |>
+  theme_tt("tabular") |>
+  print("latex")
 ```
 
 
@@ -111,7 +117,7 @@ LaTeX only.
 The `resize` theme allows you to adjust the size of the table in LaTeX outputs, making it fit within a specified width of the page. This is useful for large tables that need to be scaled down to fit the document layout. This table will be scaled to 90% of the available line width, ensuring it fits nicely within the document.
 
 ```{r}
-tmp <- cbind(mtcars, mtcars)[1:10,]
+tmp <- cbind(mtcars, mtcars)[1:10, ]
 
 tt(tmp) |> theme_tt("resize", width = .9)
 ```
@@ -141,7 +147,7 @@ tt(x) |>
 ## Rotate
 
 ```{r}
-tt(head(iris), caption = "Rotated table.") |> 
+tt(head(iris), caption = "Rotated table.") |>
   theme_tt("rotate", angle = 45)
 ```
 :::
@@ -161,8 +167,8 @@ tmp <- rbind(mtcars, mtcars)[, 1:6]
 
 cap <- "A long 80\\% width table with repeating headers."
 
-tt(tmp, width = .8, caption = cap) |> 
-    theme_tt("multipage", rowhead = 1)
+tt(tmp, width = .8, caption = cap) |>
+  theme_tt("multipage", rowhead = 1)
 ```
 :::
 

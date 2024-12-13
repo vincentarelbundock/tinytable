@@ -29,6 +29,162 @@ A string with the table when \code{output} is a format, and the file path when \
 \description{
 This function saves an object of class tinytable to a specified file and format, with an option to overwrite existing files.
 }
+\section{Dependencies}{
+
+\itemize{
+\item \code{.pdf} output requires a full LaTeX installation on the local computer.
+\item \code{.png} output requires the \code{webshot2} package.
+\item \code{.html} self-contained files require the \code{base64enc} package.
+}
+}
+
+\section{LaTeX preamble}{
+
+
+\code{tinytable} uses the \code{tabularray} package from your LaTeX distribution to draw tables. \code{tabularray}, in turn, uses the special \code{tblr}, \code{talltblr}, and \code{longtblr} environments.
+
+When rendering a document from Quarto or Rmarkdown directly to PDF, \code{tinytable} will populate the LaTeX preamble automatically with all the required packages. For standalone LaTeX documents, these commands should be inserted in the preamble manually:
+
+Note: Your document will fail to compile to PDF in Quarto if you enable caching and you use tinytable due to missing LaTeX headers. To avoid this problem, set the option \verb{#| cache: false} for the chunk(s) where you use tinytable.
+
+\if{html}{\out{<div class="sourceCode latex">}}\preformatted{\\usepackage\{tabularray\}
+\\usepackage\{float\}
+\\usepackage\{graphicx\}
+\\usepackage\{rotating\}
+\\usepackage[normalem]\{ulem\}
+\\UseTblrLibrary\{booktabs\}
+\\UseTblrLibrary\{siunitx\}
+\newcommand{\tinytableTabularrayUnderline}[1]\{\\underline\{#1\}\}
+\newcommand{\tinytableTabularrayStrikeout}[1]\{\\sout\{#1\}\}
+\\NewTableCommand\{\\tinytableDefineColor\}[3]\{\\definecolor\{#1\}\{#2\}\{#3\}\}
+}\if{html}{\out{</div>}}
+}
+
+\section{Global options}{
+
+
+Options can be set with \code{options()} and change the default behavior of tinytable. For example:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(tinytable_tt_digits = 4)
+tt(head(iris))
+}\if{html}{\out{</div>}}
+
+You can set options in a script or via \code{.Rprofile}. Note: be cautious with \code{.Rprofile} settings as they may affect reproducibility.
+\subsection{Default values for function arguments}{
+\subsection{tt()}{
+\itemize{
+\item \code{tinytable_tt_digits}
+\item \code{tinytable_tt_caption}
+\item \code{tinytable_tt_notes}
+\item \code{tinytable_tt_width}
+\item \code{tinytable_tt_theme}
+\item \code{tinytable_tt_rownames}
+}
+}
+
+\subsection{format_tt()}{
+\itemize{
+\item \code{tinytable_format_digits}
+\item \code{tinytable_format_num_fmt}
+\item \code{tinytable_format_num_zero}
+\item \code{tinytable_format_num_suffix}
+\item \code{tinytable_format_num_mark_big}
+\item \code{tinytable_format_num_mark_dec}
+\item \code{tinytable_format_date}
+\item \code{tinytable_format_bool}
+\item \code{tinytable_format_other}
+\item \code{tinytable_format_replace}
+\item \code{tinytable_format_escape}
+\item \code{tinytable_format_markdown}
+\item \code{tinytable_format_quarto}
+\item \code{tinytable_format_fn}
+\item \code{tinytable_format_sprintf}
+}
+}
+
+\subsection{save_tt()}{
+\itemize{
+\item \code{tinytable_save_overwrite}
+}
+}
+
+\subsection{theme_tt()}{
+
+Placement:
+\itemize{
+\item \code{tinytable_theme_placement_float}
+\item \code{tinytable_theme_placement_horizontal}
+}
+
+Resize:
+\itemize{
+\item \code{tinytable_theme_resize_width}
+\item \code{tinytable_theme_resize_direction}
+}
+
+Multipage:
+\itemize{
+\item \code{tinytable_theme_multipage_rowhead}
+\item \code{tinytable_theme_multipage_rowfoot}
+}
+
+Tabular:
+\itemize{
+\item \code{tinytable_theme_tabular_style}
+}
+}
+
+\subsection{print.tinytable()}{
+\itemize{
+\item \code{tinytable_print_output}
+}
+}
+
+}
+
+\subsection{Output-specific options}{
+\subsection{HTML}{
+\itemize{
+\item \code{tinytable_html_mathjax}: Insert MathJax scripts (warning: may conflict if MathJax is loaded elsewhere)
+\item \code{tinytable_html_portable}: Insert base64 encoded images directly in HTML for \code{plot_tt()}
+}
+}
+
+\subsection{PDF}{
+\itemize{
+\item \code{tinytable_pdf_clean}: Delete temporary and log files
+\item \code{tinytable_pdf_engine}: Choose between "xelatex", "pdflatex", "lualatex"
+}
+}
+
+\subsection{Quarto}{
+
+The \code{format_tt(quarto=TRUE)} argument enables Quarto data processing with some limitations:
+\enumerate{
+\item The \verb{\\QuartoMarkdownBase64\{\}} LaTeX macro may not process references and markdown as expected
+\item Quarto processing may conflict with \code{tinytable} styling/formatting
+}
+
+Options:
+\itemize{
+\item \code{tinytable_quarto_disable_processing}: Disable Quarto cell processing
+\item \code{tinytable_print_rstudio_notebook}: Display tables "inline" or in "viewer" for RStudio notebooks
+\item \code{tinytable_quarto_figure}: Control Typst figure environment in Quarto
+}
+
+Example of Quarto-specific code in cells:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{x <- data.frame(Math = "x^2^", Citation = "@Lovelace1842")
+fn <- function(z) sprintf("<span data-qmd='\%s'></span>", z)
+tt(x) |> format_tt(i = 1, fn = fn)
+}\if{html}{\out{</div>}}
+
+For more details on Quarto table processing: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing
+}
+
+}
+}
+
 \examples{
 library(tinytable)
 x <- mtcars[1:4, 1:5]

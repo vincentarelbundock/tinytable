@@ -102,7 +102,8 @@ plot_tt <- function(x,
     xlim = xlim,
     height = height,
     images = images,
-    assets = assets)
+    assets = assets
+  )
   cal <- c(cal, list(...))
   cal <- do.call(call, cal)
 
@@ -130,9 +131,9 @@ plot_tt_lazy <- function(x,
     assert_dependency("ggplot2")
     images <- NULL
 
-    if(isTRUE(x@output == "html") && isTRUE(x@portable)) {
-        path_full <- tempdir()
-        assets <- tempdir()
+    if (isTRUE(x@output == "html") && isTRUE(x@portable)) {
+      path_full <- tempdir()
+      assets <- tempdir()
     } else {
       path_full <- file.path(x@output_dir, assets)
     }
@@ -182,7 +183,7 @@ plot_tt_lazy <- function(x,
   if (isTRUE(x@output == "latex")) {
     cell <- "\\includegraphics[height=%sem]{%s}"
     cell <- sprintf(cell, height, images)
-  } else if(isTRUE(x@output == "html") && isTRUE(x@portable)) {
+  } else if (isTRUE(x@output == "html") && isTRUE(x@portable)) {
     assert_dependency("base64enc")
 
     http <- grepl("^http", trimws(images))
@@ -192,7 +193,8 @@ plot_tt_lazy <- function(x,
     cell <- ifelse(
       grepl("^http", trimws(images)),
       '<img src="%s" style="height: %sem;">',
-      '<img src="./%s" style="height: %sem;">')
+      '<img src="./%s" style="height: %sem;">'
+    )
     cell <- sprintf(cell, images, height)
   } else if (isTRUE(x@output == "markdown")) {
     cell <- "![](%s){ height=%s }"
@@ -250,7 +252,7 @@ encode <- function(images) {
   assert_dependency("base64enc")
   ext <- tools::file_ext(images)
 
-  if(any(ext == "")) stop("Empty image extensions are not allowed", call. = FALSE)
+  if (any(ext == "")) stop("Empty image extensions are not allowed", call. = FALSE)
 
   encoded <- sapply(images, base64enc::base64encode)
   sprintf("data:image/%s;base64, %s", ext, encoded)

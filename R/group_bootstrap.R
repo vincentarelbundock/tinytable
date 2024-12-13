@@ -14,7 +14,8 @@ setMethod(
       out <- group_bootstrap_row(out, i = i, j = j, indent = indent, ...)
     }
     return(out)
-  })
+  }
+)
 
 
 group_bootstrap_col <- function(x, j, ihead, ...) {
@@ -33,7 +34,8 @@ group_bootstrap_col <- function(x, j, ihead, ...) {
   jstring <- lapply(names(j), function(n) {
     sprintf(
       '<th scope="col" align="center" colspan=%s>%s</th>',
-      max(j[[n]]) - min(j[[n]]) + 1, n)
+      max(j[[n]]) - min(j[[n]]) + 1, n
+    )
   })
   jstring <- paste(unlist(jstring), collapse = "\n")
   jstring <- sprintf("<tr>\n%s\n</tr>", jstring)
@@ -67,7 +69,8 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
       # 0-indexing
       i[g] + x@nhead - 1,
       ncol(x),
-      names(i)[g])
+      names(i)[g]
+    )
     out <- lines_insert(out, js, "tinytable span after", "after")
     # out <- bootstrap_setting(out, new = js, component = "cell")
   }
@@ -78,7 +81,8 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
     "insertSpanRow(",
     paste0("insertSpanRow_", get_id(""), "("),
     out,
-    fixed = TRUE)
+    fixed = TRUE
+  )
 
   idx <- insert_values(seq_len(nrow(x)), rep(NA, length(i)), i)
 

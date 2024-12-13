@@ -1,5 +1,5 @@
 #' Combine `tinytable` objects by rows (vertically)
-#' 
+#'
 #' @details
 #' `format_tt()` calls applied to `x` or `y` are evaluated before binding, to allow distinct formatting for each panel.
 #'
@@ -25,55 +25,56 @@
 #' @aliases rbind2
 #' @examples
 #' library(tinytable)
-#' x = tt(mtcars[1:3, 1:2], caption = "Combine two tiny tables.")
-#' y = tt(mtcars[4:5, 8:10]) 
-#' 
+#' x <- tt(mtcars[1:3, 1:2], caption = "Combine two tiny tables.")
+#' y <- tt(mtcars[4:5, 8:10])
+#'
 #' # rbind() does not support additional aarguments
 #' # rbind2() supports additional arguments
-#' 
+#'
 #' # basic combination
 #' rbind(x, y)
-#' 
+#'
 #' rbind(x, y) |> format_tt(replace = "")
-#' 
+#'
 #' # omit y header
 #' rbind2(x, y, headers = FALSE)
-#' 
+#'
 #' # bind by position rather than column names
 #' rbind2(x, y, use_names = FALSE)
-#' 
+#'
 #' @importFrom methods rbind2
 #' @export
-setMethod("rbind2", 
-          signature = signature(x = "tinytable", y = "tinytable"), 
-          definition = function(x, y, 
-                                use_names = TRUE,
-                                headers = TRUE,
-                                ...) {
+setMethod("rbind2",
+  signature = signature(x = "tinytable", y = "tinytable"),
+  definition = function(x, y,
+                        use_names = TRUE,
+                        headers = TRUE,
+                        ...) {
+    assert_class(x, "tinytable")
+    assert_class(y, "tinytable")
+    assert_dependency("data.table")
+    assert_flag(use_names)
+    assert_flag(headers)
 
-  assert_class(x, "tinytable")
-  assert_class(y, "tinytable")
-  assert_dependency("data.table")
-  assert_flag(use_names)
-  assert_flag(headers)
+    x_df <- print(x, output = "dataframe")
+    y_df <- print(y, output = "dataframe")
 
-  x_df <- print(x, output = "dataframe")
-  y_df <- print(y, output = "dataframe")
+    if (isTRUE(headers) && !is.null(colnames(y))) {
+      y_df <- base::rbind(colnames(y_df), y_df)
+    }
 
-  if (isTRUE(headers) && !is.null(colnames(y))) {
-    y_df <- base::rbind(colnames(y_df), y_df)
+    out <- data.table::rbindlist(list(x_df, y_df),
+      fill = TRUE,
+      use.names = use_names
+    )
+
+    out <- tt(out)
+
+    out@output <- x@output
+    out@notes <- c(x@notes, y@notes)
+    out@width <- x@width
+    out@caption <- x@caption
+
+    return(out)
   }
-
-  out <- data.table::rbindlist(list(x_df, y_df), 
-                               fill = TRUE,
-                               use.names = use_names)
-
-  out <- tt(out)
-
-  out@output <- x@output
-  out@notes <- c(x@notes, y@notes)
-  out@width <- x@width
-  out@caption <- x@caption
-
-  return(out)
-})
+)

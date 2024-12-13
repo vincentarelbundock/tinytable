@@ -53,18 +53,21 @@ tt(head(iris)) |>
 We can style group rows in the same way as regular rows:
 
 ```{r}
-tt(dat) |> 
+tt(dat) |>
   group_tt(
     i = list(
       "I like (fake) hamburgers" = 3,
       "She prefers halloumi" = 4,
-      "They love tofu" = 7)) |>
+      "They love tofu" = 7
+    )
+  ) |>
   style_tt(
     i = c(3, 5, 9),
     align = "c",
     color = "white",
     background = "gray",
-    bold = TRUE)
+    bold = TRUE
+  )
 ```
 
 ### Automatic row groups
@@ -73,7 +76,9 @@ We can use the `group_tt()` function to group rows and label them using spanners
 
 ```{r}
 # subset and sort data
-df <- mtcars |> head(10) |> sort_by(~ am)
+df <- mtcars |>
+  head(10) |>
+  sort_by(~am)
 
 # draw table
 tt(df) |> group_tt(i = df$am)
@@ -85,7 +90,7 @@ tt(df) |> group_tt(i = df$am)
 The syntax for column groups is very similar, but we use the `j` argument instead. The named list specifies the labels to appear in column-spanning labels, and the values must be a vector of consecutive and non-overlapping integers that indicate which columns are associated to which labels:
 
 ```{r}
-tt(dat) |> 
+tt(dat) |>
   group_tt(
     j = list(
       "Hamburgers" = 1:3,
@@ -97,19 +102,25 @@ Here is a table with both row and column headers, as well as some styling:
 
 ```{r}
 dat <- mtcars[1:9, 1:8]
-tt(dat) |> 
+tt(dat) |>
   group_tt(
-    i = list("I like (fake) hamburgers" = 3,
-             "She prefers halloumi" = 4,
-             "They love tofu" = 7),
-    j = list("Hamburgers" = 1:3,
-             "Halloumi" = 4:5,
-             "Tofu" = 7)) |>
+    i = list(
+      "I like (fake) hamburgers" = 3,
+      "She prefers halloumi" = 4,
+      "They love tofu" = 7
+    ),
+    j = list(
+      "Hamburgers" = 1:3,
+      "Halloumi" = 4:5,
+      "Tofu" = 7
+    )
+  ) |>
   style_tt(
     i = c(3, 5, 9),
     align = "c",
     background = "teal",
-    color = "white") |>
+    color = "white"
+  ) |>
   style_tt(i = -1, color = "teal")
 ```
 

@@ -1,6 +1,10 @@
 options("tinysnapshot_device" = "svglite")
 options("tinysnapshot_tol" = 200)
 
+# common formatting options
+options(tinytable_format_bool = function(x) tools::toTitleCase(tolower(x)))
+options(tinytable_format_replace = "")
+
 # libraries
 requiet <- function(package) {
     void <- capture.output(

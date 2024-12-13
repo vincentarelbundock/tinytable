@@ -21,7 +21,8 @@ Install the latest version from R-Universe or CRAN:
 
 ```{r, eval = FALSE}
 install.packages("tinytable",
-    repos = c("https://vincentarelbundock.r-universe.dev", "https://cran.r-project.org"))
+  repos = c("https://vincentarelbundock.r-universe.dev", "https://cran.r-project.org")
+)
 ```
 
 This tutorial introduces the main functions of the package. It is also [available as a single PDF document.](tinytable_tutorial.pdf)
@@ -74,7 +75,7 @@ lorem <- data.frame(
   Ipsum = " Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos."
 )
 
-tt(lorem, width = 3/4)
+tt(lorem, width = 3 / 4)
 ```
 
 
@@ -99,10 +100,9 @@ We can also add markers in individual cells by providing coordinates:
 
 ```{r}
 tt(x, notes = list(
-    a = list(i = 0:1, j = 1, text = "Blah."),
-    b = "Blah blah."
-  )
-)
+  a = list(i = 0:1, j = 1, text = "Blah."),
+  b = "Blah blah."
+))
 ```
 
 
@@ -201,10 +201,13 @@ tt(mtcars[1:10, 1:5]) |>
   group_tt(
     i = list(
       "Hello" = 3,
-      "World" = 8),
+      "World" = 8
+    ),
     j = list(
       "Foo" = 2:3,
-      "Bar" = 4:5)) |>
+      "Bar" = 4:5
+    )
+  ) |>
   print("markdown")
 ```
 
@@ -213,10 +216,13 @@ tt(mtcars[1:10, 1:5]) |>
   group_tt(
     i = list(
       "Hello" = 3,
-      "World" = 8),
+      "World" = 8
+    ),
     j = list(
       "Foo" = 2:3,
-      "Bar" = 4:5)) |>
+      "Bar" = 4:5
+    )
+  ) |>
   save_tt("markdown")
 ```
 
@@ -238,7 +244,7 @@ Tables can be combined with the usual `rbind()` function:
 
 ```{r}
 a <- tt(mtcars[1:3, 1:2], caption = "Combine two tiny tables.")
-b <- tt(mtcars[4:5, 8:10]) 
+b <- tt(mtcars[4:5, 8:10])
 
 rbind(a, b)
 
@@ -274,7 +280,7 @@ In a pipe-based workflow, we can use the `setNames()` function from base `R`:
 
 ```{r} 
 mtcars[1:2, 1:2] |>
-    tt() |>
-    setNames(c("a", "b"))
+  tt() |>
+  setNames(c("a", "b"))
 ```
 

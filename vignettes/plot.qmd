@@ -35,8 +35,8 @@ dat <- data.frame(
 )
 
 img <- c(
-  "../figures/spider.png",
-  "../figures/squirrel.png"
+  "figures/spider.png",
+  "figures/squirrel.png"
 )
 
 tt(dat) |>
@@ -73,7 +73,7 @@ There are several types of inline plots available by default. For example,
 plot_data <- list(mtcars$mpg, mtcars$hp, mtcars$qsec)
 
 dat <- data.frame(
-  Variables = c("mpg", "hp", "qsec"), 
+  Variables = c("mpg", "hp", "qsec"),
   Histogram = "",
   Density = "",
   Bar = "",
@@ -124,10 +124,10 @@ library(ggplot2)
 
 f <- function(d, color = "black", ...) {
   d <- data.frame(x = d)
-  ggplot(d, aes(x = x)) + 
+  ggplot(d, aes(x = x)) +
     geom_histogram(bins = 30, color = color, fill = color) +
-    scale_x_continuous(expand=c(0,0)) +
-    scale_y_continuous(expand=c(0,0)) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
     theme_void()
 }
 
@@ -144,7 +144,8 @@ We can insert arbitrarily complex plots by customizing the `ggplot2` call:
 #| warning: false
 penguins <- read.csv(
   "https://vincentarelbundock.github.io/Rdatasets/csv/palmerpenguins/penguins.csv",
-  na.strings = "") |> na.omit()
+  na.strings = ""
+) |> na.omit()
 
 # split data by species
 dat <- split(penguins, penguins$species)
@@ -164,8 +165,8 @@ tab <- data.frame(
 f <- function(d, ...) {
   ggplot(d, aes(x = flipper_length_mm, y = body_mass_g, color = sex)) +
     geom_point(size = .2) +
-    scale_x_continuous(expand=c(0,0)) +
-    scale_y_continuous(expand=c(0,0)) +
+    scale_x_continuous(expand = c(0, 0)) +
+    scale_y_continuous(expand = c(0, 0)) +
     scale_color_manual(values = c("#E69F00", "#56B4E9")) +
     theme_void() +
     theme(legend.position = "none")
@@ -176,7 +177,7 @@ tt(tab) |>
   plot_tt(j = 2, fun = "histogram", data = body, height = 2) |>
   plot_tt(j = 3, fun = "density", data = flip, height = 2) |>
   plot_tt(j = 4, fun = f, data = dat, height = 2) |>
-  style_tt(j = 2:4, align = "c") 
+  style_tt(j = 2:4, align = "c")
 ```
 
 

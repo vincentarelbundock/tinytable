@@ -16,7 +16,8 @@ setMethod(
     }
 
     return(out)
-  })
+  }
+)
 
 
 group_typst_row <- function(x, i, indent, ...) {
@@ -24,7 +25,6 @@ group_typst_row <- function(x, i, indent, ...) {
   tab <- strsplit(tab, split = "\\n")[[1]]
   body_min <- utils::head(grep("tinytable cell content after", tab), 1) + 1
   body_max <- utils::head(grep("end table", tab), 1) - 1
-  body <- body_min:body_max
   top <- tab[1:(body_min - 1)]
   mid <- tab[body_min:body_max]
   mid <- mid[mid != ""]
@@ -32,15 +32,15 @@ group_typst_row <- function(x, i, indent, ...) {
   for (idx in rev(seq_along(i))) {
     mid <- append(mid,
       sprintf("table.cell(colspan: %s)[%s],", ncol(x), names(i)[idx]),
-      after = i[idx] - 1)
+      after = i[idx] - 1
+    )
   }
   tab <- c(top, mid, bot)
   tab <- paste(tab, collapse = "\n")
   x@table_string <- tab
   idx_new <- i + seq_along(i) - 1
-  idx_all <- seq_len(nrow(x) + length(i))
+  idx_all <- seq_len(nrow(x))
   idx <- setdiff(idx_all, idx_new)
-  # x <- style_tt(x, idx, indent = indent)
   return(x)
 }
 
@@ -58,7 +58,8 @@ group_typst_col <- function(x, j, ihead, ...) {
   col <- ifelse(
     trimws(lab) == "",
     sprintf("[%s],", lab),
-    sprintf("table.cell(stroke: (bottom: .05em + black), colspan: %s, align: center)[%s],", len, lab))
+    sprintf("table.cell(stroke: (bottom: .05em + black), colspan: %s, align: center)[%s],", len, lab)
+  )
   col <- paste(col, collapse = "")
   out <- lines_insert(out, col, "repeat: true", "after")
   if (!any(grepl("column-gutter", out))) {

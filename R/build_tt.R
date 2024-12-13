@@ -6,6 +6,7 @@
 build_tt <- function(x, output = NULL) {
   output <- sanitize_output(output)
 
+
   x <- switch(output,
     html = swap_class(x, "tinytable_bootstrap"),
     latex = swap_class(x, "tinytable_tabularray"),
@@ -17,20 +18,15 @@ build_tt <- function(x, output = NULL) {
 
   x@output <- output
 
+  # apply the style_notes
+  x <- style_notes(x)
+  x <- style_caption(x)
+
   for (th in x@lazy_theme) {
     fn <- th[[1]]
     args <- th[[2]]
     args[["x"]] <- x
     x <- do.call(fn, args)
-  }
-
-  # groups must increment indices here
-  for (idx in seq_along(x@lazy_group)) {
-    l <- x@lazy_group[[idx]]
-    x@nrow <- x@nrow + length(l$i)
-    if (length(l$j) > 0) {
-      x@nhead <- x@nhead + 1
-    }
   }
 
   tab <- x@table_dataframe
