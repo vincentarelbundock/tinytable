@@ -51,13 +51,23 @@ setMethod(
     )
     css <- rep("", nrow(rec))
 
+    del <- get_deleted_cells(sty)
+    if (nrow(del) > 0) {
+      rec <- merge(rec, del, all.x = TRUE,sort = FALSE)
+    } else {
+      rec$tinytable_deleted_cell <- FALSE
+    }
+
     for (row in seq_len(nrow(sty))) {
       # index: sty vs rec
       idx_i <- sty$i[row]
       if (is.na(idx_i)) idx_i <- unique(rec$i)
       idx_j <- sty$j[row]
       if (is.na(idx_j)) idx_j <- unique(rec$j)
-      idx <- rec$i == idx_i & rec$j == idx_j
+      idx <- idx_line <- (rec$i %in% idx_i & rec$j %in% idx_j)
+
+      # deleted cells with rowspan or colspan are not styled but have lines
+      idx[which(rec$tinytable_deleted_cell)] <- FALSE
 
       if (isTRUE(sty[row, "bold"])) css[idx] <- paste(css[idx], "font-weight: bold;")
       if (isTRUE(sty[row, "italic"])) css[idx] <- paste(css[idx], "font-style: italic;")
@@ -96,7 +106,7 @@ setMethod(
       if (template != "") {
         lin <- paste(lin, sprintf(template, line_color, line_width))
       }
-      css[idx] <- paste(css[idx], lin)
+      css[idx_line] <- paste(css[idx_line], lin)
     }
 
     css <- gsub(" +", " ", trimws(css))
@@ -104,6 +114,7 @@ setMethod(
     # JS 0-indexing
     rec$i <- rec$i - 1 + x@nhead
     rec$j <- rec$j - 1
+
 
 
     # spans: before styles because we return(x) if there is no style
@@ -146,3 +157,26 @@ setMethod(
     return(x)
   }
 )
+
+
+
+
+get_deleted_cells <- function(sty) {
+  out <- sty[which(sty$rowspan > 1 | sty$colspan > 1), ]
+  if (nrow(out) == 0) return(out)
+  out$rowspan <- ifelse(is.na(out$rowspan), 1, out$rowspan)
+  out$colspan <- ifelse(is.na(out$colspan), 1, out$colspan)
+  out <- lapply(seq_len(nrow(out)), function(k) {
+    row <- out[k, , drop = FALSE]
+    del <- expand.grid(
+      i = row$i:(row$i + row$rowspan - 1),
+      j = row$j:(row$j + row$colspan - 1)
+    )
+    del <- del[!(del$i == row$i & del$j == row$j), ]
+    return(del)
+  })
+  out <- do.call(rbind, out)
+  out$tinytable_deleted_cell <- TRUE
+  sty <- merge(sty, out, all.x = TRUE)
+  return(out)
+}

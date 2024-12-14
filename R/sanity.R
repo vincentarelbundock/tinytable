@@ -448,3 +448,38 @@ sanity_num_mark <- function(digits, num_mark_big, num_mark_dec) {
     if (num_mark_dec != ".") stop("`num_mark_dec` requires a `digits` value.", call. = FALSE)
   }
 }
+
+get_deleted_cells <- function(sty) {
+  # If no spanning cells, return empty data frame
+  if (!any(!is.na(sty$colspan) | !is.na(sty$rowspan))) {
+    return(data.frame(row = integer(0), col = integer(0)))
+  }
+  
+  # Get rows with spanning cells
+  span_rows <- which(!is.na(sty$colspan) | !is.na(sty$rowspan))
+  
+  deleted_cells <- lapply(span_rows, function(idx) {
+    colspan <- sty$colspan[idx]
+    rowspan <- sty$rowspan[idx]
+    row <- sty$row[idx]
+    col <- sty$col[idx]
+    
+    # Convert NA to 1 for non-spanning dimension
+    colspan <- if(is.na(colspan)) 1L else as.integer(colspan)
+    rowspan <- if(is.na(rowspan)) 1L else as.integer(rowspan)
+    
+    # Create grid of all spanned cells
+    grid <- expand.grid(
+      row = row:(row + rowspan - 1),
+      col = col:(col + colspan - 1)
+    )
+    
+    # Remove the original cell
+    grid <- grid[!(grid$row == row & grid$col == col), ]
+    
+    return(grid)
+  })
+  
+  # Combine all deleted cells
+  do.call(rbind, deleted_cells)
+}
