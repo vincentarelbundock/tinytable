@@ -126,22 +126,46 @@ setMethod(
       return(x)
     }
 
-    # Unique CSS arguments assigne by arrays
-    css_table <- unique(rec[, c("css_arguments"), drop = FALSE])
-    css_table$id_css <- sapply(seq_len(nrow(css_table)), function(i) get_id(stem = "tinytable_css_"))
-    idx <- merge(rec[, c("i", "j", "css_arguments")], css_table, all.x = TRUE)
-    if (nrow(idx) > 0) {
-      idx <- split(idx, idx$id)
-      for (i in seq_along(idx)) {
-        id_css <- idx[[i]]$id[1]
-        arr <- sprintf("{ i: %s, j: %s }, ", idx[[i]]$i, idx[[i]]$j)
-        arr <- c("          {", " positions: [ ", arr, " ],", " css_id: '", id_css, "',", "}, ")
-        arr <- paste(arr, collapse = "")
-        x@table_string <- lines_insert(x@table_string, arr, "tinytable style arrays after", "after")
-        entry <- sprintf("      .table td.%s, .table th.%s { %s }", id_css, id_css, idx[[i]]$css_arguments[1])
-        x@table_string <- lines_insert(x@table_string, entry, "tinytable css entries after", "after")
-      }
+    # rowspan + colspan delete cells
+  bad <- data.frame()
+  idx <- which(!is.na(sty$i) & !is.na(sty$j) & (!is.na(sty$rowspan) | !is.na(sty$colspan)))
+  idx <- sty[idx, c("i", "j", "rowspan", "colspan"), drop = FALSE]
+  idx$i <- idx$i - 1 + x@nhead
+  idx$j <- idx$j - 1
+  for (row in seq_len(nrow(idx))) {
+    imax <- idx[row, "i"]
+    jmax <- idx[row, "j"]
+    if (!is.na(idx[row, "rowspan"])) {
+      imax <- imax + idx[row, "rowspan"] - 1
     }
+    if (!is.na(idx[row, "colspan"])) {
+      jmax <- jmax + idx[row, "colspan"] - 1
+    }
+    tmp <- expand.grid(i = seq(idx[row, "i"], imax), j = seq(idx[row, "j"], jmax), deleted = TRUE)
+    tmp <- tmp[tmp$i != idx[row, "i"] | tmp$j != idx[row, "j"],]
+    bad <- rbind(bad, tmp)
+  }
+  if (nrow(bad) > 0) {
+    rec <- merge(rec, bad, by = c("i", "j"), all.x = TRUE, sort = FALSE)
+    rec <- rec[-which(rec$deleted == TRUE),]
+  }
+
+  # Unique CSS arguments assigne by arrays
+  css_table <- unique(rec[, c("css_arguments"), drop = FALSE])
+  css_table$id_css <- sapply(seq_len(nrow(css_table)), function(i) get_id(stem = "tinytable_css_"))
+  idx <- merge(rec[, c("i", "j", "css_arguments")], css_table, all.x = TRUE)
+  if (nrow(idx) > 0) {
+    idx <- split(idx, idx$id)
+    for (i in seq_along(idx)) {
+      id_css <- idx[[i]]$id[1]
+      arr <- sprintf("{ i: %s, j: %s }, ", idx[[i]]$i, idx[[i]]$j)
+      arr <- c("          {", " positions: [ ", arr, " ],", " css_id: '", id_css, "',", "}, ")
+      arr <- paste(arr, collapse = "")
+      x@table_string <- lines_insert(x@table_string, arr, "tinytable style arrays after", "after")
+      entry <- sprintf("      .table td.%s, .table th.%s { %s }", id_css, id_css, idx[[i]]$css_arguments[1])
+      x@table_string <- lines_insert(x@table_string, entry, "tinytable css entries after", "after")
+    }
+  }
 
     return(x)
   }
