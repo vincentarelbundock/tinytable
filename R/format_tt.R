@@ -18,9 +18,9 @@
 #' @param math Logical. If TRUE, wrap cell values in math mode `$..$`. This is useful for LaTeX output or with HTML MathJax `options(tinytable_html_mathjax=TRUE)`.
 #' @param other A function to format columns of other types. Defaults to `as.character()`.
 #' @param replace Logical, String or Named list of vectors
-#' - TRUE: Replace `NA` by an empty string.
-#' - FALSE: Print `NA` as the string "NA".
-#' - String: Replace `NA` entries by the user-supplied string.
+#' - TRUE: Replace `NA` and `NaN` by an empty string.
+#' - FALSE: Print `NA` and `NaN` as strings.
+#' - String: Replace `NA` and `NaN` entries by the user-supplied string.
 #' - Named list: Replace matching elements of the vectors in the list by theirs names. Example:
 #'      - `list("-" = c(NA, NaN), "Tiny" = -Inf, "Massive" = Inf)`
 #' @param escape Logical or "latex" or "html". If TRUE, escape special characters to display them as text in the format of the output of a `tt()` table.
@@ -94,7 +94,6 @@ format_tt <- function(x,
                       quarto = get_option("tinytable_format_quarto", default = FALSE),
                       fn = get_option("tinytable_format_fn", default = NULL),
                       sprintf = get_option("tinytable_format_sprintf", default = NULL)) {
-
   assert_integerish(digits, len = 1, null.ok = TRUE)
   assert_choice(num_fmt, c("significant", "significant_cell", "decimal", "scientific"))
   assert_flag(num_zero)
@@ -227,11 +226,11 @@ format_tt_lazy <- function(x,
       if (!is.null(bool) && is.logical(ori[i, col])) {
         out[i, col] <- bool(ori[i, col, drop = TRUE])
 
-      # date
+        # date
       } else if (!is.null(date) && inherits(ori[i, col], "Date")) {
         out[i, col] <- format(ori[i, col, drop = TRUE], date)
 
-      # numeric
+        # numeric
       } else if (!is.null(digits) && is.numeric(ori[i, col, drop = TRUE])) {
         tmp <- format_numeric(ori[i, col],
           num_suffix = num_suffix,
@@ -243,7 +242,7 @@ format_tt_lazy <- function(x,
         )
         if (!is.null(tmp)) out[i, col] <- tmp
 
-      # other
+        # other
       } else if (is.function(other)) {
         out[i, col] <- other(ori[i, col, drop = TRUE])
       }
@@ -251,7 +250,11 @@ format_tt_lazy <- function(x,
 
     for (k in seq_along(replace)) {
       idx <- ori[i, col, drop = TRUE] %in% replace[[k]]
-      out[i, col][idx] <- names(replace)[[k]]
+      if (identical(names(replace)[[k]], " ")) {
+        out[i, col][idx] <- ""
+      } else {
+        out[i, col][idx] <- names(replace)[[k]]
+      }
     }
   } # loop over columns
 
