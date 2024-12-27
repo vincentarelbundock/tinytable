@@ -293,8 +293,14 @@ color_to_preamble <- function(x, col) {
 get_dcolumn <- function(j, x) {
   siunitx <- get_option("tinytable_siunitx_table_format", default = "table-format=-%s.%s,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\\*+()}")
   num <- unlist(x@table_dataframe[, j])
+
+  # empty cells
+  num <- sapply(num, trimws)
+  num <- num[sapply(num, nchar) > 0]
+
   num <- strsplit(num, "\\.")
   num <- lapply(num, function(k) if (length(k) == 1) c(k, " ") else k)
+
   left <- sapply(num, function(k) k[[1]])
   right <- sapply(num, function(k) k[[2]])
   left <- max(nchar(gsub("\\D", "", left)))
