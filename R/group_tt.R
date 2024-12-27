@@ -97,6 +97,7 @@ group_tt <- function(x, i = NULL, j = NULL, indent = 1, ...) {
 }
 
 sanitize_group_vec2list <- function(vec) {
+  if (is.factor(vec)) vec <- as.character(vec)
   rle_result <- rle(vec)
   idx <- cumsum(c(1, utils::head(rle_result$lengths, -1)))
   idx <- as.list(idx)

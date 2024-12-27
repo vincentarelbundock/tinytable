@@ -9,6 +9,7 @@ Breaking change:
 Bugs:
 
 * `save_tt("file.pdf")` works with colors. Thanks to @olivedv for the report and solution #395.
+* `group_tt(i=vec)`: `vec` can be a factor vector
 
 New:
 
