@@ -13,23 +13,23 @@ sanity_align <- function(align, i) {
 
 
 sanitize_i <- function(i, x, pre_group_i = FALSE, lazy = TRUE) {
-    out <- seq_len(nrow(x))
-    if (is.null(i) && isTRUE(lazy)) {
-        out <- NA
-        attr(out, "null") <- TRUE
-        attr(out, "body") <- seq_len(nrow(x))
-        attr(out, "head") <- integer()
-    } else {
-        if (!is.null(i)) {
-            out <- i
-        } else if (inherits(x, "tinytable")) {
-            out <- seq_len(nrow(x@table_dataframe))
-        }
-        attr(out, "null") <- FALSE
-        attr(out, "body") <- out[out > 0]
-        attr(out, "head") <- out[out < 1]
+  out <- seq_len(nrow(x))
+  if (is.null(i) && isTRUE(lazy)) {
+    out <- NA
+    attr(out, "null") <- TRUE
+    attr(out, "body") <- seq_len(nrow(x))
+    attr(out, "head") <- integer()
+  } else {
+    if (!is.null(i)) {
+      out <- i
+    } else if (inherits(x, "tinytable")) {
+      out <- seq_len(nrow(x@table_dataframe))
     }
-    return(out)
+    attr(out, "null") <- FALSE
+    attr(out, "body") <- out[out > 0]
+    attr(out, "head") <- out[out < 1]
+  }
+  return(out)
 }
 sanitize_i <- function(i, x, pre_group_i = FALSE, lazy = TRUE) {
   if (is.character(i)) {
@@ -430,11 +430,12 @@ sanitize_notes <- function(notes) {
 
 sanitize_replace <- function(replace) {
   if (isTRUE(replace)) {
-    replace <- stats::setNames(list(NA), "")
+    replace <- stats::setNames(list(NA, NaN), c(" ", " "))
   } else if (isFALSE(replace)) {
-    replace <- stats::setNames(list(NULL), "")
+    replace <- list(NULL)
   } else if (isTRUE(check_string(replace))) {
-    replace <- stats::setNames(list(NA), replace)
+    if (identical(replace, "")) replace <- " "
+    replace <- stats::setNames(list(NA, NaN), c(replace, replace))
   } else if (!is.list(replace) || is.null(names(replace))) {
     stop("`replace` should be TRUE/FALSE, a single string, or a named list.", call. = FALSE)
   }

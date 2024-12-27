@@ -216,3 +216,17 @@ expect_true("16 GB" %in% tab$memory)
 expect_true("99%" %in% tab$speed_benchmark)
 expect_false("2024-01-15" %in% tab$date_lookup)
 
+
+# Issue #409: both NA and NaN should be replaced
+options(tinytable_format_replace = NULL)
+tab <- data.frame(x = c(1, NA, NaN, Inf))
+tab0 <- tt(tab) |> print("dataframe")
+tab1 <- tt(tab) |>
+  format_tt() |>
+  print("dataframe")
+tab2 <- tt(tab) |>
+  format_tt(replace = TRUE) |>
+  print("dataframe")
+expect_equivalent(tab0$x, c("1", "NA", "NaN", "Inf"))
+expect_equivalent(tab1$x, c("1", "NA", "NaN", "Inf"))
+expect_equivalent(tab2$x, c("1", "", "", "Inf"))

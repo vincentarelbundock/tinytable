@@ -61,9 +61,9 @@ format_tt(
 
 \item{replace}{Logical, String or Named list of vectors
 \itemize{
-\item TRUE: Replace \code{NA} by an empty string.
-\item FALSE: Print \code{NA} as the string "NA".
-\item String: Replace \code{NA} entries by the user-supplied string.
+\item TRUE: Replace \code{NA} and \code{NaN} by an empty string.
+\item FALSE: Print \code{NA} and \code{NaN} as strings.
+\item String: Replace \code{NA} and \code{NaN} entries by the user-supplied string.
 \item Named list: Replace matching elements of the vectors in the list by theirs names. Example:
 \itemize{
 \item \code{list("-" = c(NA, NaN), "Tiny" = -Inf, "Massive" = Inf)}
