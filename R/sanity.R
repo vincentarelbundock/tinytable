@@ -444,8 +444,9 @@ sanitize_replace <- function(replace) {
 
 
 sanity_num_mark <- function(digits, num_mark_big, num_mark_dec) {
-  if (is.null(digits)) {
-    if (num_mark_big != "") stop("`num_mark_big` requires a `digits` value.", call. = FALSE)
-    if (num_mark_dec != ".") stop("`num_mark_dec` requires a `digits` value.", call. = FALSE)
-  }
+  ## commented out because doesn't work with french decimals
+  # if (is.null(digits)) {
+  #   if (num_mark_big != "") stop("`num_mark_big` requires a `digits` value.", call. = FALSE)
+  #   if (num_mark_dec != ".") stop("`num_mark_dec` requires a `digits` value.", call. = FALSE)
+  # }
 }
