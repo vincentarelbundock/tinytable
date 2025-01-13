@@ -113,3 +113,12 @@ tab <- data.frame(sub1 = 1, sub2 = 2, sub1 = 3, sub2 = 4, check.names = FALSE) |
 tab@output <- "latex"
 expect_snapshot_print(tab, "group_tt-issue362_duplicate_colum_labels.tex")
 
+
+# Issue #413: Automatic row groups fail if column is a factor
+df <- mtcars |>
+    head(10) |>
+    sort_by(~am)
+df$am <- factor(df$am)
+tab <- tt(df) |> group_tt(i = df$am)
+expect_inherits(tab, "tinytable")
+expect_inherits(save_tt(tab, "markdown"), "character")
