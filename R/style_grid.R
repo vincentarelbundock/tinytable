@@ -7,7 +7,7 @@ style_eval_grid <- function(x) {
   }
 
   all_i <- seq_len(nrow(x))
-  idx_g <- x@group_i_idx + cumsum(rep(1, length(x@group_i_idx))) - 1
+  idx_g <- x@group_index_i
   idx_d <- setdiff(all_i, idx_g)
 
   # expand i to full rows

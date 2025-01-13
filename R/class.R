@@ -21,39 +21,39 @@ setClassUnion("NULLorCharacter", c("NULL", "character"))
 setClass(
   Class = "tinytable",
   slots = representation(
-    table_dataframe = "data.frame",
-    table_string = "character",
-    data = "data.frame",
-    caption = "character",
-    width = "numeric",
-    width_cols = "numeric",
-    notes = "list",
-    theme = "list",
-    placement = "character",
     body = "character",
-    nrow = "numeric",
-    ncol = "numeric",
-    nhead = "numeric",
-    ngroupi = "numeric",
-    ngroupj = "numeric",
-    group_i_idx = "numeric",
-    names = "NULLorCharacter",
-    output = "character",
-    output_dir = "character",
-    id = "character",
     bootstrap_class = "character",
     bootstrap_css_rule = "character",
+    caption = "character",
     css = "data.frame",
+    data = "data.frame",
+    group_index_i = "numeric",
+    group_n_i = "numeric",
+    group_n_j = "numeric",
+    id = "character",
+    lazy_finalize = "list",
+    lazy_format = "list",
+    lazy_group = "list",
+    lazy_plot = "list",
+    lazy_style = "list",
+    lazy_theme = "list",
+    names = "NULLorCharacter",
+    ncol = "numeric",
+    nhead = "numeric",
+    notes = "list",
+    nrow = "numeric",
+    output = "character",
+    output_dir = "character",
+    placement = "character",
+    portable = "logical",
     style = "data.frame",
     style_caption = "list",
     style_notes = "list",
-    lazy_format = "list",
-    lazy_group = "list",
-    lazy_style = "list",
-    lazy_plot = "list",
-    lazy_finalize = "list",
-    lazy_theme = "list",
-    portable = "logical"
+    table_dataframe = "data.frame",
+    table_string = "character",
+    theme = "list",
+    width = "numeric",
+    width_cols = "numeric"
   )
 )
 
@@ -78,8 +78,8 @@ setMethod("initialize", "tinytable", function(
   .Object@nrow <- nrow(.Object@data)
   .Object@ncol <- ncol(.Object@data)
   .Object@nhead <- if (is.null(colnames(data))) 0 else 1
-  .Object@ngroupi <- 0
-  .Object@ngroupj <- 0
+  .Object@group_n_i <- 0
+  .Object@group_n_j <- 0
   .Object@names <- if (is.null(colnames(data))) character() else colnames(data)
   .Object@id <- get_id("tinytable_")
   .Object@output <- "tinytable"
@@ -147,8 +147,7 @@ setReplaceMethod("colnames",
     }
     x@names <- value
     return(x)
-  }
-)
+  })
 
 #' Method for a tinytable S4 object
 #'
@@ -167,8 +166,7 @@ setReplaceMethod("names",
     }
     x@names <- value
     return(x)
-  }
-)
+  })
 
 #' Dimensions a tinytable S4 object
 #'
