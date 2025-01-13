@@ -59,11 +59,10 @@ three pillars:
     battle-tested and versatile frameworks like `Bootstrap` for HTML and
     `tabularray` for LaTeX.
 
-3)  [*Lightweight is the right weight.*](https://www.tinyverse.org/)
-    Some of the most popular table-drawing packages in the `R` ecosystem
-    are very heavy: A single `library()` call can sometimes load upwards
-    of 65 `R` packages. In contrast, `tinytable` imports zero 3rd party
-    `R` package by default.
+3)  Lightweight. Some of the most popular table-drawing packages in the
+    `R` ecosystem are very heavy: A single `library()` call can
+    sometimes load upwards of 65 `R` packages. In contrast, `tinytable`
+    imports zero 3rd party `R` package by default.
 
 ## Installation
 
@@ -131,7 +130,7 @@ tt(x,
 
 ## Tutorial
 
-The `tinytable` 0.6.1.3 tutorial will take you much further. It is
+The `tinytable` 0.6.1.6 tutorial will take you much further. It is
 available in two formats:
 
 - [Tutorial
