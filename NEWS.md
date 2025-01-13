@@ -11,6 +11,7 @@ Bugs:
 * `save_tt("file.pdf")` works with colors. Thanks to @olivedv for the report and solution #395.
 * `group_tt(i=vec)`: `vec` can be a factor vector
 * `style_tt(align="d")` with empty strings (`modelsummary::datasummary_balance()` test)
+* `style_tt(line_color)` accepts Hex codes. Thanks to @andrewheiss for report #415.
 * `tt(rownames=TRUE)` should not add column names if they do not exist. Thanks to @Nowosad for report #414.
 
 New:

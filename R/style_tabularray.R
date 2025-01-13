@@ -126,8 +126,11 @@ setMethod(
         rec$line[idx] <- sty$line[row]
       }
 
-      if (!is.na(sty$line_color[row])) {
-        rec$line_color[idx] <- sty$line_color[row]
+      lcol <- sty$line_color[row]
+      if (!is.na(lcol)) {
+        x <- color_to_preamble(x, lcol)
+        if (grepl("^#", lcol)) lcol <- sub("^#", "c", lcol)
+        rec$line_color[idx] <- lcol
       }
 
       if (!is.na(sty$line_width[row])) {
