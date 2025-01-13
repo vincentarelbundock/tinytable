@@ -5,6 +5,7 @@
 Breaking change:
 
 * `format_tt()` is now stricter, applying no formatting at all by default. Users must specify an argument explicitly or set a global option to change the table.
+* S4 slots renamed for internal consistency and clarity.
 
 Bugs:
 
@@ -17,6 +18,7 @@ Bugs:
 New:
 
 * `style_tt("notes")` and `style_tt("caption")` can style footnotes and captions. Note: This will only style captions handled by the `caption` argument in `tt()`, and not captions created by Quarto.
+* Using `table@group_index_i` is now documented.
 
 Misc:
 

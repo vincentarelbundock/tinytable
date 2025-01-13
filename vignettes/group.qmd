@@ -84,6 +84,16 @@ df <- mtcars |>
 tt(df) |> group_tt(i = df$am)
 ```
 
+### Styling row groups
+
+Calculating the location of rows can be cumbersome. Instead of doing this by hand, we can extract information from the `table@group_index_i` S4 slot in the table object. Please be aware, however, that slot names are subject to change without warning in future versions of `tinytable`.
+
+```{r}
+library(magrittr)
+tt(df) %>%
+  group_tt(i = df$am) %>%
+  style_tt(i = .@group_index_i, background = "pink")
+```
 
 ## Columns
 
