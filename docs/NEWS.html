@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>news – tinytable</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./LICENSE.html" rel="next">
+<link href="./man/rbind2-tinytable-tinytable-method.html" rel="prev">
+<link href="./favicon.svg" rel="icon" type="image/svg+xml">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-8be6eb1f3fc0fed20679d32b6e34e37a.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-9d5215ca2b2ba9c2cb143e573840bafe.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="./index.html" class="navbar-brand navbar-brand-logo">
+    <img src="./figures/tinytable_logo_notext.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">tinytable</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutorial-(html" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tutorial (HTML)</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-tutorial-(html">    
+        <li>
+    <a class="dropdown-item" href="./vignettes/tinytable.html">
+ <span class="dropdown-text">Tiny Tables</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./vignettes/format.html">
+ <span class="dropdown-text">Formatting</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./vignettes/style.html">
+ <span class="dropdown-text">Style</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./vignettes/group.html">
+ <span class="dropdown-text">Groups and labels</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./vignettes/plot.html">
+ <span class="dropdown-text">Plots and images</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./vignettes/theme.html">
+ <span class="dropdown-text">Themes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./vignettes/custom.html">
+ <span class="dropdown-text">Customization</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./vignettes/notebooks.html">
+ <span class="dropdown-text">Notebooks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./vignettes/faq.html">
+ <span class="dropdown-text">FAQ</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" href="./vignettes/tinytable_tutorial.pdf" aria-current="page"> 
+<span class="menu-text">Tutorial (PDF)</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/vincentarelbundock/tinytable"> <i class="bi bi-github" role="img" aria-label="tinytable GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/vincentab"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./NEWS.html">News</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Tutorial</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./vignettes/tinytable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tiny tables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./vignettes/format.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Format</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./vignettes/style.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Style</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./vignettes/group.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Group labels</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./vignettes/plot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Plots and images</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./vignettes/theme.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Themes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./vignettes/custom.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Customization</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./vignettes/notebooks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Notebooks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./vignettes/faq.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">FAQ</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./vignettes/alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternatives</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./vignettes/tinytable_tutorial.pdf" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial (PDF)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Functions</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/tt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>tt</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/format_tt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>format_tt</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/style_tt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>style_tt</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/theme_tt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_tt</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/group_tt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>group_tt</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/plot_tt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>plot_tt</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/save_tt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>save_tt</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/print.tinytable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>print</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./man/rbind2-tinytable-tinytable-method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>rbind2</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./NEWS.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">News</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./LICENSE.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">License</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./CITATION.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Citation</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#news" id="toc-news" class="nav-link active" data-scroll-target="#news">News</a>
+  <ul class="collapse">
+  <li><a href="#development" id="toc-development" class="nav-link" data-scroll-target="#development">Development</a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">0.6.1</a></li>
+  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">0.6.0</a></li>
+  <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">0.5.0</a></li>
+  <li><a href="#section-3" id="toc-section-3" class="nav-link" data-scroll-target="#section-3">0.4.0</a>
+  <ul class="collapse">
+  <li><a href="#breaking-change" id="toc-breaking-change" class="nav-link" data-scroll-target="#breaking-change">Breaking change</a></li>
+  <li><a href="#general" id="toc-general" class="nav-link" data-scroll-target="#general">General</a></li>
+  <li><a href="#html" id="toc-html" class="nav-link" data-scroll-target="#html">HTML</a></li>
+  <li><a href="#latex" id="toc-latex" class="nav-link" data-scroll-target="#latex">LaTeX</a></li>
+  <li><a href="#typst" id="toc-typst" class="nav-link" data-scroll-target="#typst">Typst</a></li>
+  <li><a href="#global-options" id="toc-global-options" class="nav-link" data-scroll-target="#global-options">Global options</a></li>
+  <li><a href="#bugs" id="toc-bugs" class="nav-link" data-scroll-target="#bugs">Bugs</a></li>
+  </ul></li>
+  <li><a href="#section-4" id="toc-section-4" class="nav-link" data-scroll-target="#section-4">0.3.0</a></li>
+  <li><a href="#section-5" id="toc-section-5" class="nav-link" data-scroll-target="#section-5">0.2.1</a></li>
+  <li><a href="#section-6" id="toc-section-6" class="nav-link" data-scroll-target="#section-6">0.2.0</a></li>
+  <li><a href="#section-7" id="toc-section-7" class="nav-link" data-scroll-target="#section-7">0.1.0</a></li>
+  <li><a href="#section-8" id="toc-section-8" class="nav-link" data-scroll-target="#section-8">0.0.5</a></li>
+  <li><a href="#section-9" id="toc-section-9" class="nav-link" data-scroll-target="#section-9">0.0.4</a></li>
+  <li><a href="#section-10" id="toc-section-10" class="nav-link" data-scroll-target="#section-10">0.0.3</a></li>
+  <li><a href="#section-11" id="toc-section-11" class="nav-link" data-scroll-target="#section-11">0.0.2</a></li>
+  <li><a href="#section-12" id="toc-section-12" class="nav-link" data-scroll-target="#section-12">0.0.1</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="news" class="level1">
+<h1>News</h1>
+<section id="development" class="level2">
+<h2 class="anchored" data-anchor-id="development">Development</h2>
+<p>Breaking change:</p>
+<ul>
+<li><code>format_tt()</code> is now stricter, applying no formatting at all by default. Users must specify an argument explicitly or set a global option to change the table.</li>
+</ul>
+<p>Bugs:</p>
+<ul>
+<li><code>save_tt("file.pdf")</code> works with colors. Thanks to <a href="https://github.com/olivedv"><span class="citation" data-cites="olivedv">@olivedv</span></a> for the report and solution <a href="https://github.com/vincentarelbundock/tinytable/issues/395">#395</a>.</li>
+<li><code>group_tt(i=vec)</code>: <code>vec</code> can be a factor vector</li>
+<li><code>style_tt(align="d")</code> with empty strings (<code>modelsummary::datasummary_balance()</code> test)</li>
+<li><code>style_tt(line_color)</code> accepts Hex codes. Thanks to <a href="https://github.com/andrewheiss"><span class="citation" data-cites="andrewheiss">@andrewheiss</span></a> for report <a href="https://github.com/vincentarelbundock/tinytable/issues/415">#415</a>.</li>
+<li><code>tt(rownames=TRUE)</code> should not add column names if they do not exist. Thanks to <a href="https://github.com/Nowosad"><span class="citation" data-cites="Nowosad">@Nowosad</span></a> for report <a href="https://github.com/vincentarelbundock/tinytable/issues/414">#414</a>.</li>
+</ul>
+<p>New:</p>
+<ul>
+<li><code>style_tt("notes")</code> and <code>style_tt("caption")</code> can style footnotes and captions. Note: This will only style captions handled by the <code>caption</code> argument in <code>tt()</code>, and not captions created by Quarto.</li>
+</ul>
+<p>Misc:</p>
+<ul>
+<li>Documentation improvements</li>
+</ul>
+</section>
+<section id="section" class="level2">
+<h2 class="anchored" data-anchor-id="section">0.6.1</h2>
+<ul>
+<li>Bug fix: d-column LaTeX generated an error in some cases.</li>
+</ul>
+</section>
+<section id="section-1" class="level2">
+<h2 class="anchored" data-anchor-id="section-1">0.6.0</h2>
+<ul>
+<li>Major refactor of the style internals. HTML, LaTeX, and Typst documents should be much more concise and efficient.</li>
+<li><code>theme_tt("spacing")</code>: Change the row and column spacing to create more compact or airy tables. LaTeX and HTML only. Thanks to <a href="https://github.com/statzhero"><span class="citation" data-cites="statzhero">@statzhero</span></a> for feature request <a href="https://github.com/vincentarelbundock/tinytable/issues/353">#353</a>.</li>
+<li><code>style_tt()</code>: the <code>i</code> and <code>j</code> indices are now consistent in all formats. They refer to rows <em>after</em> the insertion of row groups.</li>
+<li><code>save_tt()</code> respects <code>options(tinytable_save_overwrite=TRUE)</code></li>
+<li>LaTeX: Guard header rows when using <code>style_tt(align="d")</code>. Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/367">#367</a></li>
+<li>Inline display in Quarto and Rmarkdown notebooks. <code>options(tinytable_print_rstudio_notebook = "inline")</code> or <code>"viewer"</code></li>
+</ul>
+<p>Bugs:</p>
+<ul>
+<li>Typst notes returned an error since the last release. Thanks to <a href="https://github.com/DominikVogel"><span class="citation" data-cites="DominikVogel">@DominikVogel</span></a> for report <a href="https://github.com/vincentarelbundock/tinytable/issues/357">#357</a>.</li>
+<li>Duplicate group labels are allowed in LaTeX with <code>group_tt()</code>. Thanks to <a href="https://github.com/eeemda"><span class="citation" data-cites="eeemda">@eeemda</span></a> for report <a href="https://github.com/vincentarelbundock/tinytable/issues/362">#362</a>.</li>
+</ul>
+</section>
+<section id="section-2" class="level2">
+<h2 class="anchored" data-anchor-id="section-2">0.5.0</h2>
+<p>New:</p>
+<ul>
+<li><code>output="html_portable"</code> returns a portable HTML file, where <code>plot_tt()</code> encodes and embeds the images directly in the HTML code, rather than link to external images. Thanks to <a href="https://github.com/J-Moravec"><span class="citation" data-cites="J-Moravec">@J-Moravec</span></a> for implementing this nice feature!</li>
+<li><code>format_tt()</code> gets a <code>math</code> argument to wrap cell content in <span class="math inline">\(...\)</span> math mode.</li>
+<li><code>group_tt(i = vec)</code> accepts a vector of labels of length equal to the number of rows in the dataset.</li>
+<li><code>tt()</code> gets an <code>escape</code> argument. Thanks to Cameron Patrick for the feature request.</li>
+<li>The <code>i</code> argument in <code>style_tt()</code> now accepts a logical matrix of same dimensions as <code>x</code>, to style specific cells, rather than all combinations of <code>i</code> and <code>j</code> vectors. Thanks to <a href="https://github.com/dhicks"><span class="citation" data-cites="dhicks">@dhicks</span></a> for the feature request <a href="https://github.com/vincentarelbundock/tinytable/issues/329">#329</a>.</li>
+<li><code>style_tt()</code> gets new <code>output</code> argument for conditional styling based on output format.</li>
+<li><code>names()</code> method now supported for both returning column names and re-assingning them. Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/332">#332</a>.</li>
+</ul>
+<p>Typst:</p>
+<ul>
+<li>Table code is much more concise and efficient.</li>
+<li>Fix indexing bug for groups. Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/323">#323</a> and <a href="https://github.com/vincentarelbundock/tinytable/issues/343">#343</a>.</li>
+<li><code>style_tt()</code> can override cell styling with successive calls, and the call order is respected.</li>
+<li><code>options(tinytable_quarto_figure = FALSE)</code> wraps Typst tables in a <code>figure</code> environment in Quarto documents.</li>
+</ul>
+<p>Bugs:</p>
+<ul>
+<li><code>theme_tabular()</code> is no longer greedy in replacing <code>cmidrule</code>. Thanks to <a href="https://github.com/jsr-p"><span class="citation" data-cites="jsr-p">@jsr-p</span></a> for code submission <a href="https://github.com/vincentarelbundock/tinytable/issues/349">#349</a>.</li>
+</ul>
+</section>
+<section id="section-3" class="level2">
+<h2 class="anchored" data-anchor-id="section-3">0.4.0</h2>
+<section id="breaking-change" class="level3">
+<h3 class="anchored" data-anchor-id="breaking-change">Breaking change</h3>
+<p>HTML tables no longer insert MathJax scripts by default. This behavior could enter in conflict with other MathJax scripts loaded explicitly by the user or automatically by Quarto. Users can revert to the previous behavior by setting a global option:</p>
+<p><code>options(tinytable_html_mathjax = TRUE)</code></p>
+<p>Alternatively, users can insert appropriate scripts directly in their HTML document or as a Quarto literal chunk:</p>
+<pre><code>```{=html}
+&lt;script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  },
+  svg: {
+    fontCache: 'global'
+  }
+};
+&lt;/script&gt;
+```</code></pre>
+<ul>
+<li>Option <code>tinytable_markdown_hlines</code> has been removed. To get a more minimal looking markdown table, use output “gfm” which is gfm compliant.</li>
+</ul>
+</section>
+<section id="general" class="level3">
+<h3 class="anchored" data-anchor-id="general">General</h3>
+<ul>
+<li>Global options are more consistent and better documented. Thanks to <a href="https://github.com/kylebutts"><span class="citation" data-cites="kylebutts">@kylebutts</span></a> for PR <a href="https://github.com/vincentarelbundock/tinytable/issues/313">#313</a>.</li>
+<li>Support Viewer Pane in Positron IDE. Thank to <a href="https://github.com/kylebutts"><span class="citation" data-cites="kylebutts">@kylebutts</span></a> for code contribution in PR <a href="https://github.com/vincentarelbundock/tinytable/issues/299">#299</a>.</li>
+<li>Improved documentation.</li>
+<li><code>format_tt(markdown=TRUE)</code> escapes groups and notes when <code>i</code> and <code>j</code> are <code>NULL</code>.</li>
+<li><code>plot_tt()</code>: The <code>height</code> argument is now respected in Markdown and Word documents.</li>
+<li><code>group_tt()</code> allows 0 and duplicates in <code>i</code> argument for labels in the first row and consecutive labels.</li>
+<li>Headers are now styled and formatted when <code>i=NULL</code>.</li>
+<li><code>colnames(x)&lt;-NULL</code> works on a <code>tinytable</code> object.</li>
+<li><code>format_tt(num_big_mark)</code> applies to integer columns.</li>
+<li>Use <code>getOption("viewer")</code> instead of <code>rstudioapi::viewer()</code> for positron support</li>
+<li><code>glue::glue()</code> string is accepted by <code>format_tt()</code>. Thanks to <a href="https://github.com/LukasWallrich"><span class="citation" data-cites="LukasWallrich">@LukasWallrich</span></a> for report <a href="https://github.com/vincentarelbundock/tinytable/issues/792">#792</a> on the <code>modelsummary</code> repository.</li>
+<li>Support Github Flavored Markdown (<code>gfm</code>) output. Thanks to <a href="https://github.com/kylebutts"><span class="citation" data-cites="kylebutts">@kylebutts</span></a> for contribution <a href="https://github.com/vincentarelbundock/tinytable/issues/315">#315</a>.</li>
+<li><code>theme_tt("rotate")</code> to rotate tables in LaTeX or Typst.</li>
+<li><code>save_tt("/path/to/file")</code> returns the file path invisibly. Thanks to <a href="https://github.com/yjunechoe"><span class="citation" data-cites="yjunechoe">@yjunechoe</span></a> for issue <a href="https://github.com/vincentarelbundock/tinytable/issues/328">#328</a>.</li>
+</ul>
+</section>
+<section id="html" class="level3">
+<h3 class="anchored" data-anchor-id="html">HTML</h3>
+<ul>
+<li>Simplify JS functions in HTML documents. Avoid nesting full HTML documents inside Quarto output.</li>
+<li>Remove polyfill JS because of security issues.</li>
+<li>Avoid error in interactive use in Positron.</li>
+</ul>
+</section>
+<section id="latex" class="level3">
+<h3 class="anchored" data-anchor-id="latex">LaTeX</h3>
+<ul>
+<li><code>theme_tt("tabular")</code> no longer uses <code>tabularray</code> or <code>booktabs</code>. Only relies on basic LaTeX packages.</li>
+<li><code>theme_tt("tabular", style = "tabularray")</code> does the same as above, but keeps the <code>\begin{tblr}</code> environment.</li>
+</ul>
+</section>
+<section id="typst" class="level3">
+<h3 class="anchored" data-anchor-id="typst">Typst</h3>
+<ul>
+<li><code>style_tt()</code> supports <code>align</code> for different rows and cells, rather than just whole columns.</li>
+<li><code>style_tt()</code> supports <code>indent</code> argument.</li>
+<li><code>group_tt()</code> supports <code>indent</code> argument.</li>
+<li>No more gutters when <code>group_tt(j)</code> and <code>style_tt(background)</code></li>
+<li><code>theme_tt(x, horizontal = "l")</code> can left, center, or right-align a table in the page.</li>
+</ul>
+</section>
+<section id="global-options" class="level3">
+<h3 class="anchored" data-anchor-id="global-options">Global options</h3>
+<ul>
+<li><code>save_tt("pdf")</code>:
+<ul>
+<li><code>options(tinytable_save_pdf_clean = TRUE)</code></li>
+<li><code>options(tinytable_save_pdf_engine = "xelatex")</code></li>
+</ul></li>
+<li><code>options(tinytable_tt_rownames=TRUE)</code>: Print row names in the first column by calling. Thanks to <a href="https://github.com/rsbivand"><span class="citation" data-cites="rsbivand">@rsbivand</span></a> for Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/264">#264</a>.</li>
+<li>EXPERIMENTAL: <code>options(tinytable_html_mathjax = TRUE)</code>. Inserts MathJax scripts in the HTML file. This may cause conflicts if MathJax is otherwise loaded in the document.</li>
+</ul>
+</section>
+<section id="bugs" class="level3">
+<h3 class="anchored" data-anchor-id="bugs">Bugs</h3>
+<ul>
+<li>Footnotes were center-aligned in some Quarto chunks. Thanks to <a href="https://github.com/andrewheiss"><span class="citation" data-cites="andrewheiss">@andrewheiss</span></a> for report <a href="https://github.com/vincentarelbundock/tinytable/issues/303">#303</a>.</li>
+<li><code>replace</code> does not work in LaTeX with <code>format_tt(quarto=TRUE)</code>. Thanks to <a href="https://github.com/cbgoodman"><span class="citation" data-cites="cbgoodman">@cbgoodman</span></a> for Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/263">#263</a>.</li>
+<li><code>style_tt(indent)</code> works for LaTeX</li>
+<li>Notes were hard-coded to 5 colspan. We now use the actual number of columns in the table. Thanks to <a href="https://github.com/DominikVogel"><span class="citation" data-cites="DominikVogel">@DominikVogel</span></a> for report <a href="https://github.com/vincentarelbundock/tinytable/issues/788">#788</a>.</li>
+<li>Do not suppress labels when inserting notes. Thanks to <a href="https://github.com/cportner"><span class="citation" data-cites="cportner">@cportner</span></a> for Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/290">#290</a>.</li>
+<li><code>format_tt()</code> on a table without column names. Thanks to <a href="https://github.com/andrewheiss"><span class="citation" data-cites="andrewheiss">@andrewheiss</span></a> for report <a href="https://github.com/vincentarelbundock/tinytable/issues/306">#306</a>.</li>
+<li>requires [] in tabularray but () otherwise. Thanks to <a href="https://github.com/andrewheiss"><span class="citation" data-cites="andrewheiss">@andrewheiss</span></a> for report #307.</li>
+</ul>
+</section>
+</section>
+<section id="section-4" class="level2">
+<h2 class="anchored" data-anchor-id="section-4">0.3.0</h2>
+<p>Breaking change:</p>
+<ul>
+<li>The <code>width</code> argument is moved from <code>style_tt()</code> to <code>tt()</code>.</li>
+</ul>
+<p><code>tt()</code>:</p>
+<ul>
+<li><code>width</code> argument now accepts a vector of numeric values to control the width of each column, as a proportion of the total linewidth.</li>
+</ul>
+<p><code>format_tt()</code>:</p>
+<ul>
+<li>New <code>quarto</code> argument enables Quarto data processing for the whole table and marks specific cells as containing Quarto content. This is especially useful to include <a href="https://github.com/Citation1981"><span class="citation" data-cites="Citation1981">@Citation1981</span></a> in a table. Thanks to <a href="https://github.com/andrewheiss"><span class="citation" data-cites="andrewheiss">@andrewheiss</span></a> for issue <a href="https://github.com/vincentarelbundock/tinytable/issues/215">#215</a> and <a href="https://github.com/giabaio"><span class="citation" data-cites="giabaio">@giabaio</span></a> for further discussion and debugging.</li>
+<li>New <code>replace</code> argument which accepts a single logical, a single string, or a named list to specify multiple replacements.</li>
+<li><code>replace=TRUE</code> by default replaces <code>NA</code> by an empty string. <code>FALSE</code> prints “NA” as string.</li>
+<li><code>replace_na</code> is deprecated in favor of <code>replace</code>. Backward compatibility is maintained and a warning is issued.</li>
+<li>All arguments can now be set using global options.</li>
+</ul>
+<p><code>theme_tt()</code>:</p>
+<ul>
+<li>“void” is now supported for Typst tables. Thanks to <a href="https://github.com/marcboschmatas"><span class="citation" data-cites="marcboschmatas">@marcboschmatas</span></a> for PR <a href="https://github.com/vincentarelbundock/tinytable/issues/223">#223</a>.</li>
+</ul>
+<p><code>style_tt()</code>:</p>
+<ul>
+<li>No longer keep many versions of the same data frame, which could increase memory use. Thanks to <a href="https://github.com/MarcoPortmann"><span class="citation" data-cites="MarcoPortmann">@MarcoPortmann</span></a> for the report.</li>
+</ul>
+<p><code>save_tt()</code>:</p>
+<ul>
+<li>Do not change working directory when saving to file raises an error. Thanks to <a href="https://github.com/etiennebacher"><span class="citation" data-cites="etiennebacher">@etiennebacher</span></a> for report <a href="https://github.com/vincentarelbundock/tinytable/issues/225">#225</a>.</li>
+</ul>
+<p>Typst:</p>
+<ul>
+<li>Better compatibility with Quarto captions. Recommended strategy is to <em>not</em> use the <code>caption</code> argument, and rather to define <em>both</em> the <code>label</code> and <code>tbl-cap</code> chunk options in Quarto. This is a breaking change, as Typst tables are no longer enclosed in a <code>#figure</code> environment in Quarto documents when both <code>tbl-cap</code> and <code>label</code> chunk options are defined.</li>
+<li><code>format_tt(escape=TRUE)</code> escapes square brackets.</li>
+<li>Tables are centered by default.</li>
+</ul>
+<p>Misc:</p>
+<ul>
+<li>Support <code>beamer_presentations</code>, but see: https://github.com/vincentarelbundock/tinytable/issues/244</li>
+<li>Table objects can be modified and printed several times —with styling— in a single HTML document like a ReavealJS slideshow. Thanks to <a href="https://github.com/kazuyanagimoto"><span class="citation" data-cites="kazuyanagimoto">@kazuyanagimoto</span></a> for report <a href="https://github.com/vincentarelbundock/tinytable/issues/759">#759</a>.</li>
+<li>Global option to enable Quarto data processing: <code>options(tinytable_quarto_disable_processing = FALSE)</code>. Thanks to <a href="https://github.com/andrewheiss"><span class="citation" data-cites="andrewheiss">@andrewheiss</span></a> for issue <a href="https://github.com/vincentarelbundock/tinytable/issues/215">#215</a>.</li>
+</ul>
+<p>Bug fixes:</p>
+<ul>
+<li>Data frames without column headers could be displayed as “c(1,2,3,3)”. Bug in <code>format_tt()</code>. Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/230">#230</a>.</li>
+<li><code>save_tt()</code> can now save to PDF when the table includes a caption. Thanks to <a href="https://github.com/etiennebacher"><span class="citation" data-cites="etiennebacher">@etiennebacher</span></a> for report <a href="https://github.com/vincentarelbundock/tinytable/issues/224">#224</a>.</li>
+<li><code>group_tt(i)</code> inserted an extra latex column, which made horizontal lines stop to early. Thanks to <a href="https://github.com/andrewheiss"><span class="citation" data-cites="andrewheiss">@andrewheiss</span></a> for report <a href="https://github.com/vincentarelbundock/tinytable/issues/235">#235</a>.</li>
+<li>Multiple unnamed footnotes allowed in LaTeX tabularray. Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/242">#242</a>.</li>
+</ul>
+</section>
+<section id="section-5" class="level2">
+<h2 class="anchored" data-anchor-id="section-5">0.2.1</h2>
+<ul>
+<li>RStudio displays table in HTML viewer by default when the <code>rstudioapi</code> package is available.</li>
+<li><code>colnames</code> and <code>colnames&lt;-</code> are now exported functions.</li>
+<li><code>tt()</code> supports data.frame-like objects which also inherit from other classes, ex: <code>marginaleffects::slopes()</code></li>
+<li>Bug: <code>options(tinytable_tt_print)</code> is respected in <code>print()</code> without argument.</li>
+</ul>
+</section>
+<section id="section-6" class="level2">
+<h2 class="anchored" data-anchor-id="section-6">0.2.0</h2>
+<p>New features:</p>
+<ul>
+<li><code>rbind()</code> and <code>rbind2()</code> can be used to stack <code>tinytable</code> objects. <code>rbind2()</code> is more flexible than <code>rbind()</code>. See <code>?tinytable::rbind2</code></li>
+<li>New output format in <code>print()</code>: “dataframe”</li>
+<li>Rename table headers: <code>colnames(tab) &lt;- c("a", "b", "c")</code></li>
+<li><code>theme_tt("resize")</code> gets a <code>direction</code> argument with “up”, “down”, “both” options. Thanks to <a href="https://github.com/MarcoPortmann"><span class="citation" data-cites="MarcoPortmann">@MarcoPortmann</span></a> for feature request <a href="https://github.com/vincentarelbundock/tinytable/issues/207">#207</a></li>
+</ul>
+<p>Minor:</p>
+<ul>
+<li>Informative error message when no default browser is selected via global options.</li>
+<li>Fix CRAN errors on Mac old releases.</li>
+</ul>
+<p>Bugs:</p>
+<ul>
+<li><code>theme_tt()</code> resize issue with <code>talltblr</code> environment and notes in LaTeX. Thanks to <a href="https://github.com/MarcoPortmann"><span class="citation" data-cites="MarcoPortmann">@MarcoPortmann</span></a> for reporting issue <a href="https://github.com/vincentarelbundock/tinytable/issues/206">#206</a></li>
+</ul>
+</section>
+<section id="section-7" class="level2">
+<h2 class="anchored" data-anchor-id="section-7">0.1.0</h2>
+<p>New function <code>theme_tt()</code>:</p>
+<ul>
+<li>Function to apply collections of transformations to a <code>tinytable</code>.</li>
+<li>Visual themes:
+<ul>
+<li>grid, void, striped, bootstrap, default</li>
+</ul></li>
+<li><code>resize</code>: Insert a LaTeX table in a <code>resizebox</code> environment to ensure a table fits the page, or to scale it to a fraction of <code>\linewidth</code></li>
+<li><code>placement</code>: Determine where a LaTeX table float is positioned. Ex: <code>[H]</code>, <code>[htbp]</code></li>
+<li><code>multipage</code>: Split long LaTeX tables across multiple pages with (optional) repeated headers/footers. Uses the <code>longtblr</code> environment from <code>tabularray</code>.</li>
+</ul>
+<p><code>format_tt()</code>:</p>
+<ul>
+<li>New <code>i</code> argument to format subsets of rows.</li>
+<li>New <code>fn</code> argument which accepts an arbitrary function to format table content.</li>
+<li><code>num_fmt="significant_cell"</code> rounds significant digits on a cell-by-cell basis rather than for full columns (as is default in base R <code>format()</code>).</li>
+<li>Numeric formatting options can be set via global options, defined in the function signature.</li>
+<li><code>num_mark_big</code> and <code>num_mark_dec</code> require an explicit <code>digits</code>. We now raise an informative error.</li>
+<li><code>escape = TRUE</code> now escapes captions, notes, and spanning cells created by <code>group_tt()</code> when <code>i</code> and <code>j</code> are both <code>NULL</code>. To avoid escaping group labels, users can specify <code>i</code> and/or <code>j</code> explicitly.</li>
+</ul>
+<p>Typst format:</p>
+<ul>
+<li>Support for row headers with <code>group_tt(i)</code></li>
+<li>Supports images and inline plots with <code>plot_tt()</code>. Thanks to <a href="https://github.com/aghaynes"><span class="citation" data-cites="aghaynes">@aghaynes</span></a> for contribution <a href="https://github.com/vincentarelbundock/tinytable/issues/155">#155</a>.</li>
+<li>“kind: tinytable” parameter is now added to all figures enclosing a <code>tinytable</code>. This allows users to apply targeted show rules. For example, in a table of contents: <code>outline(target: figure.where(kind: "tinytable"))</code></li>
+</ul>
+<p>Misc:</p>
+<ul>
+<li><code>style_tt()</code> gains a <code>finalize</code> argument. This accepts functions to be applied to the table object at the very end of the building process, to programmatically change its content. For example, this can be used with regular expressions to modify the text version of the table hosted in <code>tab@table_string</code>, or the function could programmatically modify the caption in <code>tab@caption</code>.</li>
+<li><code>style_tt()</code>: LaTeX format supports decimal alignement with <code>align="d"</code>. The width of columns is determined by the maximum number of digits to the left and to the right in all cells specified by <code>i</code>, <code>j</code>.</li>
+<li>Support RevealJS slides in Quarto documents.</li>
+<li>Improved support for <code>tibble</code>. ANSI characters (ex: fancy <code>pillar</code> formatting) are stripped automatically or converted to HTML when the <code>fansi</code> package is installed. <code>fansi</code> is a dependency of <code>tibble</code>, so it should often be installed.</li>
+<li>New <code>tinytable_tt_digits</code> global option can set the default number of digits in the <code>tt()</code> function.</li>
+<li>Refactor: <code>tinytable</code> objects are now S4 class objects, with slots to hold data about the content and structure.</li>
+<li><code>as.character()</code> now works on <code>tinytable</code> objects, returning a string in the output format specified by the <code>@output</code> slot of the <code>tinytable</code> object (markdown by default).</li>
+<li>LaTeX code in captions no longer requires double escaping, allowing: <code>tt(x, caption = "Blah blah \\label{tab:blah})</code></li>
+</ul>
+<p>Breaking changes:</p>
+<ul>
+<li>In some cases, <code>format_tt()</code> could be use sequentially to apply two formats to the same cell. Now, multiple calls to <code>format_tt()</code> can still be make chained with pipes, but they must apply to different cells with <code>i</code>, <code>j</code>, otherwise only the last change is respected. One exception is the <code>escape</code> argument which can be applied to pre-formatted cells.</li>
+<li><code>tinytable</code> objects no longer have a <code>meta_tinytable</code> attribute. Use S4 slots instead.</li>
+<li><code>placement</code> argument in <code>tt()</code> is removed in favor of <code>theme_tt("placement")</code>.</li>
+</ul>
+<p>Bugs:</p>
+<ul>
+<li><code>format_tt()</code> did not work on factor vector.</li>
+</ul>
+</section>
+<section id="section-8" class="level2">
+<h2 class="anchored" data-anchor-id="section-8">0.0.5</h2>
+<ul>
+<li><code>format_tt()</code> escapes &lt;&gt; tags in Typst.</li>
+<li>Bug introduced in 0.0.4 prevented <code>group_tt(i)</code> in HTML.</li>
+</ul>
+</section>
+<section id="section-9" class="level2">
+<h2 class="anchored" data-anchor-id="section-9">0.0.4</h2>
+<p>New:</p>
+<ul>
+<li><code>j</code> argument in <code>style_tt()</code> and <code>format_tt()</code> now accepts a string vector to match columns. Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/122">#122</a></li>
+<li>Line plots: <code>plot_tt(fun = "line")</code></li>
+<li><code>format_tt(j=NULL, escape=TRUE)</code> now escapes column headers in addition to all cells.</li>
+<li><code>format_tt()</code> gains a <code>replace_na</code> argument to replace missing values.</li>
+<li><code>style_tt()</code>: <code>rowspan</code> and <code>colspan</code> arguments are now supported in all formats except Typst. In markdown and Word, we get “pseudo-spans” with empty cells around the main cell, instead of true merged cells.</li>
+<li><code>style_tt()</code>: <code>alignv</code> argument is now supported for LaTeX and HTML</li>
+</ul>
+<p>Bugfix:</p>
+<ul>
+<li>Markdown group columns when labels are wider than columns. Thanks to <a href="https://github.com/etiennebacher"><span class="citation" data-cites="etiennebacher">@etiennebacher</span></a> for report <a href="https://github.com/vincentarelbundock/tinytable/issues/127">#127</a>.</li>
+<li>Markdown group rows broke indexing when using <code>style_tt()</code>. Thanks to <a href="https://github.com/strengejacke"><span class="citation" data-cites="strengejacke">@strengejacke</span></a> for report <a href="https://github.com/vincentarelbundock/tinytable/issues/133">#133</a>.</li>
+</ul>
+</section>
+<section id="section-10" class="level2">
+<h2 class="anchored" data-anchor-id="section-10">0.0.3</h2>
+<p>New:</p>
+<ul>
+<li><code>Typst</code> tables are now supported using the <code>tablex</code> extension:
+<ul>
+<li>https://typst.app/</li>
+<li>https://github.com/PgBiel/typst-tablex</li>
+</ul></li>
+<li><code>escape</code> argument in <code>format_tt()</code> escapes or substitutes special characters in LaTeX or HTML output to prevent compilation and rendering errors.</li>
+<li><code>notes</code> argument in <code>tt()</code> can insert superscript markers inside cells to refer to notes at the bottom of the page.
+<ul>
+<li><code>tt(x, notes = list("*" = list(i = 0:1, j = 2, text = "Hello world)))</code></li>
+</ul></li>
+<li><code>notes</code> agument in <code>tt()</code> now works wth Markdown and Word, but must be a single string.</li>
+<li><code>group_tt()</code> can be called multiple times to create mult-row headers.</li>
+</ul>
+</section>
+<section id="section-11" class="level2">
+<h2 class="anchored" data-anchor-id="section-11">0.0.2</h2>
+<p>Improvements:</p>
+<ul>
+<li>Rules and cell borders: <code>line</code>, <code>line_width</code>, and <code>line_color</code> arguments.</li>
+<li>Enhanced knitr output detection.</li>
+<li>New themes.</li>
+<li>Caption argument support for Markdown tables.</li>
+<li>Defensive programming enhancements.</li>
+<li>plot_tt() regular expression column selection.</li>
+<li>Header/footer are no longer indented by group_tt(i).</li>
+</ul>
+<p>Bug fixes:</p>
+<ul>
+<li>Inline plots visibility in RStudio viewer pane.</li>
+<li>Bug in group_tt(i) for markdown and docx output.</li>
+<li>Resolved style_tt resetting issue.</li>
+<li>Bug fix for column alignment in markdown affecting docx output.</li>
+</ul>
+<p>Documentation:</p>
+<ul>
+<li>Improved vignette on the package website.</li>
+<li>Various documentation updates.</li>
+<li>Math in $$ is the new recommendation.</li>
+</ul>
+</section>
+<section id="section-12" class="level2">
+<h2 class="anchored" data-anchor-id="section-12">0.0.1</h2>
+<p>Initial package release. Yay!</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./man/rbind2-tinytable-tinytable-method.html" class="pagination-link" aria-label="`rbind2`">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>rbind2</code></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./LICENSE.html" class="pagination-link" aria-label="License">
+        <span class="nav-page-text">License</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
