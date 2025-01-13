@@ -107,9 +107,13 @@ tt <- function(x,
   # Same name as tibble::rownames_to_column()
   assert_flag(rownames)
   if (isTRUE(rownames) && !is.null(row.names(x))) {
+    nocol <- is.null(colnames(x))
     rn <- data.frame(format(row.names(x)))
     rn <- stats::setNames(rn, "rowname")
     x <- cbind(rn, x)
+    if (isTRUE(nocol)) {
+      colnames(x) <- NULL
+    }
   }
 
   # formatting options are limited here
