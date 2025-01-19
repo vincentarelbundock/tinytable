@@ -261,6 +261,12 @@ tab <- tt(head(iris)) |>
 expect_snapshot_print(tab, label = "latex-issue307.tex")
 
 
+# Issue #419
+tab <- tt(head(iris)) |>
+  style_tt(tabularray_outer = "label={tbl-species}", tabularray_inner = "rowsep=0pt")
+expect_snapshot_print(tab, label = "latex-issue419.tex")
+
+
 # format_tt math
 dat <- data.frame("y^2 = e^x" = c(-2, -pi), check.names = FALSE)
 tab <- tt(dat, digits = 3) |> format_tt(math = TRUE)

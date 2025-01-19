@@ -240,7 +240,7 @@ setMethod(
     }
 
     for (spec in unique(stats::na.omit(sty$tabularray_outer))) {
-      x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
+      x@table_string <- tabularray_insert(x@table_string, content = spec, type = "outer")
     }
 
 
