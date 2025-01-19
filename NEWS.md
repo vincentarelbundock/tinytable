@@ -14,7 +14,7 @@ Bugs:
 * `style_tt(align="d")` with empty strings (`modelsummary::datasummary_balance()` test)
 * `style_tt(line_color)` accepts Hex codes. Thanks to @andrewheiss for report #415.
 * `tt(rownames=TRUE)` should not add column names if they do not exist. Thanks to @Nowosad for report #414.
-* `style_tt(tabularray_outer = ...`) correctly inserts argument in outer. Issue #419.
+* `style_tt(tabularray_outer = ...`) correctly inserts argument in outer. Issue #419. Thanks to @wklimowicz
 
 New:
 
