@@ -87,8 +87,10 @@ expect_snapshot_print(tab, label = "markdown-footnote")
 
 
 # GFM
+if (!is_local) exit_file("Run on Vincent's machine")
 options(tinytable_print_output = "gfm")
 expect_snapshot_print(tt(head(iris)), label = "markdown-gfm")
-options(tinytable_print_output = "markdown")
 
+
+# restore
 options(tinytable_print_output = NULL)

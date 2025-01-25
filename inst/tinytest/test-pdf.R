@@ -1,5 +1,7 @@
 source("helpers.R")
 
+if (!is_local) exit_file("Run on Vincent's machine")
+
 x <- cbind(mtcars[1, ], mtcars[1, ])
 dest_dir <- tempdir()
 dest_pdf <- file.path(dest_dir, "out.pdf")

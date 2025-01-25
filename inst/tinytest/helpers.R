@@ -5,6 +5,8 @@ options("tinysnapshot_tol" = 200)
 options(tinytable_format_bool = function(x) tools::toTitleCase(tolower(x)))
 options(tinytable_format_replace = "")
 
+is_local <- isTRUE(grepl("(?i)vincent|mbp|mandelbrot", Sys.info()["user"]))
+
 # libraries
 requiet <- function(package) {
     void <- capture.output(
