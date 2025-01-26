@@ -115,9 +115,8 @@ expect_snapshot_print(tab, "group_tt-issue362_duplicate_colum_labels.tex")
 
 
 # Issue #413: Automatic row groups fail if column is a factor
-df <- mtcars |>
-    head(10) |>
-    sort_by(~am)
+df <- mtcars |> head(10)
+df <- df[order(df$am),]
 df$am <- factor(df$am)
 tab <- tt(df) |> group_tt(i = df$am)
 expect_inherits(tab, "tinytable")
