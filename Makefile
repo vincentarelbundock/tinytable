@@ -9,7 +9,7 @@ help:  ## Display this help screen
 document:  ## document
 	Rscript -e "devtools::document()"
 
-check:  document ## check
+check:  document website ## check
 	Rscript -e "devtools::check()"
 
 install: document  ## install
