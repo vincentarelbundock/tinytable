@@ -1,5 +1,11 @@
 # News
 
+## Development
+
+Bugs:
+
+* `format_tt()` works on tibbles. Thanks to @jon-mellon for report #426.
+
 ## 0.7.0
 
 Breaking change:
