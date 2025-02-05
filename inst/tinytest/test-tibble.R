@@ -4,6 +4,13 @@ requiet("tibble")
 requiet("pillar")
 
 
+# Issue #426
+x <- tibble(a = c(pi, 2.3, 1), b = letters[1:3])
+x <- format_tt(x, digits = 1)
+expect_inherits(x, "tbl_df")
+expect_equivalent(x[[1]], c("3", "2", "1"))
+expect_equivalent(x[[2]], c("a", "b", "c"))
+
 
 # Issue #141
 k2 <- tibble(
