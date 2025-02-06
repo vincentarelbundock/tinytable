@@ -2,6 +2,10 @@
 
 ## Development
 
+New:
+
+* Support for `litedown` notebooks with "latex", "html", or "markdown" output.
+
 Bugs:
 
 * `format_tt()` works on tibbles. Thanks to @jon-mellon for report #426.
