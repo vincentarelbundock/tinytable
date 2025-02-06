@@ -97,15 +97,14 @@ sanitize_output <- function(output) {
   if (isTRUE(check_dependency("litedown"))) {
     fmt <- tryCatch(litedown::get_context("format"), error = function(e) NULL)
     if (identical(fmt, "latex")) {
-      out <- "latex"
+      return("latex")
     } else if (identical(fmt, "markdown")) {
-      out <- "markdown"
+      return("markdown") 
     } else if (identical(fmt, "commonmark")) {
-      out <- "markdown"
+      return("markdown")
     } else if (identical(fmt, "html")) {
-      out <- "html"
+      return("html")
     }
-    return(out)
   }
 
   if (isTRUE(check_dependency("knitr"))) {
