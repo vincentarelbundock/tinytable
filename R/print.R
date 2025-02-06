@@ -70,6 +70,19 @@ print.tinytable <- function(x,
 
   tab <- x@table_string
 
+  # litedown: just return the object asIs
+  if (isTRUE(check_dependency("litedown"))) {
+    fmt <- tryCatch(litedown::get_context("format"), error = function(e) NULL)
+    if (!is.null(fmt) && !isTRUE(fmt %in% c("latex", "markdown", "html"))) {
+      stop("tinytable in litedown only supports latex, markdown, or html output", call. = FALSE)
+    }
+    if (!is.null(fmt)) {
+      tab <- sprintf("\n```{=%s}\n%s\n```\n", fmt, tab)
+      cat(tab)
+      return(invisible(NULL))
+    }
+  }
+
   # lazy styles get evaluated here by build_tt(), at the very end
   if (output %in% c("latex", "typst", "markdown", "gfm")) {
     cat(tab, "\n")

@@ -94,6 +94,20 @@ sanitize_output <- function(output) {
     out <- output
   }
 
+  if (isTRUE(check_dependency("litedown"))) {
+    fmt <- tryCatch(litedown::get_context("format"), error = function(e) NULL)
+    if (identical(fmt, "latex")) {
+      out <- "latex"
+    } else if (identical(fmt, "markdown")) {
+      out <- "markdown"
+    } else if (identical(fmt, "commonmark")) {
+      out <- "markdown"
+    } else if (identical(fmt, "html")) {
+      out <- "html"
+    }
+    return(out)
+  }
+
   if (isTRUE(check_dependency("knitr"))) {
     if (isTRUE(knitr::pandoc_to() %in% c("latex", "beamer"))) {
       flag <- getOption("tinytable_latex_preamble", default = TRUE)
