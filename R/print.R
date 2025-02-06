@@ -77,9 +77,8 @@ print.tinytable <- function(x,
       stop("tinytable in litedown only supports latex, markdown, or html output", call. = FALSE)
     }
     if (!is.null(fmt)) {
-      tab <- sprintf("\n```{=%s}\n%s\n```\n", fmt, tab)
-      cat(tab)
-      return(invisible(NULL))
+      out <- litedown::raw_text(tab, fmt)
+      return(out)
     }
   }
 
