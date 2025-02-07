@@ -1,3 +1,27 @@
+#' @exportS3Method xfun::record_print
+record_print.tinytable = function(x, ...) {
+  if (!isTRUE(check_dependency("litedown"))) {
+    return(x)
+  }
+
+  # litedown
+  fmt <- tryCatch(litedown::get_context("format"), error = function(e) NULL)
+  if (is.null(fmt)) {
+    return(x)
+  }
+
+  if (!isTRUE(fmt %in% c("latex", "markdown", "html"))) {
+    stop("tinytable in litedown only supports latex, markdown, or html output", call. = FALSE)
+  }
+
+  x <- build_tt(x, output = fmt)
+  out <- x@table_string
+
+  out <- litedown::raw_text(out, fmt)
+  return(out)
+}
+
+
 #' Print a tinytable object in knitr
 #'
 #' @keywords internal
@@ -70,17 +94,6 @@ print.tinytable <- function(x,
 
   tab <- x@table_string
 
-  # litedown: just return the object asIs
-  if (isTRUE(check_dependency("litedown"))) {
-    fmt <- tryCatch(litedown::get_context("format"), error = function(e) NULL)
-    if (!is.null(fmt) && !isTRUE(fmt %in% c("latex", "markdown", "html"))) {
-      stop("tinytable in litedown only supports latex, markdown, or html output", call. = FALSE)
-    }
-    if (!is.null(fmt)) {
-      out <- litedown::raw_text(tab, fmt)
-      return(out)
-    }
-  }
 
   # lazy styles get evaluated here by build_tt(), at the very end
   if (output %in% c("latex", "typst", "markdown", "gfm")) {

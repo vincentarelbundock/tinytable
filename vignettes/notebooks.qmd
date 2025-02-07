@@ -208,16 +208,16 @@ tt(head(iris), caption = "(#tab:tinytableref) Hello world!") |>
 
 ## Litedown
 
-[`litedown` is a lightweight version of R Markdown](https://yihui.org/litedown/) designed by Yihui Xie. `tinytable` supports `litedown` output in HTML, LaTeX, and Markdown formats. Two caveats:
+[`litedown` is a lightweight version of R Markdown](https://yihui.org/litedown/) designed by Yihui Xie. `tinytable` supports `litedown` output in HTML, LaTeX, and Markdown formats.
 
-1. LaTeX packages are not loaded automatically, so the user needs to add them manually to the YAML header, to ensure they get inserted in the preamble. See the "LaTeX preamble" section of `?tt` for  details.
-2. In code chunks, tables need to be printed explicitly using `print()`, otherwise they will be evaluated as raw text. See below for an example.
+::: {.callout-tip title="LaTeX Preamble"}
+LaTeX packages are not loaded automatically, so the user needs to add them manually to the YAML header, to ensure they get inserted in the preamble. See the "LaTeX preamble" section of `?tt` for  details.
+:::
 
 ```{r}
 #| eval: false
 library(tinytable)
 head(iris) |>
     tt() |>
-    style_tt(background = "black", color = "white") |>
-    print() 
+    style_tt(background = "black", color = "white")
 ```
