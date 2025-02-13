@@ -9,6 +9,7 @@ New:
 Bugs:
 
 * `format_tt()` works on tibbles. Thanks to @jon-mellon for report #426.
+* Respects the "Chunk Output in Console" option in RStudio. Thanks to @richardohrvall for issue #851 on the `modelsummary` repository.
 
 ## 0.7.0
 

@@ -100,13 +100,9 @@ print.tinytable <- function(x,
     cat(tab, "\n")
   } else if (output == "html") {
     if (is_rstudio_notebook()) {
-      tinytable_print_rstudio <- getOption("tinytable_print_rstudio_notebook", default = "inline")
-      assert_choice(tinytable_print_rstudio, c("inline", "viewer"))
-      if (tinytable_print_rstudio == "inline") {
-        tab <- sprintf("\n```{=html}\n%s\n```\n`", tab)
-        print(knitr::asis_output(tab))
-        return(invisible(x))
-      }
+      html_kable <- htmltools_browsable(tab)
+      print(html_kable)
+      return(invisible(NULL))
     }
 
     # need to change the output directory to a temporary directory
@@ -139,3 +135,14 @@ print.tinytable <- function(x,
 setMethod("show", "tinytable", function(object) {
   print.tinytable(object, output = get_option("tinytable_print_output", default = NULL))
 })
+
+
+# adapted from {htmltools} under GPL3
+htmltools_browsable <- function(x) {
+  htmlText <- paste(enc2utf8(x), collapse = " ")
+  attr(htmlText, "html") <- TRUE
+  attr(htmlText, "browsable_html") <- TRUE
+  class(htmlText) <- c("html", "character")
+  class(htmlText) <- "shiny.tag.list"
+  htmlText
+}
