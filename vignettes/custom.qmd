@@ -144,6 +144,14 @@ tt(mtcars[1:10, 1:8]) |>
 ```
 :::
 
+And yet another one. Some Rmarkdown documents like `bookdown` use older versions of Bootstrap that do not have a `caption-top` class. We can recreate that functionality with CSS rules and classes. For example,
+
+```r
+rule <- ".bottomcaption {caption-side: bottom;}"
+tt(head(iris), caption = "Hello world") |>
+  style_tt(bootstrap_class = "table bottomcaption", bootstrap_css_rule = rule)
+```
+
 ## LaTeX / PDF {#sec-tabularray}
 
 ::: {.content-visible when-format="html"}
