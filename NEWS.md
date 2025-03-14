@@ -11,6 +11,10 @@ Bugs:
 * `format_tt()` works on tibbles. Thanks to @jon-mellon for report #426.
 * Respects the "Chunk Output in Console" option in RStudio. Thanks to @richardohrvall for issue #851 on the `modelsummary` repository.
 
+Tests:
+
+* Using the latest `tinysnapshot` means snapshot tests are no longer sensitive to random seeds.
+
 ## 0.7.0
 
 Breaking change:
