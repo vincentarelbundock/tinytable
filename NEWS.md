@@ -10,7 +10,7 @@ Bugs:
 
 * `format_tt()` works on tibbles. Thanks to @jon-mellon for report #426.
 * Respects the "Chunk Output in Console" option in RStudio. Thanks to @richardohrvall for issue #851 on the `modelsummary` repository.
-* `tabularray` LaTeX update breaks `theme_tt("rotating")`. Adding `[=v2024]` seems to fix the issue. Thanks to @kylebutts for report #444.
+* `tabularray` LaTeX update breaks `theme_tt("rotating")`. Thanks to @kylebutts for report #444.
 
 Tests:
 
