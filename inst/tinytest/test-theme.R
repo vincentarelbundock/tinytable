@@ -17,3 +17,21 @@ k <- data.frame(X = 1) |>
   theme_tt(theme = "resize", width = 0.9) |>
   save_tt("latex")
 expect_inherits(k, "character")
+
+
+# Issue ##439: function theme breaks HTML
+theme_mitex <- function(x, ...) {
+  fn <- function(table) {
+    if (isTRUE(table@output == "typst")) {
+      table@table_string <- gsub("\\$(.*?)\\$", "#mitex(`\\1`)", table@table_string)
+    }
+    return(table)
+  }
+  x <- style_tt(x, finalize = fn)
+  x <- theme_tt(x, theme = "default")
+  return(x)
+}
+tab <- data.frame(Math = c("$\\alpha$", "$a_{it}$", "$e^{i\\pi} + 1 = 0$")) |>
+  tt(theme = theme_mitex) |>
+  save_tt("html")
+expect_inherits(tab, "character")
