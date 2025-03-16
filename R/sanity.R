@@ -99,7 +99,7 @@ sanitize_output <- function(output) {
     if (identical(fmt, "latex")) {
       return("latex")
     } else if (identical(fmt, "markdown")) {
-      return("markdown") 
+      return("markdown")
     } else if (identical(fmt, "commonmark")) {
       return("markdown")
     } else if (identical(fmt, "html")) {
@@ -115,9 +115,9 @@ sanitize_output <- function(output) {
         usepackage_latex("tabularray", extra_lines = c(
           "\\usepackage[normalem]{ulem}",
           "\\usepackage{graphicx}",
-          "\\UseTblrLibrary{booktabs}[=v2024]",
-          "\\UseTblrLibrary{rotating}[=v2024]",
-          "\\UseTblrLibrary{siunitx}[=v2024]",
+          "\\usepackage{rotating}",
+          "\\UseTblrLibrary{booktabs}",
+          "\\UseTblrLibrary{siunitx}",
           "\\NewTableCommand{\\tinytableDefineColor}[3]{\\definecolor{#1}{#2}{#3}}",
           "\\newcommand{\\tinytableTabularrayUnderline}[1]{\\underline{#1}}",
           "\\newcommand{\\tinytableTabularrayStrikeout}[1]{\\sout{#1}}"
