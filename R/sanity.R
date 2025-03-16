@@ -115,9 +115,9 @@ sanitize_output <- function(output) {
         usepackage_latex("tabularray", extra_lines = c(
           "\\usepackage[normalem]{ulem}",
           "\\usepackage{graphicx}",
-          "\\UseTblrLibrary{booktabs}",
-          "\\UseTblrLibrary{rotating}",
-          "\\UseTblrLibrary{siunitx}",
+          "\\UseTblrLibrary{booktabs}[=v2024]",
+          "\\UseTblrLibrary{rotating}[=v2024]",
+          "\\UseTblrLibrary{siunitx}[=v2024]",
           "\\NewTableCommand{\\tinytableDefineColor}[3]{\\definecolor{#1}{#2}{#3}}",
           "\\newcommand{\\tinytableTabularrayUnderline}[1]{\\underline{#1}}",
           "\\newcommand{\\tinytableTabularrayStrikeout}[1]{\\sout{#1}}"
