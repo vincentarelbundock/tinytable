@@ -76,9 +76,8 @@ We can use the `group_tt()` function to group rows and label them using spanners
 
 ```{r}
 # subset and sort data
-df <- mtcars |>
-  head(10) |>
-  sort_by(~am)
+df <- head(mtcars, 10)
+df <- df[order(df$am), ]
 
 # draw table
 tt(df) |> group_tt(i = df$am)

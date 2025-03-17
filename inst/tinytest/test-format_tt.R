@@ -56,16 +56,6 @@ expect_snapshot_print(
 
 
 
-# bug: duplicated columns with markdown html
-dat <- data.frame(
-  markdown = c(
-    "This is _italic_ text.",
-    "This sentence ends with a superscript.^2^")
-)
-tab <- tt(dat) |>
-  format_tt(j = 1, markdown = TRUE) |>
-  style_tt(j = 1, align = "c")
-expect_snapshot_print(print_html(tab), "format_tt-vignette_html_markdown.html")
 
 
 # custom formatting
@@ -230,3 +220,18 @@ tab2 <- tt(tab) |>
 expect_equivalent(tab0$x, c("1", "NA", "NaN", "Inf"))
 expect_equivalent(tab1$x, c("1", "NA", "NaN", "Inf"))
 expect_equivalent(tab2$x, c("1", "", "", "Inf"))
+
+
+
+
+
+# bug: duplicated columns with markdown html
+dat <- data.frame(
+  markdown = c(
+    "This is _italic_ text.",
+    "This sentence ends with a superscript.^2^")
+)
+tab <- tt(dat) |>
+  format_tt(j = 1, markdown = TRUE) |>
+  style_tt(j = 1, align = "c")
+expect_snapshot_print(print_html(tab), "format_tt-vignette_html_markdown.html")

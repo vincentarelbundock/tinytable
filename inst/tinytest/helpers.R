@@ -12,6 +12,7 @@ strip_random <- function(x) {
     x <- gsub("spanCell_\\w+\\b", "tinytable", x)
     x <- gsub("insertSpanRow\\w+\\b", "tinytable", x)
     x <- gsub("styleHeaderCell_\\w+\\b", "tinytable", x)
+    x <- gsub("tinytable\\/\\w+\\b", "tinytable", x)
     x
 }
 options(tinysnapshot_fn_current = strip_random)
@@ -41,14 +42,6 @@ print.custom_html_string <- function(x, ...) {
 
 print_html <- function(x, output = c("html", "html_portable")) {
     output <- match.arg(output)
-    # random table IDs
-    set.seed(1024)
-    x <- tinytable::save_tt(x, output = output)
-    # x <- gsub("tinytable_\\w+\\b", "tinytable", x)
-    # x <- gsub("styleCell_\\w+\\b", "tinytable", x)
-    # x <- gsub("spanCell_\\w+\\b", "tinytable", x)
-    # x <- gsub("insertSpanRow\\w+\\b", "tinytable", x)
-    # x <- gsub("styleHeaderCell_\\w+\\b", "tinytable", x)
-    class(x) <- c("custom_html_string", "character")
+    x@output <- output
     x
 }
