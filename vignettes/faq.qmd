@@ -107,6 +107,41 @@ foo & bar & baz \\
 ```
 ````
 
+### Multi-line cells and complex markdown with `minipage`
+
+In some contexts, users may want to include multi-line cells or complex Markdown formatting in their tables. The key distinction here is that one-line Markdown can often be rendered directly with `markdown = TRUE` in `tinytable`. However, when you have multi-line Markdown (e.g., bullet points, lists, or long text), you need to wrap it in a LaTeX `\minipage` environment so that it renders correctly in PDF output. To do this, we write two simple helper functions: `latexify` and `minipagify`.
+
+
+Below is the complete code:
+
+```{r}
+library(tinytable)
+library(litedown)
+
+dat <- data.frame(
+  A = c("Blah *blah* blah", "- Thing 1\n- Thing 2"),
+  B = c("6%", "$5.29")
+)
+
+tab <- tt(dat, width = c(0.3, 0.2)) |>
+  style_tt(j = 2, align = "c") |>
+  format_tt(j = 2, markdown = TRUE) |>
+  format_tt(i = 1, j = 1, markdown = TRUE)
+
+# render markdown code in each cell individually
+latexify <- \(x) sapply(x, litedown::mark, "latex")
+
+# wrap multi-line cell content in minipage
+minipagify <- \(x) paste("\\minipage{\\textwidth}", latexify(x), "\\endminipage")
+
+# only make the change for LaTeX output
+if (identical(knitr::to_pandoc(), "latex")) {
+  x <- format_tt(x, i = i, j = j, fn = minipagify)
+}
+
+tab
+```
+
 ### Global styles
 
 `tabularray` allows very powerful styling and themeing options. See [the reference manual](https://ctan.org/pkg/tabularray) for more information.
