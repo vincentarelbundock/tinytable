@@ -370,7 +370,7 @@ format_tt_lazy <- function(x,
   # markdown and quarto at the very end
   for (col in j) {
     if (isTRUE(markdown)) {
-      assert_dependency("markdown")
+      assert_dependency("litedown")
       out <- format_markdown(out = out, i = i, col = col, x = x)
     }
 
