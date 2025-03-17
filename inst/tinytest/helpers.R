@@ -1,4 +1,3 @@
-set.seed(03)
 options("tinysnapshot_device" = "svglite")
 options("tinysnapshot_tol" = 300)
 options("tinysnapshot_mode" = "sidebyside")
