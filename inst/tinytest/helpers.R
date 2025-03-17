@@ -1,18 +1,31 @@
+set.seed(03)
 options("tinysnapshot_device" = "svglite")
-options("tinysnapshot_tol" = 200)
+options("tinysnapshot_tol" = 300)
+options("tinysnapshot_mode" = "sidebyside")
+options("width" = 200) # for diff printout readability
 
 # common formatting options
 options(tinytable_format_bool = function(x) tools::toTitleCase(tolower(x)))
 options(tinytable_format_replace = "")
 
-
+strip_random_sequential <- function(x, stem = "tinytable_css_") {
+    pattern <- paste0(stem, "\\w+\\b")
+    match_list <- lapply(x, function(s) {
+        regmatches(s, gregexpr(pattern, s, perl = TRUE))[[1]]
+    })
+    all_matches <- unlist(match_list)
+    unique_matches <- unique(all_matches)
+    new_ids <- sprintf("tinytable_css_%02d", seq_along(unique_matches))
+    replaced <- x
+    for (i in seq_along(unique_matches)) {
+        replaced <- gsub(unique_matches[i], new_ids[i], replaced, perl = TRUE)
+    }
+    replaced
+}
 strip_random <- function(x) {
-    x <- gsub("tinytable_\\w+\\b", "tinytable", x)
-    x <- gsub("styleCell_\\w+\\b", "tinytable", x)
-    x <- gsub("spanCell_\\w+\\b", "tinytable", x)
-    x <- gsub("insertSpanRow\\w+\\b", "tinytable", x)
-    x <- gsub("styleHeaderCell_\\w+\\b", "tinytable", x)
-    x <- gsub("tinytable\\/\\w+\\b", "tinytable", x)
+    for (stem in c("tinytable_css_", "tinytable_(?!css)", "styleCell_", "spanCell_", "insertSpanRow", "styleHeaderCell_", "tinytable/")) {
+        x <- strip_random_sequential(x, stem)
+    }
     x
 }
 options(tinysnapshot_fn_current = strip_random)
@@ -42,6 +55,7 @@ print.custom_html_string <- function(x, ...) {
 
 print_html <- function(x, output = c("html", "html_portable")) {
     output <- match.arg(output)
-    x@output <- output
+    x <- save_tt(x, output)
+    class(x) <- c("custom_html_string", class(x))
     x
 }

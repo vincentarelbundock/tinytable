@@ -13,7 +13,7 @@ style_eval_grid <- function(x) {
   # expand i to full rows
   if (any(is.na(sty$i))) {
     alli <- data.frame(i = seq_len(nrow(x)))
-    alli <- merge(alli, sty[is.na(sty$i), colnames(sty) != "i"], all = TRUE)
+    alli <- merge(alli, sty[is.na(sty$i), colnames(sty) != "i"], all = TRUE, sort = FALSE)
     sty <- rbind(sty, alli)
     sty <- sty[!is.na(sty$i), ]
     sty <- sty[order(sty$i, sty$j), ]

@@ -232,11 +232,11 @@ style_tt <- function(x,
         stop(msg, call. = FALSE)
       }
       align_string <- data.frame(j = jval, align = align_string)
-      settings <- merge(settings, align_string, by = "j", all.x = TRUE)
+      settings <- merge(settings, align_string, by = "j", all.x = TRUE, sort = FALSE)
     } else if (nchar(align) == 1) {
       assert_choice(align, c("c", "l", "r", "d"))
       align_string <- data.frame(j = jval, align = align)
-      settings <- merge(settings, align_string, by = "j", all.x = TRUE)
+      settings <- merge(settings, align_string, by = "j", all.x = TRUE, sort = FALSE)
     } else {
       msg <- sprintf("`align` must be a single character or a string of length %s.", length(jval))
       stop(msg, call. = FALSE)

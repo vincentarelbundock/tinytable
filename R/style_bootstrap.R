@@ -129,7 +129,9 @@ setMethod(
     # Unique CSS arguments assigne by arrays
     css_table <- unique(rec[, c("css_arguments"), drop = FALSE])
     css_table$id_css <- sapply(seq_len(nrow(css_table)), function(i) get_id(stem = "tinytable_css_"))
-    idx <- merge(rec[, c("i", "j", "css_arguments")], css_table, all.x = TRUE)
+    idx <- merge(rec[, c("i", "j", "css_arguments")], css_table, all.x = TRUE, sort = FALSE)
+    # factor is important otherwise we split by a random value and the order can break snapshots
+    idx$id_css <- factor(idx$id_css, levels = unique(idx$id_css))
     if (nrow(idx) > 0) {
       idx <- split(idx, idx$id)
       for (i in seq_along(idx)) {
@@ -144,5 +146,4 @@ setMethod(
     }
 
     return(x)
-  }
-)
+  })

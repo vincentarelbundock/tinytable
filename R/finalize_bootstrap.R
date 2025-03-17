@@ -51,7 +51,7 @@ setMethod(
       css_rules <- do.call(rbind, css_rules)
       id <- unique(css_rules[, "bootstrap", drop = FALSE])
       id$id <- sapply(seq_len(nrow(id)), function(z) sprintf("tinytable_css_%s", get_id()))
-      css_rules <- merge(css_rules, id)
+      css_rules <- merge(css_rules, id, sort = FALSE)
       css_rules <- css_rules[order(css_rules$i, css_rules$j), ]
 
       for (ii in seq_len(nrow(css_rules))) {
@@ -83,5 +83,4 @@ setMethod(
     }
 
     return(x)
-  }
-)
+  })
