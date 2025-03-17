@@ -421,14 +421,14 @@ format_math <- function(out, math) {
 
 format_markdown <- function(out, i = NULL, col = NULL, x) {
   tmpfun_html <- function(k) {
-    k <- trimws(markdown::mark_html(text = k, template = FALSE))
+    k <- litedown::mark(I(k), "html")
     k <- sub("<p>", "", k, fixed = TRUE)
     k <- sub("</p>", "", k, fixed = TRUE)
     return(k)
   }
 
   tmpfun_latex <- function(k) {
-    k <- trimws(markdown::mark_latex(text = k, template = FALSE))
+    k <- litedown::mark(I(k), "latex")
     return(k)
   }
 
