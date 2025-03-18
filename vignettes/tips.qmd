@@ -124,11 +124,15 @@ dat <- data.frame(
 
 tab <- tt(dat, width = c(0.3, 0.2)) |>
   style_tt(j = 2, align = "c") |>
-  format_tt(j = 2, markdown = TRUE)
+  format_tt(markdown = TRUE)
 
 # wrap in a minipage environment
-latexify <- \(x) sapply(x, litedown::mark, "latex")
-minipagify <- \(x) sprintf("\\minipage{\\textwidth}%s\\endminipage", latexify(x))
+minipagify <- function(x) {
+  sprintf(
+    "\\minipage{\\textwidth}%s\\endminipage",
+    sapply(x, litedown::mark, "latex")
+  )
+}
 
 # only for LaTeX output
 if (identical(knitr::pandoc_to(), "latex")) {
