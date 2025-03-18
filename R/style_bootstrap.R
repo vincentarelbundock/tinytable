@@ -131,11 +131,11 @@ setMethod(
     css_table$id_css <- sapply(seq_len(nrow(css_table)), function(i) get_id(stem = "tinytable_css_"))
     idx <- merge(rec[, c("i", "j", "css_arguments")], css_table, all.x = TRUE, sort = FALSE)
     # factor is important otherwise we split by a random value and the order can break snapshots
-    idx$id_css <- factor(idx$id_css, levels = unique(idx$id_css))
+    idx$split_idx <- factor(idx$id_css, levels = unique(idx$id_css))
     if (nrow(idx) > 0) {
-      idx <- split(idx, idx$id)
+      idx <- split(idx, idx$split_idx)
       for (i in seq_along(idx)) {
-        id_css <- idx[[i]]$id[1]
+        id_css <- idx[[i]]$id_css[1]
         arr <- sprintf("{ i: %s, j: %s }, ", idx[[i]]$i, idx[[i]]$j)
         arr <- c("          {", " positions: [ ", arr, " ],", " css_id: '", id_css, "',", "}, ")
         arr <- paste(arr, collapse = "")
