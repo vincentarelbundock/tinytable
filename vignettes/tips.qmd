@@ -126,7 +126,7 @@ dat <- data.frame(
 minipagify <- function(x) {
   sprintf(
     "\\minipage{\\textwidth}%s\\endminipage",
-    sapply(x, litedown::mark, "latex")
+    sapply(x, mark, "latex")
   )
 }
 
@@ -136,7 +136,7 @@ is_latex <- identical(knitr::pandoc_to(), "latex")
 tab <- tt(dat, width = c(0.3, 0.2)) |>
   style_tt(j = 2, align = "c") |>
   format_tt(markdown = TRUE) |>
-  format_tt(j = 1, fn = if (is_latex) minipagify else NULL)
+  format_tt(j = 1, fn = if (is_latex) minipagify else mark)
 
 tab
 ```

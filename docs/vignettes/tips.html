@@ -516,7 +516,7 @@ MathJax = {
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>minipagify <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sprintf</span>(</span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span><span class="sc">\\</span><span class="st">minipage{</span><span class="sc">\\</span><span class="st">textwidth}%s</span><span class="sc">\\</span><span class="st">endminipage"</span>,</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sapply</span>(x, litedown<span class="sc">::</span>mark, <span class="st">"latex"</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sapply</span>(x, mark, <span class="st">"latex"</span>)</span>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
@@ -526,7 +526,7 @@ MathJax = {
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">tt</span>(dat, <span class="at">width =</span> <span class="fu">c</span>(<span class="fl">0.3</span>, <span class="fl">0.2</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(<span class="at">j =</span> <span class="dv">2</span>, <span class="at">align =</span> <span class="st">"c"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">markdown =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">j =</span> <span class="dv">1</span>, <span class="at">fn =</span> <span class="cf">if</span> (is_latex) minipagify <span class="cf">else</span> <span class="cn">NULL</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">j =</span> <span class="dv">1</span>, <span class="at">fn =</span> <span class="cf">if</span> (is_latex) minipagify <span class="cf">else</span> mark)</span>
 <span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>tab</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -534,8 +534,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_xcz4w19i47qovpovsz7m(i, j, css_id) {
-          var table = document.getElementById("tinytable_xcz4w19i47qovpovsz7m");
+      function styleCell_mh02635a09zptuj8o4ez(i, j, css_id) {
+          var table = document.getElementById("tinytable_mh02635a09zptuj8o4ez");
           var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -545,7 +545,7 @@ MathJax = {
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_xcz4w19i47qovpovsz7m');
+        var table = document.getElementById('tinytable_mh02635a09zptuj8o4ez');
         var newRow = table.insertRow(i);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
@@ -553,8 +553,8 @@ MathJax = {
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_xcz4w19i47qovpovsz7m(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_xcz4w19i47qovpovsz7m");
+      function spanCell_mh02635a09zptuj8o4ez(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_mh02635a09zptuj8o4ez");
         const targetRow = table.rows[i];
         const targetCell = targetRow.cells[j];
         for (let r = 0; r < rowspan; r++) {
@@ -584,18 +584,18 @@ MathJax = {
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 2, j: 1 },  ], css_id: 'tinytable_css_0ete6u52w19p4kd4vqj8',}, 
-          { positions: [ { i: 1, j: 1 },  ], css_id: 'tinytable_css_fjcq07y0wlinf7kvuxkk',}, 
-          { positions: [ { i: 0, j: 1 },  ], css_id: 'tinytable_css_y8wlx9l76qn3ymkyo896',}, 
-          { positions: [ { i: 2, j: 0 },  ], css_id: 'tinytable_css_eqevy73dbuxxs9uol9x1',}, 
-          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_0i2eh8isr0kstd9mo94h',}, 
-          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_aks2brxjbfreis6dge7u',}, 
+          { positions: [ { i: 2, j: 1 },  ], css_id: 'tinytable_css_hi0zlykt3aj9ehny4ey1',}, 
+          { positions: [ { i: 1, j: 1 },  ], css_id: 'tinytable_css_c46il55n1idm9j68q4ep',}, 
+          { positions: [ { i: 0, j: 1 },  ], css_id: 'tinytable_css_5xtibn90cvhakng3wcpj',}, 
+          { positions: [ { i: 2, j: 0 },  ], css_id: 'tinytable_css_nh0bdicb7nkr2j18trqh',}, 
+          { positions: [ { i: 1, j: 0 },  ], css_id: 'tinytable_css_la5r8pnveg9w80faueqn',}, 
+          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_ai7d5prlgma48ykoehvg',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_xcz4w19i47qovpovsz7m(cell.i, cell.j, group.css_id);
+                  styleCell_mh02635a09zptuj8o4ez(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -603,15 +603,15 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_0ete6u52w19p4kd4vqj8, .table th.tinytable_css_0ete6u52w19p4kd4vqj8 { text-align: center; border-bottom: solid #d3d8dc 0.1em; width: 40%; }
-      .table td.tinytable_css_fjcq07y0wlinf7kvuxkk, .table th.tinytable_css_fjcq07y0wlinf7kvuxkk { text-align: center; width: 40%; }
-      .table td.tinytable_css_y8wlx9l76qn3ymkyo896, .table th.tinytable_css_y8wlx9l76qn3ymkyo896 { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; width: 40%; }
-      .table td.tinytable_css_eqevy73dbuxxs9uol9x1, .table th.tinytable_css_eqevy73dbuxxs9uol9x1 { border-bottom: solid #d3d8dc 0.1em; width: 60%; }
-      .table td.tinytable_css_0i2eh8isr0kstd9mo94h, .table th.tinytable_css_0i2eh8isr0kstd9mo94h { width: 60%; }
-      .table td.tinytable_css_aks2brxjbfreis6dge7u, .table th.tinytable_css_aks2brxjbfreis6dge7u { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; width: 60%; }
+      .table td.tinytable_css_hi0zlykt3aj9ehny4ey1, .table th.tinytable_css_hi0zlykt3aj9ehny4ey1 { text-align: center; border-bottom: solid #d3d8dc 0.1em; width: 40%; }
+      .table td.tinytable_css_c46il55n1idm9j68q4ep, .table th.tinytable_css_c46il55n1idm9j68q4ep { text-align: center; width: 40%; }
+      .table td.tinytable_css_5xtibn90cvhakng3wcpj, .table th.tinytable_css_5xtibn90cvhakng3wcpj { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; width: 40%; }
+      .table td.tinytable_css_nh0bdicb7nkr2j18trqh, .table th.tinytable_css_nh0bdicb7nkr2j18trqh { border-bottom: solid #d3d8dc 0.1em; width: 60%; }
+      .table td.tinytable_css_la5r8pnveg9w80faueqn, .table th.tinytable_css_la5r8pnveg9w80faueqn { width: 60%; }
+      .table td.tinytable_css_ai7d5prlgma48ykoehvg, .table th.tinytable_css_ai7d5prlgma48ykoehvg { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; width: 60%; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_xcz4w19i47qovpovsz7m" style="table-layout: fixed; width: 50% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_mh02635a09zptuj8o4ez" style="table-layout: fixed; width: 50% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -622,11 +622,16 @@ MathJax = {
         
         <tbody>
                 <tr>
-                  <td>Blah <em>blah</em> blah</td>
+                  <td><p>Blah <em>blah</em> blah</p>
+<ul>
+<li>Thing 1</li>
+<li>Thing 2</li>
+</ul></td>
                   <td>6%</td>
                 </tr>
                 <tr>
-                  <td><ul>
+                  <td><p>Blah <em>blah</em> blah</p>
+<ul>
 <li>Thing 1</li>
 <li>Thing 2</li>
 </ul></td>
