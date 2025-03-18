@@ -107,12 +107,11 @@ foo & bar & baz \\
 ```
 ````
 
-### Multi-line cells and complex markdown with `minipage`
+### Multi-line cells with `minipage`
 
-In some contexts, users may want to include multi-line cells or complex Markdown formatting in their tables. The key distinction here is that one-line Markdown can often be rendered directly with `markdown = TRUE` in `tinytable`. However, when you have multi-line Markdown (e.g., bullet points, lists, or long text), you need to wrap it in a LaTeX `\minipage` environment so that it renders correctly in PDF output. To do this, we write a simple helper functions: `minipagify`.
+In some contexts, users may want create cells with LaTeX or markdown code that spans multiple lines. This usually works well for HTML tables. But sometimes, in LaTeX, multi-line content with special environments must be wrapped in a `minipage` environment.
 
-
-Below is the complete code:
+In the example that follows, we create a Markdown list using asterisks. Then, we call `litedown::mark()` to render that list as bullet points (an `itemize` environment in LaTeX). Finally, we define a custom function called `minipagify` to wrap the bullet point in a `minipage` environment.
 
 ```{r}
 library(tinytable)
@@ -125,17 +124,15 @@ dat <- data.frame(
 
 tab <- tt(dat, width = c(0.3, 0.2)) |>
   style_tt(j = 2, align = "c") |>
-  format_tt(j = 2, markdown = TRUE) |>
-  format_tt(i = 1, j = 1, markdown = TRUE)
+  format_tt(j = 2, markdown = TRUE)
 
-# wrap multi-line cell content in minipage
-minipagify <- \(x) sprintf(
-  "\\minipage{\\textwidth}%s\\endminipage",
-  sapply(x, mark, "latex"))
+# wrap in a minipage environment
+latexify <- \(x) sapply(x, litedown::mark, "latex")
+minipagify <- \(x) sprintf("\\minipage{\\textwidth}%s\\endminipage", latexify(x))
 
-# only make the change for LaTeX output
+# only for LaTeX output
 if (identical(knitr::pandoc_to(), "latex")) {
-  x <- format_tt(x, i = i, j = j, fn = minipagify)
+  tab <- format_tt(tab, j = 1, fn = minipagify)
 }
 
 tab
