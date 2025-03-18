@@ -122,10 +122,6 @@ dat <- data.frame(
   B = c("6%", "$5.29")
 )
 
-tab <- tt(dat, width = c(0.3, 0.2)) |>
-  style_tt(j = 2, align = "c") |>
-  format_tt(markdown = TRUE)
-
 # wrap in a minipage environment
 minipagify <- function(x) {
   sprintf(
@@ -134,10 +130,13 @@ minipagify <- function(x) {
   )
 }
 
-# only for LaTeX output
-if (identical(knitr::pandoc_to(), "latex")) {
-  tab <- format_tt(tab, j = 1, fn = minipagify)
-}
+# only in LaTeX
+is_latex <- identical(knitr::pandoc_to(), "latex")
+
+tab <- tt(dat, width = c(0.3, 0.2)) |>
+  style_tt(j = 2, align = "c") |>
+  format_tt(markdown = TRUE) |>
+  format_tt(j = 1, fn = if (is_latex) minipagify else NULL)
 
 tab
 ```
