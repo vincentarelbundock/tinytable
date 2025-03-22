@@ -148,7 +148,8 @@ available in two formats:
   - [Notebooks (Quarto, Rmarkdown, Bookdown,
     etc.)](https://vincentarelbundock.github.io/tinytable/vignettes/notebooks.html)
   - [Customization](https://vincentarelbundock.github.io/tinytable/vignettes/custom.html)
-  - [FAQ](https://vincentarelbundock.github.io/tinytable/vignettes/faq.html)
+  - [Tips and
+    trips](https://vincentarelbundock.github.io/tinytable/vignettes/tips.html)
   - [Alternatives](https://vincentarelbundock.github.io/tinytable/vignettes/alternatives.html)
 
 [^1]: Styling options in Word are somewhat limited. See the FAQ page and
