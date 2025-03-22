@@ -1,6 +1,6 @@
 # News
 
-## Development
+## 0.8.0
 
 New:
 
@@ -12,7 +12,6 @@ Bugs:
 * Respects the "Chunk Output in Console" option in RStudio. Thanks to @richardohrvall for issue #851 on the `modelsummary` repository.
 * Function themes broke HTML tables. Thanks to @kazuyanagimoto for report #439.
 * `tabularray` LaTeX update breaks `theme_tt("rotating")`. Thanks to @kylebutts for report #444.
-
 
 Tests:
 
