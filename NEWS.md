@@ -13,7 +13,6 @@ Bugs:
 * Function themes broke HTML tables. Thanks to @kazuyanagimoto for report #439.
 * `tabularray` LaTeX update breaks `theme_tt("rotating")`. Thanks to @kylebutts for report #444.
 
-
 Tests:
 
 * Using the latest `tinysnapshot` means snapshot tests are no longer sensitive to random seeds.
