@@ -145,6 +145,38 @@ See [the Tips and Tricks on Typst](https://vincentarelbundock.github.io/tinytabl
 
 ## Rmarkdown
 
+### Math
+
+In some cases, Rmarkdown automatically modifies the URL that `tinytable` uses to load MathJax and render mathematical content. One alternative is to call the MathJax script manually as described in the [math section of the documentation](https://vincentarelbundock.github.io/tinytable/vignettes/format.html#math).
+
+Alternatively, you can specify the MathJax URL in the YAML header of your notebook, and use an appropriate global option.
+
+````yaml
+---
+output:
+  html_document:
+    self_contained: true
+    math_method:
+      engine: mathjax
+      url: https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+---
+
+```{r echo = FALSE}
+library(tinytable)
+options(tinytable_html_mathjax = TRUE)
+
+tbl <- tibble::tribble(
+  ~Mathematics, ~Physics,
+  "function, $f (x)$", "potential energy, $P(x)$",
+  "derivative, $f\\prime (x)$", "force, $F(x) = -P\\prime(x)$",
+  "$\\min_x f(x) \\implies f\\prime (x) = 0$",
+  "equilibrium, $\\min_x P(x) \\implies F (x) = 0$"
+)
+
+tt(tbl)
+```
+````
+
 
 ### `papaja`
 
