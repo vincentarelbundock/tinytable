@@ -30,4 +30,4 @@ typst: ## compile typst example
 website: install typst ## render vignettes and website
 	rm -rf _quarto
 	rm -rf docs
-	Rscript -e "altdoc::render_docs(verbose = TRUE, freeze = TRUE, autolink = TRUE)"
+	Rscript -e "altdoc::render_docs(verbose = TRUE, freeze = TRUE)"
