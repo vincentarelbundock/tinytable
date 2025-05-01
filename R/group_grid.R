@@ -12,7 +12,6 @@ setMethod(
   }
 )
 
-
 group_grid_col <- function(x, j, ...) {
   if (is.null(j)) {
     return(x)
@@ -42,7 +41,6 @@ group_grid_col <- function(x, j, ...) {
 
   return(x)
 }
-
 
 group_grid_row <- function(x, i, ...) {
   if (is.null(i)) {

@@ -3,6 +3,8 @@
 #' 2012 hadley says "globalVariables is a hideous hack and I will never use it"
 #' 2014 hadley updates his own answer with globalVariables as one of "two solutions"
 #' @noRd
-utils::globalVariables(c(
-  "bootstrap"
-))
+utils::globalVariables(
+  c(
+    "bootstrap"
+  )
+)

@@ -1,28 +1,30 @@
 setMethod(
   f = "style_eval",
   signature = "tinytable_tabularray",
-  definition = function(x,
-                        i = NULL,
-                        j = NULL,
-                        bold = FALSE,
-                        italic = FALSE,
-                        monospace = FALSE,
-                        underline = FALSE,
-                        strikeout = FALSE,
-                        color = NULL,
-                        background = NULL,
-                        fontsize = NULL,
-                        align = NULL,
-                        alignv = NULL,
-                        line = NULL,
-                        line_color = "black",
-                        line_width = 0.1,
-                        colspan = NULL,
-                        rowspan = NULL,
-                        indent = 0,
-                        tabularray_inner = NULL,
-                        tabularray_outer = NULL,
-                        ...) {
+  definition = function(
+    x,
+    i = NULL,
+    j = NULL,
+    bold = FALSE,
+    italic = FALSE,
+    monospace = FALSE,
+    underline = FALSE,
+    strikeout = FALSE,
+    color = NULL,
+    background = NULL,
+    fontsize = NULL,
+    align = NULL,
+    alignv = NULL,
+    line = NULL,
+    line_color = "black",
+    line_width = 0.1,
+    colspan = NULL,
+    rowspan = NULL,
+    indent = 0,
+    tabularray_inner = NULL,
+    tabularray_outer = NULL,
+    ...
+  ) {
     sty <- x@style
     sty$i <- sty$i + x@nhead
 
@@ -47,10 +49,21 @@ setMethod(
       for (idx_j in dcol_j) {
         spec <- get_dcolumn(idx_j, x)
         spec <- sprintf("column{%s}={%s}\n", idx_j, spec)
-        x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
+        x@table_string <- tabularray_insert(
+          x@table_string,
+          content = spec,
+          type = "inner"
+        )
         for (idx_i in seq_len(x@nhead)) {
-          spec <- paste(sprintf("cell{%s}{%s}={guard,halign=c,},", idx_i, idx_j), collapse = "\n")
-          x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
+          spec <- paste(
+            sprintf("cell{%s}{%s}={guard,halign=c,},", idx_i, idx_j),
+            collapse = "\n"
+          )
+          x@table_string <- tabularray_insert(
+            x@table_string,
+            content = spec,
+            type = "inner"
+          )
         }
       }
     }
@@ -66,8 +79,10 @@ setMethod(
       cmd <- ""
       if (isTRUE(sty$bold[row])) cmd <- paste0(cmd, "\\bfseries")
       if (isTRUE(sty$italic[row])) cmd <- paste0(cmd, "\\textit")
-      if (isTRUE(sty$underline[row])) cmd <- paste0(cmd, "\\tinytableTabularrayUnderline")
-      if (isTRUE(sty$strikeout[row])) cmd <- paste0(cmd, "\\tinytableTabularrayStrikeout")
+      if (isTRUE(sty$underline[row]))
+        cmd <- paste0(cmd, "\\tinytableTabularrayUnderline")
+      if (isTRUE(sty$strikeout[row]))
+        cmd <- paste0(cmd, "\\tinytableTabularrayStrikeout")
       if (isTRUE(sty$monospace[row])) cmd <- paste0(cmd, "\\texttt")
 
       col <- sty$color[row]
@@ -95,7 +110,9 @@ setMethod(
       if (!is.na(as.numeric(fontsize))) {
         set[idx] <- sprintf(
           "%s font=\\fontsize{%sem}{%sem}\\selectfont,",
-          set[idx], fontsize, fontsize + 0.3
+          set[idx],
+          fontsize,
+          fontsize + 0.3
         )
       }
 
@@ -154,62 +171,103 @@ setMethod(
     all_j <- seq_len(x@ncol)
 
     # complete rows and columns
-    rec <- do.call(rbind, by(rec, list(rec$j, rec$set, rec$span), function(k) {
-      transform(k, complete_column = all(all_i %in% k$i))
-    }))
-    rec <- do.call(rbind, by(rec, list(rec$i, rec$set, rec$span), function(k) {
-      transform(k, complete_row = all(all_j %in% k$j))
-    }))
+    rec <- do.call(
+      rbind,
+      by(rec, list(rec$j, rec$set, rec$span), function(k) {
+        transform(k, complete_column = all(all_i %in% k$i))
+      })
+    )
+    rec <- do.call(
+      rbind,
+      by(rec, list(rec$i, rec$set, rec$span), function(k) {
+        transform(k, complete_row = all(all_j %in% k$j))
+      })
+    )
 
     idx <- rec$span != "" | rec$set != ""
 
     # complete columns (first because of d-column)
-    cols <- unique(rec[idx & rec$complete_column, c("j", "set", "span"), drop = FALSE])
+    cols <- unique(
+      rec[idx & rec$complete_column, c("j", "set", "span"), drop = FALSE]
+    )
     spec <- by(cols, list(cols$set, cols$span), function(k) {
       sprintf("column{%s}={%s}{%s}", paste(k$j, collapse = ","), k$span, k$set)
     })
     spec <- unique(as.vector(unlist(spec)))
     for (s in spec) {
-      x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
+      x@table_string <- tabularray_insert(
+        x@table_string,
+        content = s,
+        type = "inner"
+      )
     }
 
     # complete rows
-    rows <- unique(rec[
-      idx & rec$complete_row & !rec$complete_column,
-      c("i", "set", "span"),
-      drop = FALSE
-    ])
+    rows <- unique(
+      rec[
+        idx & rec$complete_row & !rec$complete_column,
+        c("i", "set", "span"),
+        drop = FALSE
+      ]
+    )
     spec <- by(rows, list(rows$set, rows$span), function(k) {
       sprintf("row{%s}={%s}{%s}", paste(k$i, collapse = ","), k$span, k$set)
     })
     spec <- unique(as.vector(unlist(spec)))
     for (s in spec) {
-      x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
+      x@table_string <- tabularray_insert(
+        x@table_string,
+        content = s,
+        type = "inner"
+      )
     }
 
     # cells
-    cells <- unique(rec[idx & !rec$complete_row & !rec$complete_column, , drop = FALSE])
-    spec <- sprintf("cell{%s}{%s}={%s}{%s}", cells$i, cells$j, cells$span, cells$set)
+    cells <- unique(
+      rec[idx & !rec$complete_row & !rec$complete_column, , drop = FALSE]
+    )
+    spec <- sprintf(
+      "cell{%s}{%s}={%s}{%s}",
+      cells$i,
+      cells$j,
+      cells$span,
+      cells$set
+    )
     spec <- unique(as.vector(unlist(spec)))
     for (s in spec) {
-      x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
+      x@table_string <- tabularray_insert(
+        x@table_string,
+        content = s,
+        type = "inner"
+      )
     }
 
     # lines
     rec$lin <- "solid, "
-    rec$lin <- ifelse(!is.na(rec$line_color),
-      paste0(rec$lin, rec$line_color), rec$lin
+    rec$lin <- ifelse(
+      !is.na(rec$line_color),
+      paste0(rec$lin, rec$line_color),
+      rec$lin
     )
-    rec$lin <- ifelse(!is.na(rec$line_width),
-      paste0(rec$lin, sprintf(", %sem", rec$line_width)), rec$lin
+    rec$lin <- ifelse(
+      !is.na(rec$line_width),
+      paste0(rec$lin, sprintf(", %sem", rec$line_width)),
+      rec$lin
     )
     rec$lin[is.na(rec$line)] <- NA
 
     # horizontal lines
-    horizontal <- rec[grepl("b|t", rec$line), c("i", "j", "lin", "line"), drop = FALSE]
+    horizontal <- rec[
+      grepl("b|t", rec$line),
+      c("i", "j", "lin", "line"),
+      drop = FALSE
+    ]
     horizontal <- rbind(
       horizontal[grepl("t", horizontal$line), , drop = FALSE],
-      transform(horizontal[grepl("b", horizontal$line), , drop = FALSE], i = i + 1)
+      transform(
+        horizontal[grepl("b", horizontal$line), , drop = FALSE],
+        i = i + 1
+      )
     )
     spec <- by(horizontal, list(horizontal$i, horizontal$lin), function(k) {
       jval <- paste(sort(unique(k$j)), collapse = ",")
@@ -217,11 +275,19 @@ setMethod(
     })
     spec <- unique(as.vector(unlist(spec)))
     for (s in spec) {
-      x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
+      x@table_string <- tabularray_insert(
+        x@table_string,
+        content = s,
+        type = "inner"
+      )
     }
 
     # vertical lines
-    vertical <- rec[grepl("l|r", rec$line), c("i", "j", "lin", "line"), drop = FALSE]
+    vertical <- rec[
+      grepl("l|r", rec$line),
+      c("i", "j", "lin", "line"),
+      drop = FALSE
+    ]
     vertical <- rbind(
       vertical[grepl("l", vertical$line), , drop = FALSE],
       transform(vertical[grepl("r", vertical$line), , drop = FALSE], j = j + 1)
@@ -232,29 +298,39 @@ setMethod(
     })
     spec <- unique(as.vector(unlist(spec)))
     for (s in spec) {
-      x@table_string <- tabularray_insert(x@table_string, content = s, type = "inner")
+      x@table_string <- tabularray_insert(
+        x@table_string,
+        content = s,
+        type = "inner"
+      )
     }
 
     for (spec in unique(stats::na.omit(sty$tabularray_inner))) {
-      x@table_string <- tabularray_insert(x@table_string, content = spec, type = "inner")
+      x@table_string <- tabularray_insert(
+        x@table_string,
+        content = spec,
+        type = "inner"
+      )
     }
 
     for (spec in unique(stats::na.omit(sty$tabularray_outer))) {
-      x@table_string <- tabularray_insert(x@table_string, content = spec, type = "outer")
+      x@table_string <- tabularray_insert(
+        x@table_string,
+        content = spec,
+        type = "outer"
+      )
     }
-
 
     return(x)
   }
 )
 
-
-
 tabularray_insert <- function(x, content = NULL, type = "body") {
   out <- x
 
   out <- strsplit(out, "\n")[[1]]
-  comment <- switch(type,
+  comment <- switch(
+    type,
     "body" = "% tabularray inner close",
     "outer" = "% tabularray outer close",
     "inner" = "% tabularray inner close"
@@ -278,23 +354,32 @@ tabularray_insert <- function(x, content = NULL, type = "body") {
   return(out)
 }
 
-
 color_to_preamble <- function(x, col) {
-  if (grepl("^#", col)) { # hex color need to be defined in LaTeX
+  if (grepl("^#", col)) {
+    # hex color need to be defined in LaTeX
     col <- sub("^#", "c", col)
     regex <- sprintf("DefineColor.*%s", col)
     if (!grepl(regex, x@table_string)) {
-      b <- sprintf("\\tinytableDefineColor{%s}{HTML}{%s}", col, sub("^c", "", col))
-      x@table_string <- tabularray_insert(x@table_string, content = b, type = "body")
+      b <- sprintf(
+        "\\tinytableDefineColor{%s}{HTML}{%s}",
+        col,
+        sub("^c", "", col)
+      )
+      x@table_string <- tabularray_insert(
+        x@table_string,
+        content = b,
+        type = "body"
+      )
     }
   }
   return(x)
 }
 
-
-
 get_dcolumn <- function(j, x) {
-  siunitx <- get_option("tinytable_siunitx_table_format", default = "table-format=-%s.%s,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\\*+()}")
+  siunitx <- get_option(
+    "tinytable_siunitx_table_format",
+    default = "table-format=-%s.%s,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\\*+()}"
+  )
   num <- unlist(x@table_dataframe[, j])
 
   # empty cells
@@ -312,7 +397,6 @@ get_dcolumn <- function(j, x) {
   out <- sprintf("si={%s},", out)
   return(out)
 }
-
 
 ## not longer used, but took a while to collect and might be useful in the future
 # out <- list(

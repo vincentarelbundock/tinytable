@@ -45,8 +45,6 @@ setMethod(
   }
 )
 
-
-
 replace_char_at_position <- function(input_string, position, replacement_char) {
   before <- substr(input_string, 1, position - 1)
   after <- substr(input_string, position + 1, nchar(input_string))

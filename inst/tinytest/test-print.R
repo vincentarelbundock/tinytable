@@ -19,4 +19,3 @@ expect_equivalent(x@output, "typst")
 # options("tinytable_print_output" = "html")
 # void <- capture.output(x <- print(tab))
 # expect_equivalent(x@output, "html")
-

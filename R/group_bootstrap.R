@@ -17,7 +17,6 @@ setMethod(
   }
 )
 
-
 group_bootstrap_col <- function(x, j, ihead, ...) {
   out <- x@table_string
 
@@ -34,7 +33,8 @@ group_bootstrap_col <- function(x, j, ihead, ...) {
   jstring <- lapply(names(j), function(n) {
     sprintf(
       '<th scope="col" align="center" colspan=%s>%s</th>',
-      max(j[[n]]) - min(j[[n]]) + 1, n
+      max(j[[n]]) - min(j[[n]]) + 1,
+      n
     )
   })
   jstring <- paste(unlist(jstring), collapse = "\n")
@@ -52,11 +52,17 @@ group_bootstrap_col <- function(x, j, ihead, ...) {
   # midrule on numbered spans (not full columns of body)
   jnames <- names(j)
   jnames <- seq_along(jnames)[trimws(jnames) != ""]
-  x <- style_tt(x, i = ihead, j = jnames, line = "b", line_width = 0.05, line_color = "#d3d8dc")
+  x <- style_tt(
+    x,
+    i = ihead,
+    j = jnames,
+    line = "b",
+    line_width = 0.05,
+    line_color = "#d3d8dc"
+  )
 
   return(x)
 }
-
 
 group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
   label <- names(i)

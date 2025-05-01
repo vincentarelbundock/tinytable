@@ -8,7 +8,6 @@ if (isTRUE(requiet("marginaleffects"))) {
   expect_true(all(c("term", "estimate", "std.error") %in% colnames(k)))
 }
 
-
 # Issue #264: Row names global option
 options(tinytable_tt_rownames = TRUE)
 x <- mtcars[1:4, 1:4]

@@ -6,30 +6,36 @@
 setMethod(
   f = "style_eval",
   signature = "tinytable_typst",
-  definition = function(x,
-                        i = NULL,
-                        j = NULL,
-                        bold = FALSE,
-                        italic = FALSE,
-                        monospace = FALSE,
-                        underline = FALSE,
-                        strikeout = FALSE,
-                        color = NULL,
-                        background = NULL,
-                        fontsize = NULL,
-                        align = NULL,
-                        line = NULL,
-                        line_color = "black",
-                        line_width = 0.1,
-                        colspan = NULL,
-                        indent = 0,
-                        midrule = FALSE, # undocumented, only used by `group_tt()`
-                        ...) {
+  definition = function(
+    x,
+    i = NULL,
+    j = NULL,
+    bold = FALSE,
+    italic = FALSE,
+    monospace = FALSE,
+    underline = FALSE,
+    strikeout = FALSE,
+    color = NULL,
+    background = NULL,
+    fontsize = NULL,
+    align = NULL,
+    line = NULL,
+    line_color = "black",
+    line_width = 0.1,
+    colspan = NULL,
+    indent = 0,
+    midrule = FALSE, # undocumented, only used by `group_tt()`
+    ...
+  ) {
     sty <- x@style
 
     # gutters are used for group_tt(j) but look ugly with cell fill
     if (!all(is.na(sty$background))) {
-      x@table_string <- lines_drop(x@table_string, "column-gutter:", fixed = TRUE)
+      x@table_string <- lines_drop(
+        x@table_string,
+        "column-gutter:",
+        fixed = TRUE
+      )
     }
 
     sty$align[which(sty$align == "l")] <- "left"
@@ -50,10 +56,7 @@ setMethod(
     insert_field <- function(x, name = "bold", value = "true") {
       old <- sprintf("%s: [^,]*,", name)
       new <- sprintf("%s: %s,", name, value)
-      out <- ifelse(grepl(old, x),
-        sub(old, new, x),
-        sprintf("%s, %s", x, new)
-      )
+      out <- ifelse(grepl(old, x), sub(old, new, x), sprintf("%s, %s", x, new))
       return(out)
     }
 
@@ -63,12 +66,18 @@ setMethod(
       idx_j <- sty$j[row]
       if (is.na(idx_j)) idx_j <- unique(rec$j)
       idx <- rec$i == idx_i & rec$j == idx_j
-      if (isTRUE(sty[row, "bold"])) css[idx] <- insert_field(css[idx], "bold", "true")
-      if (isTRUE(sty[row, "italic"])) css[idx] <- insert_field(css[idx], "italic", "true")
-      if (isTRUE(sty[row, "underline"])) css[idx] <- insert_field(css[idx], "underline", "true")
-      if (isTRUE(sty[row, "strikeout"])) css[idx] <- insert_field(css[idx], "strikeout", "true")
-      if (isTRUE(sty[row, "monospace"])) css[idx] <- insert_field(css[idx], "monospace", "true")
-      if (!is.na(sty[row, "align"])) css[idx] <- insert_field(css[idx], "align", sty[row, "align"])
+      if (isTRUE(sty[row, "bold"]))
+        css[idx] <- insert_field(css[idx], "bold", "true")
+      if (isTRUE(sty[row, "italic"]))
+        css[idx] <- insert_field(css[idx], "italic", "true")
+      if (isTRUE(sty[row, "underline"]))
+        css[idx] <- insert_field(css[idx], "underline", "true")
+      if (isTRUE(sty[row, "strikeout"]))
+        css[idx] <- insert_field(css[idx], "strikeout", "true")
+      if (isTRUE(sty[row, "monospace"]))
+        css[idx] <- insert_field(css[idx], "monospace", "true")
+      if (!is.na(sty[row, "align"]))
+        css[idx] <- insert_field(css[idx], "align", sty[row, "align"])
 
       fs <- sty[row, "indent"]
       if (!is.na(fs)) {
@@ -103,12 +112,20 @@ setMethod(
     # Unique style arrays
     uni <- split(rec, rec$css)
 
-    pairs <- sapply(uni, function(x) paste(sprintf("(%s, %s),", x$j, x$i), collapse = " "))
+    pairs <- sapply(
+      uni,
+      function(x) paste(sprintf("(%s, %s),", x$j, x$i), collapse = " ")
+    )
     styles <- sapply(uni, function(x) x$css[1])
     styles <- sprintf("(pairs: (%s), %s),", pairs, styles)
 
     for (s in styles) {
-      x@table_string <- lines_insert(x@table_string, s, "tinytable cell style after", "after")
+      x@table_string <- lines_insert(
+        x@table_string,
+        s,
+        "tinytable cell style after",
+        "after"
+      )
     }
 
     lin <- sty[grepl("b|t", sty$line), , drop = FALSE]
@@ -117,7 +134,12 @@ setMethod(
       lin <- Filter(function(x) nrow(x) > 0, lin)
       lin <- lapply(lin, hlines)
       for (l in lin) {
-        x@table_string <- lines_insert(x@table_string, l, "tinytable lines before", "before")
+        x@table_string <- lines_insert(
+          x@table_string,
+          l,
+          "tinytable lines before",
+          "before"
+        )
       }
     }
 
@@ -127,14 +149,18 @@ setMethod(
       lin <- Filter(function(x) nrow(x) > 0, lin)
       lin <- lapply(lin, vlines)
       for (l in lin) {
-        x@table_string <- lines_insert(x@table_string, l, "tinytable lines before", "before")
+        x@table_string <- lines_insert(
+          x@table_string,
+          l,
+          "tinytable lines before",
+          "before"
+        )
       }
     }
 
     return(x)
   }
 )
-
 
 split_chunks <- function(x) {
   x <- sort(x)
@@ -148,7 +174,6 @@ split_chunks <- function(x) {
   out$max <- out$max + 1
   return(out)
 }
-
 
 hlines <- function(k) {
   xmin <- split_chunks(k$j)$min
@@ -173,8 +198,6 @@ hlines <- function(k) {
   }
   return(out)
 }
-
-
 
 vlines <- function(k) {
   ymin <- split_chunks(k$i)$min

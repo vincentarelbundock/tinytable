@@ -1,8 +1,6 @@
 source("helpers.R")
 using("tinysnapshot")
 
-
-
 # Bug: \begin{table}[H][H]
 options(tinytable_theme_placement_latex_float = "H")
 x <- mtcars[1:4, 1:4]
@@ -18,12 +16,15 @@ k <- data.frame(X = 1) |>
   save_tt("latex")
 expect_inherits(k, "character")
 
-
 # Issue ##439: function theme breaks HTML
 theme_mitex <- function(x, ...) {
   fn <- function(table) {
     if (isTRUE(table@output == "typst")) {
-      table@table_string <- gsub("\\$(.*?)\\$", "#mitex(`\\1`)", table@table_string)
+      table@table_string <- gsub(
+        "\\$(.*?)\\$",
+        "#mitex(`\\1`)",
+        table@table_string
+      )
     }
     return(table)
   }

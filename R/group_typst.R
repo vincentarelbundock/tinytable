@@ -19,7 +19,6 @@ setMethod(
   }
 )
 
-
 group_typst_row <- function(x, i, indent, ...) {
   tab <- x@table_string
   tab <- strsplit(tab, split = "\\n")[[1]]
@@ -30,7 +29,8 @@ group_typst_row <- function(x, i, indent, ...) {
   mid <- mid[mid != ""]
   bot <- tab[(body_max + 1):length(tab)]
   for (idx in rev(seq_along(i))) {
-    mid <- append(mid,
+    mid <- append(
+      mid,
       sprintf("table.cell(colspan: %s)[%s],", ncol(x), names(i)[idx]),
       after = i[idx] - 1
     )
@@ -43,7 +43,6 @@ group_typst_row <- function(x, i, indent, ...) {
   idx <- setdiff(idx_all, idx_new)
   return(x)
 }
-
 
 group_typst_col <- function(x, j, ihead, ...) {
   out <- x@table_string
@@ -58,12 +57,21 @@ group_typst_col <- function(x, j, ihead, ...) {
   col <- ifelse(
     trimws(lab) == "",
     sprintf("[%s],", lab),
-    sprintf("table.cell(stroke: (bottom: .05em + black), colspan: %s, align: center)[%s],", len, lab)
+    sprintf(
+      "table.cell(stroke: (bottom: .05em + black), colspan: %s, align: center)[%s],",
+      len,
+      lab
+    )
   )
   col <- paste(col, collapse = "")
   out <- lines_insert(out, col, "repeat: true", "after")
   if (!any(grepl("column-gutter", out))) {
-    out <- lines_insert(out, "    column-gutter: 5pt,", "// tinytable table start", "after")
+    out <- lines_insert(
+      out,
+      "    column-gutter: 5pt,",
+      "// tinytable table start",
+      "after"
+    )
   }
 
   x@table_string <- out

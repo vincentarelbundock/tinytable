@@ -1,10 +1,15 @@
-theme_resize <- function(x,
-                         width = get_option("tinytable_theme_resize_width", 1),
-                         direction = get_option("tinytable_theme_resize_direction", "down"),
-                         ...) {
+theme_resize <- function(
+  x,
+  width = get_option("tinytable_theme_resize_width", 1),
+  direction = get_option("tinytable_theme_resize_direction", "down"),
+  ...
+) {
   fn <- theme_placement_factory(
     horizontal = get_option("tinytable_theme_default_horizontal", "c"),
-    latex_float = get_option("tinytable_theme_placement_latex_float", default = NULL)
+    latex_float = get_option(
+      "tinytable_theme_placement_latex_float",
+      default = NULL
+    )
   )
   x <- style_tt(x, finalize = fn)
 
@@ -22,9 +27,15 @@ theme_resize <- function(x,
     if (direction == "both") {
       new <- sprintf("\\resizebox{%s\\linewidth}{!}{", width)
     } else if (direction == "down") {
-      new <- sprintf("\\resizebox{\\ifdim\\width>\\linewidth %s\\linewidth\\else\\width\\fi}{!}{", width)
+      new <- sprintf(
+        "\\resizebox{\\ifdim\\width>\\linewidth %s\\linewidth\\else\\width\\fi}{!}{",
+        width
+      )
     } else if (direction == "up") {
-      new <- sprintf("\\resizebox{\\ifdim\\width<\\linewidth %s\\linewidth\\else\\width\\fi}{!}{", width)
+      new <- sprintf(
+        "\\resizebox{\\ifdim\\width<\\linewidth %s\\linewidth\\else\\width\\fi}{!}{",
+        width
+      )
     }
 
     reg <- "\\\\begin\\{tblr\\}|\\\\begin\\{talltblr\\}"

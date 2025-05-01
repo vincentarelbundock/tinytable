@@ -54,9 +54,6 @@ escape_text <- function(x, output = "latex") {
   return(out)
 }
 
-
-
-
 # function copied from `htmltools` under GPL3 license on 2024-02-07
 # https://cran.r-project.org/web/packages/htmltools/index.html
 htmlEscape <- local({
@@ -73,7 +70,10 @@ htmlEscape <- local({
     `\r` = "&#13;",
     `\n` = "&#10;"
   )
-  .htmlSpecialsPatternAttrib <- paste(names(.htmlSpecialsAttrib), collapse = "|")
+  .htmlSpecialsPatternAttrib <- paste(
+    names(.htmlSpecialsAttrib),
+    collapse = "|"
+  )
 
   function(text, attribute = FALSE) {
     pattern <- if (attribute) {

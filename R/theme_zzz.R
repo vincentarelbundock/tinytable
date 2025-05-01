@@ -13,8 +13,6 @@ theme_dictionary <- list(
   "void" = theme_void
 )
 
-
-
 #' Themes for `tinytable`
 #'
 #' @description

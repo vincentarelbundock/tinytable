@@ -18,7 +18,6 @@ last_style_vec <- function(x) {
   return(x)
 }
 
-
 last_style <- function(sty) {
   sty <- split(sty, list(sty$i, sty$j))
   sty <- lapply(sty, function(k) lapply(k, last_style_vec))

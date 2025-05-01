@@ -7,7 +7,6 @@ setMethod(
   definition = style_eval_grid
 )
 
-
 #' tinytable S4 method
 #'
 #' @keywords internal
@@ -16,7 +15,6 @@ setMethod(
   signature = "tinytable_dataframe",
   definition = identity
 )
-
 
 #' tinytable S4 method
 #'

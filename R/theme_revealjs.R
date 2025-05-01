@@ -1,7 +1,11 @@
 theme_revealjs <- function(
-    x,
-    fontsize = get_option("tinytable_theme_revealjs_fontsize", default = 0.8),
-    fontsize_caption = get_option("tinytable_theme_revealjs_fontsize_caption", default = 1)) {
+  x,
+  fontsize = get_option("tinytable_theme_revealjs_fontsize", default = 0.8),
+  fontsize_caption = get_option(
+    "tinytable_theme_revealjs_fontsize_caption",
+    default = 1
+  )
+) {
   css <- "
 // tables
 

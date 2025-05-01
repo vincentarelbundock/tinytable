@@ -11,7 +11,10 @@ record_print.tinytable = function(x, ...) {
   }
 
   if (!isTRUE(fmt %in% c("latex", "markdown", "html"))) {
-    stop("tinytable in litedown only supports latex, markdown, or html output", call. = FALSE)
+    stop(
+      "tinytable in litedown only supports latex, markdown, or html output",
+      call. = FALSE
+    )
   }
 
   x <- build_tt(x, output = fmt)
@@ -21,16 +24,17 @@ record_print.tinytable = function(x, ...) {
   return(out)
 }
 
-
 #' Print a tinytable object in knitr
 #'
 #' @keywords internal
 #' @return A string with class `knit_asis` to be printed in Rmarkdown or Quarto documents.
 #' @rawNamespace S3method(knitr::knit_print, tinytable)
 #' @export
-knit_print.tinytable <- function(x,
-                                 output = get_option("tinytable_print_output", default = NULL),
-                                 ...) {
+knit_print.tinytable <- function(
+  x,
+  output = get_option("tinytable_print_output", default = NULL),
+  ...
+) {
   # lazy styles get evaluated here, at the very end
   x <- build_tt(x, output = output)
   out <- x@table_string
@@ -75,9 +79,11 @@ knit_print.tinytable <- function(x,
 #' @param ... Other arguments are ignored.
 #' @return launch a browser window or cat() the table to console.
 #' @export
-print.tinytable <- function(x,
-                            output = get_option("tinytable_print_output", default = NULL),
-                            ...) {
+print.tinytable <- function(
+  x,
+  output = get_option("tinytable_print_output", default = NULL),
+  ...
+) {
   if (is.null(output)) {
     output <- sanitize_output(x@output)
   } else {
@@ -93,7 +99,6 @@ print.tinytable <- function(x,
   x <- build_tt(x, output = output)
 
   tab <- x@table_string
-
 
   # lazy styles get evaluated here by build_tt(), at the very end
   if (output %in% c("latex", "typst", "markdown", "gfm")) {
@@ -131,11 +136,12 @@ print.tinytable <- function(x,
   return(invisible(x))
 }
 
-
 setMethod("show", "tinytable", function(object) {
-  print.tinytable(object, output = get_option("tinytable_print_output", default = NULL))
+  print.tinytable(
+    object,
+    output = get_option("tinytable_print_output", default = NULL)
+  )
 })
-
 
 # adapted from {htmltools} under GPL3
 htmltools_browsable <- function(x) {

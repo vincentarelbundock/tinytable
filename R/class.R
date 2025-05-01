@@ -61,7 +61,10 @@ setClass(
 #'
 #' @inheritParams tt
 #' @keywords internal
-setMethod("initialize", "tinytable", function(
+setMethod(
+  "initialize",
+  "tinytable",
+  function(
     .Object,
     data = data.frame(),
     table = data.frame(),
@@ -69,32 +72,35 @@ setMethod("initialize", "tinytable", function(
     notes = NULL,
     theme = list("default"),
     placement = NULL,
-    width = NULL) {
-  # explicit
-  .Object@data <- data
-  .Object@table_dataframe <- table
-  .Object@theme <- theme
-  # dynamic
-  .Object@nrow <- nrow(.Object@data)
-  .Object@ncol <- ncol(.Object@data)
-  .Object@nhead <- if (is.null(colnames(data))) 0 else 1
-  .Object@group_n_i <- 0
-  .Object@group_n_j <- 0
-  .Object@names <- if (is.null(colnames(data))) character() else colnames(data)
-  .Object@id <- get_id("tinytable_")
-  .Object@output <- "tinytable"
-  .Object@output_dir <- getwd()
-  .Object@css <- data.frame(i = NA, j = NA, bootstrap = NA, id = NA)
-  .Object@portable <- FALSE
-  .Object@style <- data.frame()
-  .Object@lazy_theme <- list()
-  # conditional: allows NULL user input
-  if (!is.null(placement)) .Object@placement <- placement
-  if (!is.null(caption)) .Object@caption <- caption
-  if (!is.null(width)) .Object@width <- width
-  if (!is.null(notes)) .Object@notes <- notes
-  return(.Object)
-})
+    width = NULL
+  ) {
+    # explicit
+    .Object@data <- data
+    .Object@table_dataframe <- table
+    .Object@theme <- theme
+    # dynamic
+    .Object@nrow <- nrow(.Object@data)
+    .Object@ncol <- ncol(.Object@data)
+    .Object@nhead <- if (is.null(colnames(data))) 0 else 1
+    .Object@group_n_i <- 0
+    .Object@group_n_j <- 0
+    .Object@names <- if (is.null(colnames(data))) character() else
+      colnames(data)
+    .Object@id <- get_id("tinytable_")
+    .Object@output <- "tinytable"
+    .Object@output_dir <- getwd()
+    .Object@css <- data.frame(i = NA, j = NA, bootstrap = NA, id = NA)
+    .Object@portable <- FALSE
+    .Object@style <- data.frame()
+    .Object@lazy_theme <- list()
+    # conditional: allows NULL user input
+    if (!is.null(placement)) .Object@placement <- placement
+    if (!is.null(caption)) .Object@caption <- caption
+    if (!is.null(width)) .Object@width <- width
+    if (!is.null(notes)) .Object@notes <- notes
+    return(.Object)
+  }
+)
 
 #' Method for a tinytable S4 object
 #'
@@ -135,7 +141,8 @@ setMethod("names", "tinytable", function(x) {
 #' @inheritParams tt
 #' @keywords internal
 #' @export
-setReplaceMethod("colnames",
+setReplaceMethod(
+  "colnames",
   signature = "tinytable",
   definition = function(x, value) {
     # Issue #306
@@ -147,14 +154,16 @@ setReplaceMethod("colnames",
     }
     x@names <- value
     return(x)
-  })
+  }
+)
 
 #' Method for a tinytable S4 object
 #'
 #' @inheritParams tt
 #' @keywords internal
 #' @export
-setReplaceMethod("names",
+setReplaceMethod(
+  "names",
   signature = "tinytable",
   definition = function(x, value) {
     # Issue #306
@@ -166,7 +175,8 @@ setReplaceMethod("names",
     }
     x@names <- value
     return(x)
-  })
+  }
+)
 
 #' Dimensions a tinytable S4 object
 #'
@@ -191,7 +201,6 @@ setMethod("names", "tinytable", function(x) {
 setMethod("as.character", "tinytable", function(x) {
   out <- save_tt(x, x@output)
 })
-
 
 setClass("tinytable_tabularray", contains = "tinytable")
 setClass("tinytable_bootstrap", contains = "tinytable")

@@ -31,7 +31,6 @@ ttempdir <- function() {
   return(d)
 }
 
-
 lines_drop_consecutive_empty <- function(x) {
   lines <- strsplit(x, "\n")[[1]]
   tmp <- rle(lines)
@@ -41,13 +40,21 @@ lines_drop_consecutive_empty <- function(x) {
   return(x)
 }
 
-
-lines_drop <- function(old, regex, position = "equal", fixed = FALSE, unique = TRUE) {
+lines_drop <- function(
+  old,
+  regex,
+  position = "equal",
+  fixed = FALSE,
+  unique = TRUE
+) {
   assert_choice(position, c("equal", "before", "after", "all"))
   lines <- strsplit(old, "\n")[[1]]
   idx <- grep(regex, lines, fixed = fixed)
   if (isTRUE(unique) && length(idx) > 1 && position != "all") {
-    stop("The `regex` supplied `lines_drop()` did not match a unique line.", call. = FALSE)
+    stop(
+      "The `regex` supplied `lines_drop()` did not match a unique line.",
+      call. = FALSE
+    )
   }
   if (!anyNA(idx)) {
     if (position == "equal") {
@@ -63,7 +70,6 @@ lines_drop <- function(old, regex, position = "equal", fixed = FALSE, unique = T
   out <- paste(lines, collapse = "\n")
   return(out)
 }
-
 
 lines_drop_between <- function(text, regex_start, regex_end, fixed = FALSE) {
   lines <- strsplit(text, "\n")[[1]]
@@ -84,12 +90,14 @@ lines_drop_between <- function(text, regex_start, regex_end, fixed = FALSE) {
   return(out)
 }
 
-
 lines_insert <- function(old, new, regex, position = "before") {
   lines <- strsplit(old, "\n")[[1]]
   idx <- grep(regex, lines)
   if (length(idx) != 1 || anyNA(idx)) {
-    stop("The `regex` supplied `lines_insert()` did not match a unique line.", call. = FALSE)
+    stop(
+      "The `regex` supplied `lines_insert()` did not match a unique line.",
+      call. = FALSE
+    )
   }
   if (position == "before") {
     top <- lines[1:(idx - 1)]

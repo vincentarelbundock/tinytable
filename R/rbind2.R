@@ -44,12 +44,10 @@
 #'
 #' @importFrom methods rbind2
 #' @export
-setMethod("rbind2",
+setMethod(
+  "rbind2",
   signature = signature(x = "tinytable", y = "tinytable"),
-  definition = function(x, y,
-                        use_names = TRUE,
-                        headers = TRUE,
-                        ...) {
+  definition = function(x, y, use_names = TRUE, headers = TRUE, ...) {
     assert_class(x, "tinytable")
     assert_class(y, "tinytable")
     assert_dependency("data.table")
@@ -63,7 +61,8 @@ setMethod("rbind2",
       y_df <- base::rbind(colnames(y_df), y_df)
     }
 
-    out <- data.table::rbindlist(list(x_df, y_df),
+    out <- data.table::rbindlist(
+      list(x_df, y_df),
       fill = TRUE,
       use.names = use_names
     )

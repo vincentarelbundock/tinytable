@@ -5,7 +5,6 @@ grid_line <- function(width_cols, char = "-") {
   return(line_sep)
 }
 
-
 tt_eval_grid <- function(x, width_cols = NULL, ...) {
   is_matrix <- is.matrix(x)
   if (is_matrix) {
@@ -49,7 +48,8 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
         g_len <- nchar(names(g$j)[idx]) + 2
         c_len <- sum(width_cols[g$j[[idx]]])
         if (g_len > c_len) {
-          width_cols[g$j[[idx]]] <- width_cols[g$j[[idx]]] + ceiling((g_len - c_len) / length(g$j[[idx]]))
+          width_cols[g$j[[idx]]] <- width_cols[g$j[[idx]]] +
+            ceiling((g_len - c_len) / length(g$j[[idx]]))
         }
       }
     }
@@ -66,14 +66,21 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
     tab[, j] <- paste0(tab[, j], pad)
   }
 
-
   rule_head <- grid_line(width_cols, "=")
   rule_line <- grid_line(width_cols, "-")
 
   body <- apply(tab, 1, paste, collapse = "|")
   body <- paste0("|", body, "|")
   if (header) {
-    tab <- c("\n", rule_line, body[1], rule_head, body[2:length(body)], rule_line, "\n")
+    tab <- c(
+      "\n",
+      rule_line,
+      body[1],
+      rule_head,
+      body[2:length(body)],
+      rule_line,
+      "\n"
+    )
   } else {
     tab <- c("\n", rule_line, body, rule_line, "\n")
   }
@@ -91,7 +98,6 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
   # output
   return(x)
 }
-
 
 empty_cells <- function(lst) {
   # Find the largest number in the list
@@ -118,9 +124,6 @@ empty_cells <- function(lst) {
   filled_list[order(sapply(filled_list, min))]
 }
 
-
-
-
 # insert horizontal rules everywhere (important for word)
 grid_hlines <- function(x) {
   rule_line <- grid_line(x@width_cols, "-")
@@ -128,15 +131,22 @@ grid_hlines <- function(x) {
   lines <- strsplit(out, split = "\\n")[[1]]
   if (length(lines) > 1) {
     for (idlines in length(lines):2) {
-      if (!startsWith(lines[idlines - 1], "+") && !startsWith(lines[idlines], "+") && lines[idlines] != "") {
-        lines <- c(lines[1:(idlines - 1)], rule_line, lines[idlines:length(lines)])
+      if (
+        !startsWith(lines[idlines - 1], "+") &&
+          !startsWith(lines[idlines], "+") &&
+          lines[idlines] != ""
+      ) {
+        lines <- c(
+          lines[1:(idlines - 1)],
+          rule_line,
+          lines[idlines:length(lines)]
+        )
       }
     }
   }
   x@table_string <- paste(lines, collapse = "\n")
   return(x)
 }
-
 
 setMethod(
   f = "tt_eval",

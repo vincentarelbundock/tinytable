@@ -13,7 +13,12 @@ style_eval_grid <- function(x) {
   # expand i to full rows
   if (any(is.na(sty$i))) {
     alli <- data.frame(i = seq_len(nrow(x)))
-    alli <- merge(alli, sty[is.na(sty$i), colnames(sty) != "i"], all = TRUE, sort = FALSE)
+    alli <- merge(
+      alli,
+      sty[is.na(sty$i), colnames(sty) != "i"],
+      all = TRUE,
+      sort = FALSE
+    )
     sty <- rbind(sty, alli)
     sty <- sty[!is.na(sty$i), ]
     sty <- sty[order(sty$i, sty$j), ]
@@ -28,9 +33,12 @@ style_eval_grid <- function(x) {
     }
     return(utils::tail(stats::na.omit(k), 1))
   }
-  sty <- do.call(rbind, by(sty, list(sty$i, sty$j), function(k) {
-    data.frame(lapply(k, last))
-  }))
+  sty <- do.call(
+    rbind,
+    by(sty, list(sty$i, sty$j), function(k) {
+      data.frame(lapply(k, last))
+    })
+  )
 
   # TODO: style groups
   sty <- sty[which(!sty$i %in% idx_g), ]
@@ -84,9 +92,6 @@ style_eval_grid <- function(x) {
   x@table_dataframe <- out
   return(x)
 }
-
-
-
 
 #' tinytable S4 method
 #'

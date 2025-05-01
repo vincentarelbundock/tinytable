@@ -16,14 +16,21 @@ setMethod(
 
     if (isTRUE(getOption("knitr.in.progress"))) {
       # Rmarkdown and Quarto load their own bootstrap, which we probably don't want to override
-      out <- lines_drop(out, "jsdelivr.*bootstrap", fixed = FALSE, unique = FALSE)
+      out <- lines_drop(
+        out,
+        "jsdelivr.*bootstrap",
+        fixed = FALSE,
+        unique = FALSE
+      )
       # avoid nesting full HTML page inside an HTML page
-      out <- lines_drop_between(out,
+      out <- lines_drop_between(
+        out,
         regex_start = "<!-- preamble start -->",
         regex_end = "<!-- preamble end -->",
         fixed = TRUE
       )
-      out <- lines_drop_between(out,
+      out <- lines_drop_between(
+        out,
         regex_start = "<!-- postamble start -->",
         regex_end = "<!-- postamble end -->",
         fixed = TRUE
@@ -33,7 +40,6 @@ setMethod(
     # Changing function names to table ID to avoid conflict with other tables functions
     out <- gsub("styleCell_\\w+\\(", paste0("styleCell_", x@id, "("), out)
     out <- gsub("spanCell_\\w+\\(", paste0("spanCell_", x@id, "("), out)
-
 
     css_template <- "    .table td.%s, .table th.%s { %s }"
 
@@ -47,10 +53,17 @@ setMethod(
       css_rules <- Filter(function(z) nrow(z) > 0, css_rules)
       css_rules <- lapply(css_rules, function(z) z[rev(seq_len(nrow(z))), ])
       css_rules <- lapply(css_rules, unique)
-      css_rules <- lapply(css_rules, function(z) transform(z, bootstrap = paste(bootstrap, collapse = " "))[1, ])
+      css_rules <- lapply(
+        css_rules,
+        function(z)
+          transform(z, bootstrap = paste(bootstrap, collapse = " "))[1, ]
+      )
       css_rules <- do.call(rbind, css_rules)
       id <- unique(css_rules[, "bootstrap", drop = FALSE])
-      id$id <- sapply(seq_len(nrow(id)), function(z) sprintf("tinytable_css_%s", get_id()))
+      id$id <- sapply(
+        seq_len(nrow(id)),
+        function(z) sprintf("tinytable_css_%s", get_id())
+      )
       css_rules <- merge(css_rules, id, sort = FALSE)
       css_rules <- css_rules[order(css_rules$i, css_rules$j), ]
 
@@ -83,4 +96,5 @@ setMethod(
     }
 
     return(x)
-  })
+  }
+)

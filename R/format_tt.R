@@ -75,27 +75,35 @@
 #' )
 #' tt(dat) |> format_tt(escape = TRUE)
 #'
-format_tt <- function(x,
-                      i = NULL,
-                      j = NULL,
-                      digits = get_option("tinytable_format_digits", default = NULL),
-                      num_fmt = get_option("tinytable_format_num_fmt", default = "significant"),
-                      num_zero = get_option("tinytable_format_num_zero", default = FALSE),
-                      num_suffix = get_option("tinytable_format_num_suffix", default = FALSE),
-                      num_mark_big = get_option("tinytable_format_num_mark_big", default = ""),
-                      num_mark_dec = get_option("tinytable_format_num_mark_dec", default = getOption("OutDec", default = ".")),
-                      date = get_option("tinytable_format_date", default = NULL),
-                      bool = get_option("tinytable_format_bool", default = NULL),
-                      math = get_option("tinytable_format_math", default = FALSE),
-                      other = get_option("tinytable_format_other", default = NULL),
-                      replace = get_option("tinytable_format_replace", default = FALSE),
-                      escape = get_option("tinytable_format_escape", default = FALSE),
-                      markdown = get_option("tinytable_format_markdown", default = FALSE),
-                      quarto = get_option("tinytable_format_quarto", default = FALSE),
-                      fn = get_option("tinytable_format_fn", default = NULL),
-                      sprintf = get_option("tinytable_format_sprintf", default = NULL)) {
+format_tt <- function(
+  x,
+  i = NULL,
+  j = NULL,
+  digits = get_option("tinytable_format_digits", default = NULL),
+  num_fmt = get_option("tinytable_format_num_fmt", default = "significant"),
+  num_zero = get_option("tinytable_format_num_zero", default = FALSE),
+  num_suffix = get_option("tinytable_format_num_suffix", default = FALSE),
+  num_mark_big = get_option("tinytable_format_num_mark_big", default = ""),
+  num_mark_dec = get_option(
+    "tinytable_format_num_mark_dec",
+    default = getOption("OutDec", default = ".")
+  ),
+  date = get_option("tinytable_format_date", default = NULL),
+  bool = get_option("tinytable_format_bool", default = NULL),
+  math = get_option("tinytable_format_math", default = FALSE),
+  other = get_option("tinytable_format_other", default = NULL),
+  replace = get_option("tinytable_format_replace", default = FALSE),
+  escape = get_option("tinytable_format_escape", default = FALSE),
+  markdown = get_option("tinytable_format_markdown", default = FALSE),
+  quarto = get_option("tinytable_format_quarto", default = FALSE),
+  fn = get_option("tinytable_format_fn", default = NULL),
+  sprintf = get_option("tinytable_format_sprintf", default = NULL)
+) {
   assert_integerish(digits, len = 1, null.ok = TRUE)
-  assert_choice(num_fmt, c("significant", "significant_cell", "decimal", "scientific"))
+  assert_choice(
+    num_fmt,
+    c("significant", "significant_cell", "decimal", "scientific")
+  )
   assert_flag(num_zero)
   assert_string(num_mark_big)
   assert_string(num_mark_dec)
@@ -113,7 +121,8 @@ format_tt <- function(x,
   out <- x
 
   if (inherits(out, "tinytable")) {
-    cal <- call("format_tt_lazy",
+    cal <- call(
+      "format_tt_lazy",
       i = i,
       j = j,
       digits = digits,
@@ -138,7 +147,8 @@ format_tt <- function(x,
     )
     out@lazy_format <- c(out@lazy_format, list(cal))
   } else {
-    out <- format_tt_lazy(out,
+    out <- format_tt_lazy(
+      out,
       i = i,
       j = j,
       digits = digits,
@@ -166,30 +176,30 @@ format_tt <- function(x,
   return(out)
 }
 
-format_tt_lazy <- function(x,
-                           i,
-                           j,
-                           digits,
-                           num_fmt,
-                           num_zero,
-                           num_suffix,
-                           num_mark_big,
-                           num_mark_dec,
-                           replace,
-                           fn,
-                           sprintf,
-                           url,
-                           date,
-                           bool,
-                           math,
-                           escape,
-                           markdown,
-                           quarto,
-                           other,
-                           inull,
-                           jnull) {
-
-
+format_tt_lazy <- function(
+  x,
+  i,
+  j,
+  digits,
+  num_fmt,
+  num_zero,
+  num_suffix,
+  num_mark_big,
+  num_mark_dec,
+  replace,
+  fn,
+  sprintf,
+  url,
+  date,
+  bool,
+  math,
+  escape,
+  markdown,
+  quarto,
+  other,
+  inull,
+  jnull
+) {
   if (inherits(x, "tbl_df")) {
     assert_dependency("tibble")
     x_is_tibble <- TRUE
@@ -213,9 +223,11 @@ format_tt_lazy <- function(x,
     out <- x@table_dataframe
     ori <- x@data
   } else {
-    stop("`x` must be a `tinytable` object, a data frame, or an atomic vector.", call. = FALSE)
+    stop(
+      "`x` must be a `tinytable` object, a data frame, or an atomic vector.",
+      call. = FALSE
+    )
   }
-
 
   i <- sanitize_i(i, x, lazy = FALSE)
   j <- sanitize_j(j, x)
@@ -242,7 +254,8 @@ format_tt_lazy <- function(x,
 
         # numeric
       } else if (!is.null(digits) && is.numeric(ori[i, col, drop = TRUE])) {
-        tmp <- format_numeric(ori[i, col],
+        tmp <- format_numeric(
+          ori[i, col],
           num_suffix = num_suffix,
           digits = digits,
           num_mark_big = num_mark_big,
@@ -306,7 +319,6 @@ format_tt_lazy <- function(x,
       }
     }
   }
-
 
   # escape latex characters
   if (!isFALSE(escape)) {
@@ -411,7 +423,6 @@ format_tt_lazy <- function(x,
   }
 }
 
-
 format_math <- function(out, math) {
   if (isTRUE(math)) {
     out <- sprintf("$%s$", out)
@@ -452,11 +463,11 @@ format_markdown <- function(out, i = NULL, col = NULL, x) {
   return(out)
 }
 
-
 format_quarto <- function(out, i, col, x) {
   if (isTRUE(x@output == "html")) {
     fun <- function(z) {
-      z@table_string <- sub("data-quarto-disable-processing='true'",
+      z@table_string <- sub(
+        "data-quarto-disable-processing='true'",
         "data-quarto-disable-processing='false'",
         z@table_string,
         fixed = TRUE
@@ -464,10 +475,16 @@ format_quarto <- function(out, i, col, x) {
       return(z)
     }
     x <- style_tt(x, finalize = fun)
-    out[i, col] <- sprintf('<span data-qmd="%s"></span>', out[i, col, drop = TRUE])
+    out[i, col] <- sprintf(
+      '<span data-qmd="%s"></span>',
+      out[i, col, drop = TRUE]
+    )
   } else if (isTRUE(x@output == "latex")) {
     assert_dependency("base64enc")
-    tmp <- sapply(out[i, col, drop = TRUE], function(z) base64enc::base64encode(charToRaw(z)))
+    tmp <- sapply(
+      out[i, col, drop = TRUE],
+      function(z) base64enc::base64encode(charToRaw(z))
+    )
     out[i, col] <- sprintf("\\QuartoMarkdownBase64{%s}", tmp)
   }
 

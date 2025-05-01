@@ -12,7 +12,6 @@ setMethod(
   }
 )
 
-
 group_tabularray_col <- function(x, j, ihead, ...) {
   if (is.null(j)) {
     return(x)
@@ -27,13 +26,18 @@ group_tabularray_col <- function(x, j, ihead, ...) {
   header <- paste(header, collapse = " & ")
 
   # \toprule -> \midrule
-  midr <- sapply(j, function(x) sprintf("\\cmidrule[lr]{%s-%s}", min(x), max(x)))
+  midr <- sapply(
+    j,
+    function(x) sprintf("\\cmidrule[lr]{%s-%s}", min(x), max(x))
+  )
   header <- paste(header, "\\\\", paste(midr, collapse = ""))
 
-  idx <- max(c(
-    grep("% tabularray inner close", out),
-    grep("\\toprule", out, fixed = TRUE)
-  ))
+  idx <- max(
+    c(
+      grep("% tabularray inner close", out),
+      grep("\\toprule", out, fixed = TRUE)
+    )
+  )
 
   out <- c(
     out[1:idx],
@@ -63,7 +67,6 @@ group_tabularray_col <- function(x, j, ihead, ...) {
 
   return(x)
 }
-
 
 group_tabularray_row <- function(x, i, indent) {
   if (is.null(i)) {
@@ -117,8 +120,6 @@ group_tabularray_row <- function(x, i, indent) {
   return(x)
 }
 
-
-
 insert_values <- function(vec, values, positions) {
   if (length(values) != length(positions)) {
     stop("The length of values and positions must be the same")
@@ -131,7 +132,6 @@ insert_values <- function(vec, values, positions) {
 
   # Create a vector of indices for the original vector
   original_indices <- seq_along(vec)
-
 
   # Insert values and update indices
   for (i in seq_along(values)) {

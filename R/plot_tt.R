@@ -26,18 +26,20 @@
 #'
 #' @details The `plot_tt()` can insert images and inline plots into tables.
 #' @export
-plot_tt <- function(x,
-                    i = NULL,
-                    j = NULL,
-                    fun = NULL,
-                    data = NULL,
-                    color = "black",
-                    xlim = NULL,
-                    height = 1,
-                    asp = 1 / 3,
-                    images = NULL,
-                    assets = "tinytable_assets",
-                    ...) {
+plot_tt <- function(
+  x,
+  i = NULL,
+  j = NULL,
+  fun = NULL,
+  data = NULL,
+  color = "black",
+  xlim = NULL,
+  height = 1,
+  asp = 1 / 3,
+  images = NULL,
+  assets = "tinytable_assets",
+  ...
+) {
   jval <- sanitize_j(j, x)
   assert_integerish(i, null.ok = TRUE)
   assert_numeric(height, len = 1, lower = 0)
@@ -52,7 +54,10 @@ plot_tt <- function(x,
   assert_character(images, len = len, null.ok = TRUE)
 
   if (!is.null(images) && length(images) != len) {
-    msg <- sprintf("`images` must match the dimensions of `i` and `j`: length %s.", len)
+    msg <- sprintf(
+      "`images` must match the dimensions of `i` and `j`: length %s.",
+      len
+    )
     stop(msg, call. = FALSE)
   }
 
@@ -112,19 +117,20 @@ plot_tt <- function(x,
   return(x)
 }
 
-
-plot_tt_lazy <- function(x,
-                         i = NULL,
-                         j = NULL,
-                         height = 1,
-                         asp = 1 / 3,
-                         fun = NULL,
-                         color = NULL,
-                         data = NULL,
-                         xlim = NULL,
-                         images = NULL,
-                         assets = "tinytable_assets",
-                         ...) {
+plot_tt_lazy <- function(
+  x,
+  i = NULL,
+  j = NULL,
+  height = 1,
+  asp = 1 / 3,
+  fun = NULL,
+  color = NULL,
+  data = NULL,
+  xlim = NULL,
+  images = NULL,
+  assets = "tinytable_assets",
+  ...
+) {
   out <- x@table_dataframe
 
   if (!is.null(data)) {
@@ -149,19 +155,25 @@ plot_tt_lazy <- function(x,
 
       plot_fun <- fun[[idx]]
       if (!"..." %in% names(formals(plot_fun))) {
-        stop("Inline plotting function must have `...` as argument. See tutorial on the `tinytable` website for examples.", call. = FALSE)
+        stop(
+          "Inline plotting function must have `...` as argument. See tutorial on the `tinytable` website for examples.",
+          call. = FALSE
+        )
       }
       p <- plot_fun(data[[idx]], xlim = xlim, color = color, ...)
 
       # ggplot2
       if (inherits(p, "ggplot")) {
         assert_dependency("ggplot2")
-        suppressMessages(ggplot2::ggsave(
-          p,
-          filename = fn_full,
-          width = 1, height = asp,
-          units = "in"
-        ))
+        suppressMessages(
+          ggplot2::ggsave(
+            p,
+            filename = fn_full,
+            width = 1,
+            height = asp,
+            units = "in"
+          )
+        )
 
         # base R
       } else if (is.function(p)) {
@@ -216,11 +228,9 @@ plot_tt_lazy <- function(x,
   return(x)
 }
 
-
 tiny_histogram <- function(d, color = "black", ...) {
   function() graphics::hist(d, col = color, axes = FALSE, ann = FALSE)
 }
-
 
 tiny_density <- function(d, color = "black", ...) {
   function() {
@@ -230,29 +240,32 @@ tiny_density <- function(d, color = "black", ...) {
   }
 }
 
-
 tiny_bar <- function(d, color = "black", xlim = 0:1, ...) {
   function() {
     graphics::barplot(d, horiz = TRUE, col = color, xlim = xlim)
   }
 }
 
-
 tiny_line <- function(d, xlim = 0:1, color = "black", ...) {
   function() {
-    if (!inherits(d, "data.frame") || !"x" %in% names(d) || !"y" %in% names(d)) {
-      stop("The data to plot a `line` must be a data frame with columns `x` and `y`.", call. = FALSE)
+    if (
+      !inherits(d, "data.frame") || !"x" %in% names(d) || !"y" %in% names(d)
+    ) {
+      stop(
+        "The data to plot a `line` must be a data frame with columns `x` and `y`.",
+        call. = FALSE
+      )
     }
     plot(d$x, d$y, type = "l", col = color, axes = FALSE, ann = FALSE, lwd = 50)
   }
 }
 
-
 encode <- function(images) {
   assert_dependency("base64enc")
   ext <- tools::file_ext(images)
 
-  if (any(ext == "")) stop("Empty image extensions are not allowed", call. = FALSE)
+  if (any(ext == ""))
+    stop("Empty image extensions are not allowed", call. = FALSE)
 
   encoded <- sapply(images, base64enc::base64encode)
   sprintf("data:image/%s;base64, %s", ext, encoded)

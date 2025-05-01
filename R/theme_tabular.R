@@ -1,6 +1,8 @@
-theme_tabular <- function(x,
-                          style = get_option("tinytable_theme_tabular_style", "tabular"),
-                          ...) {
+theme_tabular <- function(
+  x,
+  style = get_option("tinytable_theme_tabular_style", "tabular"),
+  ...
+) {
   assert_choice(style, c("tabular", "tabularray"))
 
   # do not change the default theme
@@ -10,16 +12,36 @@ theme_tabular <- function(x,
     tab <- table@table_string
 
     if (isTRUE(table@output == "latex")) {
-      tab <- lines_drop(tab, regex = "\\\\begin\\{table\\}", position = "before")
+      tab <- lines_drop(
+        tab,
+        regex = "\\\\begin\\{table\\}",
+        position = "before"
+      )
       tab <- lines_drop(tab, regex = "\\\\begin\\{table\\}", position = "equal")
       tab <- lines_drop(tab, regex = "\\\\end\\{table\\}", position = "after")
       tab <- lines_drop(tab, regex = "\\\\end\\{table\\}", position = "equal")
       tab <- lines_drop(tab, regex = "\\\\centering", position = "equal")
       if (style == "tabular") {
-        tab <- lines_drop_between(tab, regex_start = "tabularray outer open", regex_end = "tabularray inner close")
-        tab <- lines_drop(tab, regex = "tabularray outer close", position = "equal")
-        tab <- lines_drop(tab, regex = "tabularray inner open", position = "equal")
-        tab <- lines_drop(tab, regex = "tabularray inner close", position = "equal")
+        tab <- lines_drop_between(
+          tab,
+          regex_start = "tabularray outer open",
+          regex_end = "tabularray inner close"
+        )
+        tab <- lines_drop(
+          tab,
+          regex = "tabularray outer close",
+          position = "equal"
+        )
+        tab <- lines_drop(
+          tab,
+          regex = "tabularray inner open",
+          position = "equal"
+        )
+        tab <- lines_drop(
+          tab,
+          regex = "tabularray inner close",
+          position = "equal"
+        )
         tab <- lines_drop(tab, regex = "^colspec=\\{", position = "equal")
         tab <- gsub("cmidrule\\[(.*?)\\]", "cmidrule(\\1)", tab)
         tab <- gsub("\\{tblr\\}\\[*", "{tabular}", tab)

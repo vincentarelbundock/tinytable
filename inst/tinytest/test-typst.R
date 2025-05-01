@@ -2,7 +2,6 @@ source("helpers.R")
 using("tinysnapshot")
 options(tinytable_print_output = "typst")
 
-
 # semi complicated
 tab <- tt(mtcars[1:4, 1:5], caption = "Hello World") |>
   group_tt(j = list("Group 1" = 4:5, "Group 2" = 2:3)) |>
@@ -17,7 +16,6 @@ tab <- tt(mtcars[1:4, 1:5], caption = "Hello World") |>
   ) |>
   style_tt(j = 1, color = "red", italic = TRUE)
 expect_snapshot_print(tab, label = "typst-complicated")
-
 
 # issue #139
 tab <- tt(mtcars[1:10, 1:5]) |>
@@ -111,7 +109,6 @@ tab <- tt(dat) |>
   )
 expect_snapshot_print(dat, label = "typst-group_columns")
 
-
 # issue #323
 dat <- mtcars[1:9, 1:8]
 tab <- tt(dat) |>
@@ -133,18 +130,15 @@ tab <- tt(dat) |>
 tab@output <- "typst"
 expect_snapshot_print(tab, label = "typst-issue323_group_tt_style_tt")
 
-
 # Frame
 tab <- tt(mtcars[1:5, 1:5]) |>
   style_tt(2:3, 2:3, line_color = "red", line = "tblr", line_width = .05)
 tab@output <- "typst"
 expect_snapshot_print(tab, label = "typst-tblr")
 
-
 # Issue #357
 tab <- tt(head(iris), notes = "blah") |> save_tt("typst")
 expect_true(grepl('blah', tab))
-
 
 # Bug: Footnotes with cell coordinates #456
 tab <- tt(
@@ -155,6 +149,5 @@ tab <- tt(
   )
 )
 expect_snapshot_print(tab, label = "typst-issue456")
-
 
 options(tinytable_print_output = NULL)

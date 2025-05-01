@@ -27,7 +27,6 @@ style_string_html <- function(n, styles) {
   n
 }
 
-
 style_string_latex <- function(n, styles) {
   if (isTRUE(styles[["italic"]])) {
     n <- sprintf("\\textit{%s}", n)
@@ -58,7 +57,6 @@ style_string_latex <- function(n, styles) {
   n
 }
 
-
 style_string_typst <- function(n, styles) {
   sty <- NULL
   if (isTRUE(styles[["italic"]])) {
@@ -88,7 +86,6 @@ style_string_typst <- function(n, styles) {
   out <- sub("text(, ", "text(", out, fixed = TRUE)
   return(out)
 }
-
 
 style_notes <- function(x) {
   fun <- switch(

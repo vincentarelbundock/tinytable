@@ -1,7 +1,9 @@
-theme_multipage <- function(x,
-                            rowhead = get_option("tinytable_theme_multipage_rowhead", 0L),
-                            rowfoot = get_option("tinytable_theme_multipage_rowfoot", 0L),
-                            ...) {
+theme_multipage <- function(
+  x,
+  rowhead = get_option("tinytable_theme_multipage_rowhead", 0L),
+  rowfoot = get_option("tinytable_theme_multipage_rowfoot", 0L),
+  ...
+) {
   # do not change the defaul theme
   if (identical(x@theme[[1]], "multipage")) x@theme <- list("default")
   assert_integerish(rowhead, lower = 0, len = 1)
@@ -18,7 +20,10 @@ theme_multipage <- function(x,
     tab <- sub("\\\\end\\{talltblr", "\\\\end\\{longtblr", tab)
 
     tab <- strsplit(tab, "\n")[[1]]
-    idx <- grepl("^\\\\caption\\{|^\\\\begin\\{table|^\\\\end\\{table|^\\\\centering", trimws(tab))
+    idx <- grepl(
+      "^\\\\caption\\{|^\\\\begin\\{table|^\\\\end\\{table|^\\\\centering",
+      trimws(tab)
+    )
     tab <- tab[!idx]
     tab <- paste(tab, collapse = "\n")
 
@@ -27,11 +32,17 @@ theme_multipage <- function(x,
     # table <- style_tt(table, tabularray_outer = cap)
 
     if (rowhead > 0) {
-      table <- style_tt(table, tabularray_inner = sprintf("rowhead=%s", rowhead))
+      table <- style_tt(
+        table,
+        tabularray_inner = sprintf("rowhead=%s", rowhead)
+      )
     }
 
     if (rowfoot > 0) {
-      table <- style_tt(table, tabularray_inner = sprintf("rowfoot=%s", rowfoot))
+      table <- style_tt(
+        table,
+        tabularray_inner = sprintf("rowfoot=%s", rowfoot)
+      )
     }
 
     return(table)

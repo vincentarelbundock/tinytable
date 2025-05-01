@@ -6,8 +6,8 @@
 build_tt <- function(x, output = NULL) {
   output <- sanitize_output(output)
 
-
-  x <- switch(output,
+  x <- switch(
+    output,
     html = swap_class(x, "tinytable_bootstrap"),
     latex = swap_class(x, "tinytable_tabularray"),
     markdown = swap_class(x, "tinytable_grid"),
@@ -106,7 +106,10 @@ build_tt <- function(x, output = NULL) {
   x@table_string <- lines_drop_consecutive_empty(x@table_string)
   if (output == "gfm") {
     assert_dependency("pandoc")
-    x@table_string <- paste(pandoc::pandoc_convert(text = x@table_string, to = "gfm"), collapse = "\n")
+    x@table_string <- paste(
+      pandoc::pandoc_convert(text = x@table_string, to = "gfm"),
+      collapse = "\n"
+    )
   }
 
   return(x)

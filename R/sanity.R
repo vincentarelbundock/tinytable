@@ -1,8 +1,11 @@
 usepackage_latex <- function(name, options = NULL, extra_lines = NULL) {
   assert_dependency("rmarkdown")
-  invisible(knitr::knit_meta_add(list(rmarkdown::latex_dependency(name, options, extra_lines))))
+  invisible(
+    knitr::knit_meta_add(
+      list(rmarkdown::latex_dependency(name, options, extra_lines))
+    )
+  )
 }
-
 
 sanity_align <- function(align, i) {
   if (any(grepl("d", align)) && !is.null(i)) {
@@ -10,7 +13,6 @@ sanity_align <- function(align, i) {
     stop(msg, call. = FALSE)
   }
 }
-
 
 sanitize_i <- function(i, x, pre_group_i = FALSE, lazy = TRUE) {
   out <- seq_len(nrow(x))
@@ -58,7 +60,6 @@ sanitize_i <- function(i, x, pre_group_i = FALSE, lazy = TRUE) {
   return(out)
 }
 
-
 sanitize_j <- function(j, x) {
   # regex
   if (is.character(j) && length(j) == 1 && !is.null(colnames(x))) {
@@ -84,7 +85,19 @@ sanitize_j <- function(j, x) {
 }
 
 sanitize_output <- function(output) {
-  assert_choice(output, choice = c("tinytable", "markdown", "latex", "html", "typst", "dataframe", "gfm"), null.ok = TRUE)
+  assert_choice(
+    output,
+    choice = c(
+      "tinytable",
+      "markdown",
+      "latex",
+      "html",
+      "typst",
+      "dataframe",
+      "gfm"
+    ),
+    null.ok = TRUE
+  )
 
   # default output format
   if (is.null(output) || isTRUE(output == "tinytable")) {
@@ -112,16 +125,19 @@ sanitize_output <- function(output) {
       flag <- getOption("tinytable_latex_preamble", default = TRUE)
       if (isTRUE(flag)) {
         usepackage_latex("float")
-        usepackage_latex("tabularray", extra_lines = c(
-          "\\usepackage[normalem]{ulem}",
-          "\\usepackage{graphicx}",
-          "\\usepackage{rotating}",
-          "\\UseTblrLibrary{booktabs}",
-          "\\UseTblrLibrary{siunitx}",
-          "\\NewTableCommand{\\tinytableDefineColor}[3]{\\definecolor{#1}{#2}{#3}}",
-          "\\newcommand{\\tinytableTabularrayUnderline}[1]{\\underline{#1}}",
-          "\\newcommand{\\tinytableTabularrayStrikeout}[1]{\\sout{#1}}"
-        ))
+        usepackage_latex(
+          "tabularray",
+          extra_lines = c(
+            "\\usepackage[normalem]{ulem}",
+            "\\usepackage{graphicx}",
+            "\\usepackage{rotating}",
+            "\\UseTblrLibrary{booktabs}",
+            "\\UseTblrLibrary{siunitx}",
+            "\\NewTableCommand{\\tinytableDefineColor}[3]{\\definecolor{#1}{#2}{#3}}",
+            "\\newcommand{\\tinytableTabularrayUnderline}[1]{\\underline{#1}}",
+            "\\newcommand{\\tinytableTabularrayStrikeout}[1]{\\sout{#1}}"
+          )
+        )
       }
       if (is.null(output)) out <- "latex"
     } else if (isTRUE(knitr::pandoc_to() %in% c("html", "revealjs"))) {
@@ -144,7 +160,6 @@ sanitize_output <- function(output) {
   return(out)
 }
 
-
 #' check if dependency is installed
 #'
 #' @noRd
@@ -164,7 +179,12 @@ assert_dependency <- function(library_name) {
   return(invisible())
 }
 
-assert_choice <- function(x, choice, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_choice <- function(
+  x,
+  choice,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(TRUE)
   }
@@ -189,7 +209,11 @@ check_string <- function(x, null.ok = FALSE) {
   return(FALSE)
 }
 
-assert_string <- function(x, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_string <- function(
+  x,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   msg <- sprintf("`%s` must be a string.", name)
   if (!isTRUE(check_string(x, null.ok = null.ok))) {
     stop(msg, call. = FALSE)
@@ -206,7 +230,11 @@ check_flag <- function(x, null.ok = FALSE) {
   return(FALSE)
 }
 
-assert_flag <- function(x, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_flag <- function(
+  x,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   msg <- sprintf("`%s` must be a logical flag.", name)
   if (!isTRUE(check_flag(x, null.ok = null.ok))) {
     stop(msg, call. = FALSE)
@@ -223,24 +251,41 @@ check_function <- function(x, null.ok = FALSE) {
   return(FALSE)
 }
 
-assert_function <- function(x, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_function <- function(
+  x,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   msg <- sprintf("`%s` must be a function.", name)
   if (!isTRUE(check_function(x, null.ok = null.ok))) {
     stop(msg, call. = FALSE)
   }
 }
 
-assert_length <- function(x, len = 1, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_length <- function(
+  x,
+  len = 1,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(invisible(TRUE))
   }
-  msg <- sprintf("`%s` must be one of these lengths: %s", name, paste(len, collapse = ", "))
+  msg <- sprintf(
+    "`%s` must be one of these lengths: %s",
+    name,
+    paste(len, collapse = ", ")
+  )
   if (!length(x) %in% len) {
     stop(msg, call. = FALSE)
   }
 }
 
-assert_logical <- function(x, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_logical <- function(
+  x,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(invisible(TRUE))
   }
@@ -248,8 +293,13 @@ assert_logical <- function(x, null.ok = FALSE, name = as.character(substitute(x)
   if (!is.logical(x)) stop(msg, call. = FALSE)
 }
 
-
-check_integerish <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok = TRUE) {
+check_integerish <- function(
+  x,
+  len = NULL,
+  lower = NULL,
+  upper = NULL,
+  null.ok = TRUE
+) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(TRUE)
   }
@@ -272,33 +322,66 @@ check_integerish <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok 
   return(TRUE)
 }
 
-
-assert_integerish <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_integerish <- function(
+  x,
+  len = NULL,
+  lower = NULL,
+  upper = NULL,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   if (isTRUE(null.ok) && is.null(x)) {
     return(invisible())
   }
   msg <- sprintf("`%s` must be integer-ish", name)
-  if (is.null(x) && !isTRUE(null.ok)) stop(sprintf("%s should not be NULL.", name), call. = FALSE)
-  if (!isTRUE(check_integerish(x, len = len, lower = lower, upper = upper, null.ok = null.ok))) {
+  if (is.null(x) && !isTRUE(null.ok))
+    stop(sprintf("%s should not be NULL.", name), call. = FALSE)
+  if (
+    !isTRUE(
+      check_integerish(
+        x,
+        len = len,
+        lower = lower,
+        upper = upper,
+        null.ok = null.ok
+      )
+    )
+  ) {
     if (!is.numeric(x)) msg <- paste0(msg, "; it is not numeric")
-    if (!is.null(len) && length(x) != len) msg <- paste0(msg, sprintf("; its length must be %s", len))
-    if (!is.null(lower) && any(x < lower)) msg <- paste0(msg, sprintf("; all values must be greater than or equal to %s", lower))
-    if (!is.null(upper) && any(x > upper)) msg <- paste0(msg, sprintf("; all values must be less than or equal to %s", upper))
-    if (isTRUE(any(abs(x - round(x)) > (.Machine$double.eps)^0.5))) msg <- paste0(msg, "; all values must be close to integers")
+    if (!is.null(len) && length(x) != len)
+      msg <- paste0(msg, sprintf("; its length must be %s", len))
+    if (!is.null(lower) && any(x < lower))
+      msg <- paste0(
+        msg,
+        sprintf("; all values must be greater than or equal to %s", lower)
+      )
+    if (!is.null(upper) && any(x > upper))
+      msg <- paste0(
+        msg,
+        sprintf("; all values must be less than or equal to %s", upper)
+      )
+    if (isTRUE(any(abs(x - round(x)) > (.Machine$double.eps)^0.5)))
+      msg <- paste0(msg, "; all values must be close to integers")
     stop(msg, call. = FALSE)
   }
 }
-
 
 check_null <- function(x) {
   is.null(x)
 }
 
 assert_null <- function(x, name = as.character(substitute(x))) {
-  if (!isTRUE(check_null(x))) stop(sprintf("%s should be NULL.", name), call. = FALSE)
+  if (!isTRUE(check_null(x)))
+    stop(sprintf("%s should be NULL.", name), call. = FALSE)
 }
 
-check_numeric <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok = TRUE) {
+check_numeric <- function(
+  x,
+  len = NULL,
+  lower = NULL,
+  upper = NULL,
+  null.ok = TRUE
+) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(TRUE)
   }
@@ -317,29 +400,66 @@ check_numeric <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok = T
   return(TRUE)
 }
 
-
-assert_numeric <- function(x, len = NULL, lower = NULL, upper = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_numeric <- function(
+  x,
+  len = NULL,
+  lower = NULL,
+  upper = NULL,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   msg <- sprintf("`%s` must be numeric", name)
-  if (!isTRUE(check_numeric(x, len = len, lower = lower, upper = upper, null.ok = null.ok))) {
-    if (!is.null(len) && length(x) != len) msg <- paste0(msg, sprintf("; its length must be %s", len))
-    if (!is.null(lower) && any(x < lower)) msg <- paste0(msg, sprintf("; all values must be greater than or equal to %s", lower))
-    if (!is.null(upper) && any(x > upper)) msg <- paste0(msg, sprintf("; all values must be less than or equal to %s", upper))
+  if (
+    !isTRUE(
+      check_numeric(
+        x,
+        len = len,
+        lower = lower,
+        upper = upper,
+        null.ok = null.ok
+      )
+    )
+  ) {
+    if (!is.null(len) && length(x) != len)
+      msg <- paste0(msg, sprintf("; its length must be %s", len))
+    if (!is.null(lower) && any(x < lower))
+      msg <- paste0(
+        msg,
+        sprintf("; all values must be greater than or equal to %s", lower)
+      )
+    if (!is.null(upper) && any(x > upper))
+      msg <- paste0(
+        msg,
+        sprintf("; all values must be less than or equal to %s", upper)
+      )
     stop(msg, call. = FALSE)
   }
 }
 
-
-assert_data_frame <- function(x, min_rows = 0, min_cols = 0, name = as.character(substitute(x))) {
+assert_data_frame <- function(
+  x,
+  min_rows = 0,
+  min_cols = 0,
+  name = as.character(substitute(x))
+) {
   msg <- sprintf("`%s` must be a data.frame.", name)
   if (!is.data.frame(x)) stop(msg, call. = FALSE)
   msg <- sprintf("Number of rows in `%s` must be at least `%s`", name, min_rows)
   if (nrow(x) < min_rows) stop(msg, call. = FALSE)
-  msg <- sprintf("Number of columns in `%s` must be at least `%s`", name, min_cols)
+  msg <- sprintf(
+    "Number of columns in `%s` must be at least `%s`",
+    name,
+    min_cols
+  )
   if (ncol(x) < min_cols) stop(msg, call. = FALSE)
 }
 
-
-check_character <- function(x, len = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
+check_character <- function(
+  x,
+  len = NULL,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   if (isTRUE(null.ok) && is.null(x)) {
     return(TRUE)
   } else if (!is.character(x)) {
@@ -352,7 +472,12 @@ check_character <- function(x, len = NULL, null.ok = FALSE, name = as.character(
   return(TRUE)
 }
 
-assert_character <- function(x, len = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_character <- function(
+  x,
+  len = NULL,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   flag <- check_character(x, len = len, null.ok = null.ok, name = name)
   if (!isTRUE(flag)) {
     stop(flag, call. = FALSE)
@@ -361,7 +486,13 @@ assert_character <- function(x, len = NULL, null.ok = FALSE, name = as.character
   }
 }
 
-assert_list <- function(x, named = FALSE, len = NULL, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_list <- function(
+  x,
+  named = FALSE,
+  len = NULL,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   if (isTRUE(null.ok) && is.null(x)) {
     return(invisible(TRUE))
   }
@@ -378,8 +509,11 @@ assert_list <- function(x, named = FALSE, len = NULL, null.ok = FALSE, name = as
   }
 }
 
-
-assert_function <- function(x, null.ok = FALSE, name = as.character(substitute(x))) {
+assert_function <- function(
+  x,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   if (isTRUE(null.ok) && is.null(x)) {
     return(invisible(TRUE))
   }
@@ -389,7 +523,11 @@ assert_function <- function(x, null.ok = FALSE, name = as.character(substitute(x
   }
 }
 
-check_atomic_vector <- function(x, null.ok = FALSE, name = as.character(substitute(x))) {
+check_atomic_vector <- function(
+  x,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
   if (isTRUE(null.ok) && is.null(x)) {
     return(invisible(TRUE))
   }
@@ -406,14 +544,12 @@ check_atomic_vector <- function(x, null.ok = FALSE, name = as.character(substitu
   return(out)
 }
 
-
 assert_class <- function(x, classname) {
   if (!inherits(x, classname)) {
     msg <- sprintf("`x` must be of class `%s`.", classname)
     stop(msg, call. = FALSE)
   }
 }
-
 
 sanitize_notes <- function(notes) {
   if (is.character(notes) && length(notes) > 0) {
@@ -434,12 +570,14 @@ sanitize_notes <- function(notes) {
       bad <- TRUE
     }
     if (isTRUE(bad)) {
-      stop("`notes` includes invalid elements. Please refer to the documentation for details.", call. = FALSE)
+      stop(
+        "`notes` includes invalid elements. Please refer to the documentation for details.",
+        call. = FALSE
+      )
     }
   }
   return(notes)
 }
-
 
 sanitize_replace <- function(replace) {
   if (isTRUE(replace)) {
@@ -450,11 +588,13 @@ sanitize_replace <- function(replace) {
     if (identical(replace, "")) replace <- " "
     replace <- stats::setNames(list(NA, NaN), c(replace, replace))
   } else if (!is.list(replace) || is.null(names(replace))) {
-    stop("`replace` should be TRUE/FALSE, a single string, or a named list.", call. = FALSE)
+    stop(
+      "`replace` should be TRUE/FALSE, a single string, or a named list.",
+      call. = FALSE
+    )
   }
   return(replace)
 }
-
 
 sanity_num_mark <- function(digits, num_mark_big, num_mark_dec) {
   ## commented out because doesn't work with french decimals

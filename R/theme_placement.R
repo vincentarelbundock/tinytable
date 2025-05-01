@@ -1,6 +1,13 @@
 theme_placement_factory <- function(
-    horizontal = get_option("tinytable_theme_placement_horizontal", default = NULL),
-    latex_float = get_option("tinytable_theme_placement_latex_float", default = NULL)) {
+  horizontal = get_option(
+    "tinytable_theme_placement_horizontal",
+    default = NULL
+  ),
+  latex_float = get_option(
+    "tinytable_theme_placement_latex_float",
+    default = NULL
+  )
+) {
   function(x) {
     tab <- x@table_string
     if (x@output == "latex" && !is.null(latex_float)) {
@@ -23,12 +30,21 @@ theme_placement_factory <- function(
   }
 }
 
-
 theme_placement <- function(
-    x,
-    horizontal = get_option("tinytable_theme_placement_horizontal", default = NULL),
-    latex_float = get_option("tinytable_theme_placement_latex_float", default = NULL)) {
-  fn <- theme_placement_factory(horizontal = horizontal, latex_float = latex_float)
+  x,
+  horizontal = get_option(
+    "tinytable_theme_placement_horizontal",
+    default = NULL
+  ),
+  latex_float = get_option(
+    "tinytable_theme_placement_latex_float",
+    default = NULL
+  )
+) {
+  fn <- theme_placement_factory(
+    horizontal = horizontal,
+    latex_float = latex_float
+  )
   x <- style_tt(x, finalize = fn)
   return(x)
 }

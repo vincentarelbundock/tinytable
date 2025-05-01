@@ -1,19 +1,16 @@
 source("helpers.R")
 using("tinysnapshot")
 
-
 # bug discovered in modelsummary
 z <- factor(c("a", "b", NA))
 a <- format_tt(z, replace = "-")
 b <- c("a", "b", "-")
 expect_equivalent(a, b)
 
-
 # numeric vector input
 a <- c(98938272783457, 7288839482, 29111727, 93945)
 b <- format_tt(a, num_suffix = TRUE, digits = 2)
 expect_equivalent(b, c("99T", "7.3B", "29M", "94K"))
-
 
 # num_suffix (vignette)
 options(tinytable_print_output = "markdown")
@@ -21,7 +18,8 @@ options(tinytable_print_output = "markdown")
 dat <- data.frame(
   a = c("Burger", "Halloumi", "Tofu", "Beans"),
   b = c(1.43202, 201.399, 0.146188, 0.0031),
-  c = c(98938272783457, 7288839482, 29111727, 93945))
+  c = c(98938272783457, 7288839482, 29111727, 93945)
+)
 tab <- tt(dat) |>
   format_tt(j = "a", sprintf = "Food: %s") |>
   format_tt(j = 2, digits = 1) |>
@@ -33,7 +31,8 @@ dat <- data.frame(
   w = c(143002.2092, 201399.181, 100188.3883),
   x = c(1.43402, 201.399, 0.134588),
   y = as.Date(sample(1:1000, 3), origin = "1970-01-01"),
-  z = c(TRUE, TRUE, FALSE))
+  z = c(TRUE, TRUE, FALSE)
+)
 tab <- tt(dat, digits = 2)
 expect_snapshot_print(tab, label = "format_tt-vignette_digits")
 
@@ -41,28 +40,26 @@ tab <- tt(dat) |>
   format_tt(
     j = 2:4,
     digits = 1,
-    date = "%B %d %Y") |>
+    date = "%B %d %Y"
+  ) |>
   format_tt(
     j = 1,
     digits = 2,
     num_mark_big = " ",
     num_mark_dec = ",",
-    num_fmt = "decimal")
+    num_fmt = "decimal"
+  )
 expect_snapshot_print(tab, label = "format_tt-vignette_misc")
 
 expect_snapshot_print(
   format_tt(dat, digits = 1, num_suffix = TRUE),
-  label = "format_tt-dataframe")
-
-
-
-
+  label = "format_tt-dataframe"
+)
 
 # custom formatting
 x <- mtcars[1:3, 1:3]
 tab <- tt(x) |> format_tt(fn = function(x) paste("Ya", x))
 expect_snapshot_print(tab, "format_tt-fn")
-
 
 # Issue #142
 k <- data.frame(x = c(0.000123456789, 12.4356789))
@@ -70,7 +67,6 @@ tab <- tt(k, digits = 2)
 expect_snapshot_print(tab, "format_tt-issue142_01")
 tab <- tt(k) |> format_tt(digits = 2, num_fmt = "significant_cell")
 expect_snapshot_print(tab, "format_tt-issue142_02")
-
 
 # Issue #147: format_tt(escape = TRUE) zaps previous formattinglibrary(tinytable)
 options(tinytable_print_output = "latex")
@@ -90,13 +86,11 @@ tab <- tt(x) |>
 expect_snapshot_print(tab, "format_tt-issue147_03")
 options(tinytable_print_output = NULL)
 
-
 # Issue #149: num_mark_big requires digits
 x <- data.frame(x = c(pi * 1e6, pi * 1e9))
 tab <- format_tt(tt(x), digits = 1, num_mark_big = " ")
 expect_snapshot_print(tab, "format_tt-issue149")
 # expect_error(format_tt(tt(x), num_mark_big = " "))
-
 
 # Issue #218
 options(tinytable_print_output = "dataframe")
@@ -144,8 +138,10 @@ tab <- data.frame(x = c(1332037, 1299128, 805058, 206840, 698511)) |>
   tt() |>
   format_tt(num_mark_big = " ", digits = 0, num_fmt = "decimal") |>
   print("dataframe")
-expect_equivalent(tab$x, c("1 332 037", "1 299 128", "805 058", "206 840", "698 511"))
-
+expect_equivalent(
+  tab$x,
+  c("1 332 037", "1 299 128", "805 058", "206 840", "698 511")
+)
 
 x <- data.frame(x = pi, y = NA)
 options(tinytable_tt_digits = 2)
@@ -164,18 +160,19 @@ options(tinytable_print_output = NULL)
 options(tinytable_tt_digits = NULL)
 options(tinytable_format_replace = NULL)
 
-
-
 # Issue #263: NA processing with Quarto doesn't work
 x <- data.frame(
   Points = c(40, 0, 10, 10, 10, 10, 10, 20, 110),
   Assignment = c(
-    "Analytical Assignments", "Team Project Part 0 - County Selection",
+    "Analytical Assignments",
+    "Team Project Part 0 - County Selection",
     "Team Project Part 1 - Summary Background",
     "Team Project Part 2 - SWOT Analysis",
     "Team Project Part 3 - Strategic Direction/Action Plan",
     "Team Project Part 4 - Evaluation Framework",
-    "Team Project Part 5 - Plan Presentation", "Class participation", "Total"
+    "Team Project Part 5 - Plan Presentation",
+    "Class participation",
+    "Total"
   ),
   Percent = c("36%", "0%", "9%", "9%", "9%", "9%", "9%", "18%", NA)
 )
@@ -184,10 +181,11 @@ x <- tt(x) |>
   save_tt("latex")
 expect_true(grepl("IQ==", x))
 
-
 # Website scaling example
 thumbdrives <- data.frame(
-  date_lookup = as.Date(c("2024-01-15", "2024-01-18", "2024-01-14", "2024-01-16")),
+  date_lookup = as.Date(
+    c("2024-01-15", "2024-01-18", "2024-01-14", "2024-01-16")
+  ),
   price = c(18.49, 19.99, 24.99, 24.99),
   price_rank = c(1, 2, 3, 3),
   memory = c(16e9, 12e9, 10e9, 8e9),
@@ -206,7 +204,6 @@ expect_true("16 GB" %in% tab$memory)
 expect_true("99%" %in% tab$speed_benchmark)
 expect_false("2024-01-15" %in% tab$date_lookup)
 
-
 # Issue #409: both NA and NaN should be replaced
 options(tinytable_format_replace = NULL)
 tab <- data.frame(x = c(1, NA, NaN, Inf))
@@ -221,15 +218,12 @@ expect_equivalent(tab0$x, c("1", "NA", "NaN", "Inf"))
 expect_equivalent(tab1$x, c("1", "NA", "NaN", "Inf"))
 expect_equivalent(tab2$x, c("1", "", "", "Inf"))
 
-
-
-
-
 # bug: duplicated columns with markdown html
 dat <- data.frame(
   markdown = c(
     "This is _italic_ text.",
-    "This sentence ends with a superscript.^2^")
+    "This sentence ends with a superscript.^2^"
+  )
 )
 tab <- tt(dat) |>
   format_tt(j = 1, markdown = TRUE) |>

@@ -50,12 +50,20 @@ setMethod(
       notes <- sapply(notes, function(n) if (is.list(n)) n$text else n)
       for (k in seq_along(notes)) {
         if (lab[k] == "") {
-          tmp <- sprintf("    table.cell(align: left, colspan: %s, %s),", ncol(x), notes[k])
+          tmp <- sprintf(
+            "    table.cell(align: left, colspan: %s, %s),",
+            ncol(x),
+            notes[k]
+          )
         } else {
           n <- notes[k]
           l <- sprintf("[#super[%s] ", lab[k])
           n <- sub("[", l, n, fixed = TRUE)
-          tmp <- sprintf("    table.cell(align: left, colspan: %s, %s),", ncol(x), n)
+          tmp <- sprintf(
+            "    table.cell(align: left, colspan: %s, %s),",
+            ncol(x),
+            n
+          )
         }
         tmp <- sub("text(, ", "text(", tmp, fixed = TRUE)
         out <- lines_insert(out, tmp, "tinytable notes after", "after")
@@ -80,14 +88,14 @@ setMethod(
   }
 )
 
-
 typst_insert <- function(x, content = NULL, type = "body") {
   if (is.null(content)) {
     return(x)
   }
 
   out <- strsplit(x, "\n")[[1]]
-  comment <- switch(type,
+  comment <- switch(
+    type,
     "lines" = "tinytable lines before",
     "style" = "tinytable cell style before",
     "body" = "tinytable cell content after"
