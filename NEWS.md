@@ -1,5 +1,11 @@
 # News
 
+## Development
+
+Bugs:
+
+* Typst footnotes with cell coordinates. Thanks to @sverrirarnors for report #456.
+
 ## 0.8.0
 
 New:

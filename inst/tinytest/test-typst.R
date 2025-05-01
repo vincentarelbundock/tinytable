@@ -3,12 +3,18 @@ using("tinysnapshot")
 options(tinytable_print_output = "typst")
 
 
-
 # semi complicated
 tab <- tt(mtcars[1:4, 1:5], caption = "Hello World") |>
   group_tt(j = list("Group 1" = 4:5, "Group 2" = 2:3)) |>
   style_tt(j = 1:5, align = "lcccr") |>
-  style_tt(i = 2, j = 1:3, strikeout = TRUE, bold = TRUE, background = "black", color = "white") |>
+  style_tt(
+    i = 2,
+    j = 1:3,
+    strikeout = TRUE,
+    bold = TRUE,
+    background = "black",
+    color = "white"
+  ) |>
   style_tt(j = 1, color = "red", italic = TRUE)
 expect_snapshot_print(tab, label = "typst-complicated")
 
@@ -18,7 +24,10 @@ tab <- tt(mtcars[1:10, 1:5]) |>
   group_tt(i = list("Feta" = 2, "Brie" = 6)) |>
   group_tt(j = list("First" = 2:3, "Second" = 4:5)) |>
   style_tt(1:5, align = "c", background = "blue", color = "white")
-expect_snapshot_print(tab, label = "typst-issue-139_misaligned_rule_with_group_tt")
+expect_snapshot_print(
+  tab,
+  label = "typst-issue-139_misaligned_rule_with_group_tt"
+)
 
 # Theme striped
 x <- mtcars[1:4, 1:5]
@@ -34,7 +43,8 @@ dat <- data.frame(
   w = c(143002.2092, 201399.181, 100188.3883),
   x = c(1.43402, 201.399, 0.134588),
   y = as.Date(c(897, 232, 198), origin = "1970-01-01"),
-  z = c(TRUE, TRUE, FALSE))
+  z = c(TRUE, TRUE, FALSE)
+)
 dat <- tt(dat, digits = 2)
 expect_snapshot_print(dat, label = "typst-formatting")
 
@@ -42,7 +52,8 @@ expect_snapshot_print(dat, label = "typst-formatting")
 dat <- data.frame(
   a = c("Burger", "Halloumi", "Tofu", "Beans"),
   b = c(1.43202, 201.399, 0.146188, 0.0031),
-  c = c(98938272783457, 7288839482, 29111727, 93945))
+  c = c(98938272783457, 7288839482, 29111727, 93945)
+)
 tab <- tt(dat) |>
   format_tt(j = "a", sprintf = "Food: %s") |>
   format_tt(j = 2, digits = 1) |>
@@ -79,10 +90,13 @@ expect_snapshot_print(k, label = "typst-no_headers")
 # Group rows
 dat <- mtcars[1:9, 1:8]
 dat <- tt(dat) |>
-  group_tt(i = list(
-    "I like (fake) hamburgers" = 3,
-    "She prefers halloumi" = 4,
-    "They love tofu" = 7))
+  group_tt(
+    i = list(
+      "I like (fake) hamburgers" = 3,
+      "She prefers halloumi" = 4,
+      "They love tofu" = 7
+    )
+  )
 expect_snapshot_print(dat, label = "typst-group_rows")
 
 # Group columns
@@ -92,25 +106,29 @@ tab <- tt(dat) |>
     j = list(
       "Hamburgers" = 1:3,
       "Halloumi" = 4:5,
-      "Tofu" = 7))
+      "Tofu" = 7
+    )
+  )
 expect_snapshot_print(dat, label = "typst-group_columns")
 
 
 # issue #323
 dat <- mtcars[1:9, 1:8]
-tab <- tt(dat) |> 
+tab <- tt(dat) |>
   group_tt(
-    i = list("I like (fake) hamburgers" = 3,
-             "She prefers halloumi" = 4,
-             "They love tofu" = 7),
-    j = list("Hamburgers" = 1:3,
-             "Halloumi" = 4:5,
-             "Tofu" = 7)) |>
+    i = list(
+      "I like (fake) hamburgers" = 3,
+      "She prefers halloumi" = 4,
+      "They love tofu" = 7
+    ),
+    j = list("Hamburgers" = 1:3, "Halloumi" = 4:5, "Tofu" = 7)
+  ) |>
   style_tt(
     i = c(3, 5, 9),
     align = "c",
     background = "black",
-    color = "orange") |>
+    color = "orange"
+  ) |>
   style_tt(i = -1, color = "orange")
 tab@output <- "typst"
 expect_snapshot_print(tab, label = "typst-issue323_group_tt_style_tt")
@@ -118,7 +136,7 @@ expect_snapshot_print(tab, label = "typst-issue323_group_tt_style_tt")
 
 # Frame
 tab <- tt(mtcars[1:5, 1:5]) |>
-    style_tt(2:3, 2:3, line_color = "red", line = "tblr", line_width = .05)
+  style_tt(2:3, 2:3, line_color = "red", line = "tblr", line_width = .05)
 tab@output <- "typst"
 expect_snapshot_print(tab, label = "typst-tblr")
 
@@ -128,6 +146,15 @@ tab <- tt(head(iris), notes = "blah") |> save_tt("typst")
 expect_true(grepl('blah', tab))
 
 
+# Bug: Footnotes with cell coordinates #456
+tab <- tt(
+  mtcars[1:4, 1:5],
+  notes = list(
+    a = list(i = c(0:1), j = 1, text = "Blah."),
+    b = "Blah blah."
+  )
+)
+expect_snapshot_print(tab, label = "typst-issue456")
+
+
 options(tinytable_print_output = NULL)
-
-
