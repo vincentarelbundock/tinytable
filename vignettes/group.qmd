@@ -141,3 +141,50 @@ tt(x) |>
   group_tt(j = list("Hello" = 1:2, "World" = 4:5))
 ```
 
+## Repeated column names
+
+In some contexts, users wish to repeat the column names to treat them as group labels. Consider this dataset:
+
+```{r}
+library(tinytable)
+library(magrittr)
+
+dat = data.frame(
+  Region = as.character(state.region),
+  State = row.names(state.x77), 
+  state.x77[, 1:3]) |>
+  sort_by(~ Region + State) |>
+  subset(Region %in% c("North Central", "Northeast"))
+dat = do.call(rbind, by(dat, dat$Region, head, n = 3))
+row.names(dat) = NULL
+dat
+```
+
+Here, we may want to repeat the column names for every region. The `group_tt()` function does not support this directly, but it is easy to achieve this effect by:
+
+1. Insert column names as new rows in the data.
+2. Creat a row group variable (here: `region`)
+3. Style the column names and group labels
+
+```{r}
+# Format the numeric values early because repeating column names coerces all data to character
+dat2 = format_tt(dat, digits = 1)
+
+# Insert column names as new rows
+dat2 = do.call(rbind, lapply(split(dat2, dat2$Region), \(d) {
+  rbind(as.list(colnames(d)), d)
+}))
+
+# Create row group variable
+idx = which(dat2$Region == "Region")
+dat2$Region[idx] = dat2$Region[idx + 1]
+
+# Draw table
+dat2 %>% 
+  subset(select = -Region) %>%
+  tt() %>%
+  group_tt(i = dat2$Region) %>%
+  style_tt(i = .@group_index_i + 1, background = "black", color = "white") %>%
+  style_tt(i = .@group_index_i, align = "c", color = "red") %>%
+  setNames(NULL)
+```
