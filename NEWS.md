@@ -2,6 +2,10 @@
 
 ## Development
 
+New:
+
+* `strip_tt()` function removes elements of an existing `tinytable` object.
+
 Bugs:
 
 * Typst footnotes with cell coordinates. Thanks to @sverrirarnors for report #456.
