@@ -288,4 +288,39 @@ knitr::include_graphics("table_01.png")
 ```
 ````
 
+## Removing elements with `strip_tt()`
 
+In some cases, it is useful to remove elements of an existing `tinytable` object. For example, packages like `modelsummary` often return tables with default styling—such as borders and lines in specific position. If the user adds group labels manually, the original lines and borders will be misaligned. 
+
+The code below produces a regression table with group labels but misaligned horizontal rule.
+
+```{r}
+library(modelsummary)
+library(tinytable)
+
+mod <- lm(mpg ~ factor(cyl) + hp + wt - 1, data = mtcars)
+
+modelsummary(mod) |>
+    group_tt(
+        i = list(
+            "Cylinders" = 1,
+            "Others" = 7
+        ),
+        indent = 2
+    )
+```
+
+To fix this, we can strip the lines and add them back in the correct position.
+
+```{r}
+modelsummary(mod) |>
+    strip_tt(line = TRUE) |>
+    group_tt(
+        i = list(
+            "Cylinders" = 1,
+            "Others" = 7
+        ),
+        indent = 2
+    ) |>
+    style_tt(i = 12, line = "b", line_width = .05)
+```
