@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>style_tt – tinytable</title>
+<title>strip_tt – tinytable</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,40 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -64,8 +30,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../man/theme_tt.html" rel="next">
-<link href="../man/format_tt.html" rel="prev">
 <link href="../favicon.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/quarto-html/quarto.js"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
@@ -195,7 +159,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../man/tt.html">Functions</a></li><li class="breadcrumb-item"><a href="../man/style_tt.html"><code>style_tt</code></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -286,13 +250,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
  <span class="menu-text">Functions</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/tt.html" class="sidebar-item-text sidebar-link">
@@ -307,7 +271,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/style_tt.html" class="sidebar-item-text sidebar-link active">
+  <a href="../man/style_tt.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><code>style_tt</code></span></a>
   </div>
 </li>
@@ -377,15 +341,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#style-a-tiny-table" id="toc-style-a-tiny-table" class="nav-link active" data-scroll-target="#style-a-tiny-table">Style a Tiny Table</a>
+  <li><a href="#strip-elements-from-a-tiny-table" id="toc-strip-elements-from-a-tiny-table" class="nav-link active" data-scroll-target="#strip-elements-from-a-tiny-table">Strip elements from a Tiny Table</a>
   <ul class="collapse">
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
-  <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a></li>
   <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
-  <li><a href="#word-and-markdown-limitations" id="toc-word-and-markdown-limitations" class="nav-link" data-scroll-target="#word-and-markdown-limitations">Word and Markdown limitations</a></li>
-  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -396,42 +357,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="style-a-tiny-table" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="style-a-tiny-table">Style a Tiny Table</h2>
+<section id="strip-elements-from-a-tiny-table" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="strip-elements-from-a-tiny-table">Strip elements from a Tiny Table</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Style a Tiny Table</p>
+<p>Strip elements from a Tiny Table</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">style_tt(
+<pre><code class="language-R">strip_tt(
   x,
-  i = NULL,
-  j = NULL,
+  style = FALSE,
+  format = FALSE,
+  theme = FALSE,
+  notes = FALSE,
+  caption = FALSE,
+  group = FALSE,
   bold = FALSE,
   italic = FALSE,
   monospace = FALSE,
   underline = FALSE,
   strikeout = FALSE,
-  color = NULL,
-  background = NULL,
-  fontsize = NULL,
-  align = NULL,
-  alignv = NULL,
-  colspan = NULL,
-  rowspan = NULL,
-  indent = NULL,
-  line = NULL,
-  line_color = "black",
-  line_width = 0.1,
-  finalize = NULL,
-  tabularray_inner = NULL,
-  tabularray_outer = NULL,
-  bootstrap_class = NULL,
-  bootstrap_css = NULL,
-  bootstrap_css_rule = NULL,
-  output = NULL,
-  ...
+  color = FALSE,
+  background = FALSE,
+  fontsize = FALSE,
+  align = FALSE,
+  alignv = FALSE,
+  colspan = FALSE,
+  rowspan = FALSE,
+  indent = FALSE,
+  line = FALSE,
+  bootstrap_class = FALSE,
+  bootstrap_css = FALSE,
+  bootstrap_css_rule = FALSE,
+  tabularray_inner = FALSE,
+  tabularray_outer = FALSE,
+  width = FALSE
 )
 </code></pre>
 </section>
@@ -448,40 +409,50 @@ A table object created by <code>tt()</code>.
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="i">i</code>
+<code id="style">style</code>
 </td>
 <td>
-<p>Numeric vector, logical matrix, or string..</p>
-<ul>
-<li>
-<p>Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.</p>
-</li>
-<li>
-<p>Logical matrix: A matrix with the same number of rows and columns as <code>x</code>. <code>i=0</code> is the header, and negative values are higher level headers. Row indices refer to rows <em>after</em> the insertion of row labels by <code>group_tt()</code>, when applicable.</p>
-</li>
-<li>
-<p>String: "notes" or "caption".</p>
-</li>
-</ul>
+<code>TRUE</code> reverts <code>style_tt()</code>.
 </td>
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="j">j</code>
+<code id="format">format</code>
 </td>
 <td>
-<p>Column indices where the styling should be applied. Can be:</p>
-<ul>
-<li>
-<p>Integer vectors indicating column positions.</p>
-</li>
-<li>
-<p>Character vector indicating column names.</p>
-</li>
-<li>
-<p>A single string specifying a Perl-style regular expression used to match column names.</p>
-</li>
-</ul>
+<code>TRUE</code> reverts <code>format_tt()</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="theme">theme</code>
+</td>
+<td>
+<code>TRUE</code> reverts <code>theme_tt()</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="notes">notes</code>
+</td>
+<td>
+<code>TRUE</code> reverts the effect of the <code>notes</code> argument from <code>tt()</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="caption">caption</code>
+</td>
+<td>
+<code>TRUE</code> reverts the effect of the <code>caption</code> argument from <code>tt()</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="group">group</code>
+</td>
+<td>
+<code>TRUE</code> reverts <code>group_tt()</code>.
 </td>
 </tr>
 <tr>
@@ -489,7 +460,7 @@ A table object created by <code>tt()</code>.
 <code id="bold">bold</code>
 </td>
 <td>
-Logical; if <code>TRUE</code>, text is styled in bold.
+<code>TRUE</code> reverts the effect of the <code>bold</code> argument from <code>style_tt()</code>.
 </td>
 </tr>
 <tr>
@@ -497,7 +468,7 @@ Logical; if <code>TRUE</code>, text is styled in bold.
 <code id="italic">italic</code>
 </td>
 <td>
-Logical; if <code>TRUE</code>, text is styled in italic.
+<code>TRUE</code> reverts the effect of the <code>italic</code> argument from <code>style_tt()</code>.
 </td>
 </tr>
 <tr>
@@ -505,7 +476,7 @@ Logical; if <code>TRUE</code>, text is styled in italic.
 <code id="monospace">monospace</code>
 </td>
 <td>
-Logical; if <code>TRUE</code>, text is styled in monospace font.
+<code>TRUE</code> reverts the effect of the <code>monospace</code> argument from <code>style_tt()</code>.
 </td>
 </tr>
 <tr>
@@ -513,7 +484,7 @@ Logical; if <code>TRUE</code>, text is styled in monospace font.
 <code id="underline">underline</code>
 </td>
 <td>
-Logical; if <code>TRUE</code>, text is underlined.
+<code>TRUE</code> reverts the effect of the <code>underline</code> argument from <code>style_tt()</code>.
 </td>
 </tr>
 <tr>
@@ -521,7 +492,7 @@ Logical; if <code>TRUE</code>, text is underlined.
 <code id="strikeout">strikeout</code>
 </td>
 <td>
-Logical; if <code>TRUE</code>, text has a strike through line.
+<code>TRUE</code> reverts the effect of the <code>strikeout</code> argument from <code>style_tt()</code>.
 </td>
 </tr>
 <tr>
@@ -529,37 +500,7 @@ Logical; if <code>TRUE</code>, text has a strike through line.
 <code id="color">color</code>
 </td>
 <td>
-<p>Text color. There are several ways to specify colors, depending on the output format.</p>
-<ul>
-<li>
-<p>HTML:</p>
-<ul>
-<li>
-<p>Hex code composed of # and 6 characters, ex: #CC79A7.</p>
-</li>
-<li>
-<p>Keywords: black, silver, gray, white, maroon, red, purple, fuchsia, green, lime, olive, yellow, navy, blue, teal, aqua</p>
-</li>
-</ul>
-</li>
-<li>
-<p>LaTeX:</p>
-<ul>
-<li>
-<p>Hex code composed of # and 6 characters, ex: "#CC79A7". See the section below for instructions to add in LaTeX preambles.</p>
-</li>
-<li>
-<p>Keywords: black, blue, brown, cyan, darkgray, gray, green, lightgray, lime, magenta, olive, orange, pink, purple, red, teal, violet, white, yellow.</p>
-</li>
-<li>
-<p>Color blending using xcolor<code style="white-space: pre;">, ex: </code>white!80!blue<code style="white-space: pre;">, </code>green!20!red’.</p>
-</li>
-<li>
-<p>Color names with luminance levels from <a href="https://mirror.quantum5.ca/CTAN/macros/latex/contrib/ninecolors/ninecolors.pdf">the <code>ninecolors</code> package</a> (ex: "azure4", "magenta8", "teal2", "gray1", "olive3").</p>
-</li>
-</ul>
-</li>
-</ul>
+<code>TRUE</code> reverts the effect of the <code>color</code> argument from <code>style_tt()</code>.
 </td>
 </tr>
 <tr>
@@ -567,7 +508,7 @@ Logical; if <code>TRUE</code>, text has a strike through line.
 <code id="background">background</code>
 </td>
 <td>
-Background color. Specified as a color name or hexadecimal code. Can be <code>NULL</code> for default color.
+<code>TRUE</code> reverts the effect of the <code>background</code> argument from <code>style_tt()</code>.
 </td>
 </tr>
 <tr>
@@ -575,7 +516,7 @@ Background color. Specified as a color name or hexadecimal code. Can be <code>NU
 <code id="fontsize">fontsize</code>
 </td>
 <td>
-Font size in em units. Can be <code>NULL</code> for default size.
+<code>TRUE</code> reverts the effect of the <code>fontsize</code> argument from <code>style_tt()</code>.
 </td>
 </tr>
 <tr>
@@ -583,7 +524,7 @@ Font size in em units. Can be <code>NULL</code> for default size.
 <code id="align">align</code>
 </td>
 <td>
-A single character or a string with a number of characters equal to the number of columns in <code>j</code>. Valid characters include ‘c’ (center), ‘l’ (left), ‘r’ (right), ‘d’ (decimal). Decimal alignment is only available in LaTeX via the <code>siunitx</code> package. The width of columns is determined by the maximum number of digits to the left and to the right in all cells specified by <code>i</code> and <code>j</code>.
+<code>TRUE</code> reverts the effect of the <code>align</code> argument from <code>style_tt()</code>.
 </td>
 </tr>
 <tr>
@@ -591,7 +532,7 @@ A single character or a string with a number of characters equal to the number o
 <code id="alignv">alignv</code>
 </td>
 <td>
-A single character specifying vertical alignment. Valid characters include ‘t’ (top), ‘m’ (middle), ‘b’ (bottom).
+<code>TRUE</code> reverts the effect of the <code>alignv</code> argument from <code>style_tt()</code>.
 </td>
 </tr>
 <tr>
@@ -599,7 +540,7 @@ A single character specifying vertical alignment. Valid characters include ‘t�
 <code id="colspan">colspan</code>
 </td>
 <td>
-Number of columns a cell should span. <code>i</code> and <code>j</code> must be of length 1.
+<code>TRUE</code> reverts the effect of the <code>colspan</code> argument from <code>style_tt()</code>.
 </td>
 </tr>
 <tr>
@@ -607,7 +548,7 @@ Number of columns a cell should span. <code>i</code> and <code>j</code> must be 
 <code id="rowspan">rowspan</code>
 </td>
 <td>
-Number of rows a cell should span. <code>i</code> and <code>j</code> must be of length 1.
+<code>TRUE</code> reverts the effect of the <code>rowspan</code> argument from <code>style_tt()</code>.
 </td>
 </tr>
 <tr>
@@ -615,7 +556,7 @@ Number of rows a cell should span. <code>i</code> and <code>j</code> must be of 
 <code id="indent">indent</code>
 </td>
 <td>
-Text indentation in em units. Positive values only.
+<code>TRUE</code> reverts the effect of the <code>indent</code> argument from <code>style_tt()</code>.
 </td>
 </tr>
 <tr>
@@ -623,64 +564,7 @@ Text indentation in em units. Positive values only.
 <code id="line">line</code>
 </td>
 <td>
-<p>String determines if solid lines (rules or borders) should be drawn around the cell, row, or column.</p>
-<ul>
-<li>
-<p>"t": top</p>
-</li>
-<li>
-<p>"b": bottom</p>
-</li>
-<li>
-<p>"l": left</p>
-</li>
-<li>
-<p>"r": right</p>
-</li>
-<li>
-<p>Can be combined such as: "lbt" to draw borders at the left, bottom, and top.</p>
-</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="line_color">line_color</code>
-</td>
-<td>
-Color of the line. See the <code>color</code> argument for details.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="line_width">line_width</code>
-</td>
-<td>
-Width of the line in em units (default: 0.1).
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="finalize">finalize</code>
-</td>
-<td>
-A function applied to the table object at the very end of table-building, for post-processing. For example, the function could use regular expressions to add LaTeX commands to the text version of the table hosted in <code>x@table_string</code>, or it could programmatically change the caption in <code>x@caption</code>.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="tabularray_inner">tabularray_inner</code>
-</td>
-<td>
-A string that specifies the "inner" settings of a tabularray LaTeX table.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="tabularray_outer">tabularray_outer</code>
-</td>
-<td>
-A string that specifies the "outer" settings of a tabularray LaTeX table.
+<code>TRUE</code> reverts the effect of the <code>line</code> argument from <code>style_tt()</code>.
 </td>
 </tr>
 <tr>
@@ -688,7 +572,7 @@ A string that specifies the "outer" settings of a tabularray LaTeX table.
 <code id="bootstrap_class">bootstrap_class</code>
 </td>
 <td>
-String. Bootstrap table class such as <code>“table”</code>, <code>“table table-dark”</code> or <code>“table table-dark table-hover”</code>. See the bootstrap documentation.
+<code>TRUE</code> reverts the effect of the <code>bootstrap_class</code> argument from <code>style_tt()</code>.
 </td>
 </tr>
 <tr>
@@ -696,7 +580,7 @@ String. Bootstrap table class such as <code>“table”</code>, <code>“table t
 <code id="bootstrap_css">bootstrap_css</code>
 </td>
 <td>
-Character vector. CSS style declarations to be applied to every cell defined by <code>i</code> and <code>j</code> (ex: <code>“font-weight: bold”</code>).
+<code>TRUE</code> reverts the effect of the <code>bootstrap_css</code> argument from <code>style_tt()</code>.
 </td>
 </tr>
 <tr>
@@ -704,113 +588,38 @@ Character vector. CSS style declarations to be applied to every cell defined by 
 <code id="bootstrap_css_rule">bootstrap_css_rule</code>
 </td>
 <td>
-String. Complete CSS rules (with curly braces, semicolon, etc.) that apply to the table class specified by the <code>bootstrap_class</code> argument.
+<code>TRUE</code> reverts the effect of the <code>bootstrap_css_rule</code> argument from <code>style_tt()</code>.
 </td>
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="output">output</code>
+<code id="tabularray_inner">tabularray_inner</code>
 </td>
 <td>
-Apply style only to the output format specified by this argument. <code>NULL</code> means that we apply to all formats.
+<code>TRUE</code> reverts the effect of the <code>tabularray_inner</code> argument from <code>style_tt()</code>.
 </td>
 </tr>
 <tr>
 <td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="...">…</code>
+<code id="tabularray_outer">tabularray_outer</code>
 </td>
 <td>
-extra arguments are ignored
+<code>TRUE</code> reverts the effect of the <code>tabularray_outer</code> argument from <code>style_tt()</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="width">width</code>
+</td>
+<td>
+<code>TRUE</code> reverts the effect of the <code>width</code> argument from <code>tt()</code>.
 </td>
 </tr>
 </tbody></table>
 </section>
-<section id="details" class="level3">
-<h3 class="anchored" data-anchor-id="details">Details</h3>
-<p>This function applies styling to a table created by <code>tt()</code>. It allows customization of text style (bold, italic, monospace), text and background colors, font size, cell width, text alignment, column span, and indentation. The function also supports passing native instructions to LaTeX (tabularray) and HTML (bootstrap) formats.</p>
-</section>
 <section id="value" class="level3">
 <h3 class="anchored" data-anchor-id="value">Value</h3>
-<p>An object of class <code>tt</code> representing the table.</p>
-</section>
-<section id="word-and-markdown-limitations" class="level3">
-<h3 class="anchored" data-anchor-id="word-and-markdown-limitations">Word and Markdown limitations</h3>
-<p>Markdown and Word tables only support these styles: italic, bold, strikeout. The <code>width</code> argument is also unavailable Moreover, the <code>style_tt()</code> function cannot be used to style headers inserted by the <code>group_tt()</code> function; instead, you should style the headers directly in the header definition using markdown syntax: <code>group_tt(i = list(“<em>italic header</em>” = 2))</code>. These limitations are due to the fact that there is no markdown syntax for the other options, and that we create Word documents by converting a markdown table to .docx via the Pandoc software.</p>
-</section>
-<section id="examples" class="level3">
-<h3 class="anchored" data-anchor-id="examples">Examples</h3>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinytable"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (knitr<span class="sc">::</span><span class="fu">is_html_output</span>()) <span class="fu">options</span>(<span class="at">tinytable_print_output =</span> <span class="st">"html"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>])</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Alignment</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>]) <span class="sc">|&gt;</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(<span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">align =</span> <span class="st">"lcccr"</span>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Colors and styles</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>]) <span class="sc">|&gt;</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(<span class="at">i =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">background =</span> <span class="st">"black"</span>, <span class="at">color =</span> <span class="st">"orange"</span>, <span class="at">bold =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># column selection with `j``</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>]) <span class="sc">|&gt;</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(<span class="at">j =</span> <span class="dv">5</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">background =</span> <span class="st">"pink"</span>)</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>]) <span class="sc">|&gt;</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(<span class="at">j =</span> <span class="st">"drat|wt"</span>, <span class="at">background =</span> <span class="st">"pink"</span>)</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>]) <span class="sc">|&gt;</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(<span class="at">j =</span> <span class="fu">c</span>(<span class="st">"drat"</span>, <span class="st">"wt"</span>), <span class="at">background =</span> <span class="st">"pink"</span>)</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>], <span class="at">theme =</span> <span class="st">"void"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">i =</span> <span class="dv">2</span>, <span class="at">j =</span> <span class="dv">2</span>,</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">colspan =</span> <span class="dv">3</span>,</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">rowspan =</span> <span class="dv">2</span>,</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">align =</span> <span class="st">"c"</span>,</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">alignv =</span> <span class="st">"m"</span>,</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"white"</span>,</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">background =</span> <span class="st">"black"</span>,</span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">bold =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>], <span class="at">theme =</span> <span class="st">"void"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">i =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">3</span>,</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">j =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>,</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">line =</span> <span class="st">"tblr"</span>,</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">line_width =</span> <span class="fl">0.4</span>,</span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">line_color =</span> <span class="st">"teal"</span>)</span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>], <span class="at">theme =</span> <span class="st">"bootstrap"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(</span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">i =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">5</span>),</span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">j =</span> <span class="dv">3</span>,</span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">strikeout =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontsize =</span> <span class="fl">0.7</span>)</span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>]) <span class="sc">|&gt;</span></span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(<span class="at">bootstrap_class =</span> <span class="st">"table table-dark table-hover"</span>)</span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>inner <span class="ot">&lt;-</span> <span class="st">"</span></span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="st">column{1-4}={halign=c},</span></span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="st">hlines = {fg=white},</span></span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="st">vlines = {fg=white},</span></span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="st">cell{1,6}{odd} = {bg=teal7},</span></span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="st">cell{1,6}{even} = {bg=green7},</span></span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="st">cell{2,4}{1,4} = {bg=red7},</span></span>
-<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a><span class="st">cell{3,5}{1,4} = {bg=purple7},</span></span>
-<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a><span class="st">cell{2}{2} = {r=4,c=2}{bg=azure7},</span></span>
-<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
-<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>], <span class="at">theme =</span> <span class="st">"void"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(<span class="at">tabularray_inner =</span> inner)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
+<p>An object of class <code>tt</code> representing the table with stripped styling.</p>
 
 
 </section>
@@ -1237,18 +1046,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
-<nav class="page-navigation">
-  <div class="nav-page nav-page-previous">
-      <a href="../man/format_tt.html" class="pagination-link" aria-label="`format_tt`">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><code>format_tt</code></span>
-      </a>          
-  </div>
-  <div class="nav-page nav-page-next">
-      <a href="../man/theme_tt.html" class="pagination-link" aria-label="`theme_tt`">
-        <span class="nav-page-text"><code>theme_tt</code></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
-  </div>
-</nav>
 </div> <!-- /content -->
 
 
