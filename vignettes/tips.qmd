@@ -196,6 +196,41 @@ output:
 
 With these changes, the table should appear with colors as expected.
 
+### Label and caption position
+
+In LaTeX, we can use `tabularray` options in the preamble or the table to change the location of the label and caption. The example below shows a Quarto document with caption at the bottom.
+
+````
+---
+output: 
+    pdf_document:
+header-includes:
+  - \usepackage{tabularray}
+ ---
+
+```{=latex}
+\DefTblrTemplate{firsthead,middlehead,lasthead}{default}{}
+\DefTblrTemplate{firstfoot,middlefoot}{default}{}
+\DefTblrTemplate{lastfoot}{default}% 
+{
+  \UseTblrTemplate{caption}{default}
+}
+```
+
+```{r, echo=FALSE}
+library(modelsummary)
+library(tinytable)
+mod <- list()
+mod[['One variable']] <- lm(mpg ~ hp, mtcars)
+mod[['Two variables']] <- lm(mpg ~ hp + drat, mtcars)
+
+modelsummary(mod,
+             title = "Regression Models")|>
+  style_tt(tabularray_outer = "label={tblr:test}")
+```
+
+Table \ref{tblr:test}
+````
 
 ## Typst
 
@@ -295,6 +330,7 @@ In some cases, it is useful to remove elements of an existing `tinytable` object
 The code below produces a regression table with group labels but misaligned horizontal rule.
 
 ```{r}
+#! warning: false
 library(modelsummary)
 library(tinytable)
 
