@@ -147,7 +147,8 @@ setMethod(
     # header
     idx <- grep("$tinytable_BOOTSTRAP_HEADER", template, fixed = TRUE)
     if (length(colnames(x)) > 0) {
-      header <- sprintf('    <th scope="col">%s</th>', colnames(x))
+      header <- sprintf('    <th scope="col" data-row="0" data-col="%d">%s</th>', 
+                       seq_along(colnames(x)) - 1, colnames(x))
       header <- c("  <tr>", header, "  </tr>")
       header <- paste(strrep(" ", 11), header)
     } else {
@@ -159,15 +160,18 @@ setMethod(
       template[(idx + 1):length(template)]
     )
     # body
-    makerow <- function(k) {
-      out <- c(
-        "  <tr>",
-        sprintf("    <td>%s</td>", k),
-        "  </tr>"
-      )
-      return(out)
+    body <- NULL
+    start_row <- if (length(colnames(x)) > 0) 1 else 0
+    for (i in seq_len(nrow(x@table_dataframe))) {
+      row_cells <- NULL
+      for (j in seq_len(ncol(x@table_dataframe))) {
+        cell <- sprintf('    <td data-row="%d" data-col="%d">%s</td>',
+                       i - 1 + start_row, j - 1, x@table_dataframe[i, j])
+        row_cells <- c(row_cells, cell)
+      }
+      row <- c("  <tr>", row_cells, "  </tr>")
+      body <- c(body, row)
     }
-    body <- apply(x@table_dataframe, 1, makerow)
     idx <- grep("$tinytable_BOOTSTRAP_BODY", template, fixed = TRUE)
     template <- c(
       template[1:(idx - 1)],
