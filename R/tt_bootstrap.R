@@ -168,11 +168,6 @@ setMethod(
 
     # Calculate row indices with vectorized operations
     i_idx <- seq_len(nrow(x@table_dataframe)) - 1
-    if (length(x@group_index_i) > 0) {
-      # Create a matrix of comparisons and sum the offsets
-      offset_matrix <- outer(i_idx, x@group_index_i, `>=`)
-      i_idx <- i_idx + rowSums(offset_matrix)
-    }
 
     # Generate all cells at once using matrix operations
     row_indices <- rep(i_idx, each = ncol(x@table_dataframe))

@@ -186,7 +186,8 @@ setMethod(
       idx <- split(idx, idx$split_idx)
       for (i in seq_along(idx)) {
         id_css <- idx[[i]]$id_css[1]
-        arr <- sprintf("{ i: %s, j: %s }, ", idx[[i]]$i, idx[[i]]$j)
+        tmp <- ifelse(idx[[i]]$i %in% x@group_index_i, paste0(idx[[i]]$i, "g"), idx[[i]]$i)
+        arr <- sprintf("{ i: '%s', j: %s }, ", tmp, idx[[i]]$j)
         arr <- c(
           "          {",
           " positions: [ ",
