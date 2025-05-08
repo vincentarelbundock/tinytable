@@ -30,12 +30,13 @@ group_bootstrap_col <- function(x, j, ihead, ...) {
   max_col <- sapply(j, max)
   idx <- order(max_col)
   j <- j[idx]
-  jstring <- lapply(names(j), function(n) {
+  jstring <- lapply(seq_along(names(j)), function(k) {
     sprintf(
-      '<th scope="col" align="center" colspan=%s data-row="%d" data-col="0">%s</th>',
-      max(j[[n]]) - min(j[[n]]) + 1,
+      '<th scope="col" align="center" colspan=%s data-row="%d" data-col="%d">%s</th>',
+      max(j[[k]]) - min(j[[k]]) + 1,
       ihead,
-      n
+      k - 1,  # 0-based indexing for data-col
+      names(j)[k]
     )
   })
   jstring <- paste(unlist(jstring), collapse = "\n")
