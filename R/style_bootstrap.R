@@ -50,6 +50,12 @@ setMethod(
     sty$align[which(sty$align == "d")] <- "center"
     sty$align[which(sty$align == "r")] <- "right"
 
+    offset <- x@group_index_i
+    if (length(offset) > 0) {
+      # offset <- sapply(sty$i, function(k) sum(k > offset))
+      # sty$i <- sty$i + offset
+    }
+
     rec <- expand.grid(
       i = c(-(seq_len(x@nhead) - 1), seq_len(x@nrow)),
       j = seq_len(x@ncol)

@@ -164,10 +164,15 @@ setMethod(
     )
     # body
     body <- NULL
-    start_row <- if (length(colnames(x)) > 0) 1 else 0
 
     # Calculate row indices with vectorized operations
-    i_idx <- seq_len(nrow(x@table_dataframe)) - 1
+    i_idx <- seq_len(nrow(x@table_dataframe))
+
+    # offset for group rows
+    if (length(x@group_index_i) > 0) {
+      offset <- sapply(i_idx, function(idx) sum(x@group_index_i <= idx))
+      i_idx <- i_idx + offset
+    }
 
     # Generate all cells at once using matrix operations
     row_indices <- rep(i_idx, each = ncol(x@table_dataframe))
@@ -176,7 +181,7 @@ setMethod(
     
     # Create all cells in one operation
     cells <- sprintf('    <td data-row="%d" data-col="%d">%s</td>',
-                    row_indices + start_row, col_indices, cell_values)
+                    row_indices, col_indices, cell_values)
     
     # Reshape into rows
     cells_matrix <- matrix(cells, ncol = ncol(x@table_dataframe), byrow = TRUE)

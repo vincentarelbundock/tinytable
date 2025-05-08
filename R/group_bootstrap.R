@@ -73,7 +73,7 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
 
   for (g in seq_along(i)) {
     js <- sprintf(
-      "window.addEventListener('load', function () { insertSpanRow(%s, %s, '%s') });",
+      "      window.addEventListener('load', function () { insertSpanRow(%s, %s, '%s') });",
       # 0-indexing
       # do not offset because the number of row labels is added by JS and not counted in the placement in insertSpanRow()
       i[g] - 1 + x@nhead,
