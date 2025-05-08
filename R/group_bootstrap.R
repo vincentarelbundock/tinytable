@@ -32,8 +32,9 @@ group_bootstrap_col <- function(x, j, ihead, ...) {
   j <- j[idx]
   jstring <- lapply(names(j), function(n) {
     sprintf(
-      '<th scope="col" align="center" colspan=%s>%s</th>',
+      '<th scope="col" align="center" colspan=%s data-row="%d" data-col="0">%s</th>',
       max(j[[n]]) - min(j[[n]]) + 1,
+      ihead,
       n
     )
   })

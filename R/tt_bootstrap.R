@@ -163,13 +163,18 @@ setMethod(
     # body
     body <- NULL
     start_row <- if (length(colnames(x)) > 0) 1 else 0
-    for (i in seq_len(nrow(x@table_dataframe))) {
+
+    # offset row numbers for row spanning labels
+    i_idx <- seq_len(nrow(x@table_dataframe)) - 1
+    for (g in x@group_index_i) {
+      i_idx[i_idx >= g] <- i_idx[i_idx>= g] + 1
+    }
+
+    for (i in seq_along(i_idx)) {
       row_cells <- NULL
-      offset <- if (length(x@group_index_i) > 0) sum(i > x@group_index_i) else 0
-      i_html <- i - 1 + offset
       for (j in seq_len(ncol(x@table_dataframe))) {
         cell <- sprintf('    <td data-row="%d" data-col="%d">%s</td>',
-                       i_html + start_row, j - 1, x@table_dataframe[i, j])
+                       i_idx[i] + start_row, j - 1, x@table_dataframe[i, j])
         row_cells <- c(row_cells, cell)
       }
       row <- c("  <tr>", row_cells, "  </tr>")
