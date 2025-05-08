@@ -146,6 +146,7 @@ setMethod(
 
     # header
     idx <- grep("$tinytable_BOOTSTRAP_HEADER", template, fixed = TRUE)
+
     if (length(colnames(x)) > 0) {
       header <- sprintf('    <th scope="col" data-row="0" data-col="%d">%s</th>', 
                        seq_along(colnames(x)) - 1, colnames(x))
@@ -164,9 +165,11 @@ setMethod(
     start_row <- if (length(colnames(x)) > 0) 1 else 0
     for (i in seq_len(nrow(x@table_dataframe))) {
       row_cells <- NULL
+      offset <- if (length(x@group_index_i) > 0) sum(i > x@group_index_i) else 0
+      i_html <- i - 1 + offset
       for (j in seq_len(ncol(x@table_dataframe))) {
         cell <- sprintf('    <td data-row="%d" data-col="%d">%s</td>',
-                       i - 1 + start_row, j - 1, x@table_dataframe[i, j])
+                       i_html + start_row, j - 1, x@table_dataframe[i, j])
         row_cells <- c(row_cells, cell)
       }
       row <- c("  <tr>", row_cells, "  </tr>")
