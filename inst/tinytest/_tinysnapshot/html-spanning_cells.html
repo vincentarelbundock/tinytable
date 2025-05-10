@@ -14,7 +14,7 @@
 
       function styleCell_fy5jrkadtydqyeo5r1sk(i, j, css_id) {
           var table = document.getElementById("tinytable_fy5jrkadtydqyeo5r1sk");
-          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
               cell.classList.add(css_id);
@@ -24,39 +24,44 @@
       }
       function insertSpanRow(i, colspan, content) {
         var table = document.getElementById('tinytable_fy5jrkadtydqyeo5r1sk');
-        var newRow = table.insertRow(i);
+        // Find the row with data-row attribute matching i
+        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
+        var newRow = table.insertRow(targetRow.rowIndex);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
+        newCell.setAttribute("data-col", "0");
+        newCell.setAttribute("data-row", i - 1);
         // newCell.innerText = content;
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
       function spanCell_fy5jrkadtydqyeo5r1sk(i, j, rowspan, colspan) {
         var table = document.getElementById("tinytable_fy5jrkadtydqyeo5r1sk");
-        const targetRow = table.rows[i];
-        const targetCell = targetRow.cells[j];
+        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+        if (!targetCell) {
+          console.warn(`Cell at (${i}, ${j}) not found.`);
+        }
+
+        // Get all cells that need to be removed
+        const cellsToRemove = [];
         for (let r = 0; r < rowspan; r++) {
-          // Only start deleting cells to the right for the first row (r == 0)
-          if (r === 0) {
-            // Delete cells to the right of the target cell in the first row
-            for (let c = colspan - 1; c > 0; c--) {
-              if (table.rows[i + r].cells[j + c]) {
-                table.rows[i + r].deleteCell(j + c);
-              }
-            }
-          }
-          // For rows below the first, delete starting from the target column
-          if (r > 0) {
-            for (let c = colspan - 1; c >= 0; c--) {
-              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
-                table.rows[i + r].deleteCell(j);
-              }
+          for (let c = 0; c < colspan; c++) {
+            if (r === 0 && c === 0) continue; // Skip the target cell
+            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
+            if (cell) {
+              cellsToRemove.push(cell);
             }
           }
         }
-        // Set rowspan and colspan of the target cell
-        targetCell.rowSpan = rowspan;
-        targetCell.colSpan = colspan;
+
+        // Remove all cells
+        cellsToRemove.forEach(cell => cell.remove());
+
+        // Set rowspan and colspan of the target cell if it exists
+        if (targetCell) {
+          targetCell.rowSpan = rowspan;
+          targetCell.colSpan = colspan;
+        }
       }
       // tinytable span after
       window.addEventListener('load', function () { spanCell_fy5jrkadtydqyeo5r1sk(5, 0, 2, 1) })
@@ -65,9 +70,9 @@
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 6, j: 0 }, { i: 6, j: 1 }, { i: 6, j: 2 },  ], css_id: 'tinytable_css_t084vb7tgp9c2fspxmo5',}, 
-          { positions: [ { i: 3, j: 0 }, { i: 1, j: 0 }, { i: 5, j: 0 },  ], css_id: 'tinytable_css_67yc9vcwzl822c2d559g',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 },  ], css_id: 'tinytable_css_42v4nkf1yphfyzd4gc3y',}, 
+          { positions: [ { i: '6', j: 0 }, { i: '6', j: 1 }, { i: '6', j: 2 },  ], css_id: 'tinytable_css_t084vb7tgp9c2fspxmo5',}, 
+          { positions: [ { i: '3', j: 0 }, { i: '1', j: 0 }, { i: '5', j: 0 },  ], css_id: 'tinytable_css_67yc9vcwzl822c2d559g',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 },  ], css_id: 'tinytable_css_42v4nkf1yphfyzd4gc3y',}, 
           ];
 
           // Loop over the arrays to style the cells
@@ -90,42 +95,42 @@
         <thead>
         
               <tr>
-                <th scope="col">cyl</th>
-                <th scope="col">am</th>
-                <th scope="col">mpg</th>
+                <th scope="col" data-row="0" data-col="0">cyl</th>
+                <th scope="col" data-row="0" data-col="1">am</th>
+                <th scope="col" data-row="0" data-col="2">mpg</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td>4</td>
-                  <td>0</td>
-                  <td>23</td>
+                  <td data-row="1" data-col="0">4</td>
+                  <td data-row="1" data-col="1">0</td>
+                  <td data-row="1" data-col="2">23</td>
                 </tr>
                 <tr>
-                  <td>4</td>
-                  <td>1</td>
-                  <td>28</td>
+                  <td data-row="2" data-col="0">4</td>
+                  <td data-row="2" data-col="1">1</td>
+                  <td data-row="2" data-col="2">28</td>
                 </tr>
                 <tr>
-                  <td>6</td>
-                  <td>0</td>
-                  <td>19</td>
+                  <td data-row="3" data-col="0">6</td>
+                  <td data-row="3" data-col="1">0</td>
+                  <td data-row="3" data-col="2">19</td>
                 </tr>
                 <tr>
-                  <td>6</td>
-                  <td>1</td>
-                  <td>21</td>
+                  <td data-row="4" data-col="0">6</td>
+                  <td data-row="4" data-col="1">1</td>
+                  <td data-row="4" data-col="2">21</td>
                 </tr>
                 <tr>
-                  <td>8</td>
-                  <td>0</td>
-                  <td>15</td>
+                  <td data-row="5" data-col="0">8</td>
+                  <td data-row="5" data-col="1">0</td>
+                  <td data-row="5" data-col="2">15</td>
                 </tr>
                 <tr>
-                  <td>8</td>
-                  <td>1</td>
-                  <td>15</td>
+                  <td data-row="6" data-col="0">8</td>
+                  <td data-row="6" data-col="1">1</td>
+                  <td data-row="6" data-col="2">15</td>
                 </tr>
         </tbody>
       </table>

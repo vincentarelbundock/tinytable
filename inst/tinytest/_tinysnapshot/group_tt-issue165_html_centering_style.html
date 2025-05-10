@@ -14,7 +14,7 @@
 
       function styleCell_yoc82nmzv3dwe7zfk4fp(i, j, css_id) {
           var table = document.getElementById("tinytable_yoc82nmzv3dwe7zfk4fp");
-          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
               cell.classList.add(css_id);
@@ -24,57 +24,62 @@
       }
       function insertSpanRow_oiq02t7je3cv6um3lr6e(i, colspan, content) {
         var table = document.getElementById('tinytable_yoc82nmzv3dwe7zfk4fp');
-        var newRow = table.insertRow(i);
+        // Find the row with data-row attribute matching i
+        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
+        var newRow = table.insertRow(targetRow.rowIndex);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
+        newCell.setAttribute("data-col", "0");
+        newCell.setAttribute("data-row", i - 1);
         // newCell.innerText = content;
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
       function spanCell_yoc82nmzv3dwe7zfk4fp(i, j, rowspan, colspan) {
         var table = document.getElementById("tinytable_yoc82nmzv3dwe7zfk4fp");
-        const targetRow = table.rows[i];
-        const targetCell = targetRow.cells[j];
+        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+        if (!targetCell) {
+          console.warn(`Cell at (${i}, ${j}) not found.`);
+        }
+
+        // Get all cells that need to be removed
+        const cellsToRemove = [];
         for (let r = 0; r < rowspan; r++) {
-          // Only start deleting cells to the right for the first row (r == 0)
-          if (r === 0) {
-            // Delete cells to the right of the target cell in the first row
-            for (let c = colspan - 1; c > 0; c--) {
-              if (table.rows[i + r].cells[j + c]) {
-                table.rows[i + r].deleteCell(j + c);
-              }
-            }
-          }
-          // For rows below the first, delete starting from the target column
-          if (r > 0) {
-            for (let c = colspan - 1; c >= 0; c--) {
-              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
-                table.rows[i + r].deleteCell(j);
-              }
+          for (let c = 0; c < colspan; c++) {
+            if (r === 0 && c === 0) continue; // Skip the target cell
+            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
+            if (cell) {
+              cellsToRemove.push(cell);
             }
           }
         }
-        // Set rowspan and colspan of the target cell
-        targetCell.rowSpan = rowspan;
-        targetCell.colSpan = colspan;
+
+        // Remove all cells
+        cellsToRemove.forEach(cell => cell.remove());
+
+        // Set rowspan and colspan of the target cell if it exists
+        if (targetCell) {
+          targetCell.rowSpan = rowspan;
+          targetCell.colSpan = colspan;
+        }
       }
       // tinytable span after
-window.addEventListener('load', function () { insertSpanRow_oiq02t7je3cv6um3lr6e(3, 5, 'hello world') });
+      window.addEventListener('load', function () { insertSpanRow_oiq02t7je3cv6um3lr6e(3, 5, 'hello world') });
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 7, j: 3 }, { i: 7, j: 2 }, { i: 7, j: 4 },  ], css_id: 'tinytable_css_6f82tew7vs3euhts82c1',}, 
-          { positions: [ { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_mijg36r9hc900bdlhrbe',}, 
-          { positions: [ { i: 7, j: 1 },  ], css_id: 'tinytable_css_6ra9ces322bk0vifirl6',}, 
-          { positions: [ { i: 5, j: 1 }, { i: 2, j: 1 }, { i: 3, j: 1 }, { i: 4, j: 1 }, { i: 6, j: 1 },  ], css_id: 'tinytable_css_c92du8kkm8wo1h6918vu',}, 
-          { positions: [ { i: 0, j: 1 },  ], css_id: 'tinytable_css_fkdav13ri67970f7t92b',}, 
-          { positions: [ { i: 1, j: 1 },  ], css_id: 'tinytable_css_6ae8kh93p4t3msvdsla6',}, 
-          { positions: [ { i: 7, j: 0 },  ], css_id: 'tinytable_css_prkal7at2dhqmubanjdj',}, 
-          { positions: [ { i: 5, j: 0 }, { i: 6, j: 0 },  ], css_id: 'tinytable_css_8zpozd71f5qsibznggho',}, 
-          { positions: [ { i: 3, j: 0 },  ], css_id: 'tinytable_css_4er39o3ldv2z15yi1oax',}, 
-          { positions: [ { i: 2, j: 0 }, { i: 4, j: 0 },  ], css_id: 'tinytable_css_a2uljr8ufw5aqj2oiqq0',}, 
-          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_9o57pzjgvid03jgxzoyh',}, 
-          { positions: [ { i: 1, j: 0 }, { i: 1, j: 4 }, { i: 1, j: 3 }, { i: 1, j: 2 },  ], css_id: 'tinytable_css_jaojo2kjr8tyusmpn625',}, 
+          { positions: [ { i: '6', j: 3 }, { i: '6', j: 2 }, { i: '6', j: 4 },  ], css_id: 'tinytable_css_6f82tew7vs3euhts82c1',}, 
+          { positions: [ { i: '-1', j: 2 }, { i: '-1', j: 3 }, { i: '-1', j: 4 },  ], css_id: 'tinytable_css_mijg36r9hc900bdlhrbe',}, 
+          { positions: [ { i: '6', j: 1 },  ], css_id: 'tinytable_css_6ra9ces322bk0vifirl6',}, 
+          { positions: [ { i: '4', j: 1 }, { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '5', j: 1 },  ], css_id: 'tinytable_css_c92du8kkm8wo1h6918vu',}, 
+          { positions: [ { i: '-1', j: 1 },  ], css_id: 'tinytable_css_fkdav13ri67970f7t92b',}, 
+          { positions: [ { i: '0', j: 1 },  ], css_id: 'tinytable_css_6ae8kh93p4t3msvdsla6',}, 
+          { positions: [ { i: '6', j: 0 },  ], css_id: 'tinytable_css_prkal7at2dhqmubanjdj',}, 
+          { positions: [ { i: '4', j: 0 }, { i: '5', j: 0 },  ], css_id: 'tinytable_css_8zpozd71f5qsibznggho',}, 
+          { positions: [ { i: '2', j: 0 },  ], css_id: 'tinytable_css_4er39o3ldv2z15yi1oax',}, 
+          { positions: [ { i: '1', j: 0 }, { i: '3', j: 0 },  ], css_id: 'tinytable_css_a2uljr8ufw5aqj2oiqq0',}, 
+          { positions: [ { i: '-1', j: 0 },  ], css_id: 'tinytable_css_9o57pzjgvid03jgxzoyh',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 4 }, { i: '0', j: 3 }, { i: '0', j: 2 },  ], css_id: 'tinytable_css_jaojo2kjr8tyusmpn625',}, 
           ];
 
           // Loop over the arrays to style the cells
@@ -105,55 +110,55 @@ window.addEventListener('load', function () { insertSpanRow_oiq02t7je3cv6um3lr6e
       <table class="table table-borderless" id="tinytable_yoc82nmzv3dwe7zfk4fp" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
         <thead>
 <tr>
-<th scope="col" align="center" colspan=2>foo</th>
-<th scope="col" align="center" colspan=2>bar</th>
-<th scope="col" align="center" colspan=1> </th>
+<th scope="col" align="center" colspan=2 data-row="-1" data-col="0">foo</th>
+<th scope="col" align="center" colspan=2 data-row="-1" data-col="1">bar</th>
+<th scope="col" align="center" colspan=1 data-row="-1" data-col="2"> </th>
 </tr>
         
               <tr>
-                <th scope="col">mpg</th>
-                <th scope="col">cyl</th>
-                <th scope="col">disp</th>
-                <th scope="col">hp</th>
-                <th scope="col">drat</th>
+                <th scope="col" data-row="0" data-col="0">mpg</th>
+                <th scope="col" data-row="0" data-col="1">cyl</th>
+                <th scope="col" data-row="0" data-col="2">disp</th>
+                <th scope="col" data-row="0" data-col="3">hp</th>
+                <th scope="col" data-row="0" data-col="4">drat</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td>3.142</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.900</td>
+                  <td data-row="1" data-col="0">3.142</td>
+                  <td data-row="1" data-col="1">6</td>
+                  <td data-row="1" data-col="2">160</td>
+                  <td data-row="1" data-col="3">110</td>
+                  <td data-row="1" data-col="4">3.900</td>
                 </tr>
                 <tr>
-                  <td>21.000</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.900</td>
+                  <td data-row="3" data-col="0">21.000</td>
+                  <td data-row="3" data-col="1">6</td>
+                  <td data-row="3" data-col="2">160</td>
+                  <td data-row="3" data-col="3">110</td>
+                  <td data-row="3" data-col="4">3.900</td>
                 </tr>
                 <tr>
-                  <td>22.800</td>
-                  <td>4</td>
-                  <td>108</td>
-                  <td>93</td>
-                  <td>3.850</td>
+                  <td data-row="4" data-col="0">22.800</td>
+                  <td data-row="4" data-col="1">4</td>
+                  <td data-row="4" data-col="2">108</td>
+                  <td data-row="4" data-col="3">93</td>
+                  <td data-row="4" data-col="4">3.850</td>
                 </tr>
                 <tr>
-                  <td>21.400</td>
-                  <td>6</td>
-                  <td>258</td>
-                  <td>110</td>
-                  <td>3.080</td>
+                  <td data-row="5" data-col="0">21.400</td>
+                  <td data-row="5" data-col="1">6</td>
+                  <td data-row="5" data-col="2">258</td>
+                  <td data-row="5" data-col="3">110</td>
+                  <td data-row="5" data-col="4">3.080</td>
                 </tr>
                 <tr>
-                  <td>18.700</td>
-                  <td>8</td>
-                  <td>360</td>
-                  <td>175</td>
-                  <td>3.150</td>
+                  <td data-row="6" data-col="0">18.700</td>
+                  <td data-row="6" data-col="1">8</td>
+                  <td data-row="6" data-col="2">360</td>
+                  <td data-row="6" data-col="3">175</td>
+                  <td data-row="6" data-col="4">3.150</td>
                 </tr>
         </tbody>
       </table>
