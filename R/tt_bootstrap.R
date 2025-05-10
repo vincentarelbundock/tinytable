@@ -146,9 +146,13 @@ setMethod(
 
     # header
     idx <- grep("$tinytable_BOOTSTRAP_HEADER", template, fixed = TRUE)
+
     if (length(colnames(x)) > 0) {
-      header <- sprintf('    <th scope="col">%s</th>', colnames(x))
-      header <- c("  <tr>", header, "  </tr>")
+      # Generate all header cells at once
+      col_indices <- seq_along(colnames(x)) - 1
+      header_cells <- sprintf('    <th scope="col" data-row="0" data-col="%d">%s</th>', 
+                            col_indices, colnames(x))
+      header <- c("  <tr>", header_cells, "  </tr>")
       header <- paste(strrep(" ", 11), header)
     } else {
       header <- NULL
@@ -159,15 +163,29 @@ setMethod(
       template[(idx + 1):length(template)]
     )
     # body
-    makerow <- function(k) {
-      out <- c(
-        "  <tr>",
-        sprintf("    <td>%s</td>", k),
-        "  </tr>"
-      )
-      return(out)
-    }
-    body <- apply(x@table_dataframe, 1, makerow)
+    body <- NULL
+
+    # Calculate row indices with vectorized operations
+    i_idx <- seq_len(nrow(x@table_dataframe) + length(x@group_index_i))
+    i_idx <- setdiff(i_idx, x@group_index_i)
+
+    # Generate all cells at once using matrix operations
+    row_indices <- rep(i_idx, each = ncol(x@table_dataframe))
+    col_indices <- rep(seq_len(ncol(x@table_dataframe)) - 1, times = nrow(x@table_dataframe))
+    cell_values <- as.vector(t(x@table_dataframe))
+    
+    # Create all cells in one operation
+    cells <- sprintf('    <td data-row="%d" data-col="%d">%s</td>',
+                    row_indices, col_indices, cell_values)
+    
+    # Reshape into rows
+    cells_matrix <- matrix(cells, ncol = ncol(x@table_dataframe), byrow = TRUE)
+    rows <- apply(cells_matrix, 1, function(row) {
+      c("  <tr>", row, "  </tr>")
+    })
+    
+    body <- unlist(rows)
+    
     idx <- grep("$tinytable_BOOTSTRAP_BODY", template, fixed = TRUE)
     template <- c(
       template[1:(idx - 1)],

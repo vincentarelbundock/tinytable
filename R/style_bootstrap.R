@@ -50,6 +50,12 @@ setMethod(
     sty$align[which(sty$align == "d")] <- "center"
     sty$align[which(sty$align == "r")] <- "right"
 
+    offset <- x@group_index_i
+    if (length(offset) > 0) {
+      # offset <- sapply(sty$i, function(k) sum(k > offset))
+      # sty$i <- sty$i + offset
+    }
+
     rec <- expand.grid(
       i = c(-(seq_len(x@nhead) - 1), seq_len(x@nrow)),
       j = seq_len(x@ncol)
@@ -134,7 +140,7 @@ setMethod(
     css <- gsub(" +", " ", trimws(css))
 
     # JS 0-indexing
-    rec$i <- rec$i - 1 + x@nhead
+    rec$i <- rec$i #- 1 + x@nhead
     rec$j <- rec$j - 1
 
     # spans: before styles because we return(x) if there is no style
@@ -186,7 +192,7 @@ setMethod(
       idx <- split(idx, idx$split_idx)
       for (i in seq_along(idx)) {
         id_css <- idx[[i]]$id_css[1]
-        arr <- sprintf("{ i: %s, j: %s }, ", idx[[i]]$i, idx[[i]]$j)
+        arr <- sprintf("{ i: '%s', j: %s }, ", idx[[i]]$i, idx[[i]]$j)
         arr <- c(
           "          {",
           " positions: [ ",
