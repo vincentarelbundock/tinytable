@@ -199,7 +199,41 @@ tab <- data.frame(
   group_tt(i = list("Thing" = 1, "Thing again" = 2)) |>
   style_tt(i = c(1, 3), align = "l") |>
   style_tt(j = 1:3, align = "l")
-expect_snapshot_print(print_html(dat), "html-issue297")
+expect_snapshot_print(print_html(dat), "html-issue297.html")
+
+
+# # Issue #355a: rowspan breaks indexing
+tab <- tt(mtcars[1:6, 1:5]) |>
+    group_tt(j = list("Hello" = 1:2, "World" = 3:5)) |>
+    group_tt(j = list("Foo" = 2:3, "Bar" = 4:5)) |>
+    style_tt(i = c(1, 3, 5), j = 1:2, bold = TRUE, color = "red", rowspan = 2) |>
+    style_tt(i = 1 + c(1, 3, 5), j = 3, bold = TRUE, color = "green") |>
+    style_tt(i = c(1, 3, 5), j = 3, bold = TRUE, color = "orange") |>
+    style_tt(i = 0, background = "black", color = "white") |>
+    style_tt(i = -1, color = "pink") |>
+    style_tt(i = -2, color = "blue") |>
+    style_tt(i = 6, background = "pink")
+expect_snapshot_print(print_html(tab), "html-issue355a.html")
+
+tab <- tt(mtcars[1:9, 1:8]) |>
+  group_tt(
+    j = list("Foo" = 1:3, "Bar" = 4:8),
+    i = list(
+      "I like (fake) hamburgers" = 3,
+      "She prefers halloumi" = 4,
+      "They love tofu" = 7
+    )
+  ) |>
+  style_tt(
+    i = c(3, 5, 9),
+    align = "c",
+    color = "white",
+    background = "gray",
+    bold = TRUE
+  ) |>
+  style_tt(4, background = "pink")
+expect_snapshot_print(print_html(tab), "html-issue355b.html")
+
 
 ## TODO: reinstate portable test, but there's a snapshot challenge
 # # Issue #340: plot_tt should be able to create self-contained HTML

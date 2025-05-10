@@ -8,6 +8,7 @@ New:
 
 Bugs:
 
+* Major refactor of `rowspan` for HTML files. Thanks to @J-Moravec and @ASKurz for reports #355 and #457.
 * Typst footnotes with cell coordinates. Thanks to @sverrirarnors for report #456.
 
 Docs improvement:

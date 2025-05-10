@@ -30,11 +30,13 @@ group_bootstrap_col <- function(x, j, ihead, ...) {
   max_col <- sapply(j, max)
   idx <- order(max_col)
   j <- j[idx]
-  jstring <- lapply(names(j), function(n) {
+  jstring <- lapply(seq_along(names(j)), function(k) {
     sprintf(
-      '<th scope="col" align="center" colspan=%s>%s</th>',
-      max(j[[n]]) - min(j[[n]]) + 1,
-      n
+      '<th scope="col" align="center" colspan=%s data-row="%d" data-col="%d">%s</th>',
+      max(j[[k]]) - min(j[[k]]) + 1,
+      ihead,
+      k - 1,  # 0-based indexing for data-col
+      names(j)[k]
     )
   })
   jstring <- paste(unlist(jstring), collapse = "\n")
@@ -71,9 +73,8 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
 
   for (g in seq_along(i)) {
     js <- sprintf(
-      "window.addEventListener('load', function () { insertSpanRow(%s, %s, '%s') });",
-      # 0-indexing
-      i[g] + x@nhead - 1,
+      "      window.addEventListener('load', function () { insertSpanRow(%s, %s, '%s') });",
+      i[g] + g,
       ncol(x),
       names(i)[g]
     )

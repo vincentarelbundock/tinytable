@@ -436,9 +436,9 @@ MathJax = {
 
     <script>
 
-      function styleCell_bxj1mw9i6j8ni78bnhvs(i, j, css_id) {
-          var table = document.getElementById("tinytable_bxj1mw9i6j8ni78bnhvs");
-          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+      function styleCell_u2hx6yfa67idrtmkknn2(i, j, css_id) {
+          var table = document.getElementById("tinytable_u2hx6yfa67idrtmkknn2");
+          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
               cell.classList.add(css_id);
@@ -447,53 +447,58 @@ MathJax = {
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_bxj1mw9i6j8ni78bnhvs');
-        var newRow = table.insertRow(i);
+        var table = document.getElementById('tinytable_u2hx6yfa67idrtmkknn2');
+        // Find the row with data-row attribute matching i
+        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
+        var newRow = table.insertRow(targetRow.rowIndex);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
+        newCell.setAttribute("data-col", "0");
+        newCell.setAttribute("data-row", i - 1);
         // newCell.innerText = content;
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_bxj1mw9i6j8ni78bnhvs(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_bxj1mw9i6j8ni78bnhvs");
-        const targetRow = table.rows[i];
-        const targetCell = targetRow.cells[j];
+      function spanCell_u2hx6yfa67idrtmkknn2(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_u2hx6yfa67idrtmkknn2");
+        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+        if (!targetCell) {
+          console.warn(`Cell at (${i}, ${j}) not found.`);
+        }
+
+        // Get all cells that need to be removed
+        const cellsToRemove = [];
         for (let r = 0; r < rowspan; r++) {
-          // Only start deleting cells to the right for the first row (r == 0)
-          if (r === 0) {
-            // Delete cells to the right of the target cell in the first row
-            for (let c = colspan - 1; c > 0; c--) {
-              if (table.rows[i + r].cells[j + c]) {
-                table.rows[i + r].deleteCell(j + c);
-              }
-            }
-          }
-          // For rows below the first, delete starting from the target column
-          if (r > 0) {
-            for (let c = colspan - 1; c >= 0; c--) {
-              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
-                table.rows[i + r].deleteCell(j);
-              }
+          for (let c = 0; c < colspan; c++) {
+            if (r === 0 && c === 0) continue; // Skip the target cell
+            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
+            if (cell) {
+              cellsToRemove.push(cell);
             }
           }
         }
-        // Set rowspan and colspan of the target cell
-        targetCell.rowSpan = rowspan;
-        targetCell.colSpan = colspan;
+
+        // Remove all cells
+        cellsToRemove.forEach(cell => cell.remove());
+
+        // Set rowspan and colspan of the target cell if it exists
+        if (targetCell) {
+          targetCell.rowSpan = rowspan;
+          targetCell.colSpan = colspan;
+        }
       }
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 4, j: 0 }, { i: 4, j: 1 }, { i: 4, j: 2 }, { i: 4, j: 3 }, { i: 4, j: 4 },  ], css_id: 'tinytable_css_8uz2nln0dvy82gnethlo',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_842tjw183z42vpl2mcan',}, 
+          { positions: [ { i: '4', j: 0 }, { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 },  ], css_id: 'tinytable_css_n2c4bif9e4b65gdna503',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_hej9jayftp6sx0emaet5',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_bxj1mw9i6j8ni78bnhvs(cell.i, cell.j, group.css_id);
+                  styleCell_u2hx6yfa67idrtmkknn2(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -501,50 +506,50 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_8uz2nln0dvy82gnethlo, .table th.tinytable_css_8uz2nln0dvy82gnethlo { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_842tjw183z42vpl2mcan, .table th.tinytable_css_842tjw183z42vpl2mcan { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_n2c4bif9e4b65gdna503, .table th.tinytable_css_n2c4bif9e4b65gdna503 { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_hej9jayftp6sx0emaet5, .table th.tinytable_css_hej9jayftp6sx0emaet5 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-sm" id="tinytable_bxj1mw9i6j8ni78bnhvs" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-sm" id="tinytable_u2hx6yfa67idrtmkknn2" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
-                <th scope="col">mpg</th>
-                <th scope="col">cyl</th>
-                <th scope="col">disp</th>
-                <th scope="col">hp</th>
-                <th scope="col">drat</th>
+                <th scope="col" data-row="0" data-col="0">mpg</th>
+                <th scope="col" data-row="0" data-col="1">cyl</th>
+                <th scope="col" data-row="0" data-col="2">disp</th>
+                <th scope="col" data-row="0" data-col="3">hp</th>
+                <th scope="col" data-row="0" data-col="4">drat</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td>21</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.9</td>
+                  <td data-row="1" data-col="0">21</td>
+                  <td data-row="1" data-col="1">6</td>
+                  <td data-row="1" data-col="2">160</td>
+                  <td data-row="1" data-col="3">110</td>
+                  <td data-row="1" data-col="4">3.9</td>
                 </tr>
                 <tr>
-                  <td>21</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.9</td>
+                  <td data-row="2" data-col="0">21</td>
+                  <td data-row="2" data-col="1">6</td>
+                  <td data-row="2" data-col="2">160</td>
+                  <td data-row="2" data-col="3">110</td>
+                  <td data-row="2" data-col="4">3.9</td>
                 </tr>
                 <tr>
-                  <td>22.8</td>
-                  <td>4</td>
-                  <td>108</td>
-                  <td>93</td>
-                  <td>3.85</td>
+                  <td data-row="3" data-col="0">22.8</td>
+                  <td data-row="3" data-col="1">4</td>
+                  <td data-row="3" data-col="2">108</td>
+                  <td data-row="3" data-col="3">93</td>
+                  <td data-row="3" data-col="4">3.85</td>
                 </tr>
                 <tr>
-                  <td>21.4</td>
-                  <td>6</td>
-                  <td>258</td>
-                  <td>110</td>
-                  <td>3.08</td>
+                  <td data-row="4" data-col="0">21.4</td>
+                  <td data-row="4" data-col="1">6</td>
+                  <td data-row="4" data-col="2">258</td>
+                  <td data-row="4" data-col="3">110</td>
+                  <td data-row="4" data-col="4">3.08</td>
                 </tr>
         </tbody>
       </table>
@@ -560,9 +565,9 @@ MathJax = {
 
     <script>
 
-      function styleCell_02q9v0hi7p40lbqt7k43(i, j, css_id) {
-          var table = document.getElementById("tinytable_02q9v0hi7p40lbqt7k43");
-          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+      function styleCell_ff5rag9rwfcn21lzndj8(i, j, css_id) {
+          var table = document.getElementById("tinytable_ff5rag9rwfcn21lzndj8");
+          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
               cell.classList.add(css_id);
@@ -571,53 +576,58 @@ MathJax = {
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_02q9v0hi7p40lbqt7k43');
-        var newRow = table.insertRow(i);
+        var table = document.getElementById('tinytable_ff5rag9rwfcn21lzndj8');
+        // Find the row with data-row attribute matching i
+        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
+        var newRow = table.insertRow(targetRow.rowIndex);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
+        newCell.setAttribute("data-col", "0");
+        newCell.setAttribute("data-row", i - 1);
         // newCell.innerText = content;
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_02q9v0hi7p40lbqt7k43(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_02q9v0hi7p40lbqt7k43");
-        const targetRow = table.rows[i];
-        const targetCell = targetRow.cells[j];
+      function spanCell_ff5rag9rwfcn21lzndj8(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_ff5rag9rwfcn21lzndj8");
+        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+        if (!targetCell) {
+          console.warn(`Cell at (${i}, ${j}) not found.`);
+        }
+
+        // Get all cells that need to be removed
+        const cellsToRemove = [];
         for (let r = 0; r < rowspan; r++) {
-          // Only start deleting cells to the right for the first row (r == 0)
-          if (r === 0) {
-            // Delete cells to the right of the target cell in the first row
-            for (let c = colspan - 1; c > 0; c--) {
-              if (table.rows[i + r].cells[j + c]) {
-                table.rows[i + r].deleteCell(j + c);
-              }
-            }
-          }
-          // For rows below the first, delete starting from the target column
-          if (r > 0) {
-            for (let c = colspan - 1; c >= 0; c--) {
-              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
-                table.rows[i + r].deleteCell(j);
-              }
+          for (let c = 0; c < colspan; c++) {
+            if (r === 0 && c === 0) continue; // Skip the target cell
+            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
+            if (cell) {
+              cellsToRemove.push(cell);
             }
           }
         }
-        // Set rowspan and colspan of the target cell
-        targetCell.rowSpan = rowspan;
-        targetCell.colSpan = colspan;
+
+        // Remove all cells
+        cellsToRemove.forEach(cell => cell.remove());
+
+        // Set rowspan and colspan of the target cell if it exists
+        if (targetCell) {
+          targetCell.rowSpan = rowspan;
+          targetCell.colSpan = colspan;
+        }
       }
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 4, j: 0 }, { i: 4, j: 1 }, { i: 4, j: 2 }, { i: 4, j: 3 }, { i: 4, j: 4 },  ], css_id: 'tinytable_css_gn3dni8z14guadovpwwo',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_i2jlntoy88khp6d9kufq',}, 
+          { positions: [ { i: '4', j: 0 }, { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 },  ], css_id: 'tinytable_css_u362otrelbmbpp7u506r',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_w4wyekqx848cxo5jte8n',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_02q9v0hi7p40lbqt7k43(cell.i, cell.j, group.css_id);
+                  styleCell_ff5rag9rwfcn21lzndj8(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -625,50 +635,50 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_gn3dni8z14guadovpwwo, .table th.tinytable_css_gn3dni8z14guadovpwwo { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_i2jlntoy88khp6d9kufq, .table th.tinytable_css_i2jlntoy88khp6d9kufq { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_u362otrelbmbpp7u506r, .table th.tinytable_css_u362otrelbmbpp7u506r { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_w4wyekqx848cxo5jte8n, .table th.tinytable_css_w4wyekqx848cxo5jte8n { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-bordered" id="tinytable_02q9v0hi7p40lbqt7k43" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-bordered" id="tinytable_ff5rag9rwfcn21lzndj8" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
-                <th scope="col">mpg</th>
-                <th scope="col">cyl</th>
-                <th scope="col">disp</th>
-                <th scope="col">hp</th>
-                <th scope="col">drat</th>
+                <th scope="col" data-row="0" data-col="0">mpg</th>
+                <th scope="col" data-row="0" data-col="1">cyl</th>
+                <th scope="col" data-row="0" data-col="2">disp</th>
+                <th scope="col" data-row="0" data-col="3">hp</th>
+                <th scope="col" data-row="0" data-col="4">drat</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td>21</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.9</td>
+                  <td data-row="1" data-col="0">21</td>
+                  <td data-row="1" data-col="1">6</td>
+                  <td data-row="1" data-col="2">160</td>
+                  <td data-row="1" data-col="3">110</td>
+                  <td data-row="1" data-col="4">3.9</td>
                 </tr>
                 <tr>
-                  <td>21</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.9</td>
+                  <td data-row="2" data-col="0">21</td>
+                  <td data-row="2" data-col="1">6</td>
+                  <td data-row="2" data-col="2">160</td>
+                  <td data-row="2" data-col="3">110</td>
+                  <td data-row="2" data-col="4">3.9</td>
                 </tr>
                 <tr>
-                  <td>22.8</td>
-                  <td>4</td>
-                  <td>108</td>
-                  <td>93</td>
-                  <td>3.85</td>
+                  <td data-row="3" data-col="0">22.8</td>
+                  <td data-row="3" data-col="1">4</td>
+                  <td data-row="3" data-col="2">108</td>
+                  <td data-row="3" data-col="3">93</td>
+                  <td data-row="3" data-col="4">3.85</td>
                 </tr>
                 <tr>
-                  <td>21.4</td>
-                  <td>6</td>
-                  <td>258</td>
-                  <td>110</td>
-                  <td>3.08</td>
+                  <td data-row="4" data-col="0">21.4</td>
+                  <td data-row="4" data-col="1">6</td>
+                  <td data-row="4" data-col="2">258</td>
+                  <td data-row="4" data-col="3">110</td>
+                  <td data-row="4" data-col="4">3.08</td>
                 </tr>
         </tbody>
       </table>
@@ -686,9 +696,9 @@ MathJax = {
 
     <script>
 
-      function styleCell_ge47hau3moowqhmb37cz(i, j, css_id) {
-          var table = document.getElementById("tinytable_ge47hau3moowqhmb37cz");
-          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+      function styleCell_g2nlfa19ztjldalklhpa(i, j, css_id) {
+          var table = document.getElementById("tinytable_g2nlfa19ztjldalklhpa");
+          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
               cell.classList.add(css_id);
@@ -697,53 +707,58 @@ MathJax = {
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_ge47hau3moowqhmb37cz');
-        var newRow = table.insertRow(i);
+        var table = document.getElementById('tinytable_g2nlfa19ztjldalklhpa');
+        // Find the row with data-row attribute matching i
+        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
+        var newRow = table.insertRow(targetRow.rowIndex);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
+        newCell.setAttribute("data-col", "0");
+        newCell.setAttribute("data-row", i - 1);
         // newCell.innerText = content;
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_ge47hau3moowqhmb37cz(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_ge47hau3moowqhmb37cz");
-        const targetRow = table.rows[i];
-        const targetCell = targetRow.cells[j];
+      function spanCell_g2nlfa19ztjldalklhpa(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_g2nlfa19ztjldalklhpa");
+        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+        if (!targetCell) {
+          console.warn(`Cell at (${i}, ${j}) not found.`);
+        }
+
+        // Get all cells that need to be removed
+        const cellsToRemove = [];
         for (let r = 0; r < rowspan; r++) {
-          // Only start deleting cells to the right for the first row (r == 0)
-          if (r === 0) {
-            // Delete cells to the right of the target cell in the first row
-            for (let c = colspan - 1; c > 0; c--) {
-              if (table.rows[i + r].cells[j + c]) {
-                table.rows[i + r].deleteCell(j + c);
-              }
-            }
-          }
-          // For rows below the first, delete starting from the target column
-          if (r > 0) {
-            for (let c = colspan - 1; c >= 0; c--) {
-              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
-                table.rows[i + r].deleteCell(j);
-              }
+          for (let c = 0; c < colspan; c++) {
+            if (r === 0 && c === 0) continue; // Skip the target cell
+            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
+            if (cell) {
+              cellsToRemove.push(cell);
             }
           }
         }
-        // Set rowspan and colspan of the target cell
-        targetCell.rowSpan = rowspan;
-        targetCell.colSpan = colspan;
+
+        // Remove all cells
+        cellsToRemove.forEach(cell => cell.remove());
+
+        // Set rowspan and colspan of the target cell if it exists
+        if (targetCell) {
+          targetCell.rowSpan = rowspan;
+          targetCell.colSpan = colspan;
+        }
       }
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 4, j: 0 }, { i: 4, j: 1 }, { i: 4, j: 2 }, { i: 4, j: 3 }, { i: 4, j: 4 },  ], css_id: 'tinytable_css_ec4zkaf3r1h0ragqle61',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_97o4dy73txpt22463c4h',}, 
+          { positions: [ { i: '4', j: 0 }, { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 },  ], css_id: 'tinytable_css_vnnbuaqqikwi6z4vx8sb',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_nbno8t77f4516n2diunj',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_ge47hau3moowqhmb37cz(cell.i, cell.j, group.css_id);
+                  styleCell_g2nlfa19ztjldalklhpa(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -751,50 +766,50 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_ec4zkaf3r1h0ragqle61, .table th.tinytable_css_ec4zkaf3r1h0ragqle61 { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_97o4dy73txpt22463c4h, .table th.tinytable_css_97o4dy73txpt22463c4h { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_vnnbuaqqikwi6z4vx8sb, .table th.tinytable_css_vnnbuaqqikwi6z4vx8sb { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_nbno8t77f4516n2diunj, .table th.tinytable_css_nbno8t77f4516n2diunj { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-hover" id="tinytable_ge47hau3moowqhmb37cz" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-hover" id="tinytable_g2nlfa19ztjldalklhpa" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
-                <th scope="col">mpg</th>
-                <th scope="col">cyl</th>
-                <th scope="col">disp</th>
-                <th scope="col">hp</th>
-                <th scope="col">drat</th>
+                <th scope="col" data-row="0" data-col="0">mpg</th>
+                <th scope="col" data-row="0" data-col="1">cyl</th>
+                <th scope="col" data-row="0" data-col="2">disp</th>
+                <th scope="col" data-row="0" data-col="3">hp</th>
+                <th scope="col" data-row="0" data-col="4">drat</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td>21</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.9</td>
+                  <td data-row="1" data-col="0">21</td>
+                  <td data-row="1" data-col="1">6</td>
+                  <td data-row="1" data-col="2">160</td>
+                  <td data-row="1" data-col="3">110</td>
+                  <td data-row="1" data-col="4">3.9</td>
                 </tr>
                 <tr>
-                  <td>21</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.9</td>
+                  <td data-row="2" data-col="0">21</td>
+                  <td data-row="2" data-col="1">6</td>
+                  <td data-row="2" data-col="2">160</td>
+                  <td data-row="2" data-col="3">110</td>
+                  <td data-row="2" data-col="4">3.9</td>
                 </tr>
                 <tr>
-                  <td>22.8</td>
-                  <td>4</td>
-                  <td>108</td>
-                  <td>93</td>
-                  <td>3.85</td>
+                  <td data-row="3" data-col="0">22.8</td>
+                  <td data-row="3" data-col="1">4</td>
+                  <td data-row="3" data-col="2">108</td>
+                  <td data-row="3" data-col="3">93</td>
+                  <td data-row="3" data-col="4">3.85</td>
                 </tr>
                 <tr>
-                  <td>21.4</td>
-                  <td>6</td>
-                  <td>258</td>
-                  <td>110</td>
-                  <td>3.08</td>
+                  <td data-row="4" data-col="0">21.4</td>
+                  <td data-row="4" data-col="1">6</td>
+                  <td data-row="4" data-col="2">258</td>
+                  <td data-row="4" data-col="3">110</td>
+                  <td data-row="4" data-col="4">3.08</td>
                 </tr>
         </tbody>
       </table>
@@ -811,9 +826,9 @@ MathJax = {
 
     <script>
 
-      function styleCell_lcmral62etrd8n0qjscu(i, j, css_id) {
-          var table = document.getElementById("tinytable_lcmral62etrd8n0qjscu");
-          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+      function styleCell_yntt7zighuh4mna775s0(i, j, css_id) {
+          var table = document.getElementById("tinytable_yntt7zighuh4mna775s0");
+          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
               cell.classList.add(css_id);
@@ -822,53 +837,58 @@ MathJax = {
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_lcmral62etrd8n0qjscu');
-        var newRow = table.insertRow(i);
+        var table = document.getElementById('tinytable_yntt7zighuh4mna775s0');
+        // Find the row with data-row attribute matching i
+        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
+        var newRow = table.insertRow(targetRow.rowIndex);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
+        newCell.setAttribute("data-col", "0");
+        newCell.setAttribute("data-row", i - 1);
         // newCell.innerText = content;
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_lcmral62etrd8n0qjscu(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_lcmral62etrd8n0qjscu");
-        const targetRow = table.rows[i];
-        const targetCell = targetRow.cells[j];
+      function spanCell_yntt7zighuh4mna775s0(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_yntt7zighuh4mna775s0");
+        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+        if (!targetCell) {
+          console.warn(`Cell at (${i}, ${j}) not found.`);
+        }
+
+        // Get all cells that need to be removed
+        const cellsToRemove = [];
         for (let r = 0; r < rowspan; r++) {
-          // Only start deleting cells to the right for the first row (r == 0)
-          if (r === 0) {
-            // Delete cells to the right of the target cell in the first row
-            for (let c = colspan - 1; c > 0; c--) {
-              if (table.rows[i + r].cells[j + c]) {
-                table.rows[i + r].deleteCell(j + c);
-              }
-            }
-          }
-          // For rows below the first, delete starting from the target column
-          if (r > 0) {
-            for (let c = colspan - 1; c >= 0; c--) {
-              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
-                table.rows[i + r].deleteCell(j);
-              }
+          for (let c = 0; c < colspan; c++) {
+            if (r === 0 && c === 0) continue; // Skip the target cell
+            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
+            if (cell) {
+              cellsToRemove.push(cell);
             }
           }
         }
-        // Set rowspan and colspan of the target cell
-        targetCell.rowSpan = rowspan;
-        targetCell.colSpan = colspan;
+
+        // Remove all cells
+        cellsToRemove.forEach(cell => cell.remove());
+
+        // Set rowspan and colspan of the target cell if it exists
+        if (targetCell) {
+          targetCell.rowSpan = rowspan;
+          targetCell.colSpan = colspan;
+        }
       }
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 6, j: 0 }, { i: 6, j: 1 }, { i: 6, j: 2 }, { i: 6, j: 3 }, { i: 6, j: 4 },  ], css_id: 'tinytable_css_0mi47uaj2o9q5yqjcc9y',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_n1hw5754a9jh0t4ojiqa',}, 
+          { positions: [ { i: '6', j: 0 }, { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 4 },  ], css_id: 'tinytable_css_oowm2b07cab8gaepcr8j',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_t2fn7p29k9g51d48mnwj',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_lcmral62etrd8n0qjscu(cell.i, cell.j, group.css_id);
+                  styleCell_yntt7zighuh4mna775s0(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -876,64 +896,64 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_0mi47uaj2o9q5yqjcc9y, .table th.tinytable_css_0mi47uaj2o9q5yqjcc9y { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_n1hw5754a9jh0t4ojiqa, .table th.tinytable_css_n1hw5754a9jh0t4ojiqa { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_oowm2b07cab8gaepcr8j, .table th.tinytable_css_oowm2b07cab8gaepcr8j { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_t2fn7p29k9g51d48mnwj, .table th.tinytable_css_t2fn7p29k9g51d48mnwj { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table caption-top" id="tinytable_lcmral62etrd8n0qjscu" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table caption-top" id="tinytable_yntt7zighuh4mna775s0" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         </thead><caption>A caption on top</caption>
               <tbody><tr>
-                <th scope="col">Sepal.Length</th>
-                <th scope="col">Sepal.Width</th>
-                <th scope="col">Petal.Length</th>
-                <th scope="col">Petal.Width</th>
-                <th scope="col">Species</th>
+                <th scope="col" data-row="0" data-col="0">Sepal.Length</th>
+                <th scope="col" data-row="0" data-col="1">Sepal.Width</th>
+                <th scope="col" data-row="0" data-col="2">Petal.Length</th>
+                <th scope="col" data-row="0" data-col="3">Petal.Width</th>
+                <th scope="col" data-row="0" data-col="4">Species</th>
               </tr>
         
         
         </tbody><tbody>
                 <tr>
-                  <td>5.1</td>
-                  <td>3.5</td>
-                  <td>1.4</td>
-                  <td>0.2</td>
-                  <td>setosa</td>
+                  <td data-row="1" data-col="0">5.1</td>
+                  <td data-row="1" data-col="1">3.5</td>
+                  <td data-row="1" data-col="2">1.4</td>
+                  <td data-row="1" data-col="3">0.2</td>
+                  <td data-row="1" data-col="4">setosa</td>
                 </tr>
                 <tr>
-                  <td>4.9</td>
-                  <td>3</td>
-                  <td>1.4</td>
-                  <td>0.2</td>
-                  <td>setosa</td>
+                  <td data-row="2" data-col="0">4.9</td>
+                  <td data-row="2" data-col="1">3</td>
+                  <td data-row="2" data-col="2">1.4</td>
+                  <td data-row="2" data-col="3">0.2</td>
+                  <td data-row="2" data-col="4">setosa</td>
                 </tr>
                 <tr>
-                  <td>4.7</td>
-                  <td>3.2</td>
-                  <td>1.3</td>
-                  <td>0.2</td>
-                  <td>setosa</td>
+                  <td data-row="3" data-col="0">4.7</td>
+                  <td data-row="3" data-col="1">3.2</td>
+                  <td data-row="3" data-col="2">1.3</td>
+                  <td data-row="3" data-col="3">0.2</td>
+                  <td data-row="3" data-col="4">setosa</td>
                 </tr>
                 <tr>
-                  <td>4.6</td>
-                  <td>3.1</td>
-                  <td>1.5</td>
-                  <td>0.2</td>
-                  <td>setosa</td>
+                  <td data-row="4" data-col="0">4.6</td>
+                  <td data-row="4" data-col="1">3.1</td>
+                  <td data-row="4" data-col="2">1.5</td>
+                  <td data-row="4" data-col="3">0.2</td>
+                  <td data-row="4" data-col="4">setosa</td>
                 </tr>
                 <tr>
-                  <td>5</td>
-                  <td>3.6</td>
-                  <td>1.4</td>
-                  <td>0.2</td>
-                  <td>setosa</td>
+                  <td data-row="5" data-col="0">5</td>
+                  <td data-row="5" data-col="1">3.6</td>
+                  <td data-row="5" data-col="2">1.4</td>
+                  <td data-row="5" data-col="3">0.2</td>
+                  <td data-row="5" data-col="4">setosa</td>
                 </tr>
                 <tr>
-                  <td>5.4</td>
-                  <td>3.9</td>
-                  <td>1.7</td>
-                  <td>0.4</td>
-                  <td>setosa</td>
+                  <td data-row="6" data-col="0">5.4</td>
+                  <td data-row="6" data-col="1">3.9</td>
+                  <td data-row="6" data-col="2">1.7</td>
+                  <td data-row="6" data-col="3">0.4</td>
+                  <td data-row="6" data-col="4">setosa</td>
                 </tr>
         </tbody>
       </table>
@@ -953,9 +973,9 @@ MathJax = {
 
     <script>
 
-      function styleCell_tw4iswdj4a4sucb2t1ru(i, j, css_id) {
-          var table = document.getElementById("tinytable_tw4iswdj4a4sucb2t1ru");
-          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+      function styleCell_ka6bmz0n4242ufktrqzq(i, j, css_id) {
+          var table = document.getElementById("tinytable_ka6bmz0n4242ufktrqzq");
+          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
               cell.classList.add(css_id);
@@ -964,56 +984,61 @@ MathJax = {
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_tw4iswdj4a4sucb2t1ru');
-        var newRow = table.insertRow(i);
+        var table = document.getElementById('tinytable_ka6bmz0n4242ufktrqzq');
+        // Find the row with data-row attribute matching i
+        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
+        var newRow = table.insertRow(targetRow.rowIndex);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
+        newCell.setAttribute("data-col", "0");
+        newCell.setAttribute("data-row", i - 1);
         // newCell.innerText = content;
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tw4iswdj4a4sucb2t1ru(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_tw4iswdj4a4sucb2t1ru");
-        const targetRow = table.rows[i];
-        const targetCell = targetRow.cells[j];
+      function spanCell_ka6bmz0n4242ufktrqzq(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_ka6bmz0n4242ufktrqzq");
+        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+        if (!targetCell) {
+          console.warn(`Cell at (${i}, ${j}) not found.`);
+        }
+
+        // Get all cells that need to be removed
+        const cellsToRemove = [];
         for (let r = 0; r < rowspan; r++) {
-          // Only start deleting cells to the right for the first row (r == 0)
-          if (r === 0) {
-            // Delete cells to the right of the target cell in the first row
-            for (let c = colspan - 1; c > 0; c--) {
-              if (table.rows[i + r].cells[j + c]) {
-                table.rows[i + r].deleteCell(j + c);
-              }
-            }
-          }
-          // For rows below the first, delete starting from the target column
-          if (r > 0) {
-            for (let c = colspan - 1; c >= 0; c--) {
-              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
-                table.rows[i + r].deleteCell(j);
-              }
+          for (let c = 0; c < colspan; c++) {
+            if (r === 0 && c === 0) continue; // Skip the target cell
+            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
+            if (cell) {
+              cellsToRemove.push(cell);
             }
           }
         }
-        // Set rowspan and colspan of the target cell
-        targetCell.rowSpan = rowspan;
-        targetCell.colSpan = colspan;
+
+        // Remove all cells
+        cellsToRemove.forEach(cell => cell.remove());
+
+        // Set rowspan and colspan of the target cell if it exists
+        if (targetCell) {
+          targetCell.rowSpan = rowspan;
+          targetCell.colSpan = colspan;
+        }
       }
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 4, j: 1 }, { i: 4, j: 2 }, { i: 4, j: 3 }, { i: 4, j: 4 },  ], css_id: 'tinytable_css_1xlsy0k8c3slgx1pwjc8',}, 
-          { positions: [ { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_xf90hil8x5adu4gacpjs',}, 
-          { positions: [ { i: 4, j: 0 },  ], css_id: 'tinytable_css_1lvhyga9rd98baqw33xg',}, 
-          { positions: [ { i: 1, j: 0 }, { i: 2, j: 0 }, { i: 3, j: 0 },  ], css_id: 'tinytable_css_apvgin29tlfxtbq5z5n8',}, 
-          { positions: [ { i: 0, j: 0 },  ], css_id: 'tinytable_css_ab97l2oliudp03xm0gyh',}, 
+          { positions: [ { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 },  ], css_id: 'tinytable_css_895puptz0xw3yko1dbod',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_zyl2rzznanc877tojl7g',}, 
+          { positions: [ { i: '4', j: 0 },  ], css_id: 'tinytable_css_h1dd4qvxjt0fuh1odoju',}, 
+          { positions: [ { i: '1', j: 0 }, { i: '2', j: 0 }, { i: '3', j: 0 },  ], css_id: 'tinytable_css_fa9f1y5h9wlm6zpr1bme',}, 
+          { positions: [ { i: '0', j: 0 },  ], css_id: 'tinytable_css_3mazto0c9ik8kq134uoz',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_tw4iswdj4a4sucb2t1ru(cell.i, cell.j, group.css_id);
+                  styleCell_ka6bmz0n4242ufktrqzq(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1021,53 +1046,53 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_1xlsy0k8c3slgx1pwjc8, .table th.tinytable_css_1xlsy0k8c3slgx1pwjc8 { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_xf90hil8x5adu4gacpjs, .table th.tinytable_css_xf90hil8x5adu4gacpjs { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_1lvhyga9rd98baqw33xg, .table th.tinytable_css_1lvhyga9rd98baqw33xg { font-weight: bold; color: red; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_apvgin29tlfxtbq5z5n8, .table th.tinytable_css_apvgin29tlfxtbq5z5n8 { font-weight: bold; color: red; }
-      .table td.tinytable_css_ab97l2oliudp03xm0gyh, .table th.tinytable_css_ab97l2oliudp03xm0gyh { font-weight: bold; color: red; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_895puptz0xw3yko1dbod, .table th.tinytable_css_895puptz0xw3yko1dbod { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_zyl2rzznanc877tojl7g, .table th.tinytable_css_zyl2rzznanc877tojl7g { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_h1dd4qvxjt0fuh1odoju, .table th.tinytable_css_h1dd4qvxjt0fuh1odoju { font-weight: bold; color: red; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_fa9f1y5h9wlm6zpr1bme, .table th.tinytable_css_fa9f1y5h9wlm6zpr1bme { font-weight: bold; color: red; }
+      .table td.tinytable_css_3mazto0c9ik8kq134uoz, .table th.tinytable_css_3mazto0c9ik8kq134uoz { font-weight: bold; color: red; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_tw4iswdj4a4sucb2t1ru" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_ka6bmz0n4242ufktrqzq" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
-                <th scope="col">mpg</th>
-                <th scope="col">cyl</th>
-                <th scope="col">disp</th>
-                <th scope="col">hp</th>
-                <th scope="col">drat</th>
+                <th scope="col" data-row="0" data-col="0">mpg</th>
+                <th scope="col" data-row="0" data-col="1">cyl</th>
+                <th scope="col" data-row="0" data-col="2">disp</th>
+                <th scope="col" data-row="0" data-col="3">hp</th>
+                <th scope="col" data-row="0" data-col="4">drat</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td>21</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.9</td>
+                  <td data-row="1" data-col="0">21</td>
+                  <td data-row="1" data-col="1">6</td>
+                  <td data-row="1" data-col="2">160</td>
+                  <td data-row="1" data-col="3">110</td>
+                  <td data-row="1" data-col="4">3.9</td>
                 </tr>
                 <tr>
-                  <td>21</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.9</td>
+                  <td data-row="2" data-col="0">21</td>
+                  <td data-row="2" data-col="1">6</td>
+                  <td data-row="2" data-col="2">160</td>
+                  <td data-row="2" data-col="3">110</td>
+                  <td data-row="2" data-col="4">3.9</td>
                 </tr>
                 <tr>
-                  <td>22.8</td>
-                  <td>4</td>
-                  <td>108</td>
-                  <td>93</td>
-                  <td>3.85</td>
+                  <td data-row="3" data-col="0">22.8</td>
+                  <td data-row="3" data-col="1">4</td>
+                  <td data-row="3" data-col="2">108</td>
+                  <td data-row="3" data-col="3">93</td>
+                  <td data-row="3" data-col="4">3.85</td>
                 </tr>
                 <tr>
-                  <td>21.4</td>
-                  <td>6</td>
-                  <td>258</td>
-                  <td>110</td>
-                  <td>3.08</td>
+                  <td data-row="4" data-col="0">21.4</td>
+                  <td data-row="4" data-col="1">6</td>
+                  <td data-row="4" data-col="2">258</td>
+                  <td data-row="4" data-col="3">110</td>
+                  <td data-row="4" data-col="4">3.08</td>
                 </tr>
         </tbody>
       </table>
@@ -1124,9 +1149,9 @@ MathJax = {
 
     <script>
 
-      function styleCell_tos7uze7x041xfi558z1(i, j, css_id) {
-          var table = document.getElementById("tinytable_tos7uze7x041xfi558z1");
-          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+      function styleCell_bka8akici16o4e5z8ocu(i, j, css_id) {
+          var table = document.getElementById("tinytable_bka8akici16o4e5z8ocu");
+          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
               cell.classList.add(css_id);
@@ -1135,54 +1160,59 @@ MathJax = {
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_tos7uze7x041xfi558z1');
-        var newRow = table.insertRow(i);
+        var table = document.getElementById('tinytable_bka8akici16o4e5z8ocu');
+        // Find the row with data-row attribute matching i
+        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
+        var newRow = table.insertRow(targetRow.rowIndex);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
+        newCell.setAttribute("data-col", "0");
+        newCell.setAttribute("data-row", i - 1);
         // newCell.innerText = content;
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tos7uze7x041xfi558z1(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_tos7uze7x041xfi558z1");
-        const targetRow = table.rows[i];
-        const targetCell = targetRow.cells[j];
+      function spanCell_bka8akici16o4e5z8ocu(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_bka8akici16o4e5z8ocu");
+        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+        if (!targetCell) {
+          console.warn(`Cell at (${i}, ${j}) not found.`);
+        }
+
+        // Get all cells that need to be removed
+        const cellsToRemove = [];
         for (let r = 0; r < rowspan; r++) {
-          // Only start deleting cells to the right for the first row (r == 0)
-          if (r === 0) {
-            // Delete cells to the right of the target cell in the first row
-            for (let c = colspan - 1; c > 0; c--) {
-              if (table.rows[i + r].cells[j + c]) {
-                table.rows[i + r].deleteCell(j + c);
-              }
-            }
-          }
-          // For rows below the first, delete starting from the target column
-          if (r > 0) {
-            for (let c = colspan - 1; c >= 0; c--) {
-              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
-                table.rows[i + r].deleteCell(j);
-              }
+          for (let c = 0; c < colspan; c++) {
+            if (r === 0 && c === 0) continue; // Skip the target cell
+            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
+            if (cell) {
+              cellsToRemove.push(cell);
             }
           }
         }
-        // Set rowspan and colspan of the target cell
-        targetCell.rowSpan = rowspan;
-        targetCell.colSpan = colspan;
+
+        // Remove all cells
+        cellsToRemove.forEach(cell => cell.remove());
+
+        // Set rowspan and colspan of the target cell if it exists
+        if (targetCell) {
+          targetCell.rowSpan = rowspan;
+          targetCell.colSpan = colspan;
+        }
       }
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 4, j: 0 }, { i: 4, j: 1 }, { i: 4, j: 2 }, { i: 4, j: 3 }, { i: 4, j: 4 },  ], css_id: 'tinytable_css_xm73rpwbslfcevuel0qp',}, 
-          { positions: [ { i: 1, j: 0 }, { i: 2, j: 0 }, { i: 3, j: 0 }, { i: 3, j: 1 }, { i: 3, j: 2 }, { i: 1, j: 1 }, { i: 2, j: 1 }, { i: 2, j: 2 }, { i: 2, j: 3 }, { i: 3, j: 3 }, { i: 1, j: 2 }, { i: 1, j: 3 }, { i: 1, j: 4 }, { i: 2, j: 4 }, { i: 3, j: 4 },  ], css_id: 'tinytable_css_480tqlqx91flkpc4yxu3',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 },  ], css_id: 'tinytable_css_oenixsrs9dbm7mfidks8',}, 
+          { positions: [ { i: '4', j: 0 }, { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 },  ], css_id: 'tinytable_css_t7r39523rq7772km43no',}, 
+          { positions: [ { i: '1', j: 0 }, { i: '2', j: 0 }, { i: '3', j: 0 }, { i: '3', j: 1 }, { i: '3', j: 2 }, { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '2', j: 2 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '1', j: 2 }, { i: '1', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '3', j: 4 },  ], css_id: 'tinytable_css_p66a4fey7n5rh5yuuvbl',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_ta4iin6084pihmpii40n',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_tos7uze7x041xfi558z1(cell.i, cell.j, group.css_id);
+                  styleCell_bka8akici16o4e5z8ocu(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1190,9 +1220,9 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_xm73rpwbslfcevuel0qp, .table th.tinytable_css_xm73rpwbslfcevuel0qp { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_480tqlqx91flkpc4yxu3, .table th.tinytable_css_480tqlqx91flkpc4yxu3 { text-align: center; }
-      .table td.tinytable_css_oenixsrs9dbm7mfidks8, .table th.tinytable_css_oenixsrs9dbm7mfidks8 { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_t7r39523rq7772km43no, .table th.tinytable_css_t7r39523rq7772km43no { text-align: center; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_p66a4fey7n5rh5yuuvbl, .table th.tinytable_css_p66a4fey7n5rh5yuuvbl { text-align: center; }
+      .table td.tinytable_css_ta4iin6084pihmpii40n, .table th.tinytable_css_ta4iin6084pihmpii40n { text-align: center; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
 
 .mytable {
   background: linear-gradient(45deg, #EA8D8D, #A890FE);
@@ -1226,46 +1256,46 @@ MathJax = {
 
     </style>
     <div class="container">
-      <table class="table mytable" id="tinytable_tos7uze7x041xfi558z1" style="table-layout: fixed; width: 67% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table mytable" id="tinytable_bka8akici16o4e5z8ocu" style="table-layout: fixed; width: 67% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
-                <th scope="col">mpg</th>
-                <th scope="col">cyl</th>
-                <th scope="col">disp</th>
-                <th scope="col">hp</th>
-                <th scope="col">drat</th>
+                <th scope="col" data-row="0" data-col="0">mpg</th>
+                <th scope="col" data-row="0" data-col="1">cyl</th>
+                <th scope="col" data-row="0" data-col="2">disp</th>
+                <th scope="col" data-row="0" data-col="3">hp</th>
+                <th scope="col" data-row="0" data-col="4">drat</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td>21</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.9</td>
+                  <td data-row="1" data-col="0">21</td>
+                  <td data-row="1" data-col="1">6</td>
+                  <td data-row="1" data-col="2">160</td>
+                  <td data-row="1" data-col="3">110</td>
+                  <td data-row="1" data-col="4">3.9</td>
                 </tr>
                 <tr>
-                  <td>21</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.9</td>
+                  <td data-row="2" data-col="0">21</td>
+                  <td data-row="2" data-col="1">6</td>
+                  <td data-row="2" data-col="2">160</td>
+                  <td data-row="2" data-col="3">110</td>
+                  <td data-row="2" data-col="4">3.9</td>
                 </tr>
                 <tr>
-                  <td>22.8</td>
-                  <td>4</td>
-                  <td>108</td>
-                  <td>93</td>
-                  <td>3.85</td>
+                  <td data-row="3" data-col="0">22.8</td>
+                  <td data-row="3" data-col="1">4</td>
+                  <td data-row="3" data-col="2">108</td>
+                  <td data-row="3" data-col="3">93</td>
+                  <td data-row="3" data-col="4">3.85</td>
                 </tr>
                 <tr>
-                  <td>21.4</td>
-                  <td>6</td>
-                  <td>258</td>
-                  <td>110</td>
-                  <td>3.08</td>
+                  <td data-row="4" data-col="0">21.4</td>
+                  <td data-row="4" data-col="1">6</td>
+                  <td data-row="4" data-col="2">258</td>
+                  <td data-row="4" data-col="3">110</td>
+                  <td data-row="4" data-col="4">3.08</td>
                 </tr>
         </tbody>
       </table>
@@ -1294,9 +1324,9 @@ MathJax = {
 
     <script>
 
-      function styleCell_tpnb6fsp5t1u9iv77yhh(i, j, css_id) {
-          var table = document.getElementById("tinytable_tpnb6fsp5t1u9iv77yhh");
-          var cell = table.rows[i]?.cells[j];  // Safe navigation to avoid errors
+      function styleCell_v97bne3vxct2bfxp955s(i, j, css_id) {
+          var table = document.getElementById("tinytable_v97bne3vxct2bfxp955s");
+          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
               cell.classList.add(css_id);
@@ -1305,53 +1335,58 @@ MathJax = {
           }
       }
       function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_tpnb6fsp5t1u9iv77yhh');
-        var newRow = table.insertRow(i);
+        var table = document.getElementById('tinytable_v97bne3vxct2bfxp955s');
+        // Find the row with data-row attribute matching i
+        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
+        var newRow = table.insertRow(targetRow.rowIndex);
         var newCell = newRow.insertCell(0);
         newCell.setAttribute("colspan", colspan);
+        newCell.setAttribute("data-col", "0");
+        newCell.setAttribute("data-row", i - 1);
         // newCell.innerText = content;
         // this may be unsafe, but innerText does not interpret <br>
         newCell.innerHTML = content;
       }
-      function spanCell_tpnb6fsp5t1u9iv77yhh(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_tpnb6fsp5t1u9iv77yhh");
-        const targetRow = table.rows[i];
-        const targetCell = targetRow.cells[j];
+      function spanCell_v97bne3vxct2bfxp955s(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_v97bne3vxct2bfxp955s");
+        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+        if (!targetCell) {
+          console.warn(`Cell at (${i}, ${j}) not found.`);
+        }
+
+        // Get all cells that need to be removed
+        const cellsToRemove = [];
         for (let r = 0; r < rowspan; r++) {
-          // Only start deleting cells to the right for the first row (r == 0)
-          if (r === 0) {
-            // Delete cells to the right of the target cell in the first row
-            for (let c = colspan - 1; c > 0; c--) {
-              if (table.rows[i + r].cells[j + c]) {
-                table.rows[i + r].deleteCell(j + c);
-              }
-            }
-          }
-          // For rows below the first, delete starting from the target column
-          if (r > 0) {
-            for (let c = colspan - 1; c >= 0; c--) {
-              if (table.rows[i + r] && table.rows[i + r].cells[j]) {
-                table.rows[i + r].deleteCell(j);
-              }
+          for (let c = 0; c < colspan; c++) {
+            if (r === 0 && c === 0) continue; // Skip the target cell
+            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
+            if (cell) {
+              cellsToRemove.push(cell);
             }
           }
         }
-        // Set rowspan and colspan of the target cell
-        targetCell.rowSpan = rowspan;
-        targetCell.colSpan = colspan;
+
+        // Remove all cells
+        cellsToRemove.forEach(cell => cell.remove());
+
+        // Set rowspan and colspan of the target cell if it exists
+        if (targetCell) {
+          targetCell.rowSpan = rowspan;
+          targetCell.colSpan = colspan;
+        }
       }
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: 10, j: 0 }, { i: 10, j: 1 }, { i: 10, j: 2 }, { i: 10, j: 3 }, { i: 10, j: 4 }, { i: 10, j: 5 }, { i: 10, j: 6 }, { i: 10, j: 7 },  ], css_id: 'tinytable_css_3w5jp63s3mk1iq8zx18d',}, 
-          { positions: [ { i: 0, j: 0 }, { i: 0, j: 1 }, { i: 0, j: 2 }, { i: 0, j: 3 }, { i: 0, j: 4 }, { i: 0, j: 5 }, { i: 0, j: 6 }, { i: 0, j: 7 },  ], css_id: 'tinytable_css_1uvfdjhu4t9cdxee3q5t',}, 
+          { positions: [ { i: '10', j: 0 }, { i: '10', j: 1 }, { i: '10', j: 2 }, { i: '10', j: 3 }, { i: '10', j: 4 }, { i: '10', j: 5 }, { i: '10', j: 6 }, { i: '10', j: 7 },  ], css_id: 'tinytable_css_ix8rxw80gnxqzp7qtc16',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 }, { i: '0', j: 7 },  ], css_id: 'tinytable_css_c93pf1yngm5zk8e86ctu',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_tpnb6fsp5t1u9iv77yhh(cell.i, cell.j, group.css_id);
+                  styleCell_v97bne3vxct2bfxp955s(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1359,8 +1394,8 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_3w5jp63s3mk1iq8zx18d, .table th.tinytable_css_3w5jp63s3mk1iq8zx18d { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_1uvfdjhu4t9cdxee3q5t, .table th.tinytable_css_1uvfdjhu4t9cdxee3q5t { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_ix8rxw80gnxqzp7qtc16, .table th.tinytable_css_ix8rxw80gnxqzp7qtc16 { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_c93pf1yngm5zk8e86ctu, .table th.tinytable_css_c93pf1yngm5zk8e86ctu { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
 
 .squirreltable {
   background-size: cover;
@@ -1371,121 +1406,121 @@ MathJax = {
 
     </style>
     <div class="container">
-      <table class="table table-borderless squirreltable" id="tinytable_tpnb6fsp5t1u9iv77yhh" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless squirreltable" id="tinytable_v97bne3vxct2bfxp955s" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
-                <th scope="col">mpg</th>
-                <th scope="col">cyl</th>
-                <th scope="col">disp</th>
-                <th scope="col">hp</th>
-                <th scope="col">drat</th>
-                <th scope="col">wt</th>
-                <th scope="col">qsec</th>
-                <th scope="col">vs</th>
+                <th scope="col" data-row="0" data-col="0">mpg</th>
+                <th scope="col" data-row="0" data-col="1">cyl</th>
+                <th scope="col" data-row="0" data-col="2">disp</th>
+                <th scope="col" data-row="0" data-col="3">hp</th>
+                <th scope="col" data-row="0" data-col="4">drat</th>
+                <th scope="col" data-row="0" data-col="5">wt</th>
+                <th scope="col" data-row="0" data-col="6">qsec</th>
+                <th scope="col" data-row="0" data-col="7">vs</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td>21</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.9</td>
-                  <td>2.62</td>
-                  <td>16.5</td>
-                  <td>0</td>
+                  <td data-row="1" data-col="0">21</td>
+                  <td data-row="1" data-col="1">6</td>
+                  <td data-row="1" data-col="2">160</td>
+                  <td data-row="1" data-col="3">110</td>
+                  <td data-row="1" data-col="4">3.9</td>
+                  <td data-row="1" data-col="5">2.62</td>
+                  <td data-row="1" data-col="6">16.5</td>
+                  <td data-row="1" data-col="7">0</td>
                 </tr>
                 <tr>
-                  <td>21</td>
-                  <td>6</td>
-                  <td>160</td>
-                  <td>110</td>
-                  <td>3.9</td>
-                  <td>2.88</td>
-                  <td>17</td>
-                  <td>0</td>
+                  <td data-row="2" data-col="0">21</td>
+                  <td data-row="2" data-col="1">6</td>
+                  <td data-row="2" data-col="2">160</td>
+                  <td data-row="2" data-col="3">110</td>
+                  <td data-row="2" data-col="4">3.9</td>
+                  <td data-row="2" data-col="5">2.88</td>
+                  <td data-row="2" data-col="6">17</td>
+                  <td data-row="2" data-col="7">0</td>
                 </tr>
                 <tr>
-                  <td>22.8</td>
-                  <td>4</td>
-                  <td>108</td>
-                  <td>93</td>
-                  <td>3.85</td>
-                  <td>2.32</td>
-                  <td>18.6</td>
-                  <td>1</td>
+                  <td data-row="3" data-col="0">22.8</td>
+                  <td data-row="3" data-col="1">4</td>
+                  <td data-row="3" data-col="2">108</td>
+                  <td data-row="3" data-col="3">93</td>
+                  <td data-row="3" data-col="4">3.85</td>
+                  <td data-row="3" data-col="5">2.32</td>
+                  <td data-row="3" data-col="6">18.6</td>
+                  <td data-row="3" data-col="7">1</td>
                 </tr>
                 <tr>
-                  <td>21.4</td>
-                  <td>6</td>
-                  <td>258</td>
-                  <td>110</td>
-                  <td>3.08</td>
-                  <td>3.21</td>
-                  <td>19.4</td>
-                  <td>1</td>
+                  <td data-row="4" data-col="0">21.4</td>
+                  <td data-row="4" data-col="1">6</td>
+                  <td data-row="4" data-col="2">258</td>
+                  <td data-row="4" data-col="3">110</td>
+                  <td data-row="4" data-col="4">3.08</td>
+                  <td data-row="4" data-col="5">3.21</td>
+                  <td data-row="4" data-col="6">19.4</td>
+                  <td data-row="4" data-col="7">1</td>
                 </tr>
                 <tr>
-                  <td>18.7</td>
-                  <td>8</td>
-                  <td>360</td>
-                  <td>175</td>
-                  <td>3.15</td>
-                  <td>3.44</td>
-                  <td>17</td>
-                  <td>0</td>
+                  <td data-row="5" data-col="0">18.7</td>
+                  <td data-row="5" data-col="1">8</td>
+                  <td data-row="5" data-col="2">360</td>
+                  <td data-row="5" data-col="3">175</td>
+                  <td data-row="5" data-col="4">3.15</td>
+                  <td data-row="5" data-col="5">3.44</td>
+                  <td data-row="5" data-col="6">17</td>
+                  <td data-row="5" data-col="7">0</td>
                 </tr>
                 <tr>
-                  <td>18.1</td>
-                  <td>6</td>
-                  <td>225</td>
-                  <td>105</td>
-                  <td>2.76</td>
-                  <td>3.46</td>
-                  <td>20.2</td>
-                  <td>1</td>
+                  <td data-row="6" data-col="0">18.1</td>
+                  <td data-row="6" data-col="1">6</td>
+                  <td data-row="6" data-col="2">225</td>
+                  <td data-row="6" data-col="3">105</td>
+                  <td data-row="6" data-col="4">2.76</td>
+                  <td data-row="6" data-col="5">3.46</td>
+                  <td data-row="6" data-col="6">20.2</td>
+                  <td data-row="6" data-col="7">1</td>
                 </tr>
                 <tr>
-                  <td>14.3</td>
-                  <td>8</td>
-                  <td>360</td>
-                  <td>245</td>
-                  <td>3.21</td>
-                  <td>3.57</td>
-                  <td>15.8</td>
-                  <td>0</td>
+                  <td data-row="7" data-col="0">14.3</td>
+                  <td data-row="7" data-col="1">8</td>
+                  <td data-row="7" data-col="2">360</td>
+                  <td data-row="7" data-col="3">245</td>
+                  <td data-row="7" data-col="4">3.21</td>
+                  <td data-row="7" data-col="5">3.57</td>
+                  <td data-row="7" data-col="6">15.8</td>
+                  <td data-row="7" data-col="7">0</td>
                 </tr>
                 <tr>
-                  <td>24.4</td>
-                  <td>4</td>
-                  <td>147</td>
-                  <td>62</td>
-                  <td>3.69</td>
-                  <td>3.19</td>
-                  <td>20</td>
-                  <td>1</td>
+                  <td data-row="8" data-col="0">24.4</td>
+                  <td data-row="8" data-col="1">4</td>
+                  <td data-row="8" data-col="2">147</td>
+                  <td data-row="8" data-col="3">62</td>
+                  <td data-row="8" data-col="4">3.69</td>
+                  <td data-row="8" data-col="5">3.19</td>
+                  <td data-row="8" data-col="6">20</td>
+                  <td data-row="8" data-col="7">1</td>
                 </tr>
                 <tr>
-                  <td>22.8</td>
-                  <td>4</td>
-                  <td>141</td>
-                  <td>95</td>
-                  <td>3.92</td>
-                  <td>3.15</td>
-                  <td>22.9</td>
-                  <td>1</td>
+                  <td data-row="9" data-col="0">22.8</td>
+                  <td data-row="9" data-col="1">4</td>
+                  <td data-row="9" data-col="2">141</td>
+                  <td data-row="9" data-col="3">95</td>
+                  <td data-row="9" data-col="4">3.92</td>
+                  <td data-row="9" data-col="5">3.15</td>
+                  <td data-row="9" data-col="6">22.9</td>
+                  <td data-row="9" data-col="7">1</td>
                 </tr>
                 <tr>
-                  <td>19.2</td>
-                  <td>6</td>
-                  <td>168</td>
-                  <td>123</td>
-                  <td>3.92</td>
-                  <td>3.44</td>
-                  <td>18.3</td>
-                  <td>1</td>
+                  <td data-row="10" data-col="0">19.2</td>
+                  <td data-row="10" data-col="1">6</td>
+                  <td data-row="10" data-col="2">168</td>
+                  <td data-row="10" data-col="3">123</td>
+                  <td data-row="10" data-col="4">3.92</td>
+                  <td data-row="10" data-col="5">3.44</td>
+                  <td data-row="10" data-col="6">18.3</td>
+                  <td data-row="10" data-col="7">1</td>
                 </tr>
         </tbody>
       </table>
