@@ -50,7 +50,7 @@ tt(head(iris)) |>
   group_tt(i = list("After 0" = 1))
 ```
 
-We can style group rows in the same way as regular rows:
+We can style group rows in the same way as regular rows (caveat: not in Word or Markdown):
 
 ```{r}
 tt(dat) |>
@@ -76,8 +76,9 @@ We can use the `group_tt()` function to group rows and label them using spanners
 
 ```{r}
 # subset and sort data
-df <- head(mtcars, 10)
-df <- df[order(df$am), ]
+df <- mtcars |> 
+  head(10) |>
+  sort_by(~am)
 
 # draw table
 tt(df) |> group_tt(i = df$am)
