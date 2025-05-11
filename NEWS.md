@@ -2,13 +2,19 @@
 
 ## Development
 
+Bugs:
+
+* Major refactor of `rowspan` for HTML files. Thanks to @J-Moravec and @ASKurz for reports #355 and #457.
+* `theme_tt(x, "multipage")` failed to insert `rowhead` in LaTeX. Thanks to @sTeADone for report #460.
+
+## 0.9.0
+
 New:
 
 * `strip_tt()` function removes elements of an existing `tinytable` object.
 
 Bugs:
 
-* Major refactor of `rowspan` for HTML files. Thanks to @J-Moravec and @ASKurz for reports #355 and #457.
 * Typst footnotes with cell coordinates. Thanks to @sverrirarnors for report #456.
 
 Docs improvement:

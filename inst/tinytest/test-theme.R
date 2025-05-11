@@ -36,3 +36,13 @@ tab <- data.frame(Math = c("$\\alpha$", "$a_{it}$", "$e^{i\\pi} + 1 = 0$")) |>
   tt(theme = theme_mitex) |>
   save_tt("html")
 expect_inherits(tab, "character")
+
+
+# Issue #460: rowhead is not inserted in LaTeX
+tmp <- rbind(mtcars, mtcars)[, 1:6]
+cap <- "A long 80\\% width table with repeating headers."
+tab <- tt(tmp, width = .8, caption = cap) |>
+  theme_tt("multipage", rowhead = 1) |>
+  save_tt("latex")
+expect_true(grepl("rowhead=1", tab))
+
