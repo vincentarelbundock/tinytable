@@ -7,6 +7,11 @@ Bugs:
 * Major refactor of `rowspan` for HTML files. Thanks to @J-Moravec and @ASKurz for reports #355 and #457.
 * `theme_tt(x, "multipage")` failed to insert `rowhead` in LaTeX. Thanks to @sTeADone for report #460.
 
+Misc:
+
+* Many improvements to the documentation and vignettes
+* New vignette with table of contents for CRAN
+
 ## 0.9.0
 
 New:

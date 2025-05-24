@@ -222,6 +222,19 @@ tt(tab) |>
   style_tt(1, 1, rowspan = 2)
 ```
 
+We can combine several spans to create complex tables like this one:
+
+```{r}
+df <- structure(list(Col1 = c("Col Header", "Item 0", "Item 1", "Item 2", "Total"), Col2 = c("Span 1", "X", "xx", "xx", "xxxx"), Col2.1 = c("Span 1", "Y", "xx", "xx", "xxxx"), Col2.2 = c("Span 2", "X", "xx", "xx", "xxxx"), Col2.3 = c("Span 2", "Y", "xx", "xx", "xxxx")), class = "data.frame", row.names = c(NA, -5L))
+df |>
+    setNames(NULL) |>
+    tt() |>
+    style_tt(1, 1, rowspan = 2, bold = TRUE) |>
+    style_tt(1, c(2, 4), colspan = 2, bold = TRUE) |>
+    style_tt(5, c(2, 4), colspan = 2) |>
+    theme_tt("grid")
+```
+
 ## Headers
 
 The header can be omitted from the table by deleting the column names in the `x` data frame:
