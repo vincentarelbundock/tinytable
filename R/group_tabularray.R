@@ -82,6 +82,31 @@ group_tabularray_row <- function(x, i, indent) {
   }
   label <- names(i)
 
+  # Insert the new rows and get the updated table
+  label <- paste(label, strrep("&", ncol(x) - 1), "\\\\")
+  result <- insert_tabularray_row(x, label, i)
+  x@table_string <- result$table_string
+
+  # colspan for row groups
+  # can't figure out how to use style_tt() here. Maybe build order?
+  cellspec <- sprintf(
+    "cell{%s}{%s}={%s}{%s},",
+    result$indices$new[is.na(result$indices$old)] + x@nhead,
+    1,
+    paste0("c=", ncol(x)),
+    ""
+  )
+  cellspec <- paste(cellspec, collapse = "")
+  x@table_string <- tabularray_insert(
+    x@table_string,
+    content = cellspec,
+    type = "inner"
+  )
+
+  return(x)
+}
+
+insert_tabularray_row <- function(x, label, i) {
   tab <- strsplit(x@table_string, "\\n")[[1]]
 
   # store the original body lines when creating the table, and use those to guess the boundaries.
@@ -95,7 +120,6 @@ group_tabularray_row <- function(x, i, indent) {
 
   # separator rows
   # add separator rows so they are treated as body in future calls
-  new <- paste(label, strrep("&", ncol(x) - 1), "\\\\")
   x@body <- c(x@body, new)
   idx <- insert_values(mid, new, i)
 
@@ -103,42 +127,8 @@ group_tabularray_row <- function(x, i, indent) {
   tab <- c(top, idx$vec, bot)
   tab <- paste(tab, collapse = "\n")
 
-  # colspan for row groups
-  # can't figure out how to use style_tt() here. Maybe build order?
-  cellspec <- sprintf(
-    "cell{%s}{%s}={%s}{%s},",
-    idx$new[is.na(idx$old)] + x@nhead,
-    1,
-    paste0("c=", ncol(x)),
-    ""
-  )
-  cellspec <- paste(cellspec, collapse = "")
-  tab <- tabularray_insert(tab, content = cellspec, type = "inner")
-
-  x@table_string <- tab
-
-  return(x)
-}
-
-insert_values <- function(vec, values, positions) {
-  if (length(values) != length(positions)) {
-    stop("The length of values and positions must be the same")
-  }
-
-  # Sort the positions in decreasing order along with their corresponding values
-  ord <- order(positions, decreasing = TRUE)
-  values <- values[ord]
-  positions <- positions[ord]
-
-  # Create a vector of indices for the original vector
-  original_indices <- seq_along(vec)
-
-  # Insert values and update indices
-  for (i in seq_along(values)) {
-    vec <- append(vec, values[i], after = positions[i] - 1)
-    original_indices <- append(original_indices, NA, after = positions[i] - 1)
-  }
-
-  # Return the extended vector and the original indices vector
-  return(data.frame(vec = vec, old = original_indices, new = seq_along(vec)))
+  return(list(
+    table_string = tab,
+    indices = idx
+  ))
 }
