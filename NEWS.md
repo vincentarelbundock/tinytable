@@ -9,6 +9,7 @@ Bugs:
 
 Misc:
 
+* `group_tt()` argument `j` accepts a single string as delimiter (ex: `"_"`) when column names of the data frame include group names.
 * Many improvements to the documentation and vignettes
 * New vignette with table of contents for CRAN
 
