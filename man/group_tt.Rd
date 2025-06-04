@@ -48,7 +48,8 @@ via the Pandoc software.
 dat <- data.frame(
   label = c("a", "a", "a", "b", "b", "c", "a", "a"),
   x1 = rnorm(8),
-  x2 = rnorm(8))
+  x2 = rnorm(8)
+)
 tt(dat[, 2:3]) |> group_tt(i = dat$label)
 
 # named lists of labels
@@ -56,24 +57,30 @@ tt(mtcars[1:10, 1:5]) |>
   group_tt(
     i = list(
       "Hello" = 3,
-      "World" = 8),
+      "World" = 8
+    ),
     j = list(
       "Foo" = 2:3,
-      "Bar" = 4:5))
+      "Bar" = 4:5
+    )
+  )
 
 dat <- mtcars[1:9, 1:8]
 tt(dat) |>
   group_tt(i = list(
     "I like (fake) hamburgers" = 3,
     "She prefers halloumi" = 4,
-    "They love tofu" = 7))
+    "They love tofu" = 7
+  ))
 
 tt(dat) |>
   group_tt(
     j = list(
       "Hamburgers" = 1:3,
       "Halloumi" = 4:5,
-      "Tofu" = 7))
+      "Tofu" = 7
+    )
+  )
 
 x <- mtcars[1:5, 1:6]
 tt(x) |>

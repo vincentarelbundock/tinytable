@@ -11,6 +11,7 @@ Misc:
 
 * Many improvements to the documentation and vignettes
 * New vignette with table of contents for CRAN
+* New function `group_tt_cols_by_delim` for easy grouping of columns by a delimiter in the column names. 
 
 ## 0.9.0
 
