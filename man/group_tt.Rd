@@ -4,7 +4,13 @@
 \alias{group_tt}
 \title{Spanning labels to identify groups of rows or columns}
 \usage{
-group_tt(x, i = NULL, j = NULL, indent = 1, ...)
+group_tt(
+  x,
+  i = getOption("tinytable_group_i", default = NULL),
+  j = getOption("tinytable_group_j", default = NULL),
+  indent = getOption("tinytable_group_indent", default = 1),
+  ...
+)
 }
 \arguments{
 \item{x}{A data frame or data table to be rendered as a table.}
@@ -16,7 +22,7 @@ group_tt(x, i = NULL, j = NULL, indent = 1, ...)
 \item \code{i=list("Foo Bar"=0)}: insert the label in the first row after the header.
 }}
 
-\item{j}{A named list of column indices to group. The names of the list will be used as labels. See examples below. Note: empty labels must be a space: " ".}
+\item{j}{A named list of column indices to group. The names of the list will be used as labels. See examples below. Note: empty labels must be a space: " ". A single string when column names include the group name as a prefix, ex: group1_column1, group1_column2, etc.}
 
 \item{indent}{integer number of \code{pt} to use when indenting the non-labelled rows.}
 
@@ -48,7 +54,8 @@ via the Pandoc software.
 dat <- data.frame(
   label = c("a", "a", "a", "b", "b", "c", "a", "a"),
   x1 = rnorm(8),
-  x2 = rnorm(8))
+  x2 = rnorm(8)
+)
 tt(dat[, 2:3]) |> group_tt(i = dat$label)
 
 # named lists of labels
@@ -56,24 +63,30 @@ tt(mtcars[1:10, 1:5]) |>
   group_tt(
     i = list(
       "Hello" = 3,
-      "World" = 8),
+      "World" = 8
+    ),
     j = list(
       "Foo" = 2:3,
-      "Bar" = 4:5))
+      "Bar" = 4:5
+    )
+  )
 
 dat <- mtcars[1:9, 1:8]
 tt(dat) |>
   group_tt(i = list(
     "I like (fake) hamburgers" = 3,
     "She prefers halloumi" = 4,
-    "They love tofu" = 7))
+    "They love tofu" = 7
+  ))
 
 tt(dat) |>
   group_tt(
     j = list(
       "Hamburgers" = 1:3,
       "Halloumi" = 4:5,
-      "Tofu" = 7))
+      "Tofu" = 7
+    )
+  )
 
 x <- mtcars[1:5, 1:6]
 tt(x) |>

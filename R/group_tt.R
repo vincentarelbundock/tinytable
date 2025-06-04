@@ -7,7 +7,7 @@
 #' + `i=list("Hello"=5)`: insert the "Hello" label after the 4th row in the original table.
 #' + `i=list("Hello"=2, "World"=2)`: insert the two labels consecutively after the 1st row in the original table.
 #' + `i=list("Foo Bar"=0)`: insert the label in the first row after the header.
-#' @param j A named list of column indices to group. The names of the list will be used as labels. See examples below. Note: empty labels must be a space: " ".
+#' @param j A named list of column indices to group. The names of the list will be used as labels. See examples below. Note: empty labels must be a space: " ". A single string when column names include the group name as a prefix, ex: group1_column1, group1_column2, etc.
 #' @param ... Other arguments are ignored.
 #' @return An object of class `tt` representing the table.
 #' @param indent integer number of `pt` to use when indenting the non-labelled rows.
@@ -59,7 +59,11 @@
 #'   group_tt(j = list("Hello" = 1:2, "World" = 3:4, "Hello" = 5:6)) |>
 #'   group_tt(j = list("Foo" = 1:3, "Bar" = 4:6))
 #'
-group_tt <- function(x, i = NULL, j = NULL, indent = 1, ...) {
+group_tt <- function(x, 
+  i = getOption("tinytable_group_i", default = NULL), 
+  j = getOption("tinytable_group_j", default = NULL), 
+  indent = getOption("tinytable_group_indent", default = 1), 
+  ...) {
   # ... is important for ihead passing
 
   if (!inherits(x, "tinytable")) {
