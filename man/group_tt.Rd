@@ -22,7 +22,11 @@ group_tt(
 \item \code{i=list("Foo Bar"=0)}: insert the label in the first row after the header.
 }}
 
-\item{j}{A named list of column indices to group. The names of the list will be used as labels. See examples below. Note: empty labels must be a space: " ". A single string when column names include the group name as a prefix, ex: group1_column1, group1_column2, etc.}
+\item{j}{String or named list
+\itemize{
+\item Named list of column indices to group, ex: \code{j=list("A"=1:2,"B"=3:6)}. The names of the list will be used as labels. See below for more examples. Note: empty labels must be a space: " ".
+\item A single string when column names include the group name as a prefix, ex: group1_column1, group1_column2, etc.
+}}
 
 \item{indent}{integer number of \code{pt} to use when indenting the non-labelled rows.}
 
@@ -100,7 +104,8 @@ dat <- data.frame(
   A_a2 = "3",
   B_b1 = 4,
   B_b2 = 5,
-  B_C = 6)
+  B_C = 6
+)
 tt(dat) |> group_tt(j = "_")
 
 }
