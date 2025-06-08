@@ -142,6 +142,22 @@ tt(x) |>
   group_tt(j = list("Hello" = 1:2, "World" = 4:5))
 ```
 
+### Column names with delimiters
+
+Group labels can be specified using column names with delimiters. For example, some of the columns in this data frame have group identifiers. Note that the first column does not have a group identifier, and that the last column has a group identifier but no column name.
+
+```{r}
+dat <- data.frame(
+  id = 1, 
+  A_a1 = 2, 
+  A_a2 = "3", 
+  B_b1 = 4, 
+  B_b2 = 5,  
+  C_ = 6)
+
+tt(dat) |> group_tt(j = "_")
+```
+
 ## Repeated column names
 
 In some contexts, users wish to repeat the column names to treat them as group labels. Consider this dataset:

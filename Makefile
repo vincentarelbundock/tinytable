@@ -12,7 +12,7 @@ document:  readme ## document
 readme:  README.qmd ## readme
 	quarto render README.qmd -t gfm
 
-check:  document website ## check
+check:  document ## check
 	Rscript -e "devtools::check()"
 
 install: document  ## install

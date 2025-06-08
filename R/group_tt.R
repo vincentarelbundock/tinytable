@@ -59,6 +59,16 @@
 #'   group_tt(j = list("Hello" = 1:2, "World" = 3:4, "Hello" = 5:6)) |>
 #'   group_tt(j = list("Foo" = 1:3, "Bar" = 4:6))
 #'
+#' # column names with delimiters
+#' dat <- data.frame(
+#'   A_id = 1, 
+#'   A_a1 = 2, 
+#'   A_a2 = "3", 
+#'   B_b1 = 4, 
+#'   B_b2 = 5,  
+#'   B_C = 6)
+#' tt(dat) |> group_tt(j = "_")
+#' 
 group_tt <- function(x, 
   i = getOption("tinytable_group_i", default = NULL), 
   j = getOption("tinytable_group_j", default = NULL), 
