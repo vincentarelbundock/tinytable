@@ -95,11 +95,11 @@ tt(x) |>
 
 # column names with delimiters
 dat <- data.frame(
-  A_id = 1, 
-  A_a1 = 2, 
-  A_a2 = "3", 
-  B_b1 = 4, 
-  B_b2 = 5,  
+  A_id = 1,
+  A_a1 = 2,
+  A_a2 = "3",
+  B_b1 = 4,
+  B_b2 = 5,
   B_C = 6)
 tt(dat) |> group_tt(j = "_")
 

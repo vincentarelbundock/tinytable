@@ -61,19 +61,21 @@
 #'
 #' # column names with delimiters
 #' dat <- data.frame(
-#'   A_id = 1, 
-#'   A_a1 = 2, 
-#'   A_a2 = "3", 
-#'   B_b1 = 4, 
-#'   B_b2 = 5,  
+#'   A_id = 1,
+#'   A_a1 = 2,
+#'   A_a2 = "3",
+#'   B_b1 = 4,
+#'   B_b2 = 5,
 #'   B_C = 6)
 #' tt(dat) |> group_tt(j = "_")
-#' 
-group_tt <- function(x, 
-  i = getOption("tinytable_group_i", default = NULL), 
-  j = getOption("tinytable_group_j", default = NULL), 
-  indent = getOption("tinytable_group_indent", default = 1), 
-  ...) {
+#'
+group_tt <- function(
+  x,
+  i = getOption("tinytable_group_i", default = NULL),
+  j = getOption("tinytable_group_j", default = NULL),
+  indent = getOption("tinytable_group_indent", default = 1),
+  ...
+) {
   # ... is important for ihead passing
 
   if (!inherits(x, "tinytable")) {
@@ -162,7 +164,9 @@ j_delim_to_named_list <- function(x, j) {
   nm <- x@names
 
   # Find which elements contain the delimiter, and optionally j. Others are left as is
-  check_for_multiple_delims <- any(lengths(gregexec(pattern = j, text = nm)) > 1L)
+  check_for_multiple_delims <- any(
+    lengths(gregexec(pattern = j, text = nm)) > 1L
+  )
   if (check_for_multiple_delims) {
     warning(
       "Multiple delimiters found in column names. Only the first delimiter will be used for grouping."
@@ -170,7 +174,11 @@ j_delim_to_named_list <- function(x, j) {
   }
 
   indices <- grepl(j, nm, fixed = TRUE)
-  groupnames <- sub(pattern = paste0(j, ".*"), replacement = "", x = nm[indices])
+  groupnames <- sub(
+    pattern = paste0(j, ".*"),
+    replacement = "",
+    x = nm[indices]
+  )
   indices <- which(grepl(j, nm, fixed = TRUE))
   groupnames <- split(indices, groupnames)
 

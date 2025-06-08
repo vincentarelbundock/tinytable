@@ -4,7 +4,6 @@ theme_multipage <- function(
   rowfoot = get_option("tinytable_theme_multipage_rowfoot", 0L),
   ...
 ) {
-
   if (rowhead > 0) {
     x <- style_tt(
       x,

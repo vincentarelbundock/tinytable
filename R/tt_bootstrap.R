@@ -150,8 +150,11 @@ setMethod(
     if (length(colnames(x)) > 0) {
       # Generate all header cells at once
       col_indices <- seq_along(colnames(x)) - 1
-      header_cells <- sprintf('    <th scope="col" data-row="0" data-col="%d">%s</th>', 
-                            col_indices, colnames(x))
+      header_cells <- sprintf(
+        '    <th scope="col" data-row="0" data-col="%d">%s</th>',
+        col_indices,
+        colnames(x)
+      )
       header <- c("  <tr>", header_cells, "  </tr>")
       header <- paste(strrep(" ", 11), header)
     } else {
@@ -171,21 +174,28 @@ setMethod(
 
     # Generate all cells at once using matrix operations
     row_indices <- rep(i_idx, each = ncol(x@table_dataframe))
-    col_indices <- rep(seq_len(ncol(x@table_dataframe)) - 1, times = nrow(x@table_dataframe))
+    col_indices <- rep(
+      seq_len(ncol(x@table_dataframe)) - 1,
+      times = nrow(x@table_dataframe)
+    )
     cell_values <- as.vector(t(x@table_dataframe))
-    
+
     # Create all cells in one operation
-    cells <- sprintf('    <td data-row="%d" data-col="%d">%s</td>',
-                    row_indices, col_indices, cell_values)
-    
+    cells <- sprintf(
+      '    <td data-row="%d" data-col="%d">%s</td>',
+      row_indices,
+      col_indices,
+      cell_values
+    )
+
     # Reshape into rows
     cells_matrix <- matrix(cells, ncol = ncol(x@table_dataframe), byrow = TRUE)
     rows <- apply(cells_matrix, 1, function(row) {
       c("  <tr>", row, "  </tr>")
     })
-    
+
     body <- unlist(rows)
-    
+
     idx <- grep("$tinytable_BOOTSTRAP_BODY", template, fixed = TRUE)
     template <- c(
       template[1:(idx - 1)],

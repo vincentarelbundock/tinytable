@@ -35,7 +35,7 @@ group_bootstrap_col <- function(x, j, ihead, ...) {
       '<th scope="col" align="center" colspan=%s data-row="%d" data-col="%d">%s</th>',
       max(j[[k]]) - min(j[[k]]) + 1,
       ihead,
-      k - 1,  # 0-based indexing for data-col
+      k - 1, # 0-based indexing for data-col
       names(j)[k]
     )
   })

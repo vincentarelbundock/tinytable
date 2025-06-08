@@ -204,15 +204,15 @@ expect_snapshot_print(print_html(dat), "html-issue297.html")
 
 # # Issue #355a: rowspan breaks indexing
 tab <- tt(mtcars[1:6, 1:5]) |>
-    group_tt(j = list("Hello" = 1:2, "World" = 3:5)) |>
-    group_tt(j = list("Foo" = 2:3, "Bar" = 4:5)) |>
-    style_tt(i = c(1, 3, 5), j = 1:2, bold = TRUE, color = "red", rowspan = 2) |>
-    style_tt(i = 1 + c(1, 3, 5), j = 3, bold = TRUE, color = "green") |>
-    style_tt(i = c(1, 3, 5), j = 3, bold = TRUE, color = "orange") |>
-    style_tt(i = 0, background = "black", color = "white") |>
-    style_tt(i = -1, color = "pink") |>
-    style_tt(i = -2, color = "blue") |>
-    style_tt(i = 6, background = "pink")
+  group_tt(j = list("Hello" = 1:2, "World" = 3:5)) |>
+  group_tt(j = list("Foo" = 2:3, "Bar" = 4:5)) |>
+  style_tt(i = c(1, 3, 5), j = 1:2, bold = TRUE, color = "red", rowspan = 2) |>
+  style_tt(i = 1 + c(1, 3, 5), j = 3, bold = TRUE, color = "green") |>
+  style_tt(i = c(1, 3, 5), j = 3, bold = TRUE, color = "orange") |>
+  style_tt(i = 0, background = "black", color = "white") |>
+  style_tt(i = -1, color = "pink") |>
+  style_tt(i = -2, color = "blue") |>
+  style_tt(i = 6, background = "pink")
 expect_snapshot_print(print_html(tab), "html-issue355a.html")
 
 tab <- tt(mtcars[1:9, 1:8]) |>

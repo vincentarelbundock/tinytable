@@ -131,22 +131,29 @@ expect_inherits(save_tt(tab, "markdown"), "character")
 # delimiters in column names
 options(tinytable_print_output = "markdown")
 tab <- mtcars |>
-    head() |>
-    tt()
+  head() |>
+  tt()
 expect_snapshot_print(tab, label = "group_tt_delim-no-delim.md")
 
-tab <- data.frame(A_id = 1, A_a1 = 2, A_a2 = "3", B_b1 = 4, B_b2 = 5, B_C = 6) |>
-    tt() |>
-    group_tt(j = "_")
+tab <- data.frame(
+  A_id = 1,
+  A_a1 = 2,
+  A_a2 = "3",
+  B_b1 = 4,
+  B_b2 = 5,
+  B_C = 6
+) |>
+  tt() |>
+  group_tt(j = "_")
 expect_snapshot_print(tab, label = "group_tt_delim-all-delim.md")
 
 tab <- data.frame(id = 1, A_a1 = 2, A_a2 = "3", B_b1 = 4, B_b2 = 5, C = 6) |>
-    tt() |>
-    group_tt(j = "_")
+  tt() |>
+  group_tt(j = "_")
 expect_snapshot_print(tab, label = "group_tt_delim-some-delim.md")
 
 tab <- data.frame(id = 1, Axa1 = 2, Axa2 = "3", Bxb1 = 4, Bxb2 = 5, C = 6) |>
-    tt() |>
-    group_tt(j = "x")
+  tt() |>
+  group_tt(j = "x")
 expect_snapshot_print(tab, label = "group_tt_delim-alt-delim.md")
 options(tinytable_print_output = NULL)

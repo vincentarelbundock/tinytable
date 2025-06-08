@@ -45,4 +45,3 @@ tab <- tt(tmp, width = .8, caption = cap) |>
   theme_tt("multipage", rowhead = 1) |>
   save_tt("latex")
 expect_true(grepl("rowhead=1", tab))
-

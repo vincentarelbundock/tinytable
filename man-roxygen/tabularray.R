@@ -1,4 +1,4 @@
-#' 
+#'
 #'
 #' @section LaTeX `tabularray` options:
 #'
@@ -23,7 +23,7 @@
 #' | `vspan`   | vertical span algorithm: `default` or `even`              | `default`     |
 #' | `baseline`| set the baseline of the table                             | `m`           |
 #'
-#' 
+#'
 #' Outer specifications:
 #'
 #'
@@ -93,11 +93,11 @@
 #' | `colsep`    | set horizontal space to both sides of the column                               | `6pt`         |
 #' | `preto`     | prepend text to every cell (like `>` specifier in `colspec`)                   | None          |
 #' | `appto`     | append text to every cell (like `<` specifier in `colspec`)                    | None          |
-#' 
+#'
 #'
 #' ## hlines
 #'
-#' 
+#'
 #' | Key         | Description and Values                                         | Initial Value |
 #' |-------------|-----------------------------------------------------------------|---------------|
 #' | `dash`      | dash style: `solid`, `dashed` or `dotted`                      | `solid`       |
@@ -107,10 +107,10 @@
 #' | `leftpos`   | crossing or trimming position at the left side                 | `1`           |
 #' | `rightpos`  | crossing or trimming position at the right side                | `1`           |
 #' | `endpos`    | adjust leftpos/rightpos for only the leftmost/rightmost column | `false`       |
-#' 
+#'
 #' ## vlines
 #'
-#' 
+#'
 #' | Key        | Description and Values                                        | Initial Value |
 #' |------------|---------------------------------------------------------------|---------------|
 #' | `dash`     | dash style: `solid`, `dashed` or `dotted`                     | `solid`       |
@@ -119,4 +119,4 @@
 #' | `fg`       | rule color name                                               | None          |
 #' | `abovepos` | crossing or trimming position at the above side               | `0`           |
 #' | `belowpos` | crossing or trimming position at the below side               | `0`           |
-#' 
+#'

@@ -123,16 +123,14 @@ expect_snapshot_print(
 
 # Line breaks
 expect_snapshot_print(
-  (
-    tt(
-      data.frame(
-        "{Sed ut \\\\ perspiciatis unde}",
-        "dicta sunt<br> explicabo. Nemo"
-      ) |>
-        setNames(c("LaTeX line break", "HTML line break")),
-      width = 1
-    )
-  ),
+  (tt(
+    data.frame(
+      "{Sed ut \\\\ perspiciatis unde}",
+      "dicta sunt<br> explicabo. Nemo"
+    ) |>
+      setNames(c("LaTeX line break", "HTML line break")),
+    width = 1
+  )),
   label = "latex-breaks"
 )
 
@@ -143,12 +141,10 @@ dat <- data.frame(
   c = c(98938272783457, 7288839482, 29111727, 93945)
 )
 expect_snapshot_print(
-  (
-    tt(dat) |>
-      format_tt(j = "a", sprintf = "Food: %s") |>
-      format_tt(j = 2, digits = 1) |>
-      format_tt(j = "c", digits = 2, num_suffix = TRUE)
-  ),
+  (tt(dat) |>
+    format_tt(j = "a", sprintf = "Food: %s") |>
+    format_tt(j = 2, digits = 1) |>
+    format_tt(j = "c", digits = 2, num_suffix = TRUE)),
   label = "latex-formatting"
 )
 
@@ -196,16 +192,14 @@ expect_snapshot_print(
 # Style
 x <- mtcars[1:4, 1:5]
 expect_snapshot_print(
-  (
-    tt(x) |>
-      style_tt(
-        i = 2:3,
-        j = c(1, 3, 4),
-        italic = TRUE,
-        background = "green",
-        color = "orange"
-      )
-  ),
+  (tt(x) |>
+    style_tt(
+      i = 2:3,
+      j = c(1, 3, 4),
+      italic = TRUE,
+      background = "green",
+      color = "orange"
+    )),
   label = "latex-style"
 )
 
@@ -217,20 +211,18 @@ expect_snapshot_print(
 
 # Merging cells
 expect_snapshot_print(
-  (
-    tt(x) |>
-      style_tt(
-        i = 2,
-        j = 2,
-        colspan = 3,
-        rowspan = 2,
-        align = "c",
-        alignv = "m",
-        color = "white",
-        background = "black",
-        bold = TRUE
-      )
-  ),
+  (tt(x) |>
+    style_tt(
+      i = 2,
+      j = 2,
+      colspan = 3,
+      rowspan = 2,
+      align = "c",
+      alignv = "m",
+      color = "white",
+      background = "black",
+      bold = TRUE
+    )),
   label = "latex-merging_cells"
 )
 
@@ -238,24 +230,20 @@ expect_snapshot_print(
 tab <- aggregate(mpg ~ cyl + am, FUN = mean, data = mtcars)
 tab <- tab[order(tab$cyl, tab$am), ]
 expect_snapshot_print(
-  (
-    tt(tab, digits = 2) |>
-      style_tt(i = c(1, 3, 5), j = 1, rowspan = 2, alignv = "t")
-  ),
+  (tt(tab, digits = 2) |>
+    style_tt(i = c(1, 3, 5), j = 1, rowspan = 2, alignv = "t")),
   label = "latex-spanning_cells"
 )
 
 # Conditional styling
 k <- mtcars[1:10, c("mpg", "am", "vs")]
 expect_snapshot_print(
-  (
-    tt(k) |>
-      style_tt(
-        i = which(k$am == k$vs),
-        background = "teal",
-        color = "white"
-      )
-  ),
+  (tt(k) |>
+    style_tt(
+      i = which(k$am == k$vs),
+      background = "teal",
+      color = "white"
+    )),
   label = "latex-conditional_styling"
 )
 
@@ -266,17 +254,15 @@ colnames(k) <- NULL
 bg <- hcl.colors(20, "Inferno")
 fg <- ifelse(as.matrix(k) < 1.7, tail(bg, 1), head(bg, 1))
 expect_snapshot_print(
-  (
-    tt(k, width = .7, theme = "void") |>
-      style_tt(j = 1:5, align = "ccccc") |>
-      style_tt(
-        i = 1:4,
-        j = 1:5,
-        color = fg,
-        background = bg,
-        fontsize = fs
-      )
-  ),
+  (tt(k, width = .7, theme = "void") |>
+    style_tt(j = 1:5, align = "ccccc") |>
+    style_tt(
+      i = 1:4,
+      j = 1:5,
+      color = fg,
+      background = bg,
+      fontsize = fs
+    )),
   label = "latex-heatmaps"
 )
 

@@ -30,95 +30,95 @@
 #' @return An object of class `tt` representing the table with stripped styling.
 #' @export
 strip_tt <- function(
-    x,
-    style = FALSE,
-    format = FALSE,
-    theme = FALSE,
-    notes = FALSE,
-    caption = FALSE,
-    group = FALSE,
-    bold = FALSE,
-    italic = FALSE,
-    monospace = FALSE,
-    underline = FALSE,
-    strikeout = FALSE,
-    color = FALSE,
-    background = FALSE,
-    fontsize = FALSE,
-    align = FALSE,
-    alignv = FALSE,
-    colspan = FALSE,
-    rowspan = FALSE,
-    indent = FALSE,
-    line = FALSE,
-    bootstrap_class = FALSE,
-    bootstrap_css = FALSE,
-    bootstrap_css_rule = FALSE,
-    tabularray_inner = FALSE,
-    tabularray_outer = FALSE,
-    width = FALSE
+  x,
+  style = FALSE,
+  format = FALSE,
+  theme = FALSE,
+  notes = FALSE,
+  caption = FALSE,
+  group = FALSE,
+  bold = FALSE,
+  italic = FALSE,
+  monospace = FALSE,
+  underline = FALSE,
+  strikeout = FALSE,
+  color = FALSE,
+  background = FALSE,
+  fontsize = FALSE,
+  align = FALSE,
+  alignv = FALSE,
+  colspan = FALSE,
+  rowspan = FALSE,
+  indent = FALSE,
+  line = FALSE,
+  bootstrap_class = FALSE,
+  bootstrap_css = FALSE,
+  bootstrap_css_rule = FALSE,
+  tabularray_inner = FALSE,
+  tabularray_outer = FALSE,
+  width = FALSE
 ) {
-    out <- x
+  out <- x
 
-    # Reset style data.frame and lazy style
-    if (style) {
-        out@style <- data.frame()
-        out@lazy_style <- list()
+  # Reset style data.frame and lazy style
+  if (style) {
+    out@style <- data.frame()
+    out@lazy_style <- list()
+  }
+
+  # Reset format settings
+  if (format) {
+    out@lazy_format <- list()
+  }
+
+  # Reset theme settings
+  if (theme) {
+    out@theme <- list("default")
+    out@lazy_theme <- list()
+  }
+
+  # Reset notes and caption styling
+  if (notes) out@style_notes <- list()
+  if (caption) out@style_caption <- list()
+
+  # Reset group styling
+  if (group) {
+    out@group_index_i <- numeric()
+    out@group_n_i <- 0
+    out@group_n_j <- 0
+    out@lazy_group <- list()
+    out@nrow <- nrow(out@data)
+  }
+
+  # Reset class-level styling
+  if (bootstrap_class) out@bootstrap_class <- character()
+  if (bootstrap_css_rule) out@bootstrap_css_rule <- character()
+
+  # Reset individual style elements
+  if (nrow(out@style) > 0) {
+    if (bold) out@style$bold <- FALSE
+    if (italic) out@style$italic <- FALSE
+    if (monospace) out@style$monospace <- FALSE
+    if (underline) out@style$underline <- FALSE
+    if (strikeout) out@style$strikeout <- FALSE
+    if (color) out@style$color <- NA
+    if (background) out@style$background <- NA
+    if (fontsize) out@style$fontsize <- NA
+    if (align) out@style$align <- NA
+    if (alignv) out@style$alignv <- NA
+    if (colspan) out@style$colspan <- NA
+    if (rowspan) out@style$rowspan <- NA
+    if (indent) out@style$indent <- NA
+    if (line) {
+      out@style$line <- NA
+      out@style$line_color <- NA
+      out@style$line_width <- NA
     }
+    if (bootstrap_css) out@style$bootstrap_css <- NA
+    if (tabularray_inner) out@style$tabularray_inner <- NA
+    if (tabularray_outer) out@style$tabularray_outer <- NA
+    if (width) out@style$width <- NA
+  }
 
-    # Reset format settings
-    if (format) {
-        out@lazy_format <- list()
-    }
-
-    # Reset theme settings
-    if (theme) {
-        out@theme <- list("default")
-        out@lazy_theme <- list()
-    }
-
-    # Reset notes and caption styling
-    if (notes) out@style_notes <- list()
-    if (caption) out@style_caption <- list()
-
-    # Reset group styling
-    if (group) {
-        out@group_index_i <- numeric()
-        out@group_n_i <- 0
-        out@group_n_j <- 0
-        out@lazy_group <- list()
-        out@nrow <- nrow(out@data)
-    }
-
-    # Reset class-level styling
-    if (bootstrap_class) out@bootstrap_class <- character()
-    if (bootstrap_css_rule) out@bootstrap_css_rule <- character()
-
-    # Reset individual style elements
-    if (nrow(out@style) > 0) {
-        if (bold) out@style$bold <- FALSE
-        if (italic) out@style$italic <- FALSE
-        if (monospace) out@style$monospace <- FALSE
-        if (underline) out@style$underline <- FALSE
-        if (strikeout) out@style$strikeout <- FALSE
-        if (color) out@style$color <- NA
-        if (background) out@style$background <- NA
-        if (fontsize) out@style$fontsize <- NA
-        if (align) out@style$align <- NA
-        if (alignv) out@style$alignv <- NA
-        if (colspan) out@style$colspan <- NA
-        if (rowspan) out@style$rowspan <- NA
-        if (indent) out@style$indent <- NA
-        if (line) {
-            out@style$line <- NA
-            out@style$line_color <- NA
-            out@style$line_width <- NA
-        }
-        if (bootstrap_css) out@style$bootstrap_css <- NA
-        if (tabularray_inner) out@style$tabularray_inner <- NA
-        if (tabularray_outer) out@style$tabularray_outer <- NA
-        if (width) out@style$width <- NA
-    }
-
-    return(out)
+  return(out)
 }
