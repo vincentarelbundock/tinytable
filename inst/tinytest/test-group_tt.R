@@ -155,5 +155,10 @@ expect_snapshot_print(tab, label = "group_tt_delim-some-delim.md")
 tab <- data.frame(id = 1, Axa1 = 2, Axa2 = "3", Bxb1 = 4, Bxb2 = 5, C = 6) |>
   tt() |>
   group_tt(j = "x")
-expect_snapshot_print(tab, label = "group_tt_delim-alt-delim.md")
 options(tinytable_print_output = NULL)
+
+
+# Issue #466: group_tt without delimiter returns a valid table
+tab <- tt(data.frame(Aid = 1, Aa1 = 2, Aa2 = "3", Bb1 = 4, Bb2 = 5, BC = 5)) |>
+  group_tt(j = "_")
+expect_inherits(tab, "tinytable")

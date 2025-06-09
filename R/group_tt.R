@@ -88,10 +88,18 @@ group_tt <- function(
   }
   assert_integerish(indent, lower = 0)
 
-  if (isTRUE(check_string(j)) && any(grepl(j, x@names, fixed = TRUE))) {
-    j_delim <- j_delim_to_named_list(x = x, j = j)
-    x@names <- j_delim$colnames
-    j <- j_delim$groupnames
+  if (isTRUE(check_string(j))) {
+    if (any(grepl(j, x@names, fixed = TRUE))) {
+      j_delim <- j_delim_to_named_list(x = x, j = j)
+      x@names <- j_delim$colnames
+      j <- j_delim$groupnames
+    } else {
+      j <- NULL
+    }
+  }
+
+  if (is.null(i) && is.null(j)) {
+    return(x)
   }
 
   # vector of labels
