@@ -50,6 +50,7 @@ setClass(
     style_caption = "list",
     style_notes = "list",
     table_dataframe = "data.frame",
+    table_input = "data.frame",
     table_string = "character",
     theme = "list",
     width = "numeric",
@@ -64,19 +65,17 @@ setClass(
 setMethod(
   "initialize",
   "tinytable",
-  function(
-    .Object,
-    data = data.frame(),
-    table = data.frame(),
-    caption = NULL,
-    notes = NULL,
-    theme = list("default"),
-    placement = NULL,
-    width = NULL
-  ) {
+  function(.Object,
+           data = data.frame(),
+           table_input = data.frame(),
+           caption = NULL,
+           notes = NULL,
+           theme = list("default"),
+           placement = NULL,
+           width = NULL) {
     # explicit
     .Object@data <- data
-    .Object@table_dataframe <- table
+    .Object@table_dataframe <- table_input
     .Object@theme <- theme
     # dynamic
     .Object@nrow <- nrow(.Object@data)
@@ -84,8 +83,11 @@ setMethod(
     .Object@nhead <- if (is.null(colnames(data))) 0 else 1
     .Object@group_n_i <- 0
     .Object@group_n_j <- 0
-    .Object@names <- if (is.null(colnames(data))) character() else
+    .Object@names <- if (is.null(colnames(data))) {
+      character()
+    } else {
       colnames(data)
+    }
     .Object@id <- get_id("tinytable_")
     .Object@output <- "tinytable"
     .Object@output_dir <- getwd()

@@ -245,7 +245,8 @@ tt(x)
 tt(x,
   theme = "striped",
   width = 0.5,
-  caption = "Data about cars.")
+  caption = "Data about cars."
+)
 
 tt(x, notes = "Hello World!")
 

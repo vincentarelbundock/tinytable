@@ -49,7 +49,8 @@
 #' tt(x,
 #'   theme = "striped",
 #'   width = 0.5,
-#'   caption = "Data about cars.")
+#'   caption = "Data about cars."
+#' )
 #'
 #' tt(x, notes = "Hello World!")
 #'
@@ -62,16 +63,15 @@
 #'
 #' @export
 tt <- function(
-  x,
-  digits = get_option("tinytable_tt_digits", default = NULL),
-  caption = get_option("tinytable_tt_caption", default = NULL),
-  notes = get_option("tinytable_tt_notes", default = NULL),
-  width = get_option("tinytable_tt_width", default = NULL),
-  theme = get_option("tinytable_tt_theme", default = "default"),
-  rownames = get_option("tinytable_tt_rownames", default = FALSE),
-  escape = get_option("tinytable_tt_escape", default = FALSE),
-  ...
-) {
+    x,
+    digits = get_option("tinytable_tt_digits", default = NULL),
+    caption = get_option("tinytable_tt_caption", default = NULL),
+    notes = get_option("tinytable_tt_notes", default = NULL),
+    width = get_option("tinytable_tt_width", default = NULL),
+    theme = get_option("tinytable_tt_theme", default = "default"),
+    rownames = get_option("tinytable_tt_rownames", default = FALSE),
+    escape = get_option("tinytable_tt_escape", default = FALSE),
+    ...) {
   dots <- list(...)
 
   # sanity checks
@@ -138,7 +138,7 @@ tt <- function(
   out <- methods::new(
     "tinytable",
     data = x,
-    table = tab,
+    table_input = tab,
     caption = caption,
     notes = notes,
     theme = list(theme),
