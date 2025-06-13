@@ -86,13 +86,13 @@ tt(df) |> group_tt(i = df$am)
 
 ### Styling row groups
 
-Calculating the location of rows can be cumbersome. Instead of doing this by hand, we can use the "group" shortcut to style rows. 
+Calculating the location of rows can be cumbersome. Instead of doing this by hand, we can use the "groupi" shortcut to style rows. 
 
 ```{r}
 library(magrittr)
 tt(df) %>%
   group_tt(i = df$am) %>%
-  style_tt(i = "group", background = "pink")
+  style_tt(i = "groupi", background = "pink")
 ```
 
 ## Columns
@@ -183,7 +183,7 @@ Here, we may want to repeat the column names for every region. The `group_tt()` 
 2. Creat a row group variable (here: `region`)
 3. Style the column names and group labels
 
-Normally, we would call `style_tt(i = "group")` to style the row groups, but here we need the actual indices to also style one row below the groups. We can use the `@group_index_i` slot to get the indices of the row groups.
+Normally, we would call `style_tt(i = "groupi")` to style the row groups, but here we need the actual indices to also style one row below the groups. We can use the `@group_index_i` slot to get the indices of the row groups.
 
 ```{r}
 # Format the numeric values early because repeating column names coerces all data to character

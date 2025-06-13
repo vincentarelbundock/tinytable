@@ -7,7 +7,7 @@
 #' @param i Numeric vector, logical matrix, or string..
 #'   - Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.
 #'   - Logical matrix: A matrix with the same number of rows and columns as `x`. `i=0` is the header, and negative values are higher level headers. Row indices refer to rows *after* the insertion of row labels by `group_tt()`, when applicable.
-#'   - String: "caption", "group", "notes".
+#'   - String: "caption", "groupi", "notes".
 #' @param j Column indices where the styling should be applied. Can be:
 #' + Integer vectors indicating column positions.
 #' + Character vector indicating column names.
@@ -191,7 +191,7 @@ style_tt <- function(
     if (identical(i, "notes")) out@style_notes <- tmp
     if (identical(i, "caption")) out@style_caption <- tmp
     return(out)
-  } else if (identical(i, "group")) {
+  } else if (identical(i, "groupi")) {
     idx <- out@group_index_i
     if (length(idx) == 0) {
       msg <- "To style group labels, `group_tt()` must be called before `style_tt()`."

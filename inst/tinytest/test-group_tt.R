@@ -175,7 +175,7 @@ dat <- data.frame(
 )
 expect_warning(
   tt(dat[, 2:3]) |>
-    style_tt(i = "group", color = "white", background = "black") |>
+    style_tt(i = "groupi", color = "white", background = "black") |>
     group_tt(i = dat$label),
   pattern = "style.*before"
 )
@@ -183,13 +183,13 @@ expect_warning(
 expect_false(ignore(expect_warning)(
   tt(dat[, 2:3]) |>
     group_tt(i = dat$label) |>
-    style_tt(i = "group", color = "white", background = "black")
+    style_tt(i = "groupi", color = "white", background = "black")
 ))
 
 options(tinytable_print_output = "latex")
 tab <- tt(dat[, 2:3]) |>
     group_tt(i = dat$label, indent = 0) |>
-    style_tt(i = "group", color = "white", background = "black", align = "c")
+    style_tt(i = "groupi", color = "white", background = "black", align = "c")
 expect_snapshot_print(tab, label = "group_tt_style_tt_group.tex")
 options(tinytable_print_output = NULL)
 
