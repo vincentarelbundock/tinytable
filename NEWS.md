@@ -10,6 +10,7 @@ Bugs:
 Misc:
 
 * `group_tt()` argument `j` accepts a single string as delimiter (ex: `"_"`) when column names of the data frame include group names. Thanks to @sda030 for the feature request, a first implementation, and testing.
+* `style_tt(i = "group")` styles group rows.
 * Many improvements to the documentation and vignettes
 * New vignette with table of contents for CRAN
 

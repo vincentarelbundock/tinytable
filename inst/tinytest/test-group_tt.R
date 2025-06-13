@@ -162,3 +162,34 @@ options(tinytable_print_output = NULL)
 tab <- tt(data.frame(Aid = 1, Aa1 = 2, Aa2 = "3", Bb1 = 4, Bb2 = 5, BC = 5)) |>
   group_tt(j = "_")
 expect_inherits(tab, "tinytable")
+
+
+
+
+# Issue #471: `style_tt()` group
+set.seed(48103)
+dat <- data.frame(
+  label = c("a", "a", "a", "b", "b", "c", "a", "a"),
+  x1 = rnorm(8),
+  x2 = rnorm(8)
+)
+expect_warning(
+  tt(dat[, 2:3]) |>
+    style_tt(i = "group", color = "white", background = "black") |>
+    group_tt(i = dat$label),
+  pattern = "style.*before"
+)
+
+expect_false(ignore(expect_warning)(
+  tt(dat[, 2:3]) |>
+    group_tt(i = dat$label) |>
+    style_tt(i = "group", color = "white", background = "black")
+))
+
+options(tinytable_print_output = "latex")
+tab <- tt(dat[, 2:3]) |>
+    group_tt(i = dat$label, indent = 0) |>
+    style_tt(i = "group", color = "white", background = "black", align = "c")
+expect_snapshot_print(tab, label = "group_tt_style_tt_group.tex")
+options(tinytable_print_output = NULL)
+
