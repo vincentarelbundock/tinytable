@@ -6,6 +6,7 @@ Bugs:
 
 * Major refactor of `rowspan` for HTML files. Thanks to @J-Moravec and @ASKurz for reports #355 and #457.
 * `theme_tt(x, "multipage")` failed to insert `rowhead` in LaTeX. Thanks to @sTeADone for report #460.
+* Error when `x` is a data.table without columns.
 
 Misc:
 

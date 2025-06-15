@@ -87,8 +87,14 @@ tt <- function(
   assert_data_frame(x, min_rows = 1, min_cols = 1)
   if (!isTRUE(identical(class(x), "data.frame"))) {
     cn <- colnames(x)
-    x <- as.data.frame(x, check.names = FALSE)
-    colnames(x) <- cn
+    # weird bug on as.data.frame.data.table() when there is no columns. in general, we don't want to modify in-place.
+    if (is.null(cn) && inherits(x, "data.table")) {
+      assert_dependency('data.table')
+      data.table::setDF(x)
+    } else {
+      x <- as.data.frame(x, check.names = FALSE)
+      colnames(x) <- cn
+    }
   }
 
   # factors should all be characters (for replace, etc.)
