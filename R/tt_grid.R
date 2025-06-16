@@ -44,12 +44,34 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
   # groups are longer than col-widths
   if (inherits(x, "tinytable")) {
     for (g in x@lazy_group) {
-      for (idx in seq_along(g$j)) {
-        g_len <- nchar(names(g$j)[idx]) + 2
-        c_len <- sum(width_cols[g$j[[idx]]])
-        if (g_len > c_len) {
-          width_cols[g$j[[idx]]] <- width_cols[g$j[[idx]]] +
-            ceiling((g_len - c_len) / length(g$j[[idx]]))
+      # Extract arguments from the lazy evaluation call
+      call_args <- as.list(g)[-1]  # Remove function name
+      
+      # Handle column groups
+      if (!is.null(call_args$j)) {
+        j_groups <- eval(call_args$j)
+        for (idx in seq_along(j_groups)) {
+          g_len <- nchar(names(j_groups)[idx]) + 2
+          c_len <- sum(width_cols[j_groups[[idx]]])
+          if (g_len > c_len) {
+            width_cols[j_groups[[idx]]] <- width_cols[j_groups[[idx]]] +
+              ceiling((g_len - c_len) / length(j_groups[[idx]]))
+          }
+        }
+      }
+      
+      # Handle row groups (they span entire table width)
+      if (!is.null(call_args$i)) {
+        i_groups <- eval(call_args$i)
+        for (idx in seq_along(i_groups)) {
+          g_len <- nchar(names(i_groups)[idx]) + 2
+          # Total table width including separators
+          c_len <- sum(width_cols) + length(width_cols) - 1
+          if (g_len > c_len) {
+            # Distribute extra width across all columns
+            extra_width <- ceiling((g_len - c_len) / length(width_cols))
+            width_cols <- width_cols + extra_width
+          }
         }
       }
     }
@@ -62,7 +84,7 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
       nc <- nchar(tab[, j])
     }
     pad <- width_cols[j] - nc
-    pad <- sapply(pad, function(k) strrep(" ", k))
+    pad <- sapply(pad, function(k) strrep(" ", max(0, k)))
     tab[, j] <- paste0(tab[, j], pad)
   }
 

@@ -86,5 +86,32 @@ if (!is_local) exit_file("Run on Vincent's machine")
 options(tinytable_print_output = "gfm")
 expect_snapshot_print(tt(head(iris)), label = "markdown-gfm")
 
+# Long group labels - row groups
+options(tinytable_print_output = "markdown")
+x <- mtcars[1:5, 1:2]
+tab <- tt(x) |> group_tt(i = list("AAAAAAAAAAAAAAAAAAAAAAAAAAAA" = 1))
+expect_snapshot_print(tab, label = "markdown-long_row_group")
+
+# Long group labels - column groups
+x <- mtcars[1:3, 1:4]
+tab <- tt(x) |> group_tt(j = list("Very Long Column Group Name Here" = 1:2, "Short" = 3:4))
+expect_snapshot_print(tab, label = "markdown-long_column_group")
+
+# Long group labels - mixed (both row and column)
+x <- mtcars[1:3, 1:4]
+tab <- tt(x) |> 
+  group_tt(i = list("SUPER LONG ROW GROUP NAME THAT SHOULD EXPAND TABLE" = 1)) |>
+  group_tt(j = list("Long Column Group" = 1:2, "Another Long Column Group" = 3:4))
+expect_snapshot_print(tab, label = "markdown-long_mixed_groups")
+
+# Multiple long row groups
+x <- mtcars[1:6, 1:3]
+tab <- tt(x) |> group_tt(i = list(
+  "First Very Long Row Group Name Here" = 1,
+  "Second Even Longer Row Group Name That Should Also Expand" = 3,
+  "Short" = 5
+))
+expect_snapshot_print(tab, label = "markdown-multiple_long_row_groups")
+
 # restore
 options(tinytable_print_output = NULL)
