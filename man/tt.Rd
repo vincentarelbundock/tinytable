@@ -11,6 +11,7 @@ tt(
   notes = get_option("tinytable_tt_notes", default = NULL),
   width = get_option("tinytable_tt_width", default = NULL),
   theme = get_option("tinytable_tt_theme", default = "default"),
+  colnames = get_option("tinytable_tt_colnames", default = TRUE),
   rownames = get_option("tinytable_tt_rownames", default = FALSE),
   escape = get_option("tinytable_tt_escape", default = FALSE),
   ...
@@ -42,6 +43,8 @@ tt(
 \item String: bootstrap, grid, multipage, placement, revealjs, resize, rotate, spacing, striped, tabular, void
 \item Function: Applied to the \code{tinytable} object.
 }}
+
+\item{colnames}{Logical. If \code{FALSE}, column names are omitted.}
 
 \item{rownames}{Logical. If \code{TRUE}, rownames are included as the first column}
 

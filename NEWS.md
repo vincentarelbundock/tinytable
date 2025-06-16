@@ -14,6 +14,7 @@ Misc:
 * `style_tt(i = "groupi")` styles group rows.
 * Many improvements to the documentation and vignettes
 * New vignette with table of contents for CRAN
+* `tt()` gets a `colnames` argument, instead of having to delete names manually.
 
 ## 0.9.0
 

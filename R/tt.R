@@ -26,6 +26,7 @@
 #' * Multiple strings insert multiple notes sequentially: `list("Hello world", "Foo bar")`
 #' * A named list inserts a list with the name as superscript: `list("a" = list("Hello World"))`
 #' * A named list with positions inserts markers as superscripts inside table cells: `list("a" = list(i = 0:1, j = 2, text = "Hello World"))`
+#' @param colnames Logical. If `FALSE`, column names are omitted.
 #' @param rownames Logical. If `TRUE`, rownames are included as the first column
 #' @param escape Logical. If `TRUE`, escape special characters in the table. Equivalent to `format_tt(tt(x), escape = TRUE)`.
 #' @param ... Additional arguments are ignored
@@ -69,6 +70,7 @@ tt <- function(
     notes = get_option("tinytable_tt_notes", default = NULL),
     width = get_option("tinytable_tt_width", default = NULL),
     theme = get_option("tinytable_tt_theme", default = "default"),
+    colnames = get_option("tinytable_tt_colnames", default = TRUE),
     rownames = get_option("tinytable_tt_rownames", default = FALSE),
     escape = get_option("tinytable_tt_escape", default = FALSE),
     ...) {
@@ -95,6 +97,11 @@ tt <- function(
       x <- as.data.frame(x, check.names = FALSE)
       colnames(x) <- cn
     }
+  }
+
+  assert_flag(colnames)
+  if (!isTRUE(colnames)) {
+    colnames(x) <- NULL
   }
 
   # factors should all be characters (for replace, etc.)

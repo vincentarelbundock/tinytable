@@ -237,12 +237,10 @@ df |>
 
 ## Headers
 
-The header can be omitted from the table by deleting the column names in the `x` data frame:
+The header can be omitted from the table by using the `colnames` argument.
 
 ```{r}
-k <- x
-colnames(k) <- NULL
-tt(k)
+tt(x, colnames = FALSE)
 ```
 
 The first is row 0, and higher level headers (ex: column spanning labels) have negative indices like -1. They can be styled as expected:
@@ -313,14 +311,13 @@ fs <- seq(.1, 2, length.out = 20)
 
 # headless table
 k <- data.frame(matrix(fs, ncol = 5))
-colnames(k) <- NULL
 
 # colors
 bg <- hcl.colors(20, "Inferno")
 fg <- ifelse(as.matrix(k) < 1.7, tail(bg, 1), head(bg, 1))
 
 # table
-tt(k, width = .7, theme = "void") |>
+tt(k, width = .7, theme = "void", colnames = FALSE) |>
   style_tt(j = 1:5, align = "ccccc") |>
   style_tt(
     i = 1:4,
@@ -370,9 +367,8 @@ tt(x, theme = "void") |>
 
 ```{r}
 dat <- data.frame(1:2, 3:4, 5:6, 7:8)
-colnames(dat) <- NULL
 
-tt(dat, theme = "void") |>
+tt(dat, theme = "void", colnames = FALSE) |>
   style_tt(
     line = "tblr", line_color = "white", line_width = 0.5,
     background = "blue", color = "white"
