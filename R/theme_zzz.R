@@ -26,6 +26,7 @@ theme_dictionary <- list(
 #'   + "grid": Vertical and horizontal rules around each cell.
 #'   + "multipage": Long tables continue on the next page (LaTeX only)
 #'   + "placement": Position of the table environment (LaTeX)
+#'   + "revealjs": Tables optimized for Reveal.js presentations with light/dark theme support
 #'   + "rotate": Rotate a LaTeX or Typst table.
 #'   + "resize": Scale a LaTeX `tinytable` to fit the `width` argument.
 #'   + "spacing": Draw more compact or airy tables.
@@ -34,6 +35,15 @@ theme_dictionary <- list(
 #'   + "void": No rules
 #' @param ... Additional arguments passed the themeing function. See the "Arguments" section below for a list of supported arguments for each theme.
 #' @section Arguments:
+#'
+#' revealjs
+#'
+#' + `css`: String. "light" (default) or "dark" for light or dark theme colors.
+#'   - Set globally with `options("tinytable_theme_revealjs_css" = "dark")`
+#' + `fontsize`: Numeric. Font size multiplier for table content.
+#'   - Set globally with `options("tinytable_theme_revealjs_fontsize" = 0.8)`
+#' + `fontsize_caption`: Numeric. Font size multiplier for table captions.
+#'   - Set globally with `options("tinytable_theme_revealjs_fontsize_caption" = 1)`
 #'
 #' multipage
 #'
