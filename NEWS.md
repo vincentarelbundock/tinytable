@@ -1,6 +1,6 @@
 # News
 
-## Development
+## 0.10.0
 
 Bugs:
 

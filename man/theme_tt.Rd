@@ -15,6 +15,7 @@ theme_tt(x, theme, ...)
 \item "grid": Vertical and horizontal rules around each cell.
 \item "multipage": Long tables continue on the next page (LaTeX only)
 \item "placement": Position of the table environment (LaTeX)
+\item "revealjs": Tables optimized for Reveal.js presentations with light/dark theme support
 \item "rotate": Rotate a LaTeX or Typst table.
 \item "resize": Scale a LaTeX \code{tinytable} to fit the \code{width} argument.
 \item "spacing": Draw more compact or airy tables.
@@ -35,6 +36,22 @@ Each theme can have specific arguments, which are passed to the \code{theme_tt()
 }
 \section{Arguments}{
 
+
+revealjs
+\itemize{
+\item \code{css}: String. "light" (default) or "dark" for light or dark theme colors.
+\itemize{
+\item Set globally with \code{options("tinytable_theme_revealjs_css" = "dark")}
+}
+\item \code{fontsize}: Numeric. Font size multiplier for table content.
+\itemize{
+\item Set globally with \code{options("tinytable_theme_revealjs_fontsize" = 0.8)}
+}
+\item \code{fontsize_caption}: Numeric. Font size multiplier for table captions.
+\itemize{
+\item Set globally with \code{options("tinytable_theme_revealjs_fontsize_caption" = 1)}
+}
+}
 
 multipage
 \itemize{
