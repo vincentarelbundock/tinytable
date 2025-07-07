@@ -1,5 +1,9 @@
 # News
 
+## Development
+
+* Issue #392: reinstate informative error when `format_tt()` uses `num_mark_big` without `digits` argument.
+
 ## 0.10.0
 
 Bugs:
