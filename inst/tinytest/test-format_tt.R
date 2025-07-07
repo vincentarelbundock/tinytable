@@ -1,6 +1,8 @@
 source("helpers.R")
 using("tinysnapshot")
 
+requiet("Rdatasets")
+
 # bug discovered in modelsummary
 z <- factor(c("a", "b", NA))
 a <- format_tt(z, replace = "-")
@@ -229,3 +231,8 @@ tab <- tt(dat) |>
   format_tt(j = 1, markdown = TRUE) |>
   style_tt(j = 1, align = "c")
 expect_snapshot_print(print_html(tab), "format_tt-vignette_html_markdown.html")
+
+# Issue #392
+pen <- rddata("penguins", "palmerpenguins")[1:3, c("species", "body_mass_g")]
+expect_error(format_tt(tt(pen), num_mark_big = ","), "requires.*digits")
+expect_error(format_tt(1234, num_mark_big = ","), "requires.*digits")
