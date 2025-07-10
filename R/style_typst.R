@@ -110,14 +110,19 @@ setMethod(
     # TODO: spans before styles, as in bootstrap
 
     # Unique style arrays
-    uni <- split(rec, rec$css)
+    idx <- rec$css != ""
+    uni <- split(rec[idx, , drop = FALSE], rec$css[idx])
 
     pairs <- sapply(
       uni,
       function(x) paste(sprintf("(%s, %s),", x$j, x$i), collapse = " ")
     )
-    styles <- sapply(uni, function(x) x$css[1])
-    styles <- sprintf("(pairs: (%s), %s),", pairs, styles)
+    if (length(pairs) > 0) {
+      styles <- sapply(uni, function(x) x$css[1])
+      styles <- sprintf("(pairs: (%s), %s),", pairs, styles)
+    } else {
+      styles <- list()
+    }
 
     for (s in styles) {
       x@table_string <- lines_insert(
