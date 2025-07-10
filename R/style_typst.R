@@ -109,28 +109,48 @@ setMethod(
 
     # TODO: spans before styles, as in bootstrap
 
-    # Unique style arrays
+    # Generate style-dict and style-array for optimized lookup
     idx <- rec$css != ""
-    uni <- split(rec[idx, , drop = FALSE], rec$css[idx])
-
-    pairs <- sapply(
-      uni,
-      function(x) paste(sprintf("(%s, %s),", x$j, x$i), collapse = " ")
-    )
-    if (length(pairs) > 0) {
-      styles <- sapply(uni, function(x) x$css[1])
-      styles <- sprintf("(pairs: (%s), %s),", pairs, styles)
-    } else {
-      styles <- list()
-    }
-
-    for (s in styles) {
-      x@table_string <- lines_insert(
-        x@table_string,
-        s,
-        "tinytable cell style after",
-        "after"
-      )
+    if (any(idx)) {
+      # Get unique styles
+      uni <- split(rec[idx, , drop = FALSE], rec$css[idx])
+      
+      # Create style-array (unique styles)
+      style_array_entries <- sapply(uni, function(x) {
+        style_str <- x$css[1]
+        sprintf("(%s),", style_str)
+      })
+      
+      # Create style-dict (cell positions -> style array indices)
+      style_dict_entries <- character(0)
+      for (style_idx in seq_along(uni)) {
+        cells <- uni[[style_idx]]
+        for (cell_idx in seq_len(nrow(cells))) {
+          key <- sprintf('"%s_%s"', cells$j[cell_idx], cells$i[cell_idx])
+          dict_entry <- sprintf("%s: %s,", key, style_idx - 1)  # 0-based indexing
+          style_dict_entries <- c(style_dict_entries, dict_entry)
+        }
+      }
+      
+      # Insert style-dict entries
+      for (entry in style_dict_entries) {
+        x@table_string <- lines_insert(
+          x@table_string,
+          paste0("    ", entry),
+          "tinytable style-dict after",
+          "after"
+        )
+      }
+      
+      # Insert style-array entries
+      for (entry in style_array_entries) {
+        x@table_string <- lines_insert(
+          x@table_string,
+          paste0("    ", entry),
+          "tinytable cell style after",
+          "after"
+        )
+      }
     }
 
     lin <- sty[grepl("b|t", sty$line), , drop = FALSE]
