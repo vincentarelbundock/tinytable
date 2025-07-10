@@ -132,11 +132,12 @@ setMethod(
         }
       }
       
-      # Insert style-dict entries
-      for (entry in style_dict_entries) {
+      # Insert style-dict entries as single line
+      if (length(style_dict_entries) > 0) {
+        combined_dict <- paste0("    ", paste(style_dict_entries, collapse = " "))
         x@table_string <- lines_insert(
           x@table_string,
-          paste0("    ", entry),
+          combined_dict,
           "tinytable style-dict after",
           "after"
         )
