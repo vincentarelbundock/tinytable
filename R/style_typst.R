@@ -6,27 +6,25 @@
 setMethod(
   f = "style_eval",
   signature = "tinytable_typst",
-  definition = function(
-    x,
-    i = NULL,
-    j = NULL,
-    bold = FALSE,
-    italic = FALSE,
-    monospace = FALSE,
-    underline = FALSE,
-    strikeout = FALSE,
-    color = NULL,
-    background = NULL,
-    fontsize = NULL,
-    align = NULL,
-    line = NULL,
-    line_color = "black",
-    line_width = 0.1,
-    colspan = NULL,
-    indent = 0,
-    midrule = FALSE, # undocumented, only used by `group_tt()`
-    ...
-  ) {
+  definition = function(x,
+                        i = NULL,
+                        j = NULL,
+                        bold = FALSE,
+                        italic = FALSE,
+                        monospace = FALSE,
+                        underline = FALSE,
+                        strikeout = FALSE,
+                        color = NULL,
+                        background = NULL,
+                        fontsize = NULL,
+                        align = NULL,
+                        line = NULL,
+                        line_color = "black",
+                        line_width = 0.1,
+                        colspan = NULL,
+                        indent = 0,
+                        midrule = FALSE, # undocumented, only used by `group_tt()`
+                        ...) {
     sty <- x@style
 
     # gutters are used for group_tt(j) but look ugly with cell fill
@@ -66,18 +64,24 @@ setMethod(
       idx_j <- sty$j[row]
       if (is.na(idx_j)) idx_j <- unique(rec$j)
       idx <- rec$i == idx_i & rec$j == idx_j
-      if (isTRUE(sty[row, "bold"]))
+      if (isTRUE(sty[row, "bold"])) {
         css[idx] <- insert_field(css[idx], "bold", "true")
-      if (isTRUE(sty[row, "italic"]))
+      }
+      if (isTRUE(sty[row, "italic"])) {
         css[idx] <- insert_field(css[idx], "italic", "true")
-      if (isTRUE(sty[row, "underline"]))
+      }
+      if (isTRUE(sty[row, "underline"])) {
         css[idx] <- insert_field(css[idx], "underline", "true")
-      if (isTRUE(sty[row, "strikeout"]))
+      }
+      if (isTRUE(sty[row, "strikeout"])) {
         css[idx] <- insert_field(css[idx], "strikeout", "true")
-      if (isTRUE(sty[row, "monospace"]))
+      }
+      if (isTRUE(sty[row, "monospace"])) {
         css[idx] <- insert_field(css[idx], "monospace", "true")
-      if (!is.na(sty[row, "align"]))
+      }
+      if (!is.na(sty[row, "align"])) {
         css[idx] <- insert_field(css[idx], "align", sty[row, "align"])
+      }
 
       fs <- sty[row, "indent"]
       if (!is.na(fs)) {
@@ -114,27 +118,24 @@ setMethod(
     if (any(idx)) {
       # Get unique styles
       uni <- split(rec[idx, , drop = FALSE], rec$css[idx])
-      
+
       # Create style-array (unique styles)
       style_array_entries <- sapply(uni, function(x) {
         style_str <- x$css[1]
         sprintf("(%s),", style_str)
       })
-      
+
       # Create style-dict (cell positions -> style array indices)
       style_dict_entries <- character(0)
       for (style_idx in seq_along(uni)) {
         cells <- uni[[style_idx]]
-        for (cell_idx in seq_len(nrow(cells))) {
-          key <- sprintf('"%s_%s"', cells$j[cell_idx], cells$i[cell_idx])
-          dict_entry <- sprintf("%s: %s,", key, style_idx - 1)  # 0-based indexing
-          style_dict_entries <- c(style_dict_entries, dict_entry)
-        }
+        entry <- sprintf('"%s_%s": %s', cells$i, cells$j, style_idx - 1)
+        style_dict_entries <- c(style_dict_entries, entry)
       }
-      
+
       # Insert style-dict entries as single line
       if (length(style_dict_entries) > 0) {
-        combined_dict <- paste0("    ", paste(style_dict_entries, collapse = " "))
+        combined_dict <- paste0("    ", paste(style_dict_entries, collapse = ", "))
         x@table_string <- lines_insert(
           x@table_string,
           combined_dict,
@@ -142,9 +143,9 @@ setMethod(
           "after"
         )
       }
-      
+
       # Insert style-array entries
-      for (entry in style_array_entries) {
+      for (entry in rev(style_array_entries)) {
         x@table_string <- lines_insert(
           x@table_string,
           paste0("    ", entry),
@@ -185,8 +186,7 @@ setMethod(
     }
 
     return(x)
-  }
-)
+  })
 
 split_chunks <- function(x) {
   x <- sort(x)

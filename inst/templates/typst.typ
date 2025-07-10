@@ -24,7 +24,7 @@ block[ // start block
       it 
     } else {
       let tmp = it
-      let key = str(it.x) + "_" + str(it.y)
+      let key = str(it.y) + "_" + str(it.x)
       let style-index = if key in style-dict { style-dict.at(key) } else { none }
       if style-index != none {
         let style = style-array.at(style-index)
@@ -46,7 +46,7 @@ block[ // start block
   #table( // tinytable table start
     stroke: none,
     align: (x, y) => {
-      let key = str(x) + "_" + str(y)
+      let key = str(y) + "_" + str(x)
       let style-index = if key in style-dict { style-dict.at(key) } else { none }
       if style-index != none {
         let style = style-array.at(style-index)
@@ -60,7 +60,7 @@ block[ // start block
       }
     },
     fill: (x, y) => {
-      let key = str(x) + "_" + str(y)
+      let key = str(y) + "_" + str(x)
       let style-index = if key in style-dict { style-dict.at(key) } else { none }
       if style-index != none {
         let style = style-array.at(style-index)
