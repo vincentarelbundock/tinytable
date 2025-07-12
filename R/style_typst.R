@@ -104,6 +104,15 @@ setMethod(
         if (grepl("^#", bg)) bg <- sprintf('rgb("%s")', bg)
         css[idx] <- insert_field(css[idx], "background", bg)
       }
+
+      line <- sty[row, "line"]
+      if (!is.na(line)) rec[idx, "line"] <- line
+
+      line_color <- sty[row, "line_color"]
+      if (!is.na(line_color)) rec[idx, "line_color"] <- line_color
+
+      line_width <- sty[row, "line_width"]
+      if (!is.na(line_width)) rec[idx, "line_width"] <- line_width
     }
 
     css <- gsub(" +", " ", trimws(css))
@@ -155,7 +164,7 @@ setMethod(
       }
     }
 
-    lin <- sty[grepl("b|t", sty$line), , drop = FALSE]
+    lin <- rec[grepl("b|t", rec$line), , drop = FALSE]
     if (nrow(lin) > 0) {
       lin <- split(lin, list(lin$i, lin$line, lin$line_color, lin$line_width))
       lin <- Filter(function(x) nrow(x) > 0, lin)
@@ -170,7 +179,7 @@ setMethod(
       }
     }
 
-    lin <- sty[grepl("l|r", sty$line), , drop = FALSE]
+    lin <- rec[grepl("l|r", rec$line), , drop = FALSE]
     if (nrow(lin) > 0) {
       lin <- split(lin, list(lin$j, lin$line, lin$line_color, lin$line_width))
       lin <- Filter(function(x) nrow(x) > 0, lin)
