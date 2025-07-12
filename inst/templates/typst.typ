@@ -1,8 +1,8 @@
 #show figure: set block(breakable: true)
-#figure( // start figure preamble
+#figure( // start preamble figure
   $TINYTABLE_TYPST_CAPTION
   kind: "tinytable",
-  supplement: "Table", // end figure preamble
+  supplement: "Table", // end preamble figure
 
 block[ // start block
 

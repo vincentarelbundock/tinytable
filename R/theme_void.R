@@ -12,15 +12,6 @@ theme_void_fn <- function(table) {
     tab <- tab[!grepl("^[\\+|=]+$", tab)]
     tab <- gsub("|", " ", tab, fixed = TRUE)
     table@table_string <- paste(tab, collapse = "\n")
-  } else if (isTRUE(table@output == "typst")) {
-    tab <- table@table_string
-    tab <- lines_drop(
-      tab,
-      regex = "table.hline",
-      position = "all",
-      fixed = TRUE
-    )
-    table@table_string <- tab
   }
   return(table)
 }
