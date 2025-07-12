@@ -36,6 +36,17 @@ setMethod(
       )
     }
 
+    # some default R colors are missing in Typst
+    rcolors <- function(col) {
+      if (length(col) == 1 && is.na(col)) return(NA)
+      sapply(col, function(k) 
+        switch(k,
+          pink = 'rgb("#FFC0CB")',
+          k
+        )
+      )
+    }
+
     sty$align[which(sty$align == "l")] <- "left"
     sty$align[which(sty$align == "c")] <- "center"
     sty$align[which(sty$align == "d")] <- "center"
@@ -93,13 +104,13 @@ setMethod(
         css[idx] <- insert_field(css[idx], "fontsize", sprintf("%sem", fs))
       }
 
-      col <- sty[row, "color"]
+      col <- rcolors(sty[row, "color"])
       if (!is.na(col)) {
         if (grepl("^#", col)) col <- sprintf('rgb("%s")', col)
         css[idx] <- insert_field(css[idx], "color", col)
       }
 
-      bg <- sty[row, "background"]
+      bg <- rcolors(sty[row, "background"])
       if (!is.na(bg)) {
         if (grepl("^#", bg)) bg <- sprintf('rgb("%s")', bg)
         css[idx] <- insert_field(css[idx], "background", bg)
@@ -108,7 +119,7 @@ setMethod(
       line <- sty[row, "line"]
       if (!is.na(line)) rec[idx, "line"] <- line
 
-      line_color <- sty[row, "line_color"]
+      line_color <- rcolors(sty[row, "line_color"])
       if (!is.na(line_color)) rec[idx, "line_color"] <- line_color
 
       line_width <- sty[row, "line_width"]
