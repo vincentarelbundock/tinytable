@@ -128,9 +128,9 @@ setMethod(
         tmp <- data.frame(
           i = rec$i[idx],
           j = rec$j[idx],
-          line = line,
-          line_color = line_color,
-          line_width = line_width
+          line = unname(line),
+          line_color = unname(line_color),
+          line_width = unname(line_width)
         )
         lin <- rbind(lin, tmp)
       }
@@ -194,10 +194,10 @@ setMethod(
     }
 
     if (nrow(lin) > 0) {
-      lin <- split(lin, list(lin$i, lin$line, lin$line_color, lin$line_width))
-      lin <- Filter(function(x) nrow(x) > 0, lin)
-      lin <- lapply(lin, hlines)
-      for (l in lin) {
+      tmp <- split(lin, list(lin$i, lin$line, lin$line_color, lin$line_width))
+      tmp <- Filter(function(x) nrow(x) > 0, tmp)
+      tmp <- lapply(tmp, hlines)
+      for (l in tmp) {
         x@table_string <- lines_insert(
           x@table_string,
           l,
@@ -207,7 +207,7 @@ setMethod(
       }
     }
 
-    lin <- rec[grepl("l|r", rec$line), , drop = FALSE]
+    lin <- lin[grepl("l|r", lin$line), , drop = FALSE]
     if (nrow(lin) > 0) {
       lin <- split(lin, list(lin$j, lin$line, lin$line_color, lin$line_width))
       lin <- Filter(function(x) nrow(x) > 0, lin)
