@@ -69,6 +69,8 @@ setMethod(
       return(out)
     }
 
+    lin <- data.frame()
+
     for (row in seq_len(nrow(sty))) {
       idx_i <- sty$i[row]
       if (is.na(idx_i)) idx_i <- unique(rec$i)
@@ -117,13 +119,20 @@ setMethod(
       }
 
       line <- sty[row, "line"]
-      if (!is.na(line)) rec[idx, "line"] <- line
-
-      line_color <- rcolors(sty[row, "line_color"])
-      if (!is.na(line_color)) rec[idx, "line_color"] <- line_color
-
-      line_width <- sty[row, "line_width"]
-      if (!is.na(line_width)) rec[idx, "line_width"] <- line_width
+      if (!is.na(line)) {
+        line_color <- rcolors(sty[row, "line_color"])
+        if (!is.na(line_color)) line_color else "black"
+        line_width <- sty[row, "line_width"]
+        if (!is.na(line_width)) line_width else 0.1
+        tmp <- data.frame(
+          i = rec$i[idx],
+          j = rec$j[idx],
+          line = line,
+          line_color = line_color,
+          line_width = line_width
+        )
+        lin <- rbind(lin, tmp)
+      }
     }
 
     css <- gsub(" +", " ", trimws(css))
@@ -175,7 +184,6 @@ setMethod(
       }
     }
 
-    lin <- rec[grepl("b|t", rec$line), , drop = FALSE]
     if (nrow(lin) > 0) {
       lin <- split(lin, list(lin$i, lin$line, lin$line_color, lin$line_width))
       lin <- Filter(function(x) nrow(x) > 0, lin)
