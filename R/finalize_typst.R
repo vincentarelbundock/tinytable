@@ -21,10 +21,8 @@ setMethod(
 
     # Quarto cross-references
     if (isTRUE(check_dependency("knitr"))) {
-      quarto_caption <- isTRUE(knitr::pandoc_to("typst")) &&
-        isFALSE(getOption("tinytable_quarto_figure", default = FALSE))
-      (!is.null(knitr::opts_current$get()[["label"]]) ||
-        !is.null(knitr::opts_current$get()[["tbl-cap"]]))
+      quarto_caption <- isTRUE(knitr::pandoc_to("typst")) && isFALSE(getOption("tinytable_quarto_figure", default = FALSE)) &&
+        (!is.null(knitr::opts_current$get()[["label"]]) || !is.null(knitr::opts_current$get()[["tbl-cap"]]))
       if (quarto_caption) {
         out <- lines_drop_between(
           out,
@@ -34,9 +32,9 @@ setMethod(
         )
         out <- lines_drop(out, regex = "// start preamble figure", fixed = TRUE)
         out <- lines_drop(out, regex = "// end figure", fixed = TRUE)
-        out <- lines_drop(out, regex = "// start block", fixed = TRUE)
-        out <- lines_drop(out, regex = "// end block", fixed = TRUE)
         out <- sub(" table(", " #table(", out, fixed = TRUE)
+      } else {
+        out <- sub("#block", "block", out, fixed = TRUE)
       }
     }
 

@@ -1,3 +1,18 @@
+# some default R colors are missing in Typst
+rcolors <- function(col) {
+  if (length(col) == 1 && is.na(col)) {
+    return(NA)
+  }
+  sapply(
+    col, function(k) {
+      switch(k,
+        pink = 'rgb("#FFC0CB")',
+        k
+      )
+    })
+}
+
+
 #' Internal styling function
 #'
 #' @inheritParams style_tt
@@ -36,29 +51,15 @@ setMethod(
       )
     }
 
-    # some default R colors are missing in Typst
-    rcolors <- function(col) {
-      if (length(col) == 1 && is.na(col)) return(NA)
-      sapply(col, function(k) 
-        switch(k,
-          pink = 'rgb("#FFC0CB")',
-          k
-        )
-      )
-    }
-
     sty$align[which(sty$align == "l")] <- "left"
     sty$align[which(sty$align == "c")] <- "center"
     sty$align[which(sty$align == "d")] <- "center"
     sty$align[which(sty$align == "r")] <- "right"
 
-    sty$i <- sty$i - 1 + x@nhead
-    sty$j <- sty$j - 1
-    if (length(x@names) == 0) sty$i <- sty$i + 1
-
+    # sty & rec use the same 1-based indices as tinytable::tt()
     rec <- expand.grid(
-      i = seq_len(x@nhead + x@nrow) - 1,
-      j = seq_len(x@ncol) - 1
+      i = c(-(seq_len(x@nhead) - 1), seq_len(x@nrow)),
+      j = seq_len(x@ncol)
     )
     css <- rep("", nrow(rec))
 
@@ -140,13 +141,22 @@ setMethod(
     css <- gsub(",+", ",", trimws(css))
     rec$css <- css
 
+    # 0-based indexing
+    lin$i <- lin$i + x@nhead - 1
+    lin$j <- lin$j - 1
+
+    # rec$i <- rec$i + x@nhead - 1
+    rec$j <- rec$j - 1
+
+
     # TODO: spans before styles, as in bootstrap
 
     # Generate style-dict and style-array for optimized lookup
     idx <- rec$css != ""
-    if (any(idx)) {
+    rec <- rec[idx, , drop = FALSE]
+    if (nrow(rec) > 0) {
       # Get unique styles
-      uni <- split(rec[idx, , drop = FALSE], rec$css[idx])
+      uni <- split(rec, rec$css)
 
       # Create style-array (unique styles)
       style_array_entries <- sapply(uni, function(x) {

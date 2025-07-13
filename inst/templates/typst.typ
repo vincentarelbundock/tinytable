@@ -4,7 +4,7 @@
   kind: "tinytable",
   supplement: "Table", // end preamble figure
 
-block[ // start block
+#block[ // start block
 
 #let nhead = $TINYTABLE_TYPST_NHEAD;
 #let nrow = $TINYTABLE_TYPST_NROW;
