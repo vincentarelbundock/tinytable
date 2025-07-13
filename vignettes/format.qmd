@@ -224,7 +224,7 @@ format_tt("_ Dollars $", escape = "latex")
 
 Markdown can be rendered in cells by using the `markdown` argument of the `format_tt()` function (note: this requires installing the `markdown` as an optional dependency). 
 
-```{r}
+```{r, eval = knitr::is_html_output() || knitr::is_latex_output()}
 dat <- data.frame(markdown = c(
   "This is _italic_ text.",
   "This sentence ends with a superscript.^2^"
@@ -237,7 +237,7 @@ tt(dat) |>
 
 Markdown syntax can be particularly useful when formatting URLs in a table:
 
-```{r}
+```{r, eval = knitr::is_html_output() || knitr::is_latex_output()}
 #| tbl-cap: "Vincent sometimes contributes to these R packages."
 dat <- data.frame(
   `Package (link)` = c(
