@@ -146,6 +146,7 @@ setMethod(
     lin$j <- lin$j - 1
 
     # rec$i <- rec$i + x@nhead - 1
+    rec$i <- rec$i + x@nhead - 1
     rec$j <- rec$j - 1
 
 
