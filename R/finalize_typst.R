@@ -3,9 +3,6 @@ setMethod(
   signature = "tinytable_typst",
   definition = function(x, ...) {
     out <- x@table_string
-    out <- sub("$TINYTABLE_TYPST_NROW", nrow(x), out, fixed = TRUE)
-    out <- sub("$TINYTABLE_TYPST_NCOL", ncol(x), out, fixed = TRUE)
-    out <- sub("$TINYTABLE_TYPST_NHEAD", x@nhead, out, fixed = TRUE)
 
     cap <- x@caption
     if (length(cap) == 1) {

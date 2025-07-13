@@ -6,10 +6,6 @@
 
 #block[ // start block
 
-#let nhead = $TINYTABLE_TYPST_NHEAD;
-#let nrow = $TINYTABLE_TYPST_NROW;
-#let ncol = $TINYTABLE_TYPST_NCOL;
-
   #let style-dict = (
     // tinytable style-dict after
   )
@@ -18,27 +14,29 @@
     // tinytable cell style after
   )
 
+  // Helper function to get cell style
+  #let get-style(x, y) = {
+    let key = str(y) + "_" + str(x)
+    if key in style-dict { style-array.at(style-dict.at(key)) } else { none }
+  }
+
   // tinytable align-default-array before
   #show table.cell: it => {
-    if style-array.len() == 0 {
-      it 
-    } else {
-      let tmp = it
-      let key = str(it.y) + "_" + str(it.x)
-      let style-index = if key in style-dict { style-dict.at(key) } else { none }
-      if style-index != none {
-        let style = style-array.at(style-index)
-        if ("fontsize" in style) { tmp = text(size: style.fontsize, tmp) }
-        if ("color" in style) { tmp = text(fill: style.color, tmp) }
-        if ("indent" in style) { tmp = pad(left: style.indent, tmp) }
-        if ("underline" in style) { tmp = underline(tmp) }
-        if ("italic" in style) { tmp = emph(tmp) }
-        if ("bold" in style) { tmp = strong(tmp) }
-        if ("mono" in style) { tmp = math.mono(tmp) }
-        if ("strikeout" in style) { tmp = strike(tmp) }
-      }
-      tmp
-    }
+    if style-array.len() == 0 { return it }
+    
+    let style = get-style(it.x, it.y)
+    if style == none { return it }
+    
+    let tmp = it
+    if ("fontsize" in style) { tmp = text(size: style.fontsize, tmp) }
+    if ("color" in style) { tmp = text(fill: style.color, tmp) }
+    if ("indent" in style) { tmp = pad(left: style.indent, tmp) }
+    if ("underline" in style) { tmp = underline(tmp) }
+    if ("italic" in style) { tmp = emph(tmp) }
+    if ("bold" in style) { tmp = strong(tmp) }
+    if ("mono" in style) { tmp = math.mono(tmp) }
+    if ("strikeout" in style) { tmp = strike(tmp) }
+    tmp
   }
 
   #align(center, [
@@ -46,28 +44,12 @@
   #table( // tinytable table start
     stroke: none,
     align: (x, y) => {
-      let key = str(y) + "_" + str(x)
-      let style-index = if key in style-dict { style-dict.at(key) } else { none }
-      if style-index != none {
-        let style = style-array.at(style-index)
-        if ("align" in style) {
-          style.align
-        } else {
-          left
-        }
-      } else {
-        left
-      }
+      let style = get-style(x, y)
+      if style != none and "align" in style { style.align } else { left }
     },
     fill: (x, y) => {
-      let key = str(y) + "_" + str(x)
-      let style-index = if key in style-dict { style-dict.at(key) } else { none }
-      if style-index != none {
-        let style = style-array.at(style-index)
-        if ("background" in style) {
-          style.background
-        }
-      }
+      let style = get-style(x, y)
+      if style != none and "background" in style { style.background }
     },
     // tinytable lines before
 
