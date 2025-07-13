@@ -1,44 +1,47 @@
 #show figure: set block(breakable: true)
-#figure( // start figure preamble
+#figure( // start preamble figure
   
   kind: "tinytable",
-  supplement: "Table", // end figure preamble
+  supplement: "Table", // end preamble figure
 
 block[ // start block
 
-#let nhead = 2;
-#let nrow = 12;
-#let ncol = 8;
+  #let style-dict = (
+    // tinytable style-dict after
+    "4_0": 0, "6_0": 0, "10_0": 0, "4_1": 0, "6_1": 0, "10_1": 0, "4_2": 0, "6_2": 0, "10_2": 0, "4_3": 0, "6_3": 0, "10_3": 0, "4_4": 0, "6_4": 0, "10_4": 0, "4_5": 0, "6_5": 0, "10_5": 0, "4_6": 0, "6_6": 0, "10_6": 0, "4_7": 0, "6_7": 0, "10_7": 0, "0_0": 1, "0_1": 1, "0_2": 1, "0_3": 1, "0_4": 1, "0_5": 1, "0_6": 1, "0_7": 1, "2_0": 2, "3_0": 2, "5_0": 2, "7_0": 2, "8_0": 2, "9_0": 2, "11_0": 2, "12_0": 2, "13_0": 2
+  )
 
   #let style-array = ( 
     // tinytable cell style after
-(pairs: ((0, 2), (0, 3), (0, 5), (0, 7), (0, 8), (0, 9), (0, 11), (0, 12), (0, 13),), indent: 1em,),
-(pairs: ((0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0),), color: orange,),
-(pairs: ((0, 4), (0, 6), (0, 10), (1, 4), (1, 6), (1, 10), (2, 4), (2, 6), (2, 10), (3, 4), (3, 6), (3, 10), (4, 4), (4, 6), (4, 10), (5, 4), (5, 6), (5, 10), (6, 4), (6, 6), (6, 10), (7, 4), (7, 6), (7, 10),), align: center, color: orange, background: black,),
+    (align: center, color: orange, background: black,),
+    (color: orange,),
+    (indent: 1em,),
   )
+
+  // Helper function to get cell style
+  #let get-style(x, y) = {
+    let key = str(y) + "_" + str(x)
+    if key in style-dict { style-array.at(style-dict.at(key)) } else { none }
+  }
 
   // tinytable align-default-array before
   #let align-default-array = ( left, left, left, left, left, left, left, left, ) // tinytable align-default-array here
   #show table.cell: it => {
-    if style-array.len() == 0 {
-      it 
-    } else {
-      let tmp = it
-      for style in style-array {
-        let m = style.pairs.find(k => k.at(0) == it.x and k.at(1) == it.y)
-        if m != none {
-          if ("fontsize" in style) { tmp = text(size: style.fontsize, tmp) }
-          if ("color" in style) { tmp = text(fill: style.color, tmp) }
-          if ("indent" in style) { tmp = pad(left: style.indent, tmp) }
-          if ("underline" in style) { tmp = underline(tmp) }
-          if ("italic" in style) { tmp = emph(tmp) }
-          if ("bold" in style) { tmp = strong(tmp) }
-          if ("mono" in style) { tmp = math.mono(tmp) }
-          if ("strikeout" in style) { tmp = strike(tmp) }
-        }
-      }
-      tmp
-    }
+    if style-array.len() == 0 { return it }
+    
+    let style = get-style(it.x, it.y)
+    if style == none { return it }
+    
+    let tmp = it
+    if ("fontsize" in style) { tmp = text(size: style.fontsize, tmp) }
+    if ("color" in style) { tmp = text(fill: style.color, tmp) }
+    if ("indent" in style) { tmp = pad(left: style.indent, tmp) }
+    if ("underline" in style) { tmp = underline(tmp) }
+    if ("italic" in style) { tmp = emph(tmp) }
+    if ("bold" in style) { tmp = strong(tmp) }
+    if ("mono" in style) { tmp = math.mono(tmp) }
+    if ("strikeout" in style) { tmp = strike(tmp) }
+    tmp
   }
 
   #align(center, [
@@ -47,31 +50,25 @@ block[ // start block
     columns: (auto, auto, auto, auto, auto, auto, auto, auto),
     stroke: none,
     align: (x, y) => {
-      let sarray = style-array.filter(a => "align" in a)
-      let sarray = sarray.filter(a => a.pairs.find(p => p.at(0) == x and p.at(1) == y) != none)
-      if sarray.len() > 0 {
-        sarray.last().align
-      } else {
-        left
-      }
+      let style = get-style(x, y)
+      if style != none and "align" in style { style.align } else { left }
     },
     fill: (x, y) => {
-      let sarray = style-array.filter(a => "background" in a)
-      let sarray = sarray.filter(a => a.pairs.find(p => p.at(0) == x and p.at(1) == y) != none)
-      if sarray.len() > 0 {
-        sarray.last().background
-      }
+      let style = get-style(x, y)
+      if style != none and "background" in style { style.background }
     },
  table.hline(y: 2, start: 0, end: 8, stroke: 0.05em + black),
  table.hline(y: 14, start: 0, end: 8, stroke: 0.1em + black),
  table.hline(y: 0, start: 0, end: 8, stroke: 0.1em + black),
     // tinytable lines before
 
+    // tinytable header start
     table.header(
       repeat: true,
 table.cell(stroke: (bottom: .05em + black), colspan: 3, align: center)[Hamburgers],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[Halloumi],[ ],table.cell(stroke: (bottom: .05em + black), colspan: 1, align: center)[Tofu],[ ],
 [mpg], [cyl], [disp], [hp], [drat], [wt], [qsec], [vs],
     ),
+    // tinytable header end
 
     // tinytable cell content after
 [21.0], [6], [160.0], [110], [3.90], [2.620], [16.46], [0],
