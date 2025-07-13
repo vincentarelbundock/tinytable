@@ -19,6 +19,15 @@ setMethod(
       out <- sub("$TINYTABLE_TYPST_CAPTION", "", out, fixed = TRUE)
     }
 
+    if (length(x@names) == 0) {
+      out <- lines_drop_between(
+        out,
+        regex_start = "// tinytable header start",
+        regex_end = "// tinytable header end",
+        fixed = TRUE
+      )
+    }
+
     # Quarto cross-references
     if (isTRUE(check_dependency("knitr"))) {
       quarto_caption <- isTRUE(knitr::pandoc_to("typst")) && isFALSE(getOption("tinytable_quarto_figure", default = FALSE)) &&

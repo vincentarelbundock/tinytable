@@ -71,9 +71,11 @@
     },
     // tinytable lines before
 
+    // tinytable header start
     table.header(
       repeat: true,
     ),
+    // tinytable header end
 
     // tinytable cell content after
 
