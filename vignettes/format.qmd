@@ -146,7 +146,7 @@ MathJax = {
 
 Then, we can do:
 
-```{r}
+```{r, eval = knitr::is_latex_output() || knitr::is_html_output()}
 dat <- data.frame(Math = c(
   "$x^2 + y^2 = z^2$",
   "$\\frac{1}{2}$"
@@ -207,7 +207,8 @@ LaTeX and HTML use special characters to indicate strings which should be interp
 ```{r}
 dat <- data.frame(
   "LaTeX" = c("Dollars $", "Percent %", "Underscore _"),
-  "HTML" = c("<br>", "<sup>4</sup>", "<emph>blah</emph>")
+  "HTML" = c("<br>", "<sup>4</sup>", "<emph>blah</emph>"),
+  "Typst" = c("Dollars $", "Percent %", "Underscore _")
 )
 
 tt(dat) |> format_tt(escape = TRUE)
@@ -219,11 +220,11 @@ When applied to a `tt()` table, `format_tt()` will determine the type of escapin
 format_tt("_ Dollars $", escape = "latex")
 ```
 
-## Markdown
+## Markdown (LaTeX and HTML only)
 
 Markdown can be rendered in cells by using the `markdown` argument of the `format_tt()` function (note: this requires installing the `markdown` as an optional dependency). 
 
-```{r}
+```{r, eval = knitr::is_html_output() || knitr::is_latex_output()}
 dat <- data.frame(markdown = c(
   "This is _italic_ text.",
   "This sentence ends with a superscript.^2^"
@@ -236,7 +237,7 @@ tt(dat) |>
 
 Markdown syntax can be particularly useful when formatting URLs in a table:
 
-```{r}
+```{r, eval = knitr::is_html_output() || knitr::is_latex_output()}
 #| tbl-cap: "Vincent sometimes contributes to these R packages."
 dat <- data.frame(
   `Package (link)` = c(

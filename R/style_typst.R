@@ -1,3 +1,18 @@
+# some default R colors are missing in Typst
+rcolors <- function(col) {
+  if (length(col) == 1 && is.na(col)) {
+    return(NA)
+  }
+  sapply(
+    col, function(k) {
+      switch(k,
+        pink = 'rgb("#FFC0CB")',
+        k
+      )
+    })
+}
+
+
 #' Internal styling function
 #'
 #' @inheritParams style_tt
@@ -6,27 +21,25 @@
 setMethod(
   f = "style_eval",
   signature = "tinytable_typst",
-  definition = function(
-    x,
-    i = NULL,
-    j = NULL,
-    bold = FALSE,
-    italic = FALSE,
-    monospace = FALSE,
-    underline = FALSE,
-    strikeout = FALSE,
-    color = NULL,
-    background = NULL,
-    fontsize = NULL,
-    align = NULL,
-    line = NULL,
-    line_color = "black",
-    line_width = 0.1,
-    colspan = NULL,
-    indent = 0,
-    midrule = FALSE, # undocumented, only used by `group_tt()`
-    ...
-  ) {
+  definition = function(x,
+                        i = NULL,
+                        j = NULL,
+                        bold = FALSE,
+                        italic = FALSE,
+                        monospace = FALSE,
+                        underline = FALSE,
+                        strikeout = FALSE,
+                        color = NULL,
+                        background = NULL,
+                        fontsize = NULL,
+                        align = NULL,
+                        line = NULL,
+                        line_color = "black",
+                        line_width = 0.1,
+                        colspan = NULL,
+                        indent = 0,
+                        midrule = FALSE, # undocumented, only used by `group_tt()`
+                        ...) {
     sty <- x@style
 
     # gutters are used for group_tt(j) but look ugly with cell fill
@@ -43,13 +56,10 @@ setMethod(
     sty$align[which(sty$align == "d")] <- "center"
     sty$align[which(sty$align == "r")] <- "right"
 
-    sty$i <- sty$i - 1 + x@nhead
-    sty$j <- sty$j - 1
-    if (length(x@names) == 0) sty$i <- sty$i + 1
-
+    # sty & rec use the same 1-based indices as tinytable::tt()
     rec <- expand.grid(
-      i = seq_len(x@nhead + x@nrow) - 1,
-      j = seq_len(x@ncol) - 1
+      i = c(-(seq_len(x@nhead) - 1), seq_len(x@nrow)),
+      j = seq_len(x@ncol)
     )
     css <- rep("", nrow(rec))
 
@@ -60,24 +70,32 @@ setMethod(
       return(out)
     }
 
+    lin <- data.frame()
+
     for (row in seq_len(nrow(sty))) {
       idx_i <- sty$i[row]
       if (is.na(idx_i)) idx_i <- unique(rec$i)
       idx_j <- sty$j[row]
       if (is.na(idx_j)) idx_j <- unique(rec$j)
       idx <- rec$i == idx_i & rec$j == idx_j
-      if (isTRUE(sty[row, "bold"]))
+      if (isTRUE(sty[row, "bold"])) {
         css[idx] <- insert_field(css[idx], "bold", "true")
-      if (isTRUE(sty[row, "italic"]))
+      }
+      if (isTRUE(sty[row, "italic"])) {
         css[idx] <- insert_field(css[idx], "italic", "true")
-      if (isTRUE(sty[row, "underline"]))
+      }
+      if (isTRUE(sty[row, "underline"])) {
         css[idx] <- insert_field(css[idx], "underline", "true")
-      if (isTRUE(sty[row, "strikeout"]))
+      }
+      if (isTRUE(sty[row, "strikeout"])) {
         css[idx] <- insert_field(css[idx], "strikeout", "true")
-      if (isTRUE(sty[row, "monospace"]))
+      }
+      if (isTRUE(sty[row, "monospace"])) {
         css[idx] <- insert_field(css[idx], "monospace", "true")
-      if (!is.na(sty[row, "align"]))
+      }
+      if (!is.na(sty[row, "align"])) {
         css[idx] <- insert_field(css[idx], "align", sty[row, "align"])
+      }
 
       fs <- sty[row, "indent"]
       if (!is.na(fs)) {
@@ -89,16 +107,32 @@ setMethod(
         css[idx] <- insert_field(css[idx], "fontsize", sprintf("%sem", fs))
       }
 
-      col <- sty[row, "color"]
+      col <- rcolors(sty[row, "color"])
       if (!is.na(col)) {
         if (grepl("^#", col)) col <- sprintf('rgb("%s")', col)
         css[idx] <- insert_field(css[idx], "color", col)
       }
 
-      bg <- sty[row, "background"]
+      bg <- rcolors(sty[row, "background"])
       if (!is.na(bg)) {
         if (grepl("^#", bg)) bg <- sprintf('rgb("%s")', bg)
         css[idx] <- insert_field(css[idx], "background", bg)
+      }
+
+      line <- sty[row, "line"]
+      if (!is.na(line)) {
+        line_color <- rcolors(sty[row, "line_color"])
+        if (!is.na(line_color)) line_color else "black"
+        line_width <- sty[row, "line_width"]
+        if (!is.na(line_width)) line_width else 0.1
+        tmp <- data.frame(
+          i = rec$i[idx],
+          j = rec$j[idx],
+          line = unname(line),
+          line_color = unname(line_color),
+          line_width = unname(line_width)
+        )
+        lin <- rbind(lin, tmp)
       }
     }
 
@@ -107,38 +141,63 @@ setMethod(
     css <- gsub(",+", ",", trimws(css))
     rec$css <- css
 
+    # 0-based indexing
+    lin$i <- lin$i + x@nhead - 1
+    lin$j <- lin$j - 1
+    rec$i <- rec$i + x@nhead - 1
+    rec$j <- rec$j - 1
+
+
     # TODO: spans before styles, as in bootstrap
 
-    # Unique style arrays
+    # Generate style-dict and style-array for optimized lookup
     idx <- rec$css != ""
-    uni <- split(rec[idx, , drop = FALSE], rec$css[idx])
+    rec <- rec[idx, , drop = FALSE]
+    if (nrow(rec) > 0) {
+      # Get unique styles
+      uni <- split(rec, rec$css)
 
-    pairs <- sapply(
-      uni,
-      function(x) paste(sprintf("(%s, %s),", x$j, x$i), collapse = " ")
-    )
-    if (length(pairs) > 0) {
-      styles <- sapply(uni, function(x) x$css[1])
-      styles <- sprintf("(pairs: (%s), %s),", pairs, styles)
-    } else {
-      styles <- list()
+      # Create style-array (unique styles)
+      style_array_entries <- sapply(uni, function(x) {
+        style_str <- x$css[1]
+        sprintf("(%s),", style_str)
+      })
+
+      # Create style-dict (cell positions -> style array indices)
+      style_dict_entries <- character(0)
+      for (style_idx in seq_along(uni)) {
+        cells <- uni[[style_idx]]
+        entry <- sprintf('"%s_%s": %s', cells$i, cells$j, style_idx - 1)
+        style_dict_entries <- c(style_dict_entries, entry)
+      }
+
+      # Insert style-dict entries as single line
+      if (length(style_dict_entries) > 0) {
+        combined_dict <- paste0("    ", paste(style_dict_entries, collapse = ", "))
+        x@table_string <- lines_insert(
+          x@table_string,
+          combined_dict,
+          "tinytable style-dict after",
+          "after"
+        )
+      }
+
+      # Insert style-array entries
+      for (entry in rev(style_array_entries)) {
+        x@table_string <- lines_insert(
+          x@table_string,
+          paste0("    ", entry),
+          "tinytable cell style after",
+          "after"
+        )
+      }
     }
 
-    for (s in styles) {
-      x@table_string <- lines_insert(
-        x@table_string,
-        s,
-        "tinytable cell style after",
-        "after"
-      )
-    }
-
-    lin <- sty[grepl("b|t", sty$line), , drop = FALSE]
     if (nrow(lin) > 0) {
-      lin <- split(lin, list(lin$i, lin$line, lin$line_color, lin$line_width))
-      lin <- Filter(function(x) nrow(x) > 0, lin)
-      lin <- lapply(lin, hlines)
-      for (l in lin) {
+      tmp <- split(lin, list(lin$i, lin$line, lin$line_color, lin$line_width))
+      tmp <- Filter(function(x) nrow(x) > 0, tmp)
+      tmp <- lapply(tmp, hlines)
+      for (l in tmp) {
         x@table_string <- lines_insert(
           x@table_string,
           l,
@@ -148,7 +207,7 @@ setMethod(
       }
     }
 
-    lin <- sty[grepl("l|r", sty$line), , drop = FALSE]
+    lin <- lin[grepl("l|r", lin$line), , drop = FALSE]
     if (nrow(lin) > 0) {
       lin <- split(lin, list(lin$j, lin$line, lin$line_color, lin$line_width))
       lin <- Filter(function(x) nrow(x) > 0, lin)
@@ -164,8 +223,7 @@ setMethod(
     }
 
     return(x)
-  }
-)
+  })
 
 split_chunks <- function(x) {
   x <- sort(x)

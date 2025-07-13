@@ -115,6 +115,11 @@ theme_tt <- function(x, theme, ...) {
   td <- theme_dictionary
   na <- unique(sort(names(td)))
   assert_choice(theme, na)
+  if (identical(theme, "void")) {
+    if (isTRUE(nrow(x@style$line) > 0)) {
+      x@style$line <- NA
+    }
+  }
   fn <- td[[theme]]
   out <- list(list(fn, list(...)))
   x@lazy_theme <- c(x@lazy_theme, out)

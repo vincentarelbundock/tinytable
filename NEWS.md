@@ -3,7 +3,7 @@
 ## Development
 
 * Issue #392: reinstate informative error when `format_tt()` uses `num_mark_big` without `digits` argument.
-* Typst: More efficient table code generation when no style is applied. When style is applied, Typst must process one array per cell, which can considerably slow down rendering. Thanks to @brynhum for report #475.
+* Typst: Major refactor approaches feature parity with other formats and is much more efficient for compilation. Typst can now compile `tinytable` tables that are hundreds of pages long to PDF in mere seconds. Thanks to @brynhum for report #475.
 
 ## 0.10.0
 

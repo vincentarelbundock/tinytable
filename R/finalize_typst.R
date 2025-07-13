@@ -3,9 +3,6 @@ setMethod(
   signature = "tinytable_typst",
   definition = function(x, ...) {
     out <- x@table_string
-    out <- sub("$TINYTABLE_TYPST_NROW", nrow(x), out, fixed = TRUE)
-    out <- sub("$TINYTABLE_TYPST_NCOL", ncol(x), out, fixed = TRUE)
-    out <- sub("$TINYTABLE_TYPST_NHEAD", x@nhead, out, fixed = TRUE)
 
     cap <- x@caption
     if (length(cap) == 1) {
@@ -19,24 +16,31 @@ setMethod(
       out <- sub("$TINYTABLE_TYPST_CAPTION", "", out, fixed = TRUE)
     }
 
+    if (length(x@names) == 0) {
+      out <- lines_drop_between(
+        out,
+        regex_start = "// tinytable header start",
+        regex_end = "// tinytable header end",
+        fixed = TRUE
+      )
+    }
+
     # Quarto cross-references
     if (isTRUE(check_dependency("knitr"))) {
-      quarto_caption <- isTRUE(knitr::pandoc_to("typst")) &&
-        isFALSE(getOption("tinytable_quarto_figure", default = FALSE))
-      (!is.null(knitr::opts_current$get()[["label"]]) ||
-        !is.null(knitr::opts_current$get()[["tbl-cap"]]))
+      quarto_caption <- isTRUE(knitr::pandoc_to("typst")) && isFALSE(getOption("tinytable_quarto_figure", default = FALSE)) &&
+        (!is.null(knitr::opts_current$get()[["label"]]) || !is.null(knitr::opts_current$get()[["tbl-cap"]]))
       if (quarto_caption) {
         out <- lines_drop_between(
           out,
-          regex_start = "// start figure preamble",
-          regex_end = "// end figure preamble",
+          regex_start = "// start preamble figure",
+          regex_end = "// end preamble figure",
           fixed = TRUE
         )
-        out <- lines_drop(out, regex = "// start figure preamble", fixed = TRUE)
+        out <- lines_drop(out, regex = "// start preamble figure", fixed = TRUE)
         out <- lines_drop(out, regex = "// end figure", fixed = TRUE)
-        out <- lines_drop(out, regex = "// start block", fixed = TRUE)
-        out <- lines_drop(out, regex = "// end block", fixed = TRUE)
         out <- sub(" table(", " #table(", out, fixed = TRUE)
+      } else {
+        out <- sub("#block", "block", out, fixed = TRUE)
       }
     }
 
@@ -47,5 +51,4 @@ setMethod(
     }
 
     return(x)
-  }
-)
+  })

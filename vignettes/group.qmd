@@ -201,9 +201,8 @@ dat2$Region[idx] = dat2$Region[idx + 1]
 # Draw table
 dat2 %>% 
   subset(select = -Region) %>%
-  tt() %>%
+  tt(colnames = FALSE) %>%
   group_tt(i = dat2$Region) %>%
   style_tt(i = .@group_index_i + 1, background = "black", color = "white") %>%
-  style_tt(i = .@group_index_i, align = "c", color = "red") %>%
-  setNames(NULL)
+  style_tt(i = .@group_index_i, align = "c", color = "red")
 ```
