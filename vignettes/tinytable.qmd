@@ -160,13 +160,14 @@ options(tinytable_theme_placement_latex_float = "H")
 
 ## Line breaks and text wrapping
 
-Manual line breaks work sligthly different in LaTeX (PDF) or HTML. This table shows the two strategies. For HTML, we insert a `<br>` tag. For LaTeX, we wrap the string in curly braces `{}`, and then insert two (escaped) backslashes: `\\\\`
+Manual line breaks work sligthly different in LaTeX (PDF), HTML, and Typst. This table shows the three strategies. For HTML, we insert a `<br>` tag. For LaTeX, we wrap the string in curly braces `{}`, and then insert two (escaped) backslashes: `\\\\`. For Typst, we insert an escaped backslash followed by a space.
 
 ```{r}
 d <- data.frame(
   "{Sed ut \\\\ perspiciatis unde}",
-  "dicta sunt<br> explicabo. Nemo"
-) |> setNames(c("LaTeX line break", "HTML line break"))
+  "dicta sunt<br> explicabo. Nemo",
+  "bacon\\ baconator"
+) |> setNames(c("LaTeX", "HTML", "Typst"))
 tt(d, width = 1)
 ```
 
