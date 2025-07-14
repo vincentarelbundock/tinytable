@@ -2,11 +2,24 @@ apply_typst_spans <- function(body, sty) {
   # spans must be replaced before concatenating strings
   spans <- sty[which((!is.na(sty$colspan) & sty$colspan > 1) | (!is.na(sty$rowspan) & sty$rowspan > 1)), , drop = FALSE]
   if (nrow(spans) > 0) {
+    table_nrows <- nrow(body)
+    table_ncols <- ncol(body)
+    
     for (idx in seq_len(nrow(spans))) {
       rowspan <- spans[idx, "rowspan"]
       colspan <- spans[idx, "colspan"]
       row_idx <- spans[idx, "i"]
       col_idx <- spans[idx, "j"]
+      
+      # Sanity checks for span dimensions
+      if (!is.na(colspan) && (col_idx + colspan - 1) > table_ncols) {
+        stop(sprintf("colspan of %d at column %d exceeds table width of %d columns", 
+                    colspan, col_idx, table_ncols))
+      }
+      if (!is.na(rowspan) && (row_idx + rowspan - 1) > table_nrows) {
+        stop(sprintf("rowspan of %d at row %d exceeds table height of %d rows", 
+                    rowspan, row_idx, table_nrows))
+      }
 
       # Build table.cell() arguments
       cell_args <- character(0)
