@@ -264,8 +264,9 @@ encode <- function(images) {
   assert_dependency("base64enc")
   ext <- tools::file_ext(images)
 
-  if (any(ext == ""))
+  if (any(ext == "")) {
     stop("Empty image extensions are not allowed", call. = FALSE)
+  }
 
   encoded <- sapply(images, base64enc::base64encode)
   sprintf("data:image/%s;base64, %s", ext, encoded)

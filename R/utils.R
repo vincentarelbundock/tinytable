@@ -26,7 +26,9 @@ ttempdir <- function() {
   d <- tempdir()
   d <- file.path(d, "tinytable")
   # start fresh
-  if (dir.exists(d)) unlink(d, recursive = TRUE)
+  if (dir.exists(d)) {
+    unlink(d, recursive = TRUE)
+  }
   dir.create(d)
   return(d)
 }

@@ -211,7 +211,9 @@ format_tt_lazy <- function(
   # format_tt() supports vectors
   if (isTRUE(check_atomic_vector(x))) {
     atomic_vector <- TRUE
-    if (is.factor(x)) x <- as.character(x)
+    if (is.factor(x)) {
+      x <- as.character(x)
+    }
     ori <- out <- x <- data.frame(tinytable = x, stringsAsFactors = FALSE)
     j <- 1
   } else if (is.data.frame(x)) {

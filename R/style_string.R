@@ -77,7 +77,9 @@ style_string_typst <- function(n, styles) {
   }
   if (!is.null(styles[["color"]])) {
     col <- styles[["color"]]
-    if (grepl("^#", col)) col <- sprintf('rgb("%s")', col)
+    if (grepl("^#", col)) {
+      col <- sprintf('rgb("%s")', col)
+    }
     col <- sprintf("fill: %s", col)
     sty <- c(sty, col)
   }

@@ -124,7 +124,9 @@ sanitize_output <- function(output) {
     } else if (isTRUE(knitr::pandoc_to() %in% c("html", "revealjs"))) {
       if (is.null(output)) out <- "html"
     } else if (isTRUE(knitr::pandoc_to() == "typst")) {
-      if (is.null(output)) out <- "typst"
+      if (is.null(output)) {
+        out <- "typst"
+      }
       if (isTRUE(check_dependency("quarto"))) {
         if (isTRUE(quarto::quarto_version() < "1.5.29")) {
           msg <- "Typst tables require version 1.5.29 or later of Quarto and version 0.11.0 or later of Typst. This software may (or may not) only be available in pre-release builds: https://quarto.org/docs/download"
@@ -156,7 +158,9 @@ check_dependency <- function(library_name) {
 
 assert_dependency <- function(library_name) {
   flag <- check_dependency(library_name)
-  if (!isTRUE(flag)) stop(flag, call. = FALSE)
+  if (!isTRUE(flag)) {
+    stop(flag, call. = FALSE)
+  }
   return(invisible())
 }
 
@@ -315,8 +319,9 @@ assert_integerish <- function(
     return(invisible())
   }
   msg <- sprintf("`%s` must be integer-ish", name)
-  if (is.null(x) && !isTRUE(null.ok))
+  if (is.null(x) && !isTRUE(null.ok)) {
     stop(sprintf("%s should not be NULL.", name), call. = FALSE)
+  }
   if (
     !isTRUE(
       check_integerish(
@@ -328,21 +333,27 @@ assert_integerish <- function(
       )
     )
   ) {
-    if (!is.numeric(x)) msg <- paste0(msg, "; it is not numeric")
-    if (!is.null(len) && length(x) != len)
+    if (!is.numeric(x)) {
+      msg <- paste0(msg, "; it is not numeric")
+    }
+    if (!is.null(len) && length(x) != len) {
       msg <- paste0(msg, sprintf("; its length must be %s", len))
-    if (!is.null(lower) && any(x < lower))
+    }
+    if (!is.null(lower) && any(x < lower)) {
       msg <- paste0(
         msg,
         sprintf("; all values must be greater than or equal to %s", lower)
       )
-    if (!is.null(upper) && any(x > upper))
+    }
+    if (!is.null(upper) && any(x > upper)) {
       msg <- paste0(
         msg,
         sprintf("; all values must be less than or equal to %s", upper)
       )
-    if (isTRUE(any(abs(x - round(x)) > (.Machine$double.eps)^0.5)))
+    }
+    if (isTRUE(any(abs(x - round(x)) > (.Machine$double.eps)^0.5))) {
       msg <- paste0(msg, "; all values must be close to integers")
+    }
     stop(msg, call. = FALSE)
   }
 }
@@ -352,8 +363,9 @@ check_null <- function(x) {
 }
 
 assert_null <- function(x, name = as.character(substitute(x))) {
-  if (!isTRUE(check_null(x)))
+  if (!isTRUE(check_null(x))) {
     stop(sprintf("%s should be NULL.", name), call. = FALSE)
+  }
 }
 
 check_numeric <- function(
@@ -401,18 +413,21 @@ assert_numeric <- function(
       )
     )
   ) {
-    if (!is.null(len) && length(x) != len)
+    if (!is.null(len) && length(x) != len) {
       msg <- paste0(msg, sprintf("; its length must be %s", len))
-    if (!is.null(lower) && any(x < lower))
+    }
+    if (!is.null(lower) && any(x < lower)) {
       msg <- paste0(
         msg,
         sprintf("; all values must be greater than or equal to %s", lower)
       )
-    if (!is.null(upper) && any(x > upper))
+    }
+    if (!is.null(upper) && any(x > upper)) {
       msg <- paste0(
         msg,
         sprintf("; all values must be less than or equal to %s", upper)
       )
+    }
     stop(msg, call. = FALSE)
   }
 }
@@ -424,9 +439,13 @@ assert_data_frame <- function(
   name = as.character(substitute(x))
 ) {
   msg <- sprintf("`%s` must be a data.frame.", name)
-  if (!is.data.frame(x)) stop(msg, call. = FALSE)
+  if (!is.data.frame(x)) {
+    stop(msg, call. = FALSE)
+  }
   msg <- sprintf("Number of rows in `%s` must be at least `%s`", name, min_rows)
-  if (nrow(x) < min_rows) stop(msg, call. = FALSE)
+  if (nrow(x) < min_rows) {
+    stop(msg, call. = FALSE)
+  }
   msg <- sprintf(
     "Number of columns in `%s` must be at least `%s`",
     name,
@@ -477,7 +496,9 @@ assert_list <- function(
   if (isTRUE(null.ok) && is.null(x)) {
     return(invisible(TRUE))
   }
-  if (!is.list(x)) stop("Input is not a list.", call. = FALSE)
+  if (!is.list(x)) {
+    stop("Input is not a list.", call. = FALSE)
+  }
   if (isTRUE(named)) {
     if (is.null(names(x))) {
       stop(sprintf("`%s` should be named list.", name), call. = FALSE)
@@ -566,7 +587,9 @@ sanitize_replace <- function(replace) {
   } else if (isFALSE(replace)) {
     replace <- list(NULL)
   } else if (isTRUE(check_string(replace))) {
-    if (identical(replace, "")) replace <- " "
+    if (identical(replace, "")) {
+      replace <- " "
+    }
     replace <- stats::setNames(list(NA, NaN), c(replace, replace))
   } else if (!is.list(replace) || is.null(names(replace))) {
     stop(
@@ -581,8 +604,12 @@ sanity_num_mark <- function(digits, num_mark_big, num_mark_dec) {
   # commented out because doesn't work with french decimals
   if (identical(getOption("OutDec"), ".")) {
     if (is.null(digits)) {
-      if (num_mark_big != "") stop("`num_mark_big` requires a `digits` value.", call. = FALSE)
-      if (num_mark_dec != ".") stop("`num_mark_dec` requires a `digits` value.", call. = FALSE)
+      if (num_mark_big != "") {
+        stop("`num_mark_big` requires a `digits` value.", call. = FALSE)
+      }
+      if (num_mark_dec != ".") {
+        stop("`num_mark_dec` requires a `digits` value.", call. = FALSE)
+      }
     }
   }
 }

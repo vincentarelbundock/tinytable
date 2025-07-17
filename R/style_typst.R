@@ -4,12 +4,11 @@ rcolors <- function(col) {
     return(NA)
   }
   sapply(
-    col, function(k) {
-      switch(k,
-        pink = 'rgb("#FFC0CB")',
-        k
-      )
-    })
+    col,
+    function(k) {
+      switch(k, pink = 'rgb("#FFC0CB")', k)
+    }
+  )
 }
 
 
@@ -21,24 +20,26 @@ rcolors <- function(col) {
 setMethod(
   f = "style_eval",
   signature = "tinytable_typst",
-  definition = function(x,
-                        i = NULL,
-                        j = NULL,
-                        bold = FALSE,
-                        italic = FALSE,
-                        monospace = FALSE,
-                        underline = FALSE,
-                        strikeout = FALSE,
-                        color = NULL,
-                        background = NULL,
-                        fontsize = NULL,
-                        align = NULL,
-                        line = NULL,
-                        line_color = "black",
-                        line_width = 0.1,
-                        indent = 0,
-                        midrule = FALSE, # undocumented, only used by `group_tt()`
-                        ...) {
+  definition = function(
+    x,
+    i = NULL,
+    j = NULL,
+    bold = FALSE,
+    italic = FALSE,
+    monospace = FALSE,
+    underline = FALSE,
+    strikeout = FALSE,
+    color = NULL,
+    background = NULL,
+    fontsize = NULL,
+    align = NULL,
+    line = NULL,
+    line_color = "black",
+    line_width = 0.1,
+    indent = 0,
+    midrule = FALSE, # undocumented, only used by `group_tt()`
+    ...
+  ) {
     sty <- x@style
 
     # gutters are used for group_tt(j) but look ugly with cell fill
@@ -73,9 +74,13 @@ setMethod(
 
     for (row in seq_len(nrow(sty))) {
       idx_i <- sty$i[row]
-      if (is.na(idx_i)) idx_i <- unique(rec$i)
+      if (is.na(idx_i)) {
+        idx_i <- unique(rec$i)
+      }
       idx_j <- sty$j[row]
-      if (is.na(idx_j)) idx_j <- unique(rec$j)
+      if (is.na(idx_j)) {
+        idx_j <- unique(rec$j)
+      }
       idx <- rec$i == idx_i & rec$j == idx_j
       if (isTRUE(sty[row, "bold"])) {
         css[idx] <- insert_field(css[idx], "bold", "true")
@@ -108,22 +113,34 @@ setMethod(
 
       col <- rcolors(sty[row, "color"])
       if (!is.na(col)) {
-        if (grepl("^#", col)) col <- sprintf('rgb("%s")', col)
+        if (grepl("^#", col)) {
+          col <- sprintf('rgb("%s")', col)
+        }
         css[idx] <- insert_field(css[idx], "color", col)
       }
 
       bg <- rcolors(sty[row, "background"])
       if (!is.na(bg)) {
-        if (grepl("^#", bg)) bg <- sprintf('rgb("%s")', bg)
+        if (grepl("^#", bg)) {
+          bg <- sprintf('rgb("%s")', bg)
+        }
         css[idx] <- insert_field(css[idx], "background", bg)
       }
 
       line <- sty[row, "line"]
       if (!is.na(line)) {
         line_color <- rcolors(sty[row, "line_color"])
-        if (!is.na(line_color)) line_color else "black"
+        if (!is.na(line_color)) {
+          line_color
+        } else {
+          "black"
+        }
         line_width <- sty[row, "line_width"]
-        if (!is.na(line_width)) line_width else 0.1
+        if (!is.na(line_width)) {
+          line_width
+        } else {
+          0.1
+        }
         tmp <- data.frame(
           i = rec$i[idx],
           j = rec$j[idx],
@@ -145,7 +162,6 @@ setMethod(
     lin$j <- lin$j - 1
     rec$i <- rec$i + x@nhead - 1
     rec$j <- rec$j - 1
-
 
     # TODO: spans before styles, as in bootstrap
 
@@ -172,7 +188,10 @@ setMethod(
 
       # Insert style-dict entries as single line
       if (length(style_dict_entries) > 0) {
-        combined_dict <- paste0("    ", paste(style_dict_entries, collapse = ", "))
+        combined_dict <- paste0(
+          "    ",
+          paste(style_dict_entries, collapse = ", ")
+        )
         x@table_string <- lines_insert(
           x@table_string,
           combined_dict,
@@ -222,7 +241,8 @@ setMethod(
     }
 
     return(x)
-  })
+  }
+)
 
 split_chunks <- function(x) {
   x <- sort(x)
@@ -244,7 +264,9 @@ hlines <- function(k) {
   ymax <- k$i[1] + 1
   line <- k$line[1]
   color <- if (is.na(k$line_color[1])) "black" else k$line_color[1]
-  if (grepl("^#", color)) color <- sprintf('rgb("%s")', color)
+  if (grepl("^#", color)) {
+    color <- sprintf('rgb("%s")', color)
+  }
   width <- if (is.na(k$line_width[1])) 0.1 else k$line_width[1]
   width <- sprintf("%sem", width)
   out <- ""

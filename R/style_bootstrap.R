@@ -59,50 +59,66 @@ setMethod(
     for (row in seq_len(nrow(sty))) {
       # index: sty vs rec
       idx_i <- sty$i[row]
-      if (is.na(idx_i)) idx_i <- unique(rec$i)
+      if (is.na(idx_i)) {
+        idx_i <- unique(rec$i)
+      }
       idx_j <- sty$j[row]
-      if (is.na(idx_j)) idx_j <- unique(rec$j)
+      if (is.na(idx_j)) {
+        idx_j <- unique(rec$j)
+      }
       idx <- rec$i == idx_i & rec$j == idx_j
 
-      if (isTRUE(sty[row, "bold"]))
+      if (isTRUE(sty[row, "bold"])) {
         css[idx] <- paste(css[idx], "font-weight: bold;")
-      if (isTRUE(sty[row, "italic"]))
+      }
+      if (isTRUE(sty[row, "italic"])) {
         css[idx] <- paste(css[idx], "font-style: italic;")
-      if (isTRUE(sty[row, "underline"]))
+      }
+      if (isTRUE(sty[row, "underline"])) {
         css[idx] <- paste(css[idx], "text-decoration: underline;")
-      if (isTRUE(sty[row, "strikeout"]))
+      }
+      if (isTRUE(sty[row, "strikeout"])) {
         css[idx] <- paste(css[idx], "text-decoration: line-through;")
-      if (isTRUE(sty[row, "monospace"]))
+      }
+      if (isTRUE(sty[row, "monospace"])) {
         css[idx] <- paste(css[idx], "font-family: monospace;")
-      if (!is.na(sty[row, "color"]))
+      }
+      if (!is.na(sty[row, "color"])) {
         css[idx] <- paste(css[idx], paste0("color: ", sty[row, "color"], ";"))
-      if (!is.na(sty[row, "background"]))
+      }
+      if (!is.na(sty[row, "background"])) {
         css[idx] <- paste(
           css[idx],
           paste0("background-color: ", sty[row, "background"], ";")
         )
-      if (!is.na(sty[row, "fontsize"]))
+      }
+      if (!is.na(sty[row, "fontsize"])) {
         css[idx] <- paste(
           css[idx],
           paste0("font-size: ", sty[row, "fontsize"], "em;")
         )
-      if (!is.na(sty[row, "alignv"]))
+      }
+      if (!is.na(sty[row, "alignv"])) {
         css[idx] <- paste(
           css[idx],
           paste0("vertical-align: ", sty[row, "alignv"], ";")
         )
-      if (!is.na(sty[row, "align"]))
+      }
+      if (!is.na(sty[row, "align"])) {
         css[idx] <- paste(
           css[idx],
           paste0("text-align: ", sty[row, "align"], ";")
         )
-      if (!is.na(sty[row, "indent"]))
+      }
+      if (!is.na(sty[row, "indent"])) {
         css[idx] <- paste(
           css[idx],
           paste0("padding-left: ", sty[row, "indent"], "em;")
         )
-      if (!is.na(sty[row, "bootstrap_css"]))
+      }
+      if (!is.na(sty[row, "bootstrap_css"])) {
         css[idx] <- paste(css[idx], sty[row, "bootstrap_css"])
+      }
 
       lin <- ""
       line <- sty$line[row]
@@ -118,9 +134,15 @@ setMethod(
         template <- "border: solid %s %sem;"
       } else if (any(c(left, right, top, bottom))) {
         template <- "border: solid %s %sem;"
-        if (left) template <- "border-left: solid %s %sem;"
-        if (right) template <- "border-right: solid %s %sem;"
-        if (top) template <- "border-top: solid %s %sem;"
+        if (left) {
+          template <- "border-left: solid %s %sem;"
+        }
+        if (right) {
+          template <- "border-right: solid %s %sem;"
+        }
+        if (top) {
+          template <- "border-top: solid %s %sem;"
+        }
         if (bottom) template <- "border-bottom: solid %s %sem;"
       } else {
         template <- ""

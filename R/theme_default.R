@@ -10,8 +10,11 @@ theme_default <- function(x, ...) {
 
   if (isTRUE(x@output %in% c("html", "typst"))) {
     col <- if (x@output == "typst") "black" else "#d3d8dc"
-    bc <- if (length(x@bootstrap_class) == 0) "table table-borderless" else
+    bc <- if (length(x@bootstrap_class) == 0) {
+      "table table-borderless"
+    } else {
       x@bootstrap_class
+    }
     # top
     x <- style_tt(
       x,

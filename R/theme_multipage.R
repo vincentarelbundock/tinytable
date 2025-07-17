@@ -19,7 +19,9 @@ theme_multipage <- function(
   }
 
   # do not change the defaul theme
-  if (identical(x@theme[[1]], "multipage")) x@theme <- list("default")
+  if (identical(x@theme[[1]], "multipage")) {
+    x@theme <- list("default")
+  }
   assert_integerish(rowhead, lower = 0, len = 1)
   assert_integerish(rowfoot, lower = 0, len = 1)
   # cap <- sprintf("caption={%s}", x@caption)

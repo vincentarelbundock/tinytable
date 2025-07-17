@@ -65,14 +65,16 @@ setClass(
 setMethod(
   "initialize",
   "tinytable",
-  function(.Object,
-           data = data.frame(),
-           table_input = data.frame(),
-           caption = NULL,
-           notes = NULL,
-           theme = list("default"),
-           placement = NULL,
-           width = NULL) {
+  function(
+    .Object,
+    data = data.frame(),
+    table_input = data.frame(),
+    caption = NULL,
+    notes = NULL,
+    theme = list("default"),
+    placement = NULL,
+    width = NULL
+  ) {
     # explicit
     .Object@data <- data
     .Object@table_dataframe <- table_input
@@ -96,10 +98,18 @@ setMethod(
     .Object@style <- data.frame()
     .Object@lazy_theme <- list()
     # conditional: allows NULL user input
-    if (!is.null(placement)) .Object@placement <- placement
-    if (!is.null(caption)) .Object@caption <- caption
-    if (!is.null(width)) .Object@width <- width
-    if (!is.null(notes)) .Object@notes <- notes
+    if (!is.null(placement)) {
+      .Object@placement <- placement
+    }
+    if (!is.null(caption)) {
+      .Object@caption <- caption
+    }
+    if (!is.null(width)) {
+      .Object@width <- width
+    }
+    if (!is.null(notes)) {
+      .Object@notes <- notes
+    }
     return(.Object)
   }
 )
@@ -148,7 +158,9 @@ setReplaceMethod(
   signature = "tinytable",
   definition = function(x, value) {
     # Issue #306
-    if (length(value) == 0) value <- NULL
+    if (length(value) == 0) {
+      value <- NULL
+    }
     if (!is.null(value)) {
       assert_character(value, len = length(x@names))
     } else {
@@ -169,7 +181,9 @@ setReplaceMethod(
   signature = "tinytable",
   definition = function(x, value) {
     # Issue #306
-    if (length(value) == 0) value <- NULL
+    if (length(value) == 0) {
+      value <- NULL
+    }
     if (!is.null(value)) {
       assert_character(value, len = length(x@names))
     } else {

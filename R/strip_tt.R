@@ -78,8 +78,12 @@ strip_tt <- function(
   }
 
   # Reset notes and caption styling
-  if (notes) out@style_notes <- list()
-  if (caption) out@style_caption <- list()
+  if (notes) {
+    out@style_notes <- list()
+  }
+  if (caption) {
+    out@style_caption <- list()
+  }
 
   # Reset group styling
   if (group) {
@@ -91,32 +95,68 @@ strip_tt <- function(
   }
 
   # Reset class-level styling
-  if (bootstrap_class) out@bootstrap_class <- character()
-  if (bootstrap_css_rule) out@bootstrap_css_rule <- character()
+  if (bootstrap_class) {
+    out@bootstrap_class <- character()
+  }
+  if (bootstrap_css_rule) {
+    out@bootstrap_css_rule <- character()
+  }
 
   # Reset individual style elements
   if (nrow(out@style) > 0) {
-    if (bold) out@style$bold <- FALSE
-    if (italic) out@style$italic <- FALSE
-    if (monospace) out@style$monospace <- FALSE
-    if (underline) out@style$underline <- FALSE
-    if (strikeout) out@style$strikeout <- FALSE
-    if (color) out@style$color <- NA
-    if (background) out@style$background <- NA
-    if (fontsize) out@style$fontsize <- NA
-    if (align) out@style$align <- NA
-    if (alignv) out@style$alignv <- NA
-    if (colspan) out@style$colspan <- NA
-    if (rowspan) out@style$rowspan <- NA
-    if (indent) out@style$indent <- NA
+    if (bold) {
+      out@style$bold <- FALSE
+    }
+    if (italic) {
+      out@style$italic <- FALSE
+    }
+    if (monospace) {
+      out@style$monospace <- FALSE
+    }
+    if (underline) {
+      out@style$underline <- FALSE
+    }
+    if (strikeout) {
+      out@style$strikeout <- FALSE
+    }
+    if (color) {
+      out@style$color <- NA
+    }
+    if (background) {
+      out@style$background <- NA
+    }
+    if (fontsize) {
+      out@style$fontsize <- NA
+    }
+    if (align) {
+      out@style$align <- NA
+    }
+    if (alignv) {
+      out@style$alignv <- NA
+    }
+    if (colspan) {
+      out@style$colspan <- NA
+    }
+    if (rowspan) {
+      out@style$rowspan <- NA
+    }
+    if (indent) {
+      out@style$indent <- NA
+    }
     if (line) {
       out@style$line <- NA
       out@style$line_color <- NA
       out@style$line_width <- NA
     }
-    if (bootstrap_css) out@style$bootstrap_css <- NA
-    if (tabularray_inner) out@style$tabularray_inner <- NA
-    if (tabularray_outer) out@style$tabularray_outer <- NA
+    if (bootstrap_css) {
+      out@style$bootstrap_css <- NA
+    }
+    if (tabularray_inner) {
+      out@style$tabularray_inner <- NA
+    }
+    if (tabularray_outer) {
+      out@style$tabularray_outer <- NA
+    }
     if (width) out@style$width <- NA
   }
 

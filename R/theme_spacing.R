@@ -16,8 +16,11 @@ theme_spacing <- function(
 
   # rules
   if (isTRUE(x@output %in% c("html", "typst"))) {
-    bc <- if (length(x@bootstrap_class) == 0) "table table-borderless" else
+    bc <- if (length(x@bootstrap_class) == 0) {
+      "table table-borderless"
+    } else {
       x@bootstrap_class
+    }
     x <- style_tt(
       x,
       bootstrap_class = bc,

@@ -71,31 +71,47 @@ setMethod(
     for (row in seq_len(nrow(sty))) {
       # index: sty vs rec
       idx_i <- sty$i[row]
-      if (is.na(idx_i)) idx_i <- unique(rec$i)
+      if (is.na(idx_i)) {
+        idx_i <- unique(rec$i)
+      }
       idx_j <- sty$j[row]
-      if (is.na(idx_j)) idx_j <- unique(rec$j)
+      if (is.na(idx_j)) {
+        idx_j <- unique(rec$j)
+      }
       idx <- rec$i == idx_i & rec$j == idx_j
 
       cmd <- ""
-      if (isTRUE(sty$bold[row])) cmd <- paste0(cmd, "\\bfseries")
-      if (isTRUE(sty$italic[row])) cmd <- paste0(cmd, "\\textit")
-      if (isTRUE(sty$underline[row]))
+      if (isTRUE(sty$bold[row])) {
+        cmd <- paste0(cmd, "\\bfseries")
+      }
+      if (isTRUE(sty$italic[row])) {
+        cmd <- paste0(cmd, "\\textit")
+      }
+      if (isTRUE(sty$underline[row])) {
         cmd <- paste0(cmd, "\\tinytableTabularrayUnderline")
-      if (isTRUE(sty$strikeout[row]))
+      }
+      if (isTRUE(sty$strikeout[row])) {
         cmd <- paste0(cmd, "\\tinytableTabularrayStrikeout")
-      if (isTRUE(sty$monospace[row])) cmd <- paste0(cmd, "\\texttt")
+      }
+      if (isTRUE(sty$monospace[row])) {
+        cmd <- paste0(cmd, "\\texttt")
+      }
 
       col <- sty$color[row]
       if (!is.na(col)) {
         x <- color_to_preamble(x, col)
-        if (grepl("^#", col)) col <- sub("^#", "c", col)
+        if (grepl("^#", col)) {
+          col <- sub("^#", "c", col)
+        }
         cmd <- sprintf("%s, fg=%s", cmd, col)
       }
 
       bg <- sty$background[row]
       if (!is.na(bg)) {
         x <- color_to_preamble(x, bg)
-        if (grepl("^#", bg)) bg <- sub("^#", "c", bg)
+        if (grepl("^#", bg)) {
+          bg <- sub("^#", "c", bg)
+        }
         cmd <- sprintf("%s, bg=%s", cmd, bg)
       }
 
@@ -104,7 +120,9 @@ setMethod(
       } else {
         tmp <- "%s, cmd=%s, "
       }
-      if (trimws(cmd) != "") set[idx] <- sprintf(tmp, set[idx], cmd)
+      if (trimws(cmd) != "") {
+        set[idx] <- sprintf(tmp, set[idx], cmd)
+      }
 
       fontsize <- sty$fontsize[row]
       if (!is.na(as.numeric(fontsize))) {
@@ -146,7 +164,9 @@ setMethod(
       lcol <- sty$line_color[row]
       if (!is.na(lcol)) {
         x <- color_to_preamble(x, lcol)
-        if (grepl("^#", lcol)) lcol <- sub("^#", "c", lcol)
+        if (grepl("^#", lcol)) {
+          lcol <- sub("^#", "c", lcol)
+        }
         rec$line_color[idx] <- lcol
       }
 

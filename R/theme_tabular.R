@@ -6,7 +6,9 @@ theme_tabular <- function(
   assert_choice(style, c("tabular", "tabularray"))
 
   # do not change the default theme
-  if (identical(x@theme[[1]], "tabular")) x@theme <- list("default")
+  if (identical(x@theme[[1]], "tabular")) {
+    x@theme <- list("default")
+  }
 
   fn <- function(table) {
     tab <- table@table_string

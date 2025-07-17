@@ -53,7 +53,9 @@ group_tabularray_col <- function(x, j, ihead, ...) {
   for (k in seq_along(j)) {
     z <- min(j[[k]])
     cs <- max(j[[k]]) - min(j[[k]]) + 1
-    if (cs == 1) cs <- NULL
+    if (cs == 1) {
+      cs <- NULL
+    }
     args <- list(
       tt_build_now = TRUE,
       x = x,

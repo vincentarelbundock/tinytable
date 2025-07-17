@@ -45,8 +45,8 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
   if (inherits(x, "tinytable")) {
     for (g in x@lazy_group) {
       # Extract arguments from the lazy evaluation call
-      call_args <- as.list(g)[-1]  # Remove function name
-      
+      call_args <- as.list(g)[-1] # Remove function name
+
       # Handle column groups
       if (!is.null(call_args$j)) {
         j_groups <- eval(call_args$j)
@@ -59,7 +59,7 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
           }
         }
       }
-      
+
       # Handle row groups (they span entire table width)
       if (!is.null(call_args$i)) {
         i_groups <- eval(call_args$i)

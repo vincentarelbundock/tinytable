@@ -73,11 +73,12 @@
 #' tt(dat) |> group_tt(j = "_")
 #'
 group_tt <- function(
-    x,
-    i = getOption("tinytable_group_i", default = NULL),
-    j = getOption("tinytable_group_j", default = NULL),
-    indent = getOption("tinytable_group_indent", default = 1),
-    ...) {
+  x,
+  i = getOption("tinytable_group_i", default = NULL),
+  j = getOption("tinytable_group_j", default = NULL),
+  indent = getOption("tinytable_group_indent", default = 1),
+  ...
+) {
   # ... is important for ihead passing
 
   if (!inherits(x, "tinytable")) {
@@ -143,7 +144,9 @@ group_tt <- function(
 }
 
 sanitize_group_vec2list <- function(vec) {
-  if (is.factor(vec)) vec <- as.character(vec)
+  if (is.factor(vec)) {
+    vec <- as.character(vec)
+  }
   rle_result <- rle(vec)
   idx <- cumsum(c(1, utils::head(rle_result$lengths, -1)))
   idx <- as.list(idx)

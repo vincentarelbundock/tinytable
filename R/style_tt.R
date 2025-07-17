@@ -188,8 +188,12 @@ style_tt <- function(
       strikeout = strikeout,
       underline = underline
     )
-    if (identical(i, "notes")) out@style_notes <- tmp
-    if (identical(i, "caption")) out@style_caption <- tmp
+    if (identical(i, "notes")) {
+      out@style_notes <- tmp
+    }
+    if (identical(i, "caption")) {
+      out@style_caption <- tmp
+    }
     return(out)
   } else if (identical(i, "groupi")) {
     idx <- out@group_index_i
@@ -239,8 +243,11 @@ style_tt <- function(
   }
 
   settings[["color"]] <- if (is.null(color)) NA else as.vector(color)
-  settings[["background"]] <- if (is.null(background)) NA else
+  settings[["background"]] <- if (is.null(background)) {
+    NA
+  } else {
     as.vector(background)
+  }
   settings[["fontsize"]] <- if (is.null(fontsize)) NA else as.vector(fontsize)
   settings[["alignv"]] <- if (is.null(alignv)) NA else alignv
   settings[["line"]] <- if (is.null(line)) NA else line
@@ -254,14 +261,26 @@ style_tt <- function(
   settings[["indent"]] <- if (is.null(indent)) NA else as.vector(indent)
   settings[["colspan"]] <- if (is.null(colspan)) NA else colspan
   settings[["rowspan"]] <- if (is.null(rowspan)) NA else rowspan
-  settings[["bootstrap_css_rule"]] <- if (!is.null(bootstrap_css_rule))
-    bootstrap_css_rule else NA
-  settings[["bootstrap_css"]] <- if (!is.null(bootstrap_css)) bootstrap_css else
+  settings[["bootstrap_css_rule"]] <- if (!is.null(bootstrap_css_rule)) {
+    bootstrap_css_rule
+  } else {
     NA
-  settings[["tabularray_inner"]] <- if (!is.null(tabularray_inner))
-    tabularray_inner else NA
-  settings[["tabularray_outer"]] <- if (!is.null(tabularray_outer))
-    tabularray_outer else NA
+  }
+  settings[["bootstrap_css"]] <- if (!is.null(bootstrap_css)) {
+    bootstrap_css
+  } else {
+    NA
+  }
+  settings[["tabularray_inner"]] <- if (!is.null(tabularray_inner)) {
+    tabularray_inner
+  } else {
+    NA
+  }
+  settings[["tabularray_outer"]] <- if (!is.null(tabularray_outer)) {
+    tabularray_outer
+  } else {
+    NA
+  }
 
   if (!is.null(align)) {
     if (nchar(align) == length(jval)) {
@@ -316,8 +335,12 @@ style_tt <- function(
   ) {
     a <- out@style
     b <- settings
-    if (!"tabularray" %in% colnames(a)) a$tabularray <- ""
-    if (!"tabularray" %in% colnames(b)) b$tabularray <- ""
+    if (!"tabularray" %in% colnames(a)) {
+      a$tabularray <- ""
+    }
+    if (!"tabularray" %in% colnames(b)) {
+      b$tabularray <- ""
+    }
     settings <- rbind(a, b[, colnames(a)])
     out@style <- unique(settings)
   } else if (nrow(settings) > 0) {

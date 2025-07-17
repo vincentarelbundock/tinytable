@@ -1,6 +1,13 @@
 apply_typst_spans <- function(body, sty) {
   # spans must be replaced before concatenating strings
-  spans <- sty[which((!is.na(sty$colspan) & sty$colspan > 1) | (!is.na(sty$rowspan) & sty$rowspan > 1)), , drop = FALSE]
+  spans <- sty[
+    which(
+      (!is.na(sty$colspan) & sty$colspan > 1) |
+        (!is.na(sty$rowspan) & sty$rowspan > 1)
+    ),
+    ,
+    drop = FALSE
+  ]
   if (nrow(spans) > 0) {
     table_nrows <- nrow(body)
     table_ncols <- ncol(body)
@@ -15,24 +22,35 @@ apply_typst_spans <- function(body, sty) {
       if (!is.na(colspan) && (col_idx + colspan - 1) > table_ncols) {
         stop(sprintf(
           "colspan of %d at column %d exceeds table width of %d columns",
-          colspan, col_idx, table_ncols))
+          colspan,
+          col_idx,
+          table_ncols
+        ))
       }
       if (!is.na(rowspan) && (row_idx + rowspan - 1) > table_nrows) {
         stop(sprintf(
           "rowspan of %d at row %d exceeds table height of %d rows",
-          rowspan, row_idx, table_nrows))
+          rowspan,
+          row_idx,
+          table_nrows
+        ))
       }
 
       # Build table.cell() arguments
       cell_args <- character(0)
-      if (!is.na(colspan) && colspan > 1) cell_args <- c(cell_args, sprintf("colspan: %s", colspan))
-      if (!is.na(rowspan) && rowspan > 1) cell_args <- c(cell_args, sprintf("rowspan: %s", rowspan))
+      if (!is.na(colspan) && colspan > 1) {
+        cell_args <- c(cell_args, sprintf("colspan: %s", colspan))
+      }
+      if (!is.na(rowspan) && rowspan > 1) {
+        cell_args <- c(cell_args, sprintf("rowspan: %s", rowspan))
+      }
 
       # spanning cell
       body[row_idx, col_idx] <- sprintf(
         "table.cell(%s)%s",
         paste(cell_args, collapse = ", "),
-        body[row_idx, col_idx])
+        body[row_idx, col_idx]
+      )
 
       # empty cells
       row_span <- if (!is.na(rowspan)) rowspan else 1
@@ -153,7 +171,8 @@ setMethod(
     x@table_string <- out
 
     return(x)
-  })
+  }
+)
 
 typst_insert <- function(x, content = NULL, type = "body") {
   if (is.null(content)) {
@@ -161,7 +180,8 @@ typst_insert <- function(x, content = NULL, type = "body") {
   }
 
   out <- strsplit(x, "\n")[[1]]
-  comment <- switch(type,
+  comment <- switch(
+    type,
     "lines" = "tinytable lines before",
     "style" = "tinytable cell style before",
     "body" = "tinytable cell content after"

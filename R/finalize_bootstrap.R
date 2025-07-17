@@ -55,8 +55,9 @@ setMethod(
       css_rules <- lapply(css_rules, unique)
       css_rules <- lapply(
         css_rules,
-        function(z)
+        function(z) {
           transform(z, bootstrap = paste(bootstrap, collapse = " "))[1, ]
+        }
       )
       css_rules <- do.call(rbind, css_rules)
       id <- unique(css_rules[, "bootstrap", drop = FALSE])

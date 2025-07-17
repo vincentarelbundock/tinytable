@@ -16,7 +16,9 @@ theme_resize <- function(
   assert_numeric(width, len = 1, lower = 0.01, upper = 1)
   assert_choice(direction, c("down", "up", "both"))
   # do not change the default theme
-  if (identical(x@theme[[1]], "resize")) x@theme <- list("default")
+  if (identical(x@theme[[1]], "resize")) {
+    x@theme <- list("default")
+  }
   fn <- function(table) {
     if (!isTRUE(table@output == "latex")) {
       return(table)

@@ -44,7 +44,9 @@ format_numeric <- function(
   } else {
     out <- NULL
   }
-  if (is.character(out)) out <- trimws(out)
+  if (is.character(out)) {
+    out <- trimws(out)
+  }
   return(out)
 }
 
@@ -107,7 +109,7 @@ format_non_integer_numeric <- function(
     return(
       sapply(
         value,
-        function(z)
+        function(z) {
           format(
             z,
             digits = digits,
@@ -116,6 +118,7 @@ format_non_integer_numeric <- function(
             decimal.mark = num_mark_dec,
             scientific = FALSE
           )
+        }
       )
     )
   } else if (num_fmt == "decimal") {

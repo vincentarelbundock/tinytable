@@ -10,8 +10,12 @@ setMethod(
     nrows <- nrow(x)
 
     tall <- FALSE
-    if (length(x@caption) > 0) tall <- TRUE
-    if (length(x@notes) > 0) tall <- TRUE
+    if (length(x@caption) > 0) {
+      tall <- TRUE
+    }
+    if (length(x@notes) > 0) {
+      tall <- TRUE
+    }
 
     # placement
     if (length(x@placement) == 1) {
