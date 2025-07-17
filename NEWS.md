@@ -2,8 +2,14 @@
 
 ## Development
 
+Typst: Major refactor improves several things and brings Typst very close to feature parity with other formats.
+
+* Typst code is not **much** more efficient and concise. Tables over 500 pages long compile in mere seconds. Thanks to @brynhum for the report and tips on implementation #475.
+* `rowspan` and `colspan` arguments are now supported, with informative error messages when they are not used correctly.
+
+Misc:
+
 * Issue #392: reinstate informative error when `format_tt()` uses `num_mark_big` without `digits` argument.
-* Typst: Major refactor approaches feature parity with other formats and is much more efficient for compilation. Typst can now compile `tinytable` tables that are hundreds of pages long to PDF in mere seconds. Thanks to @brynhum for report #475.
 
 ## 0.10.0
 
