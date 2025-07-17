@@ -36,7 +36,6 @@ setMethod(
                         line = NULL,
                         line_color = "black",
                         line_width = 0.1,
-                        colspan = NULL,
                         indent = 0,
                         midrule = FALSE, # undocumented, only used by `group_tt()`
                         ...) {

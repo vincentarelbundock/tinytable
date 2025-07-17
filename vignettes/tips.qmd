@@ -126,17 +126,20 @@ dat <- data.frame(
 minipagify <- function(x) {
   sprintf(
     "\\minipage{\\textwidth}%s\\endminipage",
-    sapply(x, mark, "latex")
+    sapply(x, litedown::mark, "latex")
   )
 }
 
 # only in LaTeX
 is_latex <- identical(knitr::pandoc_to(), "latex")
+is_html <- identical(knitr::pandoc_to(), "html")
+
 
 tab <- tt(dat, width = c(0.3, 0.2)) |>
   style_tt(j = 2, align = "c") |>
-  format_tt(markdown = TRUE) |>
-  format_tt(j = 1, fn = if (is_latex) minipagify else mark)
+  format_tt(j = 2, escape = TRUE) |>
+  format_tt(j = 1, fn = if (is_latex) minipagify else identity) |>
+  format_tt(j = 1, fn = if (is_html) litedown::mark else identity)
 
 tab
 ```
@@ -274,6 +277,11 @@ tt(head(iris, 50))
 ```
 ````
 
+## `rowspan` and `colspan`
+
+If a table has cells that span across the full table (`colspan` equal to `nrow(tab)`), the `rowspan` argument can collapse multiple rows into a single cell. See this forum post for explanation why:
+
+[https://forum.typst.app/t/why-is-a-rowspan-cell-with-colspan-equal-to-number-of-columns-seemingly-only-spanning-one-row/5047](https://forum.typst.app/t/why-is-a-rowspan-cell-with-colspan-equal-to-number-of-columns-seemingly-only-spanning-one-row/5047)
 
 ## Markdown
 
