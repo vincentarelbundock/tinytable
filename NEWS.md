@@ -6,6 +6,7 @@ Typst: Major refactor improves several things and brings Typst very close to fea
 
 * Typst code is not **much** more efficient and concise. Tables over 500 pages long compile in mere seconds. Thanks to @brynhum for the report and tips on implementation #475.
 * `rowspan` and `colspan` arguments are now supported, with informative error messages when they are not used correctly.
+* Support for `alignv` argument in `style_tt()`. This allows vertical alignment of cells in Typst tables.
 
 Misc:
 

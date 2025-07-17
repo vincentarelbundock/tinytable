@@ -33,6 +33,7 @@ setMethod(
     background = NULL,
     fontsize = NULL,
     align = NULL,
+    alignv = NULL,
     line = NULL,
     line_color = "black",
     line_width = 0.1,
@@ -55,6 +56,10 @@ setMethod(
     sty$align[which(sty$align == "c")] <- "center"
     sty$align[which(sty$align == "d")] <- "center"
     sty$align[which(sty$align == "r")] <- "right"
+
+    sty$alignv[which(sty$alignv == "t")] <- "top"
+    sty$alignv[which(sty$alignv == "m")] <- "horizon"
+    sty$alignv[which(sty$alignv == "b")] <- "bottom"
 
     # sty & rec use the same 1-based indices as tinytable::tt()
     rec <- expand.grid(
@@ -97,8 +102,20 @@ setMethod(
       if (isTRUE(sty[row, "monospace"])) {
         css[idx] <- insert_field(css[idx], "monospace", "true")
       }
-      if (!is.na(sty[row, "align"])) {
-        css[idx] <- insert_field(css[idx], "align", sty[row, "align"])
+      # Combine horizontal and vertical alignment
+      align_h <- sty[row, "align"]
+      align_v <- sty[row, "alignv"]
+      
+      if (!is.na(align_h) || !is.na(align_v)) {
+        combined_align <- character(0)
+        if (!is.na(align_h)) {
+          combined_align <- c(combined_align, align_h)
+        }
+        if (!is.na(align_v)) {
+          combined_align <- c(combined_align, align_v)
+        }
+        final_align <- paste(combined_align, collapse = " + ")
+        css[idx] <- insert_field(css[idx], "align", final_align)
       }
 
       fs <- sty[row, "indent"]
