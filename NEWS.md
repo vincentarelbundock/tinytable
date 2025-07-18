@@ -11,6 +11,7 @@ Typst: Major refactor improves several things and brings Typst very close to fea
 Misc:
 
 * Issue #392: reinstate informative error when `format_tt()` uses `num_mark_big` without `digits` argument.
+* Improvements to `theme_tt("revealjs")`.
 
 ## 0.10.0
 
