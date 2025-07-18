@@ -12,7 +12,6 @@ css_light <- "
 .reveal table td {
   border: none;
   padding: .23em;
-  font-weight: lighter;
   font-size: %sem;
 }
 
@@ -25,7 +24,6 @@ css_light <- "
 
 /* Make column headers bold */
 .reveal table thead th {
-/*  font-weight: bold; */
 }
 
 /* Styling table captions */
@@ -51,7 +49,6 @@ css_dark <- "
 .reveal table td {
   border: none;
   padding: .23em;
-  font-weight: lighter;
   font-size: %sem;
   color: white; /* White text color */
 }
@@ -71,7 +68,6 @@ css_dark <- "
 
 /* Make column headers bold */
 .reveal table thead th {
-/*  font-weight: bold; */
 }
 
 /* Styling table captions */
