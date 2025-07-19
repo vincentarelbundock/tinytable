@@ -220,7 +220,13 @@ When applied to a `tt()` table, `format_tt()` will determine the type of escapin
 format_tt("_ Dollars $", escape = "latex")
 ```
 
-## Markdown (LaTeX and HTML only)
+::: {.content-visible when-format="typst"}
+## Markdown 
+LaTeX and HTML only
+:::
+
+::: {.content-visible unless-format="typst"}
+## Markdown 
 
 Markdown can be rendered in cells by using the `markdown` argument of the `format_tt()` function (note: this requires installing the `markdown` as an optional dependency). 
 
@@ -271,6 +277,7 @@ dat <- data.frame(
 
 tt(dat) |> format_tt(j = 1, markdown = TRUE)
 ```
+:::
 
 ## Custom functions
 
