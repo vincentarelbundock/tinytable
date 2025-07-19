@@ -8,6 +8,7 @@ Typst: Major refactor improves several things and brings Typst very close to fea
 * `rowspan` and `colspan` arguments are now supported, with informative error messages when they are not used correctly.
 * Support for `alignv` argument in `style_tt()`. This allows vertical alignment of cells in Typst tables.
 * `plot_tt()` supports height.
+* Support `rowsep` in `theme_tt("spacing")`.
 
 Misc:
 

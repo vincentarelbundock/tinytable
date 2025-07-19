@@ -1,16 +1,12 @@
 theme_spacing <- function(
-  x,
-  rowsep = get_option("tinytable_theme_spacing_rowsep", 0.1),
-  colsep = get_option("tinytable_theme_spacing_colsep", 0.5),
-  ...
-) {
+    x,
+    rowsep = get_option("tinytable_theme_spacing_rowsep", 0.1),
+    colsep = get_option("tinytable_theme_spacing_colsep", 0.5),
+    ...) {
   # placement
   fn <- theme_placement_factory(
     horizontal = get_option("tinytable_theme_default_horizontal", "c"),
-    latex_float = get_option(
-      "tinytable_theme_placement_latex_float",
-      default = NULL
-    )
+    latex_float = get_option("tinytable_theme_placement_latex_float", default = NULL)
   )
   x <- style_tt(x, finalize = fn)
 
@@ -39,7 +35,22 @@ theme_spacing <- function(
     )
   }
 
-  # spacing
+  # spacing: Typst
+  fun_typst <- function(table) {
+    if (!is.null(rowsep)) {
+      table@table_string <- sprintf(sub(
+        "stroke: none,",
+        "stroke: none, rows: %sem,",
+        table@table_string
+      ), rowsep)
+    }
+    return(table)
+  }
+  if (x@output == "typst") {
+    x <- style_tt(x, finalize = fun_typst)
+  }
+
+  # spacing: LaTeX
   x <- style_tt(
     x,
     tabularray_inner = sprintf("rowsep={%sem}, colsep = {%sem}", rowsep, colsep)

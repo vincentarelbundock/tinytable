@@ -20,11 +20,11 @@ standardize_colors <- function(col, format = "hex") {
     }
 
     # R colors
-    out <- try(col2rgb(k), silent = TRUE)
+    out <- try(grDevices::col2rgb(k), silent = TRUE)
 
     if (!inherits(out, "try-error")) {
       # Convert RGB values to hex format
-      out <- rgb(out[1], out[2], out[3], maxColorValue = 255)
+      out <- grDevices::rgb(out[1], out[2], out[3], maxColorValue = 255)
     } else if (format != "tabularray" && k %in% latex_colors$name) {
       # LaTeX colors (skip for tabularray format)
       hex_val <- latex_colors$rgb[latex_colors$name == k]
