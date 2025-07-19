@@ -14,6 +14,10 @@ Misc:
 * Issue #392: reinstate informative error when `format_tt()` uses `num_mark_big` without `digits` argument.
 * Improvements to `theme_tt("revealjs")`.
 
+Bug fix:
+
+* Fix `theme_bootstrap()` for LaTeX and Typst. Issue #479.
+
 ## 0.10.0
 
 Bugs:
