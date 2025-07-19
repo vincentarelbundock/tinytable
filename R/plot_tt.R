@@ -27,19 +27,18 @@
 #' @details The `plot_tt()` can insert images and inline plots into tables.
 #' @export
 plot_tt <- function(
-  x,
-  i = NULL,
-  j = NULL,
-  fun = NULL,
-  data = NULL,
-  color = "black",
-  xlim = NULL,
-  height = 1,
-  asp = 1 / 3,
-  images = NULL,
-  assets = "tinytable_assets",
-  ...
-) {
+    x,
+    i = NULL,
+    j = NULL,
+    fun = NULL,
+    data = NULL,
+    color = "black",
+    xlim = NULL,
+    height = 1,
+    asp = 1 / 3,
+    images = NULL,
+    assets = "tinytable_assets",
+    ...) {
   jval <- sanitize_j(j, x)
   assert_integerish(i, null.ok = TRUE)
   assert_numeric(height, len = 1, lower = 0)
@@ -118,19 +117,18 @@ plot_tt <- function(
 }
 
 plot_tt_lazy <- function(
-  x,
-  i = NULL,
-  j = NULL,
-  height = 1,
-  asp = 1 / 3,
-  fun = NULL,
-  color = NULL,
-  data = NULL,
-  xlim = NULL,
-  images = NULL,
-  assets = "tinytable_assets",
-  ...
-) {
+    x,
+    i = NULL,
+    j = NULL,
+    height = 1,
+    asp = 1 / 3,
+    fun = NULL,
+    color = NULL,
+    data = NULL,
+    xlim = NULL,
+    images = NULL,
+    assets = "tinytable_assets",
+    ...) {
   out <- x@table_dataframe
 
   if (!is.null(data)) {
@@ -212,8 +210,8 @@ plot_tt_lazy <- function(
     cell <- "![](%s){ height=%s }"
     cell <- sprintf(cell, images, height * 16)
   } else if (isTRUE(x@output == "typst")) {
-    cell <- '#image("%s")'
-    cell <- sprintf(cell, images)
+    cell <- '#image("%s", height: %sem)'
+    cell <- sprintf(cell, images, height)
   } else if (isTRUE(x@output == "dataframe")) {
     cell <- "%s"
     cell <- sprintf(cell, images)
