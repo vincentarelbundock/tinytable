@@ -1,15 +1,3 @@
-# some default R colors are missing in Typst
-rcolors <- function(col) {
-  if (length(col) == 1 && is.na(col)) {
-    return(NA)
-  }
-  sapply(
-    col,
-    function(k) {
-      switch(k, pink = 'rgb("#FFC0CB")', k)
-    }
-  )
-}
 
 
 #' Internal styling function
@@ -128,30 +116,20 @@ setMethod(
         css[idx] <- insert_field(css[idx], "fontsize", sprintf("%sem", fs))
       }
 
-      col <- rcolors(sty[row, "color"])
+      col <- rcolors(sty[row, "color"], format = "typst")
       if (!is.na(col)) {
-        if (grepl("^#", col)) {
-          col <- sprintf('rgb("%s")', col)
-        }
         css[idx] <- insert_field(css[idx], "color", col)
       }
 
-      bg <- rcolors(sty[row, "background"])
+      bg <- rcolors(sty[row, "background"], format = "typst")
       if (!is.na(bg)) {
-        if (grepl("^#", bg)) {
-          bg <- sprintf('rgb("%s")', bg)
-        }
         css[idx] <- insert_field(css[idx], "background", bg)
       }
 
       line <- sty[row, "line"]
       if (!is.na(line)) {
-        line_color <- rcolors(sty[row, "line_color"])
-        if (!is.na(line_color)) {
-          line_color
-        } else {
-          "black"
-        }
+        line_color <- rcolors(sty[row, "line_color"], format = "typst")
+        line_color <- ifelse(is.na(line_color), "black", line_color)
         line_width <- sty[row, "line_width"]
         if (!is.na(line_width)) {
           line_width
@@ -280,10 +258,7 @@ hlines <- function(k) {
   ymin <- k$i[1]
   ymax <- k$i[1] + 1
   line <- k$line[1]
-  color <- if (is.na(k$line_color[1])) "black" else k$line_color[1]
-  if (grepl("^#", color)) {
-    color <- sprintf('rgb("%s")', color)
-  }
+  color <- if (is.na(k$line_color[1])) "black" else rcolors(k$line_color[1], format = "typst")
   width <- if (is.na(k$line_width[1])) 0.1 else k$line_width[1]
   width <- sprintf("%sem", width)
   out <- ""
