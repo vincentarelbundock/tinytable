@@ -1,5 +1,5 @@
 # Make colors more uniform: R definition -> LaTeX definition -> default
-rcolors <- function(col, format = "hex") {
+standardize_colors <- function(col, format = "hex") {
   if (length(col) == 1 && is.na(col)) {
     return(NA)
   }

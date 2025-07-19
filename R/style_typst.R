@@ -116,19 +116,19 @@ setMethod(
         css[idx] <- insert_field(css[idx], "fontsize", sprintf("%sem", fs))
       }
 
-      col <- rcolors(sty[row, "color"], format = "typst")
+      col <- standardize_colors(sty[row, "color"], format = "typst")
       if (!is.na(col)) {
         css[idx] <- insert_field(css[idx], "color", col)
       }
 
-      bg <- rcolors(sty[row, "background"], format = "typst")
+      bg <- standardize_colors(sty[row, "background"], format = "typst")
       if (!is.na(bg)) {
         css[idx] <- insert_field(css[idx], "background", bg)
       }
 
       line <- sty[row, "line"]
       if (!is.na(line)) {
-        line_color <- rcolors(sty[row, "line_color"], format = "typst")
+        line_color <- standardize_colors(sty[row, "line_color"], format = "typst")
         line_color <- ifelse(is.na(line_color), "black", line_color)
         line_width <- sty[row, "line_width"]
         if (!is.na(line_width)) {
@@ -258,7 +258,7 @@ hlines <- function(k) {
   ymin <- k$i[1]
   ymax <- k$i[1] + 1
   line <- k$line[1]
-  color <- if (is.na(k$line_color[1])) "black" else rcolors(k$line_color[1], format = "typst")
+  color <- if (is.na(k$line_color[1])) "black" else standardize_colors(k$line_color[1], format = "typst")
   width <- if (is.na(k$line_width[1])) 0.1 else k$line_width[1]
   width <- sprintf("%sem", width)
   out <- ""
