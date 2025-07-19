@@ -28,7 +28,7 @@ theme_bootstrap <- function(x, ...) {
       i = 0:nrow(x),
       line = "bt",
       line_width = 0.05,
-      line_color = "silver"
+      line_color = "#C0C0C0"
     )
   } else if (isTRUE(x@output == "html")) {
     x <- style_tt(x, bootstrap_class = "table")
