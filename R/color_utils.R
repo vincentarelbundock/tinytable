@@ -7,11 +7,16 @@ rcolors <- function(col, format = "hex") {
     return(col)
   }
 
-  fun <- function(k) {
+  single_color <- function(k) {
     # Early return for hex colors
     # do this here to allow typst rgb() wrap later
-    if (length(col) == 1 && grepl("^#", col)) {
+    if (isTRUE(grepl("^#", col))) {
       return(col)
+    }
+
+    # Skip processing for "black" and "white"
+    if (k %in% c("black", "white")) {
+      return(k)
     }
 
     # R colors
@@ -20,8 +25,8 @@ rcolors <- function(col, format = "hex") {
     if (!inherits(out, "try-error")) {
       # Convert RGB values to hex format
       out <- rgb(out[1], out[2], out[3], maxColorValue = 255)
-    } else if (k %in% latex_colors$name) {
-      # LaTeX colors
+    } else if (format != "tabularray" && k %in% latex_colors$name) {
+      # LaTeX colors (skip for tabularray format)
       hex_val <- latex_colors$rgb[latex_colors$name == k]
       out <- paste0("#", hex_val)
     } else {
@@ -30,7 +35,7 @@ rcolors <- function(col, format = "hex") {
     }
     return(out)
   }
-  result <- sapply(col, fun)
+  result <- sapply(col, single_color)
 
   # Format for Typst if needed
   if (format == "typst") {

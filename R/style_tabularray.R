@@ -99,6 +99,7 @@ setMethod(
 
       col <- sty$color[row]
       if (!is.na(col)) {
+        col <- rcolors(col, format = "tabularray")
         x <- color_to_preamble(x, col)
         if (grepl("^#", col)) {
           col <- sub("^#", "c", col)
@@ -108,6 +109,7 @@ setMethod(
 
       bg <- sty$background[row]
       if (!is.na(bg)) {
+        bg <- rcolors(bg, format = "tabularray")
         x <- color_to_preamble(x, bg)
         if (grepl("^#", bg)) {
           bg <- sub("^#", "c", bg)
@@ -163,6 +165,7 @@ setMethod(
 
       lcol <- sty$line_color[row]
       if (!is.na(lcol)) {
+        lcol <- rcolors(lcol, format = "tabularray")
         x <- color_to_preamble(x, lcol)
         if (grepl("^#", lcol)) {
           lcol <- sub("^#", "c", lcol)
