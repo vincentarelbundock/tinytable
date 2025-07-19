@@ -54,7 +54,8 @@ setClass(
     table_string = "character",
     theme = "list",
     width = "numeric",
-    width_cols = "numeric"
+    width_cols = "numeric",
+    height = "numeric"
   )
 )
 
@@ -73,7 +74,8 @@ setMethod(
     notes = NULL,
     theme = list("default"),
     placement = NULL,
-    width = NULL
+    width = NULL,
+    height = NULL
   ) {
     # explicit
     .Object@data <- data
@@ -109,6 +111,9 @@ setMethod(
     }
     if (!is.null(notes)) {
       .Object@notes <- notes
+    }
+    if (!is.null(height)) {
+      .Object@height <- height
     }
     return(.Object)
   }

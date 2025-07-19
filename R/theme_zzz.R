@@ -7,7 +7,6 @@ theme_dictionary <- list(
   "revealjs" = theme_revealjs,
   "resize" = theme_resize,
   "rotate" = theme_rotate,
-  "spacing" = theme_spacing,
   "striped" = theme_striped,
   "tabular" = theme_tabular,
   "void" = theme_void
@@ -29,7 +28,6 @@ theme_dictionary <- list(
 #'   + "revealjs": Tables optimized for Reveal.js presentations with light/dark theme support
 #'   + "rotate": Rotate a LaTeX or Typst table.
 #'   + "resize": Scale a LaTeX `tinytable` to fit the `width` argument.
-#'   + "spacing": Draw more compact or airy tables.
 #'   + "striped": Grey stripes on alternating rows
 #'   + "tabular": Remove table environment (LaTeX) or Javascript/CSS (HTML)
 #'   + "void": No rules
@@ -80,11 +78,6 @@ theme_dictionary <- list(
 #'   - LaTeX and Typst only.
 #'   - Typst: In Quarto documents, rotation does not work because Quarto takes over the figure environment.
 #'   - LaTeX: In Quarto documents, captions must be specified using the `caption` argument in `tt()` rather than via Quarto chunk options.
-#'
-#' spacing
-#'
-#' + `rowsep`: Row spacing
-#' + `colsep`: Column spacing
 #'
 #' @examples
 #' library(tinytable)

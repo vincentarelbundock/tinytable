@@ -43,6 +43,7 @@
 
   #table( // tinytable table start
     stroke: none,
+    rows: auto,
     align: (x, y) => {
       let style = get-style(x, y)
       if style != none and "align" in style { style.align } else { left }

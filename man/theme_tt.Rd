@@ -18,7 +18,6 @@ theme_tt(x, theme, ...)
 \item "revealjs": Tables optimized for Reveal.js presentations with light/dark theme support
 \item "rotate": Rotate a LaTeX or Typst table.
 \item "resize": Scale a LaTeX \code{tinytable} to fit the \code{width} argument.
-\item "spacing": Draw more compact or airy tables.
 \item "striped": Grey stripes on alternating rows
 \item "tabular": Remove table environment (LaTeX) or Javascript/CSS (HTML)
 \item "void": No rules
@@ -108,12 +107,6 @@ rotate
 \item Typst: In Quarto documents, rotation does not work because Quarto takes over the figure environment.
 \item LaTeX: In Quarto documents, captions must be specified using the \code{caption} argument in \code{tt()} rather than via Quarto chunk options.
 }
-}
-
-spacing
-\itemize{
-\item \code{rowsep}: Row spacing
-\item \code{colsep}: Column spacing
 }
 }
 

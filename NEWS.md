@@ -2,6 +2,14 @@
 
 ## Development
 
+Breaking change:
+
+* `theme_spacing()` function has been removed. Use the new `height` argument in `tt()` instead for row height control.
+
+New features:
+
+* `tt()` now accepts a `height` argument to control row height in em units. Works across all output formats (HTML, LaTeX, Typst).
+
 Typst: Major refactor improves several things and brings Typst very close to feature parity with other formats.
 
 * Typst code is not **much** more efficient and concise. Tables over 500 pages long compile in mere seconds. Thanks to @brynhum for the report and tips on implementation #475.
@@ -15,7 +23,7 @@ Misc:
 * Issue #392: reinstate informative error when `format_tt()` uses `num_mark_big` without `digits` argument.
 * Improvements to `theme_tt("revealjs")`.
 
-Bug fix:
+Bugs:
 
 * Fix `theme_bootstrap()` for LaTeX and Typst. Issue #479.
 

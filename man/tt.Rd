@@ -10,6 +10,7 @@ tt(
   caption = get_option("tinytable_tt_caption", default = NULL),
   notes = get_option("tinytable_tt_notes", default = NULL),
   width = get_option("tinytable_tt_width", default = NULL),
+  height = get_option("tinytable_tt_height", default = NULL),
   theme = get_option("tinytable_tt_theme", default = "default"),
   colnames = get_option("tinytable_tt_colnames", default = TRUE),
   rownames = get_option("tinytable_tt_rownames", default = FALSE),
@@ -38,9 +39,11 @@ tt(
 \item Numeric vector of length equal to the number of columns in \code{x} determines the width of each column, in proportion of line width. If the sum of \code{width} exceeds 1, each element is divided by \code{sum(width)}. This makes the table full-width with relative column sizes.
 }}
 
+\item{height}{Row height in em units. Single numeric value greater than zero that determines the row height spacing.}
+
 \item{theme}{Function or string.
 \itemize{
-\item String: bootstrap, grid, multipage, placement, revealjs, resize, rotate, spacing, striped, tabular, void
+\item String: bootstrap, grid, multipage, placement, revealjs, resize, rotate, striped, tabular, void
 \item Function: Applied to the \code{tinytable} object.
 }}
 
