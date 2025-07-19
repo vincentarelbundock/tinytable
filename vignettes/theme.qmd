@@ -60,7 +60,9 @@ Users can also define their own themes to apply consistent visual tweaks to tabl
 
 ```{r}
 theme_vincent <- function(x, ...) {
-  out <- x |> style_tt(color = "teal")
+  out <- x |> 
+    style_tt(color = "teal") |>
+    theme_tt("default")
   out@caption <- "Always use the same caption."
   out@width <- .5
   return(out)
@@ -108,13 +110,22 @@ tt(x) |>
 ```
 
 
-## Resize
 
-::: {.content-visible when-format="html"}
+::: {.content-visible unless-format="pdf"}
+## Resize
+LaTeX only.
+
+## Placement
+LaTeX only.
+
+## Rotate
+LaTeX only.
+
+## Multipage
 LaTeX only.
 :::
 
-::: {.content-visible when-format="pdf"}
+::: {.content-hidden unless-format="pdf"}
 The `resize` theme allows you to adjust the size of the table in LaTeX outputs, making it fit within a specified width of the page. This is useful for large tables that need to be scaled down to fit the document layout. This table will be scaled to 90% of the available line width, ensuring it fits nicely within the document.
 
 ```{r}
@@ -122,17 +133,9 @@ tmp <- cbind(mtcars, mtcars)[1:10, ]
 
 tt(tmp) |> theme_tt("resize", width = .9)
 ```
-:::
-
-
 
 ## Placement
 
-::: {.content-visible when-format="html"}
-LaTeX only.
-:::
-
-::: {.content-visible when-format="pdf"}
 The `placement` theme offers control over the positioning of the table in LaTeX documents, using floating parameters like `H` (from the `float` LaTeX package) to specify where the table should appear.
 
 ```{r placement-theme}
@@ -141,26 +144,16 @@ tt(x) |>
   theme_tt("placement", latex_float = "H") |>
   print(output = "latex")
 ```
-:::
 
-
-::: {.content-visible when-format="pdf"}
 ## Rotate
 
 ```{r}
 tt(head(iris), caption = "Rotated table.") |>
   theme_tt("rotate", angle = 45)
 ```
-:::
-
 
 ## Multipage
 
-::: {.content-visible when-format="html"}
-LaTeX only.
-:::
-
-::: {.content-visible when-format="pdf"}
 The `multipage` theme is designed for LaTeX documents to allow long tables to continue across multiple pages. This theme ensures that tables are not truncated and that all data is presented clearly.
 
 ```{r}
