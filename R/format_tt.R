@@ -166,13 +166,15 @@ apply_format <- function(out,
                          inherits = NULL,
                          ...) {
 
-  # Apply to all columns, filtering by inherits if specified
+  if (inull && jnull && is.null(components)) {
+    components <- "all"
+  }
 
-  # Handle named components in i
-  if (!is.null(components) && is.character(components)) {
+  if (is.character(components)) {
     assert_true(all(components %in% c("colnames", "caption", "notes", "groupi", "groupj", "all"))) 
-    # if there are components, do not apply to all cells, unless "all"
-    if (!"all" %in% components) {
+    if ("all" %in% components) {
+      components <- c("colnames", "caption", "notes", "groupi", "groupj")
+    } else {
       i <- NULL
       j <- NULL
       inull <- jnull <- FALSE
