@@ -29,8 +29,9 @@ format_vector_math <- function(vec, math = FALSE) {
   sprintf("$%s$", vec)
 }
 
-format_vector_replace <- function(ori_vec, out_vec, replace) {
-  if (length(replace) == 0) return(out_vec)
+format_vector_replace <- function(ori_vec = NULL, out_vec = NULL, replace = NULL) {
+  if (is.null(out_vec)) out_vec <- ori_vec
+  if (length(replace) == 0) return(NULL)
   result <- out_vec
   for (k in seq_along(replace)) {
     idx <- ori_vec %in% replace[[k]]
@@ -496,14 +497,14 @@ format_tt_lazy <- function(
     )
   }
 
-  i <- sanitize_i(i, x, lazy = FALSE)
-  j <- sanitize_j(j, x)
-  
 
   # In sanity_tt(), we fill in missing NULL `j` in the format-specific versions,
   # because tabularray can do whole column styling. Here, we need to fill in
   # NULL for all formats since this is applied before creating the table.
   # nrow(out) because nrow(x) sometimes includes rows that will be added **in the lazy future** by group_tt()
+  i <- sanitize_i(i, x, lazy = FALSE)
+  j <- sanitize_j(j, x)
+  
 
   if (!is.null(bool)) {
     result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, 
@@ -540,12 +541,13 @@ format_tt_lazy <- function(
 
   # format each column using the original approach
   # Issue #230: drop=TRUE fixes bug which returned a character dput-like vector
-  for (col in j) {
-    # Apply replacements after type-specific formatting
-    out[i, col] <- format_vector_replace(ori[i, col, drop = TRUE], out[i, col, drop = TRUE], replace)
-  } # loop over columns
-
-
+  if (!is.null(replace)) {
+    result <- apply_format(out = out, ori = ori, x = x, i = i, j = j, 
+      inull = inull, jnull = jnull, format_fn = format_vector_replace, 
+      source = "both", replace = replace)
+    out <- result$out
+    x <- result$x
+  }
 
   # after other formatting
   if (!is.null(sprintf)) {
