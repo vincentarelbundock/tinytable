@@ -199,11 +199,17 @@ apply_format <- function(out,
   # Apply to specific cells
   # Filter columns based on inherits argument
   j_filtered <- j
-  if (!is.null(inherits)) {
+  if (is.character(inherits)) {
     if (source == "ori" && !is.null(ori)) {
       j_filtered <- j[sapply(j, function(col) inherits(ori[[col]], inherits))]
     } else {
       j_filtered <- j[sapply(j, function(col) inherits(out[[col]], inherits))]
+    }
+  } else if (is.function(inherits)) {
+    if (source == "ori" && !is.null(ori)) {
+      j_filtered <- j[sapply(j, function(col) inherits(ori[[col]]))]
+    } else {
+      j_filtered <- j[sapply(j, function(col) inherits(out[[col]]))]
     }
   }
 
@@ -211,12 +217,14 @@ apply_format <- function(out,
     if (source == "both" && !is.null(ori)) {
       # Functions that need both ori and out values
       for (col in j_filtered) {
-        out[i, col] <- format_fn(ori[i, col, drop = TRUE], out[i, col, drop = TRUE], ...)
+        tmp <- format_fn(ori[i, col, drop = TRUE], out[i, col, drop = TRUE], ...)
+        if (!is.null(tmp)) out[i, col] <- tmp
       }
     } else if (source == "ori" && !is.null(ori)) {
       # Functions that use original values
       for (col in j_filtered) {
-        out[i, col] <- format_fn(ori[i, col, drop = TRUE], ...)
+        tmp <- format_fn(ori[i, col, drop = TRUE], ...)
+        if (!is.null(tmp)) out[i, col] <- tmp
       }
     } else {
       # Functions that use current out values
@@ -224,7 +232,8 @@ apply_format <- function(out,
         # Use custom apply_cells with filtering
         for (row in i) {
           for (col in j_filtered) {
-            out[row, col] <- format_fn(out[row, col], ...)
+            tmp <- format_fn(out[row, col], ...)
+            if (!is.null(tmp)) out[row, col] <- tmp
           }
         }
       } else {
@@ -503,7 +512,6 @@ format_tt_lazy <- function(
   # NULL for all formats since this is applied before creating the table.
   # nrow(out) because nrow(x) sometimes includes rows that will be added **in the lazy future** by group_tt()
 
-  # Apply bool formatting using apply_format with inherits filter
   if (!is.null(bool)) {
     result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, 
       format_fn = format_vector_logical, ori = ori, source = "ori", 
@@ -512,26 +520,27 @@ format_tt_lazy <- function(
     x <- result$x
   }
 
+  if (!is.null(date)) {
+    result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, 
+      format_fn = format_vector_date, ori = ori, source = "ori", 
+      inherits = "Date", date_format = date)
+    out <- result$out
+    x <- result$x
+  }
+
+  if (!is.null(digits)) {
+    result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull,
+      format_fn = format_numeric, ori = ori, source = "ori", num_suffix = num_suffix,
+      digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero, num_fmt = num_fmt, inherits = is.numeric)
+    out <- result$out
+    x <- result$x
+  }
+
   # format each column using the original approach
   # Issue #230: drop=TRUE fixes bug which returned a character dput-like vector
   for (col in j) {
-    # sprintf() is self-contained
-
-      # date
-      if (!is.null(date) && inherits(ori[i, col], "Date")) {
-        out[i, col] <- format_vector_date(ori[i, col, drop = TRUE], date)
-        # numeric
-      } else if (!is.null(digits) && is.numeric(ori[i, col, drop = TRUE])) {
-        tmp <- format_numeric(
-          ori[i, col],
-          num_suffix = num_suffix,
-          digits = digits,
-          num_mark_big = num_mark_big,
-          num_mark_dec = num_mark_dec,
-          num_zero = num_zero,
-          num_fmt = num_fmt
-        )
-        if (!is.null(tmp)) out[i, col] <- tmp
+      if (!is.null(digits) && is.numeric(ori[i, col, drop = TRUE])) {
+        # if (!is.null(tmp)) out[i, col] <- tmp
         # other
       } else if (is.function(other)) {
         out[i, col] <- format_vector_other(ori[i, col, drop = TRUE], other)
@@ -540,6 +549,7 @@ format_tt_lazy <- function(
     # Apply replacements after type-specific formatting
     out[i, col] <- format_vector_replace(ori[i, col, drop = TRUE], out[i, col, drop = TRUE], replace)
   } # loop over columns
+
 
   # after other formatting
   if (!is.null(sprintf)) {
