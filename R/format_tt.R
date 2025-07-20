@@ -516,9 +516,7 @@ format_tt_lazy <- function(
   # Issue #230: drop=TRUE fixes bug which returned a character dput-like vector
   for (col in j) {
     # sprintf() is self-contained
-    if (!is.null(sprintf)) {
-      out[i, col] <- format_vector_sprintf(ori[i, col, drop = TRUE], sprintf)
-    } else {
+
       # date
       if (!is.null(date) && inherits(ori[i, col], "Date")) {
         out[i, col] <- format_vector_date(ori[i, col, drop = TRUE], date)
@@ -538,11 +536,18 @@ format_tt_lazy <- function(
       } else if (is.function(other)) {
         out[i, col] <- format_vector_other(ori[i, col, drop = TRUE], other)
       }
-    }
 
     # Apply replacements after type-specific formatting
     out[i, col] <- format_vector_replace(ori[i, col, drop = TRUE], out[i, col, drop = TRUE], replace)
   } # loop over columns
+
+  # after other formatting
+  if (!is.null(sprintf)) {
+    result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, 
+      format_fn = format_vector_sprintf, ori = ori, source = "ori", sprintf_pattern = sprintf)
+    out <- result$out
+    x <- result$x
+  }
 
   # Custom functions overwrite all the other formatting, but is before markdown
   # before escaping
