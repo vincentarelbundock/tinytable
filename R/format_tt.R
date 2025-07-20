@@ -163,6 +163,7 @@ apply_format <- function(out,
                          ori = NULL, 
                          source = "out", 
                          components = NULL, 
+                         inherits = NULL,
                          ...) {
 
   # Handle named components in i
@@ -197,19 +198,40 @@ apply_format <- function(out,
   
   # Apply to specific cells
   if (!inull || !jnull) {
-    if (source == "both" && !is.null(ori)) {
-      # Functions that need both ori and out values
-      for (col in j) {
-        out[i, col] <- format_fn(ori[i, col, drop = TRUE], out[i, col, drop = TRUE], ...)
+    # Filter columns based on inherits argument
+    j_filtered <- j
+    if (!is.null(inherits)) {
+      if (source == "ori" && !is.null(ori)) {
+        j_filtered <- j[sapply(j, function(col) inherits(ori[, col], inherits))]
+      } else {
+        j_filtered <- j[sapply(j, function(col) inherits(out[, col], inherits))]
       }
-    } else if (source == "ori" && !is.null(ori)) {
-      # Functions that use original values
-      for (col in j) {
-        out[i, col] <- format_fn(ori[i, col, drop = TRUE], ...)
+    }
+    
+    if (length(j_filtered) > 0) {
+      if (source == "both" && !is.null(ori)) {
+        # Functions that need both ori and out values
+        for (col in j_filtered) {
+          out[i, col] <- format_fn(ori[i, col, drop = TRUE], out[i, col, drop = TRUE], ...)
+        }
+      } else if (source == "ori" && !is.null(ori)) {
+        # Functions that use original values
+        for (col in j_filtered) {
+          out[i, col] <- format_fn(ori[i, col, drop = TRUE], ...)
+        }
+      } else {
+        # Functions that use current out values
+        if (!is.null(inherits)) {
+          # Use custom apply_cells with filtering
+          for (row in i) {
+            for (col in j_filtered) {
+              out[row, col] <- format_fn(out[row, col], ...)
+            }
+          }
+        } else {
+          out <- apply_cells(out, i, j, format_fn, ...)
+        }
       }
-    } else {
-      # Functions that use current out values
-      out <- apply_cells(out, i, j, format_fn, ...)
     }
   }
   
@@ -223,8 +245,13 @@ apply_format <- function(out,
       x <- apply_groups_i(x, format_fn, ...)
       x <- apply_groups_j(x, format_fn, ...)
       
-      # Apply to all columns
-      for (col in seq_len(ncol(out))) {
+      # Apply to all columns, filtering by inherits if specified
+      cols_to_process <- seq_len(ncol(out))
+      if (!is.null(inherits)) {
+        cols_to_process <- cols_to_process[sapply(cols_to_process, function(col) inherits(out[, col], inherits))]
+      }
+      
+      for (col in cols_to_process) {
         out[, col] <- format_fn(out[, col], ...)
       }
     }
