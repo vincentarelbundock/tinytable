@@ -171,81 +171,69 @@ apply_format <- function(out,
   # Handle named components in i
   if (!is.null(components) && is.character(components)) {
     assert_true(all(components %in% c("colnames", "caption", "notes", "groupi", "groupj"))) 
-    
-    # Apply formatting to specified components only
-    if (source == "out") {
-      if ("colnames" %in% components) {
-        x <- apply_colnames(x, format_fn, ...)
-      }
-      if ("caption" %in% components) {
-        x <- apply_caption(x, format_fn, ...)
-      }
-      if ("notes" %in% components) {
-        x <- apply_notes(x, format_fn, ...)
-      }
-      if ("groupi" %in% components || "groupj" %in% components) {
-        # For group components, we need to specify which groups to format
-        if ("groupi" %in% components && "groupj" %in% components) {
-          x <- apply_groups_i(x, format_fn, ...)
-          x <- apply_groups_j(x, format_fn, ...)
-        } else if ("groupi" %in% components) {
-          x <- apply_groups_i(x, format_fn, ...)
-        } else if ("groupj" %in% components) {
-          x <- apply_groups_j(x, format_fn, ...)
-        }
-      }
-    }
-    return(list(out = out, x = x))
   }
-  
+
+  # Apply formatting to specified components only
+  if ("colnames" %in% components) {
+    x <- apply_colnames(x, format_fn, ...)
+  }
+  if ("caption" %in% components) {
+    x <- apply_caption(x, format_fn, ...)
+  }
+  if ("notes" %in% components) {
+    x <- apply_notes(x, format_fn, ...)
+  }
+  if ("groupi" %in% components) {
+    x <- apply_groups_i(x, format_fn, ...)
+  }
+  if ("groupj" %in% components) {
+    x <- apply_groups_j(x, format_fn, ...)
+  }
+
   # Apply to specific cells
-    # Filter columns based on inherits argument
-    j_filtered <- j
-    if (!is.null(inherits)) {
-      if (source == "ori" && !is.null(ori)) {
-        j_filtered <- j[sapply(j, function(col) inherits(ori[[col]], inherits))]
-      } else {
-        j_filtered <- j[sapply(j, function(col) inherits(out[[col]], inherits))]
-      }
+  # Filter columns based on inherits argument
+  j_filtered <- j
+  if (!is.null(inherits)) {
+    if (source == "ori" && !is.null(ori)) {
+      j_filtered <- j[sapply(j, function(col) inherits(ori[[col]], inherits))]
+    } else {
+      j_filtered <- j[sapply(j, function(col) inherits(out[[col]], inherits))]
     }
-    
-    if (length(j_filtered) > 0) {
-      if (source == "both" && !is.null(ori)) {
-        # Functions that need both ori and out values
-        for (col in j_filtered) {
-          out[i, col] <- format_fn(ori[i, col, drop = TRUE], out[i, col, drop = TRUE], ...)
-        }
-      } else if (source == "ori" && !is.null(ori)) {
-        # Functions that use original values
-        for (col in j_filtered) {
-          out[i, col] <- format_fn(ori[i, col, drop = TRUE], ...)
-        }
-      } else {
-        # Functions that use current out values
-        if (!is.null(inherits)) {
-          # Use custom apply_cells with filtering
-          for (row in i) {
-            for (col in j_filtered) {
-              out[row, col] <- format_fn(out[row, col], ...)
-            }
+  }
+
+  if (length(j_filtered) > 0) {
+    if (source == "both" && !is.null(ori)) {
+      # Functions that need both ori and out values
+      for (col in j_filtered) {
+        out[i, col] <- format_fn(ori[i, col, drop = TRUE], out[i, col, drop = TRUE], ...)
+      }
+    } else if (source == "ori" && !is.null(ori)) {
+      # Functions that use original values
+      for (col in j_filtered) {
+        out[i, col] <- format_fn(ori[i, col, drop = TRUE], ...)
+      }
+    } else {
+      # Functions that use current out values
+      if (!is.null(inherits)) {
+        # Use custom apply_cells with filtering
+        for (row in i) {
+          for (col in j_filtered) {
+            out[row, col] <- format_fn(out[row, col], ...)
           }
-        } else {
-          out <- apply_cells(out, i, j, format_fn, ...)
         }
+      } else {
+        out <- apply_cells(out, i, j, format_fn, ...)
       }
     }
-  
+  }
+
   # Apply to all elements when i and j are both null
   if (inull && jnull) {
-    # Only apply to global elements for functions that don't need ori/both
-    if (source == "out") {
-      x <- apply_colnames(x, format_fn, ...)
-      x <- apply_caption(x, format_fn, ...)
-      x <- apply_notes(x, format_fn, ...)
-      x <- apply_groups_i(x, format_fn, ...)
-      x <- apply_groups_j(x, format_fn, ...)
-    }
-      
+    x <- apply_colnames(x, format_fn, ...)
+    x <- apply_caption(x, format_fn, ...)
+    x <- apply_notes(x, format_fn, ...)
+    x <- apply_groups_i(x, format_fn, ...)
+    x <- apply_groups_j(x, format_fn, ...)
   }
   
   return(list(out = out, x = x))
