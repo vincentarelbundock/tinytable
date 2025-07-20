@@ -232,6 +232,13 @@ tab <- tt(dat) |>
   style_tt(j = 1, align = "c")
 expect_snapshot_print(print_html(tab), "format_tt-vignette_html_markdown.html")
 
+# boolean formatting
+tab <- tt(data.frame(a = c(TRUE, FALSE, TRUE, NA)))
+tab1 <- format_tt(tab, bool = tolower) |> print("dataframe")
+tab2 <- format_tt(tab, j = 1, bool = tolower) |> print("dataframe")
+expect_equivalent(tab1$a, tab2$a)
+
+
 # Issue #392
 pen <- rddata("penguins", "palmerpenguins")[1:3, c("species", "body_mass_g")]
 expect_error(format_tt(tt(pen), num_mark_big = ","), "requires.*digits")

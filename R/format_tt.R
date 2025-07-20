@@ -166,6 +166,8 @@ apply_format <- function(out,
                          inherits = NULL,
                          ...) {
 
+  # Apply to all columns, filtering by inherits if specified
+
   # Handle named components in i
   if (!is.null(components) && is.character(components)) {
     assert_true(all(components %in% c("colnames", "caption", "notes", "groupi", "groupj"))) 
@@ -197,14 +199,13 @@ apply_format <- function(out,
   }
   
   # Apply to specific cells
-  if (!inull || !jnull) {
     # Filter columns based on inherits argument
     j_filtered <- j
     if (!is.null(inherits)) {
       if (source == "ori" && !is.null(ori)) {
-        j_filtered <- j[sapply(j, function(col) inherits(ori[, col], inherits))]
+        j_filtered <- j[sapply(j, function(col) inherits(ori[[col]], inherits))]
       } else {
-        j_filtered <- j[sapply(j, function(col) inherits(out[, col], inherits))]
+        j_filtered <- j[sapply(j, function(col) inherits(out[[col]], inherits))]
       }
     }
     
@@ -233,7 +234,6 @@ apply_format <- function(out,
         }
       }
     }
-  }
   
   # Apply to all elements when i and j are both null
   if (inull && jnull) {
@@ -244,19 +244,8 @@ apply_format <- function(out,
       x <- apply_notes(x, format_fn, ...)
       x <- apply_groups_i(x, format_fn, ...)
       x <- apply_groups_j(x, format_fn, ...)
-      
-      # Apply to all columns, filtering by inherits if specified
-      cols_to_process <- seq_len(ncol(out))
-      if (!is.null(inherits)) {
-        cols_to_process <- cols_to_process[sapply(cols_to_process, function(col) inherits(out[, col], inherits))]
-      }
-      
-      for (col in cols_to_process) {
-        out[, col] <- format_fn(out[, col], ...)
-      }
     }
-    # For functions needing ori or both, global application doesn't make sense
-    # since we don't have original values for colnames, caption, etc.
+      
   }
   
   return(list(out = out, x = x))
@@ -520,6 +509,15 @@ format_tt_lazy <- function(
   # NULL for all formats since this is applied before creating the table.
   # nrow(out) because nrow(x) sometimes includes rows that will be added **in the lazy future** by group_tt()
 
+  # Apply bool formatting using apply_format with inherits filter
+  if (!is.null(bool)) {
+    result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, 
+      format_fn = format_vector_logical, ori = ori, source = "ori", 
+      inherits = "logical", bool_fn = bool)
+    out <- result$out
+    x <- result$x
+  }
+
   # format each column using the original approach
   # Issue #230: drop=TRUE fixes bug which returned a character dput-like vector
   for (col in j) {
@@ -527,11 +525,8 @@ format_tt_lazy <- function(
     if (!is.null(sprintf)) {
       out[i, col] <- format_vector_sprintf(ori[i, col, drop = TRUE], sprintf)
     } else {
-      # logical
-      if (!is.null(bool) && is.logical(ori[i, col])) {
-        out[i, col] <- format_vector_logical(ori[i, col, drop = TRUE], bool)
-        # date
-      } else if (!is.null(date) && inherits(ori[i, col], "Date")) {
+      # date
+      if (!is.null(date) && inherits(ori[i, col], "Date")) {
         out[i, col] <- format_vector_date(ori[i, col, drop = TRUE], date)
         # numeric
       } else if (!is.null(digits) && is.numeric(ori[i, col, drop = TRUE])) {
