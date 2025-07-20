@@ -506,21 +506,17 @@ format_tt_lazy <- function(
   j <- sanitize_j(j, x)
   
 
-  if (!is.null(bool)) {
-    result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, 
-      format_fn = format_vector_logical, ori = ori, source = "ori", 
-      inherits = "logical", bool_fn = bool)
-    out <- result$out
-    x <- result$x
-  }
+  result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, 
+    format_fn = format_vector_logical, ori = ori, source = "ori", 
+    inherits = "logical", bool_fn = bool)
+  out <- result$out
+  x <- result$x
 
-  if (!is.null(date)) {
-    result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, 
-      format_fn = format_vector_date, ori = ori, source = "ori", 
-      inherits = "Date", date_format = date)
-    out <- result$out
-    x <- result$x
-  }
+  result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, 
+    format_fn = format_vector_date, ori = ori, source = "ori", 
+    inherits = "Date", date_format = date)
+  out <- result$out
+  x <- result$x
 
   if (!is.null(digits)) {
     result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull,
@@ -530,24 +526,20 @@ format_tt_lazy <- function(
     x <- result$x
   }
 
-  if (is.function(other)) {
-    is_other <- function(x) !is.numeric(x) && !inherits(x, "Date") && !is.logical(x)
-    result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull,
-      format_fn = format_vector_other, ori = ori, source = "ori", inherits = is_other, 
-      other_fn = other)
-    out <- result$out
-    x <- result$x
-  }
+  is_other <- function(x) !is.numeric(x) && !inherits(x, "Date") && !is.logical(x)
+  result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull,
+    format_fn = format_vector_other, ori = ori, source = "ori", inherits = is_other, 
+    other_fn = other)
+  out <- result$out
+  x <- result$x
 
   # format each column using the original approach
   # Issue #230: drop=TRUE fixes bug which returned a character dput-like vector
-  if (!is.null(replace)) {
-    result <- apply_format(out = out, ori = ori, x = x, i = i, j = j, 
-      inull = inull, jnull = jnull, format_fn = format_vector_replace, 
-      source = "both", replace = replace)
-    out <- result$out
-    x <- result$x
-  }
+  result <- apply_format(out = out, ori = ori, x = x, i = i, j = j, 
+    inull = inull, jnull = jnull, format_fn = format_vector_replace, 
+    source = "both", replace = replace)
+  out <- result$out
+  x <- result$x
 
   # after other formatting
   if (!is.null(sprintf)) {
@@ -573,6 +565,7 @@ format_tt_lazy <- function(
     }
   }
 
+  # close to last
   if (isTRUE(math)) {
     result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, format_fn = format_vector_math, components = components, math = math)
     out <- result$out
