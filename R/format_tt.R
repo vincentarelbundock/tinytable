@@ -1,30 +1,30 @@
 
-format_vector_sprintf <- function(vec, sprintf_pattern) {
+format_vector_sprintf <- function(vec, sprintf_pattern = NULL) {
   if (is.null(sprintf_pattern)) return(vec)
   base::sprintf(sprintf_pattern, vec)
 }
 
-format_vector_logical <- function(vec, bool_fn) {
+format_vector_logical <- function(vec, bool_fn = NULL) {
   if (!is.logical(vec) || is.null(bool_fn)) return(vec)
   bool_fn(vec)
 }
 
-format_vector_date <- function(vec, date_format) {
+format_vector_date <- function(vec, date_format = NULL) {
   if (!inherits(vec, "Date") || is.null(date_format)) return(vec)
   format(vec, date_format)
 }
 
-format_vector_other <- function(vec, other_fn) {
+format_vector_other <- function(vec, other_fn = NULL) {
   if (!is.function(other_fn)) return(vec)
   other_fn(vec)
 }
 
-format_vector_custom <- function(vec, fn) {
+format_vector_custom <- function(vec, fn = NULL) {
   if (!is.function(fn)) return(vec)
   fn(vec)
 }
 
-format_vector_math <- function(vec, math) {
+format_vector_math <- function(vec, math = FALSE) {
   if (!isTRUE(math)) return(vec)
   sprintf("$%s$", vec)
 }
@@ -137,13 +137,74 @@ apply_groups <- function(x, format_fn, ...) {
   return(x)
 }
 
+apply_groups_i <- function(x, format_fn, ...) {
+  if (!inherits(x, "tinytable")) return(x)
+  
+  for (idx in seq_along(x@lazy_group)) {
+    g <- x@lazy_group[[idx]]
+    if (!is.null(g$i)) {
+      names(g$i) <- format_fn(names(g$i), ...)
+    }
+    x@lazy_group[[idx]] <- g
+  }
+  return(x)
+}
+
+apply_groups_j <- function(x, format_fn, ...) {
+  if (!inherits(x, "tinytable")) return(x)
+  
+  for (idx in seq_along(x@lazy_group)) {
+    g <- x@lazy_group[[idx]]
+    if (!is.null(g$j)) {
+      names(g$j) <- format_fn(names(g$j), ...)
+    }
+    x@lazy_group[[idx]] <- g
+  }
+  return(x)
+}
+
 apply_colnames <- function(x, format_fn, ...) {
   colnames(x) <- format_fn(colnames(x), ...)
   return(x)
 }
 
 # Global dispatcher function
-apply_format <- function(out, x, i, j, inull, jnull, format_fn, ..., ori = NULL, source = "out") {
+apply_format <- function(out, x, i, j, inull, jnull, format_fn, ..., ori = NULL, source = "out", components = NULL) {
+  # Handle named components in i
+  if (!is.null(components) && is.character(components)) {
+    valid_components <- c("colnames", "caption", "notes", "groupi", "groupj")
+    invalid_components <- setdiff(components, valid_components)
+    if (length(invalid_components) > 0) {
+      stop(sprintf("Invalid component(s): %s. Valid components are: %s", 
+                   paste(invalid_components, collapse = ", "),
+                   paste(valid_components, collapse = ", ")), call. = FALSE)
+    }
+    
+    # Apply formatting to specified components only
+    if (source == "out") {
+      if ("colnames" %in% components) {
+        x <- apply_colnames(x, format_fn, ...)
+      }
+      if ("caption" %in% components) {
+        x <- apply_caption(x, format_fn, ...)
+      }
+      if ("notes" %in% components) {
+        x <- apply_notes(x, format_fn, ...)
+      }
+      if ("groupi" %in% components || "groupj" %in% components) {
+        # For group components, we need to specify which groups to format
+        if ("groupi" %in% components && "groupj" %in% components) {
+          x <- apply_groups(x, format_fn, ...)
+        } else if ("groupi" %in% components) {
+          x <- apply_groups_i(x, format_fn, ...)
+        } else if ("groupj" %in% components) {
+          x <- apply_groups_j(x, format_fn, ...)
+        }
+      }
+    }
+    return(list(out = out, x = x))
+  }
+  
   # Apply to specific cells
   if (!inull || !jnull) {
     if (source == "both" && !is.null(ori)) {
@@ -305,6 +366,16 @@ format_tt <- function(
   replace <- sanitize_replace(replace)
   sanity_num_mark(digits, num_mark_big, num_mark_dec)
 
+  # Check if i contains component names (do this before processing tinytable objects)
+  valid_components <- c("colnames", "caption", "notes", "groupi", "groupj")
+  components <- NULL
+  if (is.character(i) && any(i %in% valid_components)) {
+    components <- i[i %in% valid_components]
+    # Remove components from i for normal processing
+    i <- i[!i %in% valid_components]
+    if (length(i) == 0) i <- NULL
+  }
+
   out <- x
 
   if (inherits(out, "tinytable")) {
@@ -330,7 +401,8 @@ format_tt <- function(
       quarto = quarto,
       other = other,
       inull = is.null(i),
-      jnull = is.null(j)
+      jnull = is.null(j),
+      components = components
     )
     out@lazy_format <- c(out@lazy_format, list(cal))
   } else {
@@ -356,7 +428,8 @@ format_tt <- function(
       quarto = quarto,
       markdown = markdown,
       inull = is.null(i),
-      jnull = is.null(j)
+      jnull = is.null(j),
+      components = components
     )
   }
 
@@ -386,7 +459,8 @@ format_tt_lazy <- function(
   quarto,
   other,
   inull,
-  jnull
+  jnull,
+  components = NULL
 ) {
   if (inherits(x, "tbl_df")) {
     assert_dependency("tibble")
@@ -421,6 +495,7 @@ format_tt_lazy <- function(
 
   i <- sanitize_i(i, x, lazy = FALSE)
   j <- sanitize_j(j, x)
+  
 
   # In sanity_tt(), we fill in missing NULL `j` in the format-specific versions,
   # because tabularray can do whole column styling. Here, we need to fill in
@@ -465,13 +540,21 @@ format_tt_lazy <- function(
   # Custom functions overwrite all the other formatting, but is before markdown
   # before escaping
   if (is.function(fn)) {
-    for (col in j) {
-      out[i, col] <- format_vector_custom(ori[i, col, drop = TRUE], fn)
+    if (!is.null(components)) {
+      # Use apply_format for component-specific formatting
+      result <- apply_format(out, x, i, j, inull, jnull, format_vector_custom, fn, ori = ori, source = "ori", components = components)
+      out <- result$out
+      x <- result$x
+    } else {
+      # Original behavior for cell-specific formatting
+      for (col in j) {
+        out[i, col] <- format_vector_custom(ori[i, col, drop = TRUE], fn)
+      }
     }
   }
 
   if (isTRUE(math)) {
-    result <- apply_format(out, x, i, j, inull, jnull, format_vector_math, math)
+    result <- apply_format(out, x, i, j, inull, jnull, format_vector_math, math, components = components)
     out <- result$out
     x <- result$x
   }
@@ -490,7 +573,7 @@ format_tt_lazy <- function(
       o <- FALSE
     }
 
-    result <- apply_format(out, x, i, j, inull, jnull, escape_text, output = o)
+    result <- apply_format(out, x, i, j, inull, jnull, escape_text, output = o, components = components)
     out <- result$out
     x <- result$x
     
@@ -504,7 +587,7 @@ format_tt_lazy <- function(
   if (isTRUE(markdown)) {
     assert_dependency("litedown")
     output_format <- if (inherits(x, "tinytable_bootstrap")) "html" else if (inherits(x, "tinytable_tabularray")) "latex" else NULL
-    result <- apply_format(out, x, i, j, inull, jnull, format_vector_markdown, output_format)
+    result <- apply_format(out, x, i, j, inull, jnull, format_vector_markdown, output_format, components = components)
     out <- result$out
     x <- result$x
   }
