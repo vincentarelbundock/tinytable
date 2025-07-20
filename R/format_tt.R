@@ -243,15 +243,6 @@ apply_format <- function(out,
       }
     }
   }
-
-  # Apply to all elements when i and j are both null and no specific components
-  if (inull && jnull && is.null(components)) {
-    x <- apply_colnames(x, format_fn, ...)
-    x <- apply_caption(x, format_fn, ...)
-    x <- apply_notes(x, format_fn, ...)
-    x <- apply_groups_i(x, format_fn, ...)
-    x <- apply_groups_j(x, format_fn, ...)
-  }
   
   return(list(out = out, x = x))
 }
