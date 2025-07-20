@@ -613,3 +613,26 @@ sanity_num_mark <- function(digits, num_mark_big, num_mark_dec) {
     }
   }
 }
+
+check_true <- function(x, null.ok = FALSE) {
+  if (is.null(x) && isTRUE(null.ok)) {
+    return(TRUE)
+  }
+  if (isTRUE(x)) {
+    return(TRUE)
+  }
+  return(FALSE)
+}
+
+assert_true <- function(
+  x,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
+  msg <- sprintf("`%s` must be a logical true.", name)
+  if (!isTRUE(check_true(x, null.ok = null.ok))) {
+    stop(msg, call. = FALSE)
+  }
+}
+
+

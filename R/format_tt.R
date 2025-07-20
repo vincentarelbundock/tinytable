@@ -121,22 +121,6 @@ apply_notes <- function(x, format_fn, ...) {
   return(x)
 }
 
-apply_groups <- function(x, format_fn, ...) {
-  if (!inherits(x, "tinytable")) return(x)
-  
-  for (idx in seq_along(x@lazy_group)) {
-    g <- x@lazy_group[[idx]]
-    if (!is.null(g$j)) {
-      names(g$j) <- format_fn(names(g$j), ...)
-    }
-    if (!is.null(g$i)) {
-      names(g$i) <- format_fn(names(g$i), ...)
-    }
-    x@lazy_group[[idx]] <- g
-  }
-  return(x)
-}
-
 apply_groups_i <- function(x, format_fn, ...) {
   if (!inherits(x, "tinytable")) return(x)
   
@@ -194,7 +178,8 @@ apply_format <- function(out, x, i, j, inull, jnull, format_fn, ..., ori = NULL,
       if ("groupi" %in% components || "groupj" %in% components) {
         # For group components, we need to specify which groups to format
         if ("groupi" %in% components && "groupj" %in% components) {
-          x <- apply_groups(x, format_fn, ...)
+          x <- apply_groups_i(x, format_fn, ...)
+          x <- apply_groups_j(x, format_fn, ...)
         } else if ("groupi" %in% components) {
           x <- apply_groups_i(x, format_fn, ...)
         } else if ("groupj" %in% components) {
@@ -230,7 +215,8 @@ apply_format <- function(out, x, i, j, inull, jnull, format_fn, ..., ori = NULL,
       x <- apply_colnames(x, format_fn, ...)
       x <- apply_caption(x, format_fn, ...)
       x <- apply_notes(x, format_fn, ...)
-      x <- apply_groups(x, format_fn, ...)
+      x <- apply_groups_i(x, format_fn, ...)
+      x <- apply_groups_j(x, format_fn, ...)
       
       # Apply to all columns
       for (col in seq_len(ncol(out))) {
