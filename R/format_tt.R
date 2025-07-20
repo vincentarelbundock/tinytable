@@ -153,16 +153,21 @@ apply_colnames <- function(x, format_fn, ...) {
 }
 
 # Global dispatcher function
-apply_format <- function(out, x, i, j, inull, jnull, format_fn, ..., ori = NULL, source = "out", components = NULL) {
+apply_format <- function(out, 
+                         x, 
+                         i, 
+                         j, 
+                         inull, 
+                         jnull, 
+                         format_fn, 
+                         ori = NULL, 
+                         source = "out", 
+                         components = NULL, 
+                         ...) {
+
   # Handle named components in i
   if (!is.null(components) && is.character(components)) {
-    valid_components <- c("colnames", "caption", "notes", "groupi", "groupj")
-    invalid_components <- setdiff(components, valid_components)
-    if (length(invalid_components) > 0) {
-      stop(sprintf("Invalid component(s): %s. Valid components are: %s", 
-                   paste(invalid_components, collapse = ", "),
-                   paste(valid_components, collapse = ", ")), call. = FALSE)
-    }
+    assert_true(all(components %in% c("colnames", "caption", "notes", "groupi", "groupj"))) 
     
     # Apply formatting to specified components only
     if (source == "out") {
@@ -528,7 +533,7 @@ format_tt_lazy <- function(
   if (is.function(fn)) {
     if (!is.null(components)) {
       # Use apply_format for component-specific formatting
-      result <- apply_format(out, x, i, j, inull, jnull, format_vector_custom, fn, ori = ori, source = "ori", components = components)
+      result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, format_fn = format_vector_custom, ori = ori, source = "ori", components = components, fn = fn)
       out <- result$out
       x <- result$x
     } else {
@@ -540,7 +545,7 @@ format_tt_lazy <- function(
   }
 
   if (isTRUE(math)) {
-    result <- apply_format(out, x, i, j, inull, jnull, format_vector_math, math, components = components)
+    result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, format_fn = format_vector_math, components = components, math = math)
     out <- result$out
     x <- result$x
   }
@@ -559,7 +564,7 @@ format_tt_lazy <- function(
       o <- FALSE
     }
 
-    result <- apply_format(out, x, i, j, inull, jnull, escape_text, output = o, components = components)
+    result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, format_fn = escape_text, components = components, output = o)
     out <- result$out
     x <- result$x
     
@@ -573,7 +578,7 @@ format_tt_lazy <- function(
   if (isTRUE(markdown)) {
     assert_dependency("litedown")
     output_format <- if (inherits(x, "tinytable_bootstrap")) "html" else if (inherits(x, "tinytable_tabularray")) "latex" else NULL
-    result <- apply_format(out, x, i, j, inull, jnull, format_vector_markdown, output_format, components = components)
+    result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, format_fn = format_vector_markdown, components = components, output_format = output_format)
     out <- result$out
     x <- result$x
   }
