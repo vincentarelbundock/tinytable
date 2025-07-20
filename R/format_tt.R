@@ -1,3 +1,190 @@
+
+format_vector_sprintf <- function(vec, sprintf_pattern) {
+  if (is.null(sprintf_pattern)) return(vec)
+  base::sprintf(sprintf_pattern, vec)
+}
+
+format_vector_logical <- function(vec, bool_fn) {
+  if (!is.logical(vec) || is.null(bool_fn)) return(vec)
+  bool_fn(vec)
+}
+
+format_vector_date <- function(vec, date_format) {
+  if (!inherits(vec, "Date") || is.null(date_format)) return(vec)
+  format(vec, date_format)
+}
+
+format_vector_other <- function(vec, other_fn) {
+  if (!is.function(other_fn)) return(vec)
+  other_fn(vec)
+}
+
+format_vector_custom <- function(vec, fn) {
+  if (!is.function(fn)) return(vec)
+  fn(vec)
+}
+
+format_vector_math <- function(vec, math) {
+  if (!isTRUE(math)) return(vec)
+  sprintf("$%s$", vec)
+}
+
+format_vector_replace <- function(ori_vec, out_vec, replace) {
+  if (length(replace) == 0) return(out_vec)
+  result <- out_vec
+  for (k in seq_along(replace)) {
+    idx <- ori_vec %in% replace[[k]]
+    if (identical(names(replace)[[k]], " ")) {
+      result[idx] <- ""
+    } else {
+      result[idx] <- names(replace)[[k]]
+    }
+  }
+  return(result)
+}
+
+format_vector_markdown <- function(vec, output_format) {
+  if (is.null(output_format)) return(vec)
+  
+  if (output_format == "html") {
+    vapply(vec, function(k) {
+      k <- litedown::mark(I(k), "html")
+      k <- sub("<p>", "", k, fixed = TRUE)
+      k <- sub("</p>", "", k, fixed = TRUE)
+      return(k)
+    }, character(1))
+  } else if (output_format == "latex") {
+    vapply(vec, function(k) {
+      litedown::mark(I(k), "latex")
+    }, character(1))
+  } else {
+    vec
+  }
+}
+
+format_quarto <- function(out, i, col, x) {
+  if (isTRUE(x@output == "html")) {
+    fun <- function(z) {
+      z@table_string <- sub(
+        "data-quarto-disable-processing='true'",
+        "data-quarto-disable-processing='false'",
+        z@table_string,
+        fixed = TRUE
+      )
+      return(z)
+    }
+    x <- style_tt(x, finalize = fun)
+    out[i, col] <- sprintf(
+      '<span data-qmd="%s"></span>',
+      out[i, col, drop = TRUE]
+    )
+  } else if (isTRUE(x@output == "latex")) {
+    assert_dependency("base64enc")
+    tmp <- sapply(
+      out[i, col, drop = TRUE],
+      function(z) base64enc::base64encode(charToRaw(z))
+    )
+    out[i, col] <- sprintf("\\QuartoMarkdownBase64{%s}", tmp)
+  }
+
+  return(list("out" = out, "x" = x))
+}
+
+# Apply functions for different table elements
+apply_cells <- function(out, i, j, format_fn, ...) {
+  for (row in i) {
+    for (col in j) {
+      out[row, col] <- format_fn(out[row, col], ...)
+    }
+  }
+  return(out)
+}
+
+apply_caption <- function(x, format_fn, ...) {
+  if (!inherits(x, "tinytable")) return(x)
+  x@caption <- format_fn(x@caption, ...)
+  return(x)
+}
+
+apply_notes <- function(x, format_fn, ...) {
+  if (!inherits(x, "tinytable")) return(x)
+  
+  for (idx in seq_along(x@notes)) {
+    n <- x@notes[[idx]]
+    if (is.character(n) && length(n) == 1) {
+      x@notes[[idx]] <- format_fn(n, ...)
+    } else if (is.list(n) && "text" %in% names(n)) {
+      n$text <- format_fn(n$text, ...)
+      x@notes[[idx]] <- n
+    }
+  }
+  return(x)
+}
+
+apply_groups <- function(x, format_fn, ...) {
+  if (!inherits(x, "tinytable")) return(x)
+  
+  for (idx in seq_along(x@lazy_group)) {
+    g <- x@lazy_group[[idx]]
+    if (!is.null(g$j)) {
+      names(g$j) <- format_fn(names(g$j), ...)
+    }
+    if (!is.null(g$i)) {
+      names(g$i) <- format_fn(names(g$i), ...)
+    }
+    x@lazy_group[[idx]] <- g
+  }
+  return(x)
+}
+
+apply_colnames <- function(x, format_fn, ...) {
+  colnames(x) <- format_fn(colnames(x), ...)
+  return(x)
+}
+
+# Global dispatcher function
+apply_format <- function(out, x, i, j, inull, jnull, format_fn, ..., ori = NULL, source = "out") {
+  # Apply to specific cells
+  if (!inull || !jnull) {
+    if (source == "both" && !is.null(ori)) {
+      # Functions that need both ori and out values
+      for (col in j) {
+        out[i, col] <- format_fn(ori[i, col, drop = TRUE], out[i, col, drop = TRUE], ...)
+      }
+    } else if (source == "ori" && !is.null(ori)) {
+      # Functions that use original values
+      for (col in j) {
+        out[i, col] <- format_fn(ori[i, col, drop = TRUE], ...)
+      }
+    } else {
+      # Functions that use current out values
+      out <- apply_cells(out, i, j, format_fn, ...)
+    }
+  }
+  
+  # Apply to all elements when i and j are both null
+  if (inull && jnull) {
+    # Only apply to global elements for functions that don't need ori/both
+    if (source == "out") {
+      x <- apply_colnames(x, format_fn, ...)
+      x <- apply_caption(x, format_fn, ...)
+      x <- apply_notes(x, format_fn, ...)
+      x <- apply_groups(x, format_fn, ...)
+      
+      # Apply to all columns
+      for (col in seq_len(ncol(out))) {
+        out[, col] <- format_fn(out[, col], ...)
+      }
+    }
+    # For functions needing ori or both, global application doesn't make sense
+    # since we don't have original values for colnames, caption, etc.
+  }
+  
+  return(list(out = out, x = x))
+}
+
+
+
 #' Format columns of a data frame
 #'
 #' This function formats the columns of a data frame based on the column type (logical, date, numeric).
@@ -177,70 +364,6 @@ format_tt <- function(
 }
 
 
-format_vector_sprintf <- function(vec, sprintf_pattern) {
-  if (is.null(sprintf_pattern)) return(vec)
-  base::sprintf(sprintf_pattern, vec)
-}
-
-format_vector_logical <- function(vec, bool_fn) {
-  if (!is.logical(vec) || is.null(bool_fn)) return(vec)
-  bool_fn(vec)
-}
-
-format_vector_date <- function(vec, date_format) {
-  if (!inherits(vec, "Date") || is.null(date_format)) return(vec)
-  format(vec, date_format)
-}
-
-format_vector_other <- function(vec, other_fn) {
-  if (!is.function(other_fn)) return(vec)
-  other_fn(vec)
-}
-
-format_vector_custom <- function(vec, fn) {
-  if (!is.function(fn)) return(vec)
-  fn(vec)
-}
-
-format_vector_math <- function(vec, math) {
-  if (!isTRUE(math)) return(vec)
-  sprintf("$%s$", vec)
-}
-
-format_vector_replace <- function(ori_vec, out_vec, replace) {
-  if (length(replace) == 0) return(out_vec)
-  result <- out_vec
-  for (k in seq_along(replace)) {
-    idx <- ori_vec %in% replace[[k]]
-    if (identical(names(replace)[[k]], " ")) {
-      result[idx] <- ""
-    } else {
-      result[idx] <- names(replace)[[k]]
-    }
-  }
-  return(result)
-}
-
-format_vector_markdown <- function(vec, output_format) {
-  if (is.null(output_format)) return(vec)
-  
-  if (output_format == "html") {
-    sapply(vec, function(k) {
-      k <- litedown::mark(I(k), "html")
-      k <- sub("<p>", "", k, fixed = TRUE)
-      k <- sub("</p>", "", k, fixed = TRUE)
-      return(k)
-    })
-  } else if (output_format == "latex") {
-    sapply(vec, function(k) {
-      litedown::mark(I(k), "latex")
-    })
-  } else {
-    vec
-  }
-}
-
-
 format_tt_lazy <- function(
   x,
   i,
@@ -304,7 +427,7 @@ format_tt_lazy <- function(
   # NULL for all formats since this is applied before creating the table.
   # nrow(out) because nrow(x) sometimes includes rows that will be added **in the lazy future** by group_tt()
 
-  # format each column using the new modular approach
+  # format each column using the original approach
   # Issue #230: drop=TRUE fixes bug which returned a character dput-like vector
   for (col in j) {
     # sprintf() is self-contained
@@ -348,34 +471,9 @@ format_tt_lazy <- function(
   }
 
   if (isTRUE(math)) {
-    for (row in i) {
-      for (col in j) {
-        out[row, col] <- format_vector_math(out[row, col], math)
-      }
-    }
-    if (inull && jnull) {
-      x@caption <- format_vector_math(x@caption, math)
-      colnames(x) <- format_vector_math(colnames(x), math)
-      for (idx in seq_along(x@notes)) {
-        n <- x@notes[[idx]]
-        if (is.character(n) && length(n) == 1) {
-          x@notes[[idx]] <- format_vector_math(n, math = math)
-        } else if (is.list(n) && "text" %in% names(n)) {
-          n$text <- format_vector_math(n$text, math = math)
-          x@notes[[idx]] <- n
-        }
-      }
-      for (idx in seq_along(x@lazy_group)) {
-        g <- x@lazy_group[[idx]]
-        if (!is.null(g$j)) {
-          names(g$j) <- format_vector_math(names(g$j), math = math)
-        }
-        if (!is.null(g$i)) {
-          names(g$i) <- format_vector_math(names(g$i), math = math)
-        }
-        x@lazy_group[[idx]] <- g
-      }
-    }
+    result <- apply_format(out, x, i, j, inull, jnull, format_vector_math, math)
+    out <- result$out
+    x <- result$x
   }
 
   # escape latex characters
@@ -392,78 +490,30 @@ format_tt_lazy <- function(
       o <- FALSE
     }
 
-    # caption & groups: if i and j are both null
-    if (inull && jnull) {
-      if (inherits(x, "tinytable")) {
-        x@caption <- escape_text(x@caption, output = o)
-
-        for (idx in seq_along(x@notes)) {
-          n <- x@notes[[idx]]
-          if (is.character(n) && length(n) == 1) {
-            x@notes[[idx]] <- escape_text(n, output = o)
-          } else if (is.list(n) && "text" %in% names(n)) {
-            n$text <- escape_text(n$text, output = o)
-            x@notes[[idx]] <- n
-          }
-        }
-
-        for (idx in seq_along(x@lazy_group)) {
-          g <- x@lazy_group[[idx]]
-          if (!is.null(g$j)) {
-            names(g$j) <- escape_text(names(g$j), output = o)
-          }
-          if (!is.null(g$i)) {
-            names(g$i) <- escape_text(names(g$i), output = o)
-          }
-          x@lazy_group[[idx]] <- g
-        }
-      }
-      colnames(x) <- escape_text(colnames(x), output = o)
-      for (col in seq_len(ncol(out))) {
-        out[, col] <- escape_text(out[, col], output = o)
-      }
-    } else {
-      # body
-      for (row in i) {
-        for (col in j) {
-          out[row, col] <- escape_text(out[row, col], output = o)
-        }
-      }
-
-      # column names
-      if (0 %in% i) {
-        colnames(x) <- escape_text(colnames(x), output = o)
-      }
+    result <- apply_format(out, x, i, j, inull, jnull, escape_text, output = o)
+    out <- result$out
+    x <- result$x
+    
+    # column names when 0 is in i
+    if (!inull && !jnull && 0 %in% i) {
+      x <- apply_colnames(x, escape_text, output = o)
     }
   }
 
   # markdown and quarto at the very end
-  for (col in j) {
-    if (isTRUE(markdown)) {
-      assert_dependency("litedown")
-      out[i, col] <- format_vector_markdown(out[i, col], if (inherits(x, "tinytable_bootstrap")) "html" else if (inherits(x, "tinytable_tabularray")) "latex" else NULL)
-    }
+  if (isTRUE(markdown)) {
+    assert_dependency("litedown")
+    output_format <- if (inherits(x, "tinytable_bootstrap")) "html" else if (inherits(x, "tinytable_tabularray")) "latex" else NULL
+    result <- apply_format(out, x, i, j, inull, jnull, format_vector_markdown, output_format)
+    out <- result$out
+    x <- result$x
+  }
 
-    if (isTRUE(quarto)) {
+  if (isTRUE(quarto)) {
+    for (col in j) {
       tmp <- format_quarto(out = out, i = i, col = col, x = x)
       out <- tmp$out
       x <- tmp$x
-    }
-  }
-
-  if (inull && jnull && isTRUE(markdown)) {
-    colnames(x) <- format_vector_markdown(colnames(x), if (inherits(x, "tinytable_bootstrap")) "html" else if (inherits(x, "tinytable_tabularray")) "latex" else NULL)
-    if (inherits(x, "tinytable")) {
-      for (k in seq_along(x@lazy_group)) {
-        g <- x@lazy_group[[k]]
-        if (!is.null(g$j)) {
-          names(g$j) <- format_vector_markdown(names(g$j), if (inherits(x, "tinytable_bootstrap")) "html" else if (inherits(x, "tinytable_tabularray")) "latex" else NULL)
-        }
-        if (!is.null(g$i)) {
-          names(g$i) <- format_vector_markdown(names(g$i), if (inherits(x, "tinytable_bootstrap")) "html" else if (inherits(x, "tinytable_tabularray")) "latex" else NULL)
-        }
-        x@lazy_group[[k]] <- g
-      }
     }
   }
 
@@ -482,30 +532,4 @@ format_tt_lazy <- function(
 }
 
 
-format_quarto <- function(out, i, col, x) {
-  if (isTRUE(x@output == "html")) {
-    fun <- function(z) {
-      z@table_string <- sub(
-        "data-quarto-disable-processing='true'",
-        "data-quarto-disable-processing='false'",
-        z@table_string,
-        fixed = TRUE
-      )
-      return(z)
-    }
-    x <- style_tt(x, finalize = fun)
-    out[i, col] <- sprintf(
-      '<span data-qmd="%s"></span>',
-      out[i, col, drop = TRUE]
-    )
-  } else if (isTRUE(x@output == "latex")) {
-    assert_dependency("base64enc")
-    tmp <- sapply(
-      out[i, col, drop = TRUE],
-      function(z) base64enc::base64encode(charToRaw(z))
-    )
-    out[i, col] <- sprintf("\\QuartoMarkdownBase64{%s}", tmp)
-  }
 
-  return(list("out" = out, "x" = x))
-}
