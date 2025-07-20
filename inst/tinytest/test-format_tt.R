@@ -244,18 +244,30 @@ pen <- rddata("penguins", "palmerpenguins")[1:3, c("species", "body_mass_g")]
 expect_error(format_tt(tt(pen), num_mark_big = ","), "requires.*digits")
 expect_error(format_tt(1234, num_mark_big = ","), "requires.*digits")
 
-# # Test component-specific formatting Issue #418
-# dat <- data.frame(x = 1:2, y = 3:4)
-# tab <- tt(dat, caption = "Test Caption", notes = "Test note")
-#
-# # Test formatting only column names
-# tab1 <- format_tt(tab, i = "colnames", fn = function(x) paste0("Col_", x))
-# expect_equivalent(colnames(tab1), c("Col_x", "Col_y"))
-#
-# # Test formatting only caption
-# tab2 <- format_tt(tab, i = "caption", fn = function(x) paste0("Updated: ", x))
-# expect_equivalent(tab2@caption, "Updated: Test Caption")
-#
-# # Test formatting only notes
-# tab3 <- format_tt(tab, i = "notes", fn = function(x) paste0("Note: ", x))
-# expect_equivalent(tab3@notes[[1]], "Note: Test note")
+
+# Component-specific formatting Issue #418
+dat <- data.frame(x = 1:2, y = 3:4)
+tab <- tt(dat, caption = "Test Caption", notes = "Test note")
+
+tab1 <- format_tt(tab, i = "colnames", fn = function(x) paste0("Col_", x))
+expect_true(grepl("Col_x", save_tt(tab1, "markdown")))
+expect_false(grepl("Col_2", save_tt(tab1, "markdown")))
+
+tab1 <- format_tt(tab, i = "caption", fn = function(x) paste0("Col_", x))
+expect_true(grepl("Col_Test", save_tt(tab1, "markdown")))
+expect_false(grepl("Col_2", save_tt(tab1, "markdown")))
+
+tab1 <- format_tt(tab, i = "notes", fn = function(x) paste0("Col_", x))
+expect_true(grepl("| Col_Test", save_tt(tab1, "markdown"), fixed = TRUE))
+expect_false(grepl("Col_2", save_tt(tab1, "markdown")))
+
+
+# Test formatting only notes
+tab3 <- format_tt(tab, i = "notes", fn = function(x) paste0("Note: ", x))
+expect_true(grepl("| Note: |", save_tt(tab3, "markdown"), fixed = TRUE))
+expect_true(grepl("| Test  |", save_tt(tab3, "markdown"), fixed = TRUE))
+
+# Test multiple components at once
+tab4 <- format_tt(tab, i = c("colnames", "caption"), fn = function(x) paste0("Prefix_", x))
+expect_true(grepl("Prefix_x", save_tt(tab4, "markdown"), fixed = TRUE))
+expect_true(grepl("Prefix_Test Caption", save_tt(tab4, "markdown"), fixed = TRUE))

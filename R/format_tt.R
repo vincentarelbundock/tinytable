@@ -170,7 +170,13 @@ apply_format <- function(out,
 
   # Handle named components in i
   if (!is.null(components) && is.character(components)) {
-    assert_true(all(components %in% c("colnames", "caption", "notes", "groupi", "groupj"))) 
+    assert_true(all(components %in% c("colnames", "caption", "notes", "groupi", "groupj", "all"))) 
+    # if there are components, do not apply to all cells, unless "all"
+    if (!"all" %in% components) {
+      i <- NULL
+      j <- NULL
+      inull <- jnull <- FALSE
+    }
   }
 
   # Apply formatting to specified components only
@@ -227,8 +233,8 @@ apply_format <- function(out,
     }
   }
 
-  # Apply to all elements when i and j are both null
-  if (inull && jnull) {
+  # Apply to all elements when i and j are both null and no specific components
+  if (inull && jnull && is.null(components)) {
     x <- apply_colnames(x, format_fn, ...)
     x <- apply_caption(x, format_fn, ...)
     x <- apply_notes(x, format_fn, ...)
