@@ -529,19 +529,22 @@ format_tt_lazy <- function(
     x <- result$x
   }
 
+  if (is.function(other)) {
+    is_other <- function(x) !is.numeric(x) && !inherits(x, "Date") && !is.logical(x)
+    result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull,
+      format_fn = format_vector_other, ori = ori, source = "ori", inherits = is_other, 
+      other_fn = other)
+    out <- result$out
+    x <- result$x
+  }
+
   # format each column using the original approach
   # Issue #230: drop=TRUE fixes bug which returned a character dput-like vector
   for (col in j) {
-      if (!is.null(digits) && is.numeric(ori[i, col, drop = TRUE])) {
-        # if (!is.null(tmp)) out[i, col] <- tmp
-        # other
-      } else if (is.function(other)) {
-        out[i, col] <- format_vector_other(ori[i, col, drop = TRUE], other)
-      }
-
     # Apply replacements after type-specific formatting
     out[i, col] <- format_vector_replace(ori[i, col, drop = TRUE], out[i, col, drop = TRUE], replace)
   } # loop over columns
+
 
 
   # after other formatting
