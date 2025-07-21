@@ -408,7 +408,7 @@ format_tt <- function(
   if (is.character(i)) {
     components <- i
     i <- NULL
-  } else if (is.numeric(i) || is.numeric(j)) {
+  } else if (!is.null(i) || !is.null(j)) {
     components <- "cells"
   } else {
     components <- "all"
