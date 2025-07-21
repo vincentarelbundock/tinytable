@@ -29,25 +29,13 @@ format_vector_math <- function(vec, math = FALSE) {
   sprintf("$%s$", vec)
 }
 
-format_vector_replace <- function(ori_vec = NULL, out_vec = NULL, replace = NULL, ...) {
-  # Handle case where only one vector is provided (for components like groupi)
-  if (is.null(out_vec) && !is.null(ori_vec)) {
+format_vector_replace <- function(ori_vec, out_vec = NULL, replace = NULL) {
+  # Handle component calls (single argument)
+  if (is.null(out_vec)) {
     out_vec <- ori_vec
   }
   
-  # Handle single argument call from components (like apply_groups_i)
-  dots <- list(...)
-  if (is.null(replace) && "replace" %in% names(dots)) {
-    replace <- dots$replace
-  }
-  
-  # Handle case where out_vec is actually the replace argument (single argument call)
-  if (is.null(replace) && is.list(out_vec)) {
-    replace <- out_vec
-    out_vec <- ori_vec
-  }
-  
-  # If no replace argument, return input unchanged
+  # If no replace argument, return original vector unchanged
   if (is.null(replace) || length(replace) == 0) {
     return(ori_vec)
   }
