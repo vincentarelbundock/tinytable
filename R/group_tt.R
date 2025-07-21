@@ -91,6 +91,13 @@ group_tt <- function(
   # Handle matrix insertion case: if i is integerish and j is a matrix
   if (isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) {
     k <- list(i, j)
+    
+    # Validate positions against table size
+    if (any(i > nrow(x) + 1)) {
+      stop(sprintf("Position %d is beyond the table size (%d rows). Maximum allowed position is %d.", 
+                   max(i[i > nrow(x) + 1]), nrow(x), nrow(x) + 1), call. = FALSE)
+    }
+    
     # Add group_index_i for matrix insertion rows
     matrix_rows <- nrow(j)
     # If single position but multiple matrix rows, replicate the position
@@ -101,21 +108,21 @@ group_tt <- function(
     }
     # Calculate the correct indices: each position gets shifted by the number of insertions before it
     idx <- numeric(length(positions))
-    for (j in seq_along(positions)) {
+    for (pos_idx in seq_along(positions)) {
       # Count how many insertions happen before this position (strictly less than)
-      prior_insertions <- sum(positions[1:(j-1)] < positions[j])
+      prior_insertions <- sum(positions[1:(pos_idx - 1)] < positions[pos_idx])
       # Count how many insertions happen at the same position up to this point
-      same_position_insertions <- sum(positions[1:j] == positions[j])
-      idx[j] <- positions[j] + prior_insertions + same_position_insertions - 1
+      same_position_insertions <- sum(positions[1:pos_idx] == positions[pos_idx])
+      idx[pos_idx] <- positions[pos_idx] + prior_insertions + same_position_insertions - 1
     }
     x@group_index_i <- c(x@group_index_i, idx)
     x@group_index_i_format <- c(x@group_index_i_format, idx)
     x@nrow <- x@nrow + length(positions)
-    
+
     # Store the matrix insertion in lazy_insert_matrix instead of lazy_group
-    cal <- call("format_insert_matrix", k = k)
+    cal <- call("group_insert_matrix", k = k)
     x@lazy_insert_matrix <- c(x@lazy_insert_matrix, list(cal))
-    
+
     return(x)
   }
 

@@ -1,4 +1,4 @@
-format_insert_matrix <- function(x, k) {
+group_insert_matrix <- function(x, k) {
   positions <- k[[1]]
   matrix_data <- k[[2]]
 
