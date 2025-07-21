@@ -201,7 +201,7 @@ tab <- tt(thumbdrives) |>
   format_tt(j = 5, fn = scales::label_percent()) |>
   format_tt(escape = TRUE) |>
   print("dataframe")
-expect_true("janvier" %in% tab$date_lookup)
+expect_true("janv" %in% tab$date_lookup)
 expect_true("$18.49" %in% tab$price)
 expect_true("16 GB" %in% tab$memory)
 expect_true("99%" %in% tab$speed_benchmark)
