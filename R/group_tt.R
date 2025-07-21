@@ -73,13 +73,12 @@
 #' tt(dat) |> group_tt(j = "_")
 #'
 group_tt <- function(
-  x,
-  i = getOption("tinytable_group_i", default = NULL),
-  j = getOption("tinytable_group_j", default = NULL),
-  k = getOption("tinytable_group_k", default = NULL),
-  indent = getOption("tinytable_group_indent", default = 1),
-  ...
-) {
+    x,
+    i = getOption("tinytable_group_i", default = NULL),
+    j = getOption("tinytable_group_j", default = NULL),
+    k = getOption("tinytable_group_k", default = NULL),
+    indent = getOption("tinytable_group_indent", default = 1),
+    ...) {
   # ... is important for ihead passing
 
   if (!inherits(x, "tinytable")) {
@@ -214,48 +213,61 @@ group_eval_k <- function(x, k) {
   if (is.null(k)) {
     return(x)
   }
-  
+
   # k should be a list with position and matrix
   if (!is.list(k) || length(k) != 2) {
     stop("k must be a list with exactly 2 elements: position and matrix", call. = FALSE)
   }
-  
+
   positions <- k[[1]]
   matrix_data <- k[[2]]
-  
+
   # Validate position parameter
   assert_integerish(positions, lower = 1)
-  
+  assert_matrix(matrix_data)
+
+  # Validate matrix_data (can be matrix, data.frame, or vector)
+  if (is.matrix(matrix_data)) {
+    assert_matrix(matrix_data, min_rows = 1, min_cols = 1)
+  } else if (is.data.frame(matrix_data)) {
+    assert_data_frame(matrix_data, min_rows = 1, min_cols = 1)
+  } else if (is.vector(matrix_data)) {
+    # Convert vector to matrix
+    matrix_data <- matrix(matrix_data, nrow = 1)
+  } else {
+    stop("k[[2]] must be a matrix, data.frame, or vector", call. = FALSE)
+  }
+
   # Always convert to data frame
   matrix_df <- as.data.frame(matrix_data, stringsAsFactors = FALSE)
-  
+
   # Check column count assertion
   if (ncol(matrix_df) != ncol(x@table_dataframe)) {
     stop("Matrix must have the same number of columns as the table", call. = FALSE)
   }
-  
+
   # Set column names to match the table
   names(matrix_df) <- names(x@table_dataframe)
-  
+
   # Simplify logic by standardizing positions and matrix rows
   matrix_rows <- nrow(matrix_df)
-  
+
   # If single position but multiple matrix rows, replicate the position
   if (length(positions) == 1 && matrix_rows > 1) {
     positions <- rep(positions[1], matrix_rows)
   }
-  
+
   # If multiple positions but single matrix row, replicate the matrix row
   if (length(positions) > 1 && matrix_rows == 1) {
     matrix_df <- matrix_df[rep(1, length(positions)), , drop = FALSE]
     matrix_rows <- nrow(matrix_df)
   }
-  
+
   # Validate that positions and matrix rows match
   if (length(positions) != matrix_rows) {
     stop("Length of positions must equal number of matrix rows after standardization", call. = FALSE)
   }
-  
+
   # Calculate the actual row indices where k matrix rows will be inserted
   k_indices <- c()
   for (pos in positions) {
@@ -267,16 +279,16 @@ group_eval_k <- function(x, k) {
     actual_index <- inserted_row_index + prev_insertions
     k_indices <- c(k_indices, actual_index)
   }
-  
+
   # Process each matrix row at its corresponding position
   # Sort by position in descending order to avoid index shifting issues
   pos_order <- order(positions, decreasing = TRUE)
-  
+
   for (i in seq_along(pos_order)) {
     idx <- pos_order[i]
     pos <- positions[idx]
     matrix_row <- matrix_df[idx, , drop = FALSE]
-    
+
     # Insert the matrix row at the specified position
     # Position logic: 1 means after first row, 2 means after second row, etc.
     if (pos > nrow(x@table_dataframe)) {
@@ -285,16 +297,16 @@ group_eval_k <- function(x, k) {
     } else {
       # Insert after the specified row position
       before_rows <- x@table_dataframe[1:pos, , drop = FALSE]
-      after_rows <- x@table_dataframe[(pos+1):nrow(x@table_dataframe), , drop = FALSE]
+      after_rows <- x@table_dataframe[(pos + 1):nrow(x@table_dataframe), , drop = FALSE]
       x@table_dataframe <- rbind(before_rows, matrix_row, after_rows)
     }
   }
-  
+
   # Update all slots that need to be modified
   x@data <- x@table_dataframe
   x@table_input <- x@data
   x@nrow <- nrow(x@table_dataframe)
-  
+
   # Update group tracking for k rows
   x@group_n_i <- x@group_n_i + length(k_indices)
   if (is.null(x@group_index_i) || length(x@group_index_i) == 0) {
@@ -302,6 +314,6 @@ group_eval_k <- function(x, k) {
   } else {
     x@group_index_i <- c(x@group_index_i, k_indices)
   }
-  
+
   return(x)
 }

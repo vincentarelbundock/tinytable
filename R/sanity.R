@@ -468,6 +468,53 @@ assert_data_frame <- function(
   if (ncol(x) < min_cols) stop(msg, call. = FALSE)
 }
 
+check_matrix <- function(
+  x,
+  min_rows = 0,
+  min_cols = 0,
+  null.ok = FALSE
+) {
+  if (is.null(x) && isTRUE(null.ok)) {
+    return(TRUE)
+  }
+  if (!is.matrix(x)) {
+    return(FALSE)
+  }
+  if (nrow(x) < min_rows) {
+    return(FALSE)
+  }
+  if (ncol(x) < min_cols) {
+    return(FALSE)
+  }
+  return(TRUE)
+}
+
+assert_matrix <- function(
+  x,
+  min_rows = 0,
+  min_cols = 0,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
+  if (is.null(x) && isTRUE(null.ok)) {
+    return(invisible(TRUE))
+  }
+  msg <- sprintf("`%s` must be a matrix.", name)
+  if (!is.matrix(x)) {
+    stop(msg, call. = FALSE)
+  }
+  msg <- sprintf("Number of rows in `%s` must be at least `%s`", name, min_rows)
+  if (nrow(x) < min_rows) {
+    stop(msg, call. = FALSE)
+  }
+  msg <- sprintf(
+    "Number of columns in `%s` must be at least `%s`",
+    name,
+    min_cols
+  )
+  if (ncol(x) < min_cols) stop(msg, call. = FALSE)
+}
+
 check_character <- function(
   x,
   len = NULL,
