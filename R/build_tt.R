@@ -74,6 +74,7 @@ build_tt <- function(x, output = NULL) {
   # draw the table
   x <- tt_eval(x)
 
+  # groups require the table to be drawn first, expecially group_tabularray_col() and friends
   ihead <- 0
   for (idx in seq_along(x@lazy_group)) {
     l <- x@lazy_group[[idx]]
