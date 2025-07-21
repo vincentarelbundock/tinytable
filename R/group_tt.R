@@ -88,6 +88,37 @@ group_tt <- function(
   }
   assert_integerish(indent, lower = 0)
 
+  # Handle matrix insertion case: if i is integerish and j is a matrix
+  if (isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) {
+    k <- list(i, j)
+    # Add group_index_i for matrix insertion rows
+    matrix_rows <- nrow(j)
+    # If single position but multiple matrix rows, replicate the position
+    if (length(i) == 1 && matrix_rows > 1) {
+      positions <- rep(i, matrix_rows)
+    } else {
+      positions <- i
+    }
+    # Calculate the correct indices: each position gets shifted by the number of insertions before it
+    idx <- numeric(length(positions))
+    for (j in seq_along(positions)) {
+      # Count how many insertions happen before this position (strictly less than)
+      prior_insertions <- sum(positions[1:(j-1)] < positions[j])
+      # Count how many insertions happen at the same position up to this point
+      same_position_insertions <- sum(positions[1:j] == positions[j])
+      idx[j] <- positions[j] + prior_insertions + same_position_insertions - 1
+    }
+    x@group_index_i <- c(x@group_index_i, idx)
+    x@group_index_i_format <- c(x@group_index_i_format, idx)
+    x@nrow <- x@nrow + length(positions)
+    
+    # Store the matrix insertion in lazy_insert_matrix instead of lazy_group
+    cal <- call("format_insert_matrix", k = k)
+    x@lazy_insert_matrix <- c(x@lazy_insert_matrix, list(cal))
+    
+    return(x)
+  }
+
   if (isTRUE(check_string(j))) {
     if (any(grepl(j, x@names, fixed = TRUE))) {
       j_delim <- j_delim_to_named_list(x = x, j = j)

@@ -48,6 +48,12 @@ build_tt <- function(x, output = NULL) {
     x <- eval(l)
   }
 
+  # process lazy_insert_matrix elements just after formatting
+  for (l in x@lazy_insert_matrix) {
+    l[["x"]] <- x
+    x <- eval(l)
+  }
+
   # add footnote markers just after formatting, otherwise appending converts to string
   x <- footnote_markers(x)
 

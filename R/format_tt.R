@@ -397,29 +397,6 @@ format_tt <- function(
   assert_string(sprintf, null.ok = TRUE)
   replace <- sanitize_replace(replace)
   sanity_num_mark(digits, num_mark_big, num_mark_dec)
-  
-
-  if (isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) {
-    k <- list(i, j)
-    # Add group_index_i for matrix insertion rows
-    if (inherits(x, "tinytable")) {
-      matrix_rows <- nrow(j)
-      # If single position but multiple matrix rows, replicate the position
-      if (length(i) == 1 && matrix_rows > 1) {
-        positions <- rep(i, matrix_rows)
-      } else {
-        positions <- i
-      }
-      idx <- positions + cumsum(rep(1, length(positions))) - 1 + sapply(positions, function(idx) sum(positions < idx))
-      x@group_index_i <- c(x@group_index_i, idx)
-      x@group_index_i_format <- c(x@group_index_i_format, idx)
-      x@nrow <- x@nrow + length(positions)
-    }
-    i <- NULL
-    j <- NULL
-  } else {
-    k <- NULL
-  }
 
   # Check if i contains component names (do this before processing tinytable objects)
   if (is.character(i)) {
@@ -454,8 +431,7 @@ format_tt <- function(
       markdown = markdown,
       quarto = quarto,
       other = other,
-      components = components,
-      k = k
+      components = components
     )
     out@lazy_format <- c(out@lazy_format, list(cal))
   } else {
@@ -479,8 +455,7 @@ format_tt <- function(
       escape = escape,
       quarto = quarto,
       markdown = markdown,
-      components = components,
-      k = k
+      components = components
     )
   }
 
@@ -508,8 +483,7 @@ format_tt_lazy <- function(
   markdown,
   quarto,
   other,
-  components = NULL,
-  k = NULL
+  components = NULL
 ) {
   if (inherits(x, "tbl_df")) {
     assert_dependency("tibble")
@@ -656,12 +630,6 @@ format_tt_lazy <- function(
     }
   }
 
-  # Handle k parameter matrix insertion
-  if (!is.null(k) && inherits(x, "tinytable")) {
-    x <- format_insert_matrix(x, k)
-    # Update the out dataframe to reflect the changes
-    out <- x@table_dataframe
-  }
 
   # output
   if (isTRUE(atomic_vector)) {

@@ -35,6 +35,7 @@ setClass(
     lazy_finalize = "list",
     lazy_format = "list",
     lazy_group = "list",
+    lazy_insert_matrix = "list",
     lazy_plot = "list",
     lazy_style = "list",
     lazy_theme = "list",
