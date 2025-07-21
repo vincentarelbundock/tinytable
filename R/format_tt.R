@@ -29,18 +29,56 @@ format_vector_math <- function(vec, math = FALSE) {
   sprintf("$%s$", vec)
 }
 
-format_vector_replace <- function(ori_vec = NULL, out_vec = NULL, replace = NULL) {
-  if (is.null(out_vec)) out_vec <- ori_vec
-  if (length(replace) == 0) return(NULL)
+format_vector_replace <- function(ori_vec = NULL, out_vec = NULL, replace = NULL, ...) {
+  # Handle case where only one vector is provided (for components like groupi)
+  if (is.null(out_vec) && !is.null(ori_vec)) {
+    out_vec <- ori_vec
+  }
+  
+  # Handle single argument call from components (like apply_groups_i)
+  dots <- list(...)
+  if (is.null(replace) && "replace" %in% names(dots)) {
+    replace <- dots$replace
+  }
+  
+  # Handle case where out_vec is actually the replace argument (single argument call)
+  if (is.null(replace) && is.list(out_vec)) {
+    replace <- out_vec
+    out_vec <- ori_vec
+  }
+  
+  # If no replace argument, return input unchanged
+  if (is.null(replace) || length(replace) == 0) {
+    return(ori_vec)
+  }
+  
   result <- out_vec
   for (k in seq_along(replace)) {
-    idx <- ori_vec %in% replace[[k]]
-    if (identical(names(replace)[[k]], " ")) {
-      result[idx] <- ""
+    # Check if this is value replacement (like NA -> "-") or named replacement (like "Down" -> "↓")
+    replacement_values <- replace[[k]]
+    is_value_replacement <- any(is.na(replacement_values)) || 
+                           any(sapply(replacement_values, function(x) identical(x, NaN))) ||
+                           any(is.infinite(replacement_values))
+    
+    if (is_value_replacement) {
+      # Value replacement: replace the value (NA/NaN/Inf/-Inf) with the name
+      idx <- ori_vec %in% replacement_values | (is.na(ori_vec) & any(is.na(replacement_values)))
+      if (identical(names(replace)[[k]], " ")) {
+        result[idx] <- ""
+      } else {
+        result[idx] <- names(replace)[[k]]
+      }
     } else {
-      result[idx] <- names(replace)[[k]]
+      # Named replacement: replace the name with the value  
+      idx <- ori_vec %in% names(replace)[[k]]
+      if (identical(replacement_values, " ")) {
+        result[idx] <- ""
+      } else {
+        result[idx] <- replacement_values
+      }
     }
   }
+  
   return(result)
 }
 
@@ -129,7 +167,10 @@ apply_groups_i <- function(x, format_fn, ...) {
   for (idx in seq_along(x@lazy_group)) {
     g <- x@lazy_group[[idx]]
     if (!is.null(g$i)) {
-      names(g$i) <- format_fn(names(g$i), ...)
+      result <- format_fn(names(g$i), ...)
+      if (!is.null(result)) {
+        names(g$i) <- result
+      }
     }
     x@lazy_group[[idx]] <- g
   }
@@ -522,7 +563,7 @@ format_tt_lazy <- function(
   # Issue #230: drop=TRUE fixes bug which returned a character dput-like vector
   result <- apply_format(out = out, ori = ori, x = x, i = i, j = j, 
     format_fn = format_vector_replace, 
-    source = "both", replace = replace)
+    source = "both", replace = replace, components = components)
   out <- result$out
   x <- result$x
 

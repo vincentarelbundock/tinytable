@@ -271,3 +271,18 @@ expect_true(grepl("| Test  |", save_tt(tab3, "markdown"), fixed = TRUE))
 tab4 <- format_tt(tab, i = c("colnames", "caption"), fn = function(x) paste0("Prefix_", x))
 expect_true(grepl("Prefix_x", save_tt(tab4, "markdown"), fixed = TRUE))
 expect_true(grepl("Prefix_Test Caption", save_tt(tab4, "markdown"), fixed = TRUE))
+
+
+# Vignette with multiple components
+options(tinytable_print_output = "latex")
+tab <- data.frame(
+  "A_B" = rnorm(5),
+  "B_C" = rnorm(5),
+  "C_D" = rnorm(5))
+tab <- tt(tab, digits = 2, notes = "_Source_: Simulated data.") |>
+  group_tt(i = list("Down" = 1, "Up" = 3)) |>
+  format_tt("colnames", fn = \(x) sub("_", " / ", x)) |>
+  format_tt("notes", markdown = TRUE) |>
+  format_tt("groupi", replace = list("Down" = "↓", "Up" = "↑"))
+expect_snapshot_print(tab, label = "format_tt-format_components_vignette_01")
+options(tinytable_print_output = NULL)
