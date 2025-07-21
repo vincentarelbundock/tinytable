@@ -13,7 +13,10 @@ setMethod(
 setMethod(
   f = "group_eval",
   signature = "tinytable_dataframe",
-  definition = identity
+  definition = function(x, i = NULL, j = NULL, k = NULL, indent = 1, ...) {
+    x <- group_eval_k(x, k)
+    return(x)
+  }
 )
 
 #' tinytable S4 method

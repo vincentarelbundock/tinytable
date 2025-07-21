@@ -4,8 +4,10 @@
 setMethod(
   f = "group_eval",
   signature = "tinytable_bootstrap",
-  definition = function(x, i = NULL, j = NULL, indent = 1, ...) {
+  definition = function(x, i = NULL, j = NULL, k = NULL, indent = 1, ...) {
     out <- x
+    # handle k parameter first
+    out <- group_eval_k(out, k)
     # columns first to count headers properly
     if (!is.null(j)) {
       out <- group_bootstrap_col(out, j = j, ...)

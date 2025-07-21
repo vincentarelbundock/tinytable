@@ -4,8 +4,11 @@
 setMethod(
   f = "group_eval",
   signature = "tinytable_typst",
-  definition = function(x, i = NULL, j = NULL, indent = 0, ...) {
+  definition = function(x, i = NULL, j = NULL, k = NULL, indent = 0, ...) {
     out <- x
+    
+    # handle k parameter first
+    out <- group_eval_k(out, k)
 
     if (!is.null(i)) {
       out <- group_typst_row(out, i, indent)

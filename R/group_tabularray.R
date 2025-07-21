@@ -4,7 +4,9 @@
 setMethod(
   f = "group_eval",
   signature = "tinytable_tabularray",
-  definition = function(x, i = NULL, j = NULL, indent = 1, ...) {
+  definition = function(x, i = NULL, j = NULL, k = NULL, indent = 1, ...) {
+    # handle k parameter first
+    x <- group_eval_k(x, k)
     # columns first to count headers properly
     x <- group_tabularray_col(x, j, ...)
     x <- group_tabularray_row(x, i, indent)

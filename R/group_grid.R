@@ -4,7 +4,9 @@
 setMethod(
   f = "group_eval",
   signature = "tinytable_grid",
-  definition = function(x, i = NULL, j = NULL, ...) {
+  definition = function(x, i = NULL, j = NULL, k = NULL, ...) {
+    # handle k parameter first
+    x <- group_eval_k(x, k)
     # add here because this is where lazy gets executed
     x <- group_grid_row(x, i)
     x <- group_grid_col(x, j)
