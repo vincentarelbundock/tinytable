@@ -233,7 +233,7 @@ style_tt <- function(
     settings <- which(i == TRUE, arr.ind = TRUE)
     settings <- stats::setNames(data.frame(settings), c("i", "j"))
   } else {
-    ival <- sanitize_i(i, x)
+    ival <- sanitize_i(i, x, calling_function = "style_tt")
     jval <- sanitize_j(j, x)
     # order may be important for recycling
     settings <- expand.grid(i = ival, j = jval, tabularray = "")

@@ -16,12 +16,19 @@ sanity_align <- function(align, i) {
 
 sanitize_i <- function(i, x, pre_group_i = FALSE, lazy = TRUE, calling_function = "other") {
 
-  # format_tt() accepts certain character inputs
-  if (!identical(calling_function, "format_tt")) {
-    if (is.character(i)) {
-      assert_true(all(i %in% c("colnames", "notes", "caption", "groupi", "groupj", "all")))
+  if (is.character(i)) {
+    # format_tt() accepts certain character inputs
+    if (identical(calling_function, "format_tt")) {
+      assert_true(all(i %in% c("colnames", "notes", "caption", "groupi", "groupj", "cells", "all")))
       return(i)
-    } 
+    } else if (identical(calling_function, "style_tt")) {
+      if (any(i %in% c("colnames", "groupj", "all", "cells"))) {
+        stop("This `i` string is not supported in `style_tt()`. Use numeric indices instead.", call. = FALSE)
+      }
+      return(i)
+    } else {
+      return(i)
+    }
   }
 
   if (is.matrix(i) && is.logical(i)) {
