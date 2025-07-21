@@ -24,10 +24,7 @@ installdep: document  ## install with Suggests
 test: install ## test
 	Rscript -e "library(tinytable);tinytest::run_test_dir()"
 
-typst: ## compile typst example
-	quarto render sandbox/typst.qmd
-
-website: install typst ## render vignettes and website
+website: install ## render vignettes and website
 	rm -rf _quarto
 	rm -rf docs
 	Rscript -e "altdoc::render_docs(verbose = TRUE, freeze = TRUE)"
