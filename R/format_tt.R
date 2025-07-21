@@ -90,6 +90,80 @@ format_vector_markdown <- function(vec, output_format, markdown = FALSE) {
   }
 }
 
+# Matrix insertion function for k parameter
+format_k_insertion <- function(x, k) {
+  if (is.null(k)) {
+    return(x)
+  }
+
+  # k should be a list with position and matrix
+  if (!is.list(k) || length(k) != 2) {
+    stop("k must be a list with exactly 2 elements: position and matrix", call. = FALSE)
+  }
+
+  positions <- k[[1]]
+  matrix_data <- k[[2]]
+
+  # Always convert to data frame
+  matrix_df <- as.data.frame(matrix_data, stringsAsFactors = FALSE)
+
+  # Check column count assertion
+  if (ncol(matrix_df) != ncol(x@table_dataframe)) {
+    stop("Matrix must have the same number of columns as the table", call. = FALSE)
+  }
+
+  # Set column names to match the table
+  names(matrix_df) <- names(x@table_dataframe)
+
+  # Simplify logic by standardizing positions and matrix rows
+  matrix_rows <- nrow(matrix_df)
+
+  # If single position but multiple matrix rows, replicate the position
+  if (length(positions) == 1 && matrix_rows > 1) {
+    positions <- rep(positions[1], matrix_rows)
+  }
+
+  # If multiple positions but single matrix row, replicate the matrix row
+  if (length(positions) > 1 && matrix_rows == 1) {
+    matrix_df <- matrix_df[rep(1, length(positions)), , drop = FALSE]
+    matrix_rows <- nrow(matrix_df)
+  }
+
+  # Validate that positions and matrix rows match
+  if (length(positions) != matrix_rows) {
+    stop("Length of positions must equal number of matrix rows after standardization", call. = FALSE)
+  }
+
+  # Process each matrix row at its corresponding position
+  # Sort by position in descending order to avoid index shifting issues
+  pos_order <- order(positions, decreasing = TRUE)
+
+  for (i in seq_along(pos_order)) {
+    idx <- pos_order[i]
+    pos <- positions[idx]
+    matrix_row <- matrix_df[idx, , drop = FALSE]
+
+    # Insert the matrix row at the specified position
+    # Position logic: 1 means after first row, 2 means after second row, etc.
+    if (pos > nrow(x@table_dataframe)) {
+      # Insert at the end
+      x@table_dataframe <- rbind(x@table_dataframe, matrix_row)
+    } else {
+      # Insert after the specified row position
+      before_rows <- x@table_dataframe[1:pos, , drop = FALSE]
+      after_rows <- x@table_dataframe[(pos + 1):nrow(x@table_dataframe), , drop = FALSE]
+      x@table_dataframe <- rbind(before_rows, matrix_row, after_rows)
+    }
+  }
+
+  # Update all slots that need to be modified
+  x@data <- x@table_dataframe
+  x@table_input <- x@data
+  x@nrow <- nrow(x@table_dataframe)
+
+  return(x)
+}
+
 format_quarto <- function(out, i, col, x) {
   if (isTRUE(x@output == "html")) {
     fun <- function(z) {
@@ -377,7 +451,8 @@ format_tt <- function(
   markdown = get_option("tinytable_format_markdown", default = FALSE),
   quarto = get_option("tinytable_format_quarto", default = FALSE),
   fn = get_option("tinytable_format_fn", default = NULL),
-  sprintf = get_option("tinytable_format_sprintf", default = NULL)
+  sprintf = get_option("tinytable_format_sprintf", default = NULL),
+  k = get_option("tinytable_format_k", default = NULL)
 ) {
   assert_integerish(digits, len = 1, null.ok = TRUE)
   assert_choice(
@@ -397,6 +472,15 @@ format_tt <- function(
   assert_string(sprintf, null.ok = TRUE)
   replace <- sanitize_replace(replace)
   sanity_num_mark(digits, num_mark_big, num_mark_dec)
+  
+  # Validate k parameter
+  if (!is.null(k)) {
+    if (!is.list(k) || length(k) != 2) {
+      stop("k must be a list with exactly 2 elements: position and matrix", call. = FALSE)
+    }
+    assert_integerish(k[[1]], lower = 1)
+    assert_matrix(k[[2]])
+  }
 
   # Check if i contains component names (do this before processing tinytable objects)
   if (is.character(i)) {
@@ -431,7 +515,8 @@ format_tt <- function(
       markdown = markdown,
       quarto = quarto,
       other = other,
-      components = components
+      components = components,
+      k = k
     )
     out@lazy_format <- c(out@lazy_format, list(cal))
   } else {
@@ -455,7 +540,8 @@ format_tt <- function(
       escape = escape,
       quarto = quarto,
       markdown = markdown,
-      components = components
+      components = components,
+      k = k
     )
   }
 
@@ -483,7 +569,8 @@ format_tt_lazy <- function(
   markdown,
   quarto,
   other,
-  components = NULL
+  components = NULL,
+  k = NULL
 ) {
   if (inherits(x, "tbl_df")) {
     assert_dependency("tibble")
@@ -628,6 +715,13 @@ format_tt_lazy <- function(
       out <- tmp$out
       x <- tmp$x
     }
+  }
+
+  # Handle k parameter matrix insertion
+  if (!is.null(k) && inherits(x, "tinytable")) {
+    x <- format_k_insertion(x, k)
+    # Update the out dataframe to reflect the changes
+    out <- x@table_dataframe
   }
 
   # output
