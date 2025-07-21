@@ -195,6 +195,7 @@ apply_format <- function(out,
                          inherits = NULL,
                          ...) {
 
+
   if (is.character(components)) {
     if ("all" %in% components) {
       components <- c("colnames", "caption", "notes", "groupi", "groupj")

@@ -6,8 +6,7 @@
 build_tt <- function(x, output = NULL) {
   output <- sanitize_output(output)
 
-  x <- switch(
-    output,
+  x <- switch(output,
     html = swap_class(x, "tinytable_bootstrap"),
     latex = swap_class(x, "tinytable_tabularray"),
     markdown = swap_class(x, "tinytable_grid"),
@@ -44,7 +43,7 @@ build_tt <- function(x, output = NULL) {
   x@table_dataframe <- tab
 
   # format data before drawing the table
-  for (l in x@lazy_format) {
+  for (l in rev(x@lazy_format)) {
     l[["x"]] <- x
     x <- eval(l)
   }
