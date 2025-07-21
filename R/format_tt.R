@@ -44,7 +44,8 @@ format_vector_replace <- function(ori_vec = NULL, out_vec = NULL, replace = NULL
   return(result)
 }
 
-format_vector_markdown <- function(vec, output_format) {
+format_vector_markdown <- function(vec, output_format, markdown = FALSE) {
+  if (isFALSE(markdown)) return(vec)
   if (is.null(output_format)) return(vec)
   
   if (output_format == "html") {
@@ -158,8 +159,6 @@ apply_format <- function(out,
                          x, 
                          i, 
                          j, 
-                         inull, 
-                         jnull, 
                          format_fn, 
                          ori = NULL, 
                          source = "out", 
@@ -167,17 +166,12 @@ apply_format <- function(out,
                          inherits = NULL,
                          ...) {
 
-  if (inull && jnull && is.null(components)) {
-    components <- "all"
-  }
-
   if (is.character(components)) {
     if ("all" %in% components) {
       components <- c("colnames", "caption", "notes", "groupi", "groupj")
-    } else {
+    } else if (!("cells" %in% components)) {
       i <- NULL
       j <- NULL
-      inull <- jnull <- FALSE
     }
   }
 
@@ -373,8 +367,10 @@ format_tt <- function(
   if (is.character(i)) {
     components <- i
     i <- NULL
+  } else if (is.numeric(i) || is.numeric(j)) {
+    components <- "cells"
   } else {
-    components <- NULL
+    components <- "all"
   }
 
   out <- x
@@ -393,7 +389,6 @@ format_tt <- function(
       replace = replace,
       fn = fn,
       sprintf = sprintf,
-      url = url,
       date = date,
       bool = bool,
       math = math,
@@ -401,8 +396,6 @@ format_tt <- function(
       markdown = markdown,
       quarto = quarto,
       other = other,
-      inull = is.null(i),
-      jnull = is.null(j),
       components = components
     )
     out@lazy_format <- c(out@lazy_format, list(cal))
@@ -420,7 +413,6 @@ format_tt <- function(
       replace = replace,
       fn = fn,
       sprintf = sprintf,
-      url = url,
       date = date,
       bool = bool,
       math = math,
@@ -428,8 +420,6 @@ format_tt <- function(
       escape = escape,
       quarto = quarto,
       markdown = markdown,
-      inull = is.null(i),
-      jnull = is.null(j),
       components = components
     )
   }
@@ -451,7 +441,6 @@ format_tt_lazy <- function(
   replace,
   fn,
   sprintf,
-  url,
   date,
   bool,
   math,
@@ -459,8 +448,6 @@ format_tt_lazy <- function(
   markdown,
   quarto,
   other,
-  inull,
-  jnull,
   components = NULL
 ) {
   if (inherits(x, "tbl_df")) {
@@ -503,28 +490,29 @@ format_tt_lazy <- function(
   j <- sanitize_j(j, x)
   
 
-  result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, 
+  result <- apply_format(out = out, x = x, i = i, j = j, 
     format_fn = format_vector_logical, ori = ori, source = "ori", 
     inherits = "logical", bool_fn = bool)
   out <- result$out
   x <- result$x
 
-  result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, 
+  result <- apply_format(out = out, x = x, i = i, j = j, 
     format_fn = format_vector_date, ori = ori, source = "ori", 
     inherits = "Date", date_format = date)
   out <- result$out
   x <- result$x
 
   if (!is.null(digits)) {
-    result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull,
+    result <- apply_format(out = out, x = x, i = i, j = j,
       format_fn = format_numeric, ori = ori, source = "ori", num_suffix = num_suffix,
-      digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, num_zero = num_zero, num_fmt = num_fmt, inherits = is.numeric)
+      digits = digits, num_mark_big = num_mark_big, num_mark_dec = num_mark_dec, 
+      num_zero = num_zero, num_fmt = num_fmt, inherits = is.numeric)
     out <- result$out
     x <- result$x
   }
 
   is_other <- function(x) !is.numeric(x) && !inherits(x, "Date") && !is.logical(x)
-  result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull,
+  result <- apply_format(out = out, x = x, i = i, j = j,
     format_fn = format_vector_other, ori = ori, source = "ori", inherits = is_other, 
     other_fn = other)
   out <- result$out
@@ -533,14 +521,14 @@ format_tt_lazy <- function(
   # format each column using the original approach
   # Issue #230: drop=TRUE fixes bug which returned a character dput-like vector
   result <- apply_format(out = out, ori = ori, x = x, i = i, j = j, 
-    inull = inull, jnull = jnull, format_fn = format_vector_replace, 
+    format_fn = format_vector_replace, 
     source = "both", replace = replace)
   out <- result$out
   x <- result$x
 
   # after other formatting
   if (!is.null(sprintf)) {
-    result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, 
+    result <- apply_format(out = out, x = x, i = i, j = j, 
       format_fn = format_vector_sprintf, ori = ori, source = "ori", sprintf_pattern = sprintf)
     out <- result$out
     x <- result$x
@@ -551,7 +539,7 @@ format_tt_lazy <- function(
   if (is.function(fn)) {
     if (!is.null(components)) {
       # Use apply_format for component-specific formatting
-      result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, format_fn = format_vector_custom, ori = ori, source = "ori", components = components, fn = fn)
+      result <- apply_format(out = out, x = x, i = i, j = j, format_fn = format_vector_custom, ori = ori, source = "ori", components = components, fn = fn)
       out <- result$out
       x <- result$x
     } else {
@@ -564,7 +552,7 @@ format_tt_lazy <- function(
 
   # close to last
   if (isTRUE(math)) {
-    result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, format_fn = format_vector_math, components = components, math = math)
+    result <- apply_format(out = out, x = x, i = i, j = j, format_fn = format_vector_math, components = components, math = math)
     out <- result$out
     x <- result$x
   }
@@ -583,24 +571,21 @@ format_tt_lazy <- function(
       o <- FALSE
     }
 
-    result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, format_fn = escape_text, components = components, output = o)
+    result <- apply_format(out = out, x = x, i = i, j = j, format_fn = escape_text, components = components, output = o)
     out <- result$out
     x <- result$x
     
     # column names when 0 is in i
-    if (!inull && !jnull && 0 %in% i) {
+    if (0 %in% i && !identical(components, "all")) {
       x <- apply_colnames(x, escape_text, output = o)
     }
   }
 
   # markdown and quarto at the very end
-  if (isTRUE(markdown)) {
-    assert_dependency("litedown")
-    output_format <- if (inherits(x, "tinytable_bootstrap")) "html" else if (inherits(x, "tinytable_tabularray")) "latex" else NULL
-    result <- apply_format(out = out, x = x, i = i, j = j, inull = inull, jnull = jnull, format_fn = format_vector_markdown, components = components, output_format = output_format)
-    out <- result$out
-    x <- result$x
-  }
+  if (isTRUE(markdown)) assert_dependency("litedown")
+  result <- apply_format(out = out, x = x, i = i, j = j, format_fn = format_vector_markdown, components = components, output_format = x@output, markdown = markdown)
+  out <- result$out
+  x <- result$x
 
   if (isTRUE(quarto)) {
     for (col in j) {
