@@ -30,7 +30,12 @@ format_tt(
 \arguments{
 \item{x}{A data frame or a vector to be formatted.}
 
-\item{i}{Row indices where the formatting should be applied. Can also be a character vector specifying table components to format: "all", "cells", "colnames", "caption", "notes", "groupi" (row group labels), "groupj" (column group labels). If both \code{i} and \code{j} are omitted (NULL), formatting is applied to all table elements: data cells, column names, caption, notes, and group labels.}
+\item{i}{Numeric vector or string.
+\itemize{
+\item Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.
+\item String: Table components to format, "all", "cells", "colnames", "caption", "notes", "groupi" (row group labels), "groupj" (column group labels).
+\item If both the \code{i} and \code{j} are omitted (default: NULL), formatting is applied to all table elements, including caption, notes, and group labels.
+}}
 
 \item{j}{Column indices where the styling should be applied. Can be:
 \itemize{

@@ -8,8 +8,8 @@ Breaking change:
 
 New features:
 
-* `tt()` now accepts a `height` argument to control row height in em units. Works across all output formats (HTML, LaTeX, Typst).
-* `format_tt()` argument `i` now accepts character strings to format specific table components: "colnames", "caption", "notes", "groupi" (row group labels), "groupj" (column group labels).
+* `tt(height=2)` controls row height in em units. Works HTML, LaTeX, and Typst.
+* `format_tt()` argument `i` accepts character strings to format specific table components: "colnames", "caption", "notes", "groupi" (row group labels), "groupj" (column group labels).
 
 Typst: Major refactor improves several things and brings Typst very close to feature parity with other formats.
 

@@ -37,7 +37,7 @@ style_tt(
 \arguments{
 \item{x}{A table object created by \code{tt()}.}
 
-\item{i}{Numeric vector, logical matrix, or string..
+\item{i}{Numeric vector, logical matrix, or string.
 \itemize{
 \item Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.
 \item Logical matrix: A matrix with the same number of rows and columns as \code{x}. \code{i=0} is the header, and negative values are higher level headers. Row indices refer to rows \emph{after} the insertion of row labels by \code{group_tt()}, when applicable.

@@ -283,7 +283,10 @@ apply_format <- function(out,
 #' If this function is applied several times to the same cell, the last transformation is retained and the previous calls are ignored, except for the `escape` argument which can be applied to previously transformed data.
 #'
 #' @param x A data frame or a vector to be formatted.
-#' @param i Row indices where the formatting should be applied. Can also be a character vector specifying table components to format: "all", "cells", "colnames", "caption", "notes", "groupi" (row group labels), "groupj" (column group labels). If both `i` and `j` are omitted (NULL), formatting is applied to all table elements: data cells, column names, caption, notes, and group labels.
+#' @param i Numeric vector or string.
+#'   - Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.
+#'   - String: Table components to format, "all", "cells", "colnames", "caption", "notes", "groupi" (row group labels), "groupj" (column group labels). 
+#'   - If both the `i` and `j` are omitted (default: NULL), formatting is applied to all table elements, including caption, notes, and group labels.
 #' @param digits Number of significant digits or decimal places.
 #' @param num_fmt The format for numeric values; one of 'significant', 'significant_cell', 'decimal', or 'scientific'.
 #' @param num_zero Logical; if TRUE, trailing zeros are kept in "decimal" format (but not in "significant" format).

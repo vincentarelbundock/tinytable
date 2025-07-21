@@ -4,7 +4,7 @@
 #' This function applies styling to a table created by `tt()`. It allows customization of text style (bold, italic, monospace), text and background colors, font size, cell width, text alignment, column span, and indentation. The function also supports passing native instructions to LaTeX (tabularray) and HTML (bootstrap) formats.
 #'
 #' @param x A table object created by `tt()`.
-#' @param i Numeric vector, logical matrix, or string..
+#' @param i Numeric vector, logical matrix, or string.
 #'   - Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.
 #'   - Logical matrix: A matrix with the same number of rows and columns as `x`. `i=0` is the header, and negative values are higher level headers. Row indices refer to rows *after* the insertion of row labels by `group_tt()`, when applicable.
 #'   - String: "caption", "groupi", "notes".
