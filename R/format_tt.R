@@ -1,31 +1,31 @@
 
 format_vector_sprintf <- function(vec, sprintf_pattern = NULL) {
-  if (is.null(sprintf_pattern)) return(vec)
+  if (is.null(sprintf_pattern)) return(NULL)
   base::sprintf(sprintf_pattern, vec)
 }
 
 format_vector_logical <- function(vec, bool_fn = NULL) {
-  if (!is.logical(vec) || is.null(bool_fn)) return(vec)
+  if (!is.logical(vec) || is.null(bool_fn)) return(NULL)
   bool_fn(vec)
 }
 
 format_vector_date <- function(vec, date_format = NULL) {
-  if (!inherits(vec, "Date") || is.null(date_format)) return(vec)
+  if (!inherits(vec, "Date") || is.null(date_format)) return(NULL)
   format(vec, date_format)
 }
 
 format_vector_other <- function(vec, other_fn = NULL) {
-  if (!is.function(other_fn)) return(vec)
+  if (!is.function(other_fn)) return(NULL)
   other_fn(vec)
 }
 
 format_vector_custom <- function(vec, fn = NULL) {
-  if (!is.function(fn)) return(vec)
+  if (!is.function(fn)) return(NULL)
   fn(vec)
 }
 
 format_vector_math <- function(vec, math = FALSE) {
-  if (!isTRUE(math)) return(vec)
+  if (!isTRUE(math)) return(NULL)
   sprintf("$%s$", vec)
 }
 
@@ -226,13 +226,15 @@ apply_format <- function(out,
   # Filter columns based on inherits argument
   j_filtered <- j
   if (is.character(inherits)) {
-    if (source == "ori" && !is.null(ori)) {
+    # Always use original data for inherits check to ensure consistent behavior
+    if (!is.null(ori)) {
       j_filtered <- j[sapply(j, function(col) inherits(ori[[col]], inherits))]
     } else {
       j_filtered <- j[sapply(j, function(col) inherits(out[[col]], inherits))]
     }
   } else if (is.function(inherits)) {
-    if (source == "ori" && !is.null(ori)) {
+    # Always use original data for inherits check to ensure consistent behavior
+    if (!is.null(ori)) {
       j_filtered <- j[sapply(j, function(col) inherits(ori[[col]]))]
     } else {
       j_filtered <- j[sapply(j, function(col) inherits(out[[col]]))]
@@ -419,7 +421,7 @@ format_tt <- function(
       replace = replace,
       fn = fn,
       sprintf = sprintf,
-      date = date,
+      date_format = date,
       bool = bool,
       math = math,
       escape = escape,
@@ -443,7 +445,7 @@ format_tt <- function(
       replace = replace,
       fn = fn,
       sprintf = sprintf,
-      date = date,
+      date_format = date,
       bool = bool,
       math = math,
       other = other,
@@ -471,7 +473,7 @@ format_tt_lazy <- function(
   replace,
   fn,
   sprintf,
-  date,
+  date_format,
   bool,
   math,
   escape,
@@ -528,7 +530,7 @@ format_tt_lazy <- function(
 
   result <- apply_format(out = out, x = x, i = i, j = j, 
     format_fn = format_vector_date, ori = ori, source = "ori", 
-    inherits = "Date", date_format = date)
+    inherits = "Date", date_format = date_format)
   out <- result$out
   x <- result$x
 

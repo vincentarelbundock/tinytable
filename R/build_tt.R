@@ -43,7 +43,7 @@ build_tt <- function(x, output = NULL) {
   x@table_dataframe <- tab
 
   # format data before drawing the table
-  for (l in rev(x@lazy_format)) {
+  for (l in x@lazy_format) {
     l[["x"]] <- x
     x <- eval(l)
   }
