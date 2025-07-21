@@ -169,8 +169,9 @@ setMethod(
     body <- NULL
 
     # Calculate row indices with vectorized operations
-    i_idx <- seq_len(nrow(x@table_dataframe) + length(x@group_index_i))
-    i_idx <- setdiff(i_idx, x@group_index_i)
+    idx_group_not_format <- setdiff(x@group_index_i, x@group_index_i_format)
+    i_idx <- seq_len(nrow(x@table_dataframe) + length(idx_group_not_format))
+    i_idx <- setdiff(i_idx, idx_group_not_format)
 
     # Generate all cells at once using matrix operations
     row_indices <- rep(i_idx, each = ncol(x@table_dataframe))
@@ -236,8 +237,7 @@ setMethod(
     }
 
     return(x)
-  }
-)
+  })
 
 bootstrap_setting <- function(x, new, component = "row") {
   att <- attributes(x)

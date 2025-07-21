@@ -403,7 +403,9 @@ format_tt <- function(
     k <- list(i, j)
     # Add group_index_i for matrix insertion rows
     if (inherits(x, "tinytable")) {
-      x@group_index_i <- c(x@group_index_i, i + cumsum(rep(1, length(i))) - 1 + sapply(i, function(idx) sum(i < idx)))
+      idx <- i + cumsum(rep(1, length(i))) - 1 + sapply(i, function(idx) sum(i < idx))
+      x@group_index_i <- c(x@group_index_i, idx)
+      x@group_index_i_format <- c(x@group_index_i_format, idx)
       x@nrow <- x@nrow + length(i)
     }
     i <- NULL

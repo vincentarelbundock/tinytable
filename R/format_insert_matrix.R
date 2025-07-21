@@ -55,7 +55,7 @@ format_insert_matrix <- function(x, k) {
       x@table_dataframe <- rbind(matrix_row, x@table_dataframe)
     } else {
       # Insert after the (pos-1)th row
-      before_rows <- x@table_dataframe[1:(pos-1), , drop = FALSE]
+      before_rows <- x@table_dataframe[1:(pos - 1), , drop = FALSE]
       after_rows <- x@table_dataframe[pos:nrow(x@table_dataframe), , drop = FALSE]
       x@table_dataframe <- rbind(before_rows, matrix_row, after_rows)
     }
@@ -63,8 +63,6 @@ format_insert_matrix <- function(x, k) {
 
   # Update all slots that need to be modified
   x@data <- x@table_dataframe
-  x@table_input <- x@data
-  x@nrow <- nrow(x@table_dataframe)
 
   return(x)
 }
