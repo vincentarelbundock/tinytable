@@ -95,6 +95,39 @@ tt(df) %>%
   style_tt(i = "groupi", background = "pink")
 ```
 
+## Row matrix insertion
+
+While the traditional `group_tt(i = list(...))` approach is useful for adding individual labeled rows, sometimes you need to insert multiple rows of data at specific positions. The matrix insertion feature provides a more efficient way to do this.
+
+Instead of creating multiple named list entries, you can specify row positions as an integer vector in `i` and provide a character matrix in `j`. This is particularly useful when you want to insert the same content (like headers or separators) at multiple positions:
+
+```{r}
+rowmat <- matrix(colnames(iris))
+
+tt(head(iris, 7)) |>
+  group_tt(i = c(2, 5), j = rowmat)
+```
+
+The matrix must have the same number of columns as the table. However, if you provide a single-column matrix with a number of elements that is a multiple of the table's column count, it will be automatically reshaped to match the table structure. This makes it easy to provide data in a linear format:
+
+```{r}
+rowmat <- matrix(c(
+  "a", "b", "c", "d", "e",
+  1, 2, 3, 4, 5))
+
+tt(head(iris, 7)) |>
+  group_tt(i = 2, j = rowmat) |>
+  style_tt(i = "groupi", background = "pink")
+```
+
+It is also easy to combine this type of insertion with column spanners using the `style_tt()` function.
+
+```{r}
+tt(head(iris, 7)) |>
+  group_tt(i = c(1, 7), j = rowmat) |>
+  style_tt(i = "groupi", j = 1, colspan = 3, rowspan = 2, background = "pink")
+```
+
 ## Columns
 
 The syntax for column groups is very similar, but we use the `j` argument instead. The named list specifies the labels to appear in column-spanning labels, and the values must be a vector of consecutive and non-overlapping integers that indicate which columns are associated to which labels:

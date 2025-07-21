@@ -3,13 +3,16 @@
 #' @export
 #' @inheritParams tt
 #' @inheritParams style_tt
-#' @param i A vector of labels with length equal to the number of rows in `x`, or a named list of row indices to group. The names of the list will be used as labels. The indices represent the position where labels should be inserted in the original table. For example,
-#' + `i=list("Hello"=5)`: insert the "Hello" label after the 4th row in the original table.
-#' + `i=list("Hello"=2, "World"=2)`: insert the two labels consecutively after the 1st row in the original table.
-#' + `i=list("Foo Bar"=0)`: insert the label in the first row after the header.
-#' @param j String or named list
+#' @param i
+#' + A vector of labels with length equal to the number of rows in `x`, or a named list of row indices to group. The names of the list will be used as labels. The indices represent the position where labels should be inserted in the original table. For example,
+#'   - `i=list("Hello"=5)`: insert the "Hello" label after the 4th row in the original table.
+#'   - `i=list("Hello"=2, "World"=2)`: insert the two labels consecutively after the 1st row in the original table.
+#'   - `i=list("Foo Bar"=0)`: insert the label in the first row after the header.
+#' + For matrix insertion: `i` can be an integer vector specifying row positions, and `j` can be a character matrix to insert at those positions.
+#' @param j String, named list, or character matrix
 #' - Named list of column indices to group, ex: `j=list("A"=1:2,"B"=3:6)`. The names of the list will be used as labels. See below for more examples. Note: empty labels must be a space: " ".
 #' - A single string when column names include the group name as a prefix, ex: group1_column1, group1_column2, etc.
+#' - Character matrix for inserting rows at positions specified by `i`. The matrix must have the same number of columns as the table, or be a single column with a number of elements that is a multiple of the table's column count (which will be automatically reshaped).
 #' @param ... Other arguments are ignored.
 #' @return An object of class `tt` representing the table.
 #' @param indent integer number of `pt` to use when indenting the non-labelled rows.
@@ -72,30 +75,19 @@
 #' )
 #' tt(dat) |> group_tt(j = "_")
 #'
-
-group_insert_matrix_ij_to_k <- function(x, i, j) {
-  # Validate that j is a character matrix
-  if (!is.character(j)) {
-    stop("Matrix `j` must be a character matrix", call. = FALSE)
-  }
-  
-  # If x has more than 1 column and j is a 1-column matrix, try to reshape j
-  if (ncol(x) > 1 && ncol(j) == 1) {
-    total_elements <- nrow(j) * ncol(j)
-    if (total_elements %% ncol(x) == 0) {
-      # Reshape j to have the same number of columns as x
-      j <- matrix(j, nrow = total_elements / ncol(x), ncol = ncol(x), byrow = TRUE)
-    }
-  }
-  
-  # Check that matrix width matches table width
-  if (ncol(j) != ncol(x)) {
-    stop(sprintf("Matrix must have the same number of columns as the table (%d columns)", ncol(x)), call. = FALSE)
-  }
-  
-  list(i, j)
-}
-
+#' # matrix insertion
+#' rowmat <- matrix(colnames(iris))
+#' tt(head(iris, 7)) |>
+#'   group_tt(i = c(2, 5), j = rowmat)
+#'
+#' rowmat <- matrix(c(
+#'   "a", "b", "c", "d", "e",
+#'   1, 2, 3, 4, 5))
+#' tt(head(iris, 7)) |>
+#'   group_tt(i = 2, j = rowmat) |>
+#'   style_tt(i = "groupi", background = "pink") |>
+#'   print("html")
+#'
 group_tt <- function(
     x,
     i = getOption("tinytable_group_i", default = NULL),
@@ -115,13 +107,14 @@ group_tt <- function(
   # Handle matrix insertion case: if i is integerish and j is a matrix
   if (isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) {
     k <- group_insert_matrix_ij_to_k(x, i, j)
-    
+
     # Validate positions against table size
     if (any(k[[1]] > nrow(x) + 1)) {
-      stop(sprintf("Position %d is beyond the table size (%d rows). Maximum allowed position is %d.", 
-                   max(k[[1]][k[[1]] > nrow(x) + 1]), nrow(x), nrow(x) + 1), call. = FALSE)
+      stop(sprintf(
+        "Position %d is beyond the table size (%d rows). Maximum allowed position is %d.",
+        max(k[[1]][k[[1]] > nrow(x) + 1]), nrow(x), nrow(x) + 1), call. = FALSE)
     }
-    
+
     # Add group_index_i for matrix insertion rows
     matrix_rows <- nrow(k[[2]])
     # If single position but multiple matrix rows, replicate the position
@@ -261,4 +254,28 @@ j_delim_to_named_list <- function(x, j) {
 
   out <- list(colnames = colnames, groupnames = groupnames)
   return(out)
+}
+
+
+group_insert_matrix_ij_to_k <- function(x, i, j) {
+  # Validate that j is a character matrix
+  if (!is.character(j)) {
+    stop("Matrix `j` must be a character matrix", call. = FALSE)
+  }
+
+  # If x has more than 1 column and j is a 1-column matrix, try to reshape j
+  if (ncol(x) > 1 && ncol(j) == 1) {
+    total_elements <- nrow(j) * ncol(j)
+    if (total_elements %% ncol(x) == 0) {
+      # Reshape j to have the same number of columns as x
+      j <- matrix(j, nrow = total_elements / ncol(x), ncol = ncol(x), byrow = TRUE)
+    }
+  }
+
+  # Check that matrix width matches table width
+  if (ncol(j) != ncol(x)) {
+    stop(sprintf("Matrix must have the same number of columns as the table (%d columns)", ncol(x)), call. = FALSE)
+  }
+
+  list(i, j)
 }

@@ -10,6 +10,7 @@ New features:
 
 * `tt(height=2)` controls row height in em units. Works HTML, LaTeX, and Typst.
 * `format_tt()` argument `i` accepts character strings to format specific table components: "colnames", "caption", "notes", "groupi" (row group labels), "groupj" (column group labels).
+* `group_tt()` now supports matrix insertion: when `i` is an integer vector and `j` is a character matrix, rows from the matrix are inserted at the specified positions. Single-column matrices are automatically reshaped when the number of elements is a multiple of the table's column count.
 
 Typst: Major refactor improves several things and brings Typst very close to feature parity with other formats.
 
