@@ -73,12 +73,11 @@
 #' tt(dat) |> group_tt(j = "_")
 #'
 group_tt <- function(
-  x,
-  i = getOption("tinytable_group_i", default = NULL),
-  j = getOption("tinytable_group_j", default = NULL),
-  indent = getOption("tinytable_group_indent", default = 1),
-  ...
-) {
+    x,
+    i = getOption("tinytable_group_i", default = NULL),
+    j = getOption("tinytable_group_j", default = NULL),
+    indent = getOption("tinytable_group_indent", default = 1),
+    ...) {
   # ... is important for ihead passing
 
   if (!inherits(x, "tinytable")) {
@@ -124,7 +123,7 @@ group_tt <- function(
 
     x@group_n_i <- length(i)
     x@nrow <- x@nrow + x@group_n_i
-    x@group_index_i <- as.numeric(i) + cumsum(rep(1, length(as.numeric(i)))) - 1
+    x@group_index_i <- c(x@group_index_i, as.numeric(i) + cumsum(rep(1, length(as.numeric(i)))) - 1)
 
     if (isTRUE(indent > 0)) {
       idx_indent <- setdiff(seq_len(nrow(x)), i + seq_along(i) - 1)

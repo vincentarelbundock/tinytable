@@ -401,6 +401,11 @@ format_tt <- function(
 
   if (isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) {
     k <- list(i, j)
+    # Add group_index_i for matrix insertion rows
+    if (inherits(x, "tinytable")) {
+      x@group_index_i <- c(x@group_index_i, i + cumsum(rep(1, length(i))) - 1 + sapply(i, function(idx) sum(i < idx)))
+      x@nrow <- x@nrow + length(i)
+    }
     i <- NULL
     j <- NULL
   } else {

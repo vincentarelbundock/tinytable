@@ -46,14 +46,17 @@ format_insert_matrix <- function(x, k) {
     matrix_row <- matrix_df[idx, , drop = FALSE]
 
     # Insert the matrix row at the specified position
-    # Position logic: 1 means after first row, 2 means after second row, etc.
+    # Position logic: 1 means at the top, 2 means after first row, etc.
     if (pos > nrow(x@table_dataframe)) {
       # Insert at the end
       x@table_dataframe <- rbind(x@table_dataframe, matrix_row)
+    } else if (pos == 1) {
+      # Insert at the very top
+      x@table_dataframe <- rbind(matrix_row, x@table_dataframe)
     } else {
-      # Insert after the specified row position
-      before_rows <- x@table_dataframe[1:pos, , drop = FALSE]
-      after_rows <- x@table_dataframe[(pos + 1):nrow(x@table_dataframe), , drop = FALSE]
+      # Insert after the (pos-1)th row
+      before_rows <- x@table_dataframe[1:(pos-1), , drop = FALSE]
+      after_rows <- x@table_dataframe[pos:nrow(x@table_dataframe), , drop = FALSE]
       x@table_dataframe <- rbind(before_rows, matrix_row, after_rows)
     }
   }
