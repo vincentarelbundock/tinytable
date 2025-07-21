@@ -194,14 +194,14 @@ thumbdrives <- data.frame(
   speed_benchmark = c(0.6, 0.73, 0.82, 0.99)
 )
 tab <- tt(thumbdrives) |>
-  format_tt(j = 1, fn = scales::date_format("%B %y", locale = "fr")) |>
+  format_tt(j = 1, fn = scales::date_format("%B %d %Y")) |>
   format_tt(j = 2, fn = scales::label_currency()) |>
   format_tt(j = 3, fn = scales::label_ordinal()) |>
   format_tt(j = 4, fn = scales::label_bytes()) |>
   format_tt(j = 5, fn = scales::label_percent()) |>
   format_tt(escape = TRUE) |>
   print("dataframe")
-expect_true("janv" %in% tab$date_lookup)
+expect_true("January 15 2024" %in% tab$date_lookup)
 expect_true("$18.49" %in% tab$price)
 expect_true("16 GB" %in% tab$memory)
 expect_true("99%" %in% tab$speed_benchmark)
