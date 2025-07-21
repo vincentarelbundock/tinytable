@@ -72,6 +72,30 @@
 #' )
 #' tt(dat) |> group_tt(j = "_")
 #'
+
+group_insert_matrix_ij_to_k <- function(x, i, j) {
+  # Validate that j is a character matrix
+  if (!is.character(j)) {
+    stop("Matrix `j` must be a character matrix", call. = FALSE)
+  }
+  
+  # If x has more than 1 column and j is a 1-column matrix, try to reshape j
+  if (ncol(x) > 1 && ncol(j) == 1) {
+    total_elements <- nrow(j) * ncol(j)
+    if (total_elements %% ncol(x) == 0) {
+      # Reshape j to have the same number of columns as x
+      j <- matrix(j, nrow = total_elements / ncol(x), ncol = ncol(x), byrow = TRUE)
+    }
+  }
+  
+  # Check that matrix width matches table width
+  if (ncol(j) != ncol(x)) {
+    stop(sprintf("Matrix must have the same number of columns as the table (%d columns)", ncol(x)), call. = FALSE)
+  }
+  
+  list(i, j)
+}
+
 group_tt <- function(
     x,
     i = getOption("tinytable_group_i", default = NULL),
@@ -90,21 +114,21 @@ group_tt <- function(
 
   # Handle matrix insertion case: if i is integerish and j is a matrix
   if (isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) {
-    k <- list(i, j)
+    k <- group_insert_matrix_ij_to_k(x, i, j)
     
     # Validate positions against table size
-    if (any(i > nrow(x) + 1)) {
+    if (any(k[[1]] > nrow(x) + 1)) {
       stop(sprintf("Position %d is beyond the table size (%d rows). Maximum allowed position is %d.", 
-                   max(i[i > nrow(x) + 1]), nrow(x), nrow(x) + 1), call. = FALSE)
+                   max(k[[1]][k[[1]] > nrow(x) + 1]), nrow(x), nrow(x) + 1), call. = FALSE)
     }
     
     # Add group_index_i for matrix insertion rows
-    matrix_rows <- nrow(j)
+    matrix_rows <- nrow(k[[2]])
     # If single position but multiple matrix rows, replicate the position
-    if (length(i) == 1 && matrix_rows > 1) {
-      positions <- rep(i, matrix_rows)
+    if (length(k[[1]]) == 1 && matrix_rows > 1) {
+      positions <- rep(k[[1]], matrix_rows)
     } else {
-      positions <- i
+      positions <- k[[1]]
     }
     # Calculate the correct indices: each position gets shifted by the number of insertions before it
     idx <- numeric(length(positions))
