@@ -14,13 +14,20 @@ sanity_align <- function(align, i) {
   }
 }
 
-sanitize_i <- function(i, x, pre_group_i = FALSE, lazy = TRUE) {
-  if (is.character(i)) {
-    assert_true(all(i %in% c("colnames", "notes", "caption", "groupi", "groupj", "all")))
-    return(i)
-  } else if (is.matrix(i) && is.logical(i)) {
+sanitize_i <- function(i, x, pre_group_i = FALSE, lazy = TRUE, calling_function = "other") {
+
+  # format_tt() accepts certain character inputs
+  if (!identical(calling_function, "format_tt")) {
+    if (is.character(i)) {
+      assert_true(all(i %in% c("colnames", "notes", "caption", "groupi", "groupj", "all")))
+      return(i)
+    } 
+  }
+
+  if (is.matrix(i) && is.logical(i)) {
     return(i)
   }
+
   out <- seq_len(nrow(x))
   assert_numeric(i, null.ok = TRUE, name = "i")
   if (is.null(i) && isTRUE(lazy)) {
