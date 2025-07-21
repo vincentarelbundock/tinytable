@@ -140,8 +140,6 @@ group_tt <- function(
   # handle k parameter immediately (not lazily) since it modifies the underlying data
   if (!is.null(k)) {
     x <- group_eval_k(x, k)
-    # Update table_input to match the modified data
-    x@table_input <- x@data
   }
 
   # apply group labels lazily (but not k, which was handled above)
@@ -239,28 +237,71 @@ group_eval_k <- function(x, k) {
   # Set column names to match the table
   names(matrix_df) <- names(x@table_dataframe)
   
-  # Handle multiple positions: insert matrix at each position
-  # Sort positions in descending order to avoid index shifting issues
-  positions <- sort(positions, decreasing = TRUE)
+  # Simplify logic by standardizing positions and matrix rows
+  matrix_rows <- nrow(matrix_df)
   
+  # If single position but multiple matrix rows, replicate the position
+  if (length(positions) == 1 && matrix_rows > 1) {
+    positions <- rep(positions[1], matrix_rows)
+  }
+  
+  # If multiple positions but single matrix row, replicate the matrix row
+  if (length(positions) > 1 && matrix_rows == 1) {
+    matrix_df <- matrix_df[rep(1, length(positions)), , drop = FALSE]
+    matrix_rows <- nrow(matrix_df)
+  }
+  
+  # Validate that positions and matrix rows match
+  if (length(positions) != matrix_rows) {
+    stop("Length of positions must equal number of matrix rows after standardization", call. = FALSE)
+  }
+  
+  # Calculate the actual row indices where k matrix rows will be inserted
+  k_indices <- c()
   for (pos in positions) {
-    # Insert the matrix at the specified position
+    # Position logic: position N means after row N, so inserted row is at N+1
+    # But we need to account for previously inserted rows
+    inserted_row_index <- pos + 1
+    # Count how many k rows were inserted before this position
+    prev_insertions <- sum(positions < pos)
+    actual_index <- inserted_row_index + prev_insertions
+    k_indices <- c(k_indices, actual_index)
+  }
+  
+  # Process each matrix row at its corresponding position
+  # Sort by position in descending order to avoid index shifting issues
+  pos_order <- order(positions, decreasing = TRUE)
+  
+  for (i in seq_along(pos_order)) {
+    idx <- pos_order[i]
+    pos <- positions[idx]
+    matrix_row <- matrix_df[idx, , drop = FALSE]
+    
+    # Insert the matrix row at the specified position
     # Position logic: 1 means after first row, 2 means after second row, etc.
     if (pos > nrow(x@table_dataframe)) {
       # Insert at the end
-      x@table_dataframe <- rbind(x@table_dataframe, matrix_df)
+      x@table_dataframe <- rbind(x@table_dataframe, matrix_row)
     } else {
       # Insert after the specified row position
       before_rows <- x@table_dataframe[1:pos, , drop = FALSE]
       after_rows <- x@table_dataframe[(pos+1):nrow(x@table_dataframe), , drop = FALSE]
-      x@table_dataframe <- rbind(before_rows, matrix_df, after_rows)
+      x@table_dataframe <- rbind(before_rows, matrix_row, after_rows)
     }
   }
   
-  # Also update x@data to match
+  # Update all slots that need to be modified
   x@data <- x@table_dataframe
-  # Update the number of rows
+  x@table_input <- x@data
   x@nrow <- nrow(x@table_dataframe)
+  
+  # Update group tracking for k rows
+  x@group_n_i <- x@group_n_i + length(k_indices)
+  if (is.null(x@group_index_i) || length(x@group_index_i) == 0) {
+    x@group_index_i <- k_indices
+  } else {
+    x@group_index_i <- c(x@group_index_i, k_indices)
+  }
   
   return(x)
 }
