@@ -16,7 +16,7 @@ sanity_align <- function(align, i) {
 
 sanitize_i <- function(i, x, pre_group_i = FALSE, lazy = TRUE) {
   if (is.character(i)) {
-    assert_choice(i, c("colnames", "notes", "caption", "groupi", "groupj", "all"))
+    assert_true(all(i %in% c("colnames", "notes", "caption", "groupi", "groupj", "all")))
     return(i)
   } else if (is.matrix(i) && is.logical(i)) {
     return(i)

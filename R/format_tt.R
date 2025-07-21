@@ -172,7 +172,6 @@ apply_format <- function(out,
   }
 
   if (is.character(components)) {
-    assert_true(all(components %in% c("colnames", "caption", "notes", "groupi", "groupj", "all"))) 
     if ("all" %in% components) {
       components <- c("colnames", "caption", "notes", "groupi", "groupj")
     } else {
@@ -371,13 +370,11 @@ format_tt <- function(
   sanity_num_mark(digits, num_mark_big, num_mark_dec)
 
   # Check if i contains component names (do this before processing tinytable objects)
-  valid_components <- c("colnames", "caption", "notes", "groupi", "groupj")
-  components <- NULL
-  if (is.character(i) && any(i %in% valid_components)) {
-    components <- i[i %in% valid_components]
-    # Remove components from i for normal processing
-    i <- i[!i %in% valid_components]
-    if (length(i) == 0) i <- NULL
+  if (is.character(i)) {
+    components <- i
+    i <- NULL
+  } else {
+    components <- NULL
   }
 
   out <- x
