@@ -70,43 +70,91 @@ group_bootstrap_col <- function(x, j, ihead, ...) {
 }
 
 group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
-  label <- names(i)
-
-  out <- x@table_string
-
-  for (g in seq_along(i)) {
-    # Map logical position to actual HTML row index
-    idx_group_not_format <- setdiff(x@group_index_i, x@group_index_i_matrix)
-    i_idx <- seq_len(nrow(x@table_dataframe) + length(idx_group_not_format))
-    i_idx <- setdiff(i_idx, idx_group_not_format)
-    actual_row_idx <- i_idx[i[g]]
-
-    js <- sprintf(
-      "      window.addEventListener('load', function () { insertSpanRow(%s, %s, '%s') });",
-      actual_row_idx,
-      ncol(x),
-      names(i)[g]
-    )
-    out <- lines_insert(out, js, "tinytable span after", "after")
-    # out <- bootstrap_setting(out, new = js, component = "cell")
+  if (is.null(i)) {
+    return(x)
   }
 
-  # need unique function names in case there are
-  # multiple tables in one Rmarkdown document
-  out <- gsub(
-    "insertSpanRow(",
-    paste0("insertSpanRow_", get_id(""), "("),
-    out,
-    fixed = TRUE
+  # reverse order is important (like in LaTeX version)
+  i <- rev(sort(i))
+  
+  if (is.null(names(i))) {
+    msg <- "`i` must be a named integer vector."
+    stop(msg, call. = FALSE)
+  }
+  
+  label <- names(i)
+
+  # Work directly on the HTML table string (similar to LaTeX version)
+  tab <- strsplit(x@table_string, "\\n")[[1]]
+
+  # Find tbody boundaries in the HTML
+  tbody_start <- grep("<tbody>", tab, fixed = TRUE)[1]
+  tbody_end <- grep("</tbody>", tab, fixed = TRUE)[1]
+  
+  if (is.na(tbody_start) || is.na(tbody_end)) {
+    stop("Could not find tbody boundaries in HTML table", call. = FALSE)
+  }
+
+  # Split table into parts (like LaTeX version)
+  top <- tab[1:tbody_start]
+  body_lines <- tab[(tbody_start + 1):(tbody_end - 1)]
+  bot <- tab[tbody_end:length(tab)]
+
+  # Find complete <tr>...</tr> blocks within tbody
+  # Join body lines and extract complete table rows
+  body_content <- paste(body_lines, collapse = "\n")
+  
+  # Extract complete <tr> blocks using regex with DOTALL mode
+  tr_pattern <- "(?s)<tr>.*?</tr>"  # (?s) enables DOTALL mode so . matches newlines
+  tr_blocks <- regmatches(body_content, gregexpr(tr_pattern, body_content, perl = TRUE))[[1]]
+  
+  if (length(tr_blocks) == 0) {
+    return(x)  # No rows to process
+  }
+
+  # Create new group row HTML (similar to LaTeX separator rows)
+  new_group_rows <- sprintf(
+    '<tr><td colspan="%s" data-row="GROUP" data-col="0">%s</td></tr>',
+    ncol(x),
+    label
   )
 
-  idx <- insert_values(seq_len(nrow(x)), rep(NA, length(i)), i)
+  # Insert group rows at specified positions (same logic as LaTeX version)
+  # Start with the original tr_blocks
+  result_rows <- tr_blocks
+  
+  # Insert group rows from highest position to lowest (same as LaTeX version)
+  for (g in seq_along(i)) {
+    # Insert after position i[g] - 1 (0-based insertion)
+    insert_pos <- i[g] - 1
+    if (insert_pos >= 0 && insert_pos <= length(result_rows)) {
+      result_rows <- append(result_rows, new_group_rows[g], after = insert_pos)
+    }
+  }
 
-  x@table_string <- out
+  # Update data-row attributes sequentially (like LaTeX version) 
+  current_data_row <- x@nhead
+  for (k in seq_along(result_rows)) {
+    result_rows[k] <- gsub(
+      'data-row="[^"]*"',
+      sprintf('data-row="%s"', current_data_row),
+      result_rows[k]
+    )
+    current_data_row <- current_data_row + 1
+  }
 
-  # if there's a two-level header column multi-span, we want it centered.
+  # Rebuild the table with proper indentation
+  new_body_content <- paste("                ", result_rows, collapse = "\n")
+  
+  # Reconstruct the full table (like LaTeX version)
+  tab <- c(top, new_body_content, bot)
+  x@table_string <- paste(tab, collapse = "\n")
+
+  # Update body tracking for future calls (like LaTeX version)
+  x@body <- c(x@body, new_group_rows)
+
+  # Style the group rows to be centered
   x <- style_tt(x, i = -1, align = "c")
 
-  # do not override meta since we modified it here above
   return(x)
 }

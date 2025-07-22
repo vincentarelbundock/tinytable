@@ -25,15 +25,29 @@ group_insert_matrix <- function(x, k) {
   # Simplify logic by standardizing positions and matrix rows
   matrix_rows <- nrow(matrix_df)
 
-  # If single position but multiple matrix rows, replicate the position
-  if (length(positions) == 1 && matrix_rows > 1) {
-    positions <- rep(positions[1], matrix_rows)
+  # Check if positions are sequential
+  are_sequential <- function(pos) {
+    if (length(pos) <= 1) return(FALSE)
+    sorted_pos <- sort(pos)
+    all(diff(sorted_pos) == 1)
   }
 
-  # If multiple positions but single matrix row, replicate the matrix row
-  if (length(positions) > 1 && matrix_rows == 1) {
-    matrix_df <- matrix_df[rep(1, length(positions)), , drop = FALSE]
-    matrix_rows <- nrow(matrix_df)
+  # Handle the different cases:
+  if (length(positions) == 1 && matrix_rows > 1) {
+    # Single position, multiple matrix rows: replicate the position
+    positions <- rep(positions[1], matrix_rows)
+  } else if (length(positions) > 1 && matrix_rows == 1) {
+    # Multiple positions, single matrix row
+    if (are_sequential(positions)) {
+      # Sequential positions: insert all rows consecutively at the first position
+      positions <- rep(min(positions), length(positions))
+      matrix_df <- matrix_df[rep(1, length(positions)), , drop = FALSE]
+      matrix_rows <- nrow(matrix_df)
+    } else {
+      # Non-sequential positions: replicate the matrix row for each position
+      matrix_df <- matrix_df[rep(1, length(positions)), , drop = FALSE]
+      matrix_rows <- nrow(matrix_df)
+    }
   }
 
   # Validate that positions and matrix rows match
