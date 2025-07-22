@@ -72,9 +72,15 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
   out <- x@table_string
 
   for (g in seq_along(i)) {
+    # Map logical position to actual HTML row index
+    idx_group_not_format <- setdiff(x@group_index_i, x@group_index_i_format)
+    i_idx <- seq_len(nrow(x@table_dataframe) + length(idx_group_not_format))
+    i_idx <- setdiff(i_idx, idx_group_not_format)
+    actual_row_idx <- i_idx[i[g]]
+    
     js <- sprintf(
       "      window.addEventListener('load', function () { insertSpanRow(%s, %s, '%s') });",
-      i[g] + g,
+      actual_row_idx,
       ncol(x),
       names(i)[g]
     )
