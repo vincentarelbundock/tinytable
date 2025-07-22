@@ -116,5 +116,27 @@ expect_snapshot_print(tab, label = "group_tt_matrix-region_grouping_no_colnames.
 options(tinytable_print_output = NULL)
 expect_snapshot_print(print_html(tab), "group_tt_matrix-region_grouping_no_colnames.html")
 
+
+# Fancty table styling
+dat <- data.frame(
+  Region = as.character(state.region),
+  State = row.names(state.x77),
+  state.x77[, 1:3]
+) |>
+  sort_by(~ Region + State) |>
+  subset(Region %in% c("North Central", "Northeast"))
+dat <- do.call(rbind, by(dat, dat$Region, head, n = 3))
+row.names(dat) = NULL
+tab <- tt(dat, colnames = FALSE) |>
+  group_tt(i = list("North Central" = 1, "Northeast" = 5), indent = 0) |>
+  group_tt(i = c(1, 4), j = matrix(colnames(dat))) |>
+  style_tt(i = 1, color = "red")
+
+options(tinytable_print_output = "latex")
+expect_snapshot_print(tab, "group_tt_matrix-region_grouping_no_colnames_style.tex")
+options(tinytable_print_output = "typst")
+expect_snapshot_print(tab, "group_tt_matrix-region_grouping_no_colnames_style.typ")
+
+
 # Reset options
 options(tinytable_print_output = NULL)
