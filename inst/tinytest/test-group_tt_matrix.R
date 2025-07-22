@@ -127,15 +127,56 @@ dat <- data.frame(
   subset(Region %in% c("North Central", "Northeast"))
 dat <- do.call(rbind, by(dat, dat$Region, head, n = 3))
 row.names(dat) = NULL
-tab <- tt(dat, colnames = FALSE) |>
+
+tt(dat, colnames = FALSE) |>
+  group_tt(i = list("North Central" = 1, "Northeast" = 4), indent = 0) |>
+  style_tt(i = c(1, 5), color = "red")
+options(tinytable_print_output = "latex")
+expect_snapshot_print(tab, "group_tt_matrix-region_grouping_no_colnames_style_01.tex")
+options(tinytable_print_output = "typst")
+expect_snapshot_print(tab, "group_tt_matrix-region_grouping_no_colnames_style_01.typ")
+
+tt(dat, colnames = FALSE) |>
+  group_tt(i = c(1, 4), j = matrix(colnames(dat))) |>
+  style_tt(i = c(1, 5), color = "red")
+options(tinytable_print_output = "latex")
+expect_snapshot_print(tab, "group_tt_matrix-region_grouping_no_colnames_style_02.tex")
+options(tinytable_print_output = "typst")
+expect_snapshot_print(tab, "group_tt_matrix-region_grouping_no_colnames_style_02.typ")
+
+tt(dat, colnames = FALSE) |>
   group_tt(i = list("North Central" = 1, "Northeast" = 5), indent = 0) |>
   group_tt(i = c(1, 4), j = matrix(colnames(dat))) |>
-  style_tt(i = 1, color = "red")
-
+  style_tt(i = c(1, 6), color = "red")
 options(tinytable_print_output = "latex")
-expect_snapshot_print(tab, "group_tt_matrix-region_grouping_no_colnames_style.tex")
+expect_snapshot_print(tab, "group_tt_matrix-region_grouping_no_colnames_style_03.tex")
 options(tinytable_print_output = "typst")
-expect_snapshot_print(tab, "group_tt_matrix-region_grouping_no_colnames_style.typ")
+expect_snapshot_print(tab, "group_tt_matrix-region_grouping_no_colnames_style_03.typ")
+
+tt(dat, colnames = TRUE) |>
+  group_tt(i = list("North Central" = 1, "Northeast" = 4), indent = 0) |>
+  style_tt(i = c(1, 5), color = "red")
+options(tinytable_print_output = "latex")
+expect_snapshot_print(tab, "group_tt_matrix-region_grouping_no_colnames_style_04.tex")
+options(tinytable_print_output = "typst")
+expect_snapshot_print(tab, "group_tt_matrix-region_grouping_no_colnames_style_04.typ")
+
+tt(dat, colnames = TRUE) |>
+  group_tt(i = c(1, 4), j = matrix(colnames(dat))) |>
+  style_tt(i = c(1, 5), color = "red")
+options(tinytable_print_output = "latex")
+expect_snapshot_print(tab, "group_tt_matrix-region_grouping_no_colnames_style_05.tex")
+options(tinytable_print_output = "typst")
+expect_snapshot_print(tab, "group_tt_matrix-region_grouping_no_colnames_style_05.typ")
+
+tt(dat, colnames = TRUE) |>
+  group_tt(i = list("North Central" = 1, "Northeast" = 5), indent = 0) |>
+  group_tt(i = c(1, 4), j = matrix(colnames(dat))) |>
+  style_tt(i = c(1, 6), color = "red")
+options(tinytable_print_output = "latex")
+expect_snapshot_print(tab, "group_tt_matrix-region_grouping_no_colnames_style_06.tex")
+options(tinytable_print_output = "typst")
+expect_snapshot_print(tab, "group_tt_matrix-region_grouping_no_colnames_style_06.typ")
 
 
 # Reset options
