@@ -82,6 +82,61 @@ tab <- tt(head(iris, 4)) |>
   style_tt(i = "groupi", background = "lightblue")
 expect_snapshot_print(print_html(tab), "group_tt_matrix-with_styling.html")
 
+# Complex example with region grouping and column headers
+# Test data from tmp.R
+dat <- data.frame(
+  Region = as.character(state.region),
+  State = row.names(state.x77),
+  state.x77[, 1:3]
+) |>
+  sort_by(~ Region + State) |>
+  subset(Region %in% c("North Central", "Northeast"))
+dat <- do.call(rbind, by(dat, dat$Region, head, n = 3))
+row.names(dat) <- NULL
+
+# Test markdown output
+options(tinytable_print_output = "markdown")
+tab <- tt(dat, colnames = TRUE) |>
+  group_tt(i = list("North Central" = 1, "Northeast" = 5), indent = 0) |>
+  group_tt(i = c(1, 4), j = matrix(colnames(dat)))
+expect_snapshot_print(tab, label = "group_tt_matrix-region_grouping.md")
+
+# Test LaTeX output
+options(tinytable_print_output = "latex")
+tab <- tt(dat, colnames = TRUE) |>
+  group_tt(i = list("North Central" = 1, "Northeast" = 5), indent = 0) |>
+  group_tt(i = c(1, 4), j = matrix(colnames(dat)))
+expect_snapshot_print(tab, label = "group_tt_matrix-region_grouping.tex")
+
+# Test HTML output
+options(tinytable_print_output = NULL)
+tab <- tt(dat, colnames = TRUE) |>
+  group_tt(i = list("North Central" = 1, "Northeast" = 5), indent = 0) |>
+  group_tt(i = c(1, 4), j = matrix(colnames(dat)))
+expect_snapshot_print(print_html(tab), "group_tt_matrix-region_grouping.html")
+
+# Same examples with colnames=FALSE
+# Test markdown output
+options(tinytable_print_output = "markdown")
+tab <- tt(dat, colnames = FALSE) |>
+  group_tt(i = list("North Central" = 1, "Northeast" = 5), indent = 0) |>
+  group_tt(i = c(1, 4), j = matrix(colnames(dat)))
+expect_snapshot_print(tab, label = "group_tt_matrix-region_grouping_no_colnames.md")
+
+# Test LaTeX output
+options(tinytable_print_output = "latex")
+tab <- tt(dat, colnames = FALSE) |>
+  group_tt(i = list("North Central" = 1, "Northeast" = 5), indent = 0) |>
+  group_tt(i = c(1, 4), j = matrix(colnames(dat)))
+expect_snapshot_print(tab, label = "group_tt_matrix-region_grouping_no_colnames.tex")
+
+# Test HTML output
+options(tinytable_print_output = NULL)
+tab <- tt(dat, colnames = FALSE) |>
+  group_tt(i = list("North Central" = 1, "Northeast" = 5), indent = 0) |>
+  group_tt(i = c(1, 4), j = matrix(colnames(dat)))
+expect_snapshot_print(print_html(tab), "group_tt_matrix-region_grouping_no_colnames.html")
+
 # Reset options
 options(tinytable_print_output = NULL)
 
