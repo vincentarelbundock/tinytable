@@ -28,7 +28,7 @@ setClass(
     css = "data.frame",
     data = "data.frame",
     group_index_i = "numeric",
-    group_index_i_format = "numeric",
+    group_index_i_matrix = "numeric",
     group_n_i = "numeric",
     group_n_j = "numeric",
     id = "character",
@@ -69,15 +69,16 @@ setMethod(
   "initialize",
   "tinytable",
   function(
-      .Object,
-      data = data.frame(),
-      table_input = data.frame(),
-      caption = NULL,
-      notes = NULL,
-      theme = list("default"),
-      placement = NULL,
-      width = NULL,
-      height = NULL) {
+    .Object,
+    data = data.frame(),
+    table_input = data.frame(),
+    caption = NULL,
+    notes = NULL,
+    theme = list("default"),
+    placement = NULL,
+    width = NULL,
+    height = NULL
+  ) {
     # explicit
     .Object@data <- data
     .Object@table_dataframe <- table_input
@@ -117,7 +118,8 @@ setMethod(
       .Object@height <- height
     }
     return(.Object)
-  })
+  }
+)
 
 #' Method for a tinytable S4 object
 #'
@@ -173,7 +175,8 @@ setReplaceMethod(
     }
     x@names <- value
     return(x)
-  })
+  }
+)
 
 #' Method for a tinytable S4 object
 #'
@@ -195,7 +198,8 @@ setReplaceMethod(
     }
     x@names <- value
     return(x)
-  })
+  }
+)
 
 #' Dimensions a tinytable S4 object
 #'

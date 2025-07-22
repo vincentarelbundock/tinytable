@@ -13,7 +13,10 @@ group_insert_matrix <- function(x, k) {
 
   # Check column count assertion
   if (ncol(matrix_df) != ncol(x@table_dataframe)) {
-    stop("Matrix must have the same number of columns as the table", call. = FALSE)
+    stop(
+      "Matrix must have the same number of columns as the table",
+      call. = FALSE
+    )
   }
 
   # Set column names to match the table
@@ -35,7 +38,10 @@ group_insert_matrix <- function(x, k) {
 
   # Validate that positions and matrix rows match
   if (length(positions) != matrix_rows) {
-    stop("Length of positions must equal number of matrix rows after standardization", call. = FALSE)
+    stop(
+      "Length of positions must equal number of matrix rows after standardization",
+      call. = FALSE
+    )
   }
 
   # Process each matrix row at its corresponding position
@@ -59,13 +65,17 @@ group_insert_matrix <- function(x, k) {
     } else {
       # Insert after the (pos-1)th row
       before_rows <- x@table_dataframe[1:(pos - 1), , drop = FALSE]
-      after_rows <- x@table_dataframe[pos:nrow(x@table_dataframe), , drop = FALSE]
+      after_rows <- x@table_dataframe[
+        pos:nrow(x@table_dataframe),
+        ,
+        drop = FALSE
+      ]
 
       # guard against malformed column names when tt(colnames=FALSE)
       colnames(matrix_row) <-
         colnames(before_rows) <-
-        colnames(after_rows) <-
-        seq_len(ncol(matrix_row))
+          colnames(after_rows) <-
+            seq_len(ncol(matrix_row))
 
       # empty rows
       rows <- list(before_rows, matrix_row, after_rows)

@@ -17,7 +17,7 @@ theme_default <- function(x, ...) {
     }
     # bootstrap class
     x <- style_tt(x, bootstrap_class = bc)
-    
+
     # top border
     if (x@output == "html" && length(x@names) == 0) {
       # For HTML with no column names, apply border to the first data row

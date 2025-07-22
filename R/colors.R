@@ -3,7 +3,9 @@ standardize_colors <- function(col, format = "hex") {
   if (length(col) == 1 && is.na(col)) {
     return(NA)
   }
-  if (isFALSE(getOption("tinytable_color_name_normalization", default = TRUE))) {
+  if (
+    isFALSE(getOption("tinytable_color_name_normalization", default = TRUE))
+  ) {
     return(col)
   }
 
@@ -39,7 +41,11 @@ standardize_colors <- function(col, format = "hex") {
 
   # Format for Typst if needed
   if (format == "typst") {
-    result <- ifelse(is.character(result) & grepl("^#", result), sprintf('rgb("%s")', result), result)
+    result <- ifelse(
+      is.character(result) & grepl("^#", result),
+      sprintf('rgb("%s")', result),
+      result
+    )
   }
 
   return(result)

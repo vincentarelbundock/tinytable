@@ -169,7 +169,7 @@ setMethod(
     body <- NULL
 
     # Calculate row indices with vectorized operations
-    idx_group_not_format <- setdiff(x@group_index_i, x@group_index_i_format)
+    idx_group_not_format <- setdiff(x@group_index_i, x@group_index_i_matrix)
     i_idx <- seq_len(nrow(x@table_dataframe) + length(idx_group_not_format))
     i_idx <- setdiff(i_idx, idx_group_not_format)
 
@@ -237,7 +237,8 @@ setMethod(
     }
 
     return(x)
-  })
+  }
+)
 
 bootstrap_setting <- function(x, new, component = "row") {
   att <- attributes(x)

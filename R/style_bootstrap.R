@@ -88,7 +88,10 @@ setMethod(
         css[idx] <- paste(css[idx], paste0("color: ", color_val, ";"))
       }
       if (!is.na(sty[row, "background"])) {
-        background_val <- standardize_colors(sty[row, "background"], format = "hex")
+        background_val <- standardize_colors(
+          sty[row, "background"],
+          format = "hex"
+        )
         css[idx] <- paste(
           css[idx],
           paste0("background-color: ", background_val, ";")
@@ -126,7 +129,11 @@ setMethod(
       line <- sty$line[row]
       line_width <- sty$line_width[row]
       line_color <- sty$line_color[row]
-      line_color <- if (is.na(line_color)) "black" else standardize_colors(line_color, format = "hex")
+      line_color <- if (is.na(line_color)) {
+        "black"
+      } else {
+        standardize_colors(line_color, format = "hex")
+      }
       line_width <- if (is.na(line_width)) 0.1 else line_width
       left <- grepl("l", line)
       right <- grepl("r", line)

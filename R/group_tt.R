@@ -89,11 +89,12 @@
 #'   print("html")
 #'
 group_tt <- function(
-    x,
-    i = getOption("tinytable_group_i", default = NULL),
-    j = getOption("tinytable_group_j", default = NULL),
-    indent = getOption("tinytable_group_indent", default = 1),
-    ...) {
+  x,
+  i = getOption("tinytable_group_i", default = NULL),
+  j = getOption("tinytable_group_j", default = NULL),
+  indent = getOption("tinytable_group_indent", default = 1),
+  ...
+) {
   # ... is important for ihead passing
 
   if (!inherits(x, "tinytable")) {
@@ -110,9 +111,15 @@ group_tt <- function(
 
     # Validate positions against table size
     if (any(k[[1]] > nrow(x) + 1)) {
-      stop(sprintf(
-        "Position %d is beyond the table size (%d rows). Maximum allowed position is %d.",
-        max(k[[1]][k[[1]] > nrow(x) + 1]), nrow(x), nrow(x) + 1), call. = FALSE)
+      stop(
+        sprintf(
+          "Position %d is beyond the table size (%d rows). Maximum allowed position is %d.",
+          max(k[[1]][k[[1]] > nrow(x) + 1]),
+          nrow(x),
+          nrow(x) + 1
+        ),
+        call. = FALSE
+      )
     }
 
     # Add group_index_i for matrix insertion rows
@@ -129,11 +136,16 @@ group_tt <- function(
       # Count how many insertions happen before this position (strictly less than)
       prior_insertions <- sum(positions[1:(pos_idx - 1)] < positions[pos_idx])
       # Count how many insertions happen at the same position up to this point
-      same_position_insertions <- sum(positions[1:pos_idx] == positions[pos_idx])
-      idx[pos_idx] <- positions[pos_idx] + prior_insertions + same_position_insertions - 1
+      same_position_insertions <- sum(
+        positions[1:pos_idx] == positions[pos_idx]
+      )
+      idx[pos_idx] <- positions[pos_idx] +
+        prior_insertions +
+        same_position_insertions -
+        1
     }
     x@group_index_i <- c(x@group_index_i, idx)
-    x@group_index_i_format <- c(x@group_index_i_format, idx)
+    x@group_index_i_matrix <- c(x@group_index_i_matrix, idx)
     x@nrow <- x@nrow + length(positions)
 
     # Store the matrix insertion in lazy_insert_matrix instead of lazy_group
@@ -178,7 +190,10 @@ group_tt <- function(
 
     x@group_n_i <- length(i)
     x@nrow <- x@nrow + x@group_n_i
-    x@group_index_i <- c(x@group_index_i, as.numeric(i) + cumsum(rep(1, length(as.numeric(i)))) - 1)
+    x@group_index_i <- c(
+      x@group_index_i,
+      as.numeric(i) + cumsum(rep(1, length(as.numeric(i)))) - 1
+    )
 
     if (isTRUE(indent > 0)) {
       idx_indent <- setdiff(seq_len(nrow(x)), i + seq_along(i) - 1)
@@ -268,13 +283,24 @@ group_insert_matrix_ij_to_k <- function(x, i, j) {
     total_elements <- nrow(j) * ncol(j)
     if (total_elements %% ncol(x) == 0) {
       # Reshape j to have the same number of columns as x
-      j <- matrix(j, nrow = total_elements / ncol(x), ncol = ncol(x), byrow = TRUE)
+      j <- matrix(
+        j,
+        nrow = total_elements / ncol(x),
+        ncol = ncol(x),
+        byrow = TRUE
+      )
     }
   }
 
   # Check that matrix width matches table width
   if (ncol(j) != ncol(x)) {
-    stop(sprintf("Matrix must have the same number of columns as the table (%d columns)", ncol(x)), call. = FALSE)
+    stop(
+      sprintf(
+        "Matrix must have the same number of columns as the table (%d columns)",
+        ncol(x)
+      ),
+      call. = FALSE
+    )
   }
 
   list(i, j)

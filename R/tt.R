@@ -180,17 +180,27 @@ tt <- function(
 
   if (!is.null(height)) {
     # LaTeX tabularray: use height/2 as rowsep
-    out <- style_tt(out, tabularray_inner = sprintf("rowsep={%sem}", height / 2))
-    
+    out <- style_tt(
+      out,
+      tabularray_inner = sprintf("rowsep={%sem}", height / 2)
+    )
+
     # Bootstrap/HTML: use CSS padding for row height
-    out <- style_tt(out, bootstrap_css = sprintf("padding-top: %sem; padding-bottom: %sem;", height / 2, height / 2))
-    
+    out <- style_tt(
+      out,
+      bootstrap_css = sprintf(
+        "padding-top: %sem; padding-bottom: %sem;",
+        height / 2,
+        height / 2
+      )
+    )
+
     # Typst: use rows parameter in table settings
     fun_typst_height <- function(table) {
       if (!is.null(table@height)) {
         table@table_string <- gsub(
-          "rows: auto,", 
-          sprintf("rows: %sem,", table@height), 
+          "rows: auto,",
+          sprintf("rows: %sem,", table@height),
           table@table_string
         )
       }

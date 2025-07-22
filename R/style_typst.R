@@ -1,5 +1,3 @@
-
-
 #' Internal styling function
 #'
 #' @inheritParams style_tt
@@ -93,7 +91,7 @@ setMethod(
       # Combine horizontal and vertical alignment
       align_h <- sty[row, "align"]
       align_v <- sty[row, "alignv"]
-      
+
       if (!is.na(align_h) || !is.na(align_v)) {
         combined_align <- character(0)
         if (!is.na(align_h)) {
@@ -128,7 +126,10 @@ setMethod(
 
       line <- sty[row, "line"]
       if (!is.na(line)) {
-        line_color <- standardize_colors(sty[row, "line_color"], format = "typst")
+        line_color <- standardize_colors(
+          sty[row, "line_color"],
+          format = "typst"
+        )
         line_color <- ifelse(is.na(line_color), "black", line_color)
         line_width <- sty[row, "line_width"]
         if (!is.na(line_width)) {
@@ -258,7 +259,11 @@ hlines <- function(k) {
   ymin <- k$i[1]
   ymax <- k$i[1] + 1
   line <- k$line[1]
-  color <- if (is.na(k$line_color[1])) "black" else standardize_colors(k$line_color[1], format = "typst")
+  color <- if (is.na(k$line_color[1])) {
+    "black"
+  } else {
+    standardize_colors(k$line_color[1], format = "typst")
+  }
   width <- if (is.na(k$line_width[1])) 0.1 else k$line_width[1]
   width <- sprintf("%sem", width)
   out <- ""
