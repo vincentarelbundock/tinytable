@@ -49,19 +49,22 @@ group_bootstrap_col <- function(x, j, ihead, ...) {
 
   x@table_string <- out
 
-  x <- style_tt(x, i = ihead, align = "c")
+  # Only apply styling if there are actual column headers (not just the inserted matrix)
+  if (x@nhead > 1) {
+    x <- style_tt(x, i = ihead, align = "c")
 
-  # midrule on numbered spans (not full columns of body)
-  jnames <- names(j)
-  jnames <- seq_along(jnames)[trimws(jnames) != ""]
-  x <- style_tt(
-    x,
-    i = ihead,
-    j = jnames,
-    line = "b",
-    line_width = 0.05,
-    line_color = "#d3d8dc"
-  )
+    # midrule on numbered spans (not full columns of body)
+    jnames <- names(j)
+    jnames <- seq_along(jnames)[trimws(jnames) != ""]
+    x <- style_tt(
+      x,
+      i = ihead,
+      j = jnames,
+      line = "b",
+      line_width = 0.05,
+      line_color = "#d3d8dc"
+    )
+  }
 
   return(x)
 }

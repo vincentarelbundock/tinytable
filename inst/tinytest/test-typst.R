@@ -138,7 +138,7 @@ expect_snapshot_print(tab, label = "typst-tblr")
 
 # Issue #357
 tab <- tt(head(iris), notes = "blah") |> save_tt("typst")
-expect_true(grepl('blah', tab))
+expect_true(grepl("blah", tab))
 
 # Bug: Footnotes with cell coordinates #456
 tab <- tt(
