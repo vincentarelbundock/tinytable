@@ -54,12 +54,25 @@ group_insert_matrix <- function(x, k) {
       x@table_dataframe <- rbind(x@table_dataframe, matrix_row)
     } else if (pos == 1) {
       # Insert at the very top
+      colnames(matrix_row) <- colnames(x@table_dataframe)
       x@table_dataframe <- rbind(matrix_row, x@table_dataframe)
     } else {
       # Insert after the (pos-1)th row
       before_rows <- x@table_dataframe[1:(pos - 1), , drop = FALSE]
       after_rows <- x@table_dataframe[pos:nrow(x@table_dataframe), , drop = FALSE]
-      x@table_dataframe <- rbind(before_rows, matrix_row, after_rows)
+
+      # guard against malformed column names when tt(colnames=FALSE)
+      colnames(matrix_row) <-
+        colnames(before_rows) <-
+        colnames(after_rows) <-
+        seq_len(ncol(matrix_row))
+
+      # empty rows
+      rows <- list(before_rows, matrix_row, after_rows)
+      rows <- Filter(function(x) nrow(x) > 0, rows)
+
+      # Combine the rows
+      x@table_dataframe <- do.call(rbind, rows)
     }
   }
 
