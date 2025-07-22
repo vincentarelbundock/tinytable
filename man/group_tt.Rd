@@ -15,21 +15,23 @@ group_tt(
 \arguments{
 \item{x}{A data frame or data table to be rendered as a table.}
 
-\item{i}{\itemize{
-\item A vector of labels with length equal to the number of rows in \code{x}, or a named list of row indices to group. The names of the list will be used as labels. The indices represent the position where labels should be inserted in the original table. For example,
+\item{i}{Character vector, named list, or integer vector
+\itemize{
+\item A character vector of labels with length equal to the number of rows in \code{x}
+\item A named list of row indices to group. The names of the list will be used as labels. The indices represent the position where labels should be inserted in the original table. For example,
 \itemize{
 \item \code{i=list("Hello"=5)}: insert the "Hello" label after the 4th row in the original table.
 \item \code{i=list("Hello"=2, "World"=2)}: insert the two labels consecutively after the 1st row in the original table.
 \item \code{i=list("Foo Bar"=0)}: insert the label in the first row after the header.
 }
-\item For matrix insertion: \code{i} can be an integer vector specifying row positions, and \code{j} can be a character matrix to insert at those positions.
+\item Vector of positive integers: For matrix insertion: \code{i} specifies row positions and \code{j} must be a character matrix to insert in the table (see below for details).
 }}
 
 \item{j}{String, named list, or character matrix
 \itemize{
 \item Named list of column indices to group, ex: \code{j=list("A"=1:2,"B"=3:6)}. The names of the list will be used as labels. See below for more examples. Note: empty labels must be a space: " ".
 \item A single string when column names include the group name as a prefix, ex: group1_column1, group1_column2, etc.
-\item Character matrix for inserting rows at positions specified by \code{i}. The matrix must have the same number of columns as the table, or be a single column with a number of elements that is a multiple of the table's column count (which will be automatically reshaped).
+\item Character matrix for inserting rows at positions specified by \code{i}. The matrix must have the same number of columns as the table, or be a single column with a number of elements that is a multiple of the table's column count (which will be automatically reshaped). Each row of the matrix matches an element
 }}
 
 \item{indent}{integer number of \code{pt} to use when indenting the non-labelled rows.}

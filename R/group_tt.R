@@ -3,16 +3,17 @@
 #' @export
 #' @inheritParams tt
 #' @inheritParams style_tt
-#' @param i
-#' + A vector of labels with length equal to the number of rows in `x`, or a named list of row indices to group. The names of the list will be used as labels. The indices represent the position where labels should be inserted in the original table. For example,
+#' @param i Character vector, named list, or integer vector
+#' + A character vector of labels with length equal to the number of rows in `x`
+#' + A named list of row indices to group. The names of the list will be used as labels. The indices represent the position where labels should be inserted in the original table. For example,
 #'   - `i=list("Hello"=5)`: insert the "Hello" label after the 4th row in the original table.
 #'   - `i=list("Hello"=2, "World"=2)`: insert the two labels consecutively after the 1st row in the original table.
 #'   - `i=list("Foo Bar"=0)`: insert the label in the first row after the header.
-#' + For matrix insertion: `i` can be an integer vector specifying row positions, and `j` can be a character matrix to insert at those positions.
+#' + Vector of positive integers: For matrix insertion: `i` specifies row positions and `j` must be a character matrix to insert in the table (see below for details).
 #' @param j String, named list, or character matrix
 #' - Named list of column indices to group, ex: `j=list("A"=1:2,"B"=3:6)`. The names of the list will be used as labels. See below for more examples. Note: empty labels must be a space: " ".
 #' - A single string when column names include the group name as a prefix, ex: group1_column1, group1_column2, etc.
-#' - Character matrix for inserting rows at positions specified by `i`. The matrix must have the same number of columns as the table, or be a single column with a number of elements that is a multiple of the table's column count (which will be automatically reshaped).
+#' - Character matrix for inserting rows at positions specified by `i`. The matrix must have the same number of columns as the table, or be a single column with a number of elements that is a multiple of the table's column count (which will be automatically reshaped). Each row of the matrix matches an element
 #' @param ... Other arguments are ignored.
 #' @return An object of class `tt` representing the table.
 #' @param indent integer number of `pt` to use when indenting the non-labelled rows.
@@ -88,12 +89,11 @@
 #'   style_tt(i = "groupi", background = "pink")
 #'
 group_tt <- function(
-  x,
-  i = getOption("tinytable_group_i", default = NULL),
-  j = getOption("tinytable_group_j", default = NULL),
-  indent = getOption("tinytable_group_indent", default = 1),
-  ...
-) {
+    x,
+    i = getOption("tinytable_group_i", default = NULL),
+    j = getOption("tinytable_group_j", default = NULL),
+    indent = getOption("tinytable_group_indent", default = 1),
+    ...) {
   # ... is important for ihead passing
 
   if (!inherits(x, "tinytable")) {
