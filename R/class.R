@@ -34,8 +34,8 @@ setClass(
     id = "character",
     lazy_finalize = "list",
     lazy_format = "list",
-    lazy_group = "list",
-    lazy_insert_matrix = "list",
+    lazy_group_j = "list",
+    lazy_group_i = "list",
     lazy_plot = "list",
     lazy_style = "list",
     lazy_theme = "list",
@@ -254,8 +254,17 @@ setGeneric(
 #' @inheritParams tt
 #' @keywords internal
 setGeneric(
-  name = "group_eval",
-  def = function(x, ...) standardGeneric("group_eval")
+  name = "group_eval_j",
+  def = function(x, ...) standardGeneric("group_eval_j")
+)
+
+#' Apply group settings to a tinytable
+#'
+#' @inheritParams tt
+#' @keywords internal
+setGeneric(
+  name = "group_eval_i",
+  def = function(x, ...) standardGeneric("group_eval_i")
 )
 
 #' Apply final settings to a tinytable

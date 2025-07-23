@@ -104,30 +104,10 @@ group_tt <- function(
   }
   assert_integerish(indent, lower = 0)
 
-  # Convert list input to matrix format for unified processing
-  converted_from_list <- FALSE
-  if (is.list(i) && is.null(j)) {
-    # Convert list like list("Blah blah" = 2) to matrix insertion format
-    positions <- unlist(i)
-    labels <- names(i)
-    
-    if (is.null(labels) || any(labels == "")) {
-      stop("All list entries must have names for group labels.", call. = FALSE)
-    }
-    
-    # Create matrix with labels in first column, empty in others
-    matrix_data <- matrix("", nrow = length(labels), ncol = ncol(x))
-    matrix_data[, 1] <- labels
-    
-    # Convert to matrix insertion format
-    i <- positions
-    j <- matrix_data
-    converted_from_list <- TRUE
-  }
-
   # Handle matrix insertion case: if i is integerish and j is a matrix
   if (isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) {
     k <- group_insert_matrix_ij_to_k(x, i, j)
+    converted_from_list <- k[[3]]
 
     # Validate positions against table size
     if (any(k[[1]] > nrow(x) + 1)) {
@@ -167,9 +147,9 @@ group_tt <- function(
     x@group_index_i <- c(x@group_index_i, idx)
     x@nrow <- x@nrow + length(positions)
 
-    # Store the matrix insertion in lazy_insert_matrix instead of lazy_group
-    cal <- call("group_insert_matrix", k = k)
-    x@lazy_insert_matrix <- c(x@lazy_insert_matrix, list(cal))
+    # Store the matrix insertion in lazy_group_i instead of lazy_group
+    cal <- call("group_eval_i", k = list(k[[1]], k[[2]]))
+    x@lazy_group_i <- c(x@lazy_group_i, list(cal))
     
     # Apply styling for converted list input (group headers)
     if (converted_from_list) {
@@ -206,8 +186,8 @@ group_tt <- function(
     x@nhead <- x@nhead + 1
     
     # Apply column group labels lazily
-    cal <- call("group_eval", i = NULL, j = j, indent = indent)
-    x@lazy_group <- c(x@lazy_group, list(cal))
+    cal <- call("group_eval_j", i = NULL, j = j, indent = indent)
+    x@lazy_group_j <- c(x@lazy_group_j, list(cal))
   }
 
   return(x)
@@ -274,6 +254,27 @@ j_delim_to_named_list <- function(x, j) {
 
 
 group_insert_matrix_ij_to_k <- function(x, i, j) {
+  # Convert list input to matrix format for unified processing
+  converted_from_list <- FALSE
+  if (is.list(i) && is.null(j)) {
+    # Convert list like list("Blah blah" = 2) to matrix insertion format
+    positions <- unlist(i)
+    labels <- names(i)
+    
+    if (is.null(labels) || any(labels == "")) {
+      stop("All list entries must have names for group labels.", call. = FALSE)
+    }
+    
+    # Create matrix with labels in first column, empty in others
+    matrix_data <- matrix("", nrow = length(labels), ncol = ncol(x))
+    matrix_data[, 1] <- labels
+    
+    # Convert to matrix insertion format
+    i <- positions
+    j <- matrix_data
+    converted_from_list <- TRUE
+  }
+  
   # Validate that j is a character matrix
   if (!is.character(j)) {
     stop("Matrix `j` must be a character matrix", call. = FALSE)
@@ -304,5 +305,5 @@ group_insert_matrix_ij_to_k <- function(x, i, j) {
     )
   }
 
-  list(i, j)
+  list(i, j, converted_from_list)
 }
