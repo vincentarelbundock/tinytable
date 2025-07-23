@@ -2,7 +2,7 @@
 #'
 #' @keywords internal
 setMethod(
-  f = "group_eval",
+  f = "group_eval_j",
   signature = "tinytable_grid",
   definition = function(x, i = NULL, j = NULL, ...) {
     # Only handle column grouping - row insertions now use matrix insertion
@@ -40,4 +40,5 @@ group_grid_col <- function(x, j, ...) {
 
   return(x)
 }
+
 

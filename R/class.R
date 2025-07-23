@@ -258,14 +258,6 @@ setGeneric(
   def = function(x, ...) standardGeneric("group_eval_j")
 )
 
-#' Apply group settings to a tinytable
-#'
-#' @inheritParams tt
-#' @keywords internal
-setGeneric(
-  name = "group_eval_i",
-  def = function(x, ...) standardGeneric("group_eval_i")
-)
 
 #' Apply final settings to a tinytable
 #'

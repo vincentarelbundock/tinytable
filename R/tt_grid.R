@@ -43,7 +43,7 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
 
   # groups are longer than col-widths
   if (inherits(x, "tinytable")) {
-    for (g in x@lazy_group) {
+    for (g in x@lazy_group_j) {
       # Extract arguments from the lazy evaluation call
       call_args <- as.list(g)[-1] # Remove function name
 

@@ -104,8 +104,8 @@ group_tt <- function(
   }
   assert_integerish(indent, lower = 0)
 
-  # Handle matrix insertion case: if i is integerish and j is a matrix
-  if (isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) {
+  # Handle matrix insertion case: if i is integerish and j is a matrix, OR if i is a list
+  if ((isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) || is.list(i)) {
     k <- group_tt_ij_k(x, i, j)
     converted_from_list <- k[[3]]
 
@@ -117,7 +117,11 @@ group_tt <- function(
     x@nrow <- x@nrow + length(positions)
 
     # Store the matrix insertion in lazy_group_i instead of lazy_group
-    cal <- call("group_eval_i", k = list(k[[1]], k[[2]]))
+    # Create a closure to preserve the matrix structure
+    cal <- list(
+      fn = "group_eval_i",
+      k = k
+    )
     x@lazy_group_i <- c(x@lazy_group_i, list(cal))
 
     # Apply styling for matrix insertion

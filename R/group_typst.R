@@ -2,7 +2,7 @@
 #'
 #' @keywords internal
 setMethod(
-  f = "group_eval",
+  f = "group_eval_j",
   signature = "tinytable_typst",
   definition = function(x, i = NULL, j = NULL, indent = 0, ...) {
     # Only handle column grouping - row insertions now use matrix insertion
@@ -48,3 +48,4 @@ group_typst_col <- function(x, j, ihead, ...) {
 
   return(x)
 }
+

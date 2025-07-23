@@ -90,7 +90,8 @@ strip_tt <- function(
     out@group_index_i <- numeric()
     out@group_n_i <- 0
     out@group_n_j <- 0
-    out@lazy_group <- list()
+    out@lazy_group_j <- list()
+    out@lazy_group_i <- list()
     out@nrow <- nrow(out@data)
   }
 

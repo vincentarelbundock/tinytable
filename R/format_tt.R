@@ -183,15 +183,15 @@ apply_groups_i <- function(x, format_fn, ...) {
     return(x)
   }
 
-  for (idx in seq_along(x@lazy_group)) {
-    g <- x@lazy_group[[idx]]
+  for (idx in seq_along(x@lazy_group_j)) {
+    g <- x@lazy_group_j[[idx]]
     if (!is.null(g$i)) {
       result <- format_fn(names(g$i), ...)
       if (!is.null(result)) {
         names(g$i) <- result
       }
     }
-    x@lazy_group[[idx]] <- g
+    x@lazy_group_j[[idx]] <- g
   }
   return(x)
 }
@@ -201,12 +201,12 @@ apply_groups_j <- function(x, format_fn, ...) {
     return(x)
   }
 
-  for (idx in seq_along(x@lazy_group)) {
-    g <- x@lazy_group[[idx]]
+  for (idx in seq_along(x@lazy_group_j)) {
+    g <- x@lazy_group_j[[idx]]
     if (!is.null(g$j)) {
       names(g$j) <- format_fn(names(g$j), ...)
     }
-    x@lazy_group[[idx]] <- g
+    x@lazy_group_j[[idx]] <- g
   }
   return(x)
 }

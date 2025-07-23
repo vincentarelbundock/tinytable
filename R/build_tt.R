@@ -49,10 +49,15 @@ build_tt <- function(x, output = NULL) {
     x <- eval(l)
   }
 
-  # process lazy_insert_matrix elements just after formatting
-  for (l in x@lazy_insert_matrix) {
-    l[["x"]] <- x
-    x <- eval(l)
+  # process lazy_group_i elements just after formatting
+  for (l in x@lazy_group_i) {
+    if (l$fn == "group_eval_i") {
+      x <- group_eval_i(x, l$k)
+    } else {
+      # Fallback for old-style calls
+      l[["x"]] <- x
+      x <- eval(l)
+    }
   }
 
   # add footnote markers just after formatting, otherwise appending converts to string
@@ -83,8 +88,8 @@ build_tt <- function(x, output = NULL) {
 
   # groups require the table to be drawn first, expecially group_tabularray_col() and friends
   ihead <- 0
-  for (idx in seq_along(x@lazy_group)) {
-    l <- x@lazy_group[[idx]]
+  for (idx in seq_along(x@lazy_group_j)) {
+    l <- x@lazy_group_j[[idx]]
     l[["x"]] <- x
     if (length(l[["j"]]) > 0) {
       ihead <- ihead - 1

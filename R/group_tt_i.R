@@ -70,14 +70,22 @@ group_tt_ij_k <- function(x, i, j) {
 }
 
 group_eval_i <- function(x, k) {
-  positions <- k$i
-  matrix_data <- k$j
+  positions <- k[[1]]
+  matrix_data <- k[[2]]
 
   # Convert to data frame
   matrix_df <- as.data.frame(matrix_data, stringsAsFactors = FALSE)
 
   # Set column names to match the table
-  names(matrix_df) <- names(x@table_dataframe)
+  table_names <- names(x@table_dataframe)
+  if (is.null(table_names)) {
+    table_names <- names(x@data)
+  }
+  if (length(table_names) == ncol(matrix_df)) {
+    names(matrix_df) <- table_names
+  } else {
+    warning("Column name mismatch in group_eval_i")
+  }
 
   # Standardize: if single position with multiple matrix rows, replicate position
   if (length(positions) == 1 && nrow(matrix_df) > 1) {
@@ -89,7 +97,9 @@ group_eval_i <- function(x, k) {
   }
 
   # Insert rows in reverse order to avoid index shifting
-  insertion_order <- order(positions, decreasing = TRUE)
+  # When positions are equal, we want to insert in reverse order of appearance
+  # so they end up in the correct final order
+  insertion_order <- order(as.numeric(positions), seq_along(positions), decreasing = c(TRUE, TRUE))
 
   for (i in insertion_order) {
     pos <- positions[i]
