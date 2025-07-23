@@ -153,8 +153,8 @@ group_bootstrap_row <- function(x, i, j, indent = 1, ...) {
   # Update body tracking for future calls (like LaTeX version)
   x@body <- c(x@body, new_group_rows)
 
-  # Style the group rows to be centered
-  x <- style_tt(x, i = -1, align = "c")
+  # Style the group rows to be centered with consistent indentation
+  x <- style_tt(x, i = -1, align = "c", indent = indent)
 
   return(x)
 }

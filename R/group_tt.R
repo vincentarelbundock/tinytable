@@ -144,7 +144,6 @@ group_tt <- function(
         1
     }
     x@group_index_i <- c(x@group_index_i, idx)
-    x@group_index_i_matrix <- c(x@group_index_i_matrix, idx)
     x@nrow <- x@nrow + length(positions)
 
     # Store the matrix insertion in lazy_insert_matrix instead of lazy_group

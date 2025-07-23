@@ -164,8 +164,8 @@ setMethod(
 
     css <- gsub(" +", " ", trimws(css))
 
-    # JS 0-indexing
-    rec$i <- rec$i #- 1 + x@nhead
+    # JS 0-indexing - adjust for header rows
+    rec$i <- rec$i - 1 + x@nhead
     rec$j <- rec$j - 1
 
     # spans: before styles because we return(x) if there is no style
