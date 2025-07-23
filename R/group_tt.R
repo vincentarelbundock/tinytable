@@ -104,6 +104,27 @@ group_tt <- function(
   }
   assert_integerish(indent, lower = 0)
 
+  # Convert list input to matrix format for unified processing
+  converted_from_list <- FALSE
+  if (is.list(i) && is.null(j)) {
+    # Convert list like list("Blah blah" = 2) to matrix insertion format
+    positions <- unlist(i)
+    labels <- names(i)
+    
+    if (is.null(labels) || any(labels == "")) {
+      stop("All list entries must have names for group labels.", call. = FALSE)
+    }
+    
+    # Create matrix with labels in first column, empty in others
+    matrix_data <- matrix("", nrow = length(labels), ncol = ncol(x))
+    matrix_data[, 1] <- labels
+    
+    # Convert to matrix insertion format
+    i <- positions
+    j <- matrix_data
+    converted_from_list <- TRUE
+  }
+
   # Handle matrix insertion case: if i is integerish and j is a matrix
   if (isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) {
     k <- group_insert_matrix_ij_to_k(x, i, j)
@@ -149,6 +170,22 @@ group_tt <- function(
     # Store the matrix insertion in lazy_insert_matrix instead of lazy_group
     cal <- call("group_insert_matrix", k = k)
     x@lazy_insert_matrix <- c(x@lazy_insert_matrix, list(cal))
+    
+    # Apply styling for converted list input (group headers)
+    if (converted_from_list) {
+      # Apply colspan to make group headers span full width (column 1 spans all columns)
+      x <- style_tt(x, i = idx, j = 1, colspan = ncol(x))
+      
+      # Apply indentation to data rows if specified
+      if (isTRUE(indent > 0)) {
+        # Find data rows (not group rows) for indentation
+        all_rows <- seq_len(x@nrow)
+        data_rows <- setdiff(all_rows, idx)
+        if (length(data_rows) > 0) {
+          x <- style_tt(x, i = data_rows, j = 1, indent = indent)
+        }
+      }
+    }
 
     return(x)
   }
@@ -163,49 +200,15 @@ group_tt <- function(
     }
   }
 
-  if (is.null(i) && is.null(j)) {
-    return(x)
-  }
-
-  # vector of labels
-  if (isTRUE(check_atomic_vector(i))) {
-    i <- sanitize_group_vec2list(i)
-  }
-
-  i <- sanitize_group_index(i, hi = nrow(x) + 1, orientation = "row")
-  j <- sanitize_group_index(j, hi = ncol(x), orientation = "column")
-
-  # increment indices eagerly
-  i <- unlist(i)
-
-  if (!is.null(i)) {
-    if (x@group_n_i > 0) {
-      stop(
-        "Only one row-wise `group_tt(i = ...)` call is allowed.",
-        call. = FALSE
-      )
-    }
-
-    x@group_n_i <- length(i)
-    x@nrow <- x@nrow + x@group_n_i
-    x@group_index_i <- c(
-      x@group_index_i,
-      as.numeric(i) + cumsum(rep(1, length(as.numeric(i)))) - 1
-    )
-
-    if (isTRUE(indent > 0)) {
-      idx_indent <- setdiff(seq_len(nrow(x)), i + seq_along(i) - 1)
-      x <- style_tt(x, i = idx_indent, j = 1, indent = indent)
-    }
-  }
-
+  # Handle column grouping (j parameter) - this remains separate from matrix insertion
   if (!is.null(j)) {
+    j <- sanitize_group_index(j, hi = ncol(x), orientation = "column")
     x@nhead <- x@nhead + 1
+    
+    # Apply column group labels lazily
+    cal <- call("group_eval", i = NULL, j = j, indent = indent)
+    x@lazy_group <- c(x@lazy_group, list(cal))
   }
-
-  # apply group labels lazily
-  cal <- call("group_eval", i = i, j = j, indent = indent)
-  x@lazy_group <- c(x@lazy_group, list(cal))
 
   return(x)
 }

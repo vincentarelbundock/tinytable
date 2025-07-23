@@ -5,44 +5,14 @@ setMethod(
   f = "group_eval",
   signature = "tinytable_typst",
   definition = function(x, i = NULL, j = NULL, indent = 0, ...) {
-    out <- x
-
-    if (!is.null(i)) {
-      out <- group_typst_row(out, i, indent)
-    }
-
+    # Only handle column grouping - row insertions now use matrix insertion
     if (!is.null(j)) {
-      out <- group_typst_col(out, j, ...)
+      x <- group_typst_col(x, j, ...)
     }
-
-    return(out)
+    return(x)
   }
 )
 
-group_typst_row <- function(x, i, indent, ...) {
-  tab <- x@table_string
-  tab <- strsplit(tab, split = "\\n")[[1]]
-  body_min <- utils::head(grep("tinytable cell content after", tab), 1) + 1
-  body_max <- utils::head(grep("end table", tab), 1) - 1
-  top <- tab[1:(body_min - 1)]
-  mid <- tab[body_min:body_max]
-  mid <- mid[mid != ""]
-  bot <- tab[(body_max + 1):length(tab)]
-  for (idx in rev(seq_along(i))) {
-    mid <- append(
-      mid,
-      sprintf("table.cell(colspan: %s)[%s],", ncol(x), names(i)[idx]),
-      after = i[idx] - 1
-    )
-  }
-  tab <- c(top, mid, bot)
-  tab <- paste(tab, collapse = "\n")
-  x@table_string <- tab
-  idx_new <- i + seq_along(i) - 1
-  idx_all <- seq_len(nrow(x))
-  idx <- setdiff(idx_all, idx_new)
-  return(x)
-}
 
 group_typst_col <- function(x, j, ihead, ...) {
   out <- x@table_string
