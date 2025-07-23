@@ -106,64 +106,33 @@ group_tt <- function(
 
   # Handle matrix insertion case: if i is integerish and j is a matrix
   if (isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) {
-    k <- group_insert_matrix_ij_to_k(x, i, j)
+    k <- group_tt_ij_k(x, i, j)
     converted_from_list <- k[[3]]
 
-    # Validate positions against table size
-    if (any(k[[1]] > nrow(x) + 1)) {
-      stop(
-        sprintf(
-          "Position %d is beyond the table size (%d rows). Maximum allowed position is %d.",
-          max(k[[1]][k[[1]] > nrow(x) + 1]),
-          nrow(x),
-          nrow(x) + 1
-        ),
-        call. = FALSE
-      )
-    }
 
-    # Add group_index_i for matrix insertion rows
-    matrix_rows <- nrow(k[[2]])
-    # If single position but multiple matrix rows, replicate the position
-    if (length(k[[1]]) == 1 && matrix_rows > 1) {
-      positions <- rep(k[[1]], matrix_rows)
-    } else {
-      positions <- k[[1]]
-    }
     # Calculate the correct indices: each position gets shifted by the number of insertions before it
-    idx <- numeric(length(positions))
-    for (pos_idx in seq_along(positions)) {
-      # Count how many insertions happen before this position (strictly less than)
-      prior_insertions <- sum(positions[1:(pos_idx - 1)] < positions[pos_idx])
-      # Count how many insertions happen at the same position up to this point
-      same_position_insertions <- sum(
-        positions[1:pos_idx] == positions[pos_idx]
-      )
-      idx[pos_idx] <- positions[pos_idx] +
-        prior_insertions +
-        same_position_insertions -
-        1
-    }
+    positions <- k[[1]]
+    idx <- positions + cumsum(rep(1, length(positions))) - 1
     x@group_index_i <- c(x@group_index_i, idx)
     x@nrow <- x@nrow + length(positions)
 
     # Store the matrix insertion in lazy_group_i instead of lazy_group
     cal <- call("group_eval_i", k = list(k[[1]], k[[2]]))
     x@lazy_group_i <- c(x@lazy_group_i, list(cal))
-    
-    # Apply styling for converted list input (group headers)
+
+    # Apply styling for matrix insertion
     if (converted_from_list) {
       # Apply colspan to make group headers span full width (column 1 spans all columns)
       x <- style_tt(x, i = idx, j = 1, colspan = ncol(x))
-      
-      # Apply indentation to data rows if specified
-      if (isTRUE(indent > 0)) {
-        # Find data rows (not group rows) for indentation
-        all_rows <- seq_len(x@nrow)
-        data_rows <- setdiff(all_rows, idx)
-        if (length(data_rows) > 0) {
-          x <- style_tt(x, i = data_rows, j = 1, indent = indent)
-        }
+    }
+
+    # Apply indentation to data rows if specified (always for matrix insertions)
+    if (isTRUE(indent > 0)) {
+      # Find data rows (not group rows) for indentation
+      all_rows <- seq_len(x@nrow)
+      data_rows <- setdiff(all_rows, idx)
+      if (length(data_rows) > 0) {
+        x <- style_tt(x, i = data_rows, j = 1, indent = indent)
       }
     }
 
@@ -184,126 +153,11 @@ group_tt <- function(
   if (!is.null(j)) {
     j <- sanitize_group_index(j, hi = ncol(x), orientation = "column")
     x@nhead <- x@nhead + 1
-    
+
     # Apply column group labels lazily
     cal <- call("group_eval_j", i = NULL, j = j, indent = indent)
     x@lazy_group_j <- c(x@lazy_group_j, list(cal))
   }
 
   return(x)
-}
-
-sanitize_group_vec2list <- function(vec) {
-  if (is.factor(vec)) {
-    vec <- as.character(vec)
-  }
-  rle_result <- rle(vec)
-  idx <- cumsum(c(1, utils::head(rle_result$lengths, -1)))
-  idx <- as.list(idx)
-  names(idx) <- rle_result$values
-  return(idx)
-}
-
-sanitize_group_index <- function(idx, hi, orientation) {
-  if (is.null(idx)) {
-    return(idx)
-  }
-  assert_list(idx, named = TRUE)
-  for (n in names(idx)) {
-    if (orientation == "row") {
-      assert_integerish(idx[[n]], len = 1, lower = 1, upper = hi, name = n)
-    } else {
-      assert_integerish(idx[[n]], lower = 1, upper = hi, name = n)
-    }
-  }
-  # allow duplicated indices for consecutive rows
-  # if (anyDuplicated(unlist(idx)) > 0) stop("Duplicate group indices.", call. = FALSE)
-  out <- lapply(idx, function(x) min(x):max(x))
-  return(out)
-}
-
-
-j_delim_to_named_list <- function(x, j) {
-  nm <- x@names
-
-  # Find which elements contain the delimiter, and optionally j. Others are left as is
-  check_for_multiple_delims <- any(
-    lengths(gregexec(pattern = j, text = nm)) > 1L
-  )
-  if (check_for_multiple_delims) {
-    warning(
-      "Multiple delimiters found in column names. Only the first delimiter will be used for grouping."
-    )
-  }
-
-  indices <- grepl(j, nm, fixed = TRUE)
-  groupnames <- sub(
-    pattern = paste0(j, ".*"),
-    replacement = "",
-    x = nm[indices]
-  )
-  indices <- which(grepl(j, nm, fixed = TRUE))
-  groupnames <- split(indices, groupnames)
-
-  # Extract suffixes (after delimiter) used as new sub-headers
-  colnames <- sub(pattern = paste0(".*?", j), replacement = "", x = nm)
-
-  out <- list(colnames = colnames, groupnames = groupnames)
-  return(out)
-}
-
-
-group_insert_matrix_ij_to_k <- function(x, i, j) {
-  # Convert list input to matrix format for unified processing
-  converted_from_list <- FALSE
-  if (is.list(i) && is.null(j)) {
-    # Convert list like list("Blah blah" = 2) to matrix insertion format
-    positions <- unlist(i)
-    labels <- names(i)
-    
-    if (is.null(labels) || any(labels == "")) {
-      stop("All list entries must have names for group labels.", call. = FALSE)
-    }
-    
-    # Create matrix with labels in first column, empty in others
-    matrix_data <- matrix("", nrow = length(labels), ncol = ncol(x))
-    matrix_data[, 1] <- labels
-    
-    # Convert to matrix insertion format
-    i <- positions
-    j <- matrix_data
-    converted_from_list <- TRUE
-  }
-  
-  # Validate that j is a character matrix
-  if (!is.character(j)) {
-    stop("Matrix `j` must be a character matrix", call. = FALSE)
-  }
-
-  # If x has more than 1 column and j is a 1-column matrix, try to reshape j
-  if (ncol(x) > 1 && ncol(j) == 1) {
-    total_elements <- nrow(j) * ncol(j)
-    if (total_elements %% ncol(x) == 0) {
-      # Reshape j to have the same number of columns as x
-      j <- matrix(
-        j,
-        nrow = total_elements / ncol(x),
-        ncol = ncol(x),
-        byrow = TRUE
-      )
-    }
-  }
-
-  # Check that matrix width matches table width
-  if (ncol(j) != ncol(x)) {
-    stop(
-      sprintf(
-        "Matrix must have the same number of columns as the table (%d columns)",
-        ncol(x)
-      ),
-      call. = FALSE
-    )
-  }
-
-  list(i, j, converted_from_list)
 }
