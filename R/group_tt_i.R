@@ -84,10 +84,17 @@ group_eval_i <- function(x, k) {
   if (is.null(table_names)) {
     table_names <- names(x@data)
   }
+  
+  # Handle column name assignment more gracefully
   if (length(table_names) == ncol(matrix_df)) {
     names(matrix_df) <- table_names
+  } else if (length(table_names) > ncol(matrix_df)) {
+    # Use only the first n table names if table has more columns
+    names(matrix_df) <- table_names[1:ncol(matrix_df)]
   } else {
-    warning("Column name mismatch in group_eval_i")
+    # If matrix has more columns than table, use table names and pad with defaults
+    new_names <- c(table_names, paste0("V", (length(table_names) + 1):ncol(matrix_df)))
+    names(matrix_df) <- new_names
   }
 
   # Standardize: if single position with multiple matrix rows, replicate position

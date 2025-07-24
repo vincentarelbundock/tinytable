@@ -4,8 +4,13 @@ style_eval_grid <- function(x) {
 
   if (nrow(sty) == 0) {
     return(x)
-  } else {
-    sty <- prepare_grid_style(x)
+  }
+  
+  sty <- prepare_grid_style(x)
+  
+  # Ensure sty is a proper data frame after prepare_grid_style
+  if (!is.data.frame(sty) || nrow(sty) == 0) {
+    return(x)
   }
 
   for (col in seq_along(out)) {
@@ -62,7 +67,12 @@ setMethod(
 grid_colspan <- function(x) {
   sty <- prepare_grid_style(x)
 
-  if (nrow(sty) == 0) {
+  if (nrow(sty) == 0 || !is.data.frame(sty)) {
+    return(x)
+  }
+
+  # Check if colspan column exists before accessing it
+  if (!"colspan" %in% colnames(sty)) {
     return(x)
   }
 
@@ -152,6 +162,11 @@ prepare_grid_style <- function(x) {
     return(sty)
   }
   
+  # Ensure sty is a data frame (defensive programming)
+  if (!is.data.frame(sty)) {
+    return(data.frame())
+  }
+  
   all_i <- seq_len(nrow(x))
   idx_g <- x@group_index_i
   idx_d <- setdiff(all_i, idx_g)
@@ -190,7 +205,7 @@ prepare_grid_style <- function(x) {
   sty <- sty[which(!sty$i %in% idx_g), ]
 
   if (nrow(sty) == 0) {
-    return(x)
+    return(sty)
   }
 
   # user-supplied indices are post-groups
