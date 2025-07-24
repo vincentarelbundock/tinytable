@@ -7,7 +7,9 @@ dat <- data.frame(
 )
 
 set.seed(1024) # reproducibility of html unique IDs
-tab <- tt(dat) |> format_tt(escape = TRUE) |> save_tt("latex")
+tab <- tt(dat) |>
+  format_tt(escape = TRUE) |>
+  save_tt("latex")
 expect_snapshot_print(tab, "escape-latex")
 
 tab <- tt(dat, escape = TRUE) |> save_tt("latex")
@@ -20,7 +22,9 @@ options(tinytable_tt_escape = FALSE)
 
 # escape columns
 dat <- data.frame("blah_blah" = 1:2)
-tab <- tt(dat) |> format_tt(escape = TRUE) |> save_tt("latex")
+tab <- tt(dat) |>
+  format_tt(escape = TRUE) |>
+  save_tt("latex")
 expect_snapshot_print(tab, "escape-latex_colnames")
 
 # Issue #150: avoid double escaping captions
