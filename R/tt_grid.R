@@ -116,10 +116,6 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
     has_content <- nchar(trimws(row_data[1])) > 0
     others_empty <- all(trimws(row_data[-1]) == "")
     # Temporary debug output
-    if (row_idx <= 5) {
-      cat("Row", row_idx, "- is_group:", is_group_row, "has_content:", has_content, "others_empty:", others_empty, "\n")
-      cat("  Content:", paste0("'", row_data, "'", collapse = ", "), "\n")
-    }
     if (is_group_row && has_content && others_empty) {
       # This is a colspan row - create a single spanning cell
       total_width <- sum(width_cols) + length(width_cols) - 1

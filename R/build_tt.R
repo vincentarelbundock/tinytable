@@ -6,8 +6,7 @@
 build_tt <- function(x, output = NULL) {
   output <- sanitize_output(output)
 
-  x <- switch(
-    output,
+  x <- switch(output,
     html = swap_class(x, "tinytable_bootstrap"),
     latex = swap_class(x, "tinytable_tabularray"),
     markdown = swap_class(x, "tinytable_grid"),
@@ -78,7 +77,7 @@ build_tt <- function(x, output = NULL) {
     x@table_dataframe <- tmp
   }
 
-  # markdown styles need to be applied before creating the table, otherwise there's annoying parsing, etc.
+  # markdown styles need to be applied before creating the table but after `format_tt()`, otherwise there's annoying parsing, etc.
   if (x@output %in% c("markdown", "gfm", "dataframe")) {
     x <- style_eval(x)
   }
@@ -111,6 +110,8 @@ build_tt <- function(x, output = NULL) {
   # markdown styles are applied earlier
   if (!x@output %in% c("markdown", "gfm", "dataframe")) {
     x <- style_eval(x)
+  } else {
+    x <- grid_colspan(x)
   }
 
   x <- finalize(x)
