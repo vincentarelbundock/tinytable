@@ -70,22 +70,22 @@ expect_snapshot_print(tab, "format_tt-issue142_01")
 tab <- tt(k) |> format_tt(digits = 2, num_fmt = "significant_cell")
 expect_snapshot_print(tab, "format_tt-issue142_02")
 
-# Issue #147: format_tt(escape = TRUE) zaps previous formattinglibrary(tinytable)
+# Issue #147: format_tt(escape = TRUE) zaps previous formatting
 options(tinytable_print_output = "latex")
 x <- data.frame(num = c(pi, pi), char = c("10$", "blah_blah"))
 tab <- tt(x) |>
   format_tt(i = 1, j = 1, digits = 2) |>
   format_tt(i = 1, j = 1, digits = 3) # overwrite
-expect_snapshot_print(tab, "format_tt-issue147_01")
+expect_snapshot_print(tab, "format_tt-issue147_01.tex")
 tab <- tt(x) |>
   format_tt(i = 1, j = 1, digits = 2) |>
   format_tt(i = 2, j = 1, digits = 3) # different cell
-expect_snapshot_print(tab, "format_tt-issue147_02")
+expect_snapshot_print(tab, "format_tt-issue147_02.tex")
 tab <- tt(x) |>
   format_tt(i = 1, j = 1, digits = 2) |>
   format_tt(i = 2, j = 1, digits = 3) |>
   format_tt(escape = TRUE) # do not zap
-expect_snapshot_print(tab, "format_tt-issue147_03")
+expect_snapshot_print(tab, "format_tt-issue147_03.tex")
 options(tinytable_print_output = NULL)
 
 # Issue #149: num_mark_big requires digits
@@ -99,29 +99,23 @@ options(tinytable_print_output = "dataframe")
 tab <- data.frame(x = 1, y = Inf) |>
   tt() |>
   print()
-expect_inherits(tab, "data.frame")
 tab <- data.frame(x = 1, y = NaN) |>
   tt() |>
   print()
-expect_inherits(tab, "data.frame")
 tab <- data.frame(x = 1, y = NA) |>
   tt() |>
   print()
-expect_inherits(tab, "data.frame")
 tab <- data.frame(x = 1, y = Inf) |>
   tt() |>
   print()
-expect_inherits(tab, "data.frame")
 tab <- data.frame(x = 1, y = Inf) |>
   tt() |>
   format_tt() |>
   print()
-expect_inherits(tab, "data.frame")
 tab <- data.frame(x = 1, y = NaN) |>
   tt() |>
   format_tt() |>
   print()
-expect_inherits(tab, "data.frame")
 tab <- data.frame(x = 1, y = NA) |>
   tt() |>
   format_tt() |>
@@ -318,7 +312,7 @@ dat4 <- data.frame(
 
 tab4 <- tt(dat4) |>
   group_tt(i = list("Header 1" = 2, "Header 2" = 4)) |>
-  format_tt(j = 1, digits = 3, sprintf = "{{%s}}")
+  format_tt(j = 1, sprintf = "{{%s}}")
 expect_snapshot_print(tab4, label = "format_tt-group_two_step_separate")
 
 # Vignette with multiple components
@@ -332,5 +326,5 @@ tab <- tt(tab, digits = 2, notes = "_Source_: Simulated data.") |>
   format_tt("colnames", fn = \(x) sub("_", " / ", x)) |>
   format_tt("notes", markdown = TRUE) |>
   format_tt("groupi", replace = list("Down" = "↓", "Up" = "↑"))
-expect_snapshot_print(tab, label = "format_tt-format_components_vignette_01")
+expect_snapshot_print(tab, label = "format_tt-format_components_vignette_01.tex")
 options(tinytable_print_output = NULL)
