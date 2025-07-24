@@ -1,8 +1,7 @@
-#' Helper functions for column grouping in group_tt
-#' 
+#' Convert delimiter-based column names to named list
+#'
 #' @keywords internal
 #' @noRd
-
 j_delim_to_named_list <- function(x, j) {
   nm <- x@names
 
@@ -32,6 +31,10 @@ j_delim_to_named_list <- function(x, j) {
   return(out)
 }
 
+#' Validate and process group indices
+#'
+#' @keywords internal
+#' @noRd
 sanitize_group_index <- function(idx, hi, orientation) {
   if (is.null(idx)) {
     return(idx)
@@ -50,6 +53,10 @@ sanitize_group_index <- function(idx, hi, orientation) {
   return(out)
 }
 
+#' Convert vector to list format for grouping
+#'
+#' @keywords internal
+#' @noRd
 sanitize_group_vec2list <- function(vec) {
   if (is.factor(vec)) {
     vec <- as.character(vec)
@@ -60,3 +67,4 @@ sanitize_group_vec2list <- function(vec) {
   names(idx) <- rle_result$values
   return(idx)
 }
+

@@ -2,7 +2,6 @@
 #'
 #' @keywords internal
 #' @noRd
-
 group_tt_ij_k <- function(x, i, j) {
   # Convert list input to matrix format for unified processing
   converted_from_list <- FALSE
@@ -69,6 +68,10 @@ group_tt_ij_k <- function(x, i, j) {
   list(i, j, converted_from_list)
 }
 
+#' Perform row insertion for group_tt matrix operations
+#'
+#' @keywords internal
+#' @noRd
 group_eval_i <- function(x, k) {
   positions <- k[[1]]
   matrix_data <- k[[2]]
@@ -135,4 +138,3 @@ group_eval_i <- function(x, k) {
 
   return(x)
 }
-
