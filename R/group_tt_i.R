@@ -110,12 +110,15 @@ group_eval_i <- function(x, k) {
 
     # Insert row at position (1 = top, 2 = after first row, etc.)
     if (pos <= 1) {
+      colnames(row_to_insert) <- colnames(x@table_dataframe)
       x@table_dataframe <- rbind(row_to_insert, x@table_dataframe)
     } else if (pos > nrow(x@table_dataframe)) {
+      colnames(row_to_insert) <- colnames(x@table_dataframe)
       x@table_dataframe <- rbind(x@table_dataframe, row_to_insert)
     } else {
       before <- x@table_dataframe[1:(pos - 1), , drop = FALSE]
       after <- x@table_dataframe[pos:nrow(x@table_dataframe), , drop = FALSE]
+      colnames(before) <- colnames(after) <- colnames(row_to_insert)
       x@table_dataframe <- rbind(before, row_to_insert, after)
     }
   }
