@@ -169,10 +169,10 @@ setMethod(
     body <- NULL
 
     # Calculate row indices with vectorized operations
-    # Matrix insertion rows are already in table_dataframe, regular group rows are not
-    regular_group_index <- setdiff(x@group_index_i, x@group_index_i_matrix)
-    i_idx <- seq_len(nrow(x@table_dataframe) + length(regular_group_index))
-    i_idx <- setdiff(i_idx, regular_group_index)
+    # All rows in table_dataframe should get consecutive indices starting from 1
+    # Group rows have already been inserted by group_eval_i()
+    # The user's row indices (i parameter) should match the HTML data-row values
+    i_idx <- seq_len(nrow(x@table_dataframe))
 
     # Generate all cells at once using matrix operations
     row_indices <- rep(i_idx, each = ncol(x@table_dataframe))

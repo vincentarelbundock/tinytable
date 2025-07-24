@@ -104,8 +104,9 @@ group_tt <- function(
   }
   assert_integerish(indent, lower = 0)
 
-  # Convert character/factor vector input to list format for consecutive series grouping
-  if (is.vector(i) && !is.list(i) && length(i) > 1 && (is.character(i) || is.factor(i))) {
+  # Convert vector input to list format for consecutive series grouping
+  # When j=NULL and i is any vector (not a list), it's for consecutive labels
+  if (is.vector(i) && !is.list(i) && length(i) > 1 && is.null(j)) {
     i <- sanitize_group_vec2list(i)
   }
 

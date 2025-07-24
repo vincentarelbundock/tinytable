@@ -164,8 +164,9 @@ setMethod(
 
     css <- gsub(" +", " ", trimws(css))
 
-    # JS 0-indexing - adjust for header rows
-    rec$i <- rec$i - 1 + x@nhead
+    # User row indices should match HTML data-row values directly
+    # HTML generation already handles header positioning
+    rec$i <- rec$i
     rec$j <- rec$j - 1
 
     # spans: before styles because we return(x) if there is no style
