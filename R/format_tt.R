@@ -183,15 +183,29 @@ apply_groups_i <- function(x, format_fn, ...) {
     return(x)
   }
 
-  for (idx in seq_along(x@lazy_group_j)) {
-    g <- x@lazy_group_j[[idx]]
-    if (!is.null(g$i)) {
+  for (idx in seq_along(x@lazy_group_i)) {
+    g <- x@lazy_group_i[[idx]]
+    
+    # Handle new group_eval_i structure
+    if (!is.null(g$fn) && g$fn == "group_eval_i" && !is.null(g$k)) {
+      matrix_data <- g$k[[2]]
+      if (is.matrix(matrix_data)) {
+        # Format all elements in the matrix
+        result <- format_fn(matrix_data, ...)
+        if (!is.null(result)) {
+          g$k[[2]] <- result
+        }
+      }
+    }
+    # Handle old structure (fallback)
+    else if (!is.null(g$i)) {
       result <- format_fn(names(g$i), ...)
       if (!is.null(result)) {
         names(g$i) <- result
       }
     }
-    x@lazy_group_j[[idx]] <- g
+    
+    x@lazy_group_i[[idx]] <- g
   }
   return(x)
 }
