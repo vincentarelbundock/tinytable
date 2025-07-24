@@ -256,7 +256,6 @@ tab1 <- format_tt(tab, i = "notes", fn = function(x) paste0("Col_", x))
 expect_true(grepl("| Col_Test", save_tt(tab1, "markdown"), fixed = TRUE))
 expect_false(grepl("Col_2", save_tt(tab1, "markdown")))
 
-
 # Test formatting only notes
 tab3 <- format_tt(tab, i = "notes", fn = function(x) paste0("Note: ", x))
 expect_true(grepl("| Note: |", save_tt(tab3, "markdown"), fixed = TRUE))
@@ -266,9 +265,6 @@ expect_true(grepl("| Test  |", save_tt(tab3, "markdown"), fixed = TRUE))
 tab4 <- format_tt(tab, i = c("colnames", "caption"), fn = function(x) paste0("Prefix_", x))
 expect_true(grepl("Prefix_x", save_tt(tab4, "markdown"), fixed = TRUE))
 expect_true(grepl("Prefix_Test Caption", save_tt(tab4, "markdown"), fixed = TRUE))
-
-# Two-step group_tt() formatting tests
-# Test that group headers and body are formatted separately in the new build_tt implementation
 
 # Test 1: Basic group_tt with sprintf formatting applied to all rows
 dat1 <- data.frame(

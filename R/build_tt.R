@@ -113,14 +113,23 @@ build_tt <- function(x, output = NULL) {
   }
   x@table_dataframe <- tab
 
-  # Two-step group_tt processing: create group_header and group_body, then apply formatting
-  
-  # Step 1: Create group_header and group_body data frames with position calculations
-  group_parts <- build_group_parts(x)
-  group_header <- group_parts$group_header
-  group_body <- group_parts$group_body
-  header_indices <- group_parts$header_indices
-  body_indices <- group_parts$body_indices
+  # Check if we have any group insertions that require two-step processing
+  if (length(x@lazy_group_i) > 0) {
+    # Two-step group_tt processing: create group_header and group_body, then apply formatting
+    
+    # Step 1: Create group_header and group_body data frames with position calculations
+    group_parts <- build_group_parts(x)
+    group_header <- group_parts$group_header
+    group_body <- group_parts$group_body
+    header_indices <- group_parts$header_indices
+    body_indices <- group_parts$body_indices
+  } else {
+    # No groups, use original logic
+    group_header <- NULL
+    group_body <- NULL
+    header_indices <- NULL
+    body_indices <- NULL
+  }
   
   # Step 2: Apply lazy_format to each part based on calculated indices
   if (!is.null(group_header)) {
