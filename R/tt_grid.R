@@ -43,11 +43,11 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
 
   # groups are longer than col-widths
   if (inherits(x, "tinytable")) {
+    # Handle column groups
     for (g in x@lazy_group_j) {
       # Extract arguments from the lazy evaluation call
       call_args <- as.list(g)[-1] # Remove function name
 
-      # Handle column groups
       if (!is.null(call_args$j)) {
         j_groups <- eval(call_args$j)
         for (idx in seq_along(j_groups)) {
@@ -59,18 +59,27 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
           }
         }
       }
+    }
 
-      # Handle row groups (they span entire table width)
-      if (!is.null(call_args$i)) {
-        i_groups <- eval(call_args$i)
-        for (idx in seq_along(i_groups)) {
-          g_len <- nchar(names(i_groups)[idx]) + 2
-          # Total table width including separators
-          c_len <- sum(width_cols) + length(width_cols) - 1
-          if (g_len > c_len) {
-            # Distribute extra width across all columns
-            extra_width <- ceiling((g_len - c_len) / length(width_cols))
-            width_cols <- width_cols + extra_width
+    # Handle row groups (they span entire table width)
+    for (g in x@lazy_group_i) {
+      if (g$fn == "group_eval_i" && !is.null(g$k)) {
+        # Extract matrix data from the new structure
+        matrix_data <- g$k[[2]]
+        if (is.matrix(matrix_data) && ncol(matrix_data) >= 1) {
+          # Check labels in first column
+          labels <- matrix_data[, 1]
+          for (label in labels) {
+            if (!is.na(label) && nchar(label) > 0) {
+              g_len <- nchar(label) + 2
+              # Total table width including separators
+              c_len <- sum(width_cols) + length(width_cols) - 1
+              if (g_len > c_len) {
+                # Distribute extra width across all columns
+                extra_width <- ceiling((g_len - c_len) / length(width_cols))
+                width_cols <- width_cols + extra_width
+              }
+            }
           }
         }
       }
