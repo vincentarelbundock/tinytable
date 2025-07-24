@@ -2,6 +2,7 @@ options("tinysnapshot_device" = "svglite")
 options("tinysnapshot_tol" = 300)
 options("tinysnapshot_mode" = "sidebyside")
 options("width" = 200) # for diff printout readability
+options("tinytable_print_output" = NULL)
 
 # common formatting options
 options(tinytable_format_bool = function(x) tools::toTitleCase(tolower(x)))
