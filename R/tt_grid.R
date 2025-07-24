@@ -32,11 +32,82 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
   tab <- matrix(padded, ncol = ncol(tab))
 
   if (is.null(width_cols) || length(width_cols) == 0) {
+    # Get colspan information to exclude those cells from initial width calculation
+    colspan_info <- NULL
+    if (inherits(x, "tinytable") && nrow(x@style) > 0) {
+      sty <- x@style
+      colspan_info <- sty[!is.na(sty$colspan) & sty$colspan > 1, c("i", "j", "colspan")]
+    }
+    
+    # First pass: calculate widths excluding colspan cells
     for (j in seq_len(ncol(tab))) {
-      if (isTRUE(check_dependency("fansi"))) {
-        width_cols[j] <- max(nchar(as.character(fansi::strip_ctl(tab[, j]))))
+      cell_widths <- character(0)
+      for (i in seq_len(nrow(tab))) {
+        # Check if this cell has colspan styling - if so, skip it for width calculation
+        is_colspan_cell <- FALSE
+        if (!is.null(colspan_info) && nrow(colspan_info) > 0) {
+          # Adjust row index if header is present
+          data_row_idx <- if (header) i - 1 else i
+          if (data_row_idx > 0) {
+            is_colspan_cell <- any(colspan_info$i == data_row_idx & colspan_info$j == j)
+          }
+        }
+        
+        if (!is_colspan_cell) {
+          cell_widths <- c(cell_widths, tab[i, j])
+        }
+      }
+      
+      if (length(cell_widths) > 0) {
+        if (isTRUE(check_dependency("fansi"))) {
+          width_cols[j] <- max(nchar(as.character(fansi::strip_ctl(cell_widths))))
+        } else {
+          width_cols[j] <- max(nchar(cell_widths))
+        }
       } else {
-        width_cols[j] <- max(nchar(tab[, j]))
+        # Fallback if all cells in column have colspan
+        if (isTRUE(check_dependency("fansi"))) {
+          width_cols[j] <- max(nchar(as.character(fansi::strip_ctl(tab[, j]))))
+        } else {
+          width_cols[j] <- max(nchar(tab[, j]))
+        }
+      }
+    }
+    
+    # Second pass: adjust widths for colspan cells that are longer than spanned columns
+    if (!is.null(colspan_info) && nrow(colspan_info) > 0) {
+      for (idx in seq_len(nrow(colspan_info))) {
+        i_row <- colspan_info[idx, "i"]
+        j_col <- colspan_info[idx, "j"]
+        colspan <- colspan_info[idx, "colspan"]
+        
+        # Get the actual row index in the tab matrix
+        tab_row_idx <- if (header) i_row + 1 else i_row
+        
+        if (tab_row_idx <= nrow(tab) && j_col <= ncol(tab)) {
+          # Get the content width of the colspan cell
+          cell_content <- tab[tab_row_idx, j_col]
+          if (isTRUE(check_dependency("fansi"))) {
+            content_width <- nchar(as.character(fansi::strip_ctl(cell_content)))
+          } else {
+            content_width <- nchar(cell_content)
+          }
+          
+          # Calculate current total width of spanned columns (including separators)
+          spanned_cols <- j_col:(j_col + colspan - 1)
+          spanned_cols <- spanned_cols[spanned_cols <= length(width_cols)]
+          current_total_width <- sum(width_cols[spanned_cols]) + length(spanned_cols) - 1
+          
+          # If content is longer than current total width, expand columns proportionally
+          if (content_width > current_total_width) {
+            extra_width <- content_width - current_total_width
+            width_per_col <- extra_width / length(spanned_cols)
+            
+            for (col in spanned_cols) {
+              width_cols[col] <- width_cols[col] + ceiling(width_per_col)
+            }
+          }
+        }
       }
     }
   }

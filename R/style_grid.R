@@ -146,6 +146,12 @@ grid_colspan <- function(x) {
 
 prepare_grid_style <- function(x) {
   sty <- x@style
+  
+  # Return early if no styles
+  if (nrow(sty) == 0) {
+    return(sty)
+  }
+  
   all_i <- seq_len(nrow(x))
   idx_g <- x@group_index_i
   idx_d <- setdiff(all_i, idx_g)
