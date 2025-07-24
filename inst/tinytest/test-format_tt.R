@@ -273,6 +273,53 @@ tab4 <- format_tt(tab, i = c("colnames", "caption"), fn = function(x) paste0("Pr
 expect_true(grepl("Prefix_x", save_tt(tab4, "markdown"), fixed = TRUE))
 expect_true(grepl("Prefix_Test Caption", save_tt(tab4, "markdown"), fixed = TRUE))
 
+# Two-step group_tt() formatting tests
+# Test that group headers and body are formatted separately in the new build_tt implementation
+
+# Test 1: Basic group_tt with sprintf formatting applied to all rows
+dat1 <- data.frame(
+  values = c(123.456, 789.012, 345.678, 901.234),
+  labels = c("A", "B", "C", "D")
+)
+
+tab1 <- tt(dat1) |>
+  group_tt(i = list("First Group" = 2, "Second Group" = 4)) |>
+  format_tt(j = 1, sprintf = "((%.1f))")
+expect_snapshot_print(tab1, label = "format_tt-group_two_step_basic")
+
+# Test 2: Targeted formatting - only specific rows
+dat2 <- data.frame(
+  x = c(10.111, 20.222, 30.333, 40.444, 50.555),
+  y = letters[1:5]
+)
+
+tab2 <- tt(dat2) |>
+  group_tt(i = list("Group A" = 2, "Group B" = 4)) |>
+  format_tt(i = c(1, 3, 5), j = 1, digits = 1, sprintf = "[%s]")
+expect_snapshot_print(tab2, label = "format_tt-group_two_step_targeted")
+
+# Test 3: Multiple formatting operations on different parts
+dat3 <- data.frame(
+  price = c(99.99, 149.50, 299.00),
+  product = c("Widget", "Gadget", "Tool")
+)
+
+tab3 <- tt(dat3) |>
+  group_tt(i = list("Electronics" = 2)) |>
+  format_tt(j = 1, digits = 2, sprintf = "$%s") |>
+  format_tt(j = 2, sprintf = "*** %s ***")
+expect_snapshot_print(tab3, label = "format_tt-group_two_step_multiple")
+
+# Test 4: Group headers and body processed separately with distinctive formatting
+dat4 <- data.frame(
+  numbers = c(1.1111, 2.2222, 3.3333, 4.4444),
+  text = c("alpha", "beta", "gamma", "delta")
+)
+
+tab4 <- tt(dat4) |>
+  group_tt(i = list("Header 1" = 2, "Header 2" = 4)) |>
+  format_tt(j = 1, digits = 3, sprintf = "{{%s}}")
+expect_snapshot_print(tab4, label = "format_tt-group_two_step_separate")
 
 # Vignette with multiple components
 options(tinytable_print_output = "latex")
