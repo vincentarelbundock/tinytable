@@ -104,8 +104,13 @@ group_tt <- function(
   }
   assert_integerish(indent, lower = 0)
 
-  # Handle matrix insertion case: if i is integerish and j is a matrix, OR if i is a list
-  if ((isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) || is.list(i)) {
+  # Convert vector input to list format for consecutive series grouping
+  if (is.vector(i) && !is.list(i) && length(i) > 1) {
+    i <- sanitize_group_vec2list(i)
+  }
+
+  # Handle matrix insertion case: if i is integerish and j is a matrix, OR if i is a list with no j
+  if ((isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) || (is.list(i) && is.null(j))) {
     k <- group_tt_ij_k(x, i, j)
     converted_from_list <- k[[3]]
 
@@ -141,6 +146,37 @@ group_tt <- function(
     }
 
     return(x)
+  }
+
+  # Handle row grouping when i is a list (but j is also provided, so not matrix insertion)
+  if (is.list(i) && !is.null(j)) {
+    # Convert list to matrix insertion format for row grouping
+    k <- group_tt_ij_k(x, i, NULL)  # Pass NULL for j to trigger list conversion
+    converted_from_list <- k[[3]]
+    
+    # Calculate indices and update table
+    positions <- k[[1]]
+    idx <- positions + cumsum(rep(1, length(positions))) - 1
+    x@group_index_i <- c(x@group_index_i, idx)
+    x@nrow <- x@nrow + length(positions)
+    
+    # Store the matrix insertion
+    cal <- list(fn = "group_eval_i", k = k)
+    x@lazy_group_i <- c(x@lazy_group_i, list(cal))
+    
+    # Apply styling for list-converted group headers
+    if (converted_from_list) {
+      x <- style_tt(x, i = idx, j = 1, colspan = ncol(x))
+    }
+    
+    # Apply indentation
+    if (isTRUE(indent > 0)) {
+      all_rows <- seq_len(x@nrow)
+      data_rows <- setdiff(all_rows, idx)
+      if (length(data_rows) > 0) {
+        x <- style_tt(x, i = data_rows, j = 1, indent = indent)
+      }
+    }
   }
 
   if (isTRUE(check_string(j))) {

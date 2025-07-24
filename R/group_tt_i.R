@@ -30,7 +30,7 @@ group_tt_ij_k <- function(x, i, j) {
   }
 
   # If x has more than 1 column and j is a 1-column matrix, try to reshape j
-  if (ncol(x) > 1 && ncol(j) == 1) {
+  if (is.matrix(j) && ncol(x) > 1 && ncol(j) == 1) {
     total_elements <- nrow(j) * ncol(j)
     if (total_elements %% ncol(x) == 0) {
       # Reshape j to have the same number of columns as x
@@ -44,7 +44,7 @@ group_tt_ij_k <- function(x, i, j) {
   }
 
   # Check that matrix width matches table width
-  if (ncol(j) != ncol(x)) {
+  if (is.matrix(j) && ncol(j) != ncol(x)) {
     stop(
       sprintf(
         "Matrix must have the same number of columns as the table (%d columns)",
