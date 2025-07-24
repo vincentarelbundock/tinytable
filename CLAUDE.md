@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Whenever running code from this package, always run `pkgload::load_all()` first to ensure the latest version is loaded. Never use `library(tinytable)`.
 
+To run all tests: `pkgload::load_all(); tinytest::run_test_dir()`
+
 ## Project Overview
 
 `tinytable` is an R package for creating beautiful, customizable tables in multiple output formats (HTML, LaTeX, Markdown, Word, PDF, PNG, Typst). The package follows a minimal, zero-dependency design philosophy with a streamlined user interface built around a few core functions.

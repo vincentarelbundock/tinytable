@@ -77,3 +77,33 @@ print_html <- function(x, output = c("html", "html_portable")) {
   class(x) <- c("custom_html_string", class(x))
   x
 }
+
+format_extensions <- list(
+  markdown = "md",
+  latex = "tex",
+  typst = "typ",
+  html = "html"
+)
+
+# Helper function to prepare tables for testing across multiple formats
+expect_table <- function(tab, formats = names(format_extensions)) {
+  result <- list()
+  
+  for (format in formats) {
+    # Create a copy and set the output format
+    table_copy <- tab
+    table_copy@output <- format
+    
+    # Create the table output
+    if (format == "html") {
+      table_output <- print_html(table_copy)
+    } else {
+      table_output <- table_copy
+    }
+    
+    # Store the table output
+    result[[format]] <- table_output
+  }
+  
+  return(result)
+}
