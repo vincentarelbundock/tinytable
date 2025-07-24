@@ -100,8 +100,37 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
   rule_head <- grid_line(width_cols, "=")
   rule_line <- grid_line(width_cols, "-")
 
-  body <- apply(tab, 1, paste, collapse = "|")
-  body <- paste0("|", body, "|")
+  # Handle colspan rows differently
+  body <- character(nrow(tab))
+  # Get group row indices if available
+  group_rows <- if (inherits(x, "tinytable")) x@group_index_i else integer(0)
+  # Adjust for header if present
+  if (header) {
+    group_rows <- group_rows + 1  # Header adds one row at the top
+  }
+  
+  for (row_idx in seq_len(nrow(tab))) {
+    row_data <- tab[row_idx, ]
+    # Check if this is a group row with colspan styling
+    is_group_row <- row_idx %in% group_rows
+    has_content <- nchar(trimws(row_data[1])) > 0
+    others_empty <- all(trimws(row_data[-1]) == "")
+    # Temporary debug output
+    if (row_idx <= 5) {
+      cat("Row", row_idx, "- is_group:", is_group_row, "has_content:", has_content, "others_empty:", others_empty, "\n")
+      cat("  Content:", paste0("'", row_data, "'", collapse = ", "), "\n")
+    }
+    if (is_group_row && has_content && others_empty) {
+      # This is a colspan row - create a single spanning cell
+      total_width <- sum(width_cols) + length(width_cols) - 1
+      content_width <- nchar(row_data[1])
+      padding_needed <- total_width - content_width
+      body[row_idx] <- paste0("|", row_data[1], strrep(" ", padding_needed), "|")
+    } else {
+      # Regular row - use column separators
+      body[row_idx] <- paste0("|", paste(row_data, collapse = "|"), "|")
+    }
+  }
   if (header) {
     tab <- c(
       "\n",
