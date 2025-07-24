@@ -123,14 +123,24 @@ grid_colspan <- function(x) {
 
       # Remove | markers for the colspan range
       if (col_idx <= length(cells) && (col_idx + colspan - 1) <= length(cells)) {
-        # Combine content from spanned cells
-        spanned_content <- paste(trimws(cells[col_idx:(col_idx + colspan - 1)]), collapse = "")
+        # Combine content from spanned cells, preserving spacing
+        spanned_cells <- cells[col_idx:(col_idx + colspan - 1)]
+        # Trim only the right side of the first cell and left side of the last cell
+        # to remove excess spacing between combined cells, but preserve leading/trailing spaces
+        if (length(spanned_cells) > 1) {
+          spanned_cells[1] <- sub(" *$", "", spanned_cells[1])  # Remove trailing spaces from first cell
+          spanned_cells[length(spanned_cells)] <- sub("^ *", "", spanned_cells[length(spanned_cells)])  # Remove leading spaces from last cell
+        }
+        spanned_content <- paste(spanned_cells, collapse = "")
 
         # Calculate total width for the spanned cells
         if (!is.null(x@width_cols) && length(x@width_cols) >= (col_idx + colspan - 1)) {
           total_width <- sum(x@width_cols[col_idx:(col_idx + colspan - 1)]) + (colspan - 1)
-          padding <- total_width - nchar(spanned_content)
-          spanned_content <- paste0(spanned_content, strrep(" ", max(0, padding)))
+          current_width <- nchar(spanned_content)
+          if (current_width < total_width) {
+            padding <- total_width - current_width
+            spanned_content <- paste0(spanned_content, strrep(" ", padding))
+          }
         }
 
         # Replace the cells with the spanned content
@@ -142,7 +152,7 @@ grid_colspan <- function(x) {
           new_cells <- new_cells[-indices_to_remove]
         }
 
-        # Reconstruct the line
+        # Reconstruct the line, preserving the original format
         table_lines[target_line] <- paste0("|", paste(new_cells, collapse = "|"), "|")
       }
     }
