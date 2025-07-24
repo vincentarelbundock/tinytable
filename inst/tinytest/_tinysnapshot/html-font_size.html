@@ -1,0 +1,131 @@
+<!-- preamble start -->
+<!DOCTYPE html> 
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytable_bnrwf4b5r0gdze1s4e93</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+<!-- preamble end -->
+
+    <script>
+
+      function styleCell_bnrwf4b5r0gdze1s4e93(i, j, css_id) {
+          var table = document.getElementById("tinytable_bnrwf4b5r0gdze1s4e93");
+          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+          if (cell) {
+              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
+              cell.classList.add(css_id);
+          } else {
+              console.warn(`Cell at (${i}, ${j}) not found.`);
+          }
+      }
+      function spanCell_bnrwf4b5r0gdze1s4e93(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_bnrwf4b5r0gdze1s4e93");
+        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+        if (!targetCell) {
+          console.warn(`Cell at (${i}, ${j}) not found.`);
+        }
+
+        // Get all cells that need to be removed
+        const cellsToRemove = [];
+        for (let r = 0; r < rowspan; r++) {
+          for (let c = 0; c < colspan; c++) {
+            if (r === 0 && c === 0) continue; // Skip the target cell
+            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
+            if (cell) {
+              cellsToRemove.push(cell);
+            }
+          }
+        }
+
+        // Remove all cells
+        cellsToRemove.forEach(cell => cell.remove());
+
+        // Set rowspan and colspan of the target cell if it exists
+        if (targetCell) {
+          targetCell.rowSpan = rowspan;
+          targetCell.colSpan = colspan;
+        }
+      }
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '4', j: 2 }, { i: '4', j: 1 }, { i: '4', j: 4 },  ], css_id: 'tinytable_css_y8jzrzqa14mhvmatg1iw',}, 
+          { positions: [ { i: '0', j: 4 }, { i: '0', j: 2 }, { i: '0', j: 1 },  ], css_id: 'tinytable_css_f178ok71c5437cpvo9lv',}, 
+          { positions: [ { i: '4', j: 0 }, { i: '4', j: 3 },  ], css_id: 'tinytable_css_2uhtf2wiapv5qxxzd786',}, 
+          { positions: [ { i: '2', j: 0 }, { i: '3', j: 0 }, { i: '3', j: 3 }, { i: '1', j: 0 }, { i: '1', j: 3 }, { i: '2', j: 3 },  ], css_id: 'tinytable_css_27s4qnwlvv1aijihtot6',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 3 },  ], css_id: 'tinytable_css_kmlqbe2nhik1fbcvcnek',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  styleCell_bnrwf4b5r0gdze1s4e93(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <style>
+      /* tinytable css entries after */
+      .table td.tinytable_css_y8jzrzqa14mhvmatg1iw, .table th.tinytable_css_y8jzrzqa14mhvmatg1iw { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_f178ok71c5437cpvo9lv, .table th.tinytable_css_f178ok71c5437cpvo9lv { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_2uhtf2wiapv5qxxzd786, .table th.tinytable_css_2uhtf2wiapv5qxxzd786 { font-size: 1.5em; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_27s4qnwlvv1aijihtot6, .table th.tinytable_css_27s4qnwlvv1aijihtot6 { font-size: 1.5em; }
+      .table td.tinytable_css_kmlqbe2nhik1fbcvcnek, .table th.tinytable_css_kmlqbe2nhik1fbcvcnek { font-size: 1.5em; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+    </style>
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_bnrwf4b5r0gdze1s4e93" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
+        <thead>
+        
+              <tr>
+                <th scope="col" data-row="0" data-col="0">mpg</th>
+                <th scope="col" data-row="0" data-col="1">cyl</th>
+                <th scope="col" data-row="0" data-col="2">disp</th>
+                <th scope="col" data-row="0" data-col="3">hp</th>
+                <th scope="col" data-row="0" data-col="4">drat</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="0">21.0</td>
+                  <td data-row="1" data-col="1">6</td>
+                  <td data-row="1" data-col="2">160</td>
+                  <td data-row="1" data-col="3">110</td>
+                  <td data-row="1" data-col="4">3.90</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="0">21.0</td>
+                  <td data-row="2" data-col="1">6</td>
+                  <td data-row="2" data-col="2">160</td>
+                  <td data-row="2" data-col="3">110</td>
+                  <td data-row="2" data-col="4">3.90</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="0">22.8</td>
+                  <td data-row="3" data-col="1">4</td>
+                  <td data-row="3" data-col="2">108</td>
+                  <td data-row="3" data-col="3">93</td>
+                  <td data-row="3" data-col="4">3.85</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="0">21.4</td>
+                  <td data-row="4" data-col="1">6</td>
+                  <td data-row="4" data-col="2">258</td>
+                  <td data-row="4" data-col="3">110</td>
+                  <td data-row="4" data-col="4">3.08</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- postamble start -->
+  </body>
+
+</html>
+<!-- postamble end -->
+<!-- hack to avoid NA insertion in last line -->
