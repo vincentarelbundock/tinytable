@@ -123,15 +123,10 @@ grid_colspan <- function(x) {
 
       # Remove | markers for the colspan range
       if (col_idx <= length(cells) && (col_idx + colspan - 1) <= length(cells)) {
-        # Combine content from spanned cells, preserving spacing
-        spanned_cells <- cells[col_idx:(col_idx + colspan - 1)]
-        # Trim only the right side of the first cell and left side of the last cell
-        # to remove excess spacing between combined cells, but preserve leading/trailing spaces
-        if (length(spanned_cells) > 1) {
-          spanned_cells[1] <- sub(" *$", "", spanned_cells[1])  # Remove trailing spaces from first cell
-          spanned_cells[length(spanned_cells)] <- sub("^ *", "", spanned_cells[length(spanned_cells)])  # Remove leading spaces from last cell
-        }
-        spanned_content <- paste(spanned_cells, collapse = "")
+        # For colspan, use only the content from the first cell (the spanning cell)
+        # and ignore content from subsequent cells that are being spanned over
+        # Preserve leading space but trim trailing spaces
+        spanned_content <- sub(" *$", "", cells[col_idx])
 
         # Calculate total width for the spanned cells
         if (!is.null(x@width_cols) && length(x@width_cols) >= (col_idx + colspan - 1)) {

@@ -21,55 +21,69 @@ group_grid_col <- function(x, j, ...) {
   cw <- x@width_cols
   
   # Process @data_group_j to create column group headers
-  # Use the first row of column groups (other backends handle multiple rows differently)
+  # Process all rows of column groups (not just the first)
   if (nrow(x@data_group_j) > 0) {
-    group_row <- as.character(x@data_group_j[1, ])
+    all_header_lines <- list()
     
-    # Convert to the old format that empty_cells expects
-    j_list <- list()
-    i <- 1
-    while (i <= length(group_row)) {
-      current_label <- group_row[i]
+    # Process each row in @data_group_j (from last to first to maintain proper order)
+    for (group_row_idx in nrow(x@data_group_j):1) {
+      group_row <- as.character(x@data_group_j[group_row_idx, ])
       
-      # Skip NA (ungrouped) columns
-      if (is.na(current_label)) {
-        i <- i + 1
-        next
-      }
-      
-      span_start <- i
-      
-      # Find the end of this span
-      if (trimws(current_label) != "") {
-        i <- i + 1  # Move past the current label
-        # Continue through empty strings (continuation of span)
-        while (i <= length(group_row) && 
-               !is.na(group_row[i]) &&
-               trimws(group_row[i]) == "") {
+      # Convert to the old format that empty_cells expects
+      j_list <- list()
+      i <- 1
+      while (i <= length(group_row)) {
+        current_label <- group_row[i]
+        
+        # Skip NA (ungrouped) columns
+        if (is.na(current_label)) {
+          i <- i + 1
+          next
+        }
+        
+        span_start <- i
+        
+        # Find the end of this span
+        if (trimws(current_label) != "") {
+          i <- i + 1  # Move past the current label
+          # Continue through empty strings (continuation of span)
+          while (i <= length(group_row) && 
+                 !is.na(group_row[i]) &&
+                 trimws(group_row[i]) == "") {
+            i <- i + 1
+          }
+          span_end <- i - 1
+          
+          # Add to j_list if non-empty label
+          j_list[[current_label]] <- span_start:span_end
+        } else {
           i <- i + 1
         }
-        span_end <- i - 1
+      }
+      
+      if (length(j_list) > 0) {
+        header <- empty_cells(j_list)
+        cw_grouped <- sapply(header, function(k) sum(cw[k]) + length(cw[k]) - 1)
+        header_matrix <- t(matrix(names(cw_grouped)))
+        header_formatted <- tt_eval(header_matrix, cw_grouped)
+        header_lines <- strsplit(header_formatted, split = "\\n")[[1]]
+        header_lines <- header_lines[header_lines != "\\n"]
+        header_lines <- header_lines[!header_lines %in% c("\\n", "")]
+        header_line <- header_lines[2]
         
-        # Add to j_list if non-empty label
-        j_list[[current_label]] <- span_start:span_end
-      } else {
-        i <- i + 1
+        # Store header line for this group row
+        all_header_lines[[group_row_idx]] <- header_line
       }
     }
     
-    if (length(j_list) > 0) {
-      header <- empty_cells(j_list)
-      cw_grouped <- sapply(header, function(k) sum(cw[k]) + length(cw[k]) - 1)
-      header_matrix <- t(matrix(names(cw_grouped)))
-      header_formatted <- tt_eval(header_matrix, cw_grouped)
-      header_lines <- strsplit(header_formatted, split = "\\n")[[1]]
-      header_lines <- header_lines[header_lines != "\\n"]
-      header_lines <- header_lines[!header_lines %in% c("\\n", "")]
-      header_line <- header_lines[2]
-      
+    # Insert all header lines into the table
+    if (length(all_header_lines) > 0) {
       z <- strsplit(tab, split = "\\n")[[1]]
       z <- z[!z %in% c("\\n", "")]
-      z <- c(z[1], header_line, z)
+      
+      # Insert all header lines after the first line (top border)
+      header_lines_to_insert <- unlist(all_header_lines)
+      z <- c(z[1], header_lines_to_insert, z[2:length(z)])
       
       # missing cell at the end
       nc <- nchar(z)
