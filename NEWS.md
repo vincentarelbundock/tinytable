@@ -14,6 +14,7 @@ New features:
 * `group_tt(i = ..., j = ...)` now supports matrix insertion: when `i` is an integer vector and `j` is a character matrix, rows from the matrix are inserted at the specified positions. Single-column matrices are automatically reshaped when the number of elements is a multiple of the table's column count.
 * `group_tt(i = ...)` can now be called multiple times to insert several rows one after the other.
 * `style_tt(colspan)` is now supported for markdown output.
+* `options(tinytable_color_name_normalization=TRUE)` (default): automatic color name processing (default: TRUE). When enabled, R color names recognized by `col2rgb()` are converted to hex format for consistent rendering across HTML, LaTeX, and Typst formats. If R color conversion fails, LaTeX color names are used as fallback. Colors explicitly supplied as hex values with "#" prefix are passed through unchanged. Set to FALSE to disable processing and pass color names unchanged.
 
 Typst: Major refactor improves several things and brings Typst very close to feature parity with other formats.
 
