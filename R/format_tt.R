@@ -192,51 +192,6 @@ apply_group <- function(x, format_fn, slot = "data_group_i", ...) {
   return(x)
 }
 
-format_group_i <- function(x) {
-  # Apply formatting to separated @data_group_i (row groups)
-  if (nrow(x@data_group_i) == 0) return(x)
-  
-  x_group_i <- x
-  x_group_i@data_processed <- x@data_group_i
-  for (l in x@lazy_format) {
-    l[["x"]] <- x_group_i
-    x_group_i <- eval(l)
-  }
-  x@data_group_i <- x_group_i@data_processed
-  
-  return(x)
-}
-
-format_group_j <- function(x) {
-  # Apply formatting to separated @data_group_j (header rows)
-  if (nrow(x@data_group_i) == 0 || nrow(x@data_group_j) == 0) return(x)
-  
-  x_header <- x
-  x_header@data_processed <- x@data_group_j
-  for (l in x@lazy_format) {
-    l[["x"]] <- x_header
-    x_header <- eval(l)
-  }
-  x@data_group_j <- x_header@data_processed
-  
-  return(x)
-}
-
-format_body <- function(x) {
-  # Apply formatting to separated @data_body
-  if (nrow(x@data_group_i) == 0 || nrow(x@data_body) == 0) return(x)
-  
-  x_body <- x
-  x_body@data_processed <- x@data_body
-  for (l in x@lazy_format) {
-    l[["x"]] <- x_body
-    x_body <- eval(l)
-  }
-  x@data_body <- x_body@data_processed
-  
-  return(x)
-}
-
 apply_colnames <- function(x, format_fn, ...) {
   colnames(x) <- format_fn(colnames(x), ...)
   return(x)

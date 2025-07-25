@@ -106,25 +106,16 @@ build_tt <- function(x, output = NULL) {
 
   x <- render_fansi(x)
 
-  # Groups case: separate, format, then recombine
-  # Step 1: Build group_header and group_body data frames
   x <- build_group_parts(x)
 
-  # Step 2: Apply formatting to the separated parts
-  x <- format_group_i(x)
-  x <- format_group_j(x)
-  x <- format_body(x)
-
-  # Step 3: Reconstruct the final table
-  x <- rbind_i_j(x)
-
-  # Handle no groups case: apply formatting directly
-  if (nrow(x@data_group_i) == 0) {
-    for (l in x@lazy_format) {
-      l[["x"]] <- x
-      x <- eval(l)
-    }
+  # format each component individually
+  for (l in x@lazy_format) {
+    l[["x"]] <- x
+    x <- eval(l)
   }
+
+  # reconstruct the final table
+  x <- rbind_i_j(x)
 
   # add footnote markers just after formatting, otherwise appending converts to string
   x <- footnote_markers(x)
