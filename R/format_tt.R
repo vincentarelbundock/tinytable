@@ -242,7 +242,7 @@ apply_colnames <- function(x, format_fn, ...) {
   return(x)
 }
 
-# Global dispatcher function
+# Global dispatcher function for applying formatting functions
 apply_format <- function(
   out,
   x,
@@ -250,7 +250,6 @@ apply_format <- function(
   j,
   format_fn,
   ori = NULL,
-  source = "out",
   components = NULL,
   inherits = NULL,
   ...
@@ -301,35 +300,72 @@ apply_format <- function(
   }
 
   if (length(j_filtered) > 0) {
-    if (source == "both" && !is.null(ori)) {
-      # Functions that need both ori and out values
-      for (col in j_filtered) {
-        tmp <- format_fn(
-          ori[i, col, drop = TRUE],
-          out[i, col, drop = TRUE],
-          ...
-        )
-        if (!is.null(tmp)) out[i, col] <- tmp
-      }
-    } else if (source == "ori" && !is.null(ori)) {
-      # Functions that use original values
+    # Default behavior: use original values, fall back to out if ori is not available
+    if (!is.null(ori)) {
       for (col in j_filtered) {
         tmp <- format_fn(ori[i, col, drop = TRUE], ...)
         if (!is.null(tmp)) out[i, col] <- tmp
       }
     } else {
-      # Functions that use current out values
-      if (!is.null(inherits)) {
-        # Use custom apply_cells with filtering
-        for (row in i) {
-          for (col in j_filtered) {
-            tmp <- format_fn(out[row, col], ...)
-            if (!is.null(tmp)) out[row, col] <- tmp
-          }
+      # Fall back to applying to current out values if no original data
+      for (row in i) {
+        for (col in j_filtered) {
+          tmp <- format_fn(out[row, col], ...)
+          if (!is.null(tmp)) out[row, col] <- tmp
         }
-      } else {
-        out <- apply_cells(out, i, j, format_fn, ...)
       }
+    }
+  }
+
+  return(list(out = out, x = x))
+}
+
+# Special dispatcher for format_vector_replace that needs both ori and out values
+apply_format_replace <- function(
+  out,
+  x,
+  i,
+  j,
+  format_fn,
+  ori = NULL,
+  components = NULL,
+  ...
+) {
+  if (is.character(components)) {
+    if ("all" %in% components) {
+      components <- c("colnames", "caption", "notes", "groupi", "groupj")
+    } else if (!("cells" %in% components)) {
+      i <- NULL
+      j <- NULL
+    }
+  }
+
+  # Apply formatting to specified components only
+  if ("colnames" %in% components) {
+    x <- apply_colnames(x, format_fn, ...)
+  }
+  if ("caption" %in% components) {
+    x <- apply_caption(x, format_fn, ...)
+  }
+  if ("notes" %in% components) {
+    x <- apply_notes(x, format_fn, ...)
+  }
+  if ("groupi" %in% components) {
+    x <- apply_group(x, format_fn, slot = "data_group_i", ...)
+  }
+  if ("groupj" %in% components) {
+    x <- apply_group(x, format_fn, slot = "data_group_j", ...)
+  }
+
+  # Apply to specific cells - format_vector_replace needs both ori and out values
+  if (length(j) > 0 && !is.null(ori)) {
+    for (col in j) {
+      tmp <- format_fn(
+        ori[i, col, drop = TRUE],
+        out[i, col, drop = TRUE],
+        ...
+      )
+      if (!is.null(tmp)) out[i, col] <- tmp
     }
   }
 
@@ -592,7 +628,6 @@ format_tt_lazy <- function(
     j = j,
     format_fn = format_vector_logical,
     ori = ori,
-    source = "ori",
     inherits = "logical",
     bool_fn = bool
   )
@@ -606,7 +641,6 @@ format_tt_lazy <- function(
     j = j,
     format_fn = format_vector_date,
     ori = ori,
-    source = "ori",
     inherits = "Date",
     date_format = date_format
   )
@@ -621,7 +655,6 @@ format_tt_lazy <- function(
       j = j,
       format_fn = format_numeric,
       ori = ori,
-      source = "ori",
       num_suffix = num_suffix,
       digits = digits,
       num_mark_big = num_mark_big,
@@ -644,7 +677,6 @@ format_tt_lazy <- function(
     j = j,
     format_fn = format_vector_other,
     ori = ori,
-    source = "ori",
     inherits = is_other,
     other_fn = other
   )
@@ -653,14 +685,13 @@ format_tt_lazy <- function(
 
   # format each column using the original approach
   # Issue #230: drop=TRUE fixes bug which returned a character dput-like vector
-  result <- apply_format(
+  result <- apply_format_replace(
     out = out,
     ori = ori,
     x = x,
     i = i,
     j = j,
     format_fn = format_vector_replace,
-    source = "both",
     replace = replace,
     components = components
   )
@@ -676,7 +707,6 @@ format_tt_lazy <- function(
       j = j,
       format_fn = format_vector_sprintf,
       ori = ori,
-      source = "ori",
       sprintf_pattern = sprintf
     )
     out <- result$out
@@ -695,7 +725,6 @@ format_tt_lazy <- function(
         j = j,
         format_fn = format_vector_custom,
         ori = ori,
-        source = "ori",
         components = components,
         fn = fn
       )
