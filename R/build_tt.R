@@ -82,10 +82,28 @@ build_tt <- function(x, output = NULL) {
   x <- tt_eval(x)
 
   # groups require the table to be drawn first, expecially group_tabularray_col() and friends
+  
+  # For LaTeX output, handle column groups using @data_group_j matrix once
+  if (x@output == "latex" && nrow(x@data_group_j) > 0) {
+    # Count how many column groups we have to set ihead correctly
+    j_groups <- sum(sapply(x@lazy_group, function(l) length(l[["j"]]) > 0))
+    if (j_groups > 0) {
+      ihead <- -j_groups
+      x <- group_tabularray_col(x, j = NULL, ihead = ihead)
+    }
+  }
+  
   ihead <- 0
   for (idx in seq_along(x@lazy_group)) {
     l <- x@lazy_group[[idx]]
     l[["x"]] <- x
+    
+    # For LaTeX output, skip column group evaluation since we handled it above
+    if (x@output == "latex" && length(l[["j"]]) > 0) {
+      ihead <- ihead - 1
+      next
+    }
+    
     if (length(l[["j"]]) > 0) {
       ihead <- ihead - 1
       l[["ihead"]] <- ihead

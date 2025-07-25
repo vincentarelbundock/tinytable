@@ -2,6 +2,10 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## IMPORTANT
+
+never call `library(tinytable)`. Always use `pkgload::load_all()` instead to use the latest code.
+
 ## Commands
 
 ### Development Commands

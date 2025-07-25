@@ -13,25 +13,91 @@ setMethod(
 )
 
 group_tabularray_col <- function(x, j, ihead, ...) {
-  if (is.null(j)) {
+  # Use @data_group_j matrix instead of j parameter
+  if (nrow(x@data_group_j) == 0) {
     return(x)
   }
 
   out <- strsplit(x@table_string, split = "\\n")[[1]]
 
-  header <- rep("", ncol(x))
-  for (idx in seq_along(j)) {
-    header[min(j[[idx]])] <- names(j)[idx]
+  # Process all header rows from @data_group_j matrix (from last to first, newest first)
+  num_header_rows <- nrow(x@data_group_j)
+  all_headers <- character(0)
+  current_ihead <- ihead
+  
+  for (row_idx in num_header_rows:1) {
+    header_row_original <- x@data_group_j[row_idx, ]
+    # Convert NA to empty string for LaTeX output
+    header_row_for_output <- header_row_original
+    header_row_for_output[is.na(header_row_for_output)] <- ""
+    header <- paste(header_row_for_output, collapse = " & ")
+
+    # Build cmidrule based on original @data_group_j content (with NAs) for this row
+    midr <- character(0)
+    i <- 1
+    while (i <= length(header_row_original)) {
+      if (!is.na(header_row_original[i]) && header_row_original[i] != "") {
+        # Find the span of this group
+        start_col <- i
+        group_name <- header_row_original[i]
+        end_col <- i
+        
+        # Find consecutive columns that belong to this group (colspan continuation with "")
+        while (end_col < length(header_row_original) && 
+               !is.na(header_row_original[end_col + 1]) && 
+               header_row_original[end_col + 1] == "") {
+          end_col <- end_col + 1
+        }
+        
+        midr <- c(midr, sprintf("\\cmidrule[lr]{%s-%s}", start_col, end_col))
+        i <- end_col + 1
+      } else {
+        i <- i + 1
+      }
+    }
+    
+    header_with_rules <- paste(header, "\\\\", paste(midr, collapse = ""))
+    all_headers <- c(all_headers, trimws(header_with_rules))
+    
+    # Apply styling for this header row
+    i <- 1
+    while (i <= length(header_row_original)) {
+      if (!is.na(header_row_original[i]) && header_row_original[i] != "") {
+        start_col <- i
+        end_col <- i
+        
+        # Find the span of this group (colspan continuation with "")
+        while (end_col < length(header_row_original) && 
+               !is.na(header_row_original[end_col + 1]) && 
+               header_row_original[end_col + 1] == "") {
+          end_col <- end_col + 1
+        }
+        
+        cs <- end_col - start_col + 1
+        if (cs == 1) {
+          cs <- NULL
+        }
+        
+        args <- list(
+          tt_build_now = TRUE,
+          x = x,
+          i = current_ihead,
+          j = start_col,
+          align = "c",
+          colspan = cs
+        )
+        x <- do.call(style_tt, args)
+        
+        i <- end_col + 1
+      } else {
+        i <- i + 1
+      }
+    }
+    
+    current_ihead <- current_ihead - 1
   }
-  header <- paste(header, collapse = " & ")
 
-  # \toprule -> \midrule
-  midr <- sapply(
-    j,
-    function(x) sprintf("\\cmidrule[lr]{%s-%s}", min(x), max(x))
-  )
-  header <- paste(header, "\\\\", paste(midr, collapse = ""))
-
+  # Insert all headers into the table
   idx <- max(
     c(
       grep("% tabularray inner close", out),
@@ -41,31 +107,13 @@ group_tabularray_col <- function(x, j, ihead, ...) {
 
   out <- c(
     out[1:idx],
-    # empty lines can break latex
-    trimws(header),
+    all_headers,
     out[(idx + 1):length(out)]
   )
   out <- paste(out, collapse = "\n")
 
   # rebuild including meta before style_tt
   x@table_string <- out
-
-  for (k in seq_along(j)) {
-    z <- min(j[[k]])
-    cs <- max(j[[k]]) - min(j[[k]]) + 1
-    if (cs == 1) {
-      cs <- NULL
-    }
-    args <- list(
-      tt_build_now = TRUE,
-      x = x,
-      i = ihead,
-      j = z,
-      align = "c",
-      colspan = cs
-    )
-    x <- do.call(style_tt, args)
-  }
 
   return(x)
 }

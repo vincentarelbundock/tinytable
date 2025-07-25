@@ -193,6 +193,12 @@ apply_groups_i <- function(x, format_fn, ...) {
     }
     x@lazy_group[[idx]] <- g
   }
+  
+  # Apply transformations to @data_group_i matrix as well
+  if (nrow(x@data_group_i) > 0) {
+    x@data_group_i <- format_fn(x@data_group_i, ...)
+  }
+  
   return(x)
 }
 
@@ -208,6 +214,12 @@ apply_groups_j <- function(x, format_fn, ...) {
     }
     x@lazy_group[[idx]] <- g
   }
+  
+  # Apply transformations to @data_group_j matrix as well
+  if (nrow(x@data_group_j) > 0) {
+    x@data_group_j <- format_fn(x@data_group_j, ...)
+  }
+  
   return(x)
 }
 
@@ -728,6 +740,7 @@ format_tt_lazy <- function(
     if (0 %in% i && !identical(components, "all")) {
       x <- apply_colnames(x, escape_text, output = o)
     }
+    
   }
 
   # markdown and quarto at the very end
