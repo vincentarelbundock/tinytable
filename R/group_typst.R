@@ -30,8 +30,15 @@ group_typst_col <- function(x, j, ihead, ...) {
         current_label <- group_row[i]
         span_start <- i
 
+        # Skip NA (ungrouped) columns
+        if (is.na(current_label)) {
+          col_specs <- c(col_specs, sprintf("[ ],"))
+          i <- i + 1
+          next
+        }
+
         # Find the end of this span
-        while (i <= length(group_row) && group_row[i] == current_label) {
+        while (i <= length(group_row) && !is.na(group_row[i]) && group_row[i] == current_label) {
           i <- i + 1
         }
         span_end <- i - 1

@@ -196,10 +196,18 @@ group_tt <- function(
     x@nhead <- x@nhead + 1
 
     # Add group labels to data_group_j matrix (above existing rows)
-    new_row <- character(ncol(x))
-    for (group_name in names(j)) {
-      group_cols <- j[[group_name]]
-      new_row[group_cols] <- group_name
+    new_row <- rep(NA_character_, ncol(x))
+    # Handle duplicate names properly by processing each list element individually
+    # Set the group name in the first column, "" in continuation columns, NA in ungrouped columns
+    for (i in seq_along(j)) {
+      group_name <- names(j)[i]
+      group_cols <- j[[i]]
+      # Set the label in the first column of the span
+      new_row[group_cols[1]] <- group_name
+      # Set empty string in continuation columns (if span > 1)
+      if (length(group_cols) > 1) {
+        new_row[group_cols[-1]] <- ""
+      }
     }
     x@data_group_j <- rbind(new_row, x@data_group_j)
 
