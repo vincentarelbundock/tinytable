@@ -10,12 +10,12 @@
 #' @noRd
 build_group_parts <- function(x) {
   if (length(x@lazy_group_i) == 0) {
-    return(list(
-      group_header = NULL,
-      group_body = NULL,
-      header_indices = NULL,
-      body_indices = NULL
-    ))
+    # No group insertions - set empty header and full table as body
+    x@data_header <- data.frame()
+    x@data_body <- x@table_dataframe
+    x@header_indices <- numeric(0)
+    x@body_indices <- seq_len(nrow(x@table_dataframe))
+    return(x)
   }
 
   # Create a temporary copy to process group insertions
@@ -35,12 +35,13 @@ build_group_parts <- function(x) {
   group_indices <- x_temp@group_index_i
 
   if (length(group_indices) == 0) {
-    return(list(
-      group_header = NULL,
-      group_body = final_table,
-      header_indices = NULL,
-      body_indices = seq_len(nrow(final_table))
-    ))
+    # No group indices found - set empty header and full table as body
+    x@data_header <- data.frame()
+    x@data_body <- final_table
+    x@header_indices <- numeric(0)
+    x@body_indices <- seq_len(nrow(final_table))
+    x@group_index_i <- group_indices
+    return(x)
   }
 
   # Split into header and body
@@ -48,28 +49,26 @@ build_group_parts <- function(x) {
   header_indices <- intersect(group_indices, all_indices)
   body_indices <- setdiff(all_indices, header_indices)
 
-  group_header <- NULL
-  group_body <- NULL
-
   if (length(header_indices) > 0) {
-    group_header <- final_table[header_indices, , drop = FALSE]
-    rownames(group_header) <- NULL
+    x@data_header <- final_table[header_indices, , drop = FALSE]
+    rownames(x@data_header) <- NULL
+  } else {
+    x@data_header <- final_table[0, , drop = FALSE]
   }
 
   if (length(body_indices) > 0) {
-    group_body <- final_table[body_indices, , drop = FALSE]
-    rownames(group_body) <- NULL
+    x@data_body <- final_table[body_indices, , drop = FALSE]
+    rownames(x@data_body) <- NULL
   } else {
     # Create empty data frame with same structure
-    group_body <- final_table[0, , drop = FALSE]
+    x@data_body <- final_table[0, , drop = FALSE]
   }
 
-  return(list(
-    group_header = group_header,
-    group_body = group_body,
-    header_indices = header_indices,
-    body_indices = body_indices
-  ))
+  x@header_indices <- header_indices
+  x@body_indices <- body_indices
+  x@group_index_i <- group_indices
+  
+  return(x)
 }
 
 
@@ -106,24 +105,15 @@ build_tt <- function(x, output = NULL) {
   # 1. Build group_header and group_body data frames with position calculations
   # 2. Apply lazy_format to each part based on calculated indices
   # 3. Combine formatted results into single character data frame
-  group_parts <- build_group_parts(x)
-  group_header <- group_parts$group_header
-  group_body <- group_parts$group_body
-  header_indices <- group_parts$header_indices
-  body_indices <- group_parts$body_indices
+  x <- build_group_parts(x)
 
   # Step 2: Apply lazy_format using the delegated function in format_tt.R
-  if (!is.null(group_header) || !is.null(group_body)) {
-    formatted_parts <- apply_group_format(x, group_header, group_body, header_indices, body_indices)
-    group_header <- formatted_parts$group_header
-    group_body <- formatted_parts$group_body
+  if (length(x@lazy_group_i) > 0) {
+    x <- apply_group_format(x)
   }
 
   # Step 3: Combine formatted results into single character data frame
-  if (!is.null(group_header) || !is.null(group_body)) {
-    # Reassemble the table in the correct order
-    final_table <- data.frame()
-
+  if (length(x@lazy_group_i) > 0) {
     # Get the original final order by recreating the full table
     x_temp <- x
     for (l in x@lazy_group_i) {
@@ -134,23 +124,22 @@ build_tt <- function(x, output = NULL) {
 
     # Now rebuild using our formatted pieces
     final_df <- x_temp@table_dataframe
-    group_indices <- x_temp@group_index_i
 
-    # Replace group rows with formatted group_header and body rows with formatted group_body
-    if (!is.null(group_header) && length(header_indices) > 0) {
-      for (i in seq_along(header_indices)) {
-        row_idx <- header_indices[i]
+    # Replace group rows with formatted data_header and body rows with formatted data_body
+    if (nrow(x@data_header) > 0 && length(x@header_indices) > 0) {
+      for (i in seq_along(x@header_indices)) {
+        row_idx <- x@header_indices[i]
         if (row_idx <= nrow(final_df)) {
-          final_df[row_idx, ] <- group_header[i, ]
+          final_df[row_idx, ] <- x@data_header[i, ]
         }
       }
     }
 
-    if (!is.null(group_body) && length(body_indices) > 0) {
-      for (i in seq_along(body_indices)) {
-        row_idx <- body_indices[i]
+    if (nrow(x@data_body) > 0 && length(x@body_indices) > 0) {
+      for (i in seq_along(x@body_indices)) {
+        row_idx <- x@body_indices[i]
         if (row_idx <= nrow(final_df)) {
-          final_df[row_idx, ] <- group_body[i, ]
+          final_df[row_idx, ] <- x@data_body[i, ]
         }
       }
     }
@@ -158,7 +147,6 @@ build_tt <- function(x, output = NULL) {
     x@table_dataframe <- final_df
     x@data <- final_df
     x@nrow <- nrow(final_df)
-    x@group_index_i <- x_temp@group_index_i
   } else {
     # No group processing needed, apply standard formatting
     for (l in x@lazy_format) {

@@ -30,6 +30,8 @@ setClass(
     data_body = "data.frame",
     data_header = "data.frame",
     data_group_j = "matrix",
+    header_indices = "numeric",
+    body_indices = "numeric",
     group_index_i = "numeric",
     group_index_i_matrix = "numeric",
     group_n_i = "numeric",
@@ -98,6 +100,10 @@ setMethod(
     }
     .Object@group_n_i <- 0
     .Object@group_n_j <- 0
+    .Object@data_header <- data.frame()
+    .Object@data_body <- data.frame()
+    .Object@header_indices <- numeric(0)
+    .Object@body_indices <- numeric(0)
     .Object@names <- if (is.null(colnames(data))) {
       character()
     } else {

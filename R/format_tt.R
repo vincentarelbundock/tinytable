@@ -803,14 +803,11 @@ format_tt_lazy <- function(
 #' Apply lazy_format operations to group header and body parts
 #' @keywords internal
 #' @noRd
-apply_group_format <- function(x, group_header, group_body, header_indices, body_indices) {
-  formatted_header <- group_header
-  formatted_body <- group_body
-  
+apply_group_format <- function(x) {
   # Apply formatting to header if it exists
-  if (!is.null(group_header)) {
+  if (nrow(x@data_header) > 0) {
     x_header <- x
-    x_header@table_dataframe <- group_header
+    x_header@table_dataframe <- x@data_header
     
     for (l in x@lazy_format) {
       should_apply <- FALSE
@@ -819,13 +816,13 @@ apply_group_format <- function(x, group_header, group_body, header_indices, body
       if (is.null(l$i)) {
         # Apply to all rows in header
         should_apply <- TRUE
-      } else if (any(l$i %in% header_indices)) {
+      } else if (any(l$i %in% x@header_indices)) {
         # Apply only to specified header indices
-        matching_indices <- intersect(l$i, header_indices)
+        matching_indices <- intersect(l$i, x@header_indices)
         if (length(matching_indices) > 0) {
           should_apply <- TRUE
-          # Adjust indices to match the group_header data frame
-          l_header$i <- match(matching_indices, header_indices)
+          # Adjust indices to match the data_header data frame
+          l_header$i <- match(matching_indices, x@header_indices)
         }
       }
       
@@ -834,13 +831,13 @@ apply_group_format <- function(x, group_header, group_body, header_indices, body
         x_header <- eval(l_header)
       }
     }
-    formatted_header <- x_header@table_dataframe
+    x@data_header <- x_header@table_dataframe
   }
   
   # Apply formatting to body if it exists
-  if (!is.null(group_body)) {
+  if (nrow(x@data_body) > 0) {
     x_body <- x
-    x_body@table_dataframe <- group_body
+    x_body@table_dataframe <- x@data_body
     
     for (l in x@lazy_format) {
       should_apply <- FALSE
@@ -849,13 +846,19 @@ apply_group_format <- function(x, group_header, group_body, header_indices, body
       if (is.null(l$i)) {
         # Apply to all rows in body
         should_apply <- TRUE
-      } else if (any(l$i %in% body_indices)) {
-        # Apply only to specified body indices
-        matching_indices <- intersect(l$i, body_indices)
-        if (length(matching_indices) > 0) {
+      } else if (length(x@body_indices) == 0 || any(l$i %in% x@body_indices)) {
+        # If no body_indices (no groups), apply to matching rows
+        # If we have body_indices, apply only to specified body indices
+        if (length(x@body_indices) == 0) {
+          # No groups case - apply to all specified rows
           should_apply <- TRUE
-          # Adjust indices to match the group_body data frame
-          l_body$i <- match(matching_indices, body_indices)
+        } else {
+          matching_indices <- intersect(l$i, x@body_indices)
+          if (length(matching_indices) > 0) {
+            should_apply <- TRUE
+            # Adjust indices to match the data_body data frame
+            l_body$i <- match(matching_indices, x@body_indices)
+          }
         }
       }
       
@@ -864,11 +867,8 @@ apply_group_format <- function(x, group_header, group_body, header_indices, body
         x_body <- eval(l_body)
       }
     }
-    formatted_body <- x_body@table_dataframe
+    x@data_body <- x_body@table_dataframe
   }
   
-  return(list(
-    group_header = formatted_header,
-    group_body = formatted_body
-  ))
+  return(x)
 }
