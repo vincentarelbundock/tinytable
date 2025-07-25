@@ -7,7 +7,6 @@
 \S4method{initialize}{tinytable}(
   .Object,
   data = data.frame(),
-  table_input = data.frame(),
   caption = NULL,
   notes = NULL,
   theme = list("default"),

@@ -57,7 +57,6 @@ setClass(
     style_caption = "list",
     style_notes = "list",
     table_dataframe = "data.frame",
-    table_input = "data.frame",
     table_string = "character",
     theme = "list",
     width = "numeric",
@@ -73,20 +72,18 @@ setClass(
 setMethod(
   "initialize",
   "tinytable",
-  function(
-    .Object,
-    data = data.frame(),
-    table_input = data.frame(),
-    caption = NULL,
-    notes = NULL,
-    theme = list("default"),
-    placement = NULL,
-    width = NULL,
-    height = NULL
-  ) {
+  function(.Object,
+           data = data.frame(),
+           caption = NULL,
+           notes = NULL,
+           theme = list("default"),
+           table_dataframe = data.frame(),
+           placement = NULL,
+           width = NULL,
+           height = NULL) {
     # explicit
     .Object@data <- data
-    .Object@table_dataframe <- table_input
+    .Object@table_dataframe <- table_dataframe
     .Object@theme <- theme
     # dynamic
     .Object@nrow <- nrow(.Object@data)
@@ -133,8 +130,7 @@ setMethod(
       .Object@height <- height
     }
     return(.Object)
-  }
-)
+  })
 
 #' Method for a tinytable S4 object
 #'
@@ -190,8 +186,7 @@ setReplaceMethod(
     }
     x@names <- value
     return(x)
-  }
-)
+  })
 
 #' Method for a tinytable S4 object
 #'
@@ -213,8 +208,7 @@ setReplaceMethod(
     }
     x@names <- value
     return(x)
-  }
-)
+  })
 
 #' Dimensions a tinytable S4 object
 #'
