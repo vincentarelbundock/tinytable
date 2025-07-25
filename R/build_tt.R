@@ -12,9 +12,9 @@ build_group_parts <- function(x) {
   if (length(x@lazy_group_i) == 0) {
     # No group insertions - set empty header and full table as body
     x@data_header <- data.frame()
-    x@data_body <- x@table_dataframe
+    x@data_body <- x@data_processed
     x@header_indices <- numeric(0)
-    x@body_indices <- seq_len(nrow(x@table_dataframe))
+    x@body_indices <- seq_len(nrow(x@data_processed))
     return(x)
   }
 
@@ -27,7 +27,7 @@ build_group_parts <- function(x) {
   }
 
   # Now we have the full table with group rows inserted
-  final_table <- x_temp@table_dataframe
+  final_table <- x_temp@data_processed
 
   # Identify which rows are group headers vs body based on group_index_i
   group_indices <- x_temp@group_index_i
@@ -109,23 +109,23 @@ build_tt <- function(x, output = NULL) {
     # Create temporary table for header formatting
     if (nrow(x@data_header) > 0) {
       x_header <- x
-      x_header@table_dataframe <- x@data_header
+      x_header@data_processed <- x@data_header
       for (l in x@lazy_format) {
         l[["x"]] <- x_header
         x_header <- eval(l)
       }
-      x@data_header <- x_header@table_dataframe
+      x@data_header <- x_header@data_processed
     }
 
     # Create temporary table for body formatting
     if (nrow(x@data_body) > 0) {
       x_body <- x
-      x_body@table_dataframe <- x@data_body
+      x_body@data_processed <- x@data_body
       for (l in x@lazy_format) {
         l[["x"]] <- x_body
         x_body <- eval(l)
       }
-      x@data_body <- x_body@table_dataframe
+      x@data_body <- x_body@data_processed
     }
 
     # Step 3: Reconstruct the final table
@@ -136,7 +136,7 @@ build_tt <- function(x, output = NULL) {
     }
 
     # Now rebuild using our formatted pieces
-    final_df <- x_temp@table_dataframe
+    final_df <- x_temp@data_processed
 
     # Replace group rows with formatted data_header and body rows with formatted data_body
     if (nrow(x@data_header) > 0 && length(x@header_indices) > 0) {
@@ -157,7 +157,7 @@ build_tt <- function(x, output = NULL) {
       }
     }
 
-    x@table_dataframe <- final_df
+    x@data_processed <- final_df
     x@data <- final_df
     x@nrow <- nrow(final_df)
   } else {
@@ -179,11 +179,11 @@ build_tt <- function(x, output = NULL) {
 
   # data frame we trim strings, pre-padded for markdown
   if (x@output == "dataframe") {
-    tmp <- x@table_dataframe
+    tmp <- x@data_processed
     for (i in seq_along(tmp)) {
       tmp[[i]] <- trimws(tmp[[i]])
     }
-    x@table_dataframe <- tmp
+    x@data_processed <- tmp
   }
 
   # markdown styles need to be applied before creating the table but after `format_tt()`, otherwise there's annoying parsing, etc.

@@ -1,6 +1,6 @@
 footnote_markers <- function(x) {
   notes <- x@notes
-  tab <- x@table_dataframe
+  tab <- x@data_processed
   for (idx in seq_along(notes)) {
     n <- notes[[idx]]
     sup <- names(notes)[idx]
@@ -48,6 +48,6 @@ footnote_markers <- function(x) {
       }
     }
   }
-  x@table_dataframe <- tab
+  x@data_processed <- tab
   return(x)
 }

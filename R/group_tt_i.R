@@ -80,7 +80,7 @@ insert_group_i <- function(x, k) {
   matrix_df <- as.data.frame(matrix_data, stringsAsFactors = FALSE)
 
   # Set column names to match the table
-  table_names <- names(x@table_dataframe)
+  table_names <- names(x@data_processed)
   if (is.null(table_names)) {
     table_names <- names(x@data)
   }
@@ -117,22 +117,22 @@ insert_group_i <- function(x, k) {
 
     # Insert row at position (1 = top, 2 = after first row, etc.)
     if (pos <= 1) {
-      colnames(row_to_insert) <- colnames(x@table_dataframe)
-      x@table_dataframe <- rbind(row_to_insert, x@table_dataframe)
-    } else if (pos > nrow(x@table_dataframe)) {
-      colnames(row_to_insert) <- colnames(x@table_dataframe)
-      x@table_dataframe <- rbind(x@table_dataframe, row_to_insert)
+      colnames(row_to_insert) <- colnames(x@data_processed)
+      x@data_processed <- rbind(row_to_insert, x@data_processed)
+    } else if (pos > nrow(x@data_processed)) {
+      colnames(row_to_insert) <- colnames(x@data_processed)
+      x@data_processed <- rbind(x@data_processed, row_to_insert)
     } else {
-      before <- x@table_dataframe[1:(pos - 1), , drop = FALSE]
-      after <- x@table_dataframe[pos:nrow(x@table_dataframe), , drop = FALSE]
+      before <- x@data_processed[1:(pos - 1), , drop = FALSE]
+      after <- x@data_processed[pos:nrow(x@data_processed), , drop = FALSE]
       colnames(before) <- colnames(after) <- colnames(row_to_insert)
-      x@table_dataframe <- rbind(before, row_to_insert, after)
+      x@data_processed <- rbind(before, row_to_insert, after)
     }
   }
 
   # Update tracking
-  x@data <- x@table_dataframe
-  x@nrow <- nrow(x@table_dataframe)
+  x@data <- x@data_processed
+  x@nrow <- nrow(x@data_processed)
 
   # Track matrix positions for styling
   if (length(positions) > 0) {

@@ -130,7 +130,7 @@ print.tinytable <- function(
       cat(tab, "\n")
     }
   } else {
-    return(x@table_dataframe)
+    return(x@data_processed)
   }
 
   return(invisible(x))

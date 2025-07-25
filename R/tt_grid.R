@@ -10,7 +10,7 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
   if (is_matrix) {
     tab <- x
   } else {
-    tab <- x@table_dataframe
+    tab <- x@data_processed
   }
 
   if (is.null(width_cols)) {

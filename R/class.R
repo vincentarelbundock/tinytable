@@ -22,25 +22,27 @@ setClass(
   Class = "tinytable",
   slots = representation(
     body = "character",
+    body_indices = "numeric",
     bootstrap_class = "character",
     bootstrap_css_rule = "character",
     caption = "character",
     css = "data.frame",
     data = "data.frame",
     data_body = "data.frame",
-    data_header = "data.frame",
     data_group_j = "matrix",
-    header_indices = "numeric",
-    body_indices = "numeric",
+    data_header = "data.frame",
+    data_processed = "data.frame",
     group_index_i = "numeric",
     group_index_i_matrix = "numeric",
     group_n_i = "numeric",
     group_n_j = "numeric",
+    header_indices = "numeric",
+    height = "numeric",
     id = "character",
     lazy_finalize = "list",
     lazy_format = "list",
-    lazy_group_j = "list",
     lazy_group_i = "list",
+    lazy_group_j = "list",
     lazy_plot = "list",
     lazy_style = "list",
     lazy_theme = "list",
@@ -56,12 +58,10 @@ setClass(
     style = "data.frame",
     style_caption = "list",
     style_notes = "list",
-    table_dataframe = "data.frame",
     table_string = "character",
     theme = "list",
     width = "numeric",
-    width_cols = "numeric",
-    height = "numeric"
+    width_cols = "numeric"
   )
 )
 
@@ -77,13 +77,13 @@ setMethod(
            caption = NULL,
            notes = NULL,
            theme = list("default"),
-           table_dataframe = data.frame(),
+           data_processed = data.frame(),
            placement = NULL,
            width = NULL,
            height = NULL) {
     # explicit
     .Object@data <- data
-    .Object@table_dataframe <- table_dataframe
+    .Object@data_processed <- data_processed
     .Object@theme <- theme
     # dynamic
     .Object@nrow <- nrow(.Object@data)

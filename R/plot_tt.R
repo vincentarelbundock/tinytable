@@ -131,7 +131,7 @@ plot_tt_lazy <- function(
   assets = "tinytable_assets",
   ...
 ) {
-  out <- x@table_dataframe
+  out <- x@data_processed
 
   if (!is.null(data)) {
     assert_dependency("ggplot2")
@@ -223,7 +223,7 @@ plot_tt_lazy <- function(
 
   out[i, j] <- cell
 
-  x@table_dataframe <- out
+  x@data_processed <- out
 
   return(x)
 }

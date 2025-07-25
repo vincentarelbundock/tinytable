@@ -155,7 +155,7 @@ tt <- function(
   out <- methods::new(
     "tinytable",
     data = x,
-    table_dataframe = tab,
+    data_processed = tab,
     caption = caption,
     notes = notes,
     theme = list(theme),

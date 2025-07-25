@@ -565,7 +565,7 @@ format_tt_lazy <- function(
   } else if (inherits(x, "tinytable")) {
     atomic_vector <- FALSE
     # if no other format_tt() call has been applied, we ctan have numeric values
-    out <- x@table_dataframe
+    out <- x@data_processed
     ori <- x@data
   } else {
     stop(
@@ -786,7 +786,7 @@ format_tt_lazy <- function(
     }
     return(out)
   } else {
-    x@table_dataframe <- out
+    x@data_processed <- out
     return(x)
   }
 }

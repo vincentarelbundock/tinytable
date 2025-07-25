@@ -75,7 +75,7 @@ setMethod(
     out <- paste(out, collapse = "\n")
 
     # body
-    body <- apply(x@table_dataframe, 2, function(k) paste0("[", k, "]"))
+    body <- apply(x@data_processed, 2, function(k) paste0("[", k, "]"))
 
     # get style information
     sty <- x@style
@@ -83,7 +83,7 @@ setMethod(
     # Apply colspan and rowspan transformations
     body <- apply_typst_spans(body, sty)
 
-    if (nrow(x@table_dataframe) && is.null(dim(body))) {
+    if (nrow(x@data_processed) && is.null(dim(body))) {
       body <- matrix(body)
     }
 
