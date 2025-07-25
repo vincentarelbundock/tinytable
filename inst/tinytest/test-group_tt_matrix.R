@@ -43,3 +43,12 @@ expect_snapshot_print(t[["markdown"]], "group_tt_matrix-single_column_with_styli
 expect_snapshot_print(t[["latex"]], "group_tt_matrix-single_column_with_styling.tex")
 expect_snapshot_print(t[["typst"]], "group_tt_matrix-single_column_with_styling.typ")
 expect_snapshot_print(t[["html"]], "group_tt_matrix-single_column_with_styling.html")
+
+# Matrix row duplication - single row matrix with multiple positions 
+rowmat <- matrix(colnames(iris))
+tab <- tt(head(iris, 7)) |> group_tt(i = c(2, 5), j = rowmat)
+t <- expect_table(tab)
+expect_snapshot_print(t[["markdown"]], "group_tt_matrix-row_duplication.md")
+expect_snapshot_print(t[["latex"]], "group_tt_matrix-row_duplication.tex")
+expect_snapshot_print(t[["typst"]], "group_tt_matrix-row_duplication.typ")
+expect_snapshot_print(t[["html"]], "group_tt_matrix-row_duplication.html")

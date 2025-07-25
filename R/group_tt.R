@@ -125,6 +125,12 @@ group_tt <- function(
     # Add group matrix data to @data_group_i and track indices in @index_group_i
     group_matrix <- k[[2]]
     group_df <- as.data.frame(group_matrix, stringsAsFactors = FALSE)
+    
+    # Handle row duplication for multiple positions with single matrix row
+    if (length(positions) > 1 && nrow(group_df) == 1) {
+      group_df <- group_df[rep(1, length(positions)), , drop = FALSE]
+    }
+    
     # Set column names to match the table
     if (ncol(group_df) == ncol(x@data)) {
       colnames(group_df) <- colnames(x@data)
