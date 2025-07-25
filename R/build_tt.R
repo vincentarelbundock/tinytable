@@ -83,13 +83,21 @@ build_tt <- function(x, output = NULL) {
 
   # groups require the table to be drawn first, expecially group_tabularray_col() and friends
   
-  # For LaTeX output, handle column groups using @data_group_j matrix once
-  if (x@output == "latex" && nrow(x@data_group_j) > 0) {
+  # For LaTeX and Typst output, handle column groups using @data_group_j matrix once
+  if (x@output %in% c("latex", "typst") && nrow(x@data_group_j) > 0) {
     # Count how many column groups we have to set ihead correctly
     j_groups <- sum(sapply(x@lazy_group, function(l) length(l[["j"]]) > 0))
     if (j_groups > 0) {
-      ihead <- -j_groups
-      x <- group_tabularray_col(x, j = NULL, ihead = ihead)
+      if (x@output == "latex") {
+        ihead <- -j_groups
+        x <- group_tabularray_col(x, j = NULL, ihead = ihead)
+      } else if (x@output == "typst") {
+        x <- group_typst_col(x, j = NULL, ihead = NULL)
+        # Clear the matrix to prevent double processing in lazy evaluation
+        if (ncol(x@data_group_j) > 0) {
+          x@data_group_j <- matrix(character(0), nrow = 0, ncol = ncol(x@data_group_j))
+        }
+      }
     }
   }
   
@@ -98,9 +106,15 @@ build_tt <- function(x, output = NULL) {
     l <- x@lazy_group[[idx]]
     l[["x"]] <- x
     
-    # For LaTeX output, skip column group evaluation since we handled it above
-    if (x@output == "latex" && length(l[["j"]]) > 0) {
+    # For LaTeX and Typst output, skip column group evaluation since we handled it above
+    if (x@output %in% c("latex", "typst") && length(l[["j"]]) > 0) {
       ihead <- ihead - 1
+      # Still evaluate row groups if present
+      if (length(l[["i"]]) > 0) {
+        l_row_only <- l
+        l_row_only[["j"]] <- NULL  # Remove column groups
+        x <- eval(l_row_only)
+      }
       next
     }
     

@@ -11,7 +11,7 @@ setMethod(
       out <- group_typst_row(out, i, indent)
     }
 
-    if (!is.null(j)) {
+    if (nrow(x@data_group_j) > 0) {
       out <- group_typst_col(out, j, ...)
     }
 
@@ -45,26 +45,60 @@ group_typst_row <- function(x, i, indent, ...) {
 }
 
 group_typst_col <- function(x, j, ihead, ...) {
+  # Use @data_group_j matrix instead of j parameter
+  if (nrow(x@data_group_j) == 0) {
+    return(x)
+  }
+  
+
   out <- x@table_string
-  miss <- as.list(setdiff(seq_len(ncol(x)), unlist(j)))
-  miss <- stats::setNames(miss, rep(" ", length(miss)))
-  j <- c(j, miss)
-  max_col <- sapply(j, max)
-  idx <- order(max_col)
-  j <- j[idx]
-  lab <- names(j)
-  len <- lengths(j)
-  col <- ifelse(
-    trimws(lab) == "",
-    sprintf("[%s],", lab),
-    sprintf(
-      "table.cell(stroke: (bottom: .05em + black), colspan: %s, align: center)[%s],",
-      len,
-      lab
-    )
-  )
-  col <- paste(col, collapse = "")
-  out <- lines_insert(out, col, "repeat: true", "after")
+
+  # Process all header rows from @data_group_j matrix (from last to first, newest first)
+  num_header_rows <- nrow(x@data_group_j)
+  
+  for (row_idx in num_header_rows:1) {
+    header_row_original <- x@data_group_j[row_idx, ]
+    
+    # Build typst column headers for this row
+    col_cells <- character(0)
+    i <- 1
+    while (i <= length(header_row_original)) {
+      if (!is.na(header_row_original[i]) && header_row_original[i] != "") {
+        # Find the span of this group
+        start_col <- i
+        group_name <- header_row_original[i]
+        end_col <- i
+        
+        # Find consecutive columns that belong to this group (colspan continuation with "")
+        while (end_col < length(header_row_original) && 
+               !is.na(header_row_original[end_col + 1]) && 
+               header_row_original[end_col + 1] == "") {
+          end_col <- end_col + 1
+        }
+        
+        # Calculate colspan
+        colspan <- end_col - start_col + 1
+        
+        # Create typst cell
+        col_cells <- c(col_cells, sprintf(
+          "table.cell(stroke: (bottom: .05em + black), colspan: %s, align: center)[%s],",
+          colspan,
+          group_name
+        ))
+        
+        i <- end_col + 1
+      } else {
+        # Empty cell (NA or first empty string in a group)
+        col_cells <- c(col_cells, "[ ],")
+        i <- i + 1
+      }
+    }
+    
+    # Insert this header row
+    col <- paste(col_cells, collapse = "")
+    out <- lines_insert(out, col, "repeat: true", "after")
+  }
+  
   if (!any(grepl("column-gutter", out))) {
     out <- lines_insert(
       out,
