@@ -26,7 +26,7 @@ rbind_i_j <- function(x) {
   if (nrow(x@data_body) > 0 && length(x@body_indices) > 0) {
     for (i in seq_along(x@body_indices)) {
       row_idx <- x@body_indices[i]
-      if (row_idx > 0 && row_idx <= total_rows) {
+      if (!is.na(row_idx) && row_idx > 0 && row_idx <= total_rows) {
         final_df[row_idx, ] <- x@data_body[i, ]
       }
     }
@@ -36,7 +36,7 @@ rbind_i_j <- function(x) {
   if (nrow(x@data_group_i) > 0 && length(x@index_group_i) > 0) {
     for (i in seq_len(nrow(x@data_group_i))) {
       row_idx <- x@index_group_i[i]
-      if (row_idx > 0 && row_idx <= total_rows) {
+      if (!is.na(row_idx) && row_idx > 0 && row_idx <= total_rows) {
         final_df[row_idx, ] <- x@data_group_i[i, ]
       }
     }
@@ -111,7 +111,9 @@ build_tt <- function(x, output = NULL) {
   x <- build_group_parts(x)
 
   # Step 2: Apply formatting to the separated parts
-  x <- format_header_body(x)
+  x <- format_group_i(x)
+  x <- format_group_j(x)
+  x <- format_body(x)
 
   # Step 3: Reconstruct the final table
   x <- rbind_i_j(x)
