@@ -133,12 +133,10 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
     }
 
     # Handle row groups (they span entire table width)
-    for (k in x@lazy_group_i) {
-      # k is now directly the list of positions and matrix
-      matrix_data <- k[[2]]
-      if (is.matrix(matrix_data) && ncol(matrix_data) >= 1) {
-        # Check labels in first column
-        labels <- matrix_data[, 1]
+    if (nrow(x@data_group_i) > 0) {
+      # Check labels in first column of group data
+      if (ncol(x@data_group_i) >= 1) {
+        labels <- x@data_group_i[, 1]
         for (label in labels) {
           if (!is.na(label) && nchar(label) > 0) {
             g_len <- nchar(label) + 2

@@ -122,10 +122,6 @@ group_tt <- function(
     x@group_index_i <- c(x@group_index_i, idx)
     x@nrow <- x@nrow + length(positions)
 
-    # Store the matrix insertion in lazy_group_i instead of lazy_group
-    # Store k directly (list of positions and matrix)
-    x@lazy_group_i <- c(x@lazy_group_i, list(k))
-    
     # Add group matrix data to @data_group_i and track indices in @index_group_i
     group_matrix <- k[[2]]
     group_df <- as.data.frame(group_matrix, stringsAsFactors = FALSE)
@@ -174,9 +170,6 @@ group_tt <- function(
     x@group_index_i <- c(x@group_index_i, idx)
     x@nrow <- x@nrow + length(positions)
 
-    # Store the matrix insertion
-    x@lazy_group_i <- c(x@lazy_group_i, list(k))
-    
     # Add group matrix data to @data_group_i and track indices in @index_group_i
     group_matrix <- k[[2]]
     group_df <- as.data.frame(group_matrix, stringsAsFactors = FALSE)

@@ -183,21 +183,21 @@ apply_groups_i <- function(x, format_fn, ...) {
     return(x)
   }
 
-  for (idx in seq_along(x@lazy_group_i)) {
-    k <- x@lazy_group_i[[idx]]
-    
-    # k is now directly the list of positions and matrix
-    matrix_data <- k[[2]]
-    if (is.matrix(matrix_data)) {
-      # Format all elements in the matrix
-      result <- format_fn(matrix_data, ...)
-      if (!is.null(result)) {
-        k[[2]] <- result
+  # Format group i data directly from @data_group_i
+  if (nrow(x@data_group_i) > 0) {
+    for (row_idx in seq_len(nrow(x@data_group_i))) {
+      for (col_idx in seq_len(ncol(x@data_group_i))) {
+        current_value <- x@data_group_i[row_idx, col_idx]
+        if (!is.na(current_value) && trimws(current_value) != "") {
+          formatted_value <- format_fn(current_value, ...)
+          if (!is.null(formatted_value)) {
+            x@data_group_i[row_idx, col_idx] <- formatted_value
+          }
+        }
       }
     }
-    
-    x@lazy_group_i[[idx]] <- k
   }
+  
   return(x)
 }
 
@@ -205,7 +205,7 @@ format_header_body <- function(x) {
   # Apply formatting to separated @data_group_j and @data_body
   # This function handles the case where groups have been separated
 
-  if (length(x@lazy_group_i) == 0) return(x)
+  if (nrow(x@data_group_i) == 0) return(x)
   
   # Create temporary table for header formatting
   if (nrow(x@data_group_j) > 0) {

@@ -118,7 +118,7 @@ build_tt <- function(x, output = NULL) {
 
 
   # Handle no groups case: apply formatting directly
-  if (length(x@lazy_group_i) == 0) {
+  if (nrow(x@data_group_i) == 0) {
     for (l in x@lazy_format) {
       l[["x"]] <- x
       x <- eval(l)
