@@ -30,7 +30,6 @@ setClass(
     caption = "NULLorCharacter",
     css = "data.frame",
     data = "data.frame",
-    data_body = "data.frame",
     data_group_i = "data.frame",
     data_group_j = "data.frame",
     data_processed = "data.frame",
@@ -97,7 +96,6 @@ setMethod(
     # empty
     .Object@data_group_i <- data.frame()
     .Object@data_group_j <- data.frame()
-    .Object@data_body <- data.frame()
     .Object@index_group_i <- numeric(0)
     .Object@index_body <- numeric(0)
     .Object@id <- get_id("tinytable_")
