@@ -31,7 +31,6 @@ setClass(
     css = "data.frame",
     data = "data.frame",
     data_body = "data.frame",
-    data_group_j = "matrix",
     data_header = "data.frame",
     data_processed = "data.frame",
     group_index_i = "numeric",
@@ -96,8 +95,6 @@ setMethod(
     .Object@ncol <- ncol(.Object@data)
     .Object@nhead <- if (is.null(colnames(data))) 0 else 1
     .Object@names <- if (is.null(colnames(data))) character() else colnames(data)
-    # @data_group_j is no longer used - column groups are stored in @data_header
-    .Object@data_group_j <- matrix(character(0), nrow = 0, ncol = ncol(.Object@data))
 
     # empty
     .Object@data_header <- data.frame()

@@ -190,7 +190,7 @@ group_tt <- function(
     j <- sanitize_group_index(j, hi = ncol(x), orientation = "column")
     x@nhead <- x@nhead + 1
 
-    # Add group labels to data_group_j matrix (above existing rows)
+    # Add group labels to data_header matrix
     new_row <- rep(NA_character_, ncol(x))
     # Handle duplicate names properly by processing each list element individually
     # Set the group name in the first column, "" in continuation columns, NA in ungrouped columns
@@ -204,7 +204,7 @@ group_tt <- function(
         new_row[group_cols[-1]] <- ""
       }
     }
-    # Add column groups to @data_header instead of @data_group_j
+    # Add column groups to @data_header
     if (nrow(x@data_header) == 0) {
       # Create initial data_header with same structure as data
       x@data_header <- data.frame(matrix(NA_character_, nrow = 1, ncol = ncol(x@data)))
