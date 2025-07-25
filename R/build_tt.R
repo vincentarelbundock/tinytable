@@ -22,10 +22,8 @@ build_group_parts <- function(x) {
   x_temp <- x
 
   # Apply all group insertions using the existing logic
-  for (l in x@lazy_group_i) {
-    if (l$fn == "group_eval_i") {
-      x_temp <- group_eval_i(x_temp, l$k)
-    }
+  for (k in x@lazy_group_i) {
+    x_temp <- group_eval_i(x_temp, k)
   }
 
   # Now we have the full table with group rows inserted
@@ -116,10 +114,8 @@ build_tt <- function(x, output = NULL) {
   if (length(x@lazy_group_i) > 0) {
     # Get the original final order by recreating the full table
     x_temp <- x
-    for (l in x@lazy_group_i) {
-      if (l$fn == "group_eval_i") {
-        x_temp <- group_eval_i(x_temp, l$k)
-      }
+    for (k in x@lazy_group_i) {
+      x_temp <- group_eval_i(x_temp, k)
     }
 
     # Now rebuild using our formatted pieces

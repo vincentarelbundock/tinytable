@@ -133,23 +133,21 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
     }
 
     # Handle row groups (they span entire table width)
-    for (g in x@lazy_group_i) {
-      if (g$fn == "group_eval_i" && !is.null(g$k)) {
-        # Extract matrix data from the new structure
-        matrix_data <- g$k[[2]]
-        if (is.matrix(matrix_data) && ncol(matrix_data) >= 1) {
-          # Check labels in first column
-          labels <- matrix_data[, 1]
-          for (label in labels) {
-            if (!is.na(label) && nchar(label) > 0) {
-              g_len <- nchar(label) + 2
-              # Total table width including separators
-              c_len <- sum(width_cols) + length(width_cols) - 1
-              if (g_len > c_len) {
-                # Distribute extra width across all columns
-                extra_width <- ceiling((g_len - c_len) / length(width_cols))
-                width_cols <- width_cols + extra_width
-              }
+    for (k in x@lazy_group_i) {
+      # k is now directly the list of positions and matrix
+      matrix_data <- k[[2]]
+      if (is.matrix(matrix_data) && ncol(matrix_data) >= 1) {
+        # Check labels in first column
+        labels <- matrix_data[, 1]
+        for (label in labels) {
+          if (!is.na(label) && nchar(label) > 0) {
+            g_len <- nchar(label) + 2
+            # Total table width including separators
+            c_len <- sum(width_cols) + length(width_cols) - 1
+            if (g_len > c_len) {
+              # Distribute extra width across all columns
+              extra_width <- ceiling((g_len - c_len) / length(width_cols))
+              width_cols <- width_cols + extra_width
             }
           }
         }

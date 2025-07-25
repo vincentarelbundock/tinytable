@@ -123,12 +123,8 @@ group_tt <- function(
     x@nrow <- x@nrow + length(positions)
 
     # Store the matrix insertion in lazy_group_i instead of lazy_group
-    # Create a closure to preserve the matrix structure
-    cal <- list(
-      fn = "group_eval_i",
-      k = k
-    )
-    x@lazy_group_i <- c(x@lazy_group_i, list(cal))
+    # Store k directly (list of positions and matrix)
+    x@lazy_group_i <- c(x@lazy_group_i, list(k))
 
     # Apply styling for matrix insertion
     if (converted_from_list) {
@@ -162,8 +158,7 @@ group_tt <- function(
     x@nrow <- x@nrow + length(positions)
     
     # Store the matrix insertion
-    cal <- list(fn = "group_eval_i", k = k)
-    x@lazy_group_i <- c(x@lazy_group_i, list(cal))
+    x@lazy_group_i <- c(x@lazy_group_i, list(k))
     
     # Apply styling for list-converted group headers
     if (converted_from_list) {
