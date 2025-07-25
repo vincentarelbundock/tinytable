@@ -85,25 +85,28 @@ setMethod(
     .Object@data <- data
     .Object@data_processed <- data_processed
     .Object@theme <- theme
+    .Object@placement <- placement
+    .Object@caption <- caption
+    .Object@width <- width
+    .Object@notes <- notes
+    .Object@height <- height
+
     # dynamic
     .Object@nrow <- nrow(.Object@data)
     .Object@ncol <- ncol(.Object@data)
     .Object@nhead <- if (is.null(colnames(data))) 0 else 1
-    # Initialize data_group_j matrix with column names as bottom row if they exist
+    .Object@names <- if (is.null(colnames(data))) character() else colnames(data)
     if (is.null(colnames(data))) {
       .Object@data_group_j <- matrix(character(0), nrow = 0, ncol = ncol(.Object@data))
     } else {
       .Object@data_group_j <- matrix(colnames(data), nrow = 1, ncol = ncol(.Object@data))
     }
+
+    # empty
     .Object@data_header <- data.frame()
     .Object@data_body <- data.frame()
     .Object@header_indices <- numeric(0)
     .Object@body_indices <- numeric(0)
-    .Object@names <- if (is.null(colnames(data))) {
-      character()
-    } else {
-      colnames(data)
-    }
     .Object@id <- get_id("tinytable_")
     .Object@output <- "tinytable"
     .Object@output_dir <- getwd()
@@ -111,22 +114,7 @@ setMethod(
     .Object@portable <- FALSE
     .Object@style <- data.frame()
     .Object@lazy_theme <- list()
-    # conditional: allows NULL user input
-    if (!is.null(placement)) {
-      .Object@placement <- placement
-    }
-    if (!is.null(caption)) {
-      .Object@caption <- caption
-    }
-    if (!is.null(width)) {
-      .Object@width <- width
-    }
-    if (!is.null(notes)) {
-      .Object@notes <- notes
-    }
-    if (!is.null(height)) {
-      .Object@height <- height
-    }
+
     return(.Object)
   })
 
