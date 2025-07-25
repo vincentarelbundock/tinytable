@@ -49,32 +49,6 @@ rbind_i_j <- function(x) {
   return(x)
 }
 
-build_group_parts <- function(x) {
-  if (nrow(x@data_group_i) == 0) {
-    # No row group insertions - set full table as body
-    x@data_body <- x@data_processed
-    x@index_group_j <- numeric(0)
-    x@body_indices <- seq_len(nrow(x@data_processed))
-    return(x)
-  }
-
-  # Since we now have @data_group_i and @index_group_i, we can directly use them
-  # without needing to recreate the table from @lazy_group_i
-
-  # Calculate which positions are body vs group
-  all_positions <- seq_len(nrow(x@data_processed) + nrow(x@data_group_i))
-  group_positions <- x@index_group_i
-  body_positions <- setdiff(all_positions, group_positions)
-
-  # Set the body data to the original processed data
-  x@data_body <- x@data_processed
-
-  # Set indices for reconstruction
-  x@index_group_j <- group_positions # for group_j compatibility
-  x@body_indices <- body_positions
-
-  return(x)
-}
 
 
 
@@ -106,7 +80,25 @@ build_tt <- function(x, output = NULL) {
 
   x <- render_fansi(x)
 
-  x <- build_group_parts(x)
+  # separate group parts for individual formatting
+  if (nrow(x@data_group_i) == 0) {
+    # No row group insertions - set full table as body
+    x@data_body <- x@data_processed
+    x@index_group_j <- numeric(0)
+    x@body_indices <- seq_len(nrow(x@data_processed))
+  } else {
+    # Calculate which positions are body vs group
+    all_positions <- seq_len(nrow(x@data_processed) + nrow(x@data_group_i))
+    group_positions <- x@index_group_i
+    body_positions <- setdiff(all_positions, group_positions)
+    
+    # Set the body data to the original processed data
+    x@data_body <- x@data_processed
+    
+    # Set indices for reconstruction
+    x@index_group_j <- group_positions # for group_j compatibility
+    x@body_indices <- body_positions
+  }
 
   # format each component individually
   for (l in x@lazy_format) {
