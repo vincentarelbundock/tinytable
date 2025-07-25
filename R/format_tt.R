@@ -1,42 +1,30 @@
 format_vector_sprintf <- function(vec, sprintf_pattern = NULL) {
-  if (is.null(sprintf_pattern)) {
-    return(NULL)
-  }
+  if (is.null(sprintf_pattern)) return(NULL)
   base::sprintf(sprintf_pattern, vec)
 }
 
 format_vector_logical <- function(vec, bool_fn = NULL) {
-  if (!is.logical(vec) || is.null(bool_fn)) {
-    return(NULL)
-  }
+  if (!is.logical(vec) || is.null(bool_fn)) return(NULL)
   bool_fn(vec)
 }
 
 format_vector_date <- function(vec, date_format = NULL) {
-  if (!inherits(vec, "Date") || is.null(date_format)) {
-    return(NULL)
-  }
+  if (!inherits(vec, "Date") || is.null(date_format)) return(NULL)
   format(vec, date_format)
 }
 
 format_vector_other <- function(vec, other_fn = NULL) {
-  if (!is.function(other_fn)) {
-    return(NULL)
-  }
+  if (!is.function(other_fn)) return(NULL)
   other_fn(vec)
 }
 
 format_vector_custom <- function(vec, fn = NULL) {
-  if (!is.function(fn)) {
-    return(NULL)
-  }
+  if (!is.function(fn)) return(NULL)
   fn(vec)
 }
 
 format_vector_math <- function(vec, math = FALSE) {
-  if (!isTRUE(math)) {
-    return(NULL)
-  }
+  if (!isTRUE(math)) return(NULL)
   sprintf("$%s$", vec)
 }
 
@@ -83,13 +71,8 @@ format_vector_replace <- function(ori_vec, out_vec = NULL, replace = NULL) {
   return(result)
 }
 
-format_vector_markdown <- function(vec, output_format, markdown = FALSE) {
-  if (isFALSE(markdown)) {
-    return(vec)
-  }
-  if (is.null(output_format)) {
-    return(vec)
-  }
+format_vector_markdown <- function(vec, output_format) {
+  if (is.null(output_format)) return(NULL)
 
   if (output_format == "html") {
     vapply(
@@ -178,26 +161,34 @@ apply_notes <- function(x, format_fn, ...) {
   return(x)
 }
 
-apply_groups_i <- function(x, format_fn, ...) {
-  if (!inherits(x, "tinytable")) {
-    return(x)
+apply_group <- function(x, format_fn, slot = "data_group_i", ...) {
+  if (!inherits(x, "tinytable")) return(x)
+
+  if (slot == "data_group_i") {
+    data_slot <- x@data_group_i
+  } else if (slot == "data_group_j") {
+    data_slot <- x@data_group_j
   }
 
-  # Format group i data directly from @data_group_i
-  if (nrow(x@data_group_i) > 0) {
-    for (row_idx in seq_len(nrow(x@data_group_i))) {
-      for (col_idx in seq_len(ncol(x@data_group_i))) {
-        current_value <- x@data_group_i[row_idx, col_idx]
+  if (nrow(data_slot) > 0) {
+    for (row_idx in seq_len(nrow(data_slot))) {
+      for (col_idx in seq_len(ncol(data_slot))) {
+        current_value <- data_slot[row_idx, col_idx]
         if (!is.na(current_value) && trimws(current_value) != "") {
           formatted_value <- format_fn(current_value, ...)
           if (!is.null(formatted_value)) {
-            x@data_group_i[row_idx, col_idx] <- formatted_value
+            data_slot[row_idx, col_idx] <- formatted_value
           }
         }
       }
     }
   }
-  
+
+  if (slot == "data_group_i") {
+    x@data_group_i <- data_slot
+  } else if (slot == "data_group_j") {
+    x@data_group_j <- data_slot
+  }
   return(x)
 }
 
@@ -227,29 +218,6 @@ format_header_body <- function(x) {
       x_body <- eval(l)
     }
     x@data_body <- x_body@data_processed
-  }
-  
-  return(x)
-}
-
-apply_groups_j <- function(x, format_fn, ...) {
-  if (!inherits(x, "tinytable")) {
-    return(x)
-  }
-
-  # Process data_group_j (for column groups stored as header rows)
-  if (nrow(x@data_group_j) > 0) {
-    for (row_idx in seq_len(nrow(x@data_group_j))) {
-      for (col_idx in seq_len(ncol(x@data_group_j))) {
-        current_value <- x@data_group_j[row_idx, col_idx]
-        if (!is.na(current_value) && trimws(current_value) != "") {
-          formatted_value <- format_fn(current_value, ...)
-          if (!is.null(formatted_value)) {
-            x@data_group_j[row_idx, col_idx] <- formatted_value
-          }
-        }
-      }
-    }
   }
   
   return(x)
@@ -293,10 +261,10 @@ apply_format <- function(
     x <- apply_notes(x, format_fn, ...)
   }
   if ("groupi" %in% components) {
-    x <- apply_groups_i(x, format_fn, ...)
+    x <- apply_group(x, format_fn, slot = "data_group_i", ...)
   }
   if ("groupj" %in% components) {
-    x <- apply_groups_j(x, format_fn, ...)
+    x <- apply_group(x, format_fn, slot = "data_group_j", ...)
   }
 
   # Apply to specific cells
@@ -777,19 +745,18 @@ format_tt_lazy <- function(
   # markdown and quarto at the very end
   if (isTRUE(markdown)) {
     assert_dependency("litedown")
+    result <- apply_format(
+      out = out,
+      x = x,
+      i = i,
+      j = j,
+      format_fn = format_vector_markdown,
+      components = components,
+      output_format = x@output
+    )
+    out <- result$out
+    x <- result$x
   }
-  result <- apply_format(
-    out = out,
-    x = x,
-    i = i,
-    j = j,
-    format_fn = format_vector_markdown,
-    components = components,
-    output_format = x@output,
-    markdown = markdown
-  )
-  out <- result$out
-  x <- result$x
 
   if (isTRUE(quarto)) {
     for (col in j) {

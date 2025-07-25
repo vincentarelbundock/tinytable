@@ -10,6 +10,7 @@
   caption = NULL,
   notes = NULL,
   theme = list("default"),
+  data_processed = data.frame(),
   placement = NULL,
   width = NULL,
   height = NULL
