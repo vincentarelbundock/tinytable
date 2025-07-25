@@ -799,3 +799,76 @@ format_tt_lazy <- function(
     return(x)
   }
 }
+
+#' Apply lazy_format operations to group header and body parts
+#' @keywords internal
+#' @noRd
+apply_group_format <- function(x, group_header, group_body, header_indices, body_indices) {
+  formatted_header <- group_header
+  formatted_body <- group_body
+  
+  # Apply formatting to header if it exists
+  if (!is.null(group_header)) {
+    x_header <- x
+    x_header@table_dataframe <- group_header
+    
+    for (l in x@lazy_format) {
+      should_apply <- FALSE
+      l_header <- l
+      
+      if (is.null(l$i)) {
+        # Apply to all rows in header
+        should_apply <- TRUE
+      } else if (any(l$i %in% header_indices)) {
+        # Apply only to specified header indices
+        matching_indices <- intersect(l$i, header_indices)
+        if (length(matching_indices) > 0) {
+          should_apply <- TRUE
+          # Adjust indices to match the group_header data frame
+          l_header$i <- match(matching_indices, header_indices)
+        }
+      }
+      
+      if (should_apply) {
+        l_header[["x"]] <- x_header
+        x_header <- eval(l_header)
+      }
+    }
+    formatted_header <- x_header@table_dataframe
+  }
+  
+  # Apply formatting to body if it exists
+  if (!is.null(group_body)) {
+    x_body <- x
+    x_body@table_dataframe <- group_body
+    
+    for (l in x@lazy_format) {
+      should_apply <- FALSE
+      l_body <- l
+      
+      if (is.null(l$i)) {
+        # Apply to all rows in body
+        should_apply <- TRUE
+      } else if (any(l$i %in% body_indices)) {
+        # Apply only to specified body indices
+        matching_indices <- intersect(l$i, body_indices)
+        if (length(matching_indices) > 0) {
+          should_apply <- TRUE
+          # Adjust indices to match the group_body data frame
+          l_body$i <- match(matching_indices, body_indices)
+        }
+      }
+      
+      if (should_apply) {
+        l_body[["x"]] <- x_body
+        x_body <- eval(l_body)
+      }
+    }
+    formatted_body <- x_body@table_dataframe
+  }
+  
+  return(list(
+    group_header = formatted_header,
+    group_body = formatted_body
+  ))
+}

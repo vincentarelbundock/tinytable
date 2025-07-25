@@ -27,6 +27,8 @@ setClass(
     caption = "character",
     css = "data.frame",
     data = "data.frame",
+    data_body = "data.frame",
+    data_header = "data.frame",
     data_group_j = "matrix",
     group_index_i = "numeric",
     group_index_i_matrix = "numeric",

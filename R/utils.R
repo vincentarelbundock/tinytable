@@ -43,12 +43,11 @@ lines_drop_consecutive_empty <- function(x) {
 }
 
 lines_drop <- function(
-  old,
-  regex,
-  position = "equal",
-  fixed = FALSE,
-  unique = TRUE
-) {
+    old,
+    regex,
+    position = "equal",
+    fixed = FALSE,
+    unique = TRUE) {
   assert_choice(position, c("equal", "before", "after", "all"))
   lines <- strsplit(old, "\n")[[1]]
   idx <- grep(regex, lines, fixed = fixed)
@@ -111,4 +110,21 @@ lines_insert <- function(old, new, regex, position = "before") {
   lines <- c(top, new, bot)
   out <- paste(lines, collapse = "\n")
   return(out)
+}
+
+
+# strip ANSI from `tibble`/`pillar`; keep for markdown
+clean_fansi <- function(x) {
+  tab <- x@table_dataframe
+  if (isTRUE(check_dependency("fansi"))) {
+    for (col in seq_along(tab)) {
+      if (isTRUE(x@output == "html")) {
+        tab[[col]] <- as.character(fansi::to_html(tab[[col]], warn = FALSE))
+      } else if (isTRUE(!x@output %in% c("markdown", "dataframe"))) {
+        tab[[col]] <- as.character(fansi::strip_ctl(tab[[col]]))
+      }
+    }
+  }
+  x@table_dataframe <- tab
+  return(x)
 }
