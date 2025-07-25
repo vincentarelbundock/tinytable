@@ -11,13 +11,13 @@ setMethod(
   })
 
 group_tabularray_col <- function(x, j, ihead, ...) {
-  # Process column groups from @data_header
-  if (nrow(x@data_header) > 0) {
+  # Process column groups from @data_group_j
+  if (nrow(x@data_group_j) > 0) {
     out <- strsplit(x@table_string, split = "\\n")[[1]]
 
     # Process each header row from bottom to top (reverse order) to match expected header order
-    for (row_idx in nrow(x@data_header):1) {
-      group_row <- as.character(x@data_header[row_idx, ])
+    for (row_idx in nrow(x@data_group_j):1) {
+      group_row <- as.character(x@data_group_j[row_idx, ])
 
       # Build header row
       header <- rep("", ncol(x))
@@ -38,17 +38,17 @@ group_tabularray_col <- function(x, j, ihead, ...) {
         # Find the end of this span
         # Only continue while we see empty strings - stop at any non-empty label (even if same)
         if (trimws(current_label) != "") {
-          i <- i + 1  # Move past the current label
+          i <- i + 1 # Move past the current label
           # Continue only through empty strings
-          while (i <= length(group_row) && 
-                 !is.na(group_row[i]) &&
-                 trimws(group_row[i]) == "") {
+          while (i <= length(group_row) &&
+            !is.na(group_row[i]) &&
+            trimws(group_row[i]) == "") {
             i <- i + 1
           }
         } else {
-          while (i <= length(group_row) && 
-                 !is.na(group_row[i]) &&
-                 trimws(group_row[i]) == "") {
+          while (i <= length(group_row) &&
+            !is.na(group_row[i]) &&
+            trimws(group_row[i]) == "") {
             i <- i + 1
           }
         }
@@ -84,11 +84,11 @@ group_tabularray_col <- function(x, j, ihead, ...) {
     x@table_string <- out
 
     # Apply styling for each header row (reverse order to match header insertion)
-    for (row_idx in nrow(x@data_header):1) {
-      group_row <- as.character(x@data_header[row_idx, ])
+    for (row_idx in nrow(x@data_group_j):1) {
+      group_row <- as.character(x@data_group_j[row_idx, ])
       # Calculate the correct ihead for this specific row
       # The styling order should match the header insertion order
-      header_position <- nrow(x@data_header) - row_idx + 1
+      header_position <- nrow(x@data_group_j) - row_idx + 1
       row_ihead <- ihead - (header_position - 1)
 
       # Find consecutive spans and apply styling
@@ -105,17 +105,17 @@ group_tabularray_col <- function(x, j, ihead, ...) {
 
         # Find the end of this span (same logic as header creation)
         if (trimws(current_label) != "") {
-          i <- i + 1  # Move past the current label
+          i <- i + 1 # Move past the current label
           # Continue only through empty strings
-          while (i <= length(group_row) && 
-                 !is.na(group_row[i]) &&
-                 trimws(group_row[i]) == "") {
+          while (i <= length(group_row) &&
+            !is.na(group_row[i]) &&
+            trimws(group_row[i]) == "") {
             i <- i + 1
           }
         } else {
-          while (i <= length(group_row) && 
-                 !is.na(group_row[i]) &&
-                 trimws(group_row[i]) == "") {
+          while (i <= length(group_row) &&
+            !is.na(group_row[i]) &&
+            trimws(group_row[i]) == "") {
             i <- i + 1
           }
         }

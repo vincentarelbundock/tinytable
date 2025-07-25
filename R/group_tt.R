@@ -125,6 +125,23 @@ group_tt <- function(
     # Store the matrix insertion in lazy_group_i instead of lazy_group
     # Store k directly (list of positions and matrix)
     x@lazy_group_i <- c(x@lazy_group_i, list(k))
+    
+    # Add group matrix data to @data_group_i and track indices in @index_group_i
+    group_matrix <- k[[2]]
+    group_df <- as.data.frame(group_matrix, stringsAsFactors = FALSE)
+    # Set column names to match the table
+    if (ncol(group_df) == ncol(x@data)) {
+      colnames(group_df) <- colnames(x@data)
+    }
+    
+    if (nrow(x@data_group_i) == 0) {
+      x@data_group_i <- group_df
+    } else {
+      x@data_group_i <- rbind(x@data_group_i, group_df)
+    }
+    
+    # Add indices to @index_group_i to track final positions
+    x@index_group_i <- c(x@index_group_i, idx)
 
     # Apply styling for matrix insertion
     if (converted_from_list) {
@@ -148,23 +165,40 @@ group_tt <- function(
   # Handle row grouping when i is a list (but j is also provided, so not matrix insertion)
   if (is.list(i) && !is.null(j)) {
     # Convert list to matrix insertion format for row grouping
-    k <- group_tt_ij_k(x, i, NULL)  # Pass NULL for j to trigger list conversion
+    k <- group_tt_ij_k(x, i, NULL) # Pass NULL for j to trigger list conversion
     converted_from_list <- k[[3]]
-    
+
     # Calculate indices and update table
     positions <- k[[1]]
     idx <- positions + cumsum(rep(1, length(positions))) - 1
     x@group_index_i <- c(x@group_index_i, idx)
     x@nrow <- x@nrow + length(positions)
-    
+
     # Store the matrix insertion
     x@lazy_group_i <- c(x@lazy_group_i, list(k))
     
+    # Add group matrix data to @data_group_i and track indices in @index_group_i
+    group_matrix <- k[[2]]
+    group_df <- as.data.frame(group_matrix, stringsAsFactors = FALSE)
+    # Set column names to match the table
+    if (ncol(group_df) == ncol(x@data)) {
+      colnames(group_df) <- colnames(x@data)
+    }
+    
+    if (nrow(x@data_group_i) == 0) {
+      x@data_group_i <- group_df
+    } else {
+      x@data_group_i <- rbind(x@data_group_i, group_df)
+    }
+    
+    # Add indices to @index_group_i to track final positions
+    x@index_group_i <- c(x@index_group_i, idx)
+
     # Apply styling for list-converted group headers
     if (converted_from_list) {
       x <- style_tt(x, i = idx, j = 1, colspan = ncol(x))
     }
-    
+
     # Apply indentation
     if (isTRUE(indent > 0)) {
       all_rows <- seq_len(x@nrow)
@@ -190,7 +224,7 @@ group_tt <- function(
     j <- sanitize_group_index(j, hi = ncol(x), orientation = "column")
     x@nhead <- x@nhead + 1
 
-    # Add group labels to data_header matrix
+    # Add group labels to data_group_j matrix
     new_row <- rep(NA_character_, ncol(x))
     # Handle duplicate names properly by processing each list element individually
     # Set the group name in the first column, "" in continuation columns, NA in ungrouped columns
@@ -204,18 +238,18 @@ group_tt <- function(
         new_row[group_cols[-1]] <- ""
       }
     }
-    # Add column groups to @data_header
-    if (nrow(x@data_header) == 0) {
-      # Create initial data_header with same structure as data
-      x@data_header <- data.frame(matrix(NA_character_, nrow = 1, ncol = ncol(x@data)))
-      colnames(x@data_header) <- colnames(x@data)
-      x@data_header[1, ] <- new_row
+    # Add column groups to @data_group_j
+    if (nrow(x@data_group_j) == 0) {
+      # Create initial data_group_j with same structure as data
+      x@data_group_j <- data.frame(matrix(NA_character_, nrow = 1, ncol = ncol(x@data)))
+      colnames(x@data_group_j) <- colnames(x@data)
+      x@data_group_j[1, ] <- new_row
     } else {
-      # Add new row to existing data_header
+      # Add new row to existing data_group_j
       new_header_row <- data.frame(matrix(NA_character_, nrow = 1, ncol = ncol(x@data)))
       colnames(new_header_row) <- colnames(x@data)
       new_header_row[1, ] <- new_row
-      x@data_header <- rbind(new_header_row, x@data_header)
+      x@data_group_j <- rbind(new_header_row, x@data_group_j)
     }
 
     # Apply column group labels lazily

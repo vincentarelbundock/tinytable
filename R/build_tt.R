@@ -9,35 +9,35 @@
 #' @keywords internal
 #' @noRd
 rbind_header_body <- function(x) {
-  # Reconstruct the final table by combining formatted header and body parts
-  if (length(x@lazy_group_i) == 0) {
+  # Reconstruct the final table by combining formatted data_body and data_group_i parts
+  if (nrow(x@data_group_i) == 0) {
     return(x)
   }
 
-  # Get the original final order by recreating the full table
-  x_temp <- x
-  for (k in x@lazy_group_i) {
-    x_temp <- insert_group_i(x_temp, k)
-  }
-
-  # Now rebuild using our formatted pieces
-  final_df <- x_temp@data_processed
-
-  # Replace group rows with formatted data_header and body rows with formatted data_body
-  if (nrow(x@data_header) > 0 && length(x@header_indices) > 0) {
-    for (i in seq_along(x@header_indices)) {
-      row_idx <- x@header_indices[i]
-      if (row_idx <= nrow(final_df)) {
-        final_df[row_idx, ] <- x@data_header[i, ]
-      }
-    }
-  }
-
+  # Calculate total final table size
+  total_rows <- nrow(x@data_body) + nrow(x@data_group_i)
+  final_ncol <- ncol(x@data_body)
+  
+  # Create final data frame with proper structure
+  final_df <- data.frame(matrix(NA_character_, nrow = total_rows, ncol = final_ncol))
+  colnames(final_df) <- colnames(x@data_body)
+  
+  # Insert body data at body_indices positions
   if (nrow(x@data_body) > 0 && length(x@body_indices) > 0) {
     for (i in seq_along(x@body_indices)) {
       row_idx <- x@body_indices[i]
-      if (row_idx <= nrow(final_df)) {
+      if (row_idx > 0 && row_idx <= total_rows) {
         final_df[row_idx, ] <- x@data_body[i, ]
+      }
+    }
+  }
+  
+  # Insert group i data at index_group_i positions
+  if (nrow(x@data_group_i) > 0 && length(x@index_group_i) > 0) {
+    for (i in seq_len(nrow(x@data_group_i))) {
+      row_idx <- x@index_group_i[i]
+      if (row_idx > 0 && row_idx <= total_rows) {
+        final_df[row_idx, ] <- x@data_group_i[i, ]
       }
     }
   }
@@ -50,61 +50,29 @@ rbind_header_body <- function(x) {
 }
 
 build_group_parts <- function(x) {
-  if (length(x@lazy_group_i) == 0) {
-    # No row group insertions - preserve existing column groups in @data_header, set full table as body
+  if (nrow(x@data_group_i) == 0) {
+    # No row group insertions - set full table as body
     x@data_body <- x@data_processed
     x@header_indices <- numeric(0)
     x@body_indices <- seq_len(nrow(x@data_processed))
     return(x)
   }
 
-  # Create a temporary copy to process group insertions
-  x_temp <- x
-
-  # Apply all group insertions using the existing logic
-  for (k in x@lazy_group_i) {
-    x_temp <- insert_group_i(x_temp, k)
-  }
-
-  # Now we have the full table with group rows inserted
-  final_table <- x_temp@data_processed
-
-  # Identify which rows are group headers vs body based on group_index_i
-  group_indices <- x_temp@group_index_i
-
-  if (length(group_indices) == 0) {
-    # No group indices found - set empty header and full table as body
-    x@data_header <- data.frame()
-    x@data_body <- final_table
-    x@header_indices <- numeric(0)
-    x@body_indices <- seq_len(nrow(final_table))
-    x@group_index_i <- group_indices
-    return(x)
-  }
-
-  # Split into header and body
-  all_indices <- seq_len(nrow(final_table))
-  header_indices <- intersect(group_indices, all_indices)
-  body_indices <- setdiff(all_indices, header_indices)
-
-  if (length(header_indices) > 0) {
-    x@data_header <- final_table[header_indices, , drop = FALSE]
-    rownames(x@data_header) <- NULL
-  } else {
-    x@data_header <- final_table[0, , drop = FALSE]
-  }
-
-  if (length(body_indices) > 0) {
-    x@data_body <- final_table[body_indices, , drop = FALSE]
-    rownames(x@data_body) <- NULL
-  } else {
-    # Create empty data frame with same structure
-    x@data_body <- final_table[0, , drop = FALSE]
-  }
-
-  x@header_indices <- header_indices
-  x@body_indices <- body_indices
-
+  # Since we now have @data_group_i and @index_group_i, we can directly use them
+  # without needing to recreate the table from @lazy_group_i
+  
+  # Calculate which positions are body vs group
+  all_positions <- seq_len(nrow(x@data_processed) + nrow(x@data_group_i))
+  group_positions <- x@index_group_i
+  body_positions <- setdiff(all_positions, group_positions)
+  
+  # Set the body data to the original processed data
+  x@data_body <- x@data_processed
+  
+  # Set indices for reconstruction
+  x@header_indices <- group_positions  # for group_j compatibility
+  x@body_indices <- body_positions
+  
   return(x)
 }
 
@@ -184,7 +152,7 @@ build_tt <- function(x, output = NULL) {
   x <- tt_eval(x)
 
   # groups require the table to be drawn first, expecially group_tabularray_col() and friends
-  # For Typst and LaTeX, handle all column groups at once from @data_header
+  # For Typst and LaTeX, handle all column groups at once from @data_group_j
   if (x@output %in% c("typst", "latex") && length(x@lazy_group_j) > 0) {
     # Calculate ihead for the group headers - start from -1 for the top header row
     ihead <- -1

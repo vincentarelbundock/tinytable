@@ -16,12 +16,12 @@ setMethod(
 group_typst_col <- function(x, j, ihead, ...) {
   out <- x@table_string
 
-  # Process column groups from @data_header
-  if (nrow(x@data_header) > 0) {
+  # Process column groups from @data_group_j
+  if (nrow(x@data_group_j) > 0) {
     all_header_rows <- character(0)
-    
-    for (row_idx in 1:nrow(x@data_header)) {
-      group_row <- as.character(x@data_header[row_idx, ])
+
+    for (row_idx in 1:nrow(x@data_group_j)) {
+      group_row <- as.character(x@data_group_j[row_idx, ])
 
       # Find consecutive spans of the same group label
       col_specs <- character(0)
@@ -40,18 +40,18 @@ group_typst_col <- function(x, j, ihead, ...) {
         # Find the end of this span
         # For non-empty labels, include following empty strings as continuation
         if (trimws(current_label) != "") {
-          i <- i + 1  # Move past the current label
+          i <- i + 1 # Move past the current label
           # Continue through empty strings
-          while (i <= length(group_row) && 
-                 !is.na(group_row[i]) &&
-                 trimws(group_row[i]) == "") {
+          while (i <= length(group_row) &&
+            !is.na(group_row[i]) &&
+            trimws(group_row[i]) == "") {
             i <- i + 1
           }
         } else {
           # For empty labels, just move to next
-          while (i <= length(group_row) && 
-                 !is.na(group_row[i]) &&
-                 trimws(group_row[i]) == "") {
+          while (i <= length(group_row) &&
+            !is.na(group_row[i]) &&
+            trimws(group_row[i]) == "") {
             i <- i + 1
           }
         }
@@ -72,7 +72,7 @@ group_typst_col <- function(x, j, ihead, ...) {
       col <- paste(col_specs, collapse = "")
       all_header_rows <- c(all_header_rows, col)
     }
-    
+
     # Insert all header rows at once
     if (length(all_header_rows) > 0) {
       all_headers <- paste(all_header_rows, collapse = "\n")

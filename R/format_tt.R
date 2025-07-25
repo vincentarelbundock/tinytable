@@ -202,20 +202,20 @@ apply_groups_i <- function(x, format_fn, ...) {
 }
 
 format_header_body <- function(x) {
-  # Apply formatting to separated @data_header and @data_body
+  # Apply formatting to separated @data_group_j and @data_body
   # This function handles the case where groups have been separated
 
   if (length(x@lazy_group_i) == 0) return(x)
   
   # Create temporary table for header formatting
-  if (nrow(x@data_header) > 0) {
+  if (nrow(x@data_group_j) > 0) {
     x_header <- x
-    x_header@data_processed <- x@data_header
+    x_header@data_processed <- x@data_group_j
     for (l in x@lazy_format) {
       l[["x"]] <- x_header
       x_header <- eval(l)
     }
-    x@data_header <- x_header@data_processed
+    x@data_group_j <- x_header@data_processed
   }
 
   # Create temporary table for body formatting
@@ -247,15 +247,15 @@ apply_groups_j <- function(x, format_fn, ...) {
   }
   
   
-  # Process data_header (for column groups stored as header rows, e.g., in Typst)
-  if (nrow(x@data_header) > 0) {
-    for (row_idx in seq_len(nrow(x@data_header))) {
-      for (col_idx in seq_len(ncol(x@data_header))) {
-        current_value <- x@data_header[row_idx, col_idx]
+  # Process data_group_j (for column groups stored as header rows, e.g., in Typst)
+  if (nrow(x@data_group_j) > 0) {
+    for (row_idx in seq_len(nrow(x@data_group_j))) {
+      for (col_idx in seq_len(ncol(x@data_group_j))) {
+        current_value <- x@data_group_j[row_idx, col_idx]
         if (!is.na(current_value) && trimws(current_value) != "") {
           formatted_value <- format_fn(current_value, ...)
           if (!is.null(formatted_value)) {
-            x@data_header[row_idx, col_idx] <- formatted_value
+            x@data_group_j[row_idx, col_idx] <- formatted_value
           }
         }
       }
