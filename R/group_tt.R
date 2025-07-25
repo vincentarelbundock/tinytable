@@ -176,6 +176,9 @@ group_tt <- function(
   i <- sanitize_group_index(i, hi = nrow(x) + 1, orientation = "row")
   j <- sanitize_group_index(j, hi = ncol(x), orientation = "column")
 
+  # Store original i for names before unlisting
+  i_original <- i
+
   # increment indices eagerly
   i <- unlist(i)
 
@@ -194,6 +197,20 @@ group_tt <- function(
       as.numeric(i) + cumsum(rep(1, length(as.numeric(i)))) - 1
     )
 
+    # Populate @data_group_i: add row with labels and whitespace
+    if (!is.null(i_original)) {
+      group_i_names <- names(i_original)
+      if (!is.null(group_i_names) && length(group_i_names) > 0) {
+        new_row <- matrix("", nrow = length(group_i_names), ncol = ncol(x))
+        new_row[, 1] <- group_i_names
+        x@data_group_i <- rbind(x@data_group_i, new_row)
+      }
+    }
+    
+    # Populate @index_group_i: calculate final positions
+    final_positions <- as.numeric(i) + seq_along(i) - 1
+    x@index_group_i <- c(x@index_group_i, final_positions)
+
     if (isTRUE(indent > 0)) {
       idx_indent <- setdiff(seq_len(nrow(x)), i + seq_along(i) - 1)
       x <- style_tt(x, i = idx_indent, j = 1, indent = indent)
@@ -202,6 +219,31 @@ group_tt <- function(
 
   if (!is.null(j)) {
     x@nhead <- x@nhead + 1
+    
+    # Populate @data_group_j: add row on top with header labels and whitespace
+    group_j_row <- matrix(character(ncol(x)), nrow = 1, ncol = ncol(x))
+    
+    # Fill in the group headers for the specified columns
+    for (group_name in names(j)) {
+      col_indices <- j[[group_name]]
+      if (length(col_indices) > 0) {
+        # Put the group name in the first column of the group
+        group_j_row[1, min(col_indices)] <- group_name
+        # Fill remaining columns in the group with whitespace
+        if (length(col_indices) > 1) {
+          group_j_row[1, col_indices[-1]] <- ""
+        }
+      }
+    }
+    
+    # Fill any ungrouped columns with whitespace
+    grouped_cols <- unlist(j)
+    ungrouped_cols <- setdiff(seq_len(ncol(x)), grouped_cols)
+    if (length(ungrouped_cols) > 0) {
+      group_j_row[1, ungrouped_cols] <- ""
+    }
+    
+    x@data_group_j <- rbind(group_j_row, x@data_group_j)
   }
 
   # apply group labels lazily

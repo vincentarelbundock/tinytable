@@ -27,11 +27,14 @@ setClass(
     caption = "character",
     css = "data.frame",
     data = "data.frame",
+    data_group_i = "matrix",
+    data_group_j = "matrix",
     group_index_i = "numeric",
     group_index_i_matrix = "numeric",
     group_n_i = "numeric",
     group_n_j = "numeric",
     id = "character",
+    index_group_i = "numeric",
     lazy_finalize = "list",
     lazy_format = "list",
     lazy_group = "list",
@@ -89,6 +92,10 @@ setMethod(
     .Object@nhead <- if (is.null(colnames(data))) 0 else 1
     .Object@group_n_i <- 0
     .Object@group_n_j <- 0
+    # initialize new group data slots
+    .Object@data_group_i <- matrix(character(0), nrow = 0, ncol = ncol(.Object@data))
+    .Object@data_group_j <- matrix(character(0), nrow = 0, ncol = ncol(.Object@data))
+    .Object@index_group_i <- numeric(0)
     .Object@names <- if (is.null(colnames(data))) {
       character()
     } else {
