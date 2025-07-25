@@ -1,5 +1,3 @@
-INTENTIONAL BREAK: are digits in the 2nd column OK?
-
 #show figure: set block(breakable: true)
 #figure( // start preamble figure
   
