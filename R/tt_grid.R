@@ -114,19 +114,52 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
 
   # groups are longer than col-widths
   if (inherits(x, "tinytable")) {
-    # Handle column groups
-    for (g in x@lazy_group_j) {
-      # Extract arguments from the lazy evaluation call
-      call_args <- as.list(g)[-1] # Remove function name
-
-      if (!is.null(call_args$j)) {
-        j_groups <- eval(call_args$j)
-        for (idx in seq_along(j_groups)) {
-          g_len <- nchar(names(j_groups)[idx]) + 2
-          c_len <- sum(width_cols[j_groups[[idx]]])
-          if (g_len > c_len) {
-            width_cols[j_groups[[idx]]] <- width_cols[j_groups[[idx]]] +
-              ceiling((g_len - c_len) / length(j_groups[[idx]]))
+    # Handle column groups using @data_group_j
+    if (nrow(x@data_group_j) > 0) {
+      # Process each header row to extract column spans
+      for (row_idx in seq_len(nrow(x@data_group_j))) {
+        group_row <- as.character(x@data_group_j[row_idx, ])
+        
+        # Find consecutive spans - similar logic to other backends
+        i <- 1
+        while (i <= length(group_row)) {
+          current_label <- group_row[i]
+          span_start <- i
+          
+          # Skip NA (ungrouped) columns
+          if (is.na(current_label)) {
+            i <- i + 1
+            next
+          }
+          
+          # Find the end of this span
+          if (trimws(current_label) != "") {
+            i <- i + 1  # Move past the current label
+            # Continue through empty strings (continuation of span)
+            while (i <= length(group_row) && 
+                   !is.na(group_row[i]) &&
+                   trimws(group_row[i]) == "") {
+              i <- i + 1
+            }
+          } else {
+            # For empty labels, just move to next
+            while (i <= length(group_row) && 
+                   !is.na(group_row[i]) &&
+                   trimws(group_row[i]) == "") {
+              i <- i + 1
+            }
+          }
+          span_end <- i - 1
+          
+          # Only process non-empty labels
+          if (trimws(current_label) != "") {
+            group_cols <- span_start:span_end
+            g_len <- nchar(current_label) + 2
+            c_len <- sum(width_cols[group_cols])
+            if (g_len > c_len) {
+              width_cols[group_cols] <- width_cols[group_cols] +
+                ceiling((g_len - c_len) / length(group_cols))
+            }
           }
         }
       }

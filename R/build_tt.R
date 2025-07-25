@@ -8,7 +8,7 @@
 #' Build group header and body parts with position calculations
 #' @keywords internal
 #' @noRd
-rbind_header_body <- function(x) {
+rbind_i_j <- function(x) {
   # Reconstruct the final table by combining formatted data_body and data_group_i parts
   if (nrow(x@data_group_i) == 0) {
     return(x)
@@ -114,8 +114,7 @@ build_tt <- function(x, output = NULL) {
   x <- format_header_body(x)
 
   # Step 3: Reconstruct the final table
-  x <- rbind_header_body(x)
-
+  x <- rbind_i_j(x)
 
   # Handle no groups case: apply formatting directly
   if (nrow(x@data_group_i) == 0) {
@@ -153,7 +152,7 @@ build_tt <- function(x, output = NULL) {
 
   # groups require the table to be drawn first, expecially group_tabularray_col() and friends
   # For Typst and LaTeX, handle all column groups at once from @data_group_j
-  if (x@output %in% c("typst", "latex") && length(x@lazy_group_j) > 0) {
+  if (x@output %in% c("typst", "latex") && nrow(x@data_group_j) > 0) {
     # Calculate ihead for the group headers - start from -1 for the top header row
     ihead <- -1
     # Apply group_eval_j once with all groups
