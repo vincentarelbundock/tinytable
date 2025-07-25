@@ -13,6 +13,8 @@ swap_class <- function(x, new_class) {
 }
 
 setClassUnion("NULLorCharacter", c("NULL", "character"))
+setClassUnion("NULLorNumeric", c("NULL", "numeric"))
+setClassUnion("NULLorList", c("NULL", "list"))
 
 #' tinytable S4 class
 #'
@@ -25,7 +27,7 @@ setClass(
     body_indices = "numeric",
     bootstrap_class = "character",
     bootstrap_css_rule = "character",
-    caption = "character",
+    caption = "NULLorCharacter",
     css = "data.frame",
     data = "data.frame",
     data_body = "data.frame",
@@ -35,7 +37,7 @@ setClass(
     group_index_i = "numeric",
     group_index_i_matrix = "numeric",
     header_indices = "numeric",
-    height = "numeric",
+    height = "NULLorNumeric",
     id = "character",
     lazy_finalize = "list",
     lazy_format = "list",
@@ -47,18 +49,18 @@ setClass(
     names = "NULLorCharacter",
     ncol = "numeric",
     nhead = "numeric",
-    notes = "list",
+    notes = "NULLorList",
     nrow = "numeric",
     output = "character",
     output_dir = "character",
-    placement = "character",
+    placement = "NULLorCharacter",
     portable = "logical",
     style = "data.frame",
     style_caption = "list",
     style_notes = "list",
     table_string = "character",
     theme = "list",
-    width = "numeric",
+    width = "NULLorNumeric",
     width_cols = "numeric"
   )
 )
