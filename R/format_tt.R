@@ -230,6 +230,21 @@ apply_groups_j <- function(x, format_fn, ...) {
     }
   }
   
+  # Process data_header (for column groups stored as header rows, e.g., in Typst)
+  if (nrow(x@data_header) > 0) {
+    for (row_idx in seq_len(nrow(x@data_header))) {
+      for (col_idx in seq_len(ncol(x@data_header))) {
+        current_value <- x@data_header[row_idx, col_idx]
+        if (!is.na(current_value) && trimws(current_value) != "") {
+          formatted_value <- format_fn(current_value, ...)
+          if (!is.null(formatted_value)) {
+            x@data_header[row_idx, col_idx] <- formatted_value
+          }
+        }
+      }
+    }
+  }
+  
   return(x)
 }
 
