@@ -23,7 +23,7 @@ build_group_parts <- function(x) {
 
   # Apply all group insertions using the existing logic
   for (k in x@lazy_group_i) {
-    x_temp <- group_eval_i(x_temp, k)
+    x_temp <- insert_group_i(x_temp, k)
   }
 
   # Now we have the full table with group rows inserted
@@ -65,7 +65,7 @@ build_group_parts <- function(x) {
   x@header_indices <- header_indices
   x@body_indices <- body_indices
   x@group_index_i <- group_indices
-  
+
   return(x)
 }
 
@@ -104,7 +104,7 @@ build_tt <- function(x, output = NULL) {
     # Groups case: separate, format, then recombine
     # Step 1: Build group_header and group_body data frames
     x <- build_group_parts(x)
-    
+
     # Step 2: Apply formatting to the separated parts
     # Create temporary table for header formatting
     if (nrow(x@data_header) > 0) {
@@ -116,7 +116,7 @@ build_tt <- function(x, output = NULL) {
       }
       x@data_header <- x_header@table_dataframe
     }
-    
+
     # Create temporary table for body formatting
     if (nrow(x@data_body) > 0) {
       x_body <- x
@@ -127,12 +127,12 @@ build_tt <- function(x, output = NULL) {
       }
       x@data_body <- x_body@table_dataframe
     }
-    
+
     # Step 3: Reconstruct the final table
     # Get the original final order by recreating the full table
     x_temp <- x
     for (k in x@lazy_group_i) {
-      x_temp <- group_eval_i(x_temp, k)
+      x_temp <- insert_group_i(x_temp, k)
     }
 
     # Now rebuild using our formatted pieces

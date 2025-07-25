@@ -72,7 +72,7 @@ group_tt_ij_k <- function(x, i, j) {
 #'
 #' @keywords internal
 #' @noRd
-group_eval_i <- function(x, k) {
+insert_group_i <- function(x, k) {
   positions <- k[[1]]
   matrix_data <- k[[2]]
 
@@ -84,7 +84,7 @@ group_eval_i <- function(x, k) {
   if (is.null(table_names)) {
     table_names <- names(x@data)
   }
-  
+
   # Handle column name assignment more gracefully
   if (length(table_names) == ncol(matrix_df)) {
     names(matrix_df) <- table_names
