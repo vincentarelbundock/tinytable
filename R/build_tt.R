@@ -99,19 +99,36 @@ build_tt <- function(x, output = NULL) {
 
   x <- clean_fansi(x)
 
-  # Groups are processed in 3 steps:
-  # 1. Build group_header and group_body data frames with position calculations
-  # 2. Apply lazy_format to each part based on calculated indices
-  # 3. Combine formatted results into single character data frame
-  x <- build_group_parts(x)
-
-  # Step 2: Apply lazy_format using the delegated function in format_tt.R
+  # Handle groups vs no groups differently
   if (length(x@lazy_group_i) > 0) {
-    x <- apply_group_format(x)
-  }
-
-  # Step 3: Combine formatted results into single character data frame
-  if (length(x@lazy_group_i) > 0) {
+    # Groups case: separate, format, then recombine
+    # Step 1: Build group_header and group_body data frames
+    x <- build_group_parts(x)
+    
+    # Step 2: Apply formatting to the separated parts
+    # Create temporary table for header formatting
+    if (nrow(x@data_header) > 0) {
+      x_header <- x
+      x_header@table_dataframe <- x@data_header
+      for (l in x@lazy_format) {
+        l[["x"]] <- x_header
+        x_header <- eval(l)
+      }
+      x@data_header <- x_header@table_dataframe
+    }
+    
+    # Create temporary table for body formatting
+    if (nrow(x@data_body) > 0) {
+      x_body <- x
+      x_body@table_dataframe <- x@data_body
+      for (l in x@lazy_format) {
+        l[["x"]] <- x_body
+        x_body <- eval(l)
+      }
+      x@data_body <- x_body@table_dataframe
+    }
+    
+    # Step 3: Reconstruct the final table
     # Get the original final order by recreating the full table
     x_temp <- x
     for (k in x@lazy_group_i) {
@@ -144,7 +161,7 @@ build_tt <- function(x, output = NULL) {
     x@data <- final_df
     x@nrow <- nrow(final_df)
   } else {
-    # No group processing needed, apply standard formatting
+    # No groups case: apply formatting directly
     for (l in x@lazy_format) {
       l[["x"]] <- x
       x <- eval(l)
