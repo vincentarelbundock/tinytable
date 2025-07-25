@@ -100,9 +100,9 @@ setMethod(
     .Object@data_group_i <- data.frame()
     .Object@data_group_j <- data.frame()
     .Object@data_body <- data.frame()
+    .Object@index_group_i <- numeric(0)
     .Object@index_group_j <- numeric(0)
     .Object@body_indices <- numeric(0)
-    .Object@index_group_i <- numeric(0)
     .Object@id <- get_id("tinytable_")
     .Object@output <- "tinytable"
     .Object@output_dir <- getwd()
