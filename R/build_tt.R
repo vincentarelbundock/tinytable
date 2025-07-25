@@ -99,35 +99,15 @@ build_tt <- function(x, output = NULL) {
 
   x <- clean_fansi(x)
 
+  # Groups case: separate, format, then recombine
+  # Step 1: Build group_header and group_body data frames
+  x <- build_group_parts(x)
+
+  # Step 2: Apply formatting to the separated parts
+  x <- format_separated_header_body(x)
+
   # Handle groups vs no groups differently
   if (length(x@lazy_group_i) > 0) {
-    # Groups case: separate, format, then recombine
-    # Step 1: Build group_header and group_body data frames
-    x <- build_group_parts(x)
-
-    # Step 2: Apply formatting to the separated parts
-    # Create temporary table for header formatting
-    if (nrow(x@data_header) > 0) {
-      x_header <- x
-      x_header@data_processed <- x@data_header
-      for (l in x@lazy_format) {
-        l[["x"]] <- x_header
-        x_header <- eval(l)
-      }
-      x@data_header <- x_header@data_processed
-    }
-
-    # Create temporary table for body formatting
-    if (nrow(x@data_body) > 0) {
-      x_body <- x
-      x_body@data_processed <- x@data_body
-      for (l in x@lazy_format) {
-        l[["x"]] <- x_body
-        x_body <- eval(l)
-      }
-      x@data_body <- x_body@data_processed
-    }
-
     # Step 3: Reconstruct the final table
     # Get the original final order by recreating the full table
     x_temp <- x

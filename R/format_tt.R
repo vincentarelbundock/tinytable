@@ -201,6 +201,37 @@ apply_groups_i <- function(x, format_fn, ...) {
   return(x)
 }
 
+format_separated_header_body <- function(x) {
+  # Apply formatting to separated @data_header and @data_body
+  # This function handles the case where groups have been separated
+
+  if (length(x@lazy_group_i) == 0) return(x)
+  
+  # Create temporary table for header formatting
+  if (nrow(x@data_header) > 0) {
+    x_header <- x
+    x_header@data_processed <- x@data_header
+    for (l in x@lazy_format) {
+      l[["x"]] <- x_header
+      x_header <- eval(l)
+    }
+    x@data_header <- x_header@data_processed
+  }
+
+  # Create temporary table for body formatting
+  if (nrow(x@data_body) > 0) {
+    x_body <- x
+    x_body@data_processed <- x@data_body
+    for (l in x@lazy_format) {
+      l[["x"]] <- x_body
+      x_body <- eval(l)
+    }
+    x@data_body <- x_body@data_processed
+  }
+  
+  return(x)
+}
+
 apply_groups_j <- function(x, format_fn, ...) {
   if (!inherits(x, "tinytable")) {
     return(x)
