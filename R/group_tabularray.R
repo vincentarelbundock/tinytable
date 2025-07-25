@@ -67,6 +67,8 @@ group_tabularray_col <- function(x, j, ihead, ...) {
     # Apply styling for each group row
     for (row_idx in 1:(nrow(x@data_group_j) - 1)) {
       group_row <- x@data_group_j[row_idx, ]
+      # Calculate the correct ihead for this specific row
+      row_ihead <- ihead - (row_idx - 1)
 
       # Find consecutive spans and apply styling
       i <- 1
@@ -87,7 +89,7 @@ group_tabularray_col <- function(x, j, ihead, ...) {
           args <- list(
             tt_build_now = TRUE,
             x = x,
-            i = ihead,
+            i = row_ihead,
             j = span_start,
             align = "c",
             colspan = cs

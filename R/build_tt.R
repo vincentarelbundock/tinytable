@@ -269,15 +269,24 @@ build_tt <- function(x, output = NULL) {
   x <- tt_eval(x)
 
   # groups require the table to be drawn first, expecially group_tabularray_col() and friends
-  ihead <- 0
-  for (idx in seq_along(x@lazy_group_j)) {
-    l <- x@lazy_group_j[[idx]]
-    l[["x"]] <- x
-    if (length(l[["j"]]) > 0) {
-      ihead <- ihead - 1
-      l[["ihead"]] <- ihead
+  # For Typst and LaTeX, handle all column groups at once from @data_group_j
+  if (x@output %in% c("typst", "latex") && length(x@lazy_group_j) > 0) {
+    # Calculate ihead for the group headers - count how many header rows we'll have
+    ihead <- -(nrow(x@data_group_j) - 1)
+    # Apply group_eval_j once with all groups
+    x <- group_eval_j(x, j = seq_len(ncol(x@data_group_j)), ihead = ihead)
+  } else {
+    # For other formats, evaluate each group individually
+    ihead <- 0
+    for (idx in seq_along(x@lazy_group_j)) {
+      l <- x@lazy_group_j[[idx]]
+      l[["x"]] <- x
+      if (length(l[["j"]]) > 0) {
+        ihead <- ihead - 1
+        l[["ihead"]] <- ihead
+      }
+      x <- eval(l)
     }
-    x <- eval(l)
   }
 
   if (!x@output %in% c("markdown", "gfm", "dataframe")) {
