@@ -11,13 +11,13 @@ setMethod(
   })
 
 group_tabularray_col <- function(x, j, ihead, ...) {
-  # Process each group row (excluding the bottom row which is column names)
-  if (nrow(x@data_group_j) > 1) {
+  # Process column groups from @data_header
+  if (nrow(x@data_header) > 0) {
     out <- strsplit(x@table_string, split = "\\n")[[1]]
 
-    # Process each group row from bottom to top (reverse order) to match expected header order
-    for (row_idx in (nrow(x@data_group_j) - 1):1) {
-      group_row <- x@data_group_j[row_idx, ]
+    # Process each header row from bottom to top (reverse order) to match expected header order
+    for (row_idx in nrow(x@data_header):1) {
+      group_row <- as.character(x@data_header[row_idx, ])
 
       # Build header row
       header <- rep("", ncol(x))
@@ -83,12 +83,12 @@ group_tabularray_col <- function(x, j, ihead, ...) {
     out <- paste(out, collapse = "\n")
     x@table_string <- out
 
-    # Apply styling for each group row (reverse order to match header insertion)
-    for (row_idx in (nrow(x@data_group_j) - 1):1) {
-      group_row <- x@data_group_j[row_idx, ]
+    # Apply styling for each header row (reverse order to match header insertion)
+    for (row_idx in nrow(x@data_header):1) {
+      group_row <- as.character(x@data_header[row_idx, ])
       # Calculate the correct ihead for this specific row
       # The styling order should match the header insertion order
-      header_position <- (nrow(x@data_group_j) - 1) - row_idx + 1
+      header_position <- nrow(x@data_header) - row_idx + 1
       row_ihead <- ihead - (header_position - 1)
 
       # Find consecutive spans and apply styling

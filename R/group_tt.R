@@ -204,7 +204,19 @@ group_tt <- function(
         new_row[group_cols[-1]] <- ""
       }
     }
-    x@data_group_j <- rbind(new_row, x@data_group_j)
+    # Add column groups to @data_header instead of @data_group_j
+    if (nrow(x@data_header) == 0) {
+      # Create initial data_header with same structure as data
+      x@data_header <- data.frame(matrix(NA_character_, nrow = 1, ncol = ncol(x@data)))
+      colnames(x@data_header) <- colnames(x@data)
+      x@data_header[1, ] <- new_row
+    } else {
+      # Add new row to existing data_header
+      new_header_row <- data.frame(matrix(NA_character_, nrow = 1, ncol = ncol(x@data)))
+      colnames(new_header_row) <- colnames(x@data)
+      new_header_row[1, ] <- new_row
+      x@data_header <- rbind(new_header_row, x@data_header)
+    }
 
     # Apply column group labels lazily
     cal <- call("group_eval_j", i = NULL, j = j, indent = indent)

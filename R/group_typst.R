@@ -16,12 +16,12 @@ setMethod(
 group_typst_col <- function(x, j, ihead, ...) {
   out <- x@table_string
 
-  # Process each group row (excluding the bottom row which is column names)
-  if (nrow(x@data_group_j) > 1) {
+  # Process column groups from @data_header
+  if (nrow(x@data_header) > 0) {
     all_header_rows <- character(0)
     
-    for (row_idx in 1:(nrow(x@data_group_j) - 1)) {
-      group_row <- x@data_group_j[row_idx, ]
+    for (row_idx in 1:nrow(x@data_header)) {
+      group_row <- as.character(x@data_header[row_idx, ])
 
       # Find consecutive spans of the same group label
       col_specs <- character(0)

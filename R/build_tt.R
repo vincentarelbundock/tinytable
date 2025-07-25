@@ -51,8 +51,7 @@ rbind_header_body <- function(x) {
 
 build_group_parts <- function(x) {
   if (length(x@lazy_group_i) == 0) {
-    # No group insertions - set empty header and full table as body
-    x@data_header <- data.frame()
+    # No row group insertions - preserve existing column groups in @data_header, set full table as body
     x@data_body <- x@data_processed
     x@header_indices <- numeric(0)
     x@body_indices <- seq_len(nrow(x@data_processed))
@@ -185,12 +184,12 @@ build_tt <- function(x, output = NULL) {
   x <- tt_eval(x)
 
   # groups require the table to be drawn first, expecially group_tabularray_col() and friends
-  # For Typst and LaTeX, handle all column groups at once from @data_group_j
+  # For Typst and LaTeX, handle all column groups at once from @data_header
   if (x@output %in% c("typst", "latex") && length(x@lazy_group_j) > 0) {
     # Calculate ihead for the group headers - start from -1 for the top header row
     ihead <- -1
     # Apply group_eval_j once with all groups
-    x <- group_eval_j(x, j = seq_len(ncol(x@data_group_j)), ihead = ihead)
+    x <- group_eval_j(x, j = seq_len(ncol(x@data)), ihead = ihead)
   } else {
     # For other formats, evaluate each group individually
     ihead <- 0
