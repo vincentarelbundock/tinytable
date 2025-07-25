@@ -228,9 +228,10 @@ apply_format <- function(
   if ("notes" %in% components) {
     x <- apply_notes(x, format_fn, ...)
   }
-  if ("groupi" %in% components) {
-    x <- apply_group(x, format_fn, slot = "data_group_i", ...)
-  }
+  # TODO: we might not need this because they are already inserted in body
+  # if ("groupi" %in% components) {
+  #   x <- apply_group(x, format_fn, slot = "data_group_i", ...)
+  # }
   if ("groupj" %in% components) {
     x <- apply_group(x, format_fn, slot = "data_group_j", ...)
   }
