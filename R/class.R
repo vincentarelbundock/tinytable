@@ -27,6 +27,7 @@ setClass(
     caption = "character",
     css = "data.frame",
     data = "data.frame",
+    data_group_j = "matrix",
     group_index_i = "numeric",
     group_index_i_matrix = "numeric",
     group_n_i = "numeric",
@@ -87,6 +88,12 @@ setMethod(
     .Object@nrow <- nrow(.Object@data)
     .Object@ncol <- ncol(.Object@data)
     .Object@nhead <- if (is.null(colnames(data))) 0 else 1
+    # Initialize data_group_j matrix with column names as bottom row if they exist
+    if (is.null(colnames(data))) {
+      .Object@data_group_j <- matrix(character(0), nrow = 0, ncol = ncol(.Object@data))
+    } else {
+      .Object@data_group_j <- matrix(colnames(data), nrow = 1, ncol = ncol(.Object@data))
+    }
     .Object@group_n_i <- 0
     .Object@group_n_j <- 0
     .Object@names <- if (is.null(colnames(data))) {

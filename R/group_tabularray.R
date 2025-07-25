@@ -8,65 +8,95 @@ setMethod(
     # Only handle column grouping - row insertions now use matrix insertion
     x <- group_tabularray_col(x, j, ...)
     return(x)
-  }
-)
+  })
 
 group_tabularray_col <- function(x, j, ihead, ...) {
-  if (is.null(j)) {
-    return(x)
-  }
+  # Process each group row (excluding the bottom row which is column names)
+  if (nrow(x@data_group_j) > 1) {
+    out <- strsplit(x@table_string, split = "\\n")[[1]]
 
-  out <- strsplit(x@table_string, split = "\\n")[[1]]
+    # Process each group row from top to bottom
+    for (row_idx in 1:(nrow(x@data_group_j) - 1)) {
+      group_row <- x@data_group_j[row_idx, ]
 
-  header <- rep("", ncol(x))
-  for (idx in seq_along(j)) {
-    header[min(j[[idx]])] <- names(j)[idx]
-  }
-  header <- paste(header, collapse = " & ")
+      # Build header row
+      header <- rep("", ncol(x))
+      cmidrules <- character(0)
 
-  # \toprule -> \midrule
-  midr <- sapply(
-    j,
-    function(x) sprintf("\\cmidrule[lr]{%s-%s}", min(x), max(x))
-  )
-  header <- paste(header, "\\\\", paste(midr, collapse = ""))
+      # Find consecutive spans of the same group label
+      i <- 1
+      while (i <= length(group_row)) {
+        current_label <- group_row[i]
+        span_start <- i
 
-  idx <- max(
-    c(
-      grep("% tabularray inner close", out),
-      grep("\\toprule", out, fixed = TRUE)
-    )
-  )
+        # Find the end of this span
+        while (i <= length(group_row) && group_row[i] == current_label) {
+          i <- i + 1
+        }
+        span_end <- i - 1
 
-  out <- c(
-    out[1:idx],
-    # empty lines can break latex
-    trimws(header),
-    out[(idx + 1):length(out)]
-  )
-  out <- paste(out, collapse = "\n")
+        # Only add non-empty labels
+        if (trimws(current_label) != "") {
+          header[span_start] <- current_label
+          # Add cmidrule for this span
+          cmidrules <- c(cmidrules, sprintf("\\cmidrule[lr]{%s-%s}", span_start, span_end))
+        }
+      }
 
-  # rebuild including meta before style_tt
-  x@table_string <- out
+      header_line <- paste(header, collapse = " & ")
+      header_line <- paste(header_line, "\\\\", paste(cmidrules, collapse = ""))
 
-  for (k in seq_along(j)) {
-    z <- min(j[[k]])
-    cs <- max(j[[k]]) - min(j[[k]]) + 1
-    if (cs == 1) {
-      cs <- NULL
+      # Insert the header line
+      idx <- max(
+        c(
+          grep("% tabularray inner close", out),
+          grep("\\toprule", out, fixed = TRUE)
+        )
+      )
+
+      out <- c(
+        out[1:idx],
+        trimws(header_line),
+        out[(idx + 1):length(out)]
+      )
     }
-    args <- list(
-      tt_build_now = TRUE,
-      x = x,
-      i = ihead,
-      j = z,
-      align = "c",
-      colspan = cs
-    )
-    x <- do.call(style_tt, args)
+
+    out <- paste(out, collapse = "\n")
+    x@table_string <- out
+
+    # Apply styling for each group row
+    for (row_idx in 1:(nrow(x@data_group_j) - 1)) {
+      group_row <- x@data_group_j[row_idx, ]
+
+      # Find consecutive spans and apply styling
+      i <- 1
+      while (i <= length(group_row)) {
+        current_label <- group_row[i]
+        span_start <- i
+
+        # Find the end of this span
+        while (i <= length(group_row) && group_row[i] == current_label) {
+          i <- i + 1
+        }
+        span_end <- i - 1
+        span_length <- span_end - span_start + 1
+
+        # Only style non-empty labels
+        if (trimws(current_label) != "") {
+          cs <- if (span_length == 1) NULL else span_length
+          args <- list(
+            tt_build_now = TRUE,
+            x = x,
+            i = ihead,
+            j = span_start,
+            align = "c",
+            colspan = cs
+          )
+          x <- do.call(style_tt, args)
+        }
+      }
+    }
   }
 
   return(x)
 }
-
-

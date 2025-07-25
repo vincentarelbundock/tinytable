@@ -195,6 +195,14 @@ group_tt <- function(
     j <- sanitize_group_index(j, hi = ncol(x), orientation = "column")
     x@nhead <- x@nhead + 1
 
+    # Add group labels to data_group_j matrix (above existing rows)
+    new_row <- character(ncol(x))
+    for (group_name in names(j)) {
+      group_cols <- j[[group_name]]
+      new_row[group_cols] <- group_name
+    }
+    x@data_group_j <- rbind(new_row, x@data_group_j)
+
     # Apply column group labels lazily
     cal <- call("group_eval_j", i = NULL, j = j, indent = indent)
     x@lazy_group_j <- c(x@lazy_group_j, list(cal))

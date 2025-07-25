@@ -32,15 +32,30 @@ To run all tests: `pkgload::load_all(); tinytest::run_test_dir()`
 
 ### Core Table Creation Flow
 1. **`tt()`** - Main entry point that creates tinytable objects from data frames
-2. **Format-specific backends**: `tt_bootstrap()` (HTML), `tt_tabularray()` (LaTeX), `tt_grid()` (text), `tt_typst()` (Typst)
-3. **Styling pipeline**: Each backend has corresponding style functions (`style_bootstrap.R`, `style_tabularray.R`, etc.)
+2. **`build_tt()`** - Central processing function that handles matrix combination, lazy evaluation, formatting, and styling
+3. **Format-specific backends**: `tt_bootstrap()` (HTML), `tt_tabularray()` (LaTeX), `tt_grid()` (text), `tt_typst()` (Typst)
 4. **Finalization**: Format-specific finalize functions render the final output
+
+### S4 Class Architecture
+The `tinytable` S4 class uses these key data slots:
+- **`@data`** - Original unmodified input data frame
+- **`@table_dataframe`** - Working data frame that gets modified during processing
+- **Lazy evaluation slots** - `@lazy_group_i`, `@lazy_group_j`, `@lazy_format`, `@lazy_style`, `@lazy_theme` store operations to be applied later
+- **Metadata slots** - `@nrow`, `@ncol`, `@nhead`, `@names`, `@output` track table dimensions and properties
+
+### Matrix System for Data Management
+The package uses a centralized matrix combination approach:
+- Data transformations (grouping, formatting) happen in `build_tt()` before backend processing
+- Each backend receives the final processed data via `@table_dataframe`
+- Group insertions are handled by `group_eval_i()` which modifies `@table_dataframe` directly
+- This ensures all backends work with consistent, fully-processed data
 
 ### Key Design Patterns
 - **S4 class system**: Tables are S4 objects with slots for data, styling, grouping, etc.
 - **Method dispatch**: Different output formats handled through S4 method dispatch
+- **Lazy evaluation**: Operations are stored and applied during `build_tt()` to handle order dependencies
 - **Separation of data and style**: Content is kept separate from formatting/styling information
-- **Modular styling**: Each output format has its own styling system (Bootstrap CSS, tabularray LaTeX, etc.)
+- **Centralized processing**: `build_tt()` is the single point where data transformations occur
 
 ### Main Functions
 - `tt()` - Create table objects (R/tt.R)
@@ -52,6 +67,8 @@ To run all tests: `pkgload::load_all(); tinytest::run_test_dir()`
 
 ### File Organization
 - `R/` - Main package code
+  - `class.R` - S4 class definition and core methods
+  - `build_tt.R` - Central processing pipeline
   - `tt*.R` - Backend implementations for each output format
   - `style_*.R` - Styling functions for each backend
   - `group_*.R` - Grouping functions for each backend
@@ -78,3 +95,4 @@ Uses `tinytest` framework with snapshot testing via `tinysnapshot`. Test files a
 - Heavy use of S4 classes and method dispatch for clean architecture
 - Each output format has its own complete styling pipeline
 - Extensive test coverage with snapshot testing for visual outputs
+- The `build_tt()` function is critical - all data transformations must happen there to maintain consistency across backends
