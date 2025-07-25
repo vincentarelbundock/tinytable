@@ -8,6 +8,47 @@
 #' Build group header and body parts with position calculations
 #' @keywords internal
 #' @noRd
+rbind_header_body <- function(x) {
+  # Reconstruct the final table by combining formatted header and body parts
+  if (length(x@lazy_group_i) == 0) {
+    return(x)
+  }
+
+  # Get the original final order by recreating the full table
+  x_temp <- x
+  for (k in x@lazy_group_i) {
+    x_temp <- insert_group_i(x_temp, k)
+  }
+
+  # Now rebuild using our formatted pieces
+  final_df <- x_temp@data_processed
+
+  # Replace group rows with formatted data_header and body rows with formatted data_body
+  if (nrow(x@data_header) > 0 && length(x@header_indices) > 0) {
+    for (i in seq_along(x@header_indices)) {
+      row_idx <- x@header_indices[i]
+      if (row_idx <= nrow(final_df)) {
+        final_df[row_idx, ] <- x@data_header[i, ]
+      }
+    }
+  }
+
+  if (nrow(x@data_body) > 0 && length(x@body_indices) > 0) {
+    for (i in seq_along(x@body_indices)) {
+      row_idx <- x@body_indices[i]
+      if (row_idx <= nrow(final_df)) {
+        final_df[row_idx, ] <- x@data_body[i, ]
+      }
+    }
+  }
+
+  x@data_processed <- final_df
+  x@data <- final_df
+  x@nrow <- nrow(final_df)
+
+  return(x)
+}
+
 build_group_parts <- function(x) {
   if (length(x@lazy_group_i) == 0) {
     # No group insertions - set empty header and full table as body
@@ -97,51 +138,20 @@ build_tt <- function(x, output = NULL) {
     x <- do.call(fn, args)
   }
 
-  x <- clean_fansi(x)
+  x <- render_fansi(x)
 
   # Groups case: separate, format, then recombine
   # Step 1: Build group_header and group_body data frames
   x <- build_group_parts(x)
 
   # Step 2: Apply formatting to the separated parts
-  x <- format_separated_header_body(x)
+  x <- format_header_body(x)
 
-  # Handle groups vs no groups differently
-  if (length(x@lazy_group_i) > 0) {
-    # Step 3: Reconstruct the final table
-    # Get the original final order by recreating the full table
-    x_temp <- x
-    for (k in x@lazy_group_i) {
-      x_temp <- insert_group_i(x_temp, k)
-    }
+  # Step 3: Reconstruct the final table
+  x <- rbind_header_body(x)
 
-    # Now rebuild using our formatted pieces
-    final_df <- x_temp@data_processed
-
-    # Replace group rows with formatted data_header and body rows with formatted data_body
-    if (nrow(x@data_header) > 0 && length(x@header_indices) > 0) {
-      for (i in seq_along(x@header_indices)) {
-        row_idx <- x@header_indices[i]
-        if (row_idx <= nrow(final_df)) {
-          final_df[row_idx, ] <- x@data_header[i, ]
-        }
-      }
-    }
-
-    if (nrow(x@data_body) > 0 && length(x@body_indices) > 0) {
-      for (i in seq_along(x@body_indices)) {
-        row_idx <- x@body_indices[i]
-        if (row_idx <= nrow(final_df)) {
-          final_df[row_idx, ] <- x@data_body[i, ]
-        }
-      }
-    }
-
-    x@data_processed <- final_df
-    x@data <- final_df
-    x@nrow <- nrow(final_df)
-  } else {
-    # No groups case: apply formatting directly
+  # Handle no groups case: apply formatting directly
+  if (length(x@lazy_group_i) == 0) {
     for (l in x@lazy_format) {
       l[["x"]] <- x
       x <- eval(l)

@@ -201,7 +201,7 @@ apply_groups_i <- function(x, format_fn, ...) {
   return(x)
 }
 
-format_separated_header_body <- function(x) {
+format_header_body <- function(x) {
   # Apply formatting to separated @data_header and @data_body
   # This function handles the case where groups have been separated
 

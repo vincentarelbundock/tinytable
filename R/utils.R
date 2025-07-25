@@ -114,7 +114,7 @@ lines_insert <- function(old, new, regex, position = "before") {
 
 
 # strip ANSI from `tibble`/`pillar`; keep for markdown
-clean_fansi <- function(x) {
+render_fansi <- function(x) {
   tab <- x@data_processed
   if (isTRUE(check_dependency("fansi"))) {
     for (col in seq_along(tab)) {
