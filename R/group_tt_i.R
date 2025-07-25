@@ -137,13 +137,10 @@ insert_group_i <- function(x, k) {
   # Track matrix positions for styling
   if (length(positions) > 0) {
     unique_positions <- sort(unique(positions))
-    final_positions <- numeric(0)
-    for (pos in unique_positions) {
-      count <- sum(positions == pos)
-      final_positions <- c(final_positions, seq(pos, pos + count - 1))
-    }
-    x@group_index_i_matrix <- c(x@group_index_i_matrix, final_positions)
-    x@group_index_i_matrix <- sort(unique(x@group_index_i_matrix))
+    # For matrix insertions, only track the actual group header positions, not all inserted rows
+    group_header_positions <- unique_positions
+    x@group_index_i <- c(x@group_index_i, group_header_positions)
+    x@group_index_i <- sort(unique(x@group_index_i))
   }
 
   return(x)

@@ -172,7 +172,7 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
   # Handle colspan rows differently
   body <- character(nrow(tab))
   # Get group row indices if available
-  group_rows <- if (inherits(x, "tinytable")) c(x@group_index_i, x@group_index_i_matrix) else integer(0)
+  group_rows <- if (inherits(x, "tinytable")) x@group_index_i else integer(0)
   # Adjust for header if present
   if (header) {
     group_rows <- group_rows + 1  # Header adds one row at the top

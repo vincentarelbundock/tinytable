@@ -34,7 +34,6 @@ setClass(
     data_header = "data.frame",
     data_processed = "data.frame",
     group_index_i = "numeric",
-    group_index_i_matrix = "numeric",
     header_indices = "numeric",
     height = "NULLorNumeric",
     id = "character",

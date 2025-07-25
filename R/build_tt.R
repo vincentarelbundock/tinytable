@@ -148,15 +148,6 @@ build_tt <- function(x, output = NULL) {
   # Step 3: Reconstruct the final table
   x <- rbind_header_body(x)
 
-  # Step 4: Update @group_index_i with final positions after reconstruction
-  if (length(x@lazy_group_i) > 0) {
-    # Recreate the temporary table to get final group positions
-    x_temp <- x
-    for (k in x@lazy_group_i) {
-      x_temp <- insert_group_i(x_temp, k)
-    }
-    x@group_index_i <- x_temp@group_index_i
-  }
 
   # Handle no groups case: apply formatting directly
   if (length(x@lazy_group_i) == 0) {
