@@ -38,8 +38,22 @@ group_typst_col <- function(x, j, ihead, ...) {
         }
 
         # Find the end of this span
-        while (i <= length(group_row) && !is.na(group_row[i]) && group_row[i] == current_label) {
-          i <- i + 1
+        # For non-empty labels, include following empty strings as continuation
+        if (trimws(current_label) != "") {
+          i <- i + 1  # Move past the current label
+          # Continue through empty strings
+          while (i <= length(group_row) && 
+                 !is.na(group_row[i]) &&
+                 trimws(group_row[i]) == "") {
+            i <- i + 1
+          }
+        } else {
+          # For empty labels, just move to next
+          while (i <= length(group_row) && 
+                 !is.na(group_row[i]) &&
+                 trimws(group_row[i]) == "") {
+            i <- i + 1
+          }
         }
         span_end <- i - 1
         span_length <- span_end - span_start + 1
