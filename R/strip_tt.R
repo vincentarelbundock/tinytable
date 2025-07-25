@@ -30,34 +30,33 @@
 #' @return An object of class `tt` representing the table with stripped styling.
 #' @export
 strip_tt <- function(
-  x,
-  style = FALSE,
-  format = FALSE,
-  theme = FALSE,
-  notes = FALSE,
-  caption = FALSE,
-  group = FALSE,
-  bold = FALSE,
-  italic = FALSE,
-  monospace = FALSE,
-  underline = FALSE,
-  strikeout = FALSE,
-  color = FALSE,
-  background = FALSE,
-  fontsize = FALSE,
-  align = FALSE,
-  alignv = FALSE,
-  colspan = FALSE,
-  rowspan = FALSE,
-  indent = FALSE,
-  line = FALSE,
-  bootstrap_class = FALSE,
-  bootstrap_css = FALSE,
-  bootstrap_css_rule = FALSE,
-  tabularray_inner = FALSE,
-  tabularray_outer = FALSE,
-  width = FALSE
-) {
+    x,
+    style = FALSE,
+    format = FALSE,
+    theme = FALSE,
+    notes = FALSE,
+    caption = FALSE,
+    group = FALSE,
+    bold = FALSE,
+    italic = FALSE,
+    monospace = FALSE,
+    underline = FALSE,
+    strikeout = FALSE,
+    color = FALSE,
+    background = FALSE,
+    fontsize = FALSE,
+    align = FALSE,
+    alignv = FALSE,
+    colspan = FALSE,
+    rowspan = FALSE,
+    indent = FALSE,
+    line = FALSE,
+    bootstrap_class = FALSE,
+    bootstrap_css = FALSE,
+    bootstrap_css_rule = FALSE,
+    tabularray_inner = FALSE,
+    tabularray_outer = FALSE,
+    width = FALSE) {
   out <- x
 
   # Reset style data.frame and lazy style
@@ -88,8 +87,6 @@ strip_tt <- function(
   # Reset group styling
   if (group) {
     out@group_index_i <- numeric()
-    out@group_n_i <- 0
-    out@group_n_j <- 0
     out@lazy_group_j <- list()
     out@lazy_group_i <- list()
     out@nrow <- nrow(out@data)
