@@ -17,11 +17,11 @@ rbind_header_body <- function(x) {
   # Calculate total final table size
   total_rows <- nrow(x@data_body) + nrow(x@data_group_i)
   final_ncol <- ncol(x@data_body)
-  
+
   # Create final data frame with proper structure
   final_df <- data.frame(matrix(NA_character_, nrow = total_rows, ncol = final_ncol))
   colnames(final_df) <- colnames(x@data_body)
-  
+
   # Insert body data at body_indices positions
   if (nrow(x@data_body) > 0 && length(x@body_indices) > 0) {
     for (i in seq_along(x@body_indices)) {
@@ -31,7 +31,7 @@ rbind_header_body <- function(x) {
       }
     }
   }
-  
+
   # Insert group i data at index_group_i positions
   if (nrow(x@data_group_i) > 0 && length(x@index_group_i) > 0) {
     for (i in seq_len(nrow(x@data_group_i))) {
@@ -53,26 +53,26 @@ build_group_parts <- function(x) {
   if (nrow(x@data_group_i) == 0) {
     # No row group insertions - set full table as body
     x@data_body <- x@data_processed
-    x@header_indices <- numeric(0)
+    x@index_group_j <- numeric(0)
     x@body_indices <- seq_len(nrow(x@data_processed))
     return(x)
   }
 
   # Since we now have @data_group_i and @index_group_i, we can directly use them
   # without needing to recreate the table from @lazy_group_i
-  
+
   # Calculate which positions are body vs group
   all_positions <- seq_len(nrow(x@data_processed) + nrow(x@data_group_i))
   group_positions <- x@index_group_i
   body_positions <- setdiff(all_positions, group_positions)
-  
+
   # Set the body data to the original processed data
   x@data_body <- x@data_processed
-  
+
   # Set indices for reconstruction
-  x@header_indices <- group_positions  # for group_j compatibility
+  x@index_group_j <- group_positions # for group_j compatibility
   x@body_indices <- body_positions
-  
+
   return(x)
 }
 

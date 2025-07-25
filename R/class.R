@@ -35,7 +35,7 @@ setClass(
     data_group_j = "data.frame",
     data_processed = "data.frame",
     group_index_i = "numeric",
-    header_indices = "numeric",
+    index_group_j = "numeric",
     index_group_i = "numeric",
     height = "NULLorNumeric",
     id = "character",
@@ -100,7 +100,7 @@ setMethod(
     .Object@data_group_i <- data.frame()
     .Object@data_group_j <- data.frame()
     .Object@data_body <- data.frame()
-    .Object@header_indices <- numeric(0)
+    .Object@index_group_j <- numeric(0)
     .Object@body_indices <- numeric(0)
     .Object@index_group_i <- numeric(0)
     .Object@id <- get_id("tinytable_")
