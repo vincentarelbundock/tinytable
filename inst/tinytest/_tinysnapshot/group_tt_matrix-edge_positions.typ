@@ -1,5 +1,3 @@
-broken
-
 #show figure: set block(breakable: true)
 #figure( // start preamble figure
   
@@ -10,7 +8,7 @@ block[ // start block
 
   #let style-dict = (
     // tinytable style-dict after
-    "1_0": 0, "2_0": 0, "3_0": 0, "4_0": 0, "5_0": 0, "6_0": 0
+    "1_0": 0, "2_0": 0, "3_0": 0, "4_0": 0, "5_0": 0
   )
 
   #let style-array = ( 
@@ -75,8 +73,8 @@ block[ // start block
 [5.1], [3.5], [1.4], [0.2], [setosa],
 [4.9], [3.0], [1.4], [0.2], [setosa],
 [4.7], [3.2], [1.3], [0.2], [setosa],
-[Footer], [Row], [At], [Bottom], [Position],
 [4.6], [3.1], [1.5], [0.2], [setosa],
+[Footer], [Row], [At], [Bottom], [Position],
 
     // tinytable footer after
 

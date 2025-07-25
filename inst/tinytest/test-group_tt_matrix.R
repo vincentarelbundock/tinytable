@@ -26,7 +26,7 @@ expect_snapshot_print(t[["html"]], "group_tt_matrix-multiple_positions_multiple_
 # Matrix insertion at edge positions (combines position 1 and last position)
 tab <- tt(head(iris, 4)) |>
   group_tt(i = 1, j = matrix(c("Header", "Row", "At", "Top", "Position"), nrow = 1)) |>
-  group_tt(i = 5, j = matrix(c("Footer", "Row", "At", "Bottom", "Position"), nrow = 1))
+  group_tt(i = 6, j = matrix(c("Footer", "Row", "At", "Bottom", "Position"), nrow = 1))
 t <- expect_table(tab)
 expect_snapshot_print(t[["markdown"]], "group_tt_matrix-edge_positions.md")
 expect_snapshot_print(t[["latex"]], "group_tt_matrix-edge_positions.tex")
