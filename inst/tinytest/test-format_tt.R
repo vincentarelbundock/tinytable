@@ -267,8 +267,6 @@ expect_true(grepl("Prefix_x", save_tt(tab4, "markdown"), fixed = TRUE))
 expect_true(grepl("Prefix_Test Caption", save_tt(tab4, "markdown"), fixed = TRUE))
 
 
-
-
 # Vignette with multiple components
 options(tinytable_print_output = "latex")
 tab <- data.frame(
@@ -284,7 +282,7 @@ expect_snapshot_print(tab, label = "format_tt-format_components_vignette_01.tex"
 options(tinytable_print_output = NULL)
 
 
-exit_file("TODO: broken tests")
+exit_file("TODO: broken markdown output")
 
 
 # TODO: group not formatted
