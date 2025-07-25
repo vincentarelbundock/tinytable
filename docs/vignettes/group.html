@@ -201,7 +201,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/tinytable.html">Tutorial</a></li><li class="breadcrumb-item"><a href="../vignettes/group.html">Group labels</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/tinytable.html">Tutorial</a></li><li class="breadcrumb-item"><a href="../vignettes/group.html">Groups and labels</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -243,7 +243,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/group.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">Group labels</span></a>
+ <span class="menu-text">Groups and labels</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -407,7 +407,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/tinytable.html">Tutorial</a></li><li class="breadcrumb-item"><a href="../vignettes/group.html">Group labels</a></li></ol></nav></header>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/tinytable.html">Tutorial</a></li><li class="breadcrumb-item"><a href="../vignettes/group.html">Groups and labels</a></li></ol></nav></header>
 
 
 
@@ -448,8 +448,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_k8k2x56kv2hyuriz5u07(i, j, css_id) {
-          var table = document.getElementById("tinytable_k8k2x56kv2hyuriz5u07");
+      function styleCell_zp1dsvmfaxouu5tan8mv(i, j, css_id) {
+          var table = document.getElementById("tinytable_zp1dsvmfaxouu5tan8mv");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -458,21 +458,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function insertSpanRow_0wlregumfsot6jnj44i4(i, colspan, content) {
-        var table = document.getElementById('tinytable_k8k2x56kv2hyuriz5u07');
-        // Find the row with data-row attribute matching i
-        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
-        var newRow = table.insertRow(targetRow.rowIndex);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        newCell.setAttribute("data-col", "0");
-        newCell.setAttribute("data-row", i - 1);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_k8k2x56kv2hyuriz5u07(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_k8k2x56kv2hyuriz5u07");
+      function spanCell_zp1dsvmfaxouu5tan8mv(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_zp1dsvmfaxouu5tan8mv");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -500,22 +487,22 @@ MathJax = {
         }
       }
       // tinytable span after
-      window.addEventListener('load', function () { insertSpanRow_0wlregumfsot6jnj44i4(10, 8, 'They love tofu') });
-      window.addEventListener('load', function () { insertSpanRow_0wlregumfsot6jnj44i4(6, 8, 'She prefers halloumi') });
-      window.addEventListener('load', function () { insertSpanRow_0wlregumfsot6jnj44i4(4, 8, 'I like (fake) hamburgers') });
+      window.addEventListener('load', function () { spanCell_zp1dsvmfaxouu5tan8mv(9, 0, 1, 8) })
+      window.addEventListener('load', function () { spanCell_zp1dsvmfaxouu5tan8mv(5, 0, 1, 8) })
+      window.addEventListener('load', function () { spanCell_zp1dsvmfaxouu5tan8mv(3, 0, 1, 8) })
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '12', j: 1 }, { i: '12', j: 2 }, { i: '12', j: 3 }, { i: '12', j: 4 }, { i: '12', j: 5 }, { i: '12', j: 6 }, { i: '12', j: 7 },  ], css_id: 'tinytable_css_sud0y20w2r5tnzg5otyz',}, 
-          { positions: [ { i: '12', j: 0 },  ], css_id: 'tinytable_css_mwc2rqeg0fpk1j0bglpu',}, 
-          { positions: [ { i: '1', j: 0 }, { i: '4', j: 0 }, { i: '7', j: 0 }, { i: '10', j: 0 }, { i: '6', j: 0 }, { i: '2', j: 0 }, { i: '11', j: 0 }, { i: '8', j: 0 },  ], css_id: 'tinytable_css_y4joe6rc2qdjizfvklb0',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 }, { i: '0', j: 7 },  ], css_id: 'tinytable_css_y7kxg7vsbduy6r1as9gr',}, 
+          { positions: [ { i: '12', j: 1 }, { i: '12', j: 2 }, { i: '12', j: 3 }, { i: '12', j: 4 }, { i: '12', j: 5 }, { i: '12', j: 6 }, { i: '12', j: 7 },  ], css_id: 'tinytable_css_1c9oldc9l1cpgpsuiay5',}, 
+          { positions: [ { i: '12', j: 0 },  ], css_id: 'tinytable_css_0nm2brrfpi76ldihqapj',}, 
+          { positions: [ { i: '1', j: 0 }, { i: '4', j: 0 }, { i: '7', j: 0 }, { i: '10', j: 0 }, { i: '6', j: 0 }, { i: '2', j: 0 }, { i: '11', j: 0 }, { i: '8', j: 0 },  ], css_id: 'tinytable_css_s46pcjl5nutyna03p471',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 }, { i: '0', j: 7 },  ], css_id: 'tinytable_css_2m5k3ftqjwfmtuh3he21',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_k8k2x56kv2hyuriz5u07(cell.i, cell.j, group.css_id);
+                  styleCell_zp1dsvmfaxouu5tan8mv(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -523,13 +510,13 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_sud0y20w2r5tnzg5otyz, .table th.tinytable_css_sud0y20w2r5tnzg5otyz { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_mwc2rqeg0fpk1j0bglpu, .table th.tinytable_css_mwc2rqeg0fpk1j0bglpu { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_y4joe6rc2qdjizfvklb0, .table th.tinytable_css_y4joe6rc2qdjizfvklb0 { padding-left: 1em; }
-      .table td.tinytable_css_y7kxg7vsbduy6r1as9gr, .table th.tinytable_css_y7kxg7vsbduy6r1as9gr { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_1c9oldc9l1cpgpsuiay5, .table th.tinytable_css_1c9oldc9l1cpgpsuiay5 { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_0nm2brrfpi76ldihqapj, .table th.tinytable_css_0nm2brrfpi76ldihqapj { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_s46pcjl5nutyna03p471, .table th.tinytable_css_s46pcjl5nutyna03p471 { padding-left: 1em; }
+      .table td.tinytable_css_2m5k3ftqjwfmtuh3he21, .table th.tinytable_css_2m5k3ftqjwfmtuh3he21 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_k8k2x56kv2hyuriz5u07" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_zp1dsvmfaxouu5tan8mv" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -566,6 +553,16 @@ MathJax = {
                   <td data-row="2" data-col="7">0</td>
                 </tr>
                 <tr>
+                  <td data-row="3" data-col="0">I like (fake) hamburgers</td>
+                  <td data-row="3" data-col="1"></td>
+                  <td data-row="3" data-col="2"></td>
+                  <td data-row="3" data-col="3"></td>
+                  <td data-row="3" data-col="4"></td>
+                  <td data-row="3" data-col="5"></td>
+                  <td data-row="3" data-col="6"></td>
+                  <td data-row="3" data-col="7"></td>
+                </tr>
+                <tr>
                   <td data-row="4" data-col="0">22.8</td>
                   <td data-row="4" data-col="1">4</td>
                   <td data-row="4" data-col="2">108</td>
@@ -574,6 +571,16 @@ MathJax = {
                   <td data-row="4" data-col="5">2.32</td>
                   <td data-row="4" data-col="6">18.6</td>
                   <td data-row="4" data-col="7">1</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="0">She prefers halloumi</td>
+                  <td data-row="5" data-col="1"></td>
+                  <td data-row="5" data-col="2"></td>
+                  <td data-row="5" data-col="3"></td>
+                  <td data-row="5" data-col="4"></td>
+                  <td data-row="5" data-col="5"></td>
+                  <td data-row="5" data-col="6"></td>
+                  <td data-row="5" data-col="7"></td>
                 </tr>
                 <tr>
                   <td data-row="6" data-col="0">21.4</td>
@@ -604,6 +611,16 @@ MathJax = {
                   <td data-row="8" data-col="5">3.46</td>
                   <td data-row="8" data-col="6">20.2</td>
                   <td data-row="8" data-col="7">1</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="0">They love tofu</td>
+                  <td data-row="9" data-col="1"></td>
+                  <td data-row="9" data-col="2"></td>
+                  <td data-row="9" data-col="3"></td>
+                  <td data-row="9" data-col="4"></td>
+                  <td data-row="9" data-col="5"></td>
+                  <td data-row="9" data-col="6"></td>
+                  <td data-row="9" data-col="7"></td>
                 </tr>
                 <tr>
                   <td data-row="10" data-col="0">14.3</td>
@@ -650,8 +667,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_tkblvy1n1jrgjgavbfzo(i, j, css_id) {
-          var table = document.getElementById("tinytable_tkblvy1n1jrgjgavbfzo");
+      function styleCell_sea1c5lym73uslm92vb3(i, j, css_id) {
+          var table = document.getElementById("tinytable_sea1c5lym73uslm92vb3");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -660,21 +677,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function insertSpanRow_dh3ffno4ge7xv9hbj1mz(i, colspan, content) {
-        var table = document.getElementById('tinytable_tkblvy1n1jrgjgavbfzo');
-        // Find the row with data-row attribute matching i
-        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
-        var newRow = table.insertRow(targetRow.rowIndex);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        newCell.setAttribute("data-col", "0");
-        newCell.setAttribute("data-row", i - 1);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_tkblvy1n1jrgjgavbfzo(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_tkblvy1n1jrgjgavbfzo");
+      function spanCell_sea1c5lym73uslm92vb3(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_sea1c5lym73uslm92vb3");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -702,23 +706,23 @@ MathJax = {
         }
       }
       // tinytable span after
-      window.addEventListener('load', function () { insertSpanRow_dh3ffno4ge7xv9hbj1mz(10, 5, 'After 5') });
-      window.addEventListener('load', function () { insertSpanRow_dh3ffno4ge7xv9hbj1mz(7, 5, 'After 3') });
-      window.addEventListener('load', function () { insertSpanRow_dh3ffno4ge7xv9hbj1mz(5, 5, 'After 2') });
-      window.addEventListener('load', function () { insertSpanRow_dh3ffno4ge7xv9hbj1mz(3, 5, 'After 1') });
+      window.addEventListener('load', function () { spanCell_sea1c5lym73uslm92vb3(9, 0, 1, 5) })
+      window.addEventListener('load', function () { spanCell_sea1c5lym73uslm92vb3(6, 0, 1, 5) })
+      window.addEventListener('load', function () { spanCell_sea1c5lym73uslm92vb3(4, 0, 1, 5) })
+      window.addEventListener('load', function () { spanCell_sea1c5lym73uslm92vb3(2, 0, 1, 5) })
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '10', j: 1 }, { i: '10', j: 2 }, { i: '10', j: 3 }, { i: '10', j: 4 },  ], css_id: 'tinytable_css_tarp5poaddqyr88ffcst',}, 
-          { positions: [ { i: '10', j: 0 },  ], css_id: 'tinytable_css_k8bf7jwqhc73d8zvg5eu',}, 
-          { positions: [ { i: '3', j: 0 }, { i: '7', j: 0 }, { i: '1', j: 0 }, { i: '5', j: 0 }, { i: '8', j: 0 },  ], css_id: 'tinytable_css_1948i6jmaqur3e7td4lz',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 2 }, { i: '0', j: 1 }, { i: '0', j: 4 }, { i: '0', j: 3 },  ], css_id: 'tinytable_css_gvyvq4oap1n5yqgohiws',}, 
+          { positions: [ { i: '10', j: 1 }, { i: '10', j: 2 }, { i: '10', j: 3 }, { i: '10', j: 4 },  ], css_id: 'tinytable_css_0lqjy7o5bgmarpqljkzi',}, 
+          { positions: [ { i: '10', j: 0 },  ], css_id: 'tinytable_css_nmvccitkd4kczsios7an',}, 
+          { positions: [ { i: '3', j: 0 }, { i: '7', j: 0 }, { i: '1', j: 0 }, { i: '5', j: 0 }, { i: '8', j: 0 },  ], css_id: 'tinytable_css_mbw43fnmb416jjyj0dbu',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 2 }, { i: '0', j: 1 }, { i: '0', j: 4 }, { i: '0', j: 3 },  ], css_id: 'tinytable_css_ob4n0bh15apczauiglzd',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_tkblvy1n1jrgjgavbfzo(cell.i, cell.j, group.css_id);
+                  styleCell_sea1c5lym73uslm92vb3(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -726,13 +730,13 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_tarp5poaddqyr88ffcst, .table th.tinytable_css_tarp5poaddqyr88ffcst { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_k8bf7jwqhc73d8zvg5eu, .table th.tinytable_css_k8bf7jwqhc73d8zvg5eu { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_1948i6jmaqur3e7td4lz, .table th.tinytable_css_1948i6jmaqur3e7td4lz { padding-left: 1em; }
-      .table td.tinytable_css_gvyvq4oap1n5yqgohiws, .table th.tinytable_css_gvyvq4oap1n5yqgohiws { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_0lqjy7o5bgmarpqljkzi, .table th.tinytable_css_0lqjy7o5bgmarpqljkzi { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_nmvccitkd4kczsios7an, .table th.tinytable_css_nmvccitkd4kczsios7an { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_mbw43fnmb416jjyj0dbu, .table th.tinytable_css_mbw43fnmb416jjyj0dbu { padding-left: 1em; }
+      .table td.tinytable_css_ob4n0bh15apczauiglzd, .table th.tinytable_css_ob4n0bh15apczauiglzd { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_tkblvy1n1jrgjgavbfzo" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_sea1c5lym73uslm92vb3" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -753,6 +757,13 @@ MathJax = {
                   <td data-row="1" data-col="4">setosa</td>
                 </tr>
                 <tr>
+                  <td data-row="2" data-col="0">After 1</td>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2"></td>
+                  <td data-row="2" data-col="3"></td>
+                  <td data-row="2" data-col="4"></td>
+                </tr>
+                <tr>
                   <td data-row="3" data-col="0">4.9</td>
                   <td data-row="3" data-col="1">3</td>
                   <td data-row="3" data-col="2">1.4</td>
@@ -760,11 +771,25 @@ MathJax = {
                   <td data-row="3" data-col="4">setosa</td>
                 </tr>
                 <tr>
+                  <td data-row="4" data-col="0">After 2</td>
+                  <td data-row="4" data-col="1"></td>
+                  <td data-row="4" data-col="2"></td>
+                  <td data-row="4" data-col="3"></td>
+                  <td data-row="4" data-col="4"></td>
+                </tr>
+                <tr>
                   <td data-row="5" data-col="0">4.7</td>
                   <td data-row="5" data-col="1">3.2</td>
                   <td data-row="5" data-col="2">1.3</td>
                   <td data-row="5" data-col="3">0.2</td>
                   <td data-row="5" data-col="4">setosa</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="0">After 3</td>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2"></td>
+                  <td data-row="6" data-col="3"></td>
+                  <td data-row="6" data-col="4"></td>
                 </tr>
                 <tr>
                   <td data-row="7" data-col="0">4.6</td>
@@ -779,6 +804,13 @@ MathJax = {
                   <td data-row="8" data-col="2">1.4</td>
                   <td data-row="8" data-col="3">0.2</td>
                   <td data-row="8" data-col="4">setosa</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="0">After 5</td>
+                  <td data-row="9" data-col="1"></td>
+                  <td data-row="9" data-col="2"></td>
+                  <td data-row="9" data-col="3"></td>
+                  <td data-row="9" data-col="4"></td>
                 </tr>
                 <tr>
                   <td data-row="10" data-col="0">5.4</td>
@@ -799,8 +831,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_w4q4ntj46xx14m1fnk9y(i, j, css_id) {
-          var table = document.getElementById("tinytable_w4q4ntj46xx14m1fnk9y");
+      function styleCell_rbd53niy4q3lihnj46r0(i, j, css_id) {
+          var table = document.getElementById("tinytable_rbd53niy4q3lihnj46r0");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -809,21 +841,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function insertSpanRow_8v9p0fooacyzb5u2cfib(i, colspan, content) {
-        var table = document.getElementById('tinytable_w4q4ntj46xx14m1fnk9y');
-        // Find the row with data-row attribute matching i
-        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
-        var newRow = table.insertRow(targetRow.rowIndex);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        newCell.setAttribute("data-col", "0");
-        newCell.setAttribute("data-row", i - 1);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_w4q4ntj46xx14m1fnk9y(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_w4q4ntj46xx14m1fnk9y");
+      function spanCell_rbd53niy4q3lihnj46r0(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_rbd53niy4q3lihnj46r0");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -851,22 +870,22 @@ MathJax = {
         }
       }
       // tinytable span after
-      window.addEventListener('load', function () { insertSpanRow_8v9p0fooacyzb5u2cfib(9, 5, 'After 5') });
-      window.addEventListener('load', function () { insertSpanRow_8v9p0fooacyzb5u2cfib(4, 5, 'After 1b') });
-      window.addEventListener('load', function () { insertSpanRow_8v9p0fooacyzb5u2cfib(4, 5, 'After 1a') });
+      window.addEventListener('load', function () { spanCell_rbd53niy4q3lihnj46r0(8, 0, 1, 5) })
+      window.addEventListener('load', function () { spanCell_rbd53niy4q3lihnj46r0(3, 0, 1, 5) })
+      window.addEventListener('load', function () { spanCell_rbd53niy4q3lihnj46r0(2, 0, 1, 5) })
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '9', j: 1 }, { i: '9', j: 2 }, { i: '9', j: 3 }, { i: '9', j: 4 },  ], css_id: 'tinytable_css_dbzpgvapmnk3acfr27b4',}, 
-          { positions: [ { i: '9', j: 0 },  ], css_id: 'tinytable_css_tpczb5r0gjy5rnlvfphk',}, 
-          { positions: [ { i: '4', j: 0 }, { i: '6', j: 0 }, { i: '1', j: 0 }, { i: '5', j: 0 }, { i: '7', j: 0 },  ], css_id: 'tinytable_css_htow6gxgogm8iujhicla',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 2 }, { i: '0', j: 1 }, { i: '0', j: 4 }, { i: '0', j: 3 },  ], css_id: 'tinytable_css_e59jq6nvi184h22oghnt',}, 
+          { positions: [ { i: '9', j: 1 }, { i: '9', j: 2 }, { i: '9', j: 3 }, { i: '9', j: 4 },  ], css_id: 'tinytable_css_yar9wiarf7g3ztzriz0y',}, 
+          { positions: [ { i: '9', j: 0 },  ], css_id: 'tinytable_css_z0b4u15iqchap1jkhvwv',}, 
+          { positions: [ { i: '4', j: 0 }, { i: '6', j: 0 }, { i: '1', j: 0 }, { i: '5', j: 0 }, { i: '7', j: 0 },  ], css_id: 'tinytable_css_hakxtk9m31n1bn94olwx',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 2 }, { i: '0', j: 1 }, { i: '0', j: 4 }, { i: '0', j: 3 },  ], css_id: 'tinytable_css_svr5jupbehwb09ub4grh',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_w4q4ntj46xx14m1fnk9y(cell.i, cell.j, group.css_id);
+                  styleCell_rbd53niy4q3lihnj46r0(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -874,13 +893,13 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_dbzpgvapmnk3acfr27b4, .table th.tinytable_css_dbzpgvapmnk3acfr27b4 { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_tpczb5r0gjy5rnlvfphk, .table th.tinytable_css_tpczb5r0gjy5rnlvfphk { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_htow6gxgogm8iujhicla, .table th.tinytable_css_htow6gxgogm8iujhicla { padding-left: 1em; }
-      .table td.tinytable_css_e59jq6nvi184h22oghnt, .table th.tinytable_css_e59jq6nvi184h22oghnt { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_yar9wiarf7g3ztzriz0y, .table th.tinytable_css_yar9wiarf7g3ztzriz0y { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_z0b4u15iqchap1jkhvwv, .table th.tinytable_css_z0b4u15iqchap1jkhvwv { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_hakxtk9m31n1bn94olwx, .table th.tinytable_css_hakxtk9m31n1bn94olwx { padding-left: 1em; }
+      .table td.tinytable_css_svr5jupbehwb09ub4grh, .table th.tinytable_css_svr5jupbehwb09ub4grh { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_w4q4ntj46xx14m1fnk9y" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_rbd53niy4q3lihnj46r0" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -899,6 +918,20 @@ MathJax = {
                   <td data-row="1" data-col="2">1.4</td>
                   <td data-row="1" data-col="3">0.2</td>
                   <td data-row="1" data-col="4">setosa</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="0">After 1a</td>
+                  <td data-row="2" data-col="1"></td>
+                  <td data-row="2" data-col="2"></td>
+                  <td data-row="2" data-col="3"></td>
+                  <td data-row="2" data-col="4"></td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="0">After 1b</td>
+                  <td data-row="3" data-col="1"></td>
+                  <td data-row="3" data-col="2"></td>
+                  <td data-row="3" data-col="3"></td>
+                  <td data-row="3" data-col="4"></td>
                 </tr>
                 <tr>
                   <td data-row="4" data-col="0">4.9</td>
@@ -929,6 +962,13 @@ MathJax = {
                   <td data-row="7" data-col="4">setosa</td>
                 </tr>
                 <tr>
+                  <td data-row="8" data-col="0">After 5</td>
+                  <td data-row="8" data-col="1"></td>
+                  <td data-row="8" data-col="2"></td>
+                  <td data-row="8" data-col="3"></td>
+                  <td data-row="8" data-col="4"></td>
+                </tr>
+                <tr>
                   <td data-row="9" data-col="0">5.4</td>
                   <td data-row="9" data-col="1">3.9</td>
                   <td data-row="9" data-col="2">1.7</td>
@@ -947,8 +987,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_kmq3ch02fy2myhb89qpl(i, j, css_id) {
-          var table = document.getElementById("tinytable_kmq3ch02fy2myhb89qpl");
+      function styleCell_rfqnetqckh2n6lnc2jxv(i, j, css_id) {
+          var table = document.getElementById("tinytable_rfqnetqckh2n6lnc2jxv");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -957,21 +997,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function insertSpanRow_rb8o13es8mcl9ltoa4z3(i, colspan, content) {
-        var table = document.getElementById('tinytable_kmq3ch02fy2myhb89qpl');
-        // Find the row with data-row attribute matching i
-        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
-        var newRow = table.insertRow(targetRow.rowIndex);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        newCell.setAttribute("data-col", "0");
-        newCell.setAttribute("data-row", i - 1);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_kmq3ch02fy2myhb89qpl(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_kmq3ch02fy2myhb89qpl");
+      function spanCell_rfqnetqckh2n6lnc2jxv(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_rfqnetqckh2n6lnc2jxv");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -999,20 +1026,20 @@ MathJax = {
         }
       }
       // tinytable span after
-      window.addEventListener('load', function () { insertSpanRow_rb8o13es8mcl9ltoa4z3(2, 5, 'After 0') });
+      window.addEventListener('load', function () { spanCell_rfqnetqckh2n6lnc2jxv(1, 0, 1, 5) })
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '7', j: 1 }, { i: '7', j: 2 }, { i: '7', j: 3 }, { i: '7', j: 4 },  ], css_id: 'tinytable_css_fxib0th76ha0v6ho7ww7',}, 
-          { positions: [ { i: '7', j: 0 },  ], css_id: 'tinytable_css_e3qg538apz969bw5dh15',}, 
-          { positions: [ { i: '3', j: 0 }, { i: '5', j: 0 }, { i: '2', j: 0 }, { i: '4', j: 0 }, { i: '6', j: 0 },  ], css_id: 'tinytable_css_epz1qxrvx38ntx2v2uve',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 2 }, { i: '0', j: 1 }, { i: '0', j: 4 }, { i: '0', j: 3 },  ], css_id: 'tinytable_css_agqwts2esslwcd3xs40z',}, 
+          { positions: [ { i: '7', j: 1 }, { i: '7', j: 2 }, { i: '7', j: 3 }, { i: '7', j: 4 },  ], css_id: 'tinytable_css_k9tnxjb7p5zfydrocd40',}, 
+          { positions: [ { i: '7', j: 0 },  ], css_id: 'tinytable_css_lq78fdatrqkpb9g1l6f7',}, 
+          { positions: [ { i: '3', j: 0 }, { i: '5', j: 0 }, { i: '2', j: 0 }, { i: '4', j: 0 }, { i: '6', j: 0 },  ], css_id: 'tinytable_css_oak9v3h1vxrddp80g85d',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 2 }, { i: '0', j: 1 }, { i: '0', j: 4 }, { i: '0', j: 3 },  ], css_id: 'tinytable_css_n2dwrve627zoli5v09ji',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_kmq3ch02fy2myhb89qpl(cell.i, cell.j, group.css_id);
+                  styleCell_rfqnetqckh2n6lnc2jxv(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1020,13 +1047,13 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_fxib0th76ha0v6ho7ww7, .table th.tinytable_css_fxib0th76ha0v6ho7ww7 { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_e3qg538apz969bw5dh15, .table th.tinytable_css_e3qg538apz969bw5dh15 { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_epz1qxrvx38ntx2v2uve, .table th.tinytable_css_epz1qxrvx38ntx2v2uve { padding-left: 1em; }
-      .table td.tinytable_css_agqwts2esslwcd3xs40z, .table th.tinytable_css_agqwts2esslwcd3xs40z { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_k9tnxjb7p5zfydrocd40, .table th.tinytable_css_k9tnxjb7p5zfydrocd40 { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_lq78fdatrqkpb9g1l6f7, .table th.tinytable_css_lq78fdatrqkpb9g1l6f7 { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_oak9v3h1vxrddp80g85d, .table th.tinytable_css_oak9v3h1vxrddp80g85d { padding-left: 1em; }
+      .table td.tinytable_css_n2dwrve627zoli5v09ji, .table th.tinytable_css_n2dwrve627zoli5v09ji { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_kmq3ch02fy2myhb89qpl" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_rfqnetqckh2n6lnc2jxv" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -1039,6 +1066,13 @@ MathJax = {
         </thead>
         
         <tbody>
+                <tr>
+                  <td data-row="1" data-col="0">After 0</td>
+                  <td data-row="1" data-col="1"></td>
+                  <td data-row="1" data-col="2"></td>
+                  <td data-row="1" data-col="3"></td>
+                  <td data-row="1" data-col="4"></td>
+                </tr>
                 <tr>
                   <td data-row="2" data-col="0">5.1</td>
                   <td data-row="2" data-col="1">3.5</td>
@@ -1109,8 +1143,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_qenpneqx3mhanl71gtoj(i, j, css_id) {
-          var table = document.getElementById("tinytable_qenpneqx3mhanl71gtoj");
+      function styleCell_as8vhkrabuu0yfi3nj3x(i, j, css_id) {
+          var table = document.getElementById("tinytable_as8vhkrabuu0yfi3nj3x");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -1119,21 +1153,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function insertSpanRow_6sq67vwb7ljt8dzsybmd(i, colspan, content) {
-        var table = document.getElementById('tinytable_qenpneqx3mhanl71gtoj');
-        // Find the row with data-row attribute matching i
-        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
-        var newRow = table.insertRow(targetRow.rowIndex);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        newCell.setAttribute("data-col", "0");
-        newCell.setAttribute("data-row", i - 1);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_qenpneqx3mhanl71gtoj(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_qenpneqx3mhanl71gtoj");
+      function spanCell_as8vhkrabuu0yfi3nj3x(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_as8vhkrabuu0yfi3nj3x");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -1161,23 +1182,23 @@ MathJax = {
         }
       }
       // tinytable span after
-      window.addEventListener('load', function () { insertSpanRow_6sq67vwb7ljt8dzsybmd(10, 8, 'They love tofu') });
-      window.addEventListener('load', function () { insertSpanRow_6sq67vwb7ljt8dzsybmd(6, 8, 'She prefers halloumi') });
-      window.addEventListener('load', function () { insertSpanRow_6sq67vwb7ljt8dzsybmd(4, 8, 'I like (fake) hamburgers') });
+      window.addEventListener('load', function () { spanCell_as8vhkrabuu0yfi3nj3x(9, 0, 1, 8) })
+      window.addEventListener('load', function () { spanCell_as8vhkrabuu0yfi3nj3x(5, 0, 1, 8) })
+      window.addEventListener('load', function () { spanCell_as8vhkrabuu0yfi3nj3x(3, 0, 1, 8) })
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '12', j: 2 }, { i: '12', j: 5 }, { i: '12', j: 1 }, { i: '12', j: 3 }, { i: '12', j: 4 }, { i: '12', j: 6 }, { i: '12', j: 7 },  ], css_id: 'tinytable_css_3g9i3cl2s357yde5ihlq',}, 
-          { positions: [ { i: '12', j: 0 },  ], css_id: 'tinytable_css_nlpxk3so2qxoar7479pl',}, 
-          { positions: [ { i: '3', j: 1 }, { i: '9', j: 0 }, { i: '5', j: 0 }, { i: '3', j: 0 }, { i: '9', j: 1 }, { i: '9', j: 2 }, { i: '5', j: 5 }, { i: '3', j: 2 }, { i: '3', j: 3 }, { i: '5', j: 3 }, { i: '9', j: 3 }, { i: '5', j: 6 }, { i: '5', j: 1 }, { i: '3', j: 4 }, { i: '5', j: 4 }, { i: '9', j: 4 }, { i: '5', j: 7 }, { i: '5', j: 2 }, { i: '3', j: 5 }, { i: '3', j: 6 }, { i: '9', j: 5 }, { i: '9', j: 6 }, { i: '9', j: 7 }, { i: '3', j: 7 },  ], css_id: 'tinytable_css_a3v47nl7qmocnik9gxlp',}, 
-          { positions: [ { i: '11', j: 0 }, { i: '1', j: 0 }, { i: '6', j: 0 }, { i: '2', j: 0 }, { i: '8', j: 0 }, { i: '4', j: 0 }, { i: '10', j: 0 }, { i: '7', j: 0 },  ], css_id: 'tinytable_css_grbr5ao3du1y6zd5kwjq',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 2 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 7 }, { i: '0', j: 1 }, { i: '0', j: 3 }, { i: '0', j: 6 },  ], css_id: 'tinytable_css_pm1zf1edj0y8yem73qxx',}, 
+          { positions: [ { i: '12', j: 2 }, { i: '12', j: 5 }, { i: '12', j: 1 }, { i: '12', j: 3 }, { i: '12', j: 4 }, { i: '12', j: 6 }, { i: '12', j: 7 },  ], css_id: 'tinytable_css_z9qnecwys2m4bugdu6rb',}, 
+          { positions: [ { i: '12', j: 0 },  ], css_id: 'tinytable_css_hmzxbhy0vke5030dws52',}, 
+          { positions: [ { i: '3', j: 1 }, { i: '9', j: 0 }, { i: '5', j: 0 }, { i: '3', j: 0 }, { i: '9', j: 1 }, { i: '9', j: 2 }, { i: '5', j: 5 }, { i: '3', j: 2 }, { i: '3', j: 3 }, { i: '5', j: 3 }, { i: '9', j: 3 }, { i: '5', j: 6 }, { i: '5', j: 1 }, { i: '3', j: 4 }, { i: '5', j: 4 }, { i: '9', j: 4 }, { i: '5', j: 7 }, { i: '5', j: 2 }, { i: '3', j: 5 }, { i: '3', j: 6 }, { i: '9', j: 5 }, { i: '9', j: 6 }, { i: '9', j: 7 }, { i: '3', j: 7 },  ], css_id: 'tinytable_css_d6szu4we73t045tzvc35',}, 
+          { positions: [ { i: '11', j: 0 }, { i: '1', j: 0 }, { i: '6', j: 0 }, { i: '2', j: 0 }, { i: '8', j: 0 }, { i: '4', j: 0 }, { i: '10', j: 0 }, { i: '7', j: 0 },  ], css_id: 'tinytable_css_440hklk3gvmhoz4j06ze',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 2 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 7 }, { i: '0', j: 1 }, { i: '0', j: 3 }, { i: '0', j: 6 },  ], css_id: 'tinytable_css_vlpqy95mf4w8ej2a1guj',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_qenpneqx3mhanl71gtoj(cell.i, cell.j, group.css_id);
+                  styleCell_as8vhkrabuu0yfi3nj3x(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1185,14 +1206,14 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_3g9i3cl2s357yde5ihlq, .table th.tinytable_css_3g9i3cl2s357yde5ihlq { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_nlpxk3so2qxoar7479pl, .table th.tinytable_css_nlpxk3so2qxoar7479pl { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_a3v47nl7qmocnik9gxlp, .table th.tinytable_css_a3v47nl7qmocnik9gxlp { font-weight: bold; color: white; background-color: #BEBEBE; text-align: center; }
-      .table td.tinytable_css_grbr5ao3du1y6zd5kwjq, .table th.tinytable_css_grbr5ao3du1y6zd5kwjq { padding-left: 1em; }
-      .table td.tinytable_css_pm1zf1edj0y8yem73qxx, .table th.tinytable_css_pm1zf1edj0y8yem73qxx { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_z9qnecwys2m4bugdu6rb, .table th.tinytable_css_z9qnecwys2m4bugdu6rb { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_hmzxbhy0vke5030dws52, .table th.tinytable_css_hmzxbhy0vke5030dws52 { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_d6szu4we73t045tzvc35, .table th.tinytable_css_d6szu4we73t045tzvc35 { font-weight: bold; color: white; background-color: #BEBEBE; text-align: center; }
+      .table td.tinytable_css_440hklk3gvmhoz4j06ze, .table th.tinytable_css_440hklk3gvmhoz4j06ze { padding-left: 1em; }
+      .table td.tinytable_css_vlpqy95mf4w8ej2a1guj, .table th.tinytable_css_vlpqy95mf4w8ej2a1guj { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_qenpneqx3mhanl71gtoj" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_as8vhkrabuu0yfi3nj3x" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -1229,6 +1250,16 @@ MathJax = {
                   <td data-row="2" data-col="7">0</td>
                 </tr>
                 <tr>
+                  <td data-row="3" data-col="0">I like (fake) hamburgers</td>
+                  <td data-row="3" data-col="1"></td>
+                  <td data-row="3" data-col="2"></td>
+                  <td data-row="3" data-col="3"></td>
+                  <td data-row="3" data-col="4"></td>
+                  <td data-row="3" data-col="5"></td>
+                  <td data-row="3" data-col="6"></td>
+                  <td data-row="3" data-col="7"></td>
+                </tr>
+                <tr>
                   <td data-row="4" data-col="0">22.8</td>
                   <td data-row="4" data-col="1">4</td>
                   <td data-row="4" data-col="2">108</td>
@@ -1237,6 +1268,16 @@ MathJax = {
                   <td data-row="4" data-col="5">2.32</td>
                   <td data-row="4" data-col="6">18.6</td>
                   <td data-row="4" data-col="7">1</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="0">She prefers halloumi</td>
+                  <td data-row="5" data-col="1"></td>
+                  <td data-row="5" data-col="2"></td>
+                  <td data-row="5" data-col="3"></td>
+                  <td data-row="5" data-col="4"></td>
+                  <td data-row="5" data-col="5"></td>
+                  <td data-row="5" data-col="6"></td>
+                  <td data-row="5" data-col="7"></td>
                 </tr>
                 <tr>
                   <td data-row="6" data-col="0">21.4</td>
@@ -1267,6 +1308,16 @@ MathJax = {
                   <td data-row="8" data-col="5">3.46</td>
                   <td data-row="8" data-col="6">20.2</td>
                   <td data-row="8" data-col="7">1</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="0">They love tofu</td>
+                  <td data-row="9" data-col="1"></td>
+                  <td data-row="9" data-col="2"></td>
+                  <td data-row="9" data-col="3"></td>
+                  <td data-row="9" data-col="4"></td>
+                  <td data-row="9" data-col="5"></td>
+                  <td data-row="9" data-col="6"></td>
+                  <td data-row="9" data-col="7"></td>
                 </tr>
                 <tr>
                   <td data-row="10" data-col="0">14.3</td>
@@ -1320,8 +1371,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_n3zt04vuj4aw7wmfsu0z(i, j, css_id) {
-          var table = document.getElementById("tinytable_n3zt04vuj4aw7wmfsu0z");
+      function styleCell_ocbbywo4ailpq8ujv6mb(i, j, css_id) {
+          var table = document.getElementById("tinytable_ocbbywo4ailpq8ujv6mb");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -1330,21 +1381,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function insertSpanRow_37dob09cu81kh4dupkjl(i, colspan, content) {
-        var table = document.getElementById('tinytable_n3zt04vuj4aw7wmfsu0z');
-        // Find the row with data-row attribute matching i
-        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
-        var newRow = table.insertRow(targetRow.rowIndex);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        newCell.setAttribute("data-col", "0");
-        newCell.setAttribute("data-row", i - 1);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_n3zt04vuj4aw7wmfsu0z(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_n3zt04vuj4aw7wmfsu0z");
+      function spanCell_ocbbywo4ailpq8ujv6mb(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_ocbbywo4ailpq8ujv6mb");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -1372,21 +1410,21 @@ MathJax = {
         }
       }
       // tinytable span after
-      window.addEventListener('load', function () { insertSpanRow_37dob09cu81kh4dupkjl(10, 11, '1') });
-      window.addEventListener('load', function () { insertSpanRow_37dob09cu81kh4dupkjl(2, 11, '0') });
+      window.addEventListener('load', function () { spanCell_ocbbywo4ailpq8ujv6mb(9, 0, 1, 11) })
+      window.addEventListener('load', function () { spanCell_ocbbywo4ailpq8ujv6mb(1, 0, 1, 11) })
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '12', j: 1 }, { i: '12', j: 2 }, { i: '12', j: 3 }, { i: '12', j: 4 }, { i: '12', j: 5 }, { i: '12', j: 6 }, { i: '12', j: 7 }, { i: '12', j: 8 }, { i: '12', j: 9 }, { i: '12', j: 10 },  ], css_id: 'tinytable_css_di5467zg3f3jkar7msog',}, 
-          { positions: [ { i: '12', j: 0 },  ], css_id: 'tinytable_css_8e68qckec8bv77bb6rtc',}, 
-          { positions: [ { i: '3', j: 0 }, { i: '5', j: 0 }, { i: '7', j: 0 }, { i: '10', j: 0 }, { i: '2', j: 0 }, { i: '4', j: 0 }, { i: '6', j: 0 }, { i: '8', j: 0 }, { i: '11', j: 0 },  ], css_id: 'tinytable_css_1jf90l014igvvl8zudyr',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 2 }, { i: '0', j: 1 }, { i: '0', j: 4 }, { i: '0', j: 3 }, { i: '0', j: 6 }, { i: '0', j: 5 }, { i: '0', j: 8 }, { i: '0', j: 7 }, { i: '0', j: 10 }, { i: '0', j: 9 },  ], css_id: 'tinytable_css_m1l4l4tf3ooy86ztjn4r',}, 
+          { positions: [ { i: '12', j: 1 }, { i: '12', j: 2 }, { i: '12', j: 3 }, { i: '12', j: 4 }, { i: '12', j: 5 }, { i: '12', j: 6 }, { i: '12', j: 7 }, { i: '12', j: 8 }, { i: '12', j: 9 }, { i: '12', j: 10 },  ], css_id: 'tinytable_css_4favssluhvkukbvcgm7x',}, 
+          { positions: [ { i: '12', j: 0 },  ], css_id: 'tinytable_css_qdxxh2126b0wo7qcfv7n',}, 
+          { positions: [ { i: '3', j: 0 }, { i: '5', j: 0 }, { i: '7', j: 0 }, { i: '10', j: 0 }, { i: '2', j: 0 }, { i: '4', j: 0 }, { i: '6', j: 0 }, { i: '8', j: 0 }, { i: '11', j: 0 },  ], css_id: 'tinytable_css_9109htbq0o0izt06q4ze',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 2 }, { i: '0', j: 1 }, { i: '0', j: 4 }, { i: '0', j: 3 }, { i: '0', j: 6 }, { i: '0', j: 5 }, { i: '0', j: 8 }, { i: '0', j: 7 }, { i: '0', j: 10 }, { i: '0', j: 9 },  ], css_id: 'tinytable_css_x31jydqibthw4p9gn3lb',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_n3zt04vuj4aw7wmfsu0z(cell.i, cell.j, group.css_id);
+                  styleCell_ocbbywo4ailpq8ujv6mb(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1394,13 +1432,13 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_di5467zg3f3jkar7msog, .table th.tinytable_css_di5467zg3f3jkar7msog { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_8e68qckec8bv77bb6rtc, .table th.tinytable_css_8e68qckec8bv77bb6rtc { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_1jf90l014igvvl8zudyr, .table th.tinytable_css_1jf90l014igvvl8zudyr { padding-left: 1em; }
-      .table td.tinytable_css_m1l4l4tf3ooy86ztjn4r, .table th.tinytable_css_m1l4l4tf3ooy86ztjn4r { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_4favssluhvkukbvcgm7x, .table th.tinytable_css_4favssluhvkukbvcgm7x { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_qdxxh2126b0wo7qcfv7n, .table th.tinytable_css_qdxxh2126b0wo7qcfv7n { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_9109htbq0o0izt06q4ze, .table th.tinytable_css_9109htbq0o0izt06q4ze { padding-left: 1em; }
+      .table td.tinytable_css_x31jydqibthw4p9gn3lb, .table th.tinytable_css_x31jydqibthw4p9gn3lb { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_n3zt04vuj4aw7wmfsu0z" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_ocbbywo4ailpq8ujv6mb" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -1419,6 +1457,19 @@ MathJax = {
         </thead>
         
         <tbody>
+                <tr>
+                  <td data-row="1" data-col="0">0</td>
+                  <td data-row="1" data-col="1"></td>
+                  <td data-row="1" data-col="2"></td>
+                  <td data-row="1" data-col="3"></td>
+                  <td data-row="1" data-col="4"></td>
+                  <td data-row="1" data-col="5"></td>
+                  <td data-row="1" data-col="6"></td>
+                  <td data-row="1" data-col="7"></td>
+                  <td data-row="1" data-col="8"></td>
+                  <td data-row="1" data-col="9"></td>
+                  <td data-row="1" data-col="10"></td>
+                </tr>
                 <tr>
                   <td data-row="2" data-col="0">21.4</td>
                   <td data-row="2" data-col="1">6</td>
@@ -1509,6 +1560,19 @@ MathJax = {
                   <td data-row="8" data-col="8">0</td>
                   <td data-row="8" data-col="9">4</td>
                   <td data-row="8" data-col="10">4</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="0">1</td>
+                  <td data-row="9" data-col="1"></td>
+                  <td data-row="9" data-col="2"></td>
+                  <td data-row="9" data-col="3"></td>
+                  <td data-row="9" data-col="4"></td>
+                  <td data-row="9" data-col="5"></td>
+                  <td data-row="9" data-col="6"></td>
+                  <td data-row="9" data-col="7"></td>
+                  <td data-row="9" data-col="8"></td>
+                  <td data-row="9" data-col="9"></td>
+                  <td data-row="9" data-col="10"></td>
                 </tr>
                 <tr>
                   <td data-row="10" data-col="0">21</td>
@@ -1569,8 +1633,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_gl181dbge9qxukq0s1lb(i, j, css_id) {
-          var table = document.getElementById("tinytable_gl181dbge9qxukq0s1lb");
+      function styleCell_of1b636265n4x1ijno2u(i, j, css_id) {
+          var table = document.getElementById("tinytable_of1b636265n4x1ijno2u");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -1579,21 +1643,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function insertSpanRow_nnfq1dqxq5pvs6h2y71p(i, colspan, content) {
-        var table = document.getElementById('tinytable_gl181dbge9qxukq0s1lb');
-        // Find the row with data-row attribute matching i
-        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
-        var newRow = table.insertRow(targetRow.rowIndex);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        newCell.setAttribute("data-col", "0");
-        newCell.setAttribute("data-row", i - 1);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_gl181dbge9qxukq0s1lb(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_gl181dbge9qxukq0s1lb");
+      function spanCell_of1b636265n4x1ijno2u(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_of1b636265n4x1ijno2u");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -1621,22 +1672,22 @@ MathJax = {
         }
       }
       // tinytable span after
-      window.addEventListener('load', function () { insertSpanRow_nnfq1dqxq5pvs6h2y71p(10, 11, '1') });
-      window.addEventListener('load', function () { insertSpanRow_nnfq1dqxq5pvs6h2y71p(2, 11, '0') });
+      window.addEventListener('load', function () { spanCell_of1b636265n4x1ijno2u(9, 0, 1, 11) })
+      window.addEventListener('load', function () { spanCell_of1b636265n4x1ijno2u(1, 0, 1, 11) })
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '12', j: 7 }, { i: '12', j: 4 }, { i: '12', j: 1 }, { i: '12', j: 8 }, { i: '12', j: 5 }, { i: '12', j: 2 }, { i: '12', j: 9 }, { i: '12', j: 6 }, { i: '12', j: 3 }, { i: '12', j: 10 },  ], css_id: 'tinytable_css_fzh7pfrna0l196jvqiew',}, 
-          { positions: [ { i: '12', j: 0 },  ], css_id: 'tinytable_css_p2qu5o843pf8wt35d8fa',}, 
-          { positions: [ { i: '2', j: 0 }, { i: '3', j: 0 }, { i: '6', j: 0 }, { i: '7', j: 0 }, { i: '10', j: 0 }, { i: '11', j: 0 }, { i: '5', j: 0 }, { i: '4', j: 0 }, { i: '8', j: 0 },  ], css_id: 'tinytable_css_y008pt8jqwhr5jl1qcxd',}, 
-          { positions: [ { i: '1', j: 0 }, { i: '1', j: 2 }, { i: '9', j: 0 }, { i: '1', j: 1 }, { i: '9', j: 1 }, { i: '1', j: 8 }, { i: '1', j: 5 }, { i: '9', j: 5 }, { i: '9', j: 2 }, { i: '1', j: 9 }, { i: '1', j: 6 }, { i: '1', j: 3 }, { i: '9', j: 3 }, { i: '1', j: 10 }, { i: '1', j: 7 }, { i: '1', j: 4 }, { i: '9', j: 4 }, { i: '9', j: 8 }, { i: '9', j: 6 }, { i: '9', j: 9 }, { i: '9', j: 7 }, { i: '9', j: 10 },  ], css_id: 'tinytable_css_jd8amhz7wrwnq3c2h3ob',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 8 }, { i: '0', j: 5 }, { i: '0', j: 2 }, { i: '0', j: 9 }, { i: '0', j: 6 }, { i: '0', j: 3 }, { i: '0', j: 10 }, { i: '0', j: 7 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_0ah28z6rtqyi2764bsid',}, 
+          { positions: [ { i: '12', j: 7 }, { i: '12', j: 4 }, { i: '12', j: 1 }, { i: '12', j: 8 }, { i: '12', j: 5 }, { i: '12', j: 2 }, { i: '12', j: 9 }, { i: '12', j: 6 }, { i: '12', j: 3 }, { i: '12', j: 10 },  ], css_id: 'tinytable_css_25csnmcfkmx13o22sku7',}, 
+          { positions: [ { i: '12', j: 0 },  ], css_id: 'tinytable_css_hkgejmod66pte7s0qzlt',}, 
+          { positions: [ { i: '2', j: 0 }, { i: '3', j: 0 }, { i: '6', j: 0 }, { i: '7', j: 0 }, { i: '10', j: 0 }, { i: '11', j: 0 }, { i: '5', j: 0 }, { i: '4', j: 0 }, { i: '8', j: 0 },  ], css_id: 'tinytable_css_knks7lqefiv1ddax9p0w',}, 
+          { positions: [ { i: '1', j: 0 }, { i: '1', j: 2 }, { i: '9', j: 0 }, { i: '1', j: 1 }, { i: '9', j: 1 }, { i: '1', j: 8 }, { i: '1', j: 5 }, { i: '9', j: 5 }, { i: '9', j: 2 }, { i: '1', j: 9 }, { i: '1', j: 6 }, { i: '1', j: 3 }, { i: '9', j: 3 }, { i: '1', j: 10 }, { i: '1', j: 7 }, { i: '1', j: 4 }, { i: '9', j: 4 }, { i: '9', j: 8 }, { i: '9', j: 6 }, { i: '9', j: 9 }, { i: '9', j: 7 }, { i: '9', j: 10 },  ], css_id: 'tinytable_css_cehove2mx97amj9vcrsu',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 8 }, { i: '0', j: 5 }, { i: '0', j: 2 }, { i: '0', j: 9 }, { i: '0', j: 6 }, { i: '0', j: 3 }, { i: '0', j: 10 }, { i: '0', j: 7 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_8rnp4ai1vocqvn3pacbt',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_gl181dbge9qxukq0s1lb(cell.i, cell.j, group.css_id);
+                  styleCell_of1b636265n4x1ijno2u(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1644,14 +1695,14 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_fzh7pfrna0l196jvqiew, .table th.tinytable_css_fzh7pfrna0l196jvqiew { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_p2qu5o843pf8wt35d8fa, .table th.tinytable_css_p2qu5o843pf8wt35d8fa { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_y008pt8jqwhr5jl1qcxd, .table th.tinytable_css_y008pt8jqwhr5jl1qcxd { padding-left: 1em; }
-      .table td.tinytable_css_jd8amhz7wrwnq3c2h3ob, .table th.tinytable_css_jd8amhz7wrwnq3c2h3ob { background-color: #FFC0CB; }
-      .table td.tinytable_css_0ah28z6rtqyi2764bsid, .table th.tinytable_css_0ah28z6rtqyi2764bsid { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_25csnmcfkmx13o22sku7, .table th.tinytable_css_25csnmcfkmx13o22sku7 { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_hkgejmod66pte7s0qzlt, .table th.tinytable_css_hkgejmod66pte7s0qzlt { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_knks7lqefiv1ddax9p0w, .table th.tinytable_css_knks7lqefiv1ddax9p0w { padding-left: 1em; }
+      .table td.tinytable_css_cehove2mx97amj9vcrsu, .table th.tinytable_css_cehove2mx97amj9vcrsu { background-color: #FFC0CB; }
+      .table td.tinytable_css_8rnp4ai1vocqvn3pacbt, .table th.tinytable_css_8rnp4ai1vocqvn3pacbt { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_gl181dbge9qxukq0s1lb" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_of1b636265n4x1ijno2u" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -1670,6 +1721,19 @@ MathJax = {
         </thead>
         
         <tbody>
+                <tr>
+                  <td data-row="1" data-col="0">0</td>
+                  <td data-row="1" data-col="1"></td>
+                  <td data-row="1" data-col="2"></td>
+                  <td data-row="1" data-col="3"></td>
+                  <td data-row="1" data-col="4"></td>
+                  <td data-row="1" data-col="5"></td>
+                  <td data-row="1" data-col="6"></td>
+                  <td data-row="1" data-col="7"></td>
+                  <td data-row="1" data-col="8"></td>
+                  <td data-row="1" data-col="9"></td>
+                  <td data-row="1" data-col="10"></td>
+                </tr>
                 <tr>
                   <td data-row="2" data-col="0">21.4</td>
                   <td data-row="2" data-col="1">6</td>
@@ -1760,6 +1824,19 @@ MathJax = {
                   <td data-row="8" data-col="8">0</td>
                   <td data-row="8" data-col="9">4</td>
                   <td data-row="8" data-col="10">4</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="0">1</td>
+                  <td data-row="9" data-col="1"></td>
+                  <td data-row="9" data-col="2"></td>
+                  <td data-row="9" data-col="3"></td>
+                  <td data-row="9" data-col="4"></td>
+                  <td data-row="9" data-col="5"></td>
+                  <td data-row="9" data-col="6"></td>
+                  <td data-row="9" data-col="7"></td>
+                  <td data-row="9" data-col="8"></td>
+                  <td data-row="9" data-col="9"></td>
+                  <td data-row="9" data-col="10"></td>
                 </tr>
                 <tr>
                   <td data-row="10" data-col="0">21</td>
@@ -1822,8 +1899,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_bmj2pfx98lwwuzs42j77(i, j, css_id) {
-          var table = document.getElementById("tinytable_bmj2pfx98lwwuzs42j77");
+      function styleCell_p7l65muctgyhb56wg8dg(i, j, css_id) {
+          var table = document.getElementById("tinytable_p7l65muctgyhb56wg8dg");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -1832,21 +1909,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_bmj2pfx98lwwuzs42j77');
-        // Find the row with data-row attribute matching i
-        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
-        var newRow = table.insertRow(targetRow.rowIndex);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        newCell.setAttribute("data-col", "0");
-        newCell.setAttribute("data-row", i - 1);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_bmj2pfx98lwwuzs42j77(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_bmj2pfx98lwwuzs42j77");
+      function spanCell_p7l65muctgyhb56wg8dg(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_p7l65muctgyhb56wg8dg");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -1877,14 +1941,16 @@ MathJax = {
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '9', j: 0 }, { i: '9', j: 1 }, { i: '9', j: 2 }, { i: '9', j: 3 }, { i: '9', j: 4 },  ], css_id: 'tinytable_css_qr30s9cziesudht22ld2',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_jciqejz9kb3kh3bynl6r',}, 
+          { positions: [ { i: '9', j: 1 }, { i: '9', j: 2 }, { i: '9', j: 3 }, { i: '9', j: 4 },  ], css_id: 'tinytable_css_ihzvzxv3sxjy6w87ydsr',}, 
+          { positions: [ { i: '9', j: 0 },  ], css_id: 'tinytable_css_wrg24d3l3y5454ikrx2b',}, 
+          { positions: [ { i: '1', j: 0 }, { i: '4', j: 0 }, { i: '7', j: 0 }, { i: '3', j: 0 }, { i: '5', j: 0 }, { i: '8', j: 0 },  ], css_id: 'tinytable_css_kadhabrnof5sf6vwdcku',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 2 }, { i: '0', j: 1 }, { i: '0', j: 4 }, { i: '0', j: 3 },  ], css_id: 'tinytable_css_11hbqhdiw9c36j7bdl0n',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_bmj2pfx98lwwuzs42j77(cell.i, cell.j, group.css_id);
+                  styleCell_p7l65muctgyhb56wg8dg(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1892,11 +1958,13 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_qr30s9cziesudht22ld2, .table th.tinytable_css_qr30s9cziesudht22ld2 { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_jciqejz9kb3kh3bynl6r, .table th.tinytable_css_jciqejz9kb3kh3bynl6r { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_ihzvzxv3sxjy6w87ydsr, .table th.tinytable_css_ihzvzxv3sxjy6w87ydsr { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_wrg24d3l3y5454ikrx2b, .table th.tinytable_css_wrg24d3l3y5454ikrx2b { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_kadhabrnof5sf6vwdcku, .table th.tinytable_css_kadhabrnof5sf6vwdcku { padding-left: 1em; }
+      .table td.tinytable_css_11hbqhdiw9c36j7bdl0n, .table th.tinytable_css_11hbqhdiw9c36j7bdl0n { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_bmj2pfx98lwwuzs42j77" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_p7l65muctgyhb56wg8dg" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -1992,8 +2060,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_7rl08ah4vyaf9lm0t8o7(i, j, css_id) {
-          var table = document.getElementById("tinytable_7rl08ah4vyaf9lm0t8o7");
+      function styleCell_e6ndoweyf26twpqd4rui(i, j, css_id) {
+          var table = document.getElementById("tinytable_e6ndoweyf26twpqd4rui");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -2002,21 +2070,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_7rl08ah4vyaf9lm0t8o7');
-        // Find the row with data-row attribute matching i
-        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
-        var newRow = table.insertRow(targetRow.rowIndex);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        newCell.setAttribute("data-col", "0");
-        newCell.setAttribute("data-row", i - 1);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_7rl08ah4vyaf9lm0t8o7(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_7rl08ah4vyaf9lm0t8o7");
+      function spanCell_e6ndoweyf26twpqd4rui(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_e6ndoweyf26twpqd4rui");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -2047,15 +2102,17 @@ MathJax = {
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '9', j: 0 }, { i: '9', j: 1 }, { i: '9', j: 2 }, { i: '9', j: 3 }, { i: '9', j: 4 },  ], css_id: 'tinytable_css_oofk8wouj0wby4zd7gsu',}, 
-          { positions: [ { i: '2', j: 0 }, { i: '3', j: 0 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '2', j: 4 }, { i: '3', j: 4 },  ], css_id: 'tinytable_css_7rbchpmmlnm7o0en2hgm',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_9s4wqnpcl6gaaygxv23t',}, 
+          { positions: [ { i: '9', j: 1 }, { i: '9', j: 2 }, { i: '9', j: 3 }, { i: '9', j: 4 },  ], css_id: 'tinytable_css_8f5e86ml7cxs7lgvny4b',}, 
+          { positions: [ { i: '9', j: 0 },  ], css_id: 'tinytable_css_yl3bs2ywqrxba8diz5cc',}, 
+          { positions: [ { i: '3', j: 0 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '2', j: 0 }, { i: '2', j: 4 }, { i: '3', j: 4 },  ], css_id: 'tinytable_css_a39xt41uoqbfgmrl3prs',}, 
+          { positions: [ { i: '1', j: 0 }, { i: '7', j: 0 }, { i: '4', j: 0 }, { i: '5', j: 0 }, { i: '8', j: 0 }, { i: '6', j: 0 },  ], css_id: 'tinytable_css_e6rb6cwrgajc0jevc6km',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_k9fegh8agdg97l6zufkf',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_7rl08ah4vyaf9lm0t8o7(cell.i, cell.j, group.css_id);
+                  styleCell_e6ndoweyf26twpqd4rui(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -2063,12 +2120,14 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_oofk8wouj0wby4zd7gsu, .table th.tinytable_css_oofk8wouj0wby4zd7gsu { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_7rbchpmmlnm7o0en2hgm, .table th.tinytable_css_7rbchpmmlnm7o0en2hgm { background-color: #FFC0CB; }
-      .table td.tinytable_css_9s4wqnpcl6gaaygxv23t, .table th.tinytable_css_9s4wqnpcl6gaaygxv23t { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_8f5e86ml7cxs7lgvny4b, .table th.tinytable_css_8f5e86ml7cxs7lgvny4b { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_yl3bs2ywqrxba8diz5cc, .table th.tinytable_css_yl3bs2ywqrxba8diz5cc { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_a39xt41uoqbfgmrl3prs, .table th.tinytable_css_a39xt41uoqbfgmrl3prs { background-color: #FFC0CB; }
+      .table td.tinytable_css_e6rb6cwrgajc0jevc6km, .table th.tinytable_css_e6rb6cwrgajc0jevc6km { padding-left: 1em; }
+      .table td.tinytable_css_k9fegh8agdg97l6zufkf, .table th.tinytable_css_k9fegh8agdg97l6zufkf { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_7rl08ah4vyaf9lm0t8o7" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_e6ndoweyf26twpqd4rui" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -2089,18 +2148,18 @@ MathJax = {
                   <td data-row="1" data-col="4">setosa</td>
                 </tr>
                 <tr>
-                  <td data-row="2" data-col="0">1</td>
-                  <td data-row="2" data-col="1">2</td>
-                  <td data-row="2" data-col="2">3</td>
-                  <td data-row="2" data-col="3">4</td>
-                  <td data-row="2" data-col="4">5</td>
+                  <td data-row="2" data-col="0">a</td>
+                  <td data-row="2" data-col="1">b</td>
+                  <td data-row="2" data-col="2">c</td>
+                  <td data-row="2" data-col="3">d</td>
+                  <td data-row="2" data-col="4">e</td>
                 </tr>
                 <tr>
-                  <td data-row="3" data-col="0">a</td>
-                  <td data-row="3" data-col="1">b</td>
-                  <td data-row="3" data-col="2">c</td>
-                  <td data-row="3" data-col="3">d</td>
-                  <td data-row="3" data-col="4">e</td>
+                  <td data-row="3" data-col="0">1</td>
+                  <td data-row="3" data-col="1">2</td>
+                  <td data-row="3" data-col="2">3</td>
+                  <td data-row="3" data-col="3">4</td>
+                  <td data-row="3" data-col="4">5</td>
                 </tr>
                 <tr>
                   <td data-row="4" data-col="0">4.9</td>
@@ -2160,8 +2219,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_s2x0tay5xw0o7fzx997g(i, j, css_id) {
-          var table = document.getElementById("tinytable_s2x0tay5xw0o7fzx997g");
+      function styleCell_sk22j04jkzj3gbqx9lov(i, j, css_id) {
+          var table = document.getElementById("tinytable_sk22j04jkzj3gbqx9lov");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -2170,21 +2229,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_s2x0tay5xw0o7fzx997g');
-        // Find the row with data-row attribute matching i
-        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
-        var newRow = table.insertRow(targetRow.rowIndex);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        newCell.setAttribute("data-col", "0");
-        newCell.setAttribute("data-row", i - 1);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_s2x0tay5xw0o7fzx997g(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_s2x0tay5xw0o7fzx997g");
+      function spanCell_sk22j04jkzj3gbqx9lov(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_sk22j04jkzj3gbqx9lov");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -2212,20 +2258,22 @@ MathJax = {
         }
       }
       // tinytable span after
-      window.addEventListener('load', function () { spanCell_s2x0tay5xw0o7fzx997g(8, 0, 2, 3) })
-      window.addEventListener('load', function () { spanCell_s2x0tay5xw0o7fzx997g(1, 0, 2, 3) })
+      window.addEventListener('load', function () { spanCell_sk22j04jkzj3gbqx9lov(8, 0, 2, 3) })
+      window.addEventListener('load', function () { spanCell_sk22j04jkzj3gbqx9lov(1, 0, 2, 3) })
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '9', j: 0 }, { i: '9', j: 1 }, { i: '9', j: 2 }, { i: '9', j: 3 }, { i: '9', j: 4 },  ], css_id: 'tinytable_css_owdx7lv6i6e7ewuywtis',}, 
-          { positions: [ { i: '1', j: 0 }, { i: '8', j: 0 },  ], css_id: 'tinytable_css_wxf76tkgkjf8jq0afj06',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 2 }, { i: '0', j: 1 }, { i: '0', j: 4 }, { i: '0', j: 3 },  ], css_id: 'tinytable_css_oat8h84l9tg075um8kgj',}, 
+          { positions: [ { i: '9', j: 1 }, { i: '9', j: 2 }, { i: '9', j: 3 }, { i: '9', j: 4 },  ], css_id: 'tinytable_css_xjc7pgwgv1k7k748tigg',}, 
+          { positions: [ { i: '9', j: 0 },  ], css_id: 'tinytable_css_gkgywncbl0yjah9w4bxj',}, 
+          { positions: [ { i: '3', j: 0 }, { i: '5', j: 0 }, { i: '7', j: 0 }, { i: '2', j: 0 }, { i: '6', j: 0 }, { i: '4', j: 0 },  ], css_id: 'tinytable_css_jw4fli7rv7xm00gkuyvr',}, 
+          { positions: [ { i: '1', j: 0 }, { i: '8', j: 0 },  ], css_id: 'tinytable_css_xdw6014xi8osrn3xwdv4',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_5rn66z0i0dxkbo5xgwed',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_s2x0tay5xw0o7fzx997g(cell.i, cell.j, group.css_id);
+                  styleCell_sk22j04jkzj3gbqx9lov(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -2233,12 +2281,14 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_owdx7lv6i6e7ewuywtis, .table th.tinytable_css_owdx7lv6i6e7ewuywtis { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_wxf76tkgkjf8jq0afj06, .table th.tinytable_css_wxf76tkgkjf8jq0afj06 { background-color: #FFC0CB; }
-      .table td.tinytable_css_oat8h84l9tg075um8kgj, .table th.tinytable_css_oat8h84l9tg075um8kgj { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_xjc7pgwgv1k7k748tigg, .table th.tinytable_css_xjc7pgwgv1k7k748tigg { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_gkgywncbl0yjah9w4bxj, .table th.tinytable_css_gkgywncbl0yjah9w4bxj { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_jw4fli7rv7xm00gkuyvr, .table th.tinytable_css_jw4fli7rv7xm00gkuyvr { padding-left: 1em; }
+      .table td.tinytable_css_xdw6014xi8osrn3xwdv4, .table th.tinytable_css_xdw6014xi8osrn3xwdv4 { background-color: #FFC0CB; }
+      .table td.tinytable_css_5rn66z0i0dxkbo5xgwed, .table th.tinytable_css_5rn66z0i0dxkbo5xgwed { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_s2x0tay5xw0o7fzx997g" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_sk22j04jkzj3gbqx9lov" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -2336,8 +2386,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_z6sqf72etyabr0akq2cn(i, j, css_id) {
-          var table = document.getElementById("tinytable_z6sqf72etyabr0akq2cn");
+      function styleCell_po2bm079m6zofp3u2ki9(i, j, css_id) {
+          var table = document.getElementById("tinytable_po2bm079m6zofp3u2ki9");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -2346,21 +2396,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_z6sqf72etyabr0akq2cn');
-        // Find the row with data-row attribute matching i
-        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
-        var newRow = table.insertRow(targetRow.rowIndex);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        newCell.setAttribute("data-col", "0");
-        newCell.setAttribute("data-row", i - 1);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_z6sqf72etyabr0akq2cn(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_z6sqf72etyabr0akq2cn");
+      function spanCell_po2bm079m6zofp3u2ki9(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_po2bm079m6zofp3u2ki9");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -2391,16 +2428,16 @@ MathJax = {
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '-1', j: 2 }, { i: '-1', j: 5 }, { i: '-1', j: 4 }, { i: '-1', j: 7 }, { i: '-1', j: 6 },  ], css_id: 'tinytable_css_qgyjh2r24vbk5dcscvcw',}, 
-          { positions: [ { i: '9', j: 3 }, { i: '9', j: 2 }, { i: '9', j: 1 }, { i: '9', j: 0 }, { i: '9', j: 7 }, { i: '9', j: 6 }, { i: '9', j: 5 }, { i: '9', j: 4 },  ], css_id: 'tinytable_css_1pgpx3uffu6x6umo42bs',}, 
-          { positions: [ { i: '-1', j: 1 }, { i: '-1', j: 0 }, { i: '-1', j: 3 },  ], css_id: 'tinytable_css_hy36ypc25szvsf5cbrc7',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 3 }, { i: '0', j: 2 }, { i: '0', j: 1 }, { i: '0', j: 4 }, { i: '0', j: 7 }, { i: '0', j: 6 }, { i: '0', j: 5 },  ], css_id: 'tinytable_css_fgsb6ztcc399vavls81t',}, 
+          { positions: [ { i: '-1', j: 2 }, { i: '-1', j: 5 }, { i: '-1', j: 4 }, { i: '-1', j: 7 }, { i: '-1', j: 6 },  ], css_id: 'tinytable_css_bstmn0ytro8q2wq9psuo',}, 
+          { positions: [ { i: '9', j: 3 }, { i: '9', j: 2 }, { i: '9', j: 1 }, { i: '9', j: 0 }, { i: '9', j: 7 }, { i: '9', j: 6 }, { i: '9', j: 5 }, { i: '9', j: 4 },  ], css_id: 'tinytable_css_h0ynzbidct8npfl0d9uu',}, 
+          { positions: [ { i: '-1', j: 1 }, { i: '-1', j: 0 }, { i: '-1', j: 3 },  ], css_id: 'tinytable_css_detctlhusduebmn1jyg7',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 3 }, { i: '0', j: 2 }, { i: '0', j: 1 }, { i: '0', j: 4 }, { i: '0', j: 7 }, { i: '0', j: 6 }, { i: '0', j: 5 },  ], css_id: 'tinytable_css_80aoxx3dndo7ls8rh4go',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_z6sqf72etyabr0akq2cn(cell.i, cell.j, group.css_id);
+                  styleCell_po2bm079m6zofp3u2ki9(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -2408,13 +2445,13 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_qgyjh2r24vbk5dcscvcw, .table th.tinytable_css_qgyjh2r24vbk5dcscvcw { border-top: solid #d3d8dc 0.1em; text-align: center; }
-      .table td.tinytable_css_1pgpx3uffu6x6umo42bs, .table th.tinytable_css_1pgpx3uffu6x6umo42bs { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_hy36ypc25szvsf5cbrc7, .table th.tinytable_css_hy36ypc25szvsf5cbrc7 { border-top: solid #d3d8dc 0.1em; text-align: center; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_fgsb6ztcc399vavls81t, .table th.tinytable_css_fgsb6ztcc399vavls81t { border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_bstmn0ytro8q2wq9psuo, .table th.tinytable_css_bstmn0ytro8q2wq9psuo { border-top: solid #d3d8dc 0.1em; text-align: center; }
+      .table td.tinytable_css_h0ynzbidct8npfl0d9uu, .table th.tinytable_css_h0ynzbidct8npfl0d9uu { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_detctlhusduebmn1jyg7, .table th.tinytable_css_detctlhusduebmn1jyg7 { border-top: solid #d3d8dc 0.1em; text-align: center; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_80aoxx3dndo7ls8rh4go, .table th.tinytable_css_80aoxx3dndo7ls8rh4go { border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_z6sqf72etyabr0akq2cn" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_po2bm079m6zofp3u2ki9" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
 <tr>
 <th scope="col" align="center" colspan="3" data-row="-1" data-col="0">Hamburgers</th>
@@ -2561,8 +2598,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_a4mksyuu1mpp91cxvpso(i, j, css_id) {
-          var table = document.getElementById("tinytable_a4mksyuu1mpp91cxvpso");
+      function styleCell_u2xbbjtldook83o01f5u(i, j, css_id) {
+          var table = document.getElementById("tinytable_u2xbbjtldook83o01f5u");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -2571,21 +2608,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function insertSpanRow_fftvkwq9wtdcda65449e(i, colspan, content) {
-        var table = document.getElementById('tinytable_a4mksyuu1mpp91cxvpso');
-        // Find the row with data-row attribute matching i
-        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
-        var newRow = table.insertRow(targetRow.rowIndex);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        newCell.setAttribute("data-col", "0");
-        newCell.setAttribute("data-row", i - 1);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_a4mksyuu1mpp91cxvpso(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_a4mksyuu1mpp91cxvpso");
+      function spanCell_u2xbbjtldook83o01f5u(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_u2xbbjtldook83o01f5u");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -2613,25 +2637,25 @@ MathJax = {
         }
       }
       // tinytable span after
-      window.addEventListener('load', function () { insertSpanRow_fftvkwq9wtdcda65449e(10, 8, 'They love tofu') });
-      window.addEventListener('load', function () { insertSpanRow_fftvkwq9wtdcda65449e(6, 8, 'She prefers halloumi') });
-      window.addEventListener('load', function () { insertSpanRow_fftvkwq9wtdcda65449e(4, 8, 'I like (fake) hamburgers') });
+      window.addEventListener('load', function () { spanCell_u2xbbjtldook83o01f5u(9, 0, 1, 8) })
+      window.addEventListener('load', function () { spanCell_u2xbbjtldook83o01f5u(5, 0, 1, 8) })
+      window.addEventListener('load', function () { spanCell_u2xbbjtldook83o01f5u(3, 0, 1, 8) })
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '-1', j: 2 }, { i: '-1', j: 5 }, { i: '-1', j: 6 }, { i: '-1', j: 4 }, { i: '-1', j: 7 },  ], css_id: 'tinytable_css_ohf1280opjgc338kwji3',}, 
-          { positions: [ { i: '12', j: 5 }, { i: '12', j: 1 }, { i: '12', j: 2 }, { i: '12', j: 7 }, { i: '12', j: 3 }, { i: '12', j: 6 }, { i: '12', j: 4 },  ], css_id: 'tinytable_css_mbun2tcbqzihu5qsso7y',}, 
-          { positions: [ { i: '12', j: 0 },  ], css_id: 'tinytable_css_4uf5x961ywilrtvxnx6a',}, 
-          { positions: [ { i: '9', j: 0 }, { i: '3', j: 0 }, { i: '5', j: 1 }, { i: '3', j: 2 }, { i: '5', j: 0 }, { i: '3', j: 1 }, { i: '3', j: 4 }, { i: '3', j: 7 }, { i: '5', j: 2 }, { i: '3', j: 3 }, { i: '5', j: 3 }, { i: '9', j: 3 }, { i: '9', j: 1 }, { i: '9', j: 4 }, { i: '3', j: 6 }, { i: '5', j: 6 }, { i: '5', j: 4 }, { i: '3', j: 5 }, { i: '9', j: 2 }, { i: '9', j: 5 }, { i: '9', j: 6 }, { i: '5', j: 5 }, { i: '9', j: 7 }, { i: '5', j: 7 },  ], css_id: 'tinytable_css_81jiaknftmnxql0rywc8',}, 
-          { positions: [ { i: '7', j: 0 }, { i: '6', j: 0 }, { i: '8', j: 0 }, { i: '4', j: 0 }, { i: '2', j: 0 }, { i: '10', j: 0 }, { i: '11', j: 0 }, { i: '1', j: 0 },  ], css_id: 'tinytable_css_qt675l5qnnfglf9kpgav',}, 
-          { positions: [ { i: '-1', j: 1 }, { i: '-1', j: 0 }, { i: '-1', j: 3 },  ], css_id: 'tinytable_css_yx6ledzenmc6c89o9v4t',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 4 }, { i: '0', j: 2 }, { i: '0', j: 5 }, { i: '0', j: 6 }, { i: '0', j: 7 }, { i: '0', j: 3 },  ], css_id: 'tinytable_css_xd676s6ycsxmlqw2jaj9',}, 
+          { positions: [ { i: '-1', j: 2 }, { i: '-1', j: 5 }, { i: '-1', j: 6 }, { i: '-1', j: 4 }, { i: '-1', j: 7 },  ], css_id: 'tinytable_css_4rh7nq6u1p4v46p3bdhe',}, 
+          { positions: [ { i: '12', j: 5 }, { i: '12', j: 1 }, { i: '12', j: 2 }, { i: '12', j: 7 }, { i: '12', j: 3 }, { i: '12', j: 6 }, { i: '12', j: 4 },  ], css_id: 'tinytable_css_kbf5tbr20nyckjxiv2fh',}, 
+          { positions: [ { i: '12', j: 0 },  ], css_id: 'tinytable_css_e71i8qdtunqwkawlr4rh',}, 
+          { positions: [ { i: '9', j: 0 }, { i: '3', j: 0 }, { i: '5', j: 1 }, { i: '3', j: 2 }, { i: '5', j: 0 }, { i: '3', j: 1 }, { i: '3', j: 4 }, { i: '3', j: 7 }, { i: '5', j: 2 }, { i: '3', j: 3 }, { i: '5', j: 3 }, { i: '9', j: 3 }, { i: '9', j: 1 }, { i: '9', j: 4 }, { i: '3', j: 6 }, { i: '5', j: 6 }, { i: '5', j: 4 }, { i: '3', j: 5 }, { i: '9', j: 2 }, { i: '9', j: 5 }, { i: '9', j: 6 }, { i: '5', j: 5 }, { i: '9', j: 7 }, { i: '5', j: 7 },  ], css_id: 'tinytable_css_m7aeth3h8oqi01vccp6q',}, 
+          { positions: [ { i: '7', j: 0 }, { i: '6', j: 0 }, { i: '8', j: 0 }, { i: '4', j: 0 }, { i: '2', j: 0 }, { i: '10', j: 0 }, { i: '11', j: 0 }, { i: '1', j: 0 },  ], css_id: 'tinytable_css_6cbw0r3fawxw8bm6fuc3',}, 
+          { positions: [ { i: '-1', j: 1 }, { i: '-1', j: 0 }, { i: '-1', j: 3 },  ], css_id: 'tinytable_css_7v3tqo2usmv68aka1cmj',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 4 }, { i: '0', j: 2 }, { i: '0', j: 5 }, { i: '0', j: 6 }, { i: '0', j: 7 }, { i: '0', j: 3 },  ], css_id: 'tinytable_css_gxg0o7fqgch77ldcswh8',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_a4mksyuu1mpp91cxvpso(cell.i, cell.j, group.css_id);
+                  styleCell_u2xbbjtldook83o01f5u(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -2639,16 +2663,16 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_ohf1280opjgc338kwji3, .table th.tinytable_css_ohf1280opjgc338kwji3 { color: #008080; border-top: solid #d3d8dc 0.1em; text-align: center; text-align: center; }
-      .table td.tinytable_css_mbun2tcbqzihu5qsso7y, .table th.tinytable_css_mbun2tcbqzihu5qsso7y { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_4uf5x961ywilrtvxnx6a, .table th.tinytable_css_4uf5x961ywilrtvxnx6a { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_81jiaknftmnxql0rywc8, .table th.tinytable_css_81jiaknftmnxql0rywc8 { color: white; background-color: #008080; text-align: center; }
-      .table td.tinytable_css_qt675l5qnnfglf9kpgav, .table th.tinytable_css_qt675l5qnnfglf9kpgav { padding-left: 1em; }
-      .table td.tinytable_css_yx6ledzenmc6c89o9v4t, .table th.tinytable_css_yx6ledzenmc6c89o9v4t { color: #008080; border-top: solid #d3d8dc 0.1em; text-align: center; border-bottom: solid #d3d8dc 0.05em; text-align: center; }
-      .table td.tinytable_css_xd676s6ycsxmlqw2jaj9, .table th.tinytable_css_xd676s6ycsxmlqw2jaj9 { border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_4rh7nq6u1p4v46p3bdhe, .table th.tinytable_css_4rh7nq6u1p4v46p3bdhe { color: #008080; border-top: solid #d3d8dc 0.1em; text-align: center; }
+      .table td.tinytable_css_kbf5tbr20nyckjxiv2fh, .table th.tinytable_css_kbf5tbr20nyckjxiv2fh { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_e71i8qdtunqwkawlr4rh, .table th.tinytable_css_e71i8qdtunqwkawlr4rh { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_m7aeth3h8oqi01vccp6q, .table th.tinytable_css_m7aeth3h8oqi01vccp6q { color: white; background-color: #008080; text-align: center; }
+      .table td.tinytable_css_6cbw0r3fawxw8bm6fuc3, .table th.tinytable_css_6cbw0r3fawxw8bm6fuc3 { padding-left: 1em; }
+      .table td.tinytable_css_7v3tqo2usmv68aka1cmj, .table th.tinytable_css_7v3tqo2usmv68aka1cmj { color: #008080; border-top: solid #d3d8dc 0.1em; text-align: center; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_gxg0o7fqgch77ldcswh8, .table th.tinytable_css_gxg0o7fqgch77ldcswh8 { border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_a4mksyuu1mpp91cxvpso" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_u2xbbjtldook83o01f5u" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
 <tr>
 <th scope="col" align="center" colspan="3" data-row="-1" data-col="0">Hamburgers</th>
@@ -2692,6 +2716,16 @@ MathJax = {
                   <td data-row="2" data-col="7">0</td>
                 </tr>
                 <tr>
+                  <td data-row="3" data-col="0">I like (fake) hamburgers</td>
+                  <td data-row="3" data-col="1"></td>
+                  <td data-row="3" data-col="2"></td>
+                  <td data-row="3" data-col="3"></td>
+                  <td data-row="3" data-col="4"></td>
+                  <td data-row="3" data-col="5"></td>
+                  <td data-row="3" data-col="6"></td>
+                  <td data-row="3" data-col="7"></td>
+                </tr>
+                <tr>
                   <td data-row="4" data-col="0">22.8</td>
                   <td data-row="4" data-col="1">4</td>
                   <td data-row="4" data-col="2">108</td>
@@ -2700,6 +2734,16 @@ MathJax = {
                   <td data-row="4" data-col="5">2.32</td>
                   <td data-row="4" data-col="6">18.6</td>
                   <td data-row="4" data-col="7">1</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="0">She prefers halloumi</td>
+                  <td data-row="5" data-col="1"></td>
+                  <td data-row="5" data-col="2"></td>
+                  <td data-row="5" data-col="3"></td>
+                  <td data-row="5" data-col="4"></td>
+                  <td data-row="5" data-col="5"></td>
+                  <td data-row="5" data-col="6"></td>
+                  <td data-row="5" data-col="7"></td>
                 </tr>
                 <tr>
                   <td data-row="6" data-col="0">21.4</td>
@@ -2730,6 +2774,16 @@ MathJax = {
                   <td data-row="8" data-col="5">3.46</td>
                   <td data-row="8" data-col="6">20.2</td>
                   <td data-row="8" data-col="7">1</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="0">They love tofu</td>
+                  <td data-row="9" data-col="1"></td>
+                  <td data-row="9" data-col="2"></td>
+                  <td data-row="9" data-col="3"></td>
+                  <td data-row="9" data-col="4"></td>
+                  <td data-row="9" data-col="5"></td>
+                  <td data-row="9" data-col="6"></td>
+                  <td data-row="9" data-col="7"></td>
                 </tr>
                 <tr>
                   <td data-row="10" data-col="0">14.3</td>
@@ -2777,8 +2831,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_sano0313xq484enfr9fq(i, j, css_id) {
-          var table = document.getElementById("tinytable_sano0313xq484enfr9fq");
+      function styleCell_8xyvx5t5o724byj8pklz(i, j, css_id) {
+          var table = document.getElementById("tinytable_8xyvx5t5o724byj8pklz");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -2787,21 +2841,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_sano0313xq484enfr9fq');
-        // Find the row with data-row attribute matching i
-        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
-        var newRow = table.insertRow(targetRow.rowIndex);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        newCell.setAttribute("data-col", "0");
-        newCell.setAttribute("data-row", i - 1);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_sano0313xq484enfr9fq(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_sano0313xq484enfr9fq");
+      function spanCell_8xyvx5t5o724byj8pklz(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_8xyvx5t5o724byj8pklz");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -2832,18 +2873,18 @@ MathJax = {
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '-2', j: 1 }, { i: '-2', j: 3 }, { i: '-2', j: 4 },  ], css_id: 'tinytable_css_7el3p4fnz6qes6agcwxa',}, 
-          { positions: [ { i: '-1', j: 1 }, { i: '-1', j: 3 },  ], css_id: 'tinytable_css_mlj4401jb83z0erh3sl9',}, 
-          { positions: [ { i: '4', j: 0 }, { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 },  ], css_id: 'tinytable_css_k1bgk1umke1ma070fb0p',}, 
-          { positions: [ { i: '-2', j: 0 }, { i: '-2', j: 2 },  ], css_id: 'tinytable_css_13ld6jnc7n8l4poktg0u',}, 
-          { positions: [ { i: '-1', j: 0 }, { i: '-1', j: 2 }, { i: '-1', j: 4 },  ], css_id: 'tinytable_css_9fweedrhrgwks2cj28yj',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_h4jw6929g20dp71ausn0',}, 
+          { positions: [ { i: '-2', j: 1 }, { i: '-2', j: 3 }, { i: '-2', j: 4 },  ], css_id: 'tinytable_css_gamxszwvwt2ky5cjqd75',}, 
+          { positions: [ { i: '-1', j: 1 }, { i: '-1', j: 3 },  ], css_id: 'tinytable_css_trautq8b4jfycfonitv8',}, 
+          { positions: [ { i: '4', j: 0 }, { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 },  ], css_id: 'tinytable_css_nvfbzd89souvdqqfk5q3',}, 
+          { positions: [ { i: '-2', j: 0 }, { i: '-2', j: 2 },  ], css_id: 'tinytable_css_uepccu2b4m1lsfc78b1y',}, 
+          { positions: [ { i: '-1', j: 0 }, { i: '-1', j: 2 }, { i: '-1', j: 4 },  ], css_id: 'tinytable_css_87njdzous93gxmmx21r5',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_vljtn0kxcactcwy8g5jv',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_sano0313xq484enfr9fq(cell.i, cell.j, group.css_id);
+                  styleCell_8xyvx5t5o724byj8pklz(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -2851,15 +2892,15 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_7el3p4fnz6qes6agcwxa, .table th.tinytable_css_7el3p4fnz6qes6agcwxa { border-top: solid #d3d8dc 0.1em; text-align: center; }
-      .table td.tinytable_css_mlj4401jb83z0erh3sl9, .table th.tinytable_css_mlj4401jb83z0erh3sl9 { text-align: center; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_k1bgk1umke1ma070fb0p, .table th.tinytable_css_k1bgk1umke1ma070fb0p { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_13ld6jnc7n8l4poktg0u, .table th.tinytable_css_13ld6jnc7n8l4poktg0u { border-top: solid #d3d8dc 0.1em; text-align: center; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_9fweedrhrgwks2cj28yj, .table th.tinytable_css_9fweedrhrgwks2cj28yj { text-align: center; }
-      .table td.tinytable_css_h4jw6929g20dp71ausn0, .table th.tinytable_css_h4jw6929g20dp71ausn0 { border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_gamxszwvwt2ky5cjqd75, .table th.tinytable_css_gamxszwvwt2ky5cjqd75 { border-top: solid #d3d8dc 0.1em; text-align: center; }
+      .table td.tinytable_css_trautq8b4jfycfonitv8, .table th.tinytable_css_trautq8b4jfycfonitv8 { text-align: center; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_nvfbzd89souvdqqfk5q3, .table th.tinytable_css_nvfbzd89souvdqqfk5q3 { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_uepccu2b4m1lsfc78b1y, .table th.tinytable_css_uepccu2b4m1lsfc78b1y { border-top: solid #d3d8dc 0.1em; text-align: center; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_87njdzous93gxmmx21r5, .table th.tinytable_css_87njdzous93gxmmx21r5 { text-align: center; }
+      .table td.tinytable_css_vljtn0kxcactcwy8g5jv, .table th.tinytable_css_vljtn0kxcactcwy8g5jv { border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_sano0313xq484enfr9fq" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_8xyvx5t5o724byj8pklz" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
 <tr>
 <th scope="col" align="center" colspan="2" data-row="-2" data-col="0">Hello</th>
@@ -2935,8 +2976,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_yuc765u0267otv12rqd8(i, j, css_id) {
-          var table = document.getElementById("tinytable_yuc765u0267otv12rqd8");
+      function styleCell_frx9omg8ifbx030vltd6(i, j, css_id) {
+          var table = document.getElementById("tinytable_frx9omg8ifbx030vltd6");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -2945,21 +2986,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function insertSpanRow(i, colspan, content) {
-        var table = document.getElementById('tinytable_yuc765u0267otv12rqd8');
-        // Find the row with data-row attribute matching i
-        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
-        var newRow = table.insertRow(targetRow.rowIndex);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        newCell.setAttribute("data-col", "0");
-        newCell.setAttribute("data-row", i - 1);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_yuc765u0267otv12rqd8(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_yuc765u0267otv12rqd8");
+      function spanCell_frx9omg8ifbx030vltd6(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_frx9omg8ifbx030vltd6");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -2990,16 +3018,16 @@ MathJax = {
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '-1', j: 3 }, { i: '-1', j: 2 }, { i: '-1', j: 1 },  ], css_id: 'tinytable_css_x933sijtnxr3zd0ypyzo',}, 
-          { positions: [ { i: '1', j: 0 }, { i: '1', j: 4 }, { i: '1', j: 3 }, { i: '1', j: 2 }, { i: '1', j: 1 }, { i: '1', j: 5 },  ], css_id: 'tinytable_css_7ka72mc88sntvrm4z9rd',}, 
-          { positions: [ { i: '-1', j: 0 }, { i: '-1', j: 5 }, { i: '-1', j: 4 },  ], css_id: 'tinytable_css_q53flmrpbb88ioweyu68',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 3 }, { i: '0', j: 2 }, { i: '0', j: 1 }, { i: '0', j: 4 }, { i: '0', j: 5 },  ], css_id: 'tinytable_css_i0tfb2svfokjvya9mkl7',}, 
+          { positions: [ { i: '-1', j: 3 }, { i: '-1', j: 2 }, { i: '-1', j: 1 },  ], css_id: 'tinytable_css_pdqja79sqmcjecm3hxnj',}, 
+          { positions: [ { i: '1', j: 0 }, { i: '1', j: 4 }, { i: '1', j: 3 }, { i: '1', j: 2 }, { i: '1', j: 1 }, { i: '1', j: 5 },  ], css_id: 'tinytable_css_vtn0ytt4x18yro69q28g',}, 
+          { positions: [ { i: '-1', j: 0 }, { i: '-1', j: 5 }, { i: '-1', j: 4 },  ], css_id: 'tinytable_css_nm02e5c4nv9fswnwfpbk',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 3 }, { i: '0', j: 2 }, { i: '0', j: 1 }, { i: '0', j: 4 }, { i: '0', j: 5 },  ], css_id: 'tinytable_css_9z6gg55p8w0ueuthve67',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_yuc765u0267otv12rqd8(cell.i, cell.j, group.css_id);
+                  styleCell_frx9omg8ifbx030vltd6(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -3007,13 +3035,13 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_x933sijtnxr3zd0ypyzo, .table th.tinytable_css_x933sijtnxr3zd0ypyzo { border-top: solid #d3d8dc 0.1em; text-align: center; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_7ka72mc88sntvrm4z9rd, .table th.tinytable_css_7ka72mc88sntvrm4z9rd { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_q53flmrpbb88ioweyu68, .table th.tinytable_css_q53flmrpbb88ioweyu68 { border-top: solid #d3d8dc 0.1em; text-align: center; }
-      .table td.tinytable_css_i0tfb2svfokjvya9mkl7, .table th.tinytable_css_i0tfb2svfokjvya9mkl7 { border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_pdqja79sqmcjecm3hxnj, .table th.tinytable_css_pdqja79sqmcjecm3hxnj { border-top: solid #d3d8dc 0.1em; text-align: center; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_vtn0ytt4x18yro69q28g, .table th.tinytable_css_vtn0ytt4x18yro69q28g { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_nm02e5c4nv9fswnwfpbk, .table th.tinytable_css_nm02e5c4nv9fswnwfpbk { border-top: solid #d3d8dc 0.1em; text-align: center; }
+      .table td.tinytable_css_9z6gg55p8w0ueuthve67, .table th.tinytable_css_9z6gg55p8w0ueuthve67 { border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_yuc765u0267otv12rqd8" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_frx9omg8ifbx030vltd6" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
 <tr>
 <th scope="col" align="center" colspan="1" data-row="-1" data-col="0"> </th>
@@ -3107,8 +3135,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_rd882k0gc1sqj1pdpa8x(i, j, css_id) {
-          var table = document.getElementById("tinytable_rd882k0gc1sqj1pdpa8x");
+      function styleCell_csoyv8i32a4i0vdtqpbu(i, j, css_id) {
+          var table = document.getElementById("tinytable_csoyv8i32a4i0vdtqpbu");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -3117,21 +3145,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function insertSpanRow_pt4ylkc45r2x5jec2ggn(i, colspan, content) {
-        var table = document.getElementById('tinytable_rd882k0gc1sqj1pdpa8x');
-        // Find the row with data-row attribute matching i
-        var targetRow = table.querySelector(`tr [data-row="${i}"]`).closest('tr');
-        var newRow = table.insertRow(targetRow.rowIndex);
-        var newCell = newRow.insertCell(0);
-        newCell.setAttribute("colspan", colspan);
-        newCell.setAttribute("data-col", "0");
-        newCell.setAttribute("data-row", i - 1);
-        // newCell.innerText = content;
-        // this may be unsafe, but innerText does not interpret <br>
-        newCell.innerHTML = content;
-      }
-      function spanCell_rd882k0gc1sqj1pdpa8x(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_rd882k0gc1sqj1pdpa8x");
+      function spanCell_csoyv8i32a4i0vdtqpbu(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_csoyv8i32a4i0vdtqpbu");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -3159,24 +3174,24 @@ MathJax = {
         }
       }
       // tinytable span after
-      window.addEventListener('load', function () { insertSpanRow_pt4ylkc45r2x5jec2ggn(7, 4, 'Northeast') });
-      window.addEventListener('load', function () { insertSpanRow_pt4ylkc45r2x5jec2ggn(2, 4, 'North Central') });
+      window.addEventListener('load', function () { spanCell_csoyv8i32a4i0vdtqpbu(6, 0, 1, 4) })
+      window.addEventListener('load', function () { spanCell_csoyv8i32a4i0vdtqpbu(1, 0, 1, 4) })
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '10', j: 1 }, { i: '10', j: 2 }, { i: '10', j: 3 },  ], css_id: 'tinytable_css_gmdzxwgwqooj6kc6mpbc',}, 
-          { positions: [ { i: '2', j: 1 }, { i: '7', j: 1 }, { i: '7', j: 2 }, { i: '7', j: 3 }, { i: '2', j: 2 }, { i: '2', j: 3 },  ], css_id: 'tinytable_css_7z7yh0sz6eo7nmz2jyfi',}, 
-          { positions: [ { i: '10', j: 0 },  ], css_id: 'tinytable_css_nh0x3i68kndu7qcdcojx',}, 
-          { positions: [ { i: '6', j: 0 }, { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 1 },  ], css_id: 'tinytable_css_tqdv3mpkqawsgzlcm661',}, 
-          { positions: [ { i: '4', j: 0 }, { i: '5', j: 0 }, { i: '3', j: 0 }, { i: '8', j: 0 }, { i: '9', j: 0 },  ], css_id: 'tinytable_css_elque3k102090w1eiirt',}, 
-          { positions: [ { i: '2', j: 0 }, { i: '7', j: 0 },  ], css_id: 'tinytable_css_tuytjzm1az124cewwxi4',}, 
-          { positions: [ { i: '1', j: 0 }, { i: '1', j: 1 }, { i: '1', j: 2 }, { i: '1', j: 3 },  ], css_id: 'tinytable_css_ytczj5lcrnhw7d2q3s71',}, 
+          { positions: [ { i: '10', j: 1 }, { i: '10', j: 2 }, { i: '10', j: 3 },  ], css_id: 'tinytable_css_9ll4gkj8q6o01zbgb7s8',}, 
+          { positions: [ { i: '2', j: 1 }, { i: '7', j: 1 }, { i: '7', j: 2 }, { i: '7', j: 3 }, { i: '2', j: 2 }, { i: '2', j: 3 },  ], css_id: 'tinytable_css_anaxny435r7se4f9avtt',}, 
+          { positions: [ { i: '10', j: 0 },  ], css_id: 'tinytable_css_j6qmuxa3726idwu4gu2m',}, 
+          { positions: [ { i: '6', j: 0 }, { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 1 },  ], css_id: 'tinytable_css_r9p1bisj6dr36120vnws',}, 
+          { positions: [ { i: '4', j: 0 }, { i: '5', j: 0 }, { i: '3', j: 0 }, { i: '8', j: 0 }, { i: '9', j: 0 },  ], css_id: 'tinytable_css_ru27sbgwjfbj4e3rpd1m',}, 
+          { positions: [ { i: '2', j: 0 }, { i: '7', j: 0 },  ], css_id: 'tinytable_css_y8yngqf134t3gl74q263',}, 
+          { positions: [ { i: '1', j: 0 }, { i: '1', j: 1 }, { i: '1', j: 2 }, { i: '1', j: 3 },  ], css_id: 'tinytable_css_6gu5ryjaqg64hn5qihtg',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_rd882k0gc1sqj1pdpa8x(cell.i, cell.j, group.css_id);
+                  styleCell_csoyv8i32a4i0vdtqpbu(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -3184,21 +3199,27 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_gmdzxwgwqooj6kc6mpbc, .table th.tinytable_css_gmdzxwgwqooj6kc6mpbc { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_7z7yh0sz6eo7nmz2jyfi, .table th.tinytable_css_7z7yh0sz6eo7nmz2jyfi { color: white; background-color: black; }
-      .table td.tinytable_css_nh0x3i68kndu7qcdcojx, .table th.tinytable_css_nh0x3i68kndu7qcdcojx { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_tqdv3mpkqawsgzlcm661, .table th.tinytable_css_tqdv3mpkqawsgzlcm661 { color: #FF0000; text-align: center; }
-      .table td.tinytable_css_elque3k102090w1eiirt, .table th.tinytable_css_elque3k102090w1eiirt { padding-left: 1em; }
-      .table td.tinytable_css_tuytjzm1az124cewwxi4, .table th.tinytable_css_tuytjzm1az124cewwxi4 { padding-left: 1em; color: white; background-color: black; }
-      .table td.tinytable_css_ytczj5lcrnhw7d2q3s71, .table th.tinytable_css_ytczj5lcrnhw7d2q3s71 { color: #FF0000; text-align: center; border-top: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_9ll4gkj8q6o01zbgb7s8, .table th.tinytable_css_9ll4gkj8q6o01zbgb7s8 { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_anaxny435r7se4f9avtt, .table th.tinytable_css_anaxny435r7se4f9avtt { color: white; background-color: black; }
+      .table td.tinytable_css_j6qmuxa3726idwu4gu2m, .table th.tinytable_css_j6qmuxa3726idwu4gu2m { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_r9p1bisj6dr36120vnws, .table th.tinytable_css_r9p1bisj6dr36120vnws { color: #FF0000; text-align: center; }
+      .table td.tinytable_css_ru27sbgwjfbj4e3rpd1m, .table th.tinytable_css_ru27sbgwjfbj4e3rpd1m { padding-left: 1em; }
+      .table td.tinytable_css_y8yngqf134t3gl74q263, .table th.tinytable_css_y8yngqf134t3gl74q263 { padding-left: 1em; color: white; background-color: black; }
+      .table td.tinytable_css_6gu5ryjaqg64hn5qihtg, .table th.tinytable_css_6gu5ryjaqg64hn5qihtg { color: #FF0000; text-align: center; border-top: solid #d3d8dc 0.1em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_rd882k0gc1sqj1pdpa8x" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_csoyv8i32a4i0vdtqpbu" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
         </thead>
         
         <tbody>
+                <tr>
+                  <td data-row="1" data-col="0">North Central</td>
+                  <td data-row="1" data-col="1"></td>
+                  <td data-row="1" data-col="2"></td>
+                  <td data-row="1" data-col="3"></td>
+                </tr>
                 <tr>
                   <td data-row="2" data-col="0">State</td>
                   <td data-row="2" data-col="1">Population</td>
@@ -3222,6 +3243,12 @@ MathJax = {
                   <td data-row="5" data-col="1">2861</td>
                   <td data-row="5" data-col="2">4628</td>
                   <td data-row="5" data-col="3">0.5</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="0">Northeast</td>
+                  <td data-row="6" data-col="1"></td>
+                  <td data-row="6" data-col="2"></td>
+                  <td data-row="6" data-col="3"></td>
                 </tr>
                 <tr>
                   <td data-row="7" data-col="0">State</td>

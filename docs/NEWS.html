@@ -237,7 +237,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./vignettes/group.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Group labels</span></a>
+ <span class="menu-text">Groups and labels</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -426,15 +426,19 @@ window.Quarto = {
 <h1>News</h1>
 <section id="development" class="level2">
 <h2 class="anchored" data-anchor-id="development">Development</h2>
-<p>Breaking change:</p>
+<p>Breaking changes:</p>
 <ul>
 <li><code>theme_spacing()</code> function has been removed. Use the new <code>height</code> argument in <code>tt()</code> instead for row height control.</li>
+<li>Indexing for <code>format_tt()</code> is now consistent with <code>style_tt()</code> and <code>plot_tt()</code>. It refers to rows and columns in the final table, after insertions by <code>group_tt()</code>.</li>
 </ul>
 <p>New features:</p>
 <ul>
 <li><code>tt(height=2)</code> controls row height in em units. Works HTML, LaTeX, and Typst.</li>
 <li><code>format_tt()</code> argument <code>i</code> accepts character strings to format specific table components: “colnames”, “caption”, “notes”, “groupi” (row group labels), “groupj” (column group labels).</li>
-<li><code>group_tt()</code> now supports matrix insertion: when <code>i</code> is an integer vector and <code>j</code> is a character matrix, rows from the matrix are inserted at the specified positions. Single-column matrices are automatically reshaped when the number of elements is a multiple of the table’s column count.</li>
+<li><code>group_tt(i = ..., j = ...)</code> now supports matrix insertion: when <code>i</code> is an integer vector and <code>j</code> is a character matrix, rows from the matrix are inserted at the specified positions. Single-column matrices are automatically reshaped when the number of elements is a multiple of the table’s column count.</li>
+<li><code>group_tt(i = ...)</code> can now be called multiple times to insert several rows one after the other.</li>
+<li><code>style_tt(colspan)</code> is now supported for markdown output.</li>
+<li><code>options(tinytable_color_name_normalization=TRUE)</code> (default): automatic color name processing (default: TRUE). When enabled, R color names recognized by <code>col2rgb()</code> are converted to hex format for consistent rendering across HTML, LaTeX, and Typst formats. If R color conversion fails, LaTeX color names are used as fallback. Colors explicitly supplied as hex values with “#” prefix are passed through unchanged. Set to FALSE to disable processing and pass color names unchanged.</li>
 </ul>
 <p>Typst: Major refactor improves several things and brings Typst very close to feature parity with other formats.</p>
 <ul>
@@ -448,10 +452,24 @@ window.Quarto = {
 <ul>
 <li>Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/392">#392</a>: reinstate informative error when <code>format_tt()</code> uses <code>num_mark_big</code> without <code>digits</code> argument.</li>
 <li>Improvements to <code>theme_tt("revealjs")</code>.</li>
+<li>Improvements to markdown output with long cell content.</li>
 </ul>
 <p>Bugs:</p>
 <ul>
+<li>Fixed matrix row duplication in <code>group_tt()</code>: single matrix rows are now properly duplicated when inserted at multiple positions using syntax like <code>group_tt(i = c(2, 5), j = matrix)</code>.</li>
+<li>Fixed bootstrap header issues in HTML tables with grouped data.</li>
+<li>Fixed duplicate header problems in LaTeX/Tabularray output.</li>
+<li>Fixed long row handling in markdown output format.</li>
 <li>Fix <code>theme_bootstrap()</code> for LaTeX and Typst. Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/479">#479</a>.</li>
+</ul>
+<p>Internal changes:</p>
+<ul>
+<li>Major refactor of <code>group_tt()</code> architecture: removed legacy lazy evaluation system (<code>@lazy_group_i</code>, <code>@lazy_group_j</code>) in favor of direct data structure manipulation with <code>@data_group_i</code> and <code>@data_group_j</code> slots.</li>
+<li>Simplified <code>format_tt()</code> function implementation for better performance and maintainability.</li>
+<li>Enhanced Typst backend with improved header handling and code efficiency.</li>
+<li>Improved grid backend with colspan support for text output.</li>
+<li>Comprehensive expansion of snapshot tests for matrix insertion functionality.</li>
+<li>Streamlined class architecture by removing unused legacy code paths.</li>
 </ul>
 </section>
 <section id="section" class="level2">
