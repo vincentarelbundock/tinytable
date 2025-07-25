@@ -21,28 +21,18 @@ tab <- tt(k2, digits = 1)
 options("tinytable_print_output" = "markdown")
 expect_snapshot_print(tab, "tibble-tibble_issue141")
 
+options("tinytable_print_output" = NULL)
 x <- tibble(
   x3 = pillar::num(9:11 * 100 + 0.5, sigfig = 3),
   x4 = pillar::num(9:11 * 100 + 0.5, sigfig = 4),
   x5 = pillar::num(9:11 * 100 + 0.5, sigfig = 5),
 )
 tab <- tt(x)
-
-# typst
-options("tinytable_print_output" = "typst")
-expect_snapshot_print(tab, "tibble-pillar_num.typ")
-options("tinytable_print_output" = NULL)
-
-# LaTeX
-options("tinytable_print_output" = "latex")
-expect_snapshot_print(tab, "tibble-pillar_num.tex")
-options("tinytable_print_output" = NULL)
-
-# html
-# exit_file("works interactively")
-options("tinytable_print_output" = "html")
-expect_snapshot_print(print_html(tab), "tibble-pillar_num.html")
-options("tinytable_print_output" = NULL)
+t <- expect_table(tab)
+expect_snapshot_print(t[["typst"]], "tibble-pillar_num.typ")
+expect_snapshot_print(t[["markdown"]], "tibble-pillar_num.md")
+expect_snapshot_print(t[["html"]], "tibble-pillar_num.html")
+expect_snapshot_print(t[["latex"]], "tibble-pillar_num.tex")
 
 
 # markdown
