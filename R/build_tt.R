@@ -22,10 +22,10 @@ rbind_i_j <- function(x) {
   final_df <- data.frame(matrix(NA_character_, nrow = total_rows, ncol = final_ncol))
   colnames(final_df) <- colnames(x@data_body)
 
-  # Insert body data at body_indices positions
-  if (nrow(x@data_body) > 0 && length(x@body_indices) > 0) {
-    for (i in seq_along(x@body_indices)) {
-      row_idx <- x@body_indices[i]
+  # Insert body data at index_body positions
+  if (nrow(x@data_body) > 0 && length(x@index_body) > 0) {
+    for (i in seq_along(x@index_body)) {
+      row_idx <- x@index_body[i]
       if (!is.na(row_idx) && row_idx > 0 && row_idx <= total_rows) {
         final_df[row_idx, ] <- x@data_body[i, ]
       }
@@ -43,8 +43,7 @@ rbind_i_j <- function(x) {
   }
 
   x@data_processed <- final_df
-  x@data <- final_df
-  x@nrow <- nrow(final_df)
+  x@nrow <- nrow(x@data) + nrow(x@data_group_i)
 
   return(x)
 }
@@ -83,21 +82,18 @@ build_tt <- function(x, output = NULL) {
   # separate group parts for individual formatting
   if (nrow(x@data_group_i) == 0) {
     # No row group insertions - set full table as body
-    x@data_body <- x@data_processed
-    x@index_group_j <- numeric(0)
-    x@body_indices <- seq_len(nrow(x@data_processed))
+    x@data_body <- x@data
+    x@index_body <- seq_len(nrow(x@data))
   } else {
     # Calculate which positions are body vs group
-    all_positions <- seq_len(nrow(x@data_processed) + nrow(x@data_group_i))
+    all_positions <- seq_len(nrow(x@data) + nrow(x@data_group_i))
     group_positions <- x@index_group_i
     body_positions <- setdiff(all_positions, group_positions)
-    
+
     # Set the body data to the original processed data
     x@data_body <- x@data_processed
-    
-    # Set indices for reconstruction
-    x@index_group_j <- group_positions # for group_j compatibility
-    x@body_indices <- body_positions
+
+    x@index_body <- body_positions
   }
 
   # format each component individually
