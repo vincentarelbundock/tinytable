@@ -7,10 +7,10 @@
 \S4method{initialize}{tinytable}(
   .Object,
   data = data.frame(),
-  table_input = data.frame(),
   caption = NULL,
   notes = NULL,
   theme = list("default"),
+  data_body = data.frame(),
   placement = NULL,
   width = NULL,
   height = NULL

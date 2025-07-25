@@ -123,5 +123,24 @@ tab <- tt(x) |>
   )
 expect_snapshot_print(tab, label = "markdown-multiple_long_row_groups")
 
+# colspan
+x <- head(iris)[1:4, ]
+tab <- tt(x) |>
+  style_tt(1, 1, italic = TRUE) |>
+  style_tt(2, 1, colspan = 3)
+expect_snapshot_print(tab, label = "markdown-colspan_basic")
+
+x <- head(iris)[1:4, ]
+x[2, 1] <- "Very long content that spans multiple columns"
+tab <- tt(x) |>
+  style_tt(2, 1, colspan = 3)
+expect_snapshot_print(tab, label = "markdown-colspan_long_content")
+
+x <- head(iris)[1:5, ]
+tab <- tt(x) |>
+  style_tt(2, 1, colspan = 3) |>
+  style_tt(4, 2, colspan = 2)
+expect_snapshot_print(tab, label = "markdown-colspan_multiple")
+
 # restore
 options(tinytable_print_output = NULL)

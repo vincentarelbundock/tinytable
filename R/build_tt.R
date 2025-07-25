@@ -3,11 +3,60 @@
 # some rows may be added, which changes how the style is applied
 #
 # THE ORDER MATTERS A LOT!
+
+
+#' Build group header and body parts with position calculations
+#' @keywords internal
+#' @noRd
+rbind_i_j <- function(x) {
+  # Reconstruct the final table by combining formatted data_body and data_group_i parts
+  if (nrow(x@data_group_i) == 0) {
+    # No groups - @data_body already contains the final formatted data
+    return(x)
+  }
+
+  # Calculate total final table size
+  total_rows <- nrow(x@data_body) + nrow(x@data_group_i)
+  final_ncol <- ncol(x@data_body)
+
+  # Create final data frame with proper structure
+  final_df <- data.frame(matrix(NA_character_, nrow = total_rows, ncol = final_ncol))
+  colnames(final_df) <- colnames(x@data_body)
+
+  # Insert body data at index_body positions
+  if (nrow(x@data_body) > 0 && length(x@index_body) > 0) {
+    for (i in seq_along(x@index_body)) {
+      row_idx <- x@index_body[i]
+      if (!is.na(row_idx) && row_idx > 0 && row_idx <= total_rows) {
+        final_df[row_idx, ] <- x@data_body[i, ]
+      }
+    }
+  }
+
+  # Insert group i data at index_group_i positions
+  if (nrow(x@data_group_i) > 0 && length(x@index_group_i) > 0) {
+    for (i in seq_len(nrow(x@data_group_i))) {
+      row_idx <- x@index_group_i[i]
+      if (!is.na(row_idx) && row_idx > 0 && row_idx <= total_rows) {
+        final_df[row_idx, ] <- x@data_group_i[i, ]
+      }
+    }
+  }
+
+  x@data_body <- final_df
+  x@nrow <- nrow(x@data) + nrow(x@data_group_i)
+
+  return(x)
+}
+
+
+
+
+
 build_tt <- function(x, output = NULL) {
   output <- sanitize_output(output)
 
-  x <- switch(
-    output,
+  x <- switch(output,
     html = swap_class(x, "tinytable_bootstrap"),
     latex = swap_class(x, "tinytable_tabularray"),
     markdown = swap_class(x, "tinytable_grid"),
@@ -29,31 +78,29 @@ build_tt <- function(x, output = NULL) {
     x <- do.call(fn, args)
   }
 
-  tab <- x@table_dataframe
+  x <- render_fansi(x)
 
-  # strip ANSI from `tibble`/`pillar`; keep for markdown
-  if (isTRUE(check_dependency("fansi"))) {
-    for (col in seq_along(tab)) {
-      if (isTRUE(x@output == "html")) {
-        tab[[col]] <- as.character(fansi::to_html(tab[[col]], warn = FALSE))
-      } else if (isTRUE(!x@output %in% c("markdown", "dataframe"))) {
-        tab[[col]] <- as.character(fansi::strip_ctl(tab[[col]]))
-      }
-    }
+  # separate group parts for individual formatting
+  if (nrow(x@data_group_i) == 0) {
+    # No row group insertions - set index for full table as body
+    x@index_body <- seq_len(nrow(x@data))
+  } else {
+    # Calculate which positions are body vs group
+    all_positions <- seq_len(nrow(x@data) + nrow(x@data_group_i))
+    group_positions <- x@index_group_i
+    body_positions <- setdiff(all_positions, group_positions)
+
+    x@index_body <- body_positions
   }
-  x@table_dataframe <- tab
 
-  # format data before drawing the table
+  # format each component individually
   for (l in x@lazy_format) {
     l[["x"]] <- x
     x <- eval(l)
   }
 
-  # process lazy_insert_matrix elements just after formatting
-  for (l in x@lazy_insert_matrix) {
-    l[["x"]] <- x
-    x <- eval(l)
-  }
+  # reconstruct the final table
+  x <- rbind_i_j(x)
 
   # add footnote markers just after formatting, otherwise appending converts to string
   x <- footnote_markers(x)
@@ -66,14 +113,14 @@ build_tt <- function(x, output = NULL) {
 
   # data frame we trim strings, pre-padded for markdown
   if (x@output == "dataframe") {
-    tmp <- x@table_dataframe
+    tmp <- x@data_body
     for (i in seq_along(tmp)) {
       tmp[[i]] <- trimws(tmp[[i]])
     }
-    x@table_dataframe <- tmp
+    x@data_body <- tmp
   }
 
-  # markdown styles need to be applied before creating the table, otherwise there's annoying parsing, etc.
+  # markdown styles need to be applied before creating the table but after `format_tt()`, otherwise there's annoying parsing, etc.
   if (x@output %in% c("markdown", "gfm", "dataframe")) {
     x <- style_eval(x)
   }
@@ -82,15 +129,20 @@ build_tt <- function(x, output = NULL) {
   x <- tt_eval(x)
 
   # groups require the table to be drawn first, expecially group_tabularray_col() and friends
-  ihead <- 0
-  for (idx in seq_along(x@lazy_group)) {
-    l <- x@lazy_group[[idx]]
-    l[["x"]] <- x
-    if (length(l[["j"]]) > 0) {
-      ihead <- ihead - 1
-      l[["ihead"]] <- ihead
+  # For Typst and LaTeX, handle all column groups at once from @data_group_j
+  if (x@output %in% c("typst", "latex") && nrow(x@data_group_j) > 0) {
+    # Calculate ihead for the group headers - start from -1 for the top header row
+    ihead <- -1
+    # Apply group_eval_j once with all groups
+    x <- group_eval_j(x, j = seq_len(ncol(x@data)), ihead = ihead)
+  } else {
+    # For other formats (HTML), handle column groups from @data_group_j
+    if (nrow(x@data_group_j) > 0) {
+      # Calculate ihead for the group headers - start from -1 for the top header row
+      ihead <- -1
+      # Apply group_eval_j once with all groups
+      x <- group_eval_j(x, j = seq_len(ncol(x@data)), ihead = ihead)
     }
-    x <- eval(l)
   }
 
   if (!x@output %in% c("markdown", "gfm", "dataframe")) {
@@ -106,6 +158,8 @@ build_tt <- function(x, output = NULL) {
   # markdown styles are applied earlier
   if (!x@output %in% c("markdown", "gfm", "dataframe")) {
     x <- style_eval(x)
+  } else {
+    x <- grid_colspan(x)
   }
 
   x <- finalize(x)

@@ -2,6 +2,7 @@ options("tinysnapshot_device" = "svglite")
 options("tinysnapshot_tol" = 300)
 options("tinysnapshot_mode" = "sidebyside")
 options("width" = 200) # for diff printout readability
+options("tinytable_print_output" = NULL)
 
 # common formatting options
 options(tinytable_format_bool = function(x) tools::toTitleCase(tolower(x)))
@@ -75,4 +76,34 @@ print_html <- function(x, output = c("html", "html_portable")) {
   x <- save_tt(x, output)
   class(x) <- c("custom_html_string", class(x))
   x
+}
+
+format_extensions <- list(
+  markdown = "md",
+  latex = "tex",
+  typst = "typ",
+  html = "html"
+)
+
+# Helper function to prepare tables for testing across multiple formats
+expect_table <- function(tab, formats = names(format_extensions)) {
+  result <- list()
+  
+  for (format in formats) {
+    # Create a copy and set the output format
+    table_copy <- tab
+    table_copy@output <- format
+    
+    # Create the table output
+    if (format == "html") {
+      table_output <- print_html(table_copy)
+    } else {
+      table_output <- table_copy
+    }
+    
+    # Store the table output
+    result[[format]] <- table_output
+  }
+  
+  return(result)
 }

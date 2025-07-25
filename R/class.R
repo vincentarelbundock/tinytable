@@ -13,6 +13,8 @@ swap_class <- function(x, new_class) {
 }
 
 setClassUnion("NULLorCharacter", c("NULL", "character"))
+setClassUnion("NULLorNumeric", c("NULL", "numeric"))
+setClassUnion("NULLorList", c("NULL", "list"))
 
 #' tinytable S4 class
 #'
@@ -22,42 +24,40 @@ setClass(
   Class = "tinytable",
   slots = representation(
     body = "character",
+    index_body = "numeric",
     bootstrap_class = "character",
     bootstrap_css_rule = "character",
-    caption = "character",
+    caption = "NULLorCharacter",
     css = "data.frame",
     data = "data.frame",
+    data_group_i = "data.frame",
+    data_group_j = "data.frame",
+    data_body = "data.frame",
     group_index_i = "numeric",
-    group_index_i_matrix = "numeric",
-    group_n_i = "numeric",
-    group_n_j = "numeric",
+    index_group_i = "numeric",
+    height = "NULLorNumeric",
     id = "character",
     lazy_finalize = "list",
     lazy_format = "list",
-    lazy_group = "list",
-    lazy_insert_matrix = "list",
     lazy_plot = "list",
     lazy_style = "list",
     lazy_theme = "list",
     names = "NULLorCharacter",
     ncol = "numeric",
     nhead = "numeric",
-    notes = "list",
+    notes = "NULLorList",
     nrow = "numeric",
     output = "character",
     output_dir = "character",
-    placement = "character",
+    placement = "NULLorCharacter",
     portable = "logical",
     style = "data.frame",
     style_caption = "list",
     style_notes = "list",
-    table_dataframe = "data.frame",
-    table_input = "data.frame",
     table_string = "character",
     theme = "list",
-    width = "numeric",
-    width_cols = "numeric",
-    height = "numeric"
+    width = "NULLorNumeric",
+    width_cols = "numeric"
   )
 )
 
@@ -68,32 +68,36 @@ setClass(
 setMethod(
   "initialize",
   "tinytable",
-  function(
-    .Object,
-    data = data.frame(),
-    table_input = data.frame(),
-    caption = NULL,
-    notes = NULL,
-    theme = list("default"),
-    placement = NULL,
-    width = NULL,
-    height = NULL
-  ) {
+  function(.Object,
+           data = data.frame(),
+           caption = NULL,
+           notes = NULL,
+           theme = list("default"),
+           data_body = data.frame(),
+           placement = NULL,
+           width = NULL,
+           height = NULL) {
     # explicit
     .Object@data <- data
-    .Object@table_dataframe <- table_input
+    .Object@data_body <- data_body
     .Object@theme <- theme
+    .Object@placement <- placement
+    .Object@caption <- caption
+    .Object@width <- width
+    .Object@notes <- notes
+    .Object@height <- height
+
     # dynamic
     .Object@nrow <- nrow(.Object@data)
     .Object@ncol <- ncol(.Object@data)
     .Object@nhead <- if (is.null(colnames(data))) 0 else 1
-    .Object@group_n_i <- 0
-    .Object@group_n_j <- 0
-    .Object@names <- if (is.null(colnames(data))) {
-      character()
-    } else {
-      colnames(data)
-    }
+    .Object@names <- if (is.null(colnames(data))) character() else colnames(data)
+
+    # empty
+    .Object@data_group_i <- data.frame()
+    .Object@data_group_j <- data.frame()
+    .Object@index_group_i <- numeric(0)
+    .Object@index_body <- numeric(0)
     .Object@id <- get_id("tinytable_")
     .Object@output <- "tinytable"
     .Object@output_dir <- getwd()
@@ -101,25 +105,9 @@ setMethod(
     .Object@portable <- FALSE
     .Object@style <- data.frame()
     .Object@lazy_theme <- list()
-    # conditional: allows NULL user input
-    if (!is.null(placement)) {
-      .Object@placement <- placement
-    }
-    if (!is.null(caption)) {
-      .Object@caption <- caption
-    }
-    if (!is.null(width)) {
-      .Object@width <- width
-    }
-    if (!is.null(notes)) {
-      .Object@notes <- notes
-    }
-    if (!is.null(height)) {
-      .Object@height <- height
-    }
+
     return(.Object)
-  }
-)
+  })
 
 #' Method for a tinytable S4 object
 #'
@@ -175,8 +163,7 @@ setReplaceMethod(
     }
     x@names <- value
     return(x)
-  }
-)
+  })
 
 #' Method for a tinytable S4 object
 #'
@@ -198,8 +185,7 @@ setReplaceMethod(
     }
     x@names <- value
     return(x)
-  }
-)
+  })
 
 #' Dimensions a tinytable S4 object
 #'
@@ -254,9 +240,10 @@ setGeneric(
 #' @inheritParams tt
 #' @keywords internal
 setGeneric(
-  name = "group_eval",
-  def = function(x, ...) standardGeneric("group_eval")
+  name = "group_eval_j",
+  def = function(x, ...) standardGeneric("group_eval_j")
 )
+
 
 #' Apply final settings to a tinytable
 #'

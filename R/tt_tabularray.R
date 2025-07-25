@@ -35,7 +35,7 @@ setMethod(
     } else {
       header <- NULL
     }
-    body <- apply(as.data.frame(x@table_dataframe), 1, paste, collapse = " & ")
+    body <- apply(as.data.frame(x@data_body), 1, paste, collapse = " & ")
     body <- paste(body, "\\\\")
 
     # theme: booktabs
@@ -126,5 +126,4 @@ setMethod(
     x@body <- body
 
     return(x)
-  }
-)
+  })

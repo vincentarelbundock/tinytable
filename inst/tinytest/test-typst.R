@@ -15,7 +15,7 @@ tab <- tt(mtcars[1:4, 1:5], caption = "Hello World") |>
     color = "white"
   ) |>
   style_tt(j = 1, color = "red", italic = TRUE)
-expect_snapshot_print(tab, label = "typst-complicated")
+expect_snapshot_print(tab, label = "typst-complicated.typ")
 
 # issue #139
 tab <- tt(mtcars[1:10, 1:5]) |>
@@ -24,17 +24,17 @@ tab <- tt(mtcars[1:10, 1:5]) |>
   style_tt(1:5, align = "c", background = "blue", color = "white")
 expect_snapshot_print(
   tab,
-  label = "typst-issue-139_misaligned_rule_with_group_tt"
+  label = "typst-issue-139_misaligned_rule_with_group_tt.typ"
 )
 
 # Theme striped
 x <- mtcars[1:4, 1:5]
 tab <- tt(x, theme = "striped")
-expect_snapshot_print(tab, label = "typst-striped")
+expect_snapshot_print(tab, label = "typst-striped.typ")
 
 # Theme grid
 tab <- tt(x, theme = "grid")
-expect_snapshot_print(tab, label = "typst-grid")
+expect_snapshot_print(tab, label = "typst-grid.typ")
 
 # Formatting
 dat <- data.frame(
@@ -44,7 +44,7 @@ dat <- data.frame(
   z = c(TRUE, TRUE, FALSE)
 )
 dat <- tt(dat, digits = 2)
-expect_snapshot_print(dat, label = "typst-formatting")
+expect_snapshot_print(dat, label = "typst-formatting.typ")
 
 # More formatting
 dat <- data.frame(
@@ -56,34 +56,34 @@ tab <- tt(dat) |>
   format_tt(j = "a", sprintf = "Food: %s") |>
   format_tt(j = 2, digits = 1) |>
   format_tt(j = "c", digits = 2, num_suffix = TRUE)
-expect_snapshot_print(tab, label = "typst-more_formatting")
+expect_snapshot_print(tab, label = "typst-more_formatting.typ")
 
 # Significant cell
 dat <- data.frame(x = c(0.000123456789, 12.4356789))
 tab <- tt(dat) |> format_tt(digits = 2, num_fmt = "significant_cell")
-expect_snapshot_print(tab, label = "typst-significant_cell")
+expect_snapshot_print(tab, label = "typst-significant_cell.typ")
 
 # Missing value replacement
 tab <- tt(data.frame(a = c(NA, 1, 2), b = c(3, NA, 5)))
 tab <- format_tt(tab, replace = "-")
-expect_snapshot_print(tab, label = "typst-missing_value_replacement")
+expect_snapshot_print(tab, label = "typst-missing_value_replacement.typ")
 
 # Italic markdown
 dat <- data.frame(markdown = c("This is _italic_ text."))
 tab <- tt(dat) |>
   format_tt(j = 1, markdown = TRUE) |>
   style_tt(j = 1, align = "c")
-expect_snapshot_print(tab, label = "typst-italic_markdown")
+expect_snapshot_print(tab, label = "typst-italic_markdown.typ")
 
 # Font size
 dat <- tt(x) |> style_tt(j = "mpg|hp|qsec", fontsize = 1.5)
-expect_snapshot_print(dat, label = "typst-font_size")
+expect_snapshot_print(dat, label = "typst-font_size.typ")
 
 # No headers
 k <- x
 colnames(k) <- NULL
 k <- tt(k)
-expect_snapshot_print(k, label = "typst-no_headers")
+expect_snapshot_print(k, label = "typst-no_headers.typ")
 
 # Group rows
 dat <- mtcars[1:9, 1:8]
@@ -95,7 +95,7 @@ dat <- tt(dat) |>
       "They love tofu" = 7
     )
   )
-expect_snapshot_print(dat, label = "typst-group_rows")
+expect_snapshot_print(dat, label = "typst-group_rows.typ")
 
 # Group columns
 dat <- mtcars[1:9, 1:8]
@@ -107,7 +107,7 @@ tab <- tt(dat) |>
       "Tofu" = 7
     )
   )
-expect_snapshot_print(dat, label = "typst-group_columns")
+expect_snapshot_print(tab, label = "typst-group_columns.typ")
 
 # issue #323
 dat <- mtcars[1:9, 1:8]
@@ -128,13 +128,13 @@ tab <- tt(dat) |>
   ) |>
   style_tt(i = -1, color = "orange")
 tab@output <- "typst"
-expect_snapshot_print(tab, label = "typst-issue323_group_tt_style_tt")
+expect_snapshot_print(tab, label = "typst-issue323_group_tt_style_tt.typ")
 
 # Frame
 tab <- tt(mtcars[1:5, 1:5]) |>
   style_tt(2:3, 2:3, line_color = "red", line = "tblr", line_width = .05)
 tab@output <- "typst"
-expect_snapshot_print(tab, label = "typst-tblr")
+expect_snapshot_print(tab, label = "typst-tblr.typ")
 
 # Issue #357
 tab <- tt(head(iris), notes = "blah") |> save_tt("typst")
@@ -148,6 +148,6 @@ tab <- tt(
     b = "Blah blah."
   )
 )
-expect_snapshot_print(tab, label = "typst-issue456")
+expect_snapshot_print(tab, label = "typst-issue456.typ")
 
 options(tinytable_print_output = NULL)

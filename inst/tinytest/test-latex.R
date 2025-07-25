@@ -6,52 +6,52 @@ x <- mtcars[1:4, 1:5]
 
 expect_snapshot_print(
   tt(x),
-  label = "latex-default"
+  label = "latex-default.tex"
 )
 
 k <- x
 colnames(k) <- NULL
 expect_snapshot_print(
   tt(k),
-  label = "latex-nohead"
+  label = "latex-nohead.tex"
 )
 
 # Align
 expect_snapshot_print(
   tt(x) |> style_tt(j = 1:5, align = "ccllr"),
-  label = "latex-align"
+  label = "latex-align.tex"
 )
 
 # Themes
 expect_snapshot_print(
   tt(x, theme = "striped"),
-  label = "latex-theme_striped"
+  label = "latex-theme_striped.tex"
 )
 
 expect_snapshot_print(
   tt(x, theme = "grid"),
-  label = "latex-theme_grid"
+  label = "latex-theme_grid.tex"
 )
 
 expect_snapshot_print(
   tt(x, theme = "void"),
-  label = "latex-theme_void"
+  label = "latex-theme_void.tex"
 )
 
 # Styles
 expect_snapshot_print(
   tt(x) |> style_tt(i = 1:4, color = "orange"),
-  label = "latex-row_color"
+  label = "latex-row_color.tex"
 )
 
 expect_snapshot_print(
   tt(x) |> style_tt(j = 1:4, color = "orange"),
-  label = "latex-col_color"
+  label = "latex-col_color.tex"
 )
 
 expect_snapshot_print(
   tt(x) |> style_tt(i = 1:2, j = 1:4, color = "orange"),
-  label = "latex-cell_color"
+  label = "latex-cell_color.tex"
 )
 
 # Lazy style: group after style is respected
@@ -61,7 +61,7 @@ a <- tt(mtcars[1:4, 1:4]) |>
 b <- tt(mtcars[1:4, 1:4]) |>
   group_tt(j = list("blah" = 1:2, "bar" = 3:4)) |>
   style_tt(color = "orange", background = "black")
-expect_snapshot_print(a, label = "latex-group_style_order")
+expect_snapshot_print(a, label = "latex-group_style_order.tex")
 expect_equal(as.character(a@table_string), as.character(b@table_string))
 
 # align d
@@ -69,17 +69,17 @@ x <- data.frame(pi = c(pi * 100, pi * 1000, pi * 10000, pi * 100000))
 tab <- tt(x) |>
   format_tt(j = 1, digits = 8, num_fmt = "significant_cell") |>
   style_tt(j = 1, align = "d")
-expect_snapshot_print(tab, label = "latex-align_d")
+expect_snapshot_print(tab, label = "latex-align_d.tex")
 
 dat = data.frame(a = c("(03.1)", "(3.14)**", "(003.1416)+"))
 tt(dat) |> style_tt(align = "d")
-expect_snapshot_print(tab, label = "latex-align_d_02")
+expect_snapshot_print(tab, label = "latex-align_d_02.tex")
 
 dat = data.frame(a = c("(03.1)", "(3.14)**", "(003.1416)+"))
 tt(dat) |>
   group_tt(j = list("blah" = 1)) |>
   style_tt(align = "d")
-expect_snapshot_print(tab, label = "latex-align_d_03")
+expect_snapshot_print(tab, label = "latex-align_d_03.tex")
 
 # bug discovered with vignette
 x <- tt(mtcars[1:9, 1:8]) |>
@@ -103,7 +103,7 @@ expect_inherits(x, "character")
 # Footnotes
 expect_snapshot_print(
   (tt(mtcars[1:4, 1:5], notes = list(a = "Blah.", b = "Blah blah."))),
-  label = "latex-footnotes"
+  label = "latex-footnotes.tex"
 )
 
 # Maths
@@ -118,7 +118,7 @@ math <- tt(
   style_tt(j = 1, align = "c")
 expect_snapshot_print(
   math,
-  label = "latex-maths"
+  label = "latex-maths.tex"
 )
 
 # Line breaks
@@ -131,7 +131,7 @@ expect_snapshot_print(
       setNames(c("LaTeX line break", "HTML line break")),
     width = 1
   )),
-  label = "latex-breaks"
+  label = "latex-breaks.tex"
 )
 
 # Formatting
@@ -145,20 +145,20 @@ expect_snapshot_print(
     format_tt(j = "a", sprintf = "Food: %s") |>
     format_tt(j = 2, digits = 1) |>
     format_tt(j = "c", digits = 2, num_suffix = TRUE)),
-  label = "latex-formatting"
+  label = "latex-formatting.tex"
 )
 
 # placement
 tab <- mtcars[1:3, 1:3]
 tab <- tt(tab) |> theme_tt("placement", latex_float = "H")
 tab@output <- "latex"
-expect_snapshot_print(tab, label = "latex-placement")
+expect_snapshot_print(tab, label = "latex-placement.tex")
 
 # Missing value replacement
 tab <- data.frame(a = c(NA, 1, 2), b = c(3, NA, 5))
 expect_snapshot_print(
   tt(tab) |> format_tt(replace = "-"),
-  label = "latex-missing_value_replacement"
+  label = "latex-missing_value_replacement.tex"
 )
 
 # Escape special characters
@@ -168,7 +168,7 @@ dat <- data.frame(
 )
 expect_snapshot_print(
   tt(dat) |> format_tt(escape = TRUE),
-  label = "latex-escape_special_caracters"
+  label = "latex-escape_special_caracters.tex"
 )
 
 # Formatting URLs
@@ -186,7 +186,7 @@ dat <- data.frame(
 dat <- tt(dat) |> format_tt(j = 1, markdown = TRUE)
 expect_snapshot_print(
   dat,
-  label = "latex-formatting_url"
+  label = "latex-formatting_url.tex"
 )
 
 # Style
@@ -200,13 +200,13 @@ expect_snapshot_print(
       background = "green",
       color = "orange"
     )),
-  label = "latex-style"
+  label = "latex-style.tex"
 )
 
 # Font size
 expect_snapshot_print(
   (tt(x) |> style_tt(j = "mpg|hp|qsec", fontsize = 1.5)),
-  label = "latex-font_size"
+  label = "latex-font_size.tex"
 )
 
 # Merging cells
@@ -223,7 +223,7 @@ expect_snapshot_print(
       background = "black",
       bold = TRUE
     )),
-  label = "latex-merging_cells"
+  label = "latex-merging_cells.tex"
 )
 
 # Spanning cells
@@ -232,7 +232,7 @@ tab <- tab[order(tab$cyl, tab$am), ]
 expect_snapshot_print(
   (tt(tab, digits = 2) |>
     style_tt(i = c(1, 3, 5), j = 1, rowspan = 2, alignv = "t")),
-  label = "latex-spanning_cells"
+  label = "latex-spanning_cells.tex"
 )
 
 # Conditional styling
@@ -244,7 +244,7 @@ expect_snapshot_print(
       background = "teal",
       color = "white"
     )),
-  label = "latex-conditional_styling"
+  label = "latex-conditional_styling.tex"
 )
 
 # Heatmaps
@@ -263,7 +263,7 @@ expect_snapshot_print(
       background = bg,
       fontsize = fs
     )),
-  label = "latex-heatmaps"
+  label = "latex-heatmaps.tex"
 )
 
 # Borders
@@ -276,7 +276,7 @@ expect_snapshot_print(
       line_width = 0.4,
       line_color = "orange"
     ),
-  label = "latex-borders"
+  label = "latex-borders.tex"
 )
 
 # Issue #242: multiple notes in tabularray are fiddly
@@ -285,7 +285,7 @@ tab <- tt(
   notes = list(a = "blah", b = "hello world", "oh yeah", "works?")
 )
 tab@output <- "latex"
-expect_snapshot_print(tab, label = "latex-issue242")
+expect_snapshot_print(tab, label = "latex-issue242.tex")
 
 # Issue #306
 x <- data.frame(x = 1:5)

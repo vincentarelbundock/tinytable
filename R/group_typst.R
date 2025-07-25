@@ -2,69 +2,84 @@
 #'
 #' @keywords internal
 setMethod(
-  f = "group_eval",
+  f = "group_eval_j",
   signature = "tinytable_typst",
   definition = function(x, i = NULL, j = NULL, indent = 0, ...) {
-    out <- x
-
-    if (!is.null(i)) {
-      out <- group_typst_row(out, i, indent)
-    }
-
+    # Only handle column grouping - row insertions now use matrix insertion
     if (!is.null(j)) {
-      out <- group_typst_col(out, j, ...)
+      x <- group_typst_col(x, j, ...)
     }
+    return(x)
+  })
 
-    return(out)
-  }
-)
-
-group_typst_row <- function(x, i, indent, ...) {
-  tab <- x@table_string
-  tab <- strsplit(tab, split = "\\n")[[1]]
-  body_min <- utils::head(grep("tinytable cell content after", tab), 1) + 1
-  body_max <- utils::head(grep("end table", tab), 1) - 1
-  top <- tab[1:(body_min - 1)]
-  mid <- tab[body_min:body_max]
-  mid <- mid[mid != ""]
-  bot <- tab[(body_max + 1):length(tab)]
-  for (idx in rev(seq_along(i))) {
-    mid <- append(
-      mid,
-      sprintf("table.cell(colspan: %s)[%s],", ncol(x), names(i)[idx]),
-      after = i[idx] - 1
-    )
-  }
-  tab <- c(top, mid, bot)
-  tab <- paste(tab, collapse = "\n")
-  x@table_string <- tab
-  idx_new <- i + seq_along(i) - 1
-  idx_all <- seq_len(nrow(x))
-  idx <- setdiff(idx_all, idx_new)
-  return(x)
-}
 
 group_typst_col <- function(x, j, ihead, ...) {
   out <- x@table_string
-  miss <- as.list(setdiff(seq_len(ncol(x)), unlist(j)))
-  miss <- stats::setNames(miss, rep(" ", length(miss)))
-  j <- c(j, miss)
-  max_col <- sapply(j, max)
-  idx <- order(max_col)
-  j <- j[idx]
-  lab <- names(j)
-  len <- lengths(j)
-  col <- ifelse(
-    trimws(lab) == "",
-    sprintf("[%s],", lab),
-    sprintf(
-      "table.cell(stroke: (bottom: .05em + black), colspan: %s, align: center)[%s],",
-      len,
-      lab
-    )
-  )
-  col <- paste(col, collapse = "")
-  out <- lines_insert(out, col, "repeat: true", "after")
+
+  # Process column groups from @data_group_j
+  if (nrow(x@data_group_j) > 0) {
+    all_header_rows <- character(0)
+
+    for (row_idx in 1:nrow(x@data_group_j)) {
+      group_row <- as.character(x@data_group_j[row_idx, ])
+
+      # Find consecutive spans of the same group label
+      col_specs <- character(0)
+      i <- 1
+      while (i <= length(group_row)) {
+        current_label <- group_row[i]
+        span_start <- i
+
+        # Skip NA (ungrouped) columns
+        if (is.na(current_label)) {
+          col_specs <- c(col_specs, sprintf("[ ],"))
+          i <- i + 1
+          next
+        }
+
+        # Find the end of this span
+        # For non-empty labels, include following empty strings as continuation
+        if (trimws(current_label) != "") {
+          i <- i + 1 # Move past the current label
+          # Continue through empty strings
+          while (i <= length(group_row) &&
+            !is.na(group_row[i]) &&
+            trimws(group_row[i]) == "") {
+            i <- i + 1
+          }
+        } else {
+          # For empty labels, just move to next
+          while (i <= length(group_row) &&
+            !is.na(group_row[i]) &&
+            trimws(group_row[i]) == "") {
+            i <- i + 1
+          }
+        }
+        span_end <- i - 1
+        span_length <- span_end - span_start + 1
+
+        if (trimws(current_label) == "") {
+          col_specs <- c(col_specs, sprintf("[ ],"))
+        } else {
+          col_specs <- c(col_specs, sprintf(
+            "table.cell(stroke: (bottom: .05em + black), colspan: %s, align: center)[%s],",
+            span_length,
+            current_label
+          ))
+        }
+      }
+
+      col <- paste(col_specs, collapse = "")
+      all_header_rows <- c(all_header_rows, col)
+    }
+
+    # Insert all header rows at once
+    if (length(all_header_rows) > 0) {
+      all_headers <- paste(all_header_rows, collapse = "\n")
+      out <- lines_insert(out, all_headers, "repeat: true", "after")
+    }
+  }
+
   if (!any(grepl("column-gutter", out))) {
     out <- lines_insert(
       out,

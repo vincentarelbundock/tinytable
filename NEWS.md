@@ -2,15 +2,19 @@
 
 ## Development
 
-Breaking change:
+Breaking changes:
 
 * `theme_spacing()` function has been removed. Use the new `height` argument in `tt()` instead for row height control.
+* Indexing for `format_tt()` is now consistent with `style_tt()` and `plot_tt()`. It refers to rows and columns in the final table, after insertions by `group_tt()`.
 
 New features:
 
 * `tt(height=2)` controls row height in em units. Works HTML, LaTeX, and Typst.
 * `format_tt()` argument `i` accepts character strings to format specific table components: "colnames", "caption", "notes", "groupi" (row group labels), "groupj" (column group labels).
-* `group_tt()` now supports matrix insertion: when `i` is an integer vector and `j` is a character matrix, rows from the matrix are inserted at the specified positions. Single-column matrices are automatically reshaped when the number of elements is a multiple of the table's column count.
+* `group_tt(i = ..., j = ...)` now supports matrix insertion: when `i` is an integer vector and `j` is a character matrix, rows from the matrix are inserted at the specified positions. Single-column matrices are automatically reshaped when the number of elements is a multiple of the table's column count.
+* `group_tt(i = ...)` can now be called multiple times to insert several rows one after the other.
+* `style_tt(colspan)` is now supported for Markdown and Typst outputs.
+* `options(tinytable_color_name_normalization=TRUE)` (default): automatic color name processing (default: TRUE). When enabled, R color names recognized by `col2rgb()` are converted to hex format for consistent rendering across HTML, LaTeX, and Typst formats. If R color conversion fails, LaTeX color names are used as fallback. Colors explicitly supplied as hex values with "#" prefix are passed through unchanged. Set to FALSE to disable processing and pass color names unchanged.
 
 Typst: Major refactor improves several things and brings Typst very close to feature parity with other formats.
 
@@ -24,10 +28,24 @@ Misc:
 
 * Issue #392: reinstate informative error when `format_tt()` uses `num_mark_big` without `digits` argument.
 * Improvements to `theme_tt("revealjs")`.
+* Improvements to markdown output with long cell content.
 
 Bugs:
 
+* Fixed matrix row duplication in `group_tt()`: single matrix rows are now properly duplicated when inserted at multiple positions using syntax like `group_tt(i = c(2, 5), j = matrix)`.
+* Fixed bootstrap header issues in HTML tables with grouped data.
+* Fixed duplicate header problems in LaTeX/Tabularray output.
+* Fixed long row handling in markdown output format.
 * Fix `theme_bootstrap()` for LaTeX and Typst. Issue #479.
+
+Internal changes:
+
+* Major refactor of `group_tt()` architecture: removed legacy lazy evaluation system (`@lazy_group_i`, `@lazy_group_j`) in favor of direct data structure manipulation with `@data_group_i` and `@data_group_j` slots.
+* Simplified `format_tt()` function implementation for better performance and maintainability.
+* Enhanced Typst backend with improved header handling and code efficiency.
+* Improved grid backend with colspan support for text output.
+* Comprehensive expansion of snapshot tests for matrix insertion functionality.
+* Streamlined class architecture by removing unused legacy code paths.
 
 ## 0.10.0
 

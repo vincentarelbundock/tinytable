@@ -16,8 +16,4 @@ expect_snapshot_print(tt(x), label = "docx-issue98_03")
 x[1, 1] <- "1"
 expect_snapshot_print(tt(x), label = "docx-issue98_04")
 
-# Issue #98: Math
-# x[1,1] <- "\\(\\sigma\\)"
-# tt(x)
-
 options(tinytable_print_output = NULL)
