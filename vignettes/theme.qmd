@@ -53,7 +53,7 @@ tt(x, theme = "void")
 
 ## Custom themes
 
-Users can also define their own themes to apply consistent visual tweaks to tables. For example, this defines a themeing function and sets a global option to apply it to all tables consistently:
+Users can also define their own themes to apply consistent visual tweaks to tables. For example, this defines a themeing function and sets a global option to apply it to all tables consistently:^[Note: Captions must be defined in Quarto chunks for Typst output, which explains why they are not displayed in the Typst version of this document.]
 
 ```{r}
 theme_vincent <- function(x, ...) {
@@ -96,7 +96,8 @@ tt(head(iris), theme = theme_slides)
 Note: the code above is not evaluated because it only applies to Typst output.
 
 
-## Tabular
+::: {.content-visible unless-format="typst"}
+## Tabular (LaTeX and HTML)
 
 The `tabular` theme is designed to provide a more "raw" table, without a floating table environment in LaTeX, and without CSS or Javascript in HTML. 
 
@@ -105,8 +106,11 @@ tt(x) |>
   theme_tt("tabular") |>
   print("latex")
 ```
-
-
+:::
+::: {.content-visible when-format="typst"}
+## Tabular 
+LaTeX and HTML only.
+:::
 
 ::: {.content-visible unless-format="pdf"}
 ## Resize
@@ -164,6 +168,8 @@ tt(tmp, width = .8, caption = cap) |>
 :::
 
 ## User-written themes
+
+This section provides a few user-written themes that can be used to extend the functionality of `tinytable`. These themes are not included in the package by default, but they can be easily added to your workflow. If you would like your own custom theme to appear here, please open an issue on the [tinytable GitHub repository](https://github.com/vincentarelbundock/tinytable/issues) or submit a pull request.
 
 ### `theme_mitex()`
 
