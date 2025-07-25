@@ -403,7 +403,7 @@ get_dcolumn <- function(j, x) {
     "tinytable_siunitx_table_format",
     default = "table-format=-%s.%s,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\\*+()}"
   )
-  num <- unlist(x@data_processed[, j])
+  num <- unlist(x@data_body[, j])
 
   # empty cells
   num <- sapply(num, trimws)

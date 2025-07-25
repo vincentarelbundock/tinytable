@@ -9,26 +9,26 @@
 #' @keywords internal
 #' @noRd
 rbind_i_j <- function(x) {
-  # Reconstruct the final table by combining formatted data_processed and data_group_i parts
+  # Reconstruct the final table by combining formatted data_body and data_group_i parts
   if (nrow(x@data_group_i) == 0) {
-    # No groups - @data_processed already contains the final formatted data
+    # No groups - @data_body already contains the final formatted data
     return(x)
   }
 
   # Calculate total final table size
-  total_rows <- nrow(x@data_processed) + nrow(x@data_group_i)
-  final_ncol <- ncol(x@data_processed)
+  total_rows <- nrow(x@data_body) + nrow(x@data_group_i)
+  final_ncol <- ncol(x@data_body)
 
   # Create final data frame with proper structure
   final_df <- data.frame(matrix(NA_character_, nrow = total_rows, ncol = final_ncol))
-  colnames(final_df) <- colnames(x@data_processed)
+  colnames(final_df) <- colnames(x@data_body)
 
   # Insert body data at index_body positions
-  if (nrow(x@data_processed) > 0 && length(x@index_body) > 0) {
+  if (nrow(x@data_body) > 0 && length(x@index_body) > 0) {
     for (i in seq_along(x@index_body)) {
       row_idx <- x@index_body[i]
       if (!is.na(row_idx) && row_idx > 0 && row_idx <= total_rows) {
-        final_df[row_idx, ] <- x@data_processed[i, ]
+        final_df[row_idx, ] <- x@data_body[i, ]
       }
     }
   }
@@ -43,7 +43,7 @@ rbind_i_j <- function(x) {
     }
   }
 
-  x@data_processed <- final_df
+  x@data_body <- final_df
   x@nrow <- nrow(x@data) + nrow(x@data_group_i)
 
   return(x)
@@ -113,11 +113,11 @@ build_tt <- function(x, output = NULL) {
 
   # data frame we trim strings, pre-padded for markdown
   if (x@output == "dataframe") {
-    tmp <- x@data_processed
+    tmp <- x@data_body
     for (i in seq_along(tmp)) {
       tmp[[i]] <- trimws(tmp[[i]])
     }
-    x@data_processed <- tmp
+    x@data_body <- tmp
   }
 
   # markdown styles need to be applied before creating the table but after `format_tt()`, otherwise there's annoying parsing, etc.

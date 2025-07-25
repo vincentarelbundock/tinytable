@@ -172,15 +172,15 @@ setMethod(
     # All rows in table_dataframe should get consecutive indices starting from 1
     # Group rows have already been inserted by insert_group_i()
     # The user's row indices (i parameter) should match the HTML data-row values
-    i_idx <- seq_len(nrow(x@data_processed))
+    i_idx <- seq_len(nrow(x@data_body))
 
     # Generate all cells at once using matrix operations
-    row_indices <- rep(i_idx, each = ncol(x@data_processed))
+    row_indices <- rep(i_idx, each = ncol(x@data_body))
     col_indices <- rep(
-      seq_len(ncol(x@data_processed)) - 1,
-      times = nrow(x@data_processed)
+      seq_len(ncol(x@data_body)) - 1,
+      times = nrow(x@data_body)
     )
-    cell_values <- as.vector(t(x@data_processed))
+    cell_values <- as.vector(t(x@data_body))
 
     # Create all cells in one operation
     cells <- sprintf(
@@ -191,7 +191,7 @@ setMethod(
     )
 
     # Reshape into rows
-    cells_matrix <- matrix(cells, ncol = ncol(x@data_processed), byrow = TRUE)
+    cells_matrix <- matrix(cells, ncol = ncol(x@data_body), byrow = TRUE)
     rows <- apply(cells_matrix, 1, function(row) {
       c("  <tr>", row, "  </tr>")
     })

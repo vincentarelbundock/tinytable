@@ -32,7 +32,7 @@ setClass(
     data = "data.frame",
     data_group_i = "data.frame",
     data_group_j = "data.frame",
-    data_processed = "data.frame",
+    data_body = "data.frame",
     group_index_i = "numeric",
     index_group_i = "numeric",
     height = "NULLorNumeric",
@@ -73,13 +73,13 @@ setMethod(
            caption = NULL,
            notes = NULL,
            theme = list("default"),
-           data_processed = data.frame(),
+           data_body = data.frame(),
            placement = NULL,
            width = NULL,
            height = NULL) {
     # explicit
     .Object@data <- data
-    .Object@data_processed <- data_processed
+    .Object@data_body <- data_body
     .Object@theme <- theme
     .Object@placement <- placement
     .Object@caption <- caption

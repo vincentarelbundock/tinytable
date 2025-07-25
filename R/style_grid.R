@@ -1,5 +1,5 @@
 style_eval_grid <- function(x) {
-  out <- x@data_processed
+  out <- x@data_body
   sty <- x@style
 
   if (nrow(sty) == 0) {
@@ -49,7 +49,7 @@ style_eval_grid <- function(x) {
     }
   }
 
-  x@data_processed <- out
+  x@data_body <- out
   return(x)
 }
 
