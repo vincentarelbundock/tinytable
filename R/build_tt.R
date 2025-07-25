@@ -158,16 +158,12 @@ build_tt <- function(x, output = NULL) {
     # Apply group_eval_j once with all groups
     x <- group_eval_j(x, j = seq_len(ncol(x@data)), ihead = ihead)
   } else {
-    # For other formats, evaluate each group individually
-    ihead <- 0
-    for (idx in seq_along(x@lazy_group_j)) {
-      l <- x@lazy_group_j[[idx]]
-      l[["x"]] <- x
-      if (length(l[["j"]]) > 0) {
-        ihead <- ihead - 1
-        l[["ihead"]] <- ihead
-      }
-      x <- eval(l)
+    # For other formats (HTML), handle column groups from @data_group_j
+    if (nrow(x@data_group_j) > 0) {
+      # Calculate ihead for the group headers - start from -1 for the top header row
+      ihead <- -1
+      # Apply group_eval_j once with all groups
+      x <- group_eval_j(x, j = seq_len(ncol(x@data)), ihead = ihead)
     }
   }
 

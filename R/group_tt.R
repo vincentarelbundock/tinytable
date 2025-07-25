@@ -245,9 +245,7 @@ group_tt <- function(
       x@data_group_j <- rbind(new_header_row, x@data_group_j)
     }
 
-    # Apply column group labels lazily
-    cal <- call("group_eval_j", i = NULL, j = j, indent = indent)
-    x@lazy_group_j <- c(x@lazy_group_j, list(cal))
+    # Column groups are now stored in @data_group_j and processed directly by backends
   }
 
   return(x)

@@ -237,17 +237,7 @@ apply_groups_j <- function(x, format_fn, ...) {
     return(x)
   }
 
-  # Process lazy_group_j (for future group applications)
-  for (idx in seq_along(x@lazy_group_j)) {
-    g <- x@lazy_group_j[[idx]]
-    if (!is.null(g$j)) {
-      names(g$j) <- format_fn(names(g$j), ...)
-    }
-    x@lazy_group_j[[idx]] <- g
-  }
-  
-  
-  # Process data_group_j (for column groups stored as header rows, e.g., in Typst)
+  # Process data_group_j (for column groups stored as header rows)
   if (nrow(x@data_group_j) > 0) {
     for (row_idx in seq_len(nrow(x@data_group_j))) {
       for (col_idx in seq_len(ncol(x@data_group_j))) {

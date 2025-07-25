@@ -41,7 +41,6 @@ setClass(
     id = "character",
     lazy_finalize = "list",
     lazy_format = "list",
-    lazy_group_j = "list",
     lazy_plot = "list",
     lazy_style = "list",
     lazy_theme = "list",
