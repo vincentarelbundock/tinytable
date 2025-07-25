@@ -1,0 +1,171 @@
+<!-- preamble start -->
+<!DOCTYPE html> 
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytable_i1l5r2tmefd6u1k3vc4c</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+<!-- preamble end -->
+
+    <script>
+
+      function styleCell_i1l5r2tmefd6u1k3vc4c(i, j, css_id) {
+          var table = document.getElementById("tinytable_i1l5r2tmefd6u1k3vc4c");
+          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+          if (cell) {
+              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
+              cell.classList.add(css_id);
+          } else {
+              console.warn(`Cell at (${i}, ${j}) not found.`);
+          }
+      }
+      function spanCell_i1l5r2tmefd6u1k3vc4c(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_i1l5r2tmefd6u1k3vc4c");
+        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+        if (!targetCell) {
+          console.warn(`Cell at (${i}, ${j}) not found.`);
+        }
+
+        // Get all cells that need to be removed
+        const cellsToRemove = [];
+        for (let r = 0; r < rowspan; r++) {
+          for (let c = 0; c < colspan; c++) {
+            if (r === 0 && c === 0) continue; // Skip the target cell
+            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
+            if (cell) {
+              cellsToRemove.push(cell);
+            }
+          }
+        }
+
+        // Remove all cells
+        cellsToRemove.forEach(cell => cell.remove());
+
+        // Set rowspan and colspan of the target cell if it exists
+        if (targetCell) {
+          targetCell.rowSpan = rowspan;
+          targetCell.colSpan = colspan;
+        }
+      }
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '10', j: 1 }, { i: '10', j: 2 }, { i: '10', j: 3 }, { i: '10', j: 4 },  ], css_id: 'tinytable_css_n55975770zjfyd7hvwa5',}, 
+          { positions: [ { i: '10', j: 0 },  ], css_id: 'tinytable_css_39kfxruz6lr99k27zbbo',}, 
+          { positions: [ { i: '1', j: 0 }, { i: '5', j: 0 }, { i: '8', j: 0 }, { i: '4', j: 0 }, { i: '6', j: 0 }, { i: '9', j: 0 },  ], css_id: 'tinytable_css_lv9na26n2mbvsc2wmxaf',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 2 }, { i: '0', j: 1 }, { i: '0', j: 4 }, { i: '0', j: 3 },  ], css_id: 'tinytable_css_47d0ox6lhdyy61pttb2j',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  styleCell_i1l5r2tmefd6u1k3vc4c(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <style>
+      /* tinytable css entries after */
+      .table td.tinytable_css_n55975770zjfyd7hvwa5, .table th.tinytable_css_n55975770zjfyd7hvwa5 { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_39kfxruz6lr99k27zbbo, .table th.tinytable_css_39kfxruz6lr99k27zbbo { padding-left: 1em; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_lv9na26n2mbvsc2wmxaf, .table th.tinytable_css_lv9na26n2mbvsc2wmxaf { padding-left: 1em; }
+      .table td.tinytable_css_47d0ox6lhdyy61pttb2j, .table th.tinytable_css_47d0ox6lhdyy61pttb2j { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+    </style>
+    <div class="container">
+      <table class="table table-borderless" id="tinytable_i1l5r2tmefd6u1k3vc4c" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
+        <thead>
+        
+              <tr>
+                <th scope="col" data-row="0" data-col="0">Sepal.Length</th>
+                <th scope="col" data-row="0" data-col="1">Sepal.Width</th>
+                <th scope="col" data-row="0" data-col="2">Petal.Length</th>
+                <th scope="col" data-row="0" data-col="3">Petal.Width</th>
+                <th scope="col" data-row="0" data-col="4">Species</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="0">5.1</td>
+                  <td data-row="1" data-col="1">3.5</td>
+                  <td data-row="1" data-col="2">1.4</td>
+                  <td data-row="1" data-col="3">0.2</td>
+                  <td data-row="1" data-col="4">setosa</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="0">Row1</td>
+                  <td data-row="2" data-col="1">At</td>
+                  <td data-row="2" data-col="2">Pos1</td>
+                  <td data-row="2" data-col="3">Data</td>
+                  <td data-row="2" data-col="4">A</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="0">Row2</td>
+                  <td data-row="3" data-col="1">At</td>
+                  <td data-row="3" data-col="2">Pos1</td>
+                  <td data-row="3" data-col="3">Data</td>
+                  <td data-row="3" data-col="4">B</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="0">4.9</td>
+                  <td data-row="4" data-col="1">3.0</td>
+                  <td data-row="4" data-col="2">1.4</td>
+                  <td data-row="4" data-col="3">0.2</td>
+                  <td data-row="4" data-col="4">setosa</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="0">4.7</td>
+                  <td data-row="5" data-col="1">3.2</td>
+                  <td data-row="5" data-col="2">1.3</td>
+                  <td data-row="5" data-col="3">0.2</td>
+                  <td data-row="5" data-col="4">setosa</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="0">4.6</td>
+                  <td data-row="6" data-col="1">3.1</td>
+                  <td data-row="6" data-col="2">1.5</td>
+                  <td data-row="6" data-col="3">0.2</td>
+                  <td data-row="6" data-col="4">setosa</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="0">Row3</td>
+                  <td data-row="7" data-col="1">At</td>
+                  <td data-row="7" data-col="2">Pos2</td>
+                  <td data-row="7" data-col="3">Data</td>
+                  <td data-row="7" data-col="4">C</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="0">5.0</td>
+                  <td data-row="8" data-col="1">3.6</td>
+                  <td data-row="8" data-col="2">1.4</td>
+                  <td data-row="8" data-col="3">0.2</td>
+                  <td data-row="8" data-col="4">setosa</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="0">5.4</td>
+                  <td data-row="9" data-col="1">3.9</td>
+                  <td data-row="9" data-col="2">1.7</td>
+                  <td data-row="9" data-col="3">0.4</td>
+                  <td data-row="9" data-col="4">setosa</td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="0">4.6</td>
+                  <td data-row="10" data-col="1">3.4</td>
+                  <td data-row="10" data-col="2">1.4</td>
+                  <td data-row="10" data-col="3">0.3</td>
+                  <td data-row="10" data-col="4">setosa</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- postamble start -->
+  </body>
+
+</html>
+<!-- postamble end -->
+<!-- hack to avoid NA insertion in last line -->
