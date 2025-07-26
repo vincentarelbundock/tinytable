@@ -2,6 +2,7 @@ source("helpers.R")
 using("tinysnapshot")
 requiet("tibble")
 requiet("pillar")
+exit_file("fail on github actions")
 
 # Issue #426
 x <- tibble(a = c(pi, 2.3, 1), b = letters[1:3])
