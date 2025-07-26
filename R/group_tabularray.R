@@ -4,7 +4,7 @@
 setMethod(
   f = "group_eval_j",
   signature = "tinytable_tabularray",
-  definition = function(x, i = NULL, j = NULL, indent = 1, ...) {
+  definition = function(x, i = NULL, j = NULL, ...) {
     # Only handle column grouping - row insertions now use matrix insertion
     x <- group_tabularray_col(x, j, ...)
     return(x)

@@ -115,7 +115,7 @@ expect_false(ignore(expect_warning)(
 ))
 
 tab <- tt(dat[, 2:3]) |>
-  group_tt(i = dat$label, indent = 0) |>
+  group_tt(i = dat$label) |>
   style_tt(i = "groupi", color = "white", background = "black", align = "c")
 tab@output <- "latex"
 expect_snapshot_print(tab, label = "group_tt_style_tt_group.tex")

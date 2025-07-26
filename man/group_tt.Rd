@@ -8,7 +8,6 @@ group_tt(
   x,
   i = getOption("tinytable_group_i", default = NULL),
   j = getOption("tinytable_group_j", default = NULL),
-  indent = getOption("tinytable_group_indent", default = 1),
   ...
 )
 }
@@ -33,8 +32,6 @@ group_tt(
 \item A single string when column names include the group name as a prefix, ex: group1_column1, group1_column2, etc.
 \item Character matrix for inserting rows at positions specified by \code{i}. The matrix must have the same number of columns as the table, or be a single column with a number of elements that is a multiple of the table's column count (which will be automatically reshaped). Each row of the matrix matches an element
 }}
-
-\item{indent}{integer number of \code{pt} to use when indenting the non-labelled rows.}
 
 \item{...}{Other arguments are ignored.}
 }

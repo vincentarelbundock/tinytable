@@ -4,7 +4,7 @@
 \alias{group_eval_j,tinytable_tabularray-method}
 \title{tinytable S4 method}
 \usage{
-\S4method{group_eval_j}{tinytable_tabularray}(x, i = NULL, j = NULL, indent = 1, ...)
+\S4method{group_eval_j}{tinytable_tabularray}(x, i = NULL, j = NULL, ...)
 }
 \description{
 tinytable S4 method
