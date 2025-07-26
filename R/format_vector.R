@@ -41,31 +41,19 @@ format_vector_math <- function(vec, math = FALSE) {
 }
 
 format_vector_replace <- function(vec, replace = NULL) {
-  if (is.null(replace) || length(replace) == 0) {
+  if (is.null(replace) || isFALSE(replace) || length(replace) == 0) {
     return(vec)
   }
-
   result <- vec
-  for (k in seq_along(replace)) {
-    replacement_values <- replace[[k]]
-    name_k <- names(replace)[[k]]
-
-    is_value_replacement <- any(is.na(replacement_values)) ||
-      any(sapply(replacement_values, function(x) identical(x, NaN))) ||
-      any(is.infinite(replacement_values))
-
-    if (is_value_replacement) {
-      idx <- vec %in% replacement_values |
-        (is.na(vec) & any(is.na(replacement_values)))
-    } else {
-      idx <- vec %in% name_k
+  for (w in seq_along(replace)) {
+    for (z in seq_along(result)) {
+      new <- replace[[w]]
+      old <- names(replace)[[w]]
+      if (identical(old, result[z])) {
+        result[z] <- new
+      }
     }
-
-    replacement <- if (identical(is_value_replacement, TRUE)) name_k else replacement_values
-    if (identical(replacement, " ")) replacement <- ""
-    result[idx] <- replacement
   }
-
   return(result)
 }
 

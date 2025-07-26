@@ -86,6 +86,7 @@ apply_format <- function(
   format_fn,
   components = NULL,
   inherit_class = NULL,
+  original_data = TRUE,
   ...
 ) {
   if (is.character(components)) {
@@ -116,22 +117,19 @@ apply_format <- function(
   }
 
   # Apply to specific cells
-  # Filter columns based on inherits argument
+  # Filter columns based on inherits argument and original data
   j_filtered <- j
+
+  if (inherits(x, "tinytable")) {
+    classref <- x@data_body
+  } else {
+    classref <- out
+  }
+
   if (is.character(inherit_class)) {
-    # Always use original data for inherits check to ensure consistent behavior
-    if (!is.null(ori)) {
-      j_filtered <- j[sapply(j, function(col) inherits(ori[[col]], inherit_class))]
-    } else {
-      j_filtered <- j[sapply(j, function(col) inherits(out[[col]], inherit_class))]
-    }
+    j_filtered <- j[sapply(j, function(col) inherits(classref[[col]], inherit_class))]
   } else if (is.function(inherit_class)) {
-    # Always use original data for inherits check to ensure consistent behavior
-    if (!is.null(ori)) {
-      j_filtered <- j[sapply(j, function(col) inherit_class(ori[[col]]))]
-    } else {
-      j_filtered <- j[sapply(j, function(col) inherit_class(out[[col]]))]
-    }
+    j_filtered <- j[sapply(j, function(col) inherit_class(classref[[col]]))]
   }
 
   # Default behavior: use original values, fall back to out if ori is not available
@@ -139,17 +137,26 @@ apply_format <- function(
     idx_body <- if (inherits(x, "tinytable")) x@index_body else seq_len(nrow(out))
 
     # original data rows
-    idx_ori <- seq_len(nrow(ori))[idx_body %in% i]
-    idx_out <- intersect(i, idx_body)
-    tmp <- tryCatch(format_fn(ori[idx_ori, col, drop = TRUE], ...),
-      error = function(e) NULL)
-    if (length(tmp) > 0) out[idx_out, col] <- tmp
+    if (original_data) {
+      idx_out <- i
 
-    # row groups
-    idx_out <- setdiff(i, idx_body)
-    tmp <- tryCatch(format_fn(out[idx_out, col, drop = TRUE], ...),
-      error = function(e) NULL)
-    if (length(tmp) > 0) out[idx_out, col] <- tmp
+      idx_out <- intersect(i, idx_body)
+      idx_ori <- seq_len(nrow(ori))[idx_body %in% i]
+      tmp <- tryCatch(format_fn(ori[idx_ori, col, drop = TRUE], ...),
+        error = function(e) NULL)
+      if (length(tmp) > 0) out[idx_out, col] <- tmp
+
+      # row groups
+      idx_out <- setdiff(i, idx_body)
+      tmp <- tryCatch(format_fn(out[idx_out, col, drop = TRUE], ...),
+        error = function(e) NULL)
+      if (length(tmp) > 0) out[idx_out, col] <- tmp
+
+    } else {
+      tmp <- tryCatch(format_fn(out[i, col, drop = TRUE], ...),
+        error = function(e) NULL)
+      if (length(tmp) > 0) out[i, col] <- tmp
+    }
   }
 
   if (inherits(x, "tinytable")) {
@@ -157,6 +164,7 @@ apply_format <- function(
   } else {
     x <- out
   }
+
 
   return(x)
 }
@@ -428,21 +436,19 @@ format_tt_lazy <- function(
     date_format = date_format
   )
 
-  if (!is.null(digits)) {
-    x <- apply_format(
-      x = x,
-      i = i,
-      j = j,
-      format_fn = format_numeric,
-      num_suffix = num_suffix,
-      digits = digits,
-      num_mark_big = num_mark_big,
-      num_mark_dec = num_mark_dec,
-      num_zero = num_zero,
-      num_fmt = num_fmt,
-      inherit_class = is.numeric
-    )
-  }
+  x <- apply_format(
+    x = x,
+    i = i,
+    j = j,
+    format_fn = format_numeric,
+    num_suffix = num_suffix,
+    digits = digits,
+    num_mark_big = num_mark_big,
+    num_mark_dec = num_mark_dec,
+    num_zero = num_zero,
+    num_fmt = num_fmt,
+    inherit_class = is.numeric
+  )
 
   is_other <- function(x) {
     !is.numeric(x) && !inherits(x, "Date") && !is.logical(x)
@@ -505,16 +511,15 @@ format_tt_lazy <- function(
   }
 
   # replace before escape, otherwise overaggressive removal
-  if (!isFALSE(replace)) {
-    x <- apply_format(
-      x = x,
-      i = i,
-      j = j,
-      format_fn = format_vector_replace,
-      components = components,
-      replace = replace
-    )
-  }
+  x <- apply_format(
+    x = x,
+    i = i,
+    j = j,
+    format_fn = format_vector_replace,
+    components = components,
+    replace = replace,
+    original_data = FALSE
+  )
 
   # escape latex characters
   if (!isFALSE(escape)) {
@@ -536,6 +541,7 @@ format_tt_lazy <- function(
       j = j,
       format_fn = escape_text,
       components = components,
+      original_data = FALSE,
       output = o
     )
 
@@ -554,6 +560,7 @@ format_tt_lazy <- function(
       j = j,
       format_fn = format_vector_markdown,
       components = components,
+      original_data = FALSE,
       output_format = x@output
     )
   }

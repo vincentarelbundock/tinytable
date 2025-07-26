@@ -1,5 +1,5 @@
 escape_text <- function(x, output = "latex") {
-  if (length(x) < 1 || all(is.na(x))) {
+  if (length(x) < 1 || all(is.na(x)) || !is.character(x)) {
     return(x)
   }
   if (isFALSE(output)) {

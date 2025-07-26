@@ -1,15 +1,14 @@
 # Format numeric values with different formats
 # digits check needs to be done here to avoid the other() formatting from ori, which zaps the original setting
 format_numeric <- function(
-  value,
-  num_suffix,
-  digits,
-  num_mark_big,
-  num_mark_dec,
-  num_zero,
-  num_fmt
-) {
-  if (!is.numeric(value)) {
+    value,
+    num_suffix,
+    digits,
+    num_mark_big,
+    num_mark_dec,
+    num_zero,
+    num_fmt) {
+  if (!is.numeric(value) || is.null(digits)) {
     return(value)
   }
 
@@ -55,13 +54,12 @@ format_numeric <- function(
 }
 
 format_num_suffix <- function(
-  x,
-  digits,
-  num_mark_big,
-  num_mark_dec,
-  num_zero,
-  num_fmt
-) {
+    x,
+    digits,
+    num_mark_big,
+    num_mark_dec,
+    num_zero,
+    num_fmt) {
   suffix <- number <- rep("", length(x))
   suffix <- ifelse(x > 1e3, "K", suffix)
   suffix <- ifelse(x > 1e6, "M", suffix)
@@ -91,13 +89,12 @@ format_num_suffix <- function(
 
 # Format non-integer numeric values
 format_non_integer_numeric <- function(
-  value,
-  digits,
-  num_mark_big,
-  num_mark_dec,
-  num_zero,
-  num_fmt
-) {
+    value,
+    digits,
+    num_mark_big,
+    num_mark_dec,
+    num_zero,
+    num_fmt) {
   if (num_fmt == "significant") {
     return(
       format(
@@ -122,8 +119,7 @@ format_non_integer_numeric <- function(
             decimal.mark = num_mark_dec,
             scientific = FALSE
           )
-        }
-      )
+        })
     )
   } else if (num_fmt == "decimal") {
     return(
@@ -153,13 +149,12 @@ format_non_integer_numeric <- function(
 
 # Format integer values
 format_integer <- function(
-  value,
-  digits,
-  num_mark_big,
-  num_mark_dec,
-  num_zero,
-  num_fmt
-) {
+    value,
+    digits,
+    num_mark_big,
+    num_mark_dec,
+    num_zero,
+    num_fmt) {
   if (num_fmt == "scientific") {
     return(
       formatC(
