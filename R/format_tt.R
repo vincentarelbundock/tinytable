@@ -462,6 +462,7 @@ format_tt_lazy <- function(
       x = x,
       i = i,
       j = j,
+      components = components,
       format_fn = format_vector_sprintf,
       sprintf_pattern = sprintf
     )
@@ -503,6 +504,18 @@ format_tt_lazy <- function(
     )
   }
 
+  # replace before escape, otherwise overaggressive removal
+  if (!isFALSE(replace)) {
+    x <- apply_format(
+      x = x,
+      i = i,
+      j = j,
+      format_fn = format_vector_replace,
+      components = components,
+      replace = replace
+    )
+  }
+
   # escape latex characters
   if (!isFALSE(escape)) {
     if (isTRUE(escape == "latex")) {
@@ -530,16 +543,6 @@ format_tt_lazy <- function(
     if (0 %in% i && !identical(components, "all")) {
       x <- apply_colnames(x, escape_text, output = o)
     }
-  }
-
-  if (!isFALSE(replace)) {
-    x <- apply_format(
-      x = x,
-      i = i,
-      j = j,
-      format_fn = format_vector_replace,
-      replace = replace
-    )
   }
 
   # markdown and quarto at the very end
