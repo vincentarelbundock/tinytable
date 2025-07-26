@@ -24,7 +24,6 @@ setClass(
   Class = "tinytable",
   slots = representation(
     body = "character",
-    index_body = "numeric",
     bootstrap_class = "character",
     bootstrap_css_rule = "character",
     caption = "NULLorCharacter",
@@ -33,7 +32,7 @@ setClass(
     data_group_i = "data.frame",
     data_group_j = "data.frame",
     data_body = "data.frame",
-    group_index_i = "numeric",
+    index_body = "numeric",
     index_group_i = "numeric",
     height = "NULLorNumeric",
     id = "character",
@@ -96,8 +95,8 @@ setMethod(
     # empty
     .Object@data_group_i <- data.frame()
     .Object@data_group_j <- data.frame()
-    .Object@index_group_i <- numeric(0)
     .Object@index_body <- numeric(0)
+    .Object@index_group_i <- numeric(0)
     .Object@id <- get_id("tinytable_")
     .Object@output <- "tinytable"
     .Object@output_dir <- getwd()

@@ -5,9 +5,9 @@ style_eval_grid <- function(x) {
   if (nrow(sty) == 0) {
     return(x)
   }
-  
+
   sty <- prepare_grid_style(x)
-  
+
   # Ensure sty is a proper data frame after prepare_grid_style
   if (!is.data.frame(sty) || nrow(sty) == 0) {
     return(x)
@@ -82,7 +82,7 @@ grid_colspan <- function(x) {
   if (nrow(colspan_rows) == 0) {
     return(x)
   }
-  
+
   # Get the table string and split into lines
   table_lines <- strsplit(x@table_string, "\\n")[[1]]
 
@@ -97,7 +97,7 @@ grid_colspan <- function(x) {
   } else {
     header_sep_line <- header_sep_line[1]
   }
-  
+
 
   for (idx in seq_len(nrow(colspan_rows))) {
     row_idx <- colspan_rows[idx, "i"]
@@ -161,19 +161,19 @@ grid_colspan <- function(x) {
 
 prepare_grid_style <- function(x) {
   sty <- x@style
-  
+
   # Return early if no styles
   if (nrow(sty) == 0) {
     return(sty)
   }
-  
+
   # Ensure sty is a data frame (defensive programming)
   if (!is.data.frame(sty)) {
     return(data.frame())
   }
-  
+
   all_i <- seq_len(nrow(x))
-  idx_g <- x@group_index_i
+  idx_g <- x@index_group_i
   idx_d <- setdiff(all_i, idx_g)
 
   # expand i to full rows

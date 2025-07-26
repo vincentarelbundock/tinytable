@@ -119,7 +119,6 @@ group_tt <- function(
     # Calculate the correct indices: each position gets shifted by the number of insertions before it
     positions <- k[[1]]
     idx <- positions + cumsum(rep(1, length(positions))) - 1
-    x@group_index_i <- c(x@group_index_i, idx)
     x@nrow <- x@nrow + length(positions)
 
     # Add group matrix data to @data_group_i and track indices in @index_group_i
@@ -173,7 +172,6 @@ group_tt <- function(
     # Calculate indices and update table
     positions <- k[[1]]
     idx <- positions + cumsum(rep(1, length(positions))) - 1
-    x@group_index_i <- c(x@group_index_i, idx)
     x@nrow <- x@nrow + length(positions)
 
     # Add group matrix data to @data_group_i and track indices in @index_group_i

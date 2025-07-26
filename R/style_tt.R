@@ -204,7 +204,7 @@ style_tt <- function(
     }
     return(out)
   } else if (any(i %in% c("groupi", "~groupi"))) {
-    idx <- out@group_index_i
+    idx <- out@index_group_i
     # warning is important here becuase the order of operations matters and we cannot evaluate `"groupi"` lazily
     if (length(idx) == 0) {
       msg <- "To style group labels, `group_tt()` must be called before `style_tt()`."
