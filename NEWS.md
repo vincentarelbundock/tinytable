@@ -7,6 +7,7 @@ Breaking changes:
 * `theme_spacing()` function has been removed. Use the new `height` argument in `tt()` instead for row height control.
 * Indexing for `format_tt()` is now consistent with `style_tt()` and `plot_tt()`. It refers to rows and columns in the final table, after insertions by `group_tt()`.
 * Names of S4 slots have changed. Most notably `@group_index_i` becomes `@index_group_i`. Reminder: internal S4 slots are not part of the public API and should not be used directly by users.
+* Argument `indent` is deprecated and will be removed in a future version. Use `style_tt(x, "~group", indent = 1)` instead.
 
 New features:
 

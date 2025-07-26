@@ -8,14 +8,12 @@ block[ // start block
 
   #let style-dict = (
     // tinytable style-dict after
-    "3_0": 0, "2_0": 1, "4_0": 1, "5_0": 2, "6_0": 2, "1_1": 3, "0_1": 3, "2_1": 3, "3_1": 3, "4_1": 3, "5_1": 3, "6_1": 3
+    "2_0": 0, "3_0": 0, "4_0": 0, "1_1": 1, "0_1": 1, "2_1": 1, "3_1": 1, "4_1": 1, "5_1": 1, "6_1": 1
   )
 
   #let style-array = ( 
     // tinytable cell style after
     (bold: true,),
-    (bold: true, indent: 1em,),
-    (indent: 1em,),
     (italic: true,),
   )
 

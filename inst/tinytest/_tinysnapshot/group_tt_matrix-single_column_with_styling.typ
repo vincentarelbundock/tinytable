@@ -8,13 +8,12 @@ block[ // start block
 
   #let style-dict = (
     // tinytable style-dict after
-    "2_0": 0, "2_1": 0, "2_2": 0, "2_3": 0, "2_4": 0, "1_0": 1, "3_0": 1, "4_0": 1, "5_0": 1
+    "2_0": 0, "2_1": 0, "2_2": 0, "2_3": 0, "2_4": 0
   )
 
   #let style-array = ( 
     // tinytable cell style after
     (background: rgb("#ADD8E6"),),
-    (indent: 1em,),
   )
 
   // Helper function to get cell style
