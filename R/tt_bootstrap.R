@@ -170,7 +170,7 @@ setMethod(
 
     # Calculate row indices with vectorized operations
     # All rows in table_dataframe should get consecutive indices starting from 1
-    # Group rows have already been inserted by insert_group_i()
+    # Group rows have already been inserted by rbind_**()
     # The user's row indices (i parameter) should match the HTML data-row values
     i_idx <- seq_len(nrow(x@data_body))
 
@@ -238,8 +238,7 @@ setMethod(
     }
 
     return(x)
-  }
-)
+  })
 
 bootstrap_setting <- function(x, new, component = "row") {
   att <- attributes(x)
