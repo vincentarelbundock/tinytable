@@ -1,33 +1,3 @@
-format_quarto <- function(i, col, x) {
-  out <- x@data_body
-  if (isTRUE(x@output == "html")) {
-    fun <- function(z) {
-      z@table_string <- sub(
-        "data-quarto-disable-processing='true'",
-        "data-quarto-disable-processing='false'",
-        z@table_string,
-        fixed = TRUE
-      )
-      return(z)
-    }
-    x <- style_tt(x, finalize = fun)
-    out[i, col] <- sprintf(
-      '<span data-qmd="%s"></span>',
-      out[i, col, drop = TRUE]
-    )
-  } else if (isTRUE(x@output == "latex")) {
-    assert_dependency("base64enc")
-    tmp <- sapply(
-      out[i, col, drop = TRUE],
-      function(z) base64enc::base64encode(charToRaw(z))
-    )
-    out[i, col] <- sprintf("\\QuartoMarkdownBase64{%s}", tmp)
-  }
-
-  x@data_body <- out
-  return(x)
-}
-
 apply_caption <- function(x, format_fn, ...) {
   if (!inherits(x, "tinytable")) {
     return(x)
@@ -505,8 +475,8 @@ format_tt_lazy <- function(
   }
 
   # close to last
-if (isTRUE(math)) {
-  x <- apply_format(
+  if (isTRUE(math)) {
+    x <- apply_format(
       x = x,
       i = i,
       j = j,
@@ -516,8 +486,8 @@ if (isTRUE(math)) {
     )
   }
 
-# replace before escape, otherwise overaggressive removal
-x <- apply_format(
+  # replace before escape, otherwise overaggressive removal
+  x <- apply_format(
     x = x,
     i = i,
     j = j,
@@ -583,7 +553,7 @@ x <- apply_format(
   }
 
   if (!inherits(x, "tinytable") && x_is_tibble) {
-      x <- tibble::as_tibble(x)
+    x <- tibble::as_tibble(x)
   }
 
   return(x)

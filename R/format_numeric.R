@@ -9,7 +9,7 @@ format_numeric <- function(
     num_zero,
     num_fmt) {
   if (!is.numeric(value) || is.null(digits)) {
-    return(value)
+    return(NULL)
   }
 
   # numeric suffix
