@@ -91,8 +91,12 @@ apply_format <- function(
 ) {
   if (is.character(components)) {
     if ("all" %in% components) {
-      components <- c("colnames", "caption", "notes", "groupi", "groupj")
+      components <- c("colnames", "caption", "notes", "groupi", "groupj", "cells")
     }
+  }
+
+  if (identical(components, "groupi")) {
+    i <- x@index_group_i
   }
 
   if (inherits(x, "tinytable")) {
@@ -116,53 +120,55 @@ apply_format <- function(
     x <- apply_group_j(x, format_fn, ...)
   }
 
-  # Apply to specific cells
-  # Filter columns based on inherits argument and original data
-  j_filtered <- j
+  if (is.null(components) || any(c("cells", "groupi") %in% components)) {
+    # Apply to specific cells
+    # Filter columns based on inherits argument and original data
+    j_filtered <- j
 
-  if (inherits(x, "tinytable")) {
-    classref <- x@data_body
-  } else {
-    classref <- out
-  }
-
-  if (is.character(inherit_class)) {
-    j_filtered <- j[sapply(j, function(col) inherits(classref[[col]], inherit_class))]
-  } else if (is.function(inherit_class)) {
-    j_filtered <- j[sapply(j, function(col) inherit_class(classref[[col]]))]
-  }
-
-  # Default behavior: use original values, fall back to out if ori is not available
-  for (col in j_filtered) {
-    idx_body <- if (inherits(x, "tinytable")) x@index_body else seq_len(nrow(out))
-
-    # original data rows
-    if (original_data) {
-      idx_out <- i
-
-      idx_out <- intersect(i, idx_body)
-      idx_ori <- seq_len(nrow(ori))[idx_body %in% i]
-      tmp <- tryCatch(format_fn(ori[idx_ori, col, drop = TRUE], ...),
-        error = function(e) NULL)
-      if (length(tmp) > 0) out[idx_out, col] <- tmp
-
-      # row groups
-      idx_out <- setdiff(i, idx_body)
-      tmp <- tryCatch(format_fn(out[idx_out, col, drop = TRUE], ...),
-        error = function(e) NULL)
-      if (length(tmp) > 0) out[idx_out, col] <- tmp
-
+    if (inherits(x, "tinytable")) {
+      classref <- x@data_body
     } else {
-      tmp <- tryCatch(format_fn(out[i, col, drop = TRUE], ...),
-        error = function(e) NULL)
-      if (length(tmp) > 0) out[i, col] <- tmp
+      classref <- out
     }
-  }
 
-  if (inherits(x, "tinytable")) {
-    x@data_body <- out
-  } else {
-    x <- out
+    if (is.character(inherit_class)) {
+      j_filtered <- j[sapply(j, function(col) inherits(classref[[col]], inherit_class))]
+    } else if (is.function(inherit_class)) {
+      j_filtered <- j[sapply(j, function(col) inherit_class(classref[[col]]))]
+    }
+
+    # Default behavior: use original values, fall back to out if ori is not available
+    for (col in j_filtered) {
+      idx_body <- if (inherits(x, "tinytable")) x@index_body else seq_len(nrow(out))
+
+      # original data rows
+      if (original_data) {
+        idx_out <- i
+
+        idx_out <- intersect(i, idx_body)
+        idx_ori <- seq_len(nrow(ori))[idx_body %in% i]
+        tmp <- tryCatch(format_fn(ori[idx_ori, col, drop = TRUE], ...),
+          error = function(e) NULL)
+        if (length(tmp) > 0) out[idx_out, col] <- tmp
+
+        # row groups
+        idx_out <- setdiff(i, idx_body)
+        tmp <- tryCatch(format_fn(out[idx_out, col, drop = TRUE], ...),
+          error = function(e) NULL)
+        if (length(tmp) > 0) out[idx_out, col] <- tmp
+
+      } else {
+        tmp <- tryCatch(format_fn(out[i, col, drop = TRUE], ...),
+          error = function(e) NULL)
+        if (length(tmp) > 0) out[i, col] <- tmp
+      }
+    }
+
+    if (inherits(x, "tinytable")) {
+      x@data_body <- out
+    } else {
+      x <- out
+    }
   }
 
 
@@ -499,8 +505,8 @@ format_tt_lazy <- function(
   }
 
   # close to last
-  if (isTRUE(math)) {
-    x <- apply_format(
+if (isTRUE(math)) {
+  x <- apply_format(
       x = x,
       i = i,
       j = j,
@@ -510,8 +516,8 @@ format_tt_lazy <- function(
     )
   }
 
-  # replace before escape, otherwise overaggressive removal
-  x <- apply_format(
+# replace before escape, otherwise overaggressive removal
+x <- apply_format(
     x = x,
     i = i,
     j = j,

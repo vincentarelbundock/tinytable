@@ -47,8 +47,8 @@ format_vector_replace <- function(vec, replace = NULL) {
   result <- vec
   for (w in seq_along(replace)) {
     for (z in seq_along(result)) {
-      new <- replace[[w]]
-      old <- names(replace)[[w]]
+      old <- replace[[w]]
+      new <- names(replace)[[w]]
       if (identical(old, result[z])) {
         result[z] <- new
       }
