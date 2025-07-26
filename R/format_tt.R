@@ -136,6 +136,30 @@ apply_cells <- function(out, i, j, format_fn, ...) {
   return(out)
 }
 
+# Map final table indices to body data indices
+map_final_to_body <- function(final_indices, x) {
+  if (!inherits(x, "tinytable")) {
+    return(final_indices)
+  }
+  
+  # If no groups, indices map directly
+  if (length(x@index_body) == 0) {
+    return(final_indices)
+  }
+  
+  # Map final table positions to body positions
+  body_indices <- integer(0)
+  for (idx in final_indices) {
+    # Check if this final position corresponds to a body row
+    body_pos <- which(x@index_body == idx)
+    if (length(body_pos) > 0) {
+      body_indices <- c(body_indices, body_pos)
+    }
+  }
+  
+  return(body_indices)
+}
+
 apply_caption <- function(x, format_fn, ...) {
   if (!inherits(x, "tinytable")) {
     return(x)
@@ -206,7 +230,7 @@ apply_format <- function(
   format_fn,
   ori = NULL,
   components = NULL,
-  inherits = NULL,
+  inherit_class = NULL,
   ...
 ) {
   if (is.character(components)) {
@@ -239,19 +263,19 @@ apply_format <- function(
   # Apply to specific cells
   # Filter columns based on inherits argument
   j_filtered <- j
-  if (is.character(inherits)) {
+  if (is.character(inherit_class)) {
     # Always use original data for inherits check to ensure consistent behavior
     if (!is.null(ori)) {
-      j_filtered <- j[sapply(j, function(col) inherits(ori[[col]], inherits))]
+      j_filtered <- j[sapply(j, function(col) inherits(ori[[col]], inherit_class))]
     } else {
-      j_filtered <- j[sapply(j, function(col) inherits(out[[col]], inherits))]
+      j_filtered <- j[sapply(j, function(col) inherits(out[[col]], inherit_class))]
     }
-  } else if (is.function(inherits)) {
+  } else if (is.function(inherit_class)) {
     # Always use original data for inherits check to ensure consistent behavior
     if (!is.null(ori)) {
-      j_filtered <- j[sapply(j, function(col) inherits(ori[[col]]))]
+      j_filtered <- j[sapply(j, function(col) inherit_class(ori[[col]]))]
     } else {
-      j_filtered <- j[sapply(j, function(col) inherits(out[[col]]))]
+      j_filtered <- j[sapply(j, function(col) inherit_class(out[[col]]))]
     }
   }
 
@@ -584,7 +608,7 @@ format_tt_lazy <- function(
     j = j,
     format_fn = format_vector_logical,
     ori = ori,
-    inherits = "logical",
+    inherit_class = "logical",
     bool_fn = bool
   )
   out <- result$out
@@ -597,7 +621,7 @@ format_tt_lazy <- function(
     j = j,
     format_fn = format_vector_date,
     ori = ori,
-    inherits = "Date",
+    inherit_class = "Date",
     date_format = date_format
   )
   out <- result$out
@@ -617,7 +641,7 @@ format_tt_lazy <- function(
       num_mark_dec = num_mark_dec,
       num_zero = num_zero,
       num_fmt = num_fmt,
-      inherits = is.numeric
+      inherit_class = is.numeric
     )
     out <- result$out
     x <- result$x
@@ -633,7 +657,7 @@ format_tt_lazy <- function(
     j = j,
     format_fn = format_vector_other,
     ori = ori,
-    inherits = is_other,
+    inherit_class = is_other,
     other_fn = other
   )
   out <- result$out

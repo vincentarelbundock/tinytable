@@ -282,16 +282,24 @@ expect_snapshot_print(tab, label = "format_tt-format_components_vignette_01.tex"
 options(tinytable_print_output = NULL)
 
 
-exit_file("TODO: broken markdown output")
 
 
-# TODO: group not formatted
-# Test 1: Basic group_tt with sprintf formatting applied to all rows
+exit_file("broken groups")
+
+# format group_tt(i)
+dat <- data.frame(x = 1:4, y = letters[1:4])
+tt(dat) |>
+  group_tt(i = list("Group A" = 2, "Group B" = 4)) |>
+  format_tt(i = c(2, 5), j = 1, sprintf = "_%s_") |>
+  format_tt(i = c(1, 3), j = 1, sprintf = "*%s*")
+expect_snapshot_print(tab, label = "format_tt-group_tt_01.md")
+
+
 dat1 <- data.frame(
   values = c(123.456, 789.012, 345.678, 901.234),
   labels = c("A", "B", "C", "D")
 )
 tab1 <- tt(dat1) |>
   group_tt(i = list("First Group" = 2, "Second Group" = 4)) |>
-  format_tt(j = 1, sprintf = "((%.1f))")
-expect_snapshot_print(tab1, label = "format_tt-group_two_step_basic")
+  format_tt(j = 1, sprintf = "((%.s))")
+expect_snapshot_print(tab1, label = "format_tt-group_tt_02.md")
