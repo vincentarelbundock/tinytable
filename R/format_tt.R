@@ -126,7 +126,7 @@ apply_format <- function(
     j_filtered <- j
 
     if (inherits(x, "tinytable")) {
-      classref <- x@data_body
+      classref <- x@data
     } else {
       classref <- out
     }
