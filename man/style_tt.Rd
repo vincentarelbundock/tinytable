@@ -41,7 +41,7 @@ style_tt(
 \itemize{
 \item Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.
 \item Logical matrix: A matrix with the same number of rows and columns as \code{x}. \code{i=0} is the header, and negative values are higher level headers. Row indices refer to rows \emph{after} the insertion of row labels by \code{group_tt()}, when applicable.
-\item String: "caption", "groupi", "notes".
+\item String: "caption", "groupi", "~groupi", "notes".
 }}
 
 \item{j}{Column indices where the styling should be applied. Can be:
@@ -209,5 +209,13 @@ cell{2}{2} = {r=4,c=2}{bg=azure7},
 "
 tt(mtcars[1:5, 1:4], theme = "void") |>
   style_tt(tabularray_inner = inner)
+
+# Style group rows and non-group rows
+dat <- data.frame(x = 1:6, y = letters[1:6])
+dat |>
+  tt() |>
+  group_tt(i = list("Group A" = 3)) |>
+  style_tt(i = "groupi", background = "lightblue") |>
+  style_tt(i = "~groupi", background = "lightgray")
 
 }

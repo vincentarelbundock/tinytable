@@ -86,13 +86,14 @@ tt(df) |> group_tt(i = df$am)
 
 ### Styling row groups
 
-Calculating the location of rows can be cumbersome. Instead of doing this by hand, we can use the "groupi" shortcut to style rows. 
+Calculating the location of rows can be cumbersome. Instead of doing this by hand, we can use the "groupi" shortcut to style rows and "~groupi" to style all non-group rows.
 
 ```{r}
 library(magrittr)
 tt(df) %>%
   group_tt(i = df$am) %>%
-  style_tt(i = "groupi", background = "pink")
+  style_tt(i = "groupi", background = "pink") %>%
+  style_tt(i = "~groupi", background = "lightgray")
 ```
 
 ## Row matrix insertion

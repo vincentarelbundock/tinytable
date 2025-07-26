@@ -7,7 +7,7 @@
 #' @param i Numeric vector, logical matrix, or string.
 #'   - Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.
 #'   - Logical matrix: A matrix with the same number of rows and columns as `x`. `i=0` is the header, and negative values are higher level headers. Row indices refer to rows *after* the insertion of row labels by `group_tt()`, when applicable.
-#'   - String: "caption", "groupi", "notes".
+#'   - String: "caption", "groupi", "~groupi", "notes".
 #' @param j Column indices where the styling should be applied. Can be:
 #' + Integer vectors indicating column positions.
 #' + Character vector indicating column names.
@@ -121,6 +121,14 @@
 #' tt(mtcars[1:5, 1:4], theme = "void") |>
 #'   style_tt(tabularray_inner = inner)
 #'
+#' # Style group rows and non-group rows
+#' dat <- data.frame(x = 1:6, y = letters[1:6])
+#' dat |>
+#'   tt() |>
+#'   group_tt(i = list("Group A" = 3)) |>
+#'   style_tt(i = "groupi", background = "lightblue") |>
+#'   style_tt(i = "~groupi", background = "lightgray")
+#'
 style_tt <- function(
   x,
   i = NULL,
@@ -195,14 +203,17 @@ style_tt <- function(
       out@style_caption <- tmp
     }
     return(out)
-  } else if (identical(i, "groupi")) {
+  } else if (any(i %in% c("groupi", "~groupi"))) {
     idx <- out@group_index_i
+    # warning is important here becuase the order of operations matters and we cannot evaluate `"groupi"` lazily
     if (length(idx) == 0) {
       msg <- "To style group labels, `group_tt()` must be called before `style_tt()`."
       warning(msg, call. = FALSE)
       return(out)
-    } else {
+    } else if (identical(i, "groupi")) {
       i <- idx
+    } else if (identical(i, "~groupi")) {
+      i <- setdiff(seq_len(nrow(out)), idx)
     }
   }
 
