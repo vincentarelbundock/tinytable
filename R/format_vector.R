@@ -48,9 +48,9 @@ format_vector_replace <- function(vec, replace = NULL) {
 
   result <- vec
 
-  for (new in names(replace)) {
-    old_vals <- replace[[new]]
-
+  for (z in seq_along(replace)) {
+    new <- names(replace)[z]
+    old_vals <- replace[[z]]
     for (old in old_vals) {
       match_idx <- vapply(seq_along(result), function(i) {
         x <- result[[i]]
