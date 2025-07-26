@@ -282,16 +282,12 @@ expect_snapshot_print(tab, label = "format_tt-format_components_vignette_01.tex"
 options(tinytable_print_output = NULL)
 
 
-
-
-exit_file("broken groups")
-
 # format group_tt(i)
 dat <- data.frame(x = 1:4, y = letters[1:4])
-tt(dat) |>
+tab <- tt(dat) |>
   group_tt(i = list("Group A" = 2, "Group B" = 4)) |>
   format_tt(i = c(2, 5), j = 1, sprintf = "_%s_") |>
-  format_tt(i = c(1, 3), j = 1, sprintf = "*%s*")
+  format_tt(i = 1:3, j = 1, sprintf = "*%s*")
 expect_snapshot_print(tab, label = "format_tt-group_tt_01.md")
 
 
@@ -301,5 +297,5 @@ dat1 <- data.frame(
 )
 tab1 <- tt(dat1) |>
   group_tt(i = list("First Group" = 2, "Second Group" = 4)) |>
-  format_tt(j = 1, sprintf = "((%.s))")
+  format_tt(j = 1, sprintf = "((%s))")
 expect_snapshot_print(tab1, label = "format_tt-group_tt_02.md")

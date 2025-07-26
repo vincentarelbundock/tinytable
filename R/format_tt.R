@@ -136,30 +136,6 @@ apply_cells <- function(out, i, j, format_fn, ...) {
   return(out)
 }
 
-# Map final table indices to body data indices
-map_final_to_body <- function(final_indices, x) {
-  if (!inherits(x, "tinytable")) {
-    return(final_indices)
-  }
-  
-  # If no groups, indices map directly
-  if (length(x@index_body) == 0) {
-    return(final_indices)
-  }
-  
-  # Map final table positions to body positions
-  body_indices <- integer(0)
-  for (idx in final_indices) {
-    # Check if this final position corresponds to a body row
-    body_pos <- which(x@index_body == idx)
-    if (length(body_pos) > 0) {
-      body_indices <- c(body_indices, body_pos)
-    }
-  }
-  
-  return(body_indices)
-}
-
 apply_caption <- function(x, format_fn, ...) {
   if (!inherits(x, "tinytable")) {
     return(x)
@@ -185,15 +161,9 @@ apply_notes <- function(x, format_fn, ...) {
   return(x)
 }
 
-apply_group <- function(x, format_fn, slot = "data_group_i", ...) {
+apply_group_j <- function(x, format_fn, ...) {
   if (!inherits(x, "tinytable")) return(x)
-
-  if (slot == "data_group_i") {
-    data_slot <- x@data_group_i
-  } else if (slot == "data_group_j") {
-    data_slot <- x@data_group_j
-  }
-
+  data_slot <- x@data_group_j
   if (nrow(data_slot) > 0) {
     for (row_idx in seq_len(nrow(data_slot))) {
       for (col_idx in seq_len(ncol(data_slot))) {
@@ -207,12 +177,7 @@ apply_group <- function(x, format_fn, slot = "data_group_i", ...) {
       }
     }
   }
-
-  if (slot == "data_group_i") {
-    x@data_group_i <- data_slot
-  } else if (slot == "data_group_j") {
-    x@data_group_j <- data_slot
-  }
+  x@data_group_j <- data_slot
   return(x)
 }
 
@@ -252,12 +217,8 @@ apply_format <- function(
   if ("notes" %in% components) {
     x <- apply_notes(x, format_fn, ...)
   }
-  # TODO: we might not need this because they are already inserted in body
-  # if ("groupi" %in% components) {
-  #   x <- apply_group(x, format_fn, slot = "data_group_i", ...)
-  # }
   if ("groupj" %in% components) {
-    x <- apply_group(x, format_fn, slot = "data_group_j", ...)
+    x <- apply_group_j(x, format_fn, ...)
   }
 
   # Apply to specific cells
@@ -283,8 +244,18 @@ apply_format <- function(
     # Default behavior: use original values, fall back to out if ori is not available
     if (!is.null(ori)) {
       for (col in j_filtered) {
-        tmp <- format_fn(ori[i, col, drop = TRUE], ...)
-        if (!is.null(tmp)) out[i, col] <- tmp
+        idx_body <- if (inherits(x, "tinytable")) x@index_body else seq_len(nrow(out))
+
+        # original data rows
+        idx_ori <- seq_len(nrow(ori))[idx_body %in% i]
+        idx_out <- intersect(i, idx_body)
+        tmp <- format_fn(ori[idx_ori, col, drop = TRUE], ...)
+        if (!is.null(tmp)) out[idx_out, col] <- tmp
+
+        # row groups
+        idx_out <- setdiff(i, idx_body)
+        tmp <- format_fn(out[idx_out, col, drop = TRUE], ...)
+        if (!is.null(tmp)) out[idx_out, col] <- tmp
       }
     } else {
       # Fall back to applying to current out values if no original data
@@ -330,22 +301,24 @@ apply_format_replace <- function(
   if ("notes" %in% components) {
     x <- apply_notes(x, format_fn, ...)
   }
-  if ("groupi" %in% components) {
-    x <- apply_group(x, format_fn, slot = "data_group_i", ...)
-  }
   if ("groupj" %in% components) {
-    x <- apply_group(x, format_fn, slot = "data_group_j", ...)
+    x <- apply_group_j(x, format_fn, ...)
   }
 
   # Apply to specific cells - format_vector_replace needs both ori and out values
   if (length(j) > 0 && !is.null(ori)) {
     for (col in j) {
-      tmp <- format_fn(
-        ori[i, col, drop = TRUE],
-        out[i, col, drop = TRUE],
-        ...
-      )
-      if (!is.null(tmp)) out[i, col] <- tmp
+        idx_body <- if (inherits(x, "tinytable")) x@index_body else seq_len(nrow(out))
+        # original data rows
+        idx_ori <- seq_len(nrow(ori))[idx_body %in% i]
+        idx_out <- intersect(i, idx_body)
+        tmp <- format_fn(ori[idx_ori, col, drop = TRUE], ...)
+        if (!is.null(tmp)) out[idx_out, col] <- tmp
+
+        # row groups
+        idx_out <- setdiff(i, idx_body)
+        tmp <- format_fn(out[idx_out, col, drop = TRUE], ...)
+        if (!is.null(tmp)) out[idx_out, col] <- tmp
     }
   }
 
@@ -713,7 +686,10 @@ format_tt_lazy <- function(
     } else {
       # Original behavior for cell-specific formatting
       for (col in j) {
-        out[i, col] <- format_vector_custom(ori[i, col, drop = TRUE], fn)
+        tmp <- tryCatch(
+          format_vector_custom(ori[i, col, drop = TRUE], fn), 
+          error = function(e) NULL)
+        out[i, col] <- if (is.null(tmp)) tmp else out[i, col]
       }
     }
   }

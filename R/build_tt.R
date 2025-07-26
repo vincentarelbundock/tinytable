@@ -8,7 +8,7 @@
 #' Build group header and body parts with position calculations
 #' @keywords internal
 #' @noRd
-rbind_i_j <- function(x) {
+rbind_body_groupi <- function(x) {
   # Reconstruct the final table by combining formatted data_body and data_group_i parts
   if (nrow(x@data_group_i) == 0) {
     # No groups - @data_body already contains the final formatted data
@@ -93,14 +93,14 @@ build_tt <- function(x, output = NULL) {
     x@index_body <- body_positions
   }
 
+  # insert group rows into body
+  x <- rbind_body_groupi(x)
+
   # format each component individually
   for (l in x@lazy_format) {
     l[["x"]] <- x
     x <- eval(l)
   }
-
-  # reconstruct the final table
-  x <- rbind_i_j(x)
 
   # add footnote markers just after formatting, otherwise appending converts to string
   x <- footnote_markers(x)
