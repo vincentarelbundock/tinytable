@@ -56,7 +56,7 @@ group_tt_ij_k <- function(x, i, j) {
 
   # Validate row insertion positions against table size
   if (any(i > nrow(x) + 1)) {
-    stop(sprintf("`i` should be smaller than %s", nrow(x) + 1), call. = FALSE)
+    stop(sprintf("`i` should be smaller than %s", nrow(x) + 2), call. = FALSE)
   }
 
   # If single position but multiple matrix rows, replicate the position
