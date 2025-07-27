@@ -203,18 +203,6 @@ style_tt <- function(
       out@style_caption <- tmp
     }
     return(out)
-  } else if (any(i %in% c("groupi", "~groupi"))) {
-    idx <- out@index_group_i
-    # warning is important here becuase the order of operations matters and we cannot evaluate `"groupi"` lazily
-    if (length(idx) == 0) {
-      msg <- "To style group labels, `group_tt()` must be called before `style_tt()`."
-      warning(msg, call. = FALSE)
-      return(out)
-    } else if (identical(i, "groupi")) {
-      i <- idx
-    } else if (identical(i, "~groupi")) {
-      i <- setdiff(seq_len(nrow(out)), idx)
-    }
   }
 
   if (!is.null(bootstrap_class)) {
@@ -421,7 +409,7 @@ assert_style_tt <- function(
     }
   }
 
-  ival <- sanitize_i(i, x)
+  ival <- sanitize_i(i, x, calling_function = "style_tt")
   jval <- sanitize_j(j, x)
   inull <- isTRUE(attr(ival, "null"))
   jnull <- isTRUE(attr(jval, "null"))

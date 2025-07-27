@@ -23,24 +23,25 @@ sanitize_i <- function(
 ) {
   if (is.character(i)) {
     # format_tt() accepts certain character inputs
-    if (identical(calling_function, "format_tt")) {
-      assert_true(all(
-        i %in%
-          c("colnames", "notes", "caption", "groupi", "groupj", "cells", "all")
-      ))
-      return(i)
-    } else if (identical(calling_function, "style_tt")) {
-      if (any(i %in% c("colnames", "groupj", "all", "cells"))) {
-        stop(
-          "This `i` string is not supported in `style_tt()`. Use numeric indices instead.",
-          call. = FALSE
-        )
-      }
-      return(i)
-    } else {
-      return(i)
+    # if (calling_function %in% c("format_tt", "style_tt")) {
+      assert_choice(i,
+        choice = c("caption", "colnames", "groupi", "~groupi", "groupj", "notes"),
+        null.ok = TRUE
+      )
     }
-  }
+    if (identical(i, "groupi")) {
+      idx <- x@index_group_i
+      if (length(idx) == 0) {
+        msg <- "No grouping index found. Please use `group_tt()` first."
+        stop(msg, call. = FALSE)
+      }
+      i <- x@index_group_i
+    } else if (identical(i, "~groupi")) {
+      i <- setdiff(seq_len(nrow(x)), x@index_group_i)
+    } else if (identical(i, "groupj")) {
+      i <- -(0:x@nhead)
+    }
+  # }
 
   if (is.matrix(i) && is.logical(i)) {
     return(i)
@@ -48,6 +49,7 @@ sanitize_i <- function(
 
   out <- seq_len(nrow(x))
   assert_numeric(i, null.ok = TRUE, name = "i")
+
   if (is.null(i) && isTRUE(lazy)) {
     out <- NA
     attr(out, "null") <- TRUE
@@ -63,6 +65,7 @@ sanitize_i <- function(
     attr(out, "body") <- out[out > 0]
     attr(out, "head") <- out[out < 1]
   }
+
   return(out)
 }
 

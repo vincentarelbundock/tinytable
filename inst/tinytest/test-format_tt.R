@@ -267,6 +267,28 @@ expect_true(grepl("Prefix_x", save_tt(tab4, "markdown"), fixed = TRUE))
 expect_true(grepl("Prefix_Test Caption", save_tt(tab4, "markdown"), fixed = TRUE))
 
 
+# groupi vs. ~groupi
+tab = head(iris) |>
+  tt() |>
+  group_tt(i = list("Hello" = 1, "World" = 3)) |>
+  format_tt("~groupi", j = 1, sprintf = "--%s--") |>
+  print("dataframe")
+expect_true("Hello" %in% tab[[1]])
+expect_true("--5.1--" %in% tab[[1]])
+expect_false("--Hello--" %in% tab[[1]])
+expect_false("5.1" %in% tab[[1]])
+
+tab = head(iris) |>
+  tt() |>
+  group_tt(i = list("Hello" = 1, "World" = 3)) |>
+  format_tt("groupi", j = 1, sprintf = "--%s--") |>
+  print("dataframe")
+expect_true("--Hello--" %in% tab[[1]])
+expect_true("5.1" %in% tab[[1]])
+expect_false("Hello" %in% tab[[1]])
+expect_false("--5.1--" %in% tab[[1]])
+
+
 # Vignette with multiple components
 options(tinytable_print_output = "latex")
 tab <- data.frame(
@@ -278,7 +300,6 @@ tab <- tt(tab, digits = 2, notes = "_Source_: Simulated data.") |>
   format_tt("colnames", fn = \(x) sub("_", " / ", x)) |>
   format_tt("notes", markdown = TRUE) |>
   format_tt("groupi", replace = list("↓" = "Down", "↑" = "Up"))
-tab
 
 expect_snapshot_print(tab, label = "format_tt-format_components_vignette_01.tex")
 options(tinytable_print_output = NULL)

@@ -66,6 +66,7 @@ apply_format <- function(
         "colnames",
         "caption",
         "notes",
+        "~groupi",
         "groupi",
         "groupj",
         "cells"
@@ -98,7 +99,7 @@ apply_format <- function(
     x <- apply_group_j(x, format_fn, ...)
   }
 
-  if (is.null(components) || any(c("cells", "groupi") %in% components)) {
+  if (is.null(components) || any(c("cells", "groupi", "~groupi") %in% components)) {
     # Apply to specific cells
     # Filter columns based on inherits argument and original data
     j_filtered <- j

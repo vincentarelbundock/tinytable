@@ -101,19 +101,6 @@ dat <- data.frame(
   x1 = rnorm(8),
   x2 = rnorm(8)
 )
-expect_warning(
-  tt(dat[, 2:3]) |>
-    style_tt(i = "groupi", color = "white", background = "black") |>
-    group_tt(i = dat$label),
-  pattern = "style.*before"
-)
-
-expect_false(ignore(expect_warning)(
-  tt(dat[, 2:3]) |>
-    group_tt(i = dat$label) |>
-    style_tt(i = "groupi", color = "white", background = "black")
-))
-
 tab <- tt(dat[, 2:3]) |>
   group_tt(i = dat$label) |>
   style_tt(i = "groupi", color = "white", background = "black", align = "c")

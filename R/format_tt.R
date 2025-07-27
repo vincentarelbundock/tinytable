@@ -8,7 +8,7 @@
 #' @param x A data frame or a vector to be formatted.
 #' @param i Numeric vector or string.
 #'   - Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.
-#'   - String: Table components to format, "all", "cells", "colnames", "caption", "notes", "groupi" (row group labels), "groupj" (column group labels).
+#'   - String: Table components to format, "all", "cells", "colnames", "caption", "notes", "groupi" (row group labels), "~groupi" (non-group rows), "groupj" (column group labels).
 #'   - If both the `i` and `j` are omitted (default: NULL), formatting is applied to all table elements, including caption, notes, and group labels.
 #' @param digits Number of significant digits or decimal places.
 #' @param num_fmt The format for numeric values; one of 'significant', 'significant_cell', 'decimal', or 'scientific'.
@@ -120,16 +120,6 @@ format_tt <- function(
   replace <- sanitize_replace(replace)
   sanity_num_mark(digits, num_mark_big, num_mark_dec)
 
-  # Check if i contains component names (do this before processing tinytable objects)
-  if (is.character(i)) {
-    components <- i
-    i <- NULL
-  } else if (!is.null(i) || !is.null(j)) {
-    components <- "cells"
-  } else {
-    components <- "all"
-  }
-
   out <- x
 
   if (inherits(out, "tinytable")) {
@@ -152,8 +142,7 @@ format_tt <- function(
       escape = escape,
       markdown = markdown,
       quarto = quarto,
-      other = other,
-      components = components
+      other = other
     )
     out@lazy_format <- c(out@lazy_format, list(cal))
   } else {
@@ -176,8 +165,7 @@ format_tt <- function(
       other = other,
       escape = escape,
       quarto = quarto,
-      markdown = markdown,
-      components = components
+      markdown = markdown
     )
   }
 
@@ -204,14 +192,29 @@ format_tt_lazy <- function(
     escape,
     markdown,
     quarto,
-    other,
-    components = NULL) {
+    other) {
   if (inherits(x, "tbl_df")) {
     assert_dependency("tibble")
     x_is_tibble <- TRUE
     x <- as.data.frame(x, check.names = FALSE)
   } else {
     x_is_tibble <- FALSE
+  }
+
+  # Check if i contains component names (do this before processing tinytable objects)
+  if (identical(i, "groupi")) {
+    components <- "cells"
+    i <- x@index_group_i
+  } else if (identical(i, "~groupi")) {
+    components <- "cells"
+    i <- setdiff(seq_len(nrow(x)), x@index_group_i)
+  } else if (is.character(i)) {
+    components <- i # before wiping i
+    i <- NULL
+  } else if (!is.null(i) || !is.null(j)) {
+    components <- "cells"
+  } else {
+    components <- "all"
   }
 
   # format_tt() supports vectors
