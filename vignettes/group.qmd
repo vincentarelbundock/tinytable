@@ -234,23 +234,26 @@ Here, we may want to repeat the column names for every region. The `group_tt()` 
 Normally, we would call `style_tt(i = "groupi")` to style the row groups, but here we need the actual indices to also style one row below the groups. We can use the `@index_group_i` slot to get the indices of the row groups.
 
 ```{r}
-# Format the numeric values early because repeating column names coerces all data to character
-dat2 = format_tt(dat, digits = 1)
+region_names <- unique(dat$Region)
+region_indices <- rep(match(region_names, dat$Region), each = 2)
 
-# Insert column names as new rows
-dat2 = do.call(rbind, lapply(split(dat2, dat2$Region), \(d) {
-  rbind(as.list(colnames(d)), d)
+rowmat <- do.call(rbind, lapply(region_names, function(name) {
+  rbind(
+    c(name, rep("", 3)),
+    colnames(dat)[2:5]
+  )
 }))
 
-# Create row group variable
-idx = which(dat2$Region == "Region")
-dat2$Region[idx] = dat2$Region[idx + 1]
+rowmat
+```
 
-# Draw table
-dat2 %>% 
-  subset(select = -Region) %>%
-  tt(colnames = FALSE) %>%
-  group_tt(i = dat2$Region) %>%
-  style_tt(i = .@index_group_i + 1, background = "black", color = "white") %>%
-  style_tt(i = .@index_group_i, align = "c", color = "red")
+```{r}
+tab <- tt(dat[, 2:5], colnames = FALSE) |>
+  group_tt(i = region_indices, j = rowmat)
+
+idx <- tab@index_group_i[c(TRUE, diff(tab@index_group_i) != 1)]
+
+tab |>
+  style_tt(i = idx, j = 1, align = "c", colspan = 4, background = "lightgrey", line = "b") |>
+  style_tt(i = idx + 1, line = "tb")
 ```
