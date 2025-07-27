@@ -50,24 +50,32 @@ tt(head(iris)) |>
   group_tt(i = list("After 0" = 1))
 ```
 
+### Styling row groups
+
+
 We can style group rows in the same way as regular rows (caveat: not in Word or Markdown):
 
 ```{r}
-tt(dat) |>
-  group_tt(
-    i = list(
+tab <- tt(dat) |>
+  group_tt(i = list(
       "I like (fake) hamburgers" = 3,
       "She prefers halloumi" = 4,
-      "They love tofu" = 7
-    )
-  ) |>
-  style_tt(
+      "They love tofu" = 7))
+
+tab |> style_tt(
     i = c(3, 5, 9),
     align = "c",
     color = "white",
     background = "gray",
-    bold = TRUE
-  )
+    bold = TRUE)
+```
+
+Calculating the location of rows can be cumbersome. Instead of doing this by hand, we can use the "groupi" shortcut to style rows and "~groupi" (the complement) to style all non-group rows.
+
+```{r}
+tab |> 
+  style_tt(i = "groupi", color = "white", background = "teal") |>
+  style_tt(i = "~groupi", j = 1, indent = 2)
 ```
 
 ### Automatic row groups
@@ -84,19 +92,7 @@ df <- mtcars |>
 tt(df) |> group_tt(i = df$am)
 ```
 
-### Styling row groups
-
-Calculating the location of rows can be cumbersome. Instead of doing this by hand, we can use the "groupi" shortcut to style rows and "~groupi" to style all non-group rows.
-
-```{r}
-library(magrittr)
-tt(df) %>%
-  group_tt(i = df$am) %>%
-  style_tt(i = "groupi", background = "pink") %>%
-  style_tt(i = "~groupi", background = "lightgray")
-```
-
-## Row matrix insertion
+### Row matrix insertion
 
 While the traditional `group_tt(i = list(...))` approach is useful for adding individual labeled rows, sometimes you need to insert multiple rows of data at specific positions. The matrix insertion feature provides a more efficient way to do this.
 
@@ -109,24 +105,20 @@ tt(head(iris, 7)) |>
   group_tt(i = c(2, 5), j = rowmat)
 ```
 
-The matrix must have the same number of columns as the table. However, if you provide a single-column matrix with a number of elements that is a multiple of the table's column count, it will be automatically reshaped to match the table structure. This makes it easy to provide data in a linear format:
+The matrix is expected to have the same number of columns as the table. However, if you provide a single-column matrix with a number of elements that is a multiple of the table's column count, it will be automatically reshaped to match the table structure. This makes it easy to provide data in a linear format:
 
 ```{r}
 rowmat <- matrix(c(
-  "a", "b", "c", "d", "e",
-  1, 2, 3, 4, 5))
+  "-", "-", "-", "-", "-",
+  "x", "x", "x", "x", "x"))
 
-tt(head(iris, 7)) |>
-  group_tt(i = 2, j = rowmat) |>
-  style_tt(i = "groupi", background = "pink")
+tt(head(iris, 7)) |> group_tt(i = 2, j = rowmat) 
 ```
 
-It is also easy to combine this type of insertion with column spanners using the `style_tt()` function.
+We can also insert rows of the group matrix in different positions:
 
 ```{r}
-tt(head(iris, 7)) |>
-  group_tt(i = c(1, 7), j = rowmat) |>
-  style_tt(i = "groupi", j = 1, colspan = 3, rowspan = 2, background = "pink")
+tt(head(iris, 7)) |> group_tt(i = c(1, 8), j = rowmat)
 ```
 
 ## Columns
@@ -141,6 +133,44 @@ tt(dat) |>
       "Halloumi" = 4:5,
       "Tofu" = 7))
 ```
+
+We can stack several extra headers on top of one another:
+
+```{r}
+x <- mtcars[1:4, 1:5]
+tt(x) |>
+  group_tt(j = list("Foo" = 2:3, "Bar" = 5)) |>
+  group_tt(j = list("Hello" = 1:2, "World" = 4:5))
+```
+
+### Styling column groups
+
+To style column headers, we use zero or negative indices:
+
+```{r}
+tt(x) |>
+  group_tt(j = list("Foo" = 2:3, "Bar" = 5)) |>
+  group_tt(j = list("Hello" = 1:2, "World" = 4:5)) |>
+  style_tt(i = 0, color = "#E69F00") |>
+  style_tt(i = -1, color = "#56B4E9") |>
+  style_tt(i = -2, color = "#F0E442")
+```
+
+Alternatively, we can use string shortcuts:
+
+```{r}
+tt(x) |>
+  group_tt(j = list("Foo" = 2:3, "Bar" = 5)) |>
+  group_tt(j = list("Hello" = 1:2, "World" = 4:5)) |>
+  style_tt("groupj", color = "orange") |>
+  style_tt("colnames", color = "teal")
+```
+
+TODO: 
+
+* test error on no group_tt(j). 
+* Test distinction between colnames and groupj. 
+* test i="colnames" when there are no column names
 
 Here is a table with both row and column headers, as well as some styling:
 
@@ -168,14 +198,6 @@ tt(dat) |>
   style_tt(i = -1, color = "teal")
 ```
 
-We can also stack several extra headers on top of one another:
-
-```{r}
-tt(x) |>
-  group_tt(j = list("Foo" = 2:3, "Bar" = 5)) |>
-  group_tt(j = list("Hello" = 1:2, "World" = 4:5))
-```
-
 ### Column names with delimiters
 
 Group labels can be specified using column names with delimiters. For example, some of the columns in this data frame have group identifiers. Note that the first column does not have a group identifier, and that the last column has a group identifier but no column name.
@@ -192,7 +214,9 @@ dat <- data.frame(
 tt(dat) |> group_tt(j = "_")
 ```
 
-## Repeated column names
+## Case studies
+
+### Repeated column names
 
 In some contexts, users wish to repeat the column names to treat them as group labels. Consider this dataset:
 

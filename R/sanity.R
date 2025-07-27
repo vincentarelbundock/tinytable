@@ -39,9 +39,14 @@ sanitize_i <- function(
     } else if (identical(i, "~groupi")) {
       i <- setdiff(seq_len(nrow(x)), x@index_group_i)
     } else if (identical(i, "groupj")) {
-      i <- -(0:x@nhead)
+      if (x@nhead < 2) {
+        msg <- "No column grouping found. Please use `group_tt(j = ...)` first."
+        stop(msg, call. = FALSE)
+      }
+      i <- -(1:x@nhead)
+    } else if (identical(i, "colnames")) {
+      i <- 0
     }
-  # }
 
   if (is.matrix(i) && is.logical(i)) {
     return(i)
