@@ -315,4 +315,15 @@ dat <- data.frame("y^2 = e^x" = c(-2, -pi), check.names = FALSE)
 tab <- tt(dat, digits = 3) |> format_tt(math = TRUE)
 expect_snapshot_print(tab, label = "latex-format_tt_math.tex")
 
+
+# Issue #493: theme_multipage does not convert to longtblr
+dat <- data.frame(a = rnorm(100), b = rnorm(100), c = rnorm(100))
+tab <- tt(dat) |>
+  theme_tt("multipage") |>
+  save_tt("latex")
+matches <- lengths(gregexpr("longtblr", tab, fixed = TRUE))
+expect_equal(matches, 2)
+
+
+
 options(tinytable_print_output = NULL)

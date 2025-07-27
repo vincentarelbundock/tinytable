@@ -1,9 +1,8 @@
 theme_multipage <- function(
-  x,
-  rowhead = get_option("tinytable_theme_multipage_rowhead", 0L),
-  rowfoot = get_option("tinytable_theme_multipage_rowfoot", 0L),
-  ...
-) {
+    x,
+    rowhead = get_option("tinytable_theme_multipage_rowhead", 0L),
+    rowfoot = get_option("tinytable_theme_multipage_rowfoot", 0L),
+    ...) {
   if (rowhead > 0) {
     x <- style_tt(
       x,
@@ -32,6 +31,8 @@ theme_multipage <- function(
     }
 
     tab <- table@table_string
+    tab <- sub("\\\\begin\\{tblr", "\\\\begin\\{longtblr", tab)
+    tab <- sub("\\\\end\\{tblr", "\\\\end\\{longtblr", tab)
     tab <- sub("\\\\begin\\{talltblr", "\\\\begin\\{longtblr", tab)
     tab <- sub("\\\\end\\{talltblr", "\\\\end\\{longtblr", tab)
 
