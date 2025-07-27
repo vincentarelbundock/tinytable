@@ -47,6 +47,7 @@ Bugs:
 * Fixed duplicate header problems in LaTeX/Tabularray output.
 * Fixed long row handling in markdown output format.
 * Fix `theme_bootstrap()` for LaTeX and Typst. Issue #479.
+* `theme_tt("multipage")` correctly converts LaTeX environment to `longtblr`. Thanks to @ujtwr for report #493.
 
 Internal changes:
 
