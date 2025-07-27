@@ -24,14 +24,12 @@ expect_snapshot_print(t[["typst"]], "group_tt_matrix-multiple_positions_multiple
 expect_snapshot_print(t[["html"]], "group_tt_matrix-multiple_positions_multiple_rows.html")
 
 # Matrix insertion at edge positions (combines position 1 and last position)
-tab <- tt(head(iris, 4)) |>
-  group_tt(i = 1, j = matrix(c("Header", "Row", "At", "Top", "Position"), nrow = 1)) |>
-  group_tt(i = 6, j = matrix(c("Footer", "Row", "At", "Bottom", "Position"), nrow = 1))
-t <- expect_table(tab)
-expect_snapshot_print(t[["markdown"]], "group_tt_matrix-edge_positions.md")
-expect_snapshot_print(t[["latex"]], "group_tt_matrix-edge_positions.tex")
-expect_snapshot_print(t[["typst"]], "group_tt_matrix-edge_positions.typ")
-expect_snapshot_print(t[["html"]], "group_tt_matrix-edge_positions.html")
+expect_error(
+  tt(head(iris, 4)) |>
+    group_tt(i = 1, j = matrix(c("Header", "Row", "At", "Top", "Position"), nrow = 1)) |>
+    group_tt(i = 6, j = matrix(c("Footer", "Row", "At", "Bottom", "Position"), nrow = 1)),
+  pattern = "Only one group row"
+)
 
 # Matrix with single column reshape and styling combined
 rowmat <- matrix(c("A", "B", "C", "D", "E"))
@@ -44,7 +42,7 @@ expect_snapshot_print(t[["latex"]], "group_tt_matrix-single_column_with_styling.
 expect_snapshot_print(t[["typst"]], "group_tt_matrix-single_column_with_styling.typ")
 expect_snapshot_print(t[["html"]], "group_tt_matrix-single_column_with_styling.html")
 
-# Matrix row duplication - single row matrix with multiple positions 
+# Matrix row duplication - single row matrix with multiple positions
 rowmat <- matrix(colnames(iris))
 tab <- tt(head(iris, 7)) |> group_tt(i = c(2, 5), j = rowmat)
 t <- expect_table(tab)

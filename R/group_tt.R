@@ -88,11 +88,10 @@
 #'   style_tt(i = "groupi", background = "pink")
 #'
 group_tt <- function(
-  x,
-  i = getOption("tinytable_group_i", default = NULL),
-  j = getOption("tinytable_group_j", default = NULL),
-  ...
-) {
+    x,
+    i = getOption("tinytable_group_i", default = NULL),
+    j = getOption("tinytable_group_j", default = NULL),
+    ...) {
   # ... is important for ihead passing
 
   if ("indent" %in% ...names()) {
@@ -144,12 +143,12 @@ group_tt <- function(
 
     if (nrow(x@data_group_i) == 0) {
       x@data_group_i <- group_df
+      x@index_group_i <- idx
     } else {
-      x@data_group_i <- rbind(x@data_group_i, group_df)
+      msg <- "Only one group row insertion is allowed at a time with `group_tt(i=...)`."
+      stop(msg, call. = FALSE)
     }
 
-    # Add indices to @index_group_i to track final positions
-    x@index_group_i <- c(x@index_group_i, idx)
 
     # Apply styling for matrix insertion
     if (converted_from_list) {
