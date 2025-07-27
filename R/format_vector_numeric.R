@@ -1,13 +1,14 @@
 # Format numeric values with different formats
 # digits check needs to be done here to avoid the other() formatting from ori, which zaps the original setting
-format_numeric <- function(
+format_vector_numeric <- function(
     value,
     num_suffix,
     digits,
     num_mark_big,
     num_mark_dec,
     num_zero,
-    num_fmt) {
+    num_fmt,
+    ...) {
   if (!is.numeric(value) || is.null(digits)) {
     return(NULL)
   }

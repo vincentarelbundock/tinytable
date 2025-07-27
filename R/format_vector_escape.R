@@ -1,4 +1,4 @@
-escape_text <- function(x, output = "latex") {
+format_vector_escape <- function(x, output = "latex") {
   if (length(x) < 1 || all(is.na(x)) || !is.character(x)) {
     return(x)
   }

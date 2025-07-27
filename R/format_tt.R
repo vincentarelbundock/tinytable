@@ -416,7 +416,7 @@ format_tt_lazy <- function(
     x = x,
     i = i,
     j = j,
-    format_fn = format_numeric,
+    format_fn = format_vector_numeric,
     num_suffix = num_suffix,
     digits = digits,
     num_mark_big = num_mark_big,
@@ -515,7 +515,7 @@ format_tt_lazy <- function(
       x = x,
       i = i,
       j = j,
-      format_fn = escape_text,
+      format_fn = format_vector_escape,
       components = components,
       original_data = FALSE,
       output = o
@@ -523,7 +523,7 @@ format_tt_lazy <- function(
 
     # column names when 0 is in i
     if (0 %in% i && !identical(components, "all")) {
-      x <- apply_colnames(x, escape_text, output = o)
+      x <- apply_colnames(x, format_vector_escape, output = o)
     }
   }
 
