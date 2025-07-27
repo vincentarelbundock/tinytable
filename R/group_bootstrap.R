@@ -10,7 +10,8 @@ setMethod(
       x <- group_bootstrap_col(x, j = j, ...)
     }
     return(x)
-  })
+  }
+)
 
 group_bootstrap_col <- function(x, j, ihead, ...) {
   # Check if there are any column groups to process
@@ -52,9 +53,11 @@ group_bootstrap_col <- function(x, j, ihead, ...) {
         if (trimws(current_label) != "") {
           i <- i + 1 # Move past the current label
           # Continue through empty strings (continuation of span)
-          while (i <= length(group_row) &&
-            !is.na(group_row[i]) &&
-            trimws(group_row[i]) == "") {
+          while (
+            i <= length(group_row) &&
+              !is.na(group_row[i]) &&
+              trimws(group_row[i]) == ""
+          ) {
             i <- i + 1
           }
           span_end <- i - 1

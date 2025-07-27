@@ -65,17 +65,18 @@
 #'
 #' @export
 tt <- function(
-    x,
-    digits = get_option("tinytable_tt_digits", default = NULL),
-    caption = get_option("tinytable_tt_caption", default = NULL),
-    notes = get_option("tinytable_tt_notes", default = NULL),
-    width = get_option("tinytable_tt_width", default = NULL),
-    height = get_option("tinytable_tt_height", default = NULL),
-    theme = get_option("tinytable_tt_theme", default = "default"),
-    colnames = get_option("tinytable_tt_colnames", default = TRUE),
-    rownames = get_option("tinytable_tt_rownames", default = FALSE),
-    escape = get_option("tinytable_tt_escape", default = FALSE),
-    ...) {
+  x,
+  digits = get_option("tinytable_tt_digits", default = NULL),
+  caption = get_option("tinytable_tt_caption", default = NULL),
+  notes = get_option("tinytable_tt_notes", default = NULL),
+  width = get_option("tinytable_tt_width", default = NULL),
+  height = get_option("tinytable_tt_height", default = NULL),
+  theme = get_option("tinytable_tt_theme", default = "default"),
+  colnames = get_option("tinytable_tt_colnames", default = TRUE),
+  rownames = get_option("tinytable_tt_rownames", default = FALSE),
+  escape = get_option("tinytable_tt_escape", default = FALSE),
+  ...
+) {
   dots <- list(...)
 
   # sanity checks

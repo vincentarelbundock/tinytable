@@ -67,4 +67,3 @@ sanitize_group_vec2list <- function(vec) {
   names(idx) <- rle_result$values
   return(idx)
 }
-

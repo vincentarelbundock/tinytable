@@ -4,7 +4,6 @@
 #
 # THE ORDER MATTERS A LOT!
 
-
 #' Build group header and body parts with position calculations
 #' @keywords internal
 #' @noRd
@@ -20,7 +19,11 @@ rbind_body_groupi <- function(x) {
   final_ncol <- ncol(x@data_body)
 
   # Create final data frame with proper structure
-  final_df <- data.frame(matrix(NA_character_, nrow = total_rows, ncol = final_ncol))
+  final_df <- data.frame(matrix(
+    NA_character_,
+    nrow = total_rows,
+    ncol = final_ncol
+  ))
   colnames(final_df) <- colnames(x@data_body)
 
   # Insert body data at index_body positions
@@ -50,13 +53,11 @@ rbind_body_groupi <- function(x) {
 }
 
 
-
-
-
 build_tt <- function(x, output = NULL) {
   output <- sanitize_output(output)
 
-  x <- switch(output,
+  x <- switch(
+    output,
     html = swap_class(x, "tinytable_bootstrap"),
     latex = swap_class(x, "tinytable_tabularray"),
     markdown = swap_class(x, "tinytable_grid"),

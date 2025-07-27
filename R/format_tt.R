@@ -24,7 +24,9 @@ apply_notes <- function(x, format_fn, ...) {
 }
 
 apply_group_j <- function(x, format_fn, ...) {
-  if (!inherits(x, "tinytable")) return(x)
+  if (!inherits(x, "tinytable")) {
+    return(x)
+  }
   data_slot <- x@data_group_j
   if (nrow(data_slot) > 0) {
     for (row_idx in seq_len(nrow(data_slot))) {
@@ -61,7 +63,14 @@ apply_format <- function(
 ) {
   if (is.character(components)) {
     if ("all" %in% components) {
-      components <- c("colnames", "caption", "notes", "groupi", "groupj", "cells")
+      components <- c(
+        "colnames",
+        "caption",
+        "notes",
+        "groupi",
+        "groupj",
+        "cells"
+      )
     }
   }
 
@@ -102,14 +111,20 @@ apply_format <- function(
     }
 
     if (is.character(inherit_class)) {
-      j_filtered <- j[sapply(j, function(col) inherits(classref[[col]], inherit_class))]
+      j_filtered <- j[sapply(j, function(col) {
+        inherits(classref[[col]], inherit_class)
+      })]
     } else if (is.function(inherit_class)) {
       j_filtered <- j[sapply(j, function(col) inherit_class(classref[[col]]))]
     }
 
     # Default behavior: use original values, fall back to out if ori is not available
     for (col in j_filtered) {
-      idx_body <- if (inherits(x, "tinytable")) x@index_body else seq_len(nrow(out))
+      idx_body <- if (inherits(x, "tinytable")) {
+        x@index_body
+      } else {
+        seq_len(nrow(out))
+      }
 
       # original data rows
       if (original_data) {
@@ -117,19 +132,26 @@ apply_format <- function(
 
         idx_out <- intersect(i, idx_body)
         idx_ori <- seq_len(nrow(ori))[idx_body %in% i]
-        tmp <- tryCatch(format_fn(ori[idx_ori, col, drop = TRUE], ...),
-          error = function(e) NULL)
-        if (length(tmp) > 0) out[idx_out, col] <- tmp
+        tmp <- tryCatch(
+          format_fn(ori[idx_ori, col, drop = TRUE], ...),
+          error = function(e) NULL
+        )
+        if (length(tmp) > 0) {
+          out[idx_out, col] <- tmp
+        }
 
         # row groups
         idx_out <- setdiff(i, idx_body)
-        tmp <- tryCatch(format_fn(out[idx_out, col, drop = TRUE], ...),
-          error = function(e) NULL)
+        tmp <- tryCatch(
+          format_fn(out[idx_out, col, drop = TRUE], ...),
+          error = function(e) NULL
+        )
         if (length(tmp) > 0) out[idx_out, col] <- tmp
-
       } else {
-        tmp <- tryCatch(format_fn(out[i, col, drop = TRUE], ...),
-          error = function(e) NULL)
+        tmp <- tryCatch(
+          format_fn(out[i, col, drop = TRUE], ...),
+          error = function(e) NULL
+        )
         if (length(tmp) > 0) out[i, col] <- tmp
       }
     }
@@ -140,7 +162,6 @@ apply_format <- function(
       x <- out
     }
   }
-
 
   return(x)
 }
@@ -467,8 +488,9 @@ format_tt_lazy <- function(
       # Original behavior for cell-specific formatting
       for (col in j) {
         tmp <- tryCatch(
-          format_vector_custom(ori[i, col, drop = TRUE], fn), 
-          error = function(e) NULL)
+          format_vector_custom(ori[i, col, drop = TRUE], fn),
+          error = function(e) NULL
+        )
         out[i, col] <- if (length(tmp) > 0) tmp else out[i, col]
       }
     }

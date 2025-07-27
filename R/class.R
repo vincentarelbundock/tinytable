@@ -67,15 +67,17 @@ setClass(
 setMethod(
   "initialize",
   "tinytable",
-  function(.Object,
-           data = data.frame(),
-           caption = NULL,
-           notes = NULL,
-           theme = list("default"),
-           data_body = data.frame(),
-           placement = NULL,
-           width = NULL,
-           height = NULL) {
+  function(
+    .Object,
+    data = data.frame(),
+    caption = NULL,
+    notes = NULL,
+    theme = list("default"),
+    data_body = data.frame(),
+    placement = NULL,
+    width = NULL,
+    height = NULL
+  ) {
     # explicit
     .Object@data <- data
     .Object@data_body <- data_body
@@ -90,7 +92,11 @@ setMethod(
     .Object@nrow <- nrow(.Object@data)
     .Object@ncol <- ncol(.Object@data)
     .Object@nhead <- if (is.null(colnames(data))) 0 else 1
-    .Object@names <- if (is.null(colnames(data))) character() else colnames(data)
+    .Object@names <- if (is.null(colnames(data))) {
+      character()
+    } else {
+      colnames(data)
+    }
 
     # empty
     .Object@data_group_i <- data.frame()
@@ -106,7 +112,8 @@ setMethod(
     .Object@lazy_theme <- list()
 
     return(.Object)
-  })
+  }
+)
 
 #' Method for a tinytable S4 object
 #'
@@ -162,7 +169,8 @@ setReplaceMethod(
     }
     x@names <- value
     return(x)
-  })
+  }
+)
 
 #' Method for a tinytable S4 object
 #'
@@ -184,7 +192,8 @@ setReplaceMethod(
     }
     x@names <- value
     return(x)
-  })
+  }
+)
 
 #' Dimensions a tinytable S4 object
 #'

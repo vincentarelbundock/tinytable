@@ -98,7 +98,6 @@ grid_colspan <- function(x) {
     header_sep_line <- header_sep_line[1]
   }
 
-
   for (idx in seq_len(nrow(colspan_rows))) {
     row_idx <- colspan_rows[idx, "i"]
     col_idx <- colspan_rows[idx, "j"]
@@ -107,7 +106,10 @@ grid_colspan <- function(x) {
     # Calculate target line: header_sep_line + row_idx (rows are consecutive after header separator)
     target_line <- header_sep_line + row_idx
 
-    if (target_line <= length(table_lines) && startsWith(table_lines[target_line], "|")) {
+    if (
+      target_line <= length(table_lines) &&
+        startsWith(table_lines[target_line], "|")
+    ) {
       line <- table_lines[target_line]
 
       # Split the line by | to get cells
@@ -122,15 +124,21 @@ grid_colspan <- function(x) {
       }
 
       # Remove | markers for the colspan range
-      if (col_idx <= length(cells) && (col_idx + colspan - 1) <= length(cells)) {
+      if (
+        col_idx <= length(cells) && (col_idx + colspan - 1) <= length(cells)
+      ) {
         # For colspan, use only the content from the first cell (the spanning cell)
         # and ignore content from subsequent cells that are being spanned over
         # Preserve leading space but trim trailing spaces
         spanned_content <- sub(" *$", "", cells[col_idx])
 
         # Calculate total width for the spanned cells
-        if (!is.null(x@width_cols) && length(x@width_cols) >= (col_idx + colspan - 1)) {
-          total_width <- sum(x@width_cols[col_idx:(col_idx + colspan - 1)]) + (colspan - 1)
+        if (
+          !is.null(x@width_cols) &&
+            length(x@width_cols) >= (col_idx + colspan - 1)
+        ) {
+          total_width <- sum(x@width_cols[col_idx:(col_idx + colspan - 1)]) +
+            (colspan - 1)
           current_width <- nchar(spanned_content)
           if (current_width < total_width) {
             padding <- total_width - current_width
@@ -148,7 +156,11 @@ grid_colspan <- function(x) {
         }
 
         # Reconstruct the line, preserving the original format
-        table_lines[target_line] <- paste0("|", paste(new_cells, collapse = "|"), "|")
+        table_lines[target_line] <- paste0(
+          "|",
+          paste(new_cells, collapse = "|"),
+          "|"
+        )
       }
     }
   }

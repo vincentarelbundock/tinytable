@@ -43,11 +43,12 @@ lines_drop_consecutive_empty <- function(x) {
 }
 
 lines_drop <- function(
-    old,
-    regex,
-    position = "equal",
-    fixed = FALSE,
-    unique = TRUE) {
+  old,
+  regex,
+  position = "equal",
+  fixed = FALSE,
+  unique = TRUE
+) {
   assert_choice(position, c("equal", "before", "after", "all"))
   lines <- strsplit(old, "\n")[[1]]
   idx <- grep(regex, lines, fixed = fixed)

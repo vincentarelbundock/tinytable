@@ -26,9 +26,10 @@
 #' tt(mtcars[1:4, 1:4]) |> save_tt(filename)
 #'
 save_tt <- function(
-    x,
-    output,
-    overwrite = get_option("tinytable_save_overwrite", default = FALSE)) {
+  x,
+  output,
+  overwrite = get_option("tinytable_save_overwrite", default = FALSE)
+) {
   assert_class(x, "tinytable")
   assert_string(output)
   assert_flag(overwrite)
@@ -72,7 +73,8 @@ save_tt <- function(
 
   file_ext <- tools::file_ext(output)
 
-  output_format <- switch(file_ext,
+  output_format <- switch(
+    file_ext,
     "png" = "html",
     "html" = "html",
     "pdf" = "latex",
