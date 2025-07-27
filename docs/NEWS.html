@@ -430,6 +430,8 @@ window.Quarto = {
 <ul>
 <li><code>theme_spacing()</code> function has been removed. Use the new <code>height</code> argument in <code>tt()</code> instead for row height control.</li>
 <li>Indexing for <code>format_tt()</code> is now consistent with <code>style_tt()</code> and <code>plot_tt()</code>. It refers to rows and columns in the final table, after insertions by <code>group_tt()</code>.</li>
+<li>Names of S4 slots have changed. Most notably <code>@group_index_i</code> becomes <code>@index_group_i</code>. Reminder: internal S4 slots are not part of the public API and should not be used directly by users.</li>
+<li>Argument <code>indent</code> is deprecated and will be removed in a future version. Use <code>style_tt(x, "~group", indent = 1)</code> instead.</li>
 </ul>
 <p>New features:</p>
 <ul>
@@ -437,7 +439,8 @@ window.Quarto = {
 <li><code>format_tt()</code> argument <code>i</code> accepts character strings to format specific table components: “colnames”, “caption”, “notes”, “groupi” (row group labels), “groupj” (column group labels).</li>
 <li><code>group_tt(i = ..., j = ...)</code> now supports matrix insertion: when <code>i</code> is an integer vector and <code>j</code> is a character matrix, rows from the matrix are inserted at the specified positions. Single-column matrices are automatically reshaped when the number of elements is a multiple of the table’s column count.</li>
 <li><code>group_tt(i = ...)</code> can now be called multiple times to insert several rows one after the other.</li>
-<li><code>style_tt(colspan)</code> is now supported for markdown output.</li>
+<li><code>style_tt(colspan)</code> is now supported for Markdown and Typst outputs.</li>
+<li><code>style_tt(i = "~groupi")</code> styles all non-group rows (complement of “groupi”).</li>
 <li><code>options(tinytable_color_name_normalization=TRUE)</code> (default): automatic color name processing (default: TRUE). When enabled, R color names recognized by <code>col2rgb()</code> are converted to hex format for consistent rendering across HTML, LaTeX, and Typst formats. If R color conversion fails, LaTeX color names are used as fallback. Colors explicitly supplied as hex values with “#” prefix are passed through unchanged. Set to FALSE to disable processing and pass color names unchanged.</li>
 </ul>
 <p>Typst: Major refactor improves several things and brings Typst very close to feature parity with other formats.</p>
@@ -543,7 +546,7 @@ window.Quarto = {
 <p>New:</p>
 <ul>
 <li><code>style_tt("notes")</code> and <code>style_tt("caption")</code> can style footnotes and captions. Note: This will only style captions handled by the <code>caption</code> argument in <code>tt()</code>, and not captions created by Quarto.</li>
-<li>Using <code>table@group_index_i</code> is now documented.</li>
+<li>Using <code>table@index_group_i</code> is now documented.</li>
 </ul>
 <p>Misc:</p>
 <ul>
