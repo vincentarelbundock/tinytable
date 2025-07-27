@@ -33,7 +33,7 @@ format_tt(
 \item{i}{Numeric vector or string.
 \itemize{
 \item Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.
-\item String: Table components to format, "all", "cells", "colnames", "caption", "notes", "groupi" (row group labels), "~groupi" (non-group rows), "groupj" (column group labels).
+\item String: Table components to format "caption", "colnames", "groupi" (row group labels), "~groupi" (non-group rows), "groupj" (column group labels), "notes".
 \item If both the \code{i} and \code{j} are omitted (default: NULL), formatting is applied to all table elements, including caption, notes, and group labels.
 }}
 

@@ -7,7 +7,7 @@
 #' @param i Numeric vector, logical matrix, or string.
 #'   - Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.
 #'   - Logical matrix: A matrix with the same number of rows and columns as `x`. `i=0` is the header, and negative values are higher level headers. Row indices refer to rows *after* the insertion of row labels by `group_tt()`, when applicable.
-#'   - String: "caption", "groupi", "~groupi", "notes".
+#'   - String: Table components "caption", "colnames", "groupi" (row group labels), "~groupi" (non-group rows), "groupj" (column group labels), "notes".
 #' @param j Column indices where the styling should be applied. Can be:
 #' + Integer vectors indicating column positions.
 #' + Character vector indicating column names.

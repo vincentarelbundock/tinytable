@@ -8,7 +8,7 @@
 #' @param x A data frame or a vector to be formatted.
 #' @param i Numeric vector or string.
 #'   - Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.
-#'   - String: Table components to format, "all", "cells", "colnames", "caption", "notes", "groupi" (row group labels), "~groupi" (non-group rows), "groupj" (column group labels).
+#'   - String: Table components to format "caption", "colnames", "groupi" (row group labels), "~groupi" (non-group rows), "groupj" (column group labels), "notes".
 #'   - If both the `i` and `j` are omitted (default: NULL), formatting is applied to all table elements, including caption, notes, and group labels.
 #' @param digits Number of significant digits or decimal places.
 #' @param num_fmt The format for numeric values; one of 'significant', 'significant_cell', 'decimal', or 'scientific'.

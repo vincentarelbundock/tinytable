@@ -41,7 +41,7 @@ style_tt(
 \itemize{
 \item Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.
 \item Logical matrix: A matrix with the same number of rows and columns as \code{x}. \code{i=0} is the header, and negative values are higher level headers. Row indices refer to rows \emph{after} the insertion of row labels by \code{group_tt()}, when applicable.
-\item String: "caption", "groupi", "~groupi", "notes".
+\item String: Table components "caption", "colnames", "groupi" (row group labels), "~groupi" (non-group rows), "groupj" (column group labels), "notes".
 }}
 
 \item{j}{Column indices where the styling should be applied. Can be:
