@@ -543,7 +543,7 @@ format_tt_lazy <- function(
 
   if (isTRUE(quarto)) {
     for (col in j) {
-      x <- format_quarto(i = i, col = col, x = x)
+      x <- format_vector_quarto(i = i, col = col, x = x)
     }
   }
 
