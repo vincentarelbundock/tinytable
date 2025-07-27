@@ -117,44 +117,62 @@ apply_format <- function(
       j_filtered <- j[sapply(j, function(col) inherit_class(classref[[col]]))]
     }
 
-    # Default behavior: use original values, fall back to out if ori is not available
+    i <- sort(unique(i))
+
+    # group i
     for (col in j_filtered) {
+      if (!inherits(x, "tinytable")) next
+      idx <- x@index_group_i %in% i
+      tmp <- tryCatch(
+        format_fn(x@data_group_i[idx, col], ...),
+        error = function(e) NULL
+      )
+      if (length(tmp) > 0) {
+        x@data_group_i[idx, col] <- tmp
+      }
+    }
+
+    # body
+    for (col in j_filtered) {
+      # original and output data
       if (inherits(x, "tinytable")) {
-        idx_body <- x@index_body
+        out <- x@data_body
+        ori <- x@data
       } else {
-        idx_body <- seq_len(nrow(out))
+        out <- ori <- x
       }
 
-      idx_out <- i
-      idx_out <- intersect(i, idx_body)
-      idx_ori <- seq_len(nrow(ori))[idx_body %in% i]
+      # index: we are only formatting the body rows
+      # ori & out currently have the same dimensions
+      if (inherits(x, "tinytable")) {
+        idx <- x@index_body %in% i
+      } else {
+        idx <- seq_len(nrow(out)) %in% i
+      }
 
       # original data rows
       if (original_data) {
-        tmp <- tryCatch(
-          format_fn(ori[idx_ori, col, drop = TRUE], ...),
-          error = function(e) NULL
-        )
-        if (length(tmp) > 0) {
-          out[idx_out, col] <- tmp
-        }
-
-        # row groups
-        idx_out <- setdiff(i, idx_body)
-        tmp <- tryCatch(
-          format_fn(out[idx_out, col, drop = TRUE], ...),
-          error = function(e) NULL
-        )
-        if (length(tmp) > 0) out[idx_out, col] <- tmp
-      } else {
-        tmp <- tryCatch(
+        vec <- vec_original <- ori[idx, col, drop = TRUE]
+        formatted <- tryCatch(
           format_fn(
-            vec = out[i, col, drop = TRUE],
-            vec_original = ori[idx_ori, col, drop = TRUE],
+            vec = vec,
+            vec_original = vec_original,
             ...),
           error = function(e) NULL
         )
-        if (length(tmp) > 0) out[i, col] <- tmp
+      } else {
+        vec <- out[idx, col, drop = TRUE]
+        vec_original <- ori[idx, col, drop = TRUE]
+        formatted <- tryCatch(
+          format_fn(
+            vec = vec,
+            vec_original = vec_original,
+            ...),
+          error = function(e) NULL
+        )
+      }
+      if (length(formatted) > 0) {
+        out[idx, col] <- formatted
       }
     }
 

@@ -57,7 +57,7 @@ sanitize_i <- function(
     if (!is.null(i)) {
       out <- i
     } else if (inherits(x, "tinytable")) {
-      out <- seq_len(nrow(x@data_body))
+      out <- seq_len(nrow(x))
     }
     attr(out, "null") <- FALSE
     attr(out, "body") <- out[out > 0]

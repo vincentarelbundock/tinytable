@@ -278,6 +278,8 @@ tab <- tt(tab, digits = 2, notes = "_Source_: Simulated data.") |>
   format_tt("colnames", fn = \(x) sub("_", " / ", x)) |>
   format_tt("notes", markdown = TRUE) |>
   format_tt("groupi", replace = list("↓" = "Down", "↑" = "Up"))
+tab
+
 expect_snapshot_print(tab, label = "format_tt-format_components_vignette_01.tex")
 options(tinytable_print_output = NULL)
 

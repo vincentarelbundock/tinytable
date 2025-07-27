@@ -47,7 +47,6 @@ rbind_body_groupi <- function(x) {
   }
 
   x@data_body <- final_df
-  x@nrow <- nrow(x@data) + nrow(x@data_group_i)
 
   return(x)
 }
@@ -56,8 +55,7 @@ rbind_body_groupi <- function(x) {
 build_tt <- function(x, output = NULL) {
   output <- sanitize_output(output)
 
-  x <- switch(
-    output,
+  x <- switch(output,
     html = swap_class(x, "tinytable_bootstrap"),
     latex = swap_class(x, "tinytable_tabularray"),
     markdown = swap_class(x, "tinytable_grid"),
@@ -94,14 +92,17 @@ build_tt <- function(x, output = NULL) {
     x@index_body <- body_positions
   }
 
-  # insert group rows into body
-  x <- rbind_body_groupi(x)
+  # before format_tt() because we need the indices
+  x@nrow <- nrow(x@data) + nrow(x@data_group_i)
 
   # format each component individually
   for (l in x@lazy_format) {
     l[["x"]] <- x
     x <- eval(l)
   }
+
+  # insert group rows into body
+  x <- rbind_body_groupi(x)
 
   # add footnote markers just after formatting, otherwise appending converts to string
   x <- footnote_markers(x)
