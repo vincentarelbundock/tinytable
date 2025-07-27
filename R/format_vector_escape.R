@@ -1,12 +1,12 @@
-format_vector_escape <- function(x, output = "latex") {
-  if (length(x) < 1 || all(is.na(x)) || !is.character(x)) {
-    return(x)
+format_vector_escape <- function(vec, output = "latex", ...) {
+  if (length(vec) < 1 || all(is.na(vec)) || !is.character(vec)) {
+    return(vec)
   }
   if (isFALSE(output)) {
-    return(x)
+    return(vec)
   }
 
-  out <- x
+  out <- vec
 
   if (isTRUE(output == "latex")) {
     # LaTeX escaping code adapted from the `gt` package, published under MIT
