@@ -41,13 +41,7 @@ The numbers in the `i` list indicate that a label must be inserted at position #
 
 ```{r}
 tt(head(iris)) |>
-  group_tt(i = list("After 1" = 2, "After 2" = 3, "After 3" = 4, "After 5" = 6))
-
-tt(head(iris)) |>
-  group_tt(i = list("After 1a" = 2, "After 1b" = 2, "After 5" = 6))
-
-tt(head(iris)) |>
-  group_tt(i = list("After 0" = 1))
+  group_tt(i = list("After 0" = 1, "After 3a" = 4, "After 3b" = 4, "After 5" = 6))
 ```
 
 ### Styling row groups
@@ -74,8 +68,8 @@ Calculating the location of rows can be cumbersome. Instead of doing this by han
 
 ```{r}
 tab |> 
-  style_tt(i = "groupi", color = "white", background = "teal") |>
-  style_tt(i = "~groupi", j = 1, indent = 2)
+  style_tt("groupi", color = "white", background = "teal") |>
+  style_tt("~groupi", j = 1, indent = 2)
 ```
 
 ### Automatic row groups
@@ -110,7 +104,7 @@ The matrix is expected to have the same number of columns as the table. However,
 ```{r}
 rowmat <- matrix(c(
   "-", "-", "-", "-", "-",
-  "x", "x", "x", "x", "x"))
+  "/", "/", "/", "/", "/"))
 
 tt(head(iris, 7)) |> group_tt(i = 2, j = rowmat) 
 ```
@@ -164,13 +158,9 @@ tt(x) |>
   group_tt(j = list("Hello" = 1:2, "World" = 4:5)) |>
   style_tt("groupj", color = "orange") |>
   style_tt("colnames", color = "teal")
+
+
 ```
-
-TODO: 
-
-* test error on no group_tt(j). 
-* Test distinction between colnames and groupj. 
-* test i="colnames" when there are no column names
 
 Here is a table with both row and column headers, as well as some styling:
 

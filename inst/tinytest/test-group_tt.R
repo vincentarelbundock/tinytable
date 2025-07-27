@@ -121,6 +121,29 @@ expect_snapshot_print(
   "group_tt-issue165_html_centering_style.html")
 
 
+# informative errors
+expect_error(tt(head(iris)) |> style_tt("groupj", color = "orange"),
+  pattern = "No column grouping")
+
+# informative errors
+x <- head(iris)
+colnames(x) <- NULL
+expect_error(tt(x) |> style_tt("colnames", color = "orange"),
+  pattern = "No column names found")
+expect_error(tt(head(iris)) |> style_tt("groupj", color = "orange"),
+  pattern = "No column grouping")
+
+
+# i = "colnames" vs. "groupj"
+tab <- tt(head(iris)) |>
+  group_tt(j = list("Foo" = 2:3, "Bar" = 5)) |>
+  group_tt(j = list("Hello" = 1:2, "World" = 4:5)) |>
+  style_tt("groupj", color = "orange") |>
+  style_tt("colnames", color = "teal")
+tab <- expect_table(tab, "latex")[["latex"]]
+expect_snapshot_print(tab, "group_tt-style_tt_i_colnames_vs_groupj.tex")
+
+
 # Issue #165: group_tt insert extra row at the bottom
 k <- mtcars[1:4, 1:4]
 tab <- tt(k) |>
@@ -137,16 +160,3 @@ expect_snapshot_print(t[["typst"]], "group_tt-issue165_extra_row.typ")
 expect_snapshot_print(t[["html"]], "group_tt-issue165_extra_row.html")
 exit_file("TODO: broken markdown output")
 expect_snapshot_print(t[["markdown"]], "group_tt-issue165_extra_row.md")
-
-
-# informative errors
-expect_error(tt(head(iris)) |> style_tt("groupj", color = "orange"),
-  pattern = "No column grouping")
-
-# informative errors
-x <- head(iris)
-colnames(x) <- NULL
-expect_error(tt(x) |> style_tt("colnames", color = "orange"),
-  pattern = "No column names found")
-expect_error(tt(head(iris)) |> style_tt("groupj", color = "orange"),
-  pattern = "No column grouping")
