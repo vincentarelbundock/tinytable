@@ -137,3 +137,16 @@ expect_snapshot_print(t[["typst"]], "group_tt-issue165_extra_row.typ")
 expect_snapshot_print(t[["html"]], "group_tt-issue165_extra_row.html")
 exit_file("TODO: broken markdown output")
 expect_snapshot_print(t[["markdown"]], "group_tt-issue165_extra_row.md")
+
+
+# informative errors
+expect_error(tt(head(iris)) |> style_tt("groupj", color = "orange"),
+  pattern = "No column grouping")
+
+# informative errors
+x <- head(iris)
+colnames(x) <- NULL
+expect_error(tt(x) |> style_tt("colnames", color = "orange"),
+  pattern = "No column names found")
+expect_error(tt(head(iris)) |> style_tt("groupj", color = "orange"),
+  pattern = "No column grouping")

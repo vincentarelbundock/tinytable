@@ -45,6 +45,10 @@ sanitize_i <- function(
       }
       i <- -(1:x@nhead)
     } else if (identical(i, "colnames")) {
+      if (isTRUE(length(colnames(x)) == 0)) {
+        msg <- "No column names found. Please set column names first."
+        stop(msg, call. = FALSE)
+      }
       i <- 0
     }
 
