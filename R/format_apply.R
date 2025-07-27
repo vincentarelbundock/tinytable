@@ -134,14 +134,6 @@ apply_format <- function(
 
     # body
     for (col in j_filtered) {
-      # original and output data
-      if (inherits(x, "tinytable")) {
-        out <- x@data_body
-        ori <- x@data
-      } else {
-        out <- ori <- x
-      }
-
       # index: we are only formatting the body rows
       # ori & out currently have the same dimensions
       if (inherits(x, "tinytable")) {

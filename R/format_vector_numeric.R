@@ -1,23 +1,22 @@
 # Format numeric values with different formats
 # digits check needs to be done here to avoid the other() formatting from ori, which zaps the original setting
 format_vector_numeric <- function(
-  value,
-  num_suffix,
-  digits,
-  num_mark_big,
-  num_mark_dec,
-  num_zero,
-  num_fmt,
-  ...
-) {
-  if (!is.numeric(value) || is.null(digits)) {
+    vec,
+    num_suffix,
+    digits,
+    num_mark_big,
+    num_mark_dec,
+    num_zero,
+    num_fmt,
+    ...) {
+  if (!is.numeric(vec) || is.null(digits)) {
     return(NULL)
   }
 
   # numeric suffix
   if (isTRUE(num_suffix) && !is.null(digits)) {
     out <- format_num_suffix(
-      value,
+      vec,
       digits = digits,
       num_mark_big = num_mark_big,
       num_mark_dec = num_mark_dec,
@@ -26,10 +25,10 @@ format_vector_numeric <- function(
     )
     # non-integer numeric
   } else if (
-    is.numeric(value) && !isTRUE(check_integerish(value)) && !is.null(digits)
+    is.numeric(vec) && !isTRUE(check_integerish(vec)) && !is.null(digits)
   ) {
     out <- format_non_integer_numeric(
-      value,
+      vec,
       digits = digits,
       num_mark_big = num_mark_big,
       num_mark_dec = num_mark_dec,
@@ -37,9 +36,9 @@ format_vector_numeric <- function(
       num_fmt = num_fmt
     )
     # integer
-  } else if (isTRUE(check_integerish(value))) {
+  } else if (isTRUE(check_integerish(vec))) {
     out <- format_integer(
-      value,
+      vec,
       digits = digits,
       num_mark_big = num_mark_big,
       num_mark_dec = num_mark_dec,
@@ -56,13 +55,12 @@ format_vector_numeric <- function(
 }
 
 format_num_suffix <- function(
-  x,
-  digits,
-  num_mark_big,
-  num_mark_dec,
-  num_zero,
-  num_fmt
-) {
+    x,
+    digits,
+    num_mark_big,
+    num_mark_dec,
+    num_zero,
+    num_fmt) {
   suffix <- number <- rep("", length(x))
   suffix <- ifelse(x > 1e3, "K", suffix)
   suffix <- ifelse(x > 1e6, "M", suffix)
@@ -92,17 +90,16 @@ format_num_suffix <- function(
 
 # Format non-integer numeric values
 format_non_integer_numeric <- function(
-  value,
-  digits,
-  num_mark_big,
-  num_mark_dec,
-  num_zero,
-  num_fmt
-) {
+    vec,
+    digits,
+    num_mark_big,
+    num_mark_dec,
+    num_zero,
+    num_fmt) {
   if (num_fmt == "significant") {
     return(
       format(
-        value,
+        vec,
         digits = digits,
         drop0trailing = !num_zero,
         big.mark = num_mark_big,
@@ -113,7 +110,7 @@ format_non_integer_numeric <- function(
   } else if (num_fmt == "significant_cell") {
     return(
       sapply(
-        value,
+        vec,
         function(z) {
           format(
             z,
@@ -123,13 +120,12 @@ format_non_integer_numeric <- function(
             decimal.mark = num_mark_dec,
             scientific = FALSE
           )
-        }
-      )
+        })
     )
   } else if (num_fmt == "decimal") {
     return(
       formatC(
-        value,
+        vec,
         digits = digits,
         format = "f",
         drop0trailing = !num_zero,
@@ -140,7 +136,7 @@ format_non_integer_numeric <- function(
   } else if (num_fmt == "scientific") {
     return(
       formatC(
-        value,
+        vec,
         digits = digits,
         format = "e",
         drop0trailing = !num_zero,
@@ -149,22 +145,21 @@ format_non_integer_numeric <- function(
       )
     )
   }
-  return(value)
+  return(vec)
 }
 
 # Format integer values
 format_integer <- function(
-  value,
-  digits,
-  num_mark_big,
-  num_mark_dec,
-  num_zero,
-  num_fmt
-) {
+    vec,
+    digits,
+    num_mark_big,
+    num_mark_dec,
+    num_zero,
+    num_fmt) {
   if (num_fmt == "scientific") {
     return(
       formatC(
-        value,
+        vec,
         digits = digits,
         format = "e",
         drop0trailing = !num_zero,
@@ -173,6 +168,6 @@ format_integer <- function(
       )
     )
   } else {
-    return(format(value, big.mark = num_mark_big, scientific = FALSE))
+    return(format(vec, big.mark = num_mark_big, scientific = FALSE))
   }
 }
