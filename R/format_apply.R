@@ -120,15 +120,18 @@ apply_format <- function(
     i <- sort(unique(i))
 
     # group i
-    for (col in j_filtered) {
-      if (!inherits(x, "tinytable")) next
-      idx <- x@index_group_i %in% i
-      tmp <- tryCatch(
-        format_fn(x@data_group_i[idx, col], ...),
-        error = function(e) NULL
-      )
-      if (length(tmp) > 0) {
-        x@data_group_i[idx, col] <- tmp
+    if (length(x@index_group_i) > 0) {
+      for (col in j_filtered) {
+        if (!inherits(x, "tinytable")) next
+        idx <- x@index_group_i %in% i
+        tmp <- tryCatch(
+          format_fn(x@data_group_i[idx, col], ...),
+          error = function(e) NULL
+        )
+        if (length(tmp) > 0) {
+          browser()
+          x@data_group_i[idx, col] <- tmp
+        }
       }
     }
 
