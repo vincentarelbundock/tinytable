@@ -214,7 +214,7 @@ setMethod(
       rec[idx & rec$complete_column, c("j", "set", "span"), drop = FALSE]
     )
     spec <- by(cols, list(cols$set, cols$span), function(k) {
-      sprintf("column{%s}={%s}{%s}", paste(k$j, collapse = ","), k$span, k$set)
+      sprintf("column{%s}={%s}{%s}", latex_range_string(k$j), k$span, k$set)
     })
     spec <- unique(as.vector(unlist(spec)))
     for (s in spec) {
@@ -249,20 +249,28 @@ setMethod(
     cells <- unique(
       rec[idx & !rec$complete_row & !rec$complete_column, , drop = FALSE]
     )
-    spec <- sprintf(
-      "cell{%s}{%s}={%s}{%s}",
-      cells$i,
-      cells$j,
-      cells$span,
-      cells$set
-    )
-    spec <- unique(as.vector(unlist(spec)))
-    for (s in spec) {
-      x@table_string <- tabularray_insert(
-        x@table_string,
-        content = s,
-        type = "inner"
-      )
+    if (nrow(cells) > 0) {
+      # need to split by j otherwise we can end up with rectangular index that
+      # cover cells that should not be styled
+      cellsplit <- split(cells, list(cells$j, cells$set, cells$span))
+      cellsplit <- Filter(function(k) nrow(k) > 0, cellsplit)
+      spec <- sapply(cellsplit, function(cells) {
+        sprintf(
+          "cell{%s}{%s}={%s}{%s}",
+          latex_range_string(cells$i),
+          cells$j[1],
+          cells$span[1],
+          cells$set[1]
+        )
+      })
+      spec <- sort(unique(as.vector(unlist(spec))))
+      for (s in spec) {
+        x@table_string <- tabularray_insert(
+          x@table_string,
+          content = s,
+          type = "inner"
+        )
+      }
     }
 
     # lines
@@ -293,7 +301,7 @@ setMethod(
       )
     )
     spec <- by(horizontal, list(horizontal$i, horizontal$lin), function(k) {
-      jval <- paste(sort(unique(k$j)), collapse = ",")
+      jval <- latex_range_string(k$j)
       sprintf("hline{%s}={%s}{%s}", k$i, jval, k$lin)
     })
     spec <- unique(as.vector(unlist(spec)))
@@ -316,7 +324,7 @@ setMethod(
       transform(vertical[grepl("r", vertical$line), , drop = FALSE], j = j + 1)
     )
     spec <- by(vertical, list(vertical$j, vertical$lin), function(k) {
-      ival <- paste(sort(unique(k$i)), collapse = ",")
+      ival <- latex_range_string(k$i)
       sprintf("vline{%s}={%s}{%s}", k$j, ival, k$lin)
     })
     spec <- unique(as.vector(unlist(spec)))
@@ -432,3 +440,13 @@ get_dcolumn <- function(j, x) {
 #   inner_specs_keys = c("rulesep", "hlines", "vline", "hline", "vlines", "stretch", "abovesep", "belowsep", "rowsep", "leftsep", "rightsep", "colsep", "hspan", "vspan", "baseline"),
 #   span = c("r", "c")
 # )
+
+
+latex_range_string <- function(x) {
+  if (length(x) == 0) return("")
+  x <- sort(unique(x))
+  start <- x[c(TRUE, diff(x) != 1)]
+  end <- x[c(diff(x) != 1, TRUE)]
+  parts <- ifelse(start == end, start, paste0(start, "-", end))
+  paste(parts, collapse = ",")
+}
