@@ -335,6 +335,7 @@ format_tt_lazy <- function(
       j = j,
       format_fn = format_vector_math,
       components = components,
+      original_data = FALSE,
       math = math
     )
   }
