@@ -36,9 +36,12 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
     colspan_info <- NULL
     if (inherits(x, "tinytable") && nrow(x@style) > 0) {
       sty <- x@style
-      colspan_info <- sty[!is.na(sty$colspan) & sty$colspan > 1, c("i", "j", "colspan")]
+      colspan_info <- sty[
+        !is.na(sty$colspan) & sty$colspan > 1,
+        c("i", "j", "colspan")
+      ]
     }
-    
+
     # First pass: calculate widths excluding colspan cells
     for (j in seq_len(ncol(tab))) {
       cell_widths <- character(0)
@@ -49,18 +52,22 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
           # Adjust row index if header is present
           data_row_idx <- if (header) i - 1 else i
           if (data_row_idx > 0) {
-            is_colspan_cell <- any(colspan_info$i == data_row_idx & colspan_info$j == j)
+            is_colspan_cell <- any(
+              colspan_info$i == data_row_idx & colspan_info$j == j
+            )
           }
         }
-        
+
         if (!is_colspan_cell) {
           cell_widths <- c(cell_widths, tab[i, j])
         }
       }
-      
+
       if (length(cell_widths) > 0) {
         if (isTRUE(check_dependency("fansi"))) {
-          width_cols[j] <- max(nchar(as.character(fansi::strip_ctl(cell_widths))))
+          width_cols[j] <- max(nchar(as.character(fansi::strip_ctl(
+            cell_widths
+          ))))
         } else {
           width_cols[j] <- max(nchar(cell_widths))
         }
@@ -73,17 +80,17 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
         }
       }
     }
-    
+
     # Second pass: adjust widths for colspan cells that are longer than spanned columns
     if (!is.null(colspan_info) && nrow(colspan_info) > 0) {
       for (idx in seq_len(nrow(colspan_info))) {
         i_row <- colspan_info[idx, "i"]
         j_col <- colspan_info[idx, "j"]
         colspan <- colspan_info[idx, "colspan"]
-        
+
         # Get the actual row index in the tab matrix
         tab_row_idx <- if (header) i_row + 1 else i_row
-        
+
         if (tab_row_idx <= nrow(tab) && j_col <= ncol(tab)) {
           # Get the content width of the colspan cell
           cell_content <- tab[tab_row_idx, j_col]
@@ -92,17 +99,19 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
           } else {
             content_width <- nchar(cell_content)
           }
-          
+
           # Calculate current total width of spanned columns (including separators)
           spanned_cols <- j_col:(j_col + colspan - 1)
           spanned_cols <- spanned_cols[spanned_cols <= length(width_cols)]
-          current_total_width <- sum(width_cols[spanned_cols]) + length(spanned_cols) - 1
-          
+          current_total_width <- sum(width_cols[spanned_cols]) +
+            length(spanned_cols) -
+            1
+
           # If content is longer than current total width, expand columns proportionally
           if (content_width > current_total_width) {
             extra_width <- content_width - current_total_width
             width_per_col <- extra_width / length(spanned_cols)
-            
+
             for (col in spanned_cols) {
               width_cols[col] <- width_cols[col] + ceiling(width_per_col)
             }
@@ -119,38 +128,42 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
       # Process each header row to extract column spans
       for (row_idx in seq_len(nrow(x@data_group_j))) {
         group_row <- as.character(x@data_group_j[row_idx, ])
-        
+
         # Find consecutive spans - similar logic to other backends
         i <- 1
         while (i <= length(group_row)) {
           current_label <- group_row[i]
           span_start <- i
-          
+
           # Skip NA (ungrouped) columns
           if (is.na(current_label)) {
             i <- i + 1
             next
           }
-          
+
           # Find the end of this span
           if (trimws(current_label) != "") {
-            i <- i + 1  # Move past the current label
+            i <- i + 1 # Move past the current label
             # Continue through empty strings (continuation of span)
-            while (i <= length(group_row) && 
-                   !is.na(group_row[i]) &&
-                   trimws(group_row[i]) == "") {
+            while (
+              i <= length(group_row) &&
+                !is.na(group_row[i]) &&
+                trimws(group_row[i]) == ""
+            ) {
               i <- i + 1
             }
           } else {
             # For empty labels, just move to next
-            while (i <= length(group_row) && 
-                   !is.na(group_row[i]) &&
-                   trimws(group_row[i]) == "") {
+            while (
+              i <= length(group_row) &&
+                !is.na(group_row[i]) &&
+                trimws(group_row[i]) == ""
+            ) {
               i <- i + 1
             }
           }
           span_end <- i - 1
-          
+
           # Only process non-empty labels
           if (trimws(current_label) != "") {
             group_cols <- span_start:span_end
@@ -206,9 +219,9 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
   group_rows <- if (inherits(x, "tinytable")) x@index_group_i else integer(0)
   # Adjust for header if present
   if (header) {
-    group_rows <- group_rows + 1  # Header adds one row at the top
+    group_rows <- group_rows + 1 # Header adds one row at the top
   }
-  
+
   for (row_idx in seq_len(nrow(tab))) {
     row_data <- tab[row_idx, ]
     # Check if this is a group row with colspan styling
@@ -221,7 +234,12 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
       total_width <- sum(width_cols) + length(width_cols) - 1
       content_width <- nchar(row_data[1])
       padding_needed <- total_width - content_width
-      body[row_idx] <- paste0("|", row_data[1], strrep(" ", padding_needed), "|")
+      body[row_idx] <- paste0(
+        "|",
+        row_data[1],
+        strrep(" ", padding_needed),
+        "|"
+      )
     } else {
       # Regular row - use column separators
       body[row_idx] <- paste0("|", paste(row_data, collapse = "|"), "|")

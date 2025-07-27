@@ -238,7 +238,8 @@ setMethod(
     }
 
     return(x)
-  })
+  }
+)
 
 bootstrap_setting <- function(x, new, component = "row") {
   att <- attributes(x)

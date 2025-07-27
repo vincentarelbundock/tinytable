@@ -8,7 +8,8 @@ setMethod(
     # Only handle column grouping - row insertions now use matrix insertion
     x <- group_tabularray_col(x, j, ...)
     return(x)
-  })
+  }
+)
 
 group_tabularray_col <- function(x, j, ihead, ...) {
   # Process column groups from @data_group_j
@@ -40,15 +41,19 @@ group_tabularray_col <- function(x, j, ihead, ...) {
         if (trimws(current_label) != "") {
           i <- i + 1 # Move past the current label
           # Continue only through empty strings
-          while (i <= length(group_row) &&
-            !is.na(group_row[i]) &&
-            trimws(group_row[i]) == "") {
+          while (
+            i <= length(group_row) &&
+              !is.na(group_row[i]) &&
+              trimws(group_row[i]) == ""
+          ) {
             i <- i + 1
           }
         } else {
-          while (i <= length(group_row) &&
-            !is.na(group_row[i]) &&
-            trimws(group_row[i]) == "") {
+          while (
+            i <= length(group_row) &&
+              !is.na(group_row[i]) &&
+              trimws(group_row[i]) == ""
+          ) {
             i <- i + 1
           }
         }
@@ -58,7 +63,10 @@ group_tabularray_col <- function(x, j, ihead, ...) {
         if (trimws(current_label) != "") {
           header[span_start] <- current_label
           # Add cmidrule for this span
-          cmidrules <- c(cmidrules, sprintf("\\cmidrule[lr]{%s-%s}", span_start, span_end))
+          cmidrules <- c(
+            cmidrules,
+            sprintf("\\cmidrule[lr]{%s-%s}", span_start, span_end)
+          )
         }
       }
 
@@ -107,15 +115,19 @@ group_tabularray_col <- function(x, j, ihead, ...) {
         if (trimws(current_label) != "") {
           i <- i + 1 # Move past the current label
           # Continue only through empty strings
-          while (i <= length(group_row) &&
-            !is.na(group_row[i]) &&
-            trimws(group_row[i]) == "") {
+          while (
+            i <= length(group_row) &&
+              !is.na(group_row[i]) &&
+              trimws(group_row[i]) == ""
+          ) {
             i <- i + 1
           }
         } else {
-          while (i <= length(group_row) &&
-            !is.na(group_row[i]) &&
-            trimws(group_row[i]) == "") {
+          while (
+            i <= length(group_row) &&
+              !is.na(group_row[i]) &&
+              trimws(group_row[i]) == ""
+          ) {
             i <- i + 1
           }
         }

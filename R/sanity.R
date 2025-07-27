@@ -57,7 +57,7 @@ sanitize_i <- function(
     if (!is.null(i)) {
       out <- i
     } else if (inherits(x, "tinytable")) {
-      out <- seq_len(nrow(x@data_body))
+      out <- seq_len(nrow(x))
     }
     attr(out, "null") <- FALSE
     attr(out, "body") <- out[out > 0]
@@ -655,7 +655,7 @@ sanitize_notes <- function(notes) {
 
 sanitize_replace <- function(replace) {
   if (isTRUE(replace)) {
-    replace <- stats::setNames(list(NA, NaN), c(" ", " "))
+    replace <- list(" " = c("NA", "NaN"), " " = c(NA, NaN))
   } else if (isFALSE(replace)) {
     replace <- list(NULL)
   } else if (isTRUE(check_string(replace))) {

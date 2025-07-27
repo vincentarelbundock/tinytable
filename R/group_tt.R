@@ -88,14 +88,18 @@
 #'   style_tt(i = "groupi", background = "pink")
 #'
 group_tt <- function(
-    x,
-    i = getOption("tinytable_group_i", default = NULL),
-    j = getOption("tinytable_group_j", default = NULL),
-    ...) {
+  x,
+  i = getOption("tinytable_group_i", default = NULL),
+  j = getOption("tinytable_group_j", default = NULL),
+  ...
+) {
   # ... is important for ihead passing
 
   if ("indent" %in% ...names()) {
-    warning('Argument `indent` is deprecated and will be removed in a future version. Use `style_tt("~group", indent = 1)` instead.', call. = FALSE)
+    warning(
+      'Argument `indent` is deprecated and will be removed in a future version. Use `style_tt("~group", indent = 1)` instead.',
+      call. = FALSE
+    )
   }
 
   if (!inherits(x, "tinytable")) {
@@ -112,10 +116,12 @@ group_tt <- function(
   }
 
   # Handle matrix insertion case: if i is integerish and j is a matrix, OR if i is a list with no j
-  if ((isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) || (is.list(i) && is.null(j))) {
+  if (
+    (isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) ||
+      (is.list(i) && is.null(j))
+  ) {
     k <- group_tt_ij_k(x, i, j)
     converted_from_list <- k[[3]]
-
 
     # Calculate the correct indices: each position gets shifted by the number of insertions before it
     positions <- k[[1]]
@@ -220,12 +226,20 @@ group_tt <- function(
     # Add column groups to @data_group_j
     if (nrow(x@data_group_j) == 0) {
       # Create initial data_group_j with same structure as data
-      x@data_group_j <- data.frame(matrix(NA_character_, nrow = 1, ncol = ncol(x@data)))
+      x@data_group_j <- data.frame(matrix(
+        NA_character_,
+        nrow = 1,
+        ncol = ncol(x@data)
+      ))
       colnames(x@data_group_j) <- colnames(x@data)
       x@data_group_j[1, ] <- new_row
     } else {
       # Add new row to existing data_group_j
-      new_header_row <- data.frame(matrix(NA_character_, nrow = 1, ncol = ncol(x@data)))
+      new_header_row <- data.frame(matrix(
+        NA_character_,
+        nrow = 1,
+        ncol = ncol(x@data)
+      ))
       colnames(new_header_row) <- colnames(x@data)
       new_header_row[1, ] <- new_row
       x@data_group_j <- rbind(new_header_row, x@data_group_j)

@@ -1,358 +1,3 @@
-format_vector_sprintf <- function(vec, sprintf_pattern = NULL) {
-  if (is.null(sprintf_pattern)) return(NULL)
-  base::sprintf(sprintf_pattern, vec)
-}
-
-format_vector_logical <- function(vec, bool_fn = NULL) {
-  if (!is.logical(vec) || is.null(bool_fn)) return(NULL)
-  bool_fn(vec)
-}
-
-format_vector_date <- function(vec, date_format = NULL) {
-  if (!inherits(vec, "Date") || is.null(date_format)) return(NULL)
-  format(vec, date_format)
-}
-
-format_vector_other <- function(vec, other_fn = NULL) {
-  if (!is.function(other_fn)) return(NULL)
-  other_fn(vec)
-}
-
-format_vector_custom <- function(vec, fn = NULL) {
-  if (!is.function(fn)) return(NULL)
-  fn(vec)
-}
-
-format_vector_math <- function(vec, math = FALSE) {
-  if (!isTRUE(math)) return(NULL)
-  sprintf("$%s$", vec)
-}
-
-format_vector_replace <- function(ori_vec, out_vec = NULL, replace = NULL) {
-  # Handle component calls (single argument)
-  if (is.null(out_vec)) {
-    out_vec <- ori_vec
-  }
-
-  # If no replace argument, return original vector unchanged
-  if (is.null(replace) || length(replace) == 0) {
-    return(ori_vec)
-  }
-
-  result <- out_vec
-  for (k in seq_along(replace)) {
-    # Check if this is value replacement (like NA -> "-") or named replacement (like "Down" -> "↓")
-    replacement_values <- replace[[k]]
-    is_value_replacement <- any(is.na(replacement_values)) ||
-      any(sapply(replacement_values, function(x) identical(x, NaN))) ||
-      any(is.infinite(replacement_values))
-
-    if (is_value_replacement) {
-      # Value replacement: replace the value (NA/NaN/Inf/-Inf) with the name
-      idx <- ori_vec %in%
-        replacement_values |
-        (is.na(ori_vec) & any(is.na(replacement_values)))
-      if (identical(names(replace)[[k]], " ")) {
-        result[idx] <- ""
-      } else {
-        result[idx] <- names(replace)[[k]]
-      }
-    } else {
-      # Named replacement: replace the name with the value
-      idx <- ori_vec %in% names(replace)[[k]]
-      if (identical(replacement_values, " ")) {
-        result[idx] <- ""
-      } else {
-        result[idx] <- replacement_values
-      }
-    }
-  }
-
-  return(result)
-}
-
-format_vector_markdown <- function(vec, output_format) {
-  if (is.null(output_format)) return(NULL)
-
-  if (output_format == "html") {
-    vapply(
-      vec,
-      function(k) {
-        k <- litedown::mark(I(k), "html")
-        k <- sub("<p>", "", k, fixed = TRUE)
-        k <- sub("</p>", "", k, fixed = TRUE)
-        return(k)
-      },
-      character(1)
-    )
-  } else if (output_format == "latex") {
-    vapply(
-      vec,
-      function(k) {
-        litedown::mark(I(k), "latex")
-      },
-      character(1)
-    )
-  } else {
-    vec
-  }
-}
-
-format_quarto <- function(out, i, col, x) {
-  if (isTRUE(x@output == "html")) {
-    fun <- function(z) {
-      z@table_string <- sub(
-        "data-quarto-disable-processing='true'",
-        "data-quarto-disable-processing='false'",
-        z@table_string,
-        fixed = TRUE
-      )
-      return(z)
-    }
-    x <- style_tt(x, finalize = fun)
-    out[i, col] <- sprintf(
-      '<span data-qmd="%s"></span>',
-      out[i, col, drop = TRUE]
-    )
-  } else if (isTRUE(x@output == "latex")) {
-    assert_dependency("base64enc")
-    tmp <- sapply(
-      out[i, col, drop = TRUE],
-      function(z) base64enc::base64encode(charToRaw(z))
-    )
-    out[i, col] <- sprintf("\\QuartoMarkdownBase64{%s}", tmp)
-  }
-
-  return(list("out" = out, "x" = x))
-}
-
-# Apply functions for different table elements
-apply_cells <- function(out, i, j, format_fn, ...) {
-  for (row in i) {
-    for (col in j) {
-      out[row, col] <- format_fn(out[row, col], ...)
-    }
-  }
-  return(out)
-}
-
-# Map final table indices to body data indices
-map_final_to_body <- function(final_indices, x) {
-  if (!inherits(x, "tinytable")) {
-    return(final_indices)
-  }
-  
-  # If no groups, indices map directly
-  if (length(x@index_body) == 0) {
-    return(final_indices)
-  }
-  
-  # Map final table positions to body positions
-  body_indices <- integer(0)
-  for (idx in final_indices) {
-    # Check if this final position corresponds to a body row
-    body_pos <- which(x@index_body == idx)
-    if (length(body_pos) > 0) {
-      body_indices <- c(body_indices, body_pos)
-    }
-  }
-  
-  return(body_indices)
-}
-
-apply_caption <- function(x, format_fn, ...) {
-  if (!inherits(x, "tinytable")) {
-    return(x)
-  }
-  x@caption <- format_fn(x@caption, ...)
-  return(x)
-}
-
-apply_notes <- function(x, format_fn, ...) {
-  if (!inherits(x, "tinytable")) {
-    return(x)
-  }
-
-  for (idx in seq_along(x@notes)) {
-    n <- x@notes[[idx]]
-    if (is.character(n) && length(n) == 1) {
-      x@notes[[idx]] <- format_fn(n, ...)
-    } else if (is.list(n) && "text" %in% names(n)) {
-      n$text <- format_fn(n$text, ...)
-      x@notes[[idx]] <- n
-    }
-  }
-  return(x)
-}
-
-apply_group <- function(x, format_fn, slot = "data_group_i", ...) {
-  if (!inherits(x, "tinytable")) return(x)
-
-  if (slot == "data_group_i") {
-    data_slot <- x@data_group_i
-  } else if (slot == "data_group_j") {
-    data_slot <- x@data_group_j
-  }
-
-  if (nrow(data_slot) > 0) {
-    for (row_idx in seq_len(nrow(data_slot))) {
-      for (col_idx in seq_len(ncol(data_slot))) {
-        current_value <- data_slot[row_idx, col_idx]
-        if (!is.na(current_value) && trimws(current_value) != "") {
-          formatted_value <- format_fn(current_value, ...)
-          if (!is.null(formatted_value)) {
-            data_slot[row_idx, col_idx] <- formatted_value
-          }
-        }
-      }
-    }
-  }
-
-  if (slot == "data_group_i") {
-    x@data_group_i <- data_slot
-  } else if (slot == "data_group_j") {
-    x@data_group_j <- data_slot
-  }
-  return(x)
-}
-
-apply_colnames <- function(x, format_fn, ...) {
-  colnames(x) <- format_fn(colnames(x), ...)
-  return(x)
-}
-
-# Global dispatcher function for applying formatting functions
-apply_format <- function(
-  out,
-  x,
-  i,
-  j,
-  format_fn,
-  ori = NULL,
-  components = NULL,
-  inherit_class = NULL,
-  ...
-) {
-  if (is.character(components)) {
-    if ("all" %in% components) {
-      components <- c("colnames", "caption", "notes", "groupi", "groupj")
-    } else if (!("cells" %in% components)) {
-      i <- NULL
-      j <- NULL
-    }
-  }
-
-  # Apply formatting to specified components only
-  if ("colnames" %in% components) {
-    x <- apply_colnames(x, format_fn, ...)
-  }
-  if ("caption" %in% components) {
-    x <- apply_caption(x, format_fn, ...)
-  }
-  if ("notes" %in% components) {
-    x <- apply_notes(x, format_fn, ...)
-  }
-  # TODO: we might not need this because they are already inserted in body
-  # if ("groupi" %in% components) {
-  #   x <- apply_group(x, format_fn, slot = "data_group_i", ...)
-  # }
-  if ("groupj" %in% components) {
-    x <- apply_group(x, format_fn, slot = "data_group_j", ...)
-  }
-
-  # Apply to specific cells
-  # Filter columns based on inherits argument
-  j_filtered <- j
-  if (is.character(inherit_class)) {
-    # Always use original data for inherits check to ensure consistent behavior
-    if (!is.null(ori)) {
-      j_filtered <- j[sapply(j, function(col) inherits(ori[[col]], inherit_class))]
-    } else {
-      j_filtered <- j[sapply(j, function(col) inherits(out[[col]], inherit_class))]
-    }
-  } else if (is.function(inherit_class)) {
-    # Always use original data for inherits check to ensure consistent behavior
-    if (!is.null(ori)) {
-      j_filtered <- j[sapply(j, function(col) inherit_class(ori[[col]]))]
-    } else {
-      j_filtered <- j[sapply(j, function(col) inherit_class(out[[col]]))]
-    }
-  }
-
-  if (length(j_filtered) > 0) {
-    # Default behavior: use original values, fall back to out if ori is not available
-    if (!is.null(ori)) {
-      for (col in j_filtered) {
-        tmp <- format_fn(ori[i, col, drop = TRUE], ...)
-        if (!is.null(tmp)) out[i, col] <- tmp
-      }
-    } else {
-      # Fall back to applying to current out values if no original data
-      for (row in i) {
-        for (col in j_filtered) {
-          tmp <- format_fn(out[row, col], ...)
-          if (!is.null(tmp)) out[row, col] <- tmp
-        }
-      }
-    }
-  }
-
-  return(list(out = out, x = x))
-}
-
-# Special dispatcher for format_vector_replace that needs both ori and out values
-apply_format_replace <- function(
-  out,
-  x,
-  i,
-  j,
-  format_fn,
-  ori = NULL,
-  components = NULL,
-  ...
-) {
-  if (is.character(components)) {
-    if ("all" %in% components) {
-      components <- c("colnames", "caption", "notes", "groupi", "groupj")
-    } else if (!("cells" %in% components)) {
-      i <- NULL
-      j <- NULL
-    }
-  }
-
-  # Apply formatting to specified components only
-  if ("colnames" %in% components) {
-    x <- apply_colnames(x, format_fn, ...)
-  }
-  if ("caption" %in% components) {
-    x <- apply_caption(x, format_fn, ...)
-  }
-  if ("notes" %in% components) {
-    x <- apply_notes(x, format_fn, ...)
-  }
-  if ("groupi" %in% components) {
-    x <- apply_group(x, format_fn, slot = "data_group_i", ...)
-  }
-  if ("groupj" %in% components) {
-    x <- apply_group(x, format_fn, slot = "data_group_j", ...)
-  }
-
-  # Apply to specific cells - format_vector_replace needs both ori and out values
-  if (length(j) > 0 && !is.null(ori)) {
-    for (col in j) {
-      tmp <- format_fn(
-        ori[i, col, drop = TRUE],
-        out[i, col, drop = TRUE],
-        ...
-      )
-      if (!is.null(tmp)) out[i, col] <- tmp
-    }
-  }
-
-  return(list(out = out, x = x))
-}
-
-
 #' Format columns of a data frame
 #'
 #' This function formats the columns of a data frame based on the column type (logical, date, numeric).
@@ -434,29 +79,28 @@ apply_format_replace <- function(
 #' tt(dat) |> format_tt(escape = TRUE)
 #'
 format_tt <- function(
-  x,
-  i = NULL,
-  j = NULL,
-  digits = get_option("tinytable_format_digits", default = NULL),
-  num_fmt = get_option("tinytable_format_num_fmt", default = "significant"),
-  num_zero = get_option("tinytable_format_num_zero", default = FALSE),
-  num_suffix = get_option("tinytable_format_num_suffix", default = FALSE),
-  num_mark_big = get_option("tinytable_format_num_mark_big", default = ""),
-  num_mark_dec = get_option(
-    "tinytable_format_num_mark_dec",
-    default = getOption("OutDec", default = ".")
-  ),
-  date = get_option("tinytable_format_date", default = NULL),
-  bool = get_option("tinytable_format_bool", default = NULL),
-  math = get_option("tinytable_format_math", default = FALSE),
-  other = get_option("tinytable_format_other", default = NULL),
-  replace = get_option("tinytable_format_replace", default = FALSE),
-  escape = get_option("tinytable_format_escape", default = FALSE),
-  markdown = get_option("tinytable_format_markdown", default = FALSE),
-  quarto = get_option("tinytable_format_quarto", default = FALSE),
-  fn = get_option("tinytable_format_fn", default = NULL),
-  sprintf = get_option("tinytable_format_sprintf", default = NULL)
-) {
+    x,
+    i = NULL,
+    j = NULL,
+    digits = get_option("tinytable_format_digits", default = NULL),
+    num_fmt = get_option("tinytable_format_num_fmt", default = "significant"),
+    num_zero = get_option("tinytable_format_num_zero", default = FALSE),
+    num_suffix = get_option("tinytable_format_num_suffix", default = FALSE),
+    num_mark_big = get_option("tinytable_format_num_mark_big", default = ""),
+    num_mark_dec = get_option(
+      "tinytable_format_num_mark_dec",
+      default = getOption("OutDec", default = ".")
+    ),
+    date = get_option("tinytable_format_date", default = NULL),
+    bool = get_option("tinytable_format_bool", default = NULL),
+    math = get_option("tinytable_format_math", default = FALSE),
+    other = get_option("tinytable_format_other", default = NULL),
+    replace = get_option("tinytable_format_replace", default = FALSE),
+    escape = get_option("tinytable_format_escape", default = FALSE),
+    markdown = get_option("tinytable_format_markdown", default = FALSE),
+    quarto = get_option("tinytable_format_quarto", default = FALSE),
+    fn = get_option("tinytable_format_fn", default = NULL),
+    sprintf = get_option("tinytable_format_sprintf", default = NULL)) {
   assert_integerish(digits, len = 1, null.ok = TRUE)
   assert_choice(
     num_fmt,
@@ -542,27 +186,26 @@ format_tt <- function(
 
 
 format_tt_lazy <- function(
-  x,
-  i,
-  j,
-  digits,
-  num_fmt,
-  num_zero,
-  num_suffix,
-  num_mark_big,
-  num_mark_dec,
-  replace,
-  fn,
-  sprintf,
-  date_format,
-  bool,
-  math,
-  escape,
-  markdown,
-  quarto,
-  other,
-  components = NULL
-) {
+    x,
+    i,
+    j,
+    digits,
+    num_fmt,
+    num_zero,
+    num_suffix,
+    num_mark_big,
+    num_mark_dec,
+    replace,
+    fn,
+    sprintf,
+    date_format,
+    bool,
+    math,
+    escape,
+    markdown,
+    quarto,
+    other,
+    components = NULL) {
   if (inherits(x, "tbl_df")) {
     assert_dependency("tibble")
     x_is_tibble <- TRUE
@@ -601,96 +244,60 @@ format_tt_lazy <- function(
   i <- sanitize_i(i, x, lazy = FALSE, calling_function = "format_tt")
   j <- sanitize_j(j, x)
 
-  result <- apply_format(
-    out = out,
+  x <- apply_format(
     x = x,
     i = i,
     j = j,
     format_fn = format_vector_logical,
-    ori = ori,
     inherit_class = "logical",
     bool_fn = bool
   )
-  out <- result$out
-  x <- result$x
 
-  result <- apply_format(
-    out = out,
+  x <- apply_format(
     x = x,
     i = i,
     j = j,
     format_fn = format_vector_date,
-    ori = ori,
     inherit_class = "Date",
     date_format = date_format
   )
-  out <- result$out
-  x <- result$x
 
-  if (!is.null(digits)) {
-    result <- apply_format(
-      out = out,
-      x = x,
-      i = i,
-      j = j,
-      format_fn = format_numeric,
-      ori = ori,
-      num_suffix = num_suffix,
-      digits = digits,
-      num_mark_big = num_mark_big,
-      num_mark_dec = num_mark_dec,
-      num_zero = num_zero,
-      num_fmt = num_fmt,
-      inherit_class = is.numeric
-    )
-    out <- result$out
-    x <- result$x
-  }
+  x <- apply_format(
+    x = x,
+    i = i,
+    j = j,
+    format_fn = format_vector_numeric,
+    num_suffix = num_suffix,
+    digits = digits,
+    num_mark_big = num_mark_big,
+    num_mark_dec = num_mark_dec,
+    num_zero = num_zero,
+    num_fmt = num_fmt,
+    inherit_class = is.numeric
+  )
 
   is_other <- function(x) {
     !is.numeric(x) && !inherits(x, "Date") && !is.logical(x)
   }
-  result <- apply_format(
-    out = out,
+  x <- apply_format(
     x = x,
     i = i,
     j = j,
     format_fn = format_vector_other,
-    ori = ori,
     inherit_class = is_other,
     other_fn = other
   )
-  out <- result$out
-  x <- result$x
-
-  # format each column using the original approach
-  # Issue #230: drop=TRUE fixes bug which returned a character dput-like vector
-  result <- apply_format_replace(
-    out = out,
-    ori = ori,
-    x = x,
-    i = i,
-    j = j,
-    format_fn = format_vector_replace,
-    replace = replace,
-    components = components
-  )
-  out <- result$out
-  x <- result$x
 
   # after other formatting
   if (!is.null(sprintf)) {
-    result <- apply_format(
-      out = out,
+    x <- apply_format(
       x = x,
       i = i,
       j = j,
+      components = components,
       format_fn = format_vector_sprintf,
-      ori = ori,
       sprintf_pattern = sprintf
     )
-    out <- result$out
-    x <- result$x
   }
 
   # Custom functions overwrite all the other formatting, but is before markdown
@@ -698,40 +305,49 @@ format_tt_lazy <- function(
   if (is.function(fn)) {
     if (!is.null(components)) {
       # Use apply_format for component-specific formatting
-      result <- apply_format(
-        out = out,
+      x <- apply_format(
         x = x,
         i = i,
         j = j,
         format_fn = format_vector_custom,
-        ori = ori,
         components = components,
         fn = fn
       )
-      out <- result$out
-      x <- result$x
     } else {
       # Original behavior for cell-specific formatting
       for (col in j) {
-        out[i, col] <- format_vector_custom(ori[i, col, drop = TRUE], fn)
+        tmp <- tryCatch(
+          format_vector_custom(ori[i, col, drop = TRUE], fn),
+          error = function(e) NULL
+        )
+        out[i, col] <- if (length(tmp) > 0) tmp else out[i, col]
       }
     }
   }
 
   # close to last
   if (isTRUE(math)) {
-    result <- apply_format(
-      out = out,
+    x <- apply_format(
       x = x,
       i = i,
       j = j,
       format_fn = format_vector_math,
       components = components,
+      original_data = FALSE,
       math = math
     )
-    out <- result$out
-    x <- result$x
   }
+
+  # replace before escape, otherwise overaggressive removal
+  x <- apply_format(
+    x = x,
+    i = i,
+    j = j,
+    format_fn = format_vector_replace,
+    components = components,
+    replace = replace,
+    original_data = FALSE
+  )
 
   # escape latex characters
   if (!isFALSE(escape)) {
@@ -747,58 +363,50 @@ format_tt_lazy <- function(
       o <- FALSE
     }
 
-    result <- apply_format(
-      out = out,
+    x <- apply_format(
       x = x,
       i = i,
       j = j,
-      format_fn = escape_text,
+      format_fn = format_vector_escape,
       components = components,
+      original_data = FALSE,
       output = o
     )
-    out <- result$out
-    x <- result$x
 
     # column names when 0 is in i
     if (0 %in% i && !identical(components, "all")) {
-      x <- apply_colnames(x, escape_text, output = o)
+      x <- apply_colnames(x, format_vector_escape, output = o)
     }
   }
 
   # markdown and quarto at the very end
   if (isTRUE(markdown)) {
     assert_dependency("litedown")
-    result <- apply_format(
-      out = out,
+    x <- apply_format(
       x = x,
       i = i,
       j = j,
       format_fn = format_vector_markdown,
       components = components,
+      original_data = FALSE,
       output_format = x@output
     )
-    out <- result$out
-    x <- result$x
   }
 
   if (isTRUE(quarto)) {
     for (col in j) {
-      tmp <- format_quarto(out = out, i = i, col = col, x = x)
-      out <- tmp$out
-      x <- tmp$x
+      x <- format_vector_quarto(i = i, col = col, x = x)
     }
   }
 
   # output
   if (isTRUE(atomic_vector)) {
-    return(out[[1]])
-  } else if (!inherits(x, "tinytable")) {
-    if (x_is_tibble) {
-      out <- tibble::as_tibble(out)
-    }
-    return(out)
-  } else {
-    x@data_body <- out
-    return(x)
+    x <- x[[1]]
   }
+
+  if (!inherits(x, "tinytable") && x_is_tibble) {
+    x <- tibble::as_tibble(x)
+  }
+
+  return(x)
 }

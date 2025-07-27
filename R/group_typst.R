@@ -10,7 +10,8 @@ setMethod(
       x <- group_typst_col(x, j, ...)
     }
     return(x)
-  })
+  }
+)
 
 
 group_typst_col <- function(x, j, ihead, ...) {
@@ -42,16 +43,20 @@ group_typst_col <- function(x, j, ihead, ...) {
         if (trimws(current_label) != "") {
           i <- i + 1 # Move past the current label
           # Continue through empty strings
-          while (i <= length(group_row) &&
-            !is.na(group_row[i]) &&
-            trimws(group_row[i]) == "") {
+          while (
+            i <= length(group_row) &&
+              !is.na(group_row[i]) &&
+              trimws(group_row[i]) == ""
+          ) {
             i <- i + 1
           }
         } else {
           # For empty labels, just move to next
-          while (i <= length(group_row) &&
-            !is.na(group_row[i]) &&
-            trimws(group_row[i]) == "") {
+          while (
+            i <= length(group_row) &&
+              !is.na(group_row[i]) &&
+              trimws(group_row[i]) == ""
+          ) {
             i <- i + 1
           }
         }
@@ -61,11 +66,14 @@ group_typst_col <- function(x, j, ihead, ...) {
         if (trimws(current_label) == "") {
           col_specs <- c(col_specs, sprintf("[ ],"))
         } else {
-          col_specs <- c(col_specs, sprintf(
-            "table.cell(stroke: (bottom: .05em + black), colspan: %s, align: center)[%s],",
-            span_length,
-            current_label
-          ))
+          col_specs <- c(
+            col_specs,
+            sprintf(
+              "table.cell(stroke: (bottom: .05em + black), colspan: %s, align: center)[%s],",
+              span_length,
+              current_label
+            )
+          )
         }
       }
 

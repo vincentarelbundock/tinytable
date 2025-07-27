@@ -4,11 +4,10 @@
 #
 # THE ORDER MATTERS A LOT!
 
-
 #' Build group header and body parts with position calculations
 #' @keywords internal
 #' @noRd
-rbind_i_j <- function(x) {
+rbind_body_groupi <- function(x) {
   # Reconstruct the final table by combining formatted data_body and data_group_i parts
   if (nrow(x@data_group_i) == 0) {
     # No groups - @data_body already contains the final formatted data
@@ -20,7 +19,11 @@ rbind_i_j <- function(x) {
   final_ncol <- ncol(x@data_body)
 
   # Create final data frame with proper structure
-  final_df <- data.frame(matrix(NA_character_, nrow = total_rows, ncol = final_ncol))
+  final_df <- data.frame(matrix(
+    NA_character_,
+    nrow = total_rows,
+    ncol = final_ncol
+  ))
   colnames(final_df) <- colnames(x@data_body)
 
   # Insert body data at index_body positions
@@ -44,13 +47,9 @@ rbind_i_j <- function(x) {
   }
 
   x@data_body <- final_df
-  x@nrow <- nrow(x@data) + nrow(x@data_group_i)
 
   return(x)
 }
-
-
-
 
 
 build_tt <- function(x, output = NULL) {
@@ -93,14 +92,17 @@ build_tt <- function(x, output = NULL) {
     x@index_body <- body_positions
   }
 
+  # before format_tt() because we need the indices
+  x@nrow <- nrow(x@data) + nrow(x@data_group_i)
+
   # format each component individually
   for (l in x@lazy_format) {
     l[["x"]] <- x
     x <- eval(l)
   }
 
-  # reconstruct the final table
-  x <- rbind_i_j(x)
+  # insert group rows into body
+  x <- rbind_body_groupi(x)
 
   # add footnote markers just after formatting, otherwise appending converts to string
   x <- footnote_markers(x)
