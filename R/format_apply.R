@@ -119,18 +119,18 @@ apply_format <- function(
 
     # Default behavior: use original values, fall back to out if ori is not available
     for (col in j_filtered) {
-      idx_body <- if (inherits(x, "tinytable")) {
-        x@index_body
+      if (inherits(x, "tinytable")) {
+        idx_body <- x@index_body
       } else {
-        seq_len(nrow(out))
+        idx_body <- seq_len(nrow(out))
       }
+
+      idx_out <- i
+      idx_out <- intersect(i, idx_body)
+      idx_ori <- seq_len(nrow(ori))[idx_body %in% i]
 
       # original data rows
       if (original_data) {
-        idx_out <- i
-
-        idx_out <- intersect(i, idx_body)
-        idx_ori <- seq_len(nrow(ori))[idx_body %in% i]
         tmp <- tryCatch(
           format_fn(ori[idx_ori, col, drop = TRUE], ...),
           error = function(e) NULL
@@ -148,7 +148,10 @@ apply_format <- function(
         if (length(tmp) > 0) out[idx_out, col] <- tmp
       } else {
         tmp <- tryCatch(
-          format_fn(out[i, col, drop = TRUE], ...),
+          format_fn(
+            vec = out[i, col, drop = TRUE],
+            vec_original = ori[idx_ori, col, drop = TRUE],
+            ...),
           error = function(e) NULL
         )
         if (length(tmp) > 0) out[i, col] <- tmp
