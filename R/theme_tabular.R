@@ -1,8 +1,7 @@
 theme_tabular <- function(
-  x,
-  style = get_option("tinytable_theme_tabular_style", "tabular"),
-  ...
-) {
+    x,
+    style = get_option("tinytable_theme_tabular_style", "tabular"),
+    ...) {
   assert_choice(style, c("tabular", "tabularray"))
 
   # do not change the default theme

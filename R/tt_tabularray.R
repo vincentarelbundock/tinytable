@@ -126,5 +126,4 @@ setMethod(
     x@body <- body
 
     return(x)
-  }
-)
+  })
