@@ -52,7 +52,7 @@ format_vector_escape <- function(vec, output = "latex", ...) {
         "[" = "\\[",
         "]" = "\\]"
       ),
-      pattern = "[<>*_@=\\-+/$#\\[\\]]"
+      pattern = "[<>*_@=+/\\$#\\[\\]\\-]"
     )
   )
 
@@ -77,7 +77,7 @@ apply_escape_pattern <- function(vec, pattern_info) {
   }
 
   # Short circuit if no special characters found (performance optimization)
-  if (!any(grepl(pattern_info$pattern, vec[!na_out], useBytes = TRUE))) {
+  if (!any(grepl(pattern_info$pattern, vec[!na_out], perl = TRUE))) {
     return(vec)
   }
 
