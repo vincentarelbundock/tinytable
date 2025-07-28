@@ -1,3 +1,165 @@
+# =============================================================================
+# HELPER FUNCTIONS
+# =============================================================================
+
+#' Handle deprecated arguments
+#' @keywords internal
+#' @noRd
+handle_deprecated_args <- function(...) {
+  if ("indent" %in% ...names()) {
+    warning(
+      'Argument `indent` is deprecated and will be removed in a future version. Use `style_tt("~group", indent = 1)` instead.',
+      call. = FALSE
+    )
+  }
+}
+
+#' Process matrix insertion for row grouping
+#' @keywords internal
+#' @noRd
+process_matrix_insertion <- function(x, i, j) {
+  k <- group_tt_ij_k(x, i, j)
+  converted_from_list <- k[[3]]
+
+  # Calculate indices and update table
+  positions <- k[[1]]
+  idx <- positions + cumsum(rep(1, length(positions))) - 1
+  x@nrow <- x@nrow + length(positions)
+
+  # Create group data frame
+  group_matrix <- k[[2]]
+  group_df <- as.data.frame(group_matrix, stringsAsFactors = FALSE)
+
+  # Handle row duplication for multiple positions with single matrix row
+  if (length(positions) > 1 && nrow(group_df) == 1) {
+    group_df <- group_df[rep(1, length(positions)), , drop = FALSE]
+  }
+
+  # Set column names to match the table
+  if (ncol(group_df) == ncol(x@data)) {
+    colnames(group_df) <- colnames(x@data)
+  }
+
+  # Add to existing group data or create new
+  if (nrow(x@data_group_i) == 0) {
+    x@data_group_i <- group_df
+    x@index_group_i <- idx
+  } else {
+    msg <- "Only one group row insertion is allowed at a time with `group_tt(i=...)`."
+    stop(msg, call. = FALSE)
+  }
+
+  # Apply styling for matrix insertion
+  if (converted_from_list) {
+    x <- style_tt(x, i = idx, j = 1, colspan = ncol(x))
+  }
+
+  return(x)
+}
+
+#' Process row grouping with list input
+#' @keywords internal
+#' @noRd
+process_row_grouping <- function(x, i, j) {
+  # Convert list to matrix insertion format for row grouping
+  k <- group_tt_ij_k(x, i, NULL) # Pass NULL for j to trigger list conversion
+  converted_from_list <- k[[3]]
+
+  # Calculate indices and update table
+  positions <- k[[1]]
+  idx <- positions + cumsum(rep(1, length(positions))) - 1
+  x@nrow <- x@nrow + length(positions)
+
+  # Create group data frame
+  group_matrix <- k[[2]]
+  group_df <- as.data.frame(group_matrix, stringsAsFactors = FALSE)
+
+  # Set column names to match the table
+  if (ncol(group_df) == ncol(x@data)) {
+    colnames(group_df) <- colnames(x@data)
+  }
+
+  # Add to existing group data or create new
+  if (nrow(x@data_group_i) == 0) {
+    x@data_group_i <- group_df
+  } else {
+    x@data_group_i <- rbind_nocol(x@data_group_i, group_df)
+  }
+
+  # Add indices to track final positions
+  x@index_group_i <- c(x@index_group_i, idx)
+
+  # Apply styling for list-converted group headers
+  if (converted_from_list) {
+    x <- style_tt(x, i = idx, j = 1, colspan = ncol(x))
+  }
+
+  return(x)
+}
+
+#' Process column grouping
+#' @keywords internal
+#' @noRd
+process_column_grouping <- function(x, j) {
+  j <- sanitize_group_index(j, hi = ncol(x), orientation = "column")
+  x@nhead <- x@nhead + 1
+
+  # Create group row
+  new_row <- rep(NA_character_, ncol(x))
+
+  # Set group labels in appropriate columns
+  for (i in seq_along(j)) {
+    group_name <- names(j)[i]
+    group_cols <- j[[i]]
+    # Set the label in the first column of the span
+    new_row[group_cols[1]] <- group_name
+    # Set empty string in continuation columns (if span > 1)
+    if (length(group_cols) > 1) {
+      new_row[group_cols[-1]] <- ""
+    }
+  }
+
+  # Add to existing group data or create new
+  if (nrow(x@data_group_j) == 0) {
+    x@data_group_j <- data.frame(matrix(
+      NA_character_,
+      nrow = 1,
+      ncol = ncol(x@data)
+    ))
+    colnames(x@data_group_j) <- colnames(x@data)
+    x@data_group_j[1, ] <- new_row
+  } else {
+    new_header_row <- data.frame(matrix(
+      NA_character_,
+      nrow = 1,
+      ncol = ncol(x@data)
+    ))
+    colnames(new_header_row) <- colnames(x@data)
+    new_header_row[1, ] <- new_row
+    x@data_group_j <- rbind_nocol(new_header_row, x@data_group_j)
+  }
+
+  return(x)
+}
+
+#' Process delimiter-based column grouping
+#' @keywords internal
+#' @noRd
+process_delimiter_grouping <- function(x, j) {
+  if (any(grepl(j, x@names, fixed = TRUE))) {
+    j_delim <- j_delim_to_named_list(x = x, j = j)
+    x@names <- j_delim$colnames
+    j <- j_delim$groupnames
+  } else {
+    j <- NULL
+  }
+  return(list(x = x, j = j))
+}
+
+# =============================================================================
+# MAIN FUNCTION
+# =============================================================================
+
 #' Spanning labels to identify groups of rows or columns
 #'
 #' @export
@@ -86,21 +248,13 @@
 #' tt(head(iris, 7)) |>
 #'   group_tt(i = 2, j = rowmat) |>
 #'   style_tt(i = "groupi", background = "pink")
-#'
 group_tt <- function(
-    x,
-    i = getOption("tinytable_group_i", default = NULL),
-    j = getOption("tinytable_group_j", default = NULL),
-    ...) {
-  # ... is important for ihead passing
-
-  if ("indent" %in% ...names()) {
-    warning(
-      'Argument `indent` is deprecated and will be removed in a future version. Use `style_tt("~group", indent = 1)` instead.',
-      call. = FALSE
-    )
-  }
-
+  x,
+  i = getOption("tinytable_group_i", default = NULL),
+  j = getOption("tinytable_group_j", default = NULL),
+  ...
+) {
+  handle_deprecated_args(...)
   if (!inherits(x, "tinytable")) {
     stop("`x` must be generated by `tinytable::tt()`.", call. = FALSE)
   }
@@ -108,143 +262,35 @@ group_tt <- function(
     stop("At least one of `i` or `j` must be specified.", call. = FALSE)
   }
 
-  # Convert vector input to list format for consecutive series grouping
-  # When j=NULL and i is any vector (not a list), it's for consecutive labels
+  validate_group_tt_inputs(x, i, j)
+
   if (is.vector(i) && !is.list(i) && length(i) > 1 && is.null(j)) {
     i <- sanitize_group_vec2list(i)
   }
 
-  # Handle matrix insertion case: if i is integerish and j is a matrix, OR if i is a list with no j
+  # matrix insertion case
   if (
     (isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) ||
       (is.list(i) && is.null(j))
   ) {
-    k <- group_tt_ij_k(x, i, j)
-    converted_from_list <- k[[3]]
-
-    # Calculate the correct indices: each position gets shifted by the number of insertions before it
-    positions <- k[[1]]
-    idx <- positions + cumsum(rep(1, length(positions))) - 1
-    x@nrow <- x@nrow + length(positions)
-
-    # Add group matrix data to @data_group_i and track indices in @index_group_i
-    group_matrix <- k[[2]]
-    group_df <- as.data.frame(group_matrix, stringsAsFactors = FALSE)
-
-    # Handle row duplication for multiple positions with single matrix row
-    if (length(positions) > 1 && nrow(group_df) == 1) {
-      group_df <- group_df[rep(1, length(positions)), , drop = FALSE]
-    }
-
-    # Set column names to match the table
-    if (ncol(group_df) == ncol(x@data)) {
-      colnames(group_df) <- colnames(x@data)
-    }
-
-    if (nrow(x@data_group_i) == 0) {
-      x@data_group_i <- group_df
-      x@index_group_i <- idx
-    } else {
-      msg <- "Only one group row insertion is allowed at a time with `group_tt(i=...)`."
-      stop(msg, call. = FALSE)
-    }
-
-
-    # Apply styling for matrix insertion
-    if (converted_from_list) {
-      # Apply colspan to make group headers span full width (column 1 spans all columns)
-      x <- style_tt(x, i = idx, j = 1, colspan = ncol(x))
-    }
-
-    return(x)
+    return(process_matrix_insertion(x, i, j))
   }
 
-  # Handle row grouping when i is a list (but j is also provided, so not matrix insertion)
+  # row grouping when i is a list (but j is also provided)
   if (is.list(i) && !is.null(j)) {
-    # Convert list to matrix insertion format for row grouping
-    k <- group_tt_ij_k(x, i, NULL) # Pass NULL for j to trigger list conversion
-    converted_from_list <- k[[3]]
-
-    # Calculate indices and update table
-    positions <- k[[1]]
-    idx <- positions + cumsum(rep(1, length(positions))) - 1
-    x@nrow <- x@nrow + length(positions)
-
-    # Add group matrix data to @data_group_i and track indices in @index_group_i
-    group_matrix <- k[[2]]
-    group_df <- as.data.frame(group_matrix, stringsAsFactors = FALSE)
-    # Set column names to match the table
-    if (ncol(group_df) == ncol(x@data)) {
-      colnames(group_df) <- colnames(x@data)
-    }
-
-    if (nrow(x@data_group_i) == 0) {
-      x@data_group_i <- group_df
-    } else {
-      x@data_group_i <- rbind_nocol(x@data_group_i, group_df)
-    }
-
-    # Add indices to @index_group_i to track final positions
-    x@index_group_i <- c(x@index_group_i, idx)
-
-    # Apply styling for list-converted group headers
-    if (converted_from_list) {
-      x <- style_tt(x, i = idx, j = 1, colspan = ncol(x))
-    }
+    x <- process_row_grouping(x, i, j)
   }
 
+  # delimiter-based column grouping
   if (isTRUE(check_string(j))) {
-    if (any(grepl(j, x@names, fixed = TRUE))) {
-      j_delim <- j_delim_to_named_list(x = x, j = j)
-      x@names <- j_delim$colnames
-      j <- j_delim$groupnames
-    } else {
-      j <- NULL
-    }
+    result <- process_delimiter_grouping(x, j)
+    x <- result$x
+    j <- result$j
   }
 
-  # Handle column grouping (j parameter) - this remains separate from matrix insertion
+  # column grouping
   if (!is.null(j)) {
-    j <- sanitize_group_index(j, hi = ncol(x), orientation = "column")
-    x@nhead <- x@nhead + 1
-
-    # Add group labels to data_group_j matrix
-    new_row <- rep(NA_character_, ncol(x))
-    # Handle duplicate names properly by processing each list element individually
-    # Set the group name in the first column, "" in continuation columns, NA in ungrouped columns
-    for (i in seq_along(j)) {
-      group_name <- names(j)[i]
-      group_cols <- j[[i]]
-      # Set the label in the first column of the span
-      new_row[group_cols[1]] <- group_name
-      # Set empty string in continuation columns (if span > 1)
-      if (length(group_cols) > 1) {
-        new_row[group_cols[-1]] <- ""
-      }
-    }
-    # Add column groups to @data_group_j
-    if (nrow(x@data_group_j) == 0) {
-      # Create initial data_group_j with same structure as data
-      x@data_group_j <- data.frame(matrix(
-        NA_character_,
-        nrow = 1,
-        ncol = ncol(x@data)
-      ))
-      colnames(x@data_group_j) <- colnames(x@data)
-      x@data_group_j[1, ] <- new_row
-    } else {
-      # Add new row to existing data_group_j
-      new_header_row <- data.frame(matrix(
-        NA_character_,
-        nrow = 1,
-        ncol = ncol(x@data)
-      ))
-      colnames(new_header_row) <- colnames(x@data)
-      new_header_row[1, ] <- new_row
-      x@data_group_j <- rbind_nocol(new_header_row, x@data_group_j)
-    }
-
-    # Column groups are now stored in @data_group_j and processed directly by backends
+    x <- process_column_grouping(x, j)
   }
 
   return(x)

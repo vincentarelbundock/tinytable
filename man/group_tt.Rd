@@ -122,5 +122,4 @@ rowmat <- matrix(c(
 tt(head(iris, 7)) |>
   group_tt(i = 2, j = rowmat) |>
   style_tt(i = "groupi", background = "pink")
-
 }
