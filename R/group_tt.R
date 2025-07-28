@@ -262,8 +262,6 @@ group_tt <- function(
     stop("At least one of `i` or `j` must be specified.", call. = FALSE)
   }
 
-  validate_group_tt_inputs(x, i, j)
-
   if (is.vector(i) && !is.list(i) && length(i) > 1 && is.null(j)) {
     i <- sanitize_group_vec2list(i)
   }
