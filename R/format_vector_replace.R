@@ -1,4 +1,9 @@
-format_vector_replace <- function(vec, vec_original = NULL, replace = NULL, ...) {
+format_vector_replace <- function(
+  vec,
+  vec_original = NULL,
+  replace = NULL,
+  ...
+) {
   if (is.null(replace) || isFALSE(replace) || length(replace) == 0) {
     return(vec)
   }
@@ -21,8 +26,14 @@ format_vector_replace <- function(vec, vec_original = NULL, replace = NULL, ...)
             is.na(old) && is.na(x0),
             is.nan(old) && is.nan(x),
             is.nan(old) && is.nan(x0),
-            is.infinite(old) && is.infinite(x) && typeof(x) == "double" && sign(x) == sign(old),
-            is.infinite(old) && is.infinite(x0) && typeof(x0) == "double" && sign(x0) == sign(old),
+            is.infinite(old) &&
+              is.infinite(x) &&
+              typeof(x) == "double" &&
+              sign(x) == sign(old),
+            is.infinite(old) &&
+              is.infinite(x0) &&
+              typeof(x0) == "double" &&
+              sign(x0) == sign(old),
             identical(old, x),
             identical(old, x0)
           ))

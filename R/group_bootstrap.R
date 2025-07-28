@@ -7,131 +7,166 @@ setMethod(
   definition = function(x, i = NULL, j = NULL, ...) {
     # Only handle column grouping - row insertions now use matrix insertion
     if (!is.null(j)) {
-      x <- group_bootstrap_col(x, j = j, ...)
+      x <- bootstrap_groupj(x, j = j, ...)
     }
     return(x)
   }
 )
 
-group_bootstrap_col <- function(x, j, ihead, ...) {
+bootstrap_groupj <- function(x, j, ihead, ...) {
   # Check if there are any column groups to process
   if (nrow(x@data_group_j) == 0) {
     return(x)
   }
 
-  out <- x@table_string
-  out <- strsplit(out, "\\n")[[1]]
+  all_groupj_rows <- list()
+  all_styling_tasks <- list()
 
-  # Process column groups from @data_group_j (process all rows, not just the first)
-  if (nrow(x@data_group_j) > 0) {
-    all_group_rows <- list()
-    all_styling_tasks <- list()
+  # Process each row in @data_group_j separately (from last to first to maintain proper order)
+  for (groupj_idx in nrow(x@data_group_j):1) {
+    groupj <- as.character(x@data_group_j[groupj_idx, ])
 
-    # Process each row in @data_group_j separately (from last to first to maintain proper order)
-    for (group_row_idx in nrow(x@data_group_j):1) {
-      group_row <- as.character(x@data_group_j[group_row_idx, ])
-      # Calculate the appropriate ihead for this group row:
-      # Row 1 in @data_group_j (most recent group_tt call) should get -1
-      # Row 2 in @data_group_j (earlier group_tt call) should get -2, etc.
-      current_ihead <- ihead - (nrow(x@data_group_j) - group_row_idx)
+    # Calculate the appropriate ihead for this group row
+    current_ihead <- ihead - (nrow(x@data_group_j) - groupj_idx)
 
-      # Convert to the old format that the bootstrap code expects
-      j_list <- list()
-      i <- 1
-      while (i <= length(group_row)) {
-        current_label <- group_row[i]
+    # Convert group row to column spans
+    j_list <- bootstrap_groupj_span(groupj)
 
-        # Skip NA (ungrouped) columns
-        if (is.na(current_label)) {
-          i <- i + 1
-          next
-        }
+    if (length(j_list) > 0) {
+      # Create HTML for this group row
+      group_html <- bootstrap_groupj_html(x, j_list, current_ihead)
+      all_groupj_rows[[groupj_idx]] <- group_html
 
-        span_start <- i
-
-        # Find the end of this span
-        if (trimws(current_label) != "") {
-          i <- i + 1 # Move past the current label
-          # Continue through empty strings (continuation of span)
-          while (
-            i <= length(group_row) &&
-              !is.na(group_row[i]) &&
-              trimws(group_row[i]) == ""
-          ) {
-            i <- i + 1
-          }
-          span_end <- i - 1
-
-          # Add to j_list if non-empty label
-          j_list[[current_label]] <- span_start:span_end
-        } else {
-          i <- i + 1
-        }
-      }
-
-      if (length(j_list) > 0) {
-        # Add missing columns as empty groups
+      # Store styling tasks for later application (maintain original order)
+      if (x@nhead > 1) {
+        # Create j_combined for styling (same as in groupj_html_html)
         miss <- as.list(setdiff(seq_len(ncol(x)), unlist(j_list)))
         miss <- stats::setNames(miss, rep(" ", length(miss)))
         j_combined <- c(j_list, miss)
-
         max_col <- sapply(j_combined, max)
         idx <- order(max_col)
         j_combined <- j_combined[idx]
 
-        jstring <- lapply(seq_along(names(j_combined)), function(k) {
-          sprintf(
-            '<th scope="col" align="center" colspan=%s data-row="%d" data-col="%d">%s</th>',
-            max(j_combined[[k]]) - min(j_combined[[k]]) + 1,
-            current_ihead,
-            k - 1, # 0-based indexing for data-col
-            names(j_combined)[k]
-          )
-        })
-        jstring <- paste(unlist(jstring), collapse = "\n")
-        jstring <- sprintf("<tr>\n%s\n</tr>", jstring)
-
-        # Store the group row HTML for later insertion
-        all_group_rows[[group_row_idx]] <- jstring
-
-        # Store styling tasks for later application
-        if (x@nhead > 1) {
-          all_styling_tasks[[length(all_styling_tasks) + 1]] <- list(
-            ihead = current_ihead,
-            j_combined = j_combined
-          )
-        }
-      }
-    }
-
-    # Insert all group rows at once
-    if (length(all_group_rows) > 0) {
-      all_jstrings <- paste(all_group_rows, collapse = "\n")
-      idx <- grep("<thead>", out, fixed = TRUE)[1]
-      out <- c(out[seq_len(idx)], all_jstrings, out[(idx + 1):length(out)])
-      out <- paste(out, collapse = "\n")
-      x@table_string <- out
-
-      # Apply all styling
-      for (task in all_styling_tasks) {
-        x <- style_tt(x, i = task$ihead, align = "c")
-
-        # midrule on numbered spans (not full columns of body)
-        jnames <- names(task$j_combined)
-        jnames <- seq_along(jnames)[trimws(jnames) != ""]
-        if (length(jnames) > 0) {
-          x <- style_tt(
-            x,
-            i = task$ihead,
-            j = jnames,
-            line = "b",
-            line_width = 0.05,
-            line_color = "#d3d8dc"
-          )
-        }
+        all_styling_tasks[[length(all_styling_tasks) + 1]] <- list(
+          ihead = current_ihead,
+          j_combined = j_combined
+        )
       }
     }
   }
 
+  if (length(all_groupj_rows) > 0) {
+    # Insert all group rows into the table
+    x <- bootstrap_groupj_insert(x, all_groupj_rows)
+
+    # Apply styling to all groups
+    x <- bootstrap_groupj_style(x, all_styling_tasks)
+  }
+
   return(x)
+}
+
+
+# Helper function to parse a group row into column spans
+bootstrap_groupj_span <- function(groupj) {
+  j_list <- list()
+  i <- 1
+
+  while (i <= length(groupj)) {
+    current_label <- groupj[i]
+
+    # Skip NA (ungrouped) columns
+    if (is.na(current_label)) {
+      i <- i + 1
+      next
+    }
+
+    span_start <- i
+
+    # Find the end of this span
+    if (trimws(current_label) != "") {
+      i <- i + 1 # Move past the current label
+      # Continue through empty strings (continuation of span)
+      while (
+        i <= length(groupj) &&
+          !is.na(groupj[i]) &&
+          trimws(groupj[i]) == ""
+      ) {
+        i <- i + 1
+      }
+      span_end <- i - 1
+
+      # Add to j_list if non-empty label
+      j_list[[current_label]] <- span_start:span_end
+    } else {
+      i <- i + 1
+    }
+  }
+
+  j_list
+}
+
+# Helper function to create HTML for a group row
+bootstrap_groupj_html <- function(x, j_list, ihead) {
+  # Add missing columns as empty groups
+  miss <- as.list(setdiff(seq_len(ncol(x)), unlist(j_list)))
+  miss <- stats::setNames(miss, rep(" ", length(miss)))
+  j_combined <- c(j_list, miss)
+
+  # Sort by column position
+  max_col <- sapply(j_combined, max)
+  idx <- order(max_col)
+  j_combined <- j_combined[idx]
+
+  # Generate HTML for each group
+  jstring <- lapply(seq_along(names(j_combined)), function(k) {
+    sprintf(
+      '<th scope="col" align="center" colspan=%s data-row="%d" data-col="%d">%s</th>',
+      max(j_combined[[k]]) - min(j_combined[[k]]) + 1,
+      ihead,
+      k - 1, # 0-based indexing for data-col
+      names(j_combined)[k]
+    )
+  })
+
+  jstring <- paste(unlist(jstring), collapse = "\n")
+  sprintf("<tr>\n%s\n</tr>", jstring)
+}
+
+# Helper function to insert group rows into the table
+bootstrap_groupj_insert <- function(x, groupj_rows) {
+  out <- strsplit(x@table_string, "\\n")[[1]]
+
+  all_jstrings <- paste(groupj_rows, collapse = "\n")
+  idx <- grep("<thead>", out, fixed = TRUE)[1]
+  out <- c(out[seq_len(idx)], all_jstrings, out[(idx + 1):length(out)])
+  out <- paste(out, collapse = "\n")
+
+  x@table_string <- out
+  x
+}
+
+# Helper function to apply styling to all groups
+bootstrap_groupj_style <- function(x, styling_tasks) {
+  # Apply styling in the same order as the original code
+  for (task in styling_tasks) {
+    x <- style_tt(x, i = task$ihead, align = "c")
+
+    # Add midrule on numbered spans (not full columns of body)
+    jnames <- names(task$j_combined)
+    jnames <- seq_along(jnames)[trimws(jnames) != ""]
+
+    if (length(jnames) > 0) {
+      x <- style_tt(
+        x,
+        i = task$ihead,
+        j = jnames,
+        line = "b",
+        line_width = 0.05,
+        line_color = "#d3d8dc"
+      )
+    }
+  }
+
+  x
 }
