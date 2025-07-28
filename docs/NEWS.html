@@ -430,8 +430,7 @@ window.Quarto = {
 <ul>
 <li><code>theme_spacing()</code> function has been removed. Use the new <code>height</code> argument in <code>tt()</code> instead for row height control.</li>
 <li>Indexing for <code>format_tt()</code> is now consistent with <code>style_tt()</code> and <code>plot_tt()</code>. It refers to rows and columns in the final table, after insertions by <code>group_tt()</code>.</li>
-<li>Names of S4 slots have changed. Most notably <code>@group_index_i</code> becomes <code>@index_group_i</code>. Reminder: internal S4 slots are not part of the public API and should not be used directly by users.</li>
-<li>Argument <code>indent</code> is deprecated and will be removed in a future version. Use <code>style_tt(x, "~group", indent = 1)</code> instead.</li>
+<li>Argument <code>indent</code> is removed form the <code>group_tt()</code> function. Use <code>style_tt(x, "~groupi", indent = 1)</code> instead.</li>
 </ul>
 <p>New features:</p>
 <ul>
@@ -473,10 +472,11 @@ window.Quarto = {
 <li>Fixed duplicate header problems in LaTeX/Tabularray output.</li>
 <li>Fixed long row handling in markdown output format.</li>
 <li>Fix <code>theme_bootstrap()</code> for LaTeX and Typst. Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/479">#479</a>.</li>
+<li><code>theme_tt("multipage")</code> correctly converts LaTeX environment to <code>longtblr</code>. Thanks to <a href="https://github.com/ujtwr"><span class="citation" data-cites="ujtwr">@ujtwr</span></a> for report <a href="https://github.com/vincentarelbundock/tinytable/issues/493">#493</a>.</li>
 </ul>
 <p>Internal changes:</p>
 <ul>
-<li>Major refactor of <code>group_tt()</code> architecture: removed legacy lazy evaluation system (<code>@lazy_group_i</code>, <code>@lazy_group_j</code>) in favor of direct data structure manipulation with <code>@data_group_i</code> and <code>@data_group_j</code> slots.</li>
+<li>Major refactor of <code>group_tt()</code> architecture: removed legacy lazy evaluation system (<code>@lazy_group_i</code>, <code>@lazy_group_j</code>) in favor of direct data structure manipulation with <code>@group_data_i</code> and <code>@group_data_j</code> slots.</li>
 <li>Simplified <code>format_tt()</code> function implementation for better performance and maintainability.</li>
 <li>Enhanced Typst backend with improved header handling and code efficiency.</li>
 <li>Improved grid backend with colspan support for text output.</li>
@@ -555,7 +555,7 @@ window.Quarto = {
 <p>New:</p>
 <ul>
 <li><code>style_tt("notes")</code> and <code>style_tt("caption")</code> can style footnotes and captions. Note: This will only style captions handled by the <code>caption</code> argument in <code>tt()</code>, and not captions created by Quarto.</li>
-<li>Using <code>table@index_group_i</code> is now documented.</li>
+<li>Using <code>table@group_index_i</code> is now documented.</li>
 </ul>
 <p>Misc:</p>
 <ul>
