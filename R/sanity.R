@@ -39,11 +39,18 @@ sanitize_i <- function(
     } else if (identical(i, "~groupi")) {
       i <- setdiff(seq_len(nrow(x)), x@index_group_i)
     } else if (identical(i, "groupj")) {
-      if (x@nhead < 2) {
+      has_colnames <- length(names(x)) > 0
+      has_groupj <- nrow(x@data_group_j) > 0
+      if (!has_groupj) {
         msg <- "No column grouping found. Please use `group_tt(j = ...)` first."
         stop(msg, call. = FALSE)
       }
-      i <- -(1:x@nhead)
+      if (has_colnames) {
+        i <- -(1:x@nhead)
+      } else {
+        i <- -(0:x@nhead)
+      }
+
     } else if (identical(i, "colnames")) {
       if (isTRUE(length(colnames(x)) == 0)) {
         msg <- "No column names found. Please set column names first."

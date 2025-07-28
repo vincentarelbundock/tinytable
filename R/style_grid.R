@@ -211,12 +211,10 @@ prepare_grid_style <- function(x) {
     }
     return(utils::tail(stats::na.omit(k), 1))
   }
-  sty <- do.call(
-    rbind,
-    by(sty, list(sty$i, sty$j), function(k) {
-      data.frame(lapply(k, last))
-    })
-  )
+
+  sty <- split(sty, list(sty$i, sty$j))
+  sty <- lapply(sty, tail, n = 1)
+  sty <- do.call(rbind, sty)
 
   # TODO: style groups
   sty <- sty[which(!sty$i %in% idx_g), ]

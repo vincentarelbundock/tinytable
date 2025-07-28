@@ -181,7 +181,7 @@ group_tt <- function(
     if (nrow(x@data_group_i) == 0) {
       x@data_group_i <- group_df
     } else {
-      x@data_group_i <- rbind(x@data_group_i, group_df)
+      x@data_group_i <- rbind_nocol(x@data_group_i, group_df)
     }
 
     # Add indices to @index_group_i to track final positions
@@ -241,7 +241,7 @@ group_tt <- function(
       ))
       colnames(new_header_row) <- colnames(x@data)
       new_header_row[1, ] <- new_row
-      x@data_group_j <- rbind(new_header_row, x@data_group_j)
+      x@data_group_j <- rbind_nocol(new_header_row, x@data_group_j)
     }
 
     # Column groups are now stored in @data_group_j and processed directly by backends

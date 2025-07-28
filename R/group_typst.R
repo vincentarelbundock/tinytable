@@ -10,8 +10,7 @@ setMethod(
       x <- group_typst_col(x, j, ...)
     }
     return(x)
-  }
-)
+  })
 
 
 group_typst_col <- function(x, j, ihead, ...) {
