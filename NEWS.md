@@ -1,6 +1,6 @@
 # News
 
-## 0.11.0
+## Development
 
 Breaking changes:
 
