@@ -55,7 +55,8 @@ rbind_body_groupi <- function(x) {
 build_tt <- function(x, output = NULL) {
   output <- sanitize_output(output)
 
-  x <- switch(output,
+  x <- switch(
+    output,
     html = swap_class(x, "tinytable_bootstrap"),
     latex = swap_class(x, "tinytable_tabularray"),
     markdown = swap_class(x, "tinytable_grid"),
@@ -131,20 +132,12 @@ build_tt <- function(x, output = NULL) {
   x <- tt_eval(x)
 
   # groups require the table to be drawn first, expecially group_tabularray_col() and friends
-  # For Typst and LaTeX, handle all column groups at once from @data_group_j
-  if (x@output %in% c("typst", "latex") && nrow(x@data_group_j) > 0) {
+  # Handle column groups from @data_group_j
+  if (nrow(x@data_group_j) > 0) {
     # Calculate ihead for the group headers - start from -1 for the top header row
     ihead <- -1
     # Apply group_eval_j once with all groups
     x <- group_eval_j(x, j = seq_len(ncol(x@data)), ihead = ihead)
-  } else {
-    # For other formats (HTML), handle column groups from @data_group_j
-    if (nrow(x@data_group_j) > 0) {
-      # Calculate ihead for the group headers - start from -1 for the top header row
-      ihead <- -1
-      # Apply group_eval_j once with all groups
-      x <- group_eval_j(x, j = seq_len(ncol(x@data)), ihead = ihead)
-    }
   }
 
   if (!x@output %in% c("markdown", "gfm", "dataframe")) {
