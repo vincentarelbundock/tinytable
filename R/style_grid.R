@@ -213,7 +213,7 @@ prepare_grid_style <- function(x) {
   }
 
   sty <- split(sty, list(sty$i, sty$j))
-  sty <- lapply(sty, tail, n = 1)
+  sty <- lapply(sty, utils::tail, n = 1)
   sty <- do.call(rbind, sty)
 
   # TODO: style groups
