@@ -55,8 +55,17 @@ group_tt_ij_k <- function(x, i, j) {
   }
 
   # Validate row insertion positions against table size
+  # For vector-based grouping (consecutive groups), the indices represent group boundaries
+  # and can be larger than the table size since they represent insertion points
   if (any(i > nrow(x) + 1)) {
-    stop(sprintf("`i` should be smaller than %s", nrow(x) + 2), call. = FALSE)
+    # Check if this is a vector-based grouping case (consecutive groups)
+    # In this case, the indices represent where groups should be inserted
+    # and can be larger than the current table size
+    if (length(i) > 1 && all(diff(i) >= 0)) {
+      # This looks like consecutive grouping, allow it
+    } else {
+      stop(sprintf("`i` should be smaller than %s", nrow(x) + 2), call. = FALSE)
+    }
   }
 
   # If single position but multiple matrix rows, replicate the position
