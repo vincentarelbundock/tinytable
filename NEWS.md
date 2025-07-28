@@ -6,8 +6,7 @@ Breaking changes:
 
 * `theme_spacing()` function has been removed. Use the new `height` argument in `tt()` instead for row height control.
 * Indexing for `format_tt()` is now consistent with `style_tt()` and `plot_tt()`. It refers to rows and columns in the final table, after insertions by `group_tt()`.
-* Names of S4 slots have changed. Most notably `@group_index_i` becomes `@index_group_i`. Reminder: internal S4 slots are not part of the public API and should not be used directly by users.
-* Argument `indent` is deprecated and will be removed in a future version. Use `style_tt(x, "~group", indent = 1)` instead.
+* Argument `indent` is removed form the `group_tt()` function. Use `style_tt(x, "~groupi", indent = 1)` instead.
 
 New features:
 
@@ -51,7 +50,7 @@ Bugs:
 
 Internal changes:
 
-* Major refactor of `group_tt()` architecture: removed legacy lazy evaluation system (`@lazy_group_i`, `@lazy_group_j`) in favor of direct data structure manipulation with `@data_group_i` and `@data_group_j` slots.
+* Major refactor of `group_tt()` architecture: removed legacy lazy evaluation system (`@lazy_group_i`, `@lazy_group_j`) in favor of direct data structure manipulation with `@group_data_i` and `@group_data_j` slots.
 * Simplified `format_tt()` function implementation for better performance and maintainability.
 * Enhanced Typst backend with improved header handling and code efficiency.
 * Improved grid backend with colspan support for text output.
@@ -126,7 +125,7 @@ Bugs:
 New:
 
 * `style_tt("notes")` and `style_tt("caption")` can style footnotes and captions. Note: This will only style captions handled by the `caption` argument in `tt()`, and not captions created by Quarto.
-* Using `table@index_group_i` is now documented.
+* Using `table@group_index_i` is now documented.
 
 Misc:
 

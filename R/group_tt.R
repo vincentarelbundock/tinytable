@@ -41,9 +41,9 @@ process_matrix_insertion <- function(x, i, j) {
   }
 
   # Add to existing group data or create new
-  if (nrow(x@data_group_i) == 0) {
-    x@data_group_i <- group_df
-    x@index_group_i <- idx
+  if (nrow(x@group_data_i) == 0) {
+    x@group_data_i <- group_df
+    x@group_index_i <- idx
   } else {
     msg <- "Only one group row insertion is allowed at a time with `group_tt(i=...)`."
     stop(msg, call. = FALSE)
@@ -80,14 +80,14 @@ process_row_grouping <- function(x, i, j) {
   }
 
   # Add to existing group data or create new
-  if (nrow(x@data_group_i) == 0) {
-    x@data_group_i <- group_df
+  if (nrow(x@group_data_i) == 0) {
+    x@group_data_i <- group_df
   } else {
-    x@data_group_i <- rbind_nocol(x@data_group_i, group_df)
+    x@group_data_i <- rbind_nocol(x@group_data_i, group_df)
   }
 
   # Add indices to track final positions
-  x@index_group_i <- c(x@index_group_i, idx)
+  x@group_index_i <- c(x@group_index_i, idx)
 
   # Apply styling for list-converted group headers
   if (converted_from_list) {
@@ -120,14 +120,14 @@ process_column_grouping <- function(x, j) {
   }
 
   # Add to existing group data or create new
-  if (nrow(x@data_group_j) == 0) {
-    x@data_group_j <- data.frame(matrix(
+  if (nrow(x@group_data_j) == 0) {
+    x@group_data_j <- data.frame(matrix(
       NA_character_,
       nrow = 1,
       ncol = ncol(x@data)
     ))
-    colnames(x@data_group_j) <- colnames(x@data)
-    x@data_group_j[1, ] <- new_row
+    colnames(x@group_data_j) <- colnames(x@data)
+    x@group_data_j[1, ] <- new_row
   } else {
     new_header_row <- data.frame(matrix(
       NA_character_,
@@ -136,7 +136,7 @@ process_column_grouping <- function(x, j) {
     ))
     colnames(new_header_row) <- colnames(x@data)
     new_header_row[1, ] <- new_row
-    x@data_group_j <- rbind_nocol(new_header_row, x@data_group_j)
+    x@group_data_j <- rbind_nocol(new_header_row, x@group_data_j)
   }
 
   return(x)

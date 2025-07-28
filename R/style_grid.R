@@ -185,7 +185,7 @@ prepare_grid_style <- function(x) {
   }
 
   all_i <- seq_len(nrow(x))
-  idx_g <- x@index_group_i
+  idx_g <- x@group_index_i
   idx_d <- setdiff(all_i, idx_g)
 
   # expand i to full rows

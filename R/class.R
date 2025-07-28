@@ -29,13 +29,13 @@ setClass(
     caption = "NULLorCharacter",
     css = "data.frame",
     data = "data.frame",
-    data_group_i = "data.frame",
-    data_group_j = "data.frame",
     data_body = "data.frame",
-    index_body = "numeric",
-    index_group_i = "numeric",
+    group_data_i = "data.frame",
+    group_data_j = "data.frame",
+    group_index_i = "numeric",
     height = "NULLorNumeric",
     id = "character",
+    index_body = "numeric",
     lazy_finalize = "list",
     lazy_format = "list",
     lazy_plot = "list",
@@ -99,10 +99,10 @@ setMethod(
     }
 
     # empty
-    .Object@data_group_i <- data.frame()
-    .Object@data_group_j <- data.frame()
+    .Object@group_data_i <- data.frame()
+    .Object@group_data_j <- data.frame()
     .Object@index_body <- numeric(0)
-    .Object@index_group_i <- numeric(0)
+    .Object@group_index_i <- numeric(0)
     .Object@id <- get_id("tinytable_")
     .Object@output <- "tinytable"
     .Object@output_dir <- getwd()

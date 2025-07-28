@@ -231,7 +231,7 @@ Here, we may want to repeat the column names for every region. The `group_tt()` 
 2. Creat a row group variable (here: `region`)
 3. Style the column names and group labels
 
-Normally, we would call `style_tt(i = "groupi")` to style the row groups, but here we need the actual indices to also style one row below the groups. We can use the `@index_group_i` slot to get the indices of the row groups.
+Normally, we would call `style_tt(i = "groupi")` to style the row groups, but here we need the actual indices to also style one row below the groups. We can use the `@group_index_i` slot to get the indices of the row groups.
 
 ```{r}
 region_names <- unique(dat$Region)
@@ -251,7 +251,7 @@ rowmat
 tab <- tt(dat[, 2:5], colnames = FALSE) |>
   group_tt(i = region_indices, j = rowmat)
 
-idx <- tab@index_group_i[c(TRUE, diff(tab@index_group_i) != 1)]
+idx <- tab@group_index_i[c(TRUE, diff(tab@group_index_i) != 1)]
 
 tab |>
   style_tt(i = idx, j = 1, align = "c", colspan = 4, background = "lightgrey", line = "b") |>

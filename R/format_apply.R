@@ -27,7 +27,7 @@ apply_group_j <- function(x, format_fn, ...) {
   if (!inherits(x, "tinytable")) {
     return(x)
   }
-  data_slot <- x@data_group_j
+  data_slot <- x@group_data_j
   if (nrow(data_slot) > 0) {
     for (row_idx in seq_len(nrow(data_slot))) {
       for (col_idx in seq_len(ncol(data_slot))) {
@@ -41,7 +41,7 @@ apply_group_j <- function(x, format_fn, ...) {
       }
     }
   }
-  x@data_group_j <- data_slot
+  x@group_data_j <- data_slot
   return(x)
 }
 
@@ -52,14 +52,15 @@ apply_colnames <- function(x, format_fn, ...) {
 
 # Global dispatcher function for applying formatting functions
 apply_format <- function(
-    x,
-    i,
-    j,
-    format_fn,
-    components = NULL,
-    inherit_class = NULL,
-    original_data = TRUE,
-    ...) {
+  x,
+  i,
+  j,
+  format_fn,
+  components = NULL,
+  inherit_class = NULL,
+  original_data = TRUE,
+  ...
+) {
   if (is.character(components)) {
     if ("all" %in% components) {
       components <- c(
@@ -75,7 +76,7 @@ apply_format <- function(
   }
 
   if (identical(components, "groupi")) {
-    i <- x@index_group_i
+    i <- x@group_index_i
   }
 
   if (inherits(x, "tinytable")) {
@@ -99,7 +100,9 @@ apply_format <- function(
     x <- apply_group_j(x, format_fn, ...)
   }
 
-  if (is.null(components) || any(c("cells", "groupi", "~groupi") %in% components)) {
+  if (
+    is.null(components) || any(c("cells", "groupi", "~groupi") %in% components)
+  ) {
     # Apply to specific cells
     # Filter columns based on inherits argument and original data
     j_filtered <- j
@@ -121,16 +124,18 @@ apply_format <- function(
     i <- sort(unique(i))
 
     # group i
-    if (inherits(x, "tinytable") && length(x@index_group_i) > 0) {
+    if (inherits(x, "tinytable") && length(x@group_index_i) > 0) {
       for (col in j_filtered) {
-        if (!inherits(x, "tinytable")) next
-        idx <- x@index_group_i %in% i
+        if (!inherits(x, "tinytable")) {
+          next
+        }
+        idx <- x@group_index_i %in% i
         tmp <- tryCatch(
-          format_fn(x@data_group_i[idx, col], ...),
+          format_fn(x@group_data_i[idx, col], ...),
           error = function(e) NULL
         )
         if (length(tmp) > 0) {
-          x@data_group_i[idx, col] <- tmp
+          x@group_data_i[idx, col] <- tmp
         }
       }
     }
@@ -152,7 +157,8 @@ apply_format <- function(
           format_fn(
             vec = vec,
             vec_original = vec_original,
-            ...),
+            ...
+          ),
           error = function(e) NULL
         )
       } else {
@@ -162,7 +168,8 @@ apply_format <- function(
           format_fn(
             vec = vec,
             vec_original = vec_original,
-            ...),
+            ...
+          ),
           error = function(e) NULL
         )
       }

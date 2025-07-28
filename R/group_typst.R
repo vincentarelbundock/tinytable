@@ -15,7 +15,7 @@ setMethod(
 
 typst_groupj <- function(x, j, ihead, ...) {
   # Check if there are any column groups to process
-  if (nrow(x@data_group_j) == 0) {
+  if (nrow(x@group_data_j) == 0) {
     return(x)
   }
 
@@ -37,8 +37,8 @@ typst_groupj <- function(x, j, ihead, ...) {
 typst_groupj_process <- function(x) {
   all_header_rows <- character(0)
 
-  for (row_idx in 1:nrow(x@data_group_j)) {
-    group_row <- as.character(x@data_group_j[row_idx, ])
+  for (row_idx in 1:nrow(x@group_data_j)) {
+    group_row <- as.character(x@group_data_j[row_idx, ])
 
     # Convert group row to column specifications
     col_specs <- typst_groupj_specs(group_row)

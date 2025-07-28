@@ -13,21 +13,21 @@ setMethod(
 
 group_grid_col <- function(x, j, ...) {
   # Check if there are any column groups to process
-  if (nrow(x@data_group_j) == 0) {
+  if (nrow(x@group_data_j) == 0) {
     return(x)
   }
 
   tab <- x@table_string
   cw <- x@width_cols
 
-  # Process @data_group_j to create column group headers
+  # Process @group_data_j to create column group headers
   # Process all rows of column groups (not just the first)
-  if (nrow(x@data_group_j) > 0) {
+  if (nrow(x@group_data_j) > 0) {
     all_header_lines <- list()
 
-    # Process each row in @data_group_j (from last to first to maintain proper order)
-    for (group_row_idx in nrow(x@data_group_j):1) {
-      group_row <- as.character(x@data_group_j[group_row_idx, ])
+    # Process each row in @group_data_j (from last to first to maintain proper order)
+    for (group_row_idx in nrow(x@group_data_j):1) {
+      group_row <- as.character(x@group_data_j[group_row_idx, ])
 
       # Convert to the old format that empty_cells expects
       j_list <- list()

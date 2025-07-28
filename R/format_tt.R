@@ -79,28 +79,29 @@
 #' tt(dat) |> format_tt(escape = TRUE)
 #'
 format_tt <- function(
-    x,
-    i = NULL,
-    j = NULL,
-    digits = get_option("tinytable_format_digits", default = NULL),
-    num_fmt = get_option("tinytable_format_num_fmt", default = "significant"),
-    num_zero = get_option("tinytable_format_num_zero", default = FALSE),
-    num_suffix = get_option("tinytable_format_num_suffix", default = FALSE),
-    num_mark_big = get_option("tinytable_format_num_mark_big", default = ""),
-    num_mark_dec = get_option(
-      "tinytable_format_num_mark_dec",
-      default = getOption("OutDec", default = ".")
-    ),
-    date = get_option("tinytable_format_date", default = NULL),
-    bool = get_option("tinytable_format_bool", default = NULL),
-    math = get_option("tinytable_format_math", default = FALSE),
-    other = get_option("tinytable_format_other", default = NULL),
-    replace = get_option("tinytable_format_replace", default = FALSE),
-    escape = get_option("tinytable_format_escape", default = FALSE),
-    markdown = get_option("tinytable_format_markdown", default = FALSE),
-    quarto = get_option("tinytable_format_quarto", default = FALSE),
-    fn = get_option("tinytable_format_fn", default = NULL),
-    sprintf = get_option("tinytable_format_sprintf", default = NULL)) {
+  x,
+  i = NULL,
+  j = NULL,
+  digits = get_option("tinytable_format_digits", default = NULL),
+  num_fmt = get_option("tinytable_format_num_fmt", default = "significant"),
+  num_zero = get_option("tinytable_format_num_zero", default = FALSE),
+  num_suffix = get_option("tinytable_format_num_suffix", default = FALSE),
+  num_mark_big = get_option("tinytable_format_num_mark_big", default = ""),
+  num_mark_dec = get_option(
+    "tinytable_format_num_mark_dec",
+    default = getOption("OutDec", default = ".")
+  ),
+  date = get_option("tinytable_format_date", default = NULL),
+  bool = get_option("tinytable_format_bool", default = NULL),
+  math = get_option("tinytable_format_math", default = FALSE),
+  other = get_option("tinytable_format_other", default = NULL),
+  replace = get_option("tinytable_format_replace", default = FALSE),
+  escape = get_option("tinytable_format_escape", default = FALSE),
+  markdown = get_option("tinytable_format_markdown", default = FALSE),
+  quarto = get_option("tinytable_format_quarto", default = FALSE),
+  fn = get_option("tinytable_format_fn", default = NULL),
+  sprintf = get_option("tinytable_format_sprintf", default = NULL)
+) {
   assert_integerish(digits, len = 1, null.ok = TRUE)
   assert_choice(
     num_fmt,
@@ -174,25 +175,26 @@ format_tt <- function(
 
 
 format_tt_lazy <- function(
-    x,
-    i,
-    j,
-    digits,
-    num_fmt,
-    num_zero,
-    num_suffix,
-    num_mark_big,
-    num_mark_dec,
-    replace,
-    fn,
-    sprintf,
-    date_format,
-    bool,
-    math,
-    escape,
-    markdown,
-    quarto,
-    other) {
+  x,
+  i,
+  j,
+  digits,
+  num_fmt,
+  num_zero,
+  num_suffix,
+  num_mark_big,
+  num_mark_dec,
+  replace,
+  fn,
+  sprintf,
+  date_format,
+  bool,
+  math,
+  escape,
+  markdown,
+  quarto,
+  other
+) {
   if (inherits(x, "tbl_df")) {
     assert_dependency("tibble")
     x_is_tibble <- TRUE
@@ -204,10 +206,10 @@ format_tt_lazy <- function(
   # Check if i contains component names (do this before processing tinytable objects)
   if (identical(i, "groupi")) {
     components <- "cells"
-    i <- x@index_group_i
+    i <- x@group_index_i
   } else if (identical(i, "~groupi")) {
     components <- "cells"
-    i <- setdiff(seq_len(nrow(x)), x@index_group_i)
+    i <- setdiff(seq_len(nrow(x)), x@group_index_i)
   } else if (is.character(i)) {
     components <- i # before wiping i
     i <- NULL

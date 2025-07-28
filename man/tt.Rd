@@ -58,7 +58,7 @@ tt(
 \value{
 An object of class \code{tt} representing the table.
 
-The table object has S4 slots which hold information about the structure of the table. For example, the \code{table@index_group_i} slot includes the row indices for grouping labels added by \code{group_tt()}.
+The table object has S4 slots which hold information about the structure of the table. For example, the \code{table@group_index_i} slot includes the row indices for grouping labels added by \code{group_tt()}.
 
 Warning: Relying on or modifying the contents of these slots is strongly discouraged. Their names and contents could change at any time, and the \code{tinytable} developers do not consider changes to the internal structure of the output object to be a "breaking  change" for versioning or changelog purposes.
 }

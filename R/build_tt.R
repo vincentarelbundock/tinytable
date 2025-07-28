@@ -8,14 +8,14 @@
 #' @keywords internal
 #' @noRd
 rbind_body_groupi <- function(x) {
-  # Reconstruct the final table by combining formatted data_body and data_group_i parts
-  if (nrow(x@data_group_i) == 0) {
+  # Reconstruct the final table by combining formatted data_body and group_data_i parts
+  if (nrow(x@group_data_i) == 0) {
     # No groups - @data_body already contains the final formatted data
     return(x)
   }
 
   # Calculate total final table size
-  total_rows <- nrow(x@data_body) + nrow(x@data_group_i)
+  total_rows <- nrow(x@data_body) + nrow(x@group_data_i)
   final_ncol <- ncol(x@data_body)
 
   # Create final data frame with proper structure
@@ -36,12 +36,12 @@ rbind_body_groupi <- function(x) {
     }
   }
 
-  # Insert group i data at index_group_i positions
-  if (nrow(x@data_group_i) > 0 && length(x@index_group_i) > 0) {
-    for (i in seq_len(nrow(x@data_group_i))) {
-      row_idx <- x@index_group_i[i]
+  # Insert group i data at group_index_i positions
+  if (nrow(x@group_data_i) > 0 && length(x@group_index_i) > 0) {
+    for (i in seq_len(nrow(x@group_data_i))) {
+      row_idx <- x@group_index_i[i]
       if (!is.na(row_idx) && row_idx > 0 && row_idx <= total_rows) {
-        final_df[row_idx, ] <- x@data_group_i[i, ]
+        final_df[row_idx, ] <- x@group_data_i[i, ]
       }
     }
   }
@@ -81,20 +81,20 @@ build_tt <- function(x, output = NULL) {
   x <- render_fansi(x)
 
   # separate group parts for individual formatting
-  if (nrow(x@data_group_i) == 0) {
+  if (nrow(x@group_data_i) == 0) {
     # No row group insertions - set index for full table as body
     x@index_body <- seq_len(nrow(x@data))
   } else {
     # Calculate which positions are body vs group
-    all_positions <- seq_len(nrow(x@data) + nrow(x@data_group_i))
-    group_positions <- x@index_group_i
+    all_positions <- seq_len(nrow(x@data) + nrow(x@group_data_i))
+    group_positions <- x@group_index_i
     body_positions <- setdiff(all_positions, group_positions)
 
     x@index_body <- body_positions
   }
 
   # before format_tt() because we need the indices
-  x@nrow <- nrow(x@data) + nrow(x@data_group_i)
+  x@nrow <- nrow(x@data) + nrow(x@group_data_i)
 
   # format each component individually
   for (l in x@lazy_format) {
@@ -132,8 +132,8 @@ build_tt <- function(x, output = NULL) {
   x <- tt_eval(x)
 
   # groups require the table to be drawn first, expecially group_tabularray_col() and friends
-  # Handle column groups from @data_group_j
-  if (nrow(x@data_group_j) > 0) {
+  # Handle column groups from @group_data_j
+  if (nrow(x@group_data_j) > 0) {
     # Calculate ihead for the group headers - start from -1 for the top header row
     ihead <- -1
     # Apply group_eval_j once with all groups

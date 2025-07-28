@@ -16,7 +16,7 @@ setMethod(
       out <- sub("$TINYTABLE_TYPST_CAPTION", "", out, fixed = TRUE)
     }
 
-    if (length(x@names) == 0 && nrow(x@data_group_j) == 0) {
+    if (length(x@names) == 0 && nrow(x@group_data_j) == 0) {
       out <- lines_drop_between(
         out,
         regex_start = "// tinytable header start",
@@ -53,4 +53,5 @@ setMethod(
     }
 
     return(x)
-  })
+  }
+)

@@ -15,19 +15,19 @@ setMethod(
 
 bootstrap_groupj <- function(x, j, ihead, ...) {
   # Check if there are any column groups to process
-  if (nrow(x@data_group_j) == 0) {
+  if (nrow(x@group_data_j) == 0) {
     return(x)
   }
 
   all_groupj_rows <- list()
   all_styling_tasks <- list()
 
-  # Process each row in @data_group_j separately (from last to first to maintain proper order)
-  for (groupj_idx in nrow(x@data_group_j):1) {
-    groupj <- as.character(x@data_group_j[groupj_idx, ])
+  # Process each row in @group_data_j separately (from last to first to maintain proper order)
+  for (groupj_idx in nrow(x@group_data_j):1) {
+    groupj <- as.character(x@group_data_j[groupj_idx, ])
 
     # Calculate the appropriate ihead for this group row
-    current_ihead <- ihead - (nrow(x@data_group_j) - groupj_idx)
+    current_ihead <- ihead - (nrow(x@group_data_j) - groupj_idx)
 
     # Convert group row to column spans
     j_list <- bootstrap_groupj_span(groupj)

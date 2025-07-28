@@ -87,9 +87,9 @@ strip_tt <- function(
 
   # Reset group styling
   if (group) {
-    out@data_group_j <- data.frame()
-    out@data_group_i <- data.frame()
-    out@index_group_i <- numeric()
+    out@group_data_j <- data.frame()
+    out@group_data_i <- data.frame()
+    out@group_index_i <- numeric()
     out@nrow <- nrow(out@data)
   }
 

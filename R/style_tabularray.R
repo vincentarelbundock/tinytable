@@ -306,12 +306,11 @@ tabularray_hlines <- function(x, rec) {
     c("i", "j", "lin", "line"),
     drop = FALSE
   ]
+  horizontal_bottom <- horizontal[grepl("b", horizontal$line), , drop = FALSE]
+  horizontal_bottom$i <- horizontal_bottom$i + 1
   horizontal <- rbind(
     horizontal[grepl("t", horizontal$line), , drop = FALSE],
-    transform(
-      horizontal[grepl("b", horizontal$line), , drop = FALSE],
-      i = i + 1
-    )
+    horizontal_bottom
   )
 
   spec <- by(horizontal, list(horizontal$i, horizontal$lin), function(k) {
@@ -341,9 +340,11 @@ tabularray_vlines <- function(x, rec) {
     c("i", "j", "lin", "line"),
     drop = FALSE
   ]
+  vertical_right <- vertical[grepl("r", vertical$line), , drop = FALSE]
+  vertical_right$j <- vertical_right$j + 1
   vertical <- rbind(
     vertical[grepl("l", vertical$line), , drop = FALSE],
-    transform(vertical[grepl("r", vertical$line), , drop = FALSE], j = j + 1)
+    vertical_right
   )
 
   spec <- by(vertical, list(vertical$j, vertical$lin), function(k) {

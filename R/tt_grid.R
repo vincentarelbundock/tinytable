@@ -34,17 +34,17 @@ extract_colspan_info <- function(x) {
   if (!inherits(x, "tinytable") || nrow(x@style) == 0) {
     return(NULL)
   }
-  
+
   sty <- x@style
   colspan_info <- sty[
     !is.na(sty$colspan) & sty$colspan > 1,
     c("i", "j", "colspan")
   ]
-  
+
   if (nrow(colspan_info) == 0) {
     return(NULL)
   }
-  
+
   return(colspan_info)
 }
 
@@ -55,12 +55,12 @@ is_colspan_cell <- function(i, j, colspan_info, header) {
   if (is.null(colspan_info)) {
     return(FALSE)
   }
-  
+
   data_row_idx <- if (header) i - 1 else i
   if (data_row_idx <= 0) {
     return(FALSE)
   }
-  
+
   any(colspan_info$i == data_row_idx & colspan_info$j == j)
 }
 
@@ -73,7 +73,7 @@ is_colspan_cell <- function(i, j, colspan_info, header) {
 #' @noRd
 calculate_basic_widths <- function(tab, x, header, width_cols) {
   colspan_info <- extract_colspan_info(x)
-  
+
   for (j in seq_len(ncol(tab))) {
     # Collect non-colspan cell contents
     cell_widths <- character(0)
@@ -82,7 +82,7 @@ calculate_basic_widths <- function(tab, x, header, width_cols) {
         cell_widths <- c(cell_widths, tab[i, j])
       }
     }
-    
+
     # Calculate max width for this column
     if (length(cell_widths) > 0) {
       width_cols[j] <- max(calculate_text_width(cell_widths))
@@ -91,7 +91,7 @@ calculate_basic_widths <- function(tab, x, header, width_cols) {
       width_cols[j] <- max(calculate_text_width(tab[, j]))
     }
   }
-  
+
   return(list(width_cols = width_cols, colspan_info = colspan_info))
 }
 
@@ -102,37 +102,39 @@ adjust_colspan_widths <- function(tab, width_cols, colspan_info, header) {
   if (is.null(colspan_info)) {
     return(width_cols)
   }
-  
+
   for (idx in seq_len(nrow(colspan_info))) {
     i_row <- colspan_info[idx, "i"]
     j_col <- colspan_info[idx, "j"]
     colspan <- colspan_info[idx, "colspan"]
-    
+
     # Get the actual row index in the tab matrix
     tab_row_idx <- if (header) i_row + 1 else i_row
-    
+
     if (tab_row_idx <= nrow(tab) && j_col <= ncol(tab)) {
       # Get content width of the colspan cell
       cell_content <- tab[tab_row_idx, j_col]
       content_width <- calculate_text_width(cell_content)
-      
+
       # Calculate current total width of spanned columns
       spanned_cols <- j_col:(j_col + colspan - 1)
       spanned_cols <- spanned_cols[spanned_cols <= length(width_cols)]
-      current_total_width <- sum(width_cols[spanned_cols]) + length(spanned_cols) - 1
-      
+      current_total_width <- sum(width_cols[spanned_cols]) +
+        length(spanned_cols) -
+        1
+
       # Expand columns if content is longer than current width
       if (content_width > current_total_width) {
         extra_width <- content_width - current_total_width
         width_per_col <- extra_width / length(spanned_cols)
-        
+
         for (col in spanned_cols) {
           width_cols[col] <- width_cols[col] + ceiling(width_per_col)
         }
       }
     }
   }
-  
+
   return(width_cols)
 }
 
@@ -141,7 +143,7 @@ adjust_colspan_widths <- function(tab, width_cols, colspan_info, header) {
 #' @noRd
 find_span_end <- function(group_row, start_pos) {
   pos <- start_pos
-  
+
   # Skip consecutive empty strings
   while (
     pos <= length(group_row) &&
@@ -150,7 +152,7 @@ find_span_end <- function(group_row, start_pos) {
   ) {
     pos <- pos + 1
   }
-  
+
   return(pos - 1)
 }
 
@@ -160,29 +162,29 @@ find_span_end <- function(group_row, start_pos) {
 find_column_spans <- function(group_row) {
   spans <- list()
   current_pos <- 1
-  
+
   # Process each position in the group row
   while (current_pos <= length(group_row)) {
     current_label <- group_row[current_pos]
-    
+
     # Skip NA (ungrouped) columns
     if (is.na(current_label)) {
       current_pos <- current_pos + 1
       next
     }
-    
+
     span_start <- current_pos
-    
+
     # Find the end of this span
     if (trimws(current_label) != "") {
       # For non-empty labels, skip the label itself first
       current_pos <- current_pos + 1
     }
-    
+
     # Find consecutive empty strings (common logic for both cases)
     span_end <- find_span_end(group_row, current_pos)
     current_pos <- span_end + 1
-    
+
     # Only add non-empty labels
     if (trimws(current_label) != "") {
       spans[[length(spans) + 1]] <- list(
@@ -192,7 +194,7 @@ find_column_spans <- function(group_row) {
       )
     }
   }
-  
+
   return(spans)
 }
 
@@ -200,19 +202,19 @@ find_column_spans <- function(group_row) {
 #' @keywords internal
 #' @noRd
 adjust_group_widths <- function(x, width_cols) {
-  # Handle column groups using @data_group_j
-  if (nrow(x@data_group_j) > 0) {
+  # Handle column groups using @group_data_j
+  if (nrow(x@group_data_j) > 0) {
     # Process each header row to extract column spans
-    for (row_idx in seq_len(nrow(x@data_group_j))) {
-      group_row <- as.character(x@data_group_j[row_idx, ])
+    for (row_idx in seq_len(nrow(x@group_data_j))) {
+      group_row <- as.character(x@group_data_j[row_idx, ])
       spans <- find_column_spans(group_row)
-      
+
       # Adjust widths for each span
       for (span in spans) {
         group_cols <- span$start:span$end
         g_len <- nchar(span$label) + 2
         c_len <- sum(width_cols[group_cols])
-        
+
         if (g_len > c_len) {
           width_cols[group_cols] <- width_cols[group_cols] +
             ceiling((g_len - c_len) / length(group_cols))
@@ -220,12 +222,12 @@ adjust_group_widths <- function(x, width_cols) {
       }
     }
   }
-  
+
   # Handle row groups (they span entire table width)
-  if (nrow(x@data_group_i) > 0) {
+  if (nrow(x@group_data_i) > 0) {
     # Check labels in first column of group data
-    if (ncol(x@data_group_i) >= 1) {
-      labels <- x@data_group_i[, 1]
+    if (ncol(x@group_data_i) >= 1) {
+      labels <- x@group_data_i[, 1]
       for (label in labels) {
         if (!is.na(label) && nchar(label) > 0) {
           g_len <- nchar(label) + 2
@@ -240,7 +242,7 @@ adjust_group_widths <- function(x, width_cols) {
       }
     }
   }
-  
+
   return(width_cols)
 }
 
@@ -252,15 +254,15 @@ calculate_column_widths <- function(tab, x, header, width_cols) {
   result <- calculate_basic_widths(tab, x, header, width_cols)
   width_cols <- result$width_cols
   colspan_info <- result$colspan_info
-  
+
   # Adjust for colspan cells
   width_cols <- adjust_colspan_widths(tab, width_cols, colspan_info, header)
-  
+
   # Adjust for group headers
   if (inherits(x, "tinytable")) {
     width_cols <- adjust_group_widths(x, width_cols)
   }
-  
+
   return(width_cols)
 }
 
@@ -290,21 +292,21 @@ pad_table_cells <- function(tab, width_cols) {
 #' @noRd
 format_table_rows <- function(tab, x, header, width_cols) {
   body <- character(nrow(tab))
-  
+
   # Get group row indices if available
-  group_rows <- if (inherits(x, "tinytable")) x@index_group_i else integer(0)
+  group_rows <- if (inherits(x, "tinytable")) x@group_index_i else integer(0)
   # Adjust for header if present
   if (header) {
     group_rows <- group_rows + 1 # Header adds one row at the top
   }
-  
+
   for (row_idx in seq_len(nrow(tab))) {
     row_data <- tab[row_idx, ]
     # Check if this is a group row with colspan styling
     is_group_row <- row_idx %in% group_rows
     has_content <- nchar(trimws(row_data[1])) > 0
     others_empty <- all(trimws(row_data[-1]) == "")
-    
+
     if (is_group_row && has_content && others_empty) {
       # This is a colspan row - create a single spanning cell
       total_width <- sum(width_cols) + length(width_cols) - 1
@@ -321,7 +323,7 @@ format_table_rows <- function(tab, x, header, width_cols) {
       body[row_idx] <- paste0("|", paste(row_data, collapse = "|"), "|")
     }
   }
-  
+
   return(body)
 }
 
@@ -331,7 +333,7 @@ format_table_rows <- function(tab, x, header, width_cols) {
 assemble_table_string <- function(body, header, width_cols) {
   rule_head <- create_grid_line(width_cols, "=")
   rule_line <- create_grid_line(width_cols, "-")
-  
+
   if (header) {
     tab <- c(
       "\n",
@@ -345,7 +347,7 @@ assemble_table_string <- function(body, header, width_cols) {
   } else {
     tab <- c("\n", rule_line, body, rule_line, "\n")
   }
-  
+
   return(paste(tab, collapse = "\n"))
 }
 
@@ -385,10 +387,10 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
 
   # Pad cells to match column widths
   tab <- pad_table_cells(tab, width_cols)
-  
+
   # Format rows with proper separators
   body <- format_table_rows(tab, x, header, width_cols)
-  
+
   # Assemble final table string
   out <- assemble_table_string(body, header, width_cols)
 

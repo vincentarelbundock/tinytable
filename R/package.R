@@ -5,6 +5,8 @@
 #' @noRd
 utils::globalVariables(
   c(
-    "bootstrap"
+    "bootstrap",
+    "i",
+    "j"
   )
 )
