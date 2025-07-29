@@ -1,5 +1,5 @@
 style_eval_grid <- function(x) {
-  out <- x@data_body
+  out <- x@body_data
   sty <- x@style
 
   if (nrow(sty) == 0) {

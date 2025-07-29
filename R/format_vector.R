@@ -41,7 +41,7 @@ format_vector_math <- function(vec, math = FALSE, ...) {
 }
 
 format_vector_quarto <- function(i, col, x, ...) {
-  out <- x@data_body
+  out <- x@body_data
   if (isTRUE(x@output == "html")) {
     fun <- function(z) {
       z@table_string <- sub(
@@ -66,6 +66,6 @@ format_vector_quarto <- function(i, col, x, ...) {
     out[i, col] <- sprintf("\\QuartoMarkdownBase64{%s}", tmp)
   }
 
-  x@data_body <- out
+  x@body_data <- out
   return(x)
 }

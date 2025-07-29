@@ -132,7 +132,7 @@ print.tinytable <- function(
       cat(tab, "\n")
     }
   } else {
-    return(x@data_body)
+    return(x@body_data)
   }
 
   return(invisible(x))

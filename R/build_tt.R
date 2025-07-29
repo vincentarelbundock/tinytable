@@ -8,15 +8,15 @@
 #' @keywords internal
 #' @noRd
 rbind_body_groupi <- function(x) {
-  # Reconstruct the final table by combining formatted data_body and group_data_i parts
+  # Reconstruct the final table by combining formatted body_data and group_data_i parts
   if (nrow(x@group_data_i) == 0) {
-    # No groups - @data_body already contains the final formatted data
+    # No groups - @body_data already contains the final formatted data
     return(x)
   }
 
   # Calculate total final table size
-  total_rows <- nrow(x@data_body) + nrow(x@group_data_i)
-  final_ncol <- ncol(x@data_body)
+  total_rows <- nrow(x@body_data) + nrow(x@group_data_i)
+  final_ncol <- ncol(x@body_data)
 
   # Create final data frame with proper structure
   final_df <- data.frame(matrix(
@@ -24,14 +24,14 @@ rbind_body_groupi <- function(x) {
     nrow = total_rows,
     ncol = final_ncol
   ))
-  colnames(final_df) <- colnames(x@data_body)
+  colnames(final_df) <- colnames(x@body_data)
 
-  # Insert body data at index_body positions
-  if (nrow(x@data_body) > 0 && length(x@index_body) > 0) {
-    for (i in seq_along(x@index_body)) {
-      row_idx <- x@index_body[i]
+  # Insert body data at body_index positions
+  if (nrow(x@body_data) > 0 && length(x@body_index) > 0) {
+    for (i in seq_along(x@body_index)) {
+      row_idx <- x@body_index[i]
       if (!is.na(row_idx) && row_idx > 0 && row_idx <= total_rows) {
-        final_df[row_idx, ] <- x@data_body[i, ]
+        final_df[row_idx, ] <- x@body_data[i, ]
       }
     }
   }
@@ -46,7 +46,7 @@ rbind_body_groupi <- function(x) {
     }
   }
 
-  x@data_body <- final_df
+  x@body_data <- final_df
 
   return(x)
 }
@@ -85,9 +85,9 @@ build_tt <- function(x, output = NULL) {
 
   # Calculate which positions are body vs group
   if (nrow(x@group_data_i) == 0) {
-    x@index_body <- seq_len(nrow(x))
+    x@body_index <- seq_len(nrow(x))
   } else {
-    x@index_body <- setdiff(seq_len(nrow(x)), x@group_index_i)
+    x@body_index <- setdiff(seq_len(nrow(x)), x@group_index_i)
   }
 
   # markdown styles are applied via special format_tt() calls, so they need to
@@ -116,11 +116,11 @@ build_tt <- function(x, output = NULL) {
 
   # data frame we trim strings, pre-padded for markdown
   if (x@output == "dataframe") {
-    tmp <- x@data_body
+    tmp <- x@body_data
     for (i in seq_along(tmp)) {
       tmp[[i]] <- trimws(tmp[[i]])
     }
-    x@data_body <- tmp
+    x@body_data <- tmp
   }
 
   # draw the table

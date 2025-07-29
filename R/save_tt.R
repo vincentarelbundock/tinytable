@@ -65,7 +65,7 @@ save_tt <- function(
     out <- build_tt(x, output = "typst")@table_string
     return(as.character(out))
   } else if (identical(output, "dataframe")) {
-    out <- build_tt(x, output = "dataframe")@data_body
+    out <- build_tt(x, output = "dataframe")@body_data
     return(out)
   }
 

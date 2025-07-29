@@ -1,6 +1,6 @@
 footnote_markers <- function(x) {
   notes <- x@notes
-  tab <- x@data_body
+  tab <- x@body_data
 
   # Define superscript syntax for each output format
   superscript_syntax <- list(
@@ -41,6 +41,6 @@ footnote_markers <- function(x) {
     }
   }
 
-  x@data_body <- tab
+  x@body_data <- tab
   return(x)
 }

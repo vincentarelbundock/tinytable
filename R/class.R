@@ -24,18 +24,18 @@ setClass(
   Class = "tinytable",
   slots = representation(
     body = "character",
+    body_data = "data.frame",
+    body_index = "numeric",
     bootstrap_class = "character",
     bootstrap_css_rule = "character",
     caption = "NULLorCharacter",
     css = "data.frame",
     data = "data.frame",
-    data_body = "data.frame",
     group_data_i = "data.frame",
     group_data_j = "data.frame",
     group_index_i = "numeric",
     height = "NULLorNumeric",
     id = "character",
-    index_body = "numeric",
     lazy_finalize = "list",
     lazy_format = "list",
     lazy_plot = "list",
@@ -73,14 +73,14 @@ setMethod(
     caption = NULL,
     notes = NULL,
     theme = list("default"),
-    data_body = data.frame(),
+    body_data = data.frame(),
     placement = NULL,
     width = NULL,
     height = NULL
   ) {
     # explicit
     .Object@data <- data
-    .Object@data_body <- data_body
+    .Object@body_data <- body_data
     .Object@theme <- theme
     .Object@placement <- placement
     .Object@caption <- caption
@@ -101,7 +101,7 @@ setMethod(
     # empty
     .Object@group_data_i <- data.frame()
     .Object@group_data_j <- data.frame()
-    .Object@index_body <- numeric(0)
+    .Object@body_index <- numeric(0)
     .Object@group_index_i <- numeric(0)
     .Object@id <- get_id("tinytable_")
     .Object@output <- "tinytable"

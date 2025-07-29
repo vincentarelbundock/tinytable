@@ -7,7 +7,7 @@ Breaking changes:
 * `theme_spacing()` function has been removed. Use the new `height` argument in `tt()` instead for row height control.
 * Indexing for `format_tt()` is now consistent with `style_tt()` and `plot_tt()`. It refers to rows and columns in the final table, after insertions by `group_tt()`.
 * Argument `indent` is removed form the `group_tt()` function. Use `style_tt(x, "~groupi", indent = 1)` instead.
-* `print("dataframe")` is now consistent with other formats and only prints the result. Use `save_tt("dataframe")` to obtain a data frame.
+* `print("dataframe")` is now consistent with other formats and only prints the result. Use `save_tt("dataframe")` to return an actual data frame.
 
 New features:
 
@@ -57,6 +57,7 @@ Internal changes:
 * Improved grid backend with colspan support for text output.
 * Comprehensive expansion of snapshot tests for matrix insertion functionality.
 * Streamlined class architecture by removing unused legacy code paths.
+* Improvements in Tabularray code efficiency and concision in LaTeX.
 
 ## 0.10.0
 

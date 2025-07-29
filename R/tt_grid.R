@@ -360,7 +360,7 @@ tt_eval_grid <- function(x, width_cols = NULL, ...) {
   if (is_matrix) {
     tab <- x
   } else {
-    tab <- x@data_body
+    tab <- x@body_data
   }
 
   if (is.null(width_cols)) {

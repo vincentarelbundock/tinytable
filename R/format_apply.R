@@ -110,7 +110,7 @@ apply_format <- function(
   }
 
   if (inherits(x, "tinytable")) {
-    out <- x@data_body
+    out <- x@body_data
     ori <- x@data
   } else {
     out <- ori <- x
@@ -172,7 +172,7 @@ apply_format <- function(
       # index: we are only formatting the body rows
       # ori & out currently have the same dimensions
       if (inherits(x, "tinytable")) {
-        idx <- x@index_body %in% i
+        idx <- x@body_index %in% i
       } else {
         idx <- seq_len(nrow(out)) %in% i
       }
@@ -206,7 +206,7 @@ apply_format <- function(
     }
 
     if (inherits(x, "tinytable")) {
-      x@data_body <- out
+      x@body_data <- out
     } else {
       x <- out
     }
