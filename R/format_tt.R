@@ -378,10 +378,14 @@ format_tt_lazy <- function(
       output = o
     )
 
-    # column names when 0 is in i
-    if (0 %in% i && !identical(components, "all")) {
-      x <- apply_colnames(x, format_vector_escape, output = o)
-    }
+    x <- apply_colnames(
+      x,
+      i,
+      j,
+      format_vector_escape,
+      components = components,
+      output = o
+    )
   }
 
   # markdown and quarto at the very end

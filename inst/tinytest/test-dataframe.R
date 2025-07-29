@@ -18,3 +18,11 @@ tab <- data.frame(x = 1, y = Inf) |>
     tt() |>
     save_tt()
 expect_inherits(tab, "data.frame")
+
+
+# Issue #513: uninformative error
+tab <- tt(head(iris)) |>
+    group_tt(j = list("a" = 1:2, "b" = 3:5)) |>
+    style_tt("colnames", italic = TRUE)
+tab <- tab |> save_tt("dataframe")
+expect_inherits(tab, "data.frame")

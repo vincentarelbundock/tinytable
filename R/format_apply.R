@@ -45,8 +45,15 @@ apply_group_j <- function(x, format_fn, ...) {
   return(x)
 }
 
-apply_colnames <- function(x, format_fn, ...) {
-  colnames(x) <- format_fn(colnames(x), ...)
+apply_colnames <- function(x, i, j, format_fn, components, ...) {
+  if ("colnames" %in% components) {
+    colnames(x) <- format_fn(colnames(x), ...)
+  } else if (0 %in% i) {
+    formatted <- format_fn(colnames(x)[j], ...)
+    if (length(formatted) == length(j)) {
+      colnames(x)[j] <- formatted
+    }
+  }
   return(x)
 }
 
@@ -87,9 +94,8 @@ apply_format <- function(
   }
 
   # Apply formatting to specified components only
-  if ("colnames" %in% components) {
-    x <- apply_colnames(x, format_fn, ...)
-  }
+  x <- apply_colnames(x, i, j, format_fn, components = components, ...)
+
   if ("caption" %in% components) {
     x <- apply_caption(x, format_fn, ...)
   }
