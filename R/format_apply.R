@@ -23,24 +23,47 @@ apply_notes <- function(x, format_fn, ...) {
   return(x)
 }
 
-apply_group_j <- function(x, format_fn, ...) {
+apply_group_j <- function(x, i, j, format_fn, components, ...) {
   if (!inherits(x, "tinytable")) {
     return(x)
   }
+
+  if (!"groupj" %in% components && !any(i < 0)) {
+    return(x)
+  }
+
   data_slot <- x@group_data_j
-  if (nrow(data_slot) > 0) {
-    for (row_idx in seq_len(nrow(data_slot))) {
-      for (col_idx in seq_len(ncol(data_slot))) {
-        current_value <- data_slot[row_idx, col_idx]
+
+  if ("groupj" %in% components) {
+    if (nrow(data_slot) > 0) {
+      for (row_idx in seq_len(nrow(data_slot))) {
+        for (col_idx in seq_len(ncol(data_slot))) {
+          current_value <- data_slot[row_idx, col_idx]
+          if (!is.na(current_value) && trimws(current_value) != "") {
+            formatted_value <- format_fn(current_value, ...)
+            if (!is.null(formatted_value)) {
+              data_slot[row_idx, col_idx] <- formatted_value
+            }
+          }
+        }
+      }
+    }
+  } else if (any(i < 0)) {
+    i_idx <- i[i < 0]
+    i_idx <- i_idx - min(i_idx) + 1
+    for (row in i_idx) {
+      for (col in j) {
+        current_value <- data_slot[row, col]
         if (!is.na(current_value) && trimws(current_value) != "") {
           formatted_value <- format_fn(current_value, ...)
           if (!is.null(formatted_value)) {
-            data_slot[row_idx, col_idx] <- formatted_value
+            data_slot[row, col] <- formatted_value
           }
         }
       }
     }
   }
+
   x@group_data_j <- data_slot
   return(x)
 }
@@ -95,15 +118,13 @@ apply_format <- function(
 
   # Apply formatting to specified components only
   x <- apply_colnames(x, i, j, format_fn, components = components, ...)
+  x <- apply_group_j(x, i, j, format_fn, components = components, ...)
 
   if ("caption" %in% components) {
     x <- apply_caption(x, format_fn, ...)
   }
   if ("notes" %in% components) {
     x <- apply_notes(x, format_fn, ...)
-  }
-  if ("groupj" %in% components) {
-    x <- apply_group_j(x, format_fn, ...)
   }
 
   if (

@@ -13,3 +13,33 @@ expect_snapshot_print(t[["markdown"]], "style-issue507_markdown_styles.md")
 expect_snapshot_print(t[["latex"]], "style-issue507_markdown_styles.tex")
 expect_snapshot_print(t[["typst"]], "style-issue507_markdown_styles.typ")
 expect_snapshot_print(t[["html"]], "style-issue507_markdown_styles.html")
+
+
+# Issue #512: Many tables with identical output
+tab <- tt(head(iris)) |>
+    group_tt(j = list("a" = 1:2, "b" = 3:5)) |>
+    style_tt("colnames", italic = TRUE) |>
+    style_tt(-1, bold = TRUE)
+expect_snapshot_print(tab, "style-groupj_colnames.md")
+tab <- tt(head(iris)) |>
+    group_tt(j = list("a" = 1:2, "b" = 3:5)) |>
+    style_tt(0, italic = TRUE) |>
+    style_tt(-1, bold = TRUE)
+expect_snapshot_print(tab, "style-groupj_colnames.md")
+tab <- tt(head(iris)) |>
+    group_tt(j = list("a" = 1:2, "b" = 3:5)) |>
+    format_tt(0, sprintf = "_%s_") |>
+    format_tt(-1, sprintf = "**%s**")
+expect_snapshot_print(tab, "style-groupj_colnames.md")
+tab <- tt(head(iris)) |>
+    group_tt(j = list("a" = 1:2, "b" = 3:5)) |>
+    format_tt("colnames", sprintf = "_%s_") |>
+    format_tt(-1, sprintf = "**%s**")
+expect_snapshot_print(tab, "style-groupj_colnames.md")
+
+exit_file("error: double bold")
+tab <- tt(head(iris)) |>
+    group_tt(j = list("a" = 1:2, "b" = 3:5)) |>
+    style_tt("colnames", italic = TRUE) |>
+    style_tt("groupj", bold = TRUE)
+expect_snapshot_print(tab, "style-groupj_colnames.md")
