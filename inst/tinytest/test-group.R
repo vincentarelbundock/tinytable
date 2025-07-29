@@ -27,9 +27,9 @@ expect_snapshot_print(t[["typst"]], "group_tt-3level.typ")
 tab <- tt(mtcars[1:10, 1:5]) |>
   group_tt(
     i = list("Hello" = 3, "World" = 8),
-    j = list("Foo" = 2:3, "Bar" = 4:5))
+    j = list("Foo" = 2:3, "Bar" = 4:5)
+  )
 expect_snapshot_print(print_html(tab), "group_tt-html_tutorial_01.html")
-
 
 
 # Issue #258: group_tt indices with 0 and duplicates
@@ -74,15 +74,36 @@ expect_inherits(save_tt(tab, "markdown"), "character")
 tab <- tt(mtcars |> head())
 tab@output <- "markdown"
 expect_snapshot_print(tab, "group_tt_delim-no-delim.md")
-tab <- tt(data.frame(A_id = 1, A_a1 = 2, A_a2 = "3", B_b1 = 4, B_b2 = 5, B_C = 6)) |>
+tab <- tt(data.frame(
+  A_id = 1,
+  A_a1 = 2,
+  A_a2 = "3",
+  B_b1 = 4,
+  B_b2 = 5,
+  B_C = 6
+)) |>
   group_tt(j = "_")
 tab@output <- "markdown"
 expect_snapshot_print(tab, "group_tt_delim-all-delim.md")
-tab <- tt(data.frame(id = 1, A_a1 = 2, A_a2 = "3", B_b1 = 4, B_b2 = 5, C = 6)) |>
+tab <- tt(data.frame(
+  id = 1,
+  A_a1 = 2,
+  A_a2 = "3",
+  B_b1 = 4,
+  B_b2 = 5,
+  C = 6
+)) |>
   group_tt(j = "_")
 tab@output <- "markdown"
 expect_snapshot_print(tab, "group_tt_delim-some-delim.md")
-tab <- tt(data.frame(id = 1, Axa1 = 2, Axa2 = "3", Bxb1 = 4, Bxb2 = 5, C = 6)) |>
+tab <- tt(data.frame(
+  id = 1,
+  Axa1 = 2,
+  Axa2 = "3",
+  Bxb1 = 4,
+  Bxb2 = 5,
+  C = 6
+)) |>
   group_tt(j = "x")
 tab@output <- "markdown"
 expect_snapshot_print(tab, "group_tt_delim-x-delim.md")
@@ -118,20 +139,27 @@ tab <- tt(k) |>
   group_tt(i = list("hello world" = 2), j = list("foo" = 1:2, "bar" = 3:4))
 expect_snapshot_print(
   print_html(tab),
-  "group_tt-issue165_html_centering_style.html")
+  "group_tt-issue165_html_centering_style.html"
+)
 
 
 # informative errors
-expect_error(tt(head(iris)) |> style_tt("groupj", color = "orange"),
-  pattern = "No column grouping")
+expect_error(
+  tt(head(iris)) |> style_tt("groupj", color = "orange"),
+  pattern = "No column grouping"
+)
 
 # informative errors
 x <- head(iris)
 colnames(x) <- NULL
-expect_error(tt(x) |> style_tt("colnames", color = "orange"),
-  pattern = "No column names found")
-expect_error(tt(head(iris)) |> style_tt("groupj", color = "orange"),
-  pattern = "No column grouping")
+expect_error(
+  tt(x) |> style_tt("colnames", color = "orange"),
+  pattern = "No column names found"
+)
+expect_error(
+  tt(head(iris)) |> style_tt("groupj", color = "orange"),
+  pattern = "No column grouping"
+)
 
 
 # i = "colnames" vs. "groupj"
@@ -155,7 +183,7 @@ tab <- tt(k) |>
     j = list("foo" = 1:2, "bar" = 3:4)
   )
 t <- expect_table(tab)
-expect_snapshot_print(t[["latex"]], "group_tt-issue165_extra_row.tex")
-expect_snapshot_print(t[["typst"]], "group_tt-issue165_extra_row.typ")
-expect_snapshot_print(t[["html"]], "group_tt-issue165_extra_row.html")
-expect_snapshot_print(t[["markdown"]], "group_tt-issue165_extra_row.md")
+expect_snapshot_print(t[["latex"]], "group-issue165_extra_row.tex")
+expect_snapshot_print(t[["typst"]], "group-issue165_extra_row.typ")
+expect_snapshot_print(t[["html"]], "group-issue165_extra_row.html")
+expect_snapshot_print(t[["markdown"]], "group-issue165_extra_row.md")

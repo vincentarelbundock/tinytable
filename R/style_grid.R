@@ -19,7 +19,7 @@ style_eval_grid <- function(x) {
       x <- format_tt(x, i = row, j = col, fn = fn)
     }
     if (isTRUE(sty[idx, "italic"])) {
-      fn <- function(z) if (identical(trimws(z), "")) "" else sprintf("*%s*", z)
+      fn <- function(z) if (identical(trimws(z), "")) "" else sprintf("_%s_", z)
       x <- format_tt(x, i = row, j = col, fn = fn)
     }
     if (isTRUE(sty[idx, "strikeout"])) {
@@ -173,46 +173,48 @@ prepare_grid_style <- function(x) {
     return(sty)
   }
 
-  # Ensure sty is a data frame (defensive programming)
-  if (!is.data.frame(sty)) {
-    return(data.frame())
+  sty <- sty[, c(
+    "i",
+    "j",
+    "bold",
+    "italic",
+    "strikeout",
+    "indent",
+    "colspan",
+    "rowspan"
+  )]
+  styrows <- lapply(seq_len(nrow(sty)), function(i) sty[i, , drop = FALSE])
+
+  for (idx in seq_along(styrows)) {
+    sr <- styrows[[idx]]
+    if (is.na(sr$i) && is.na(sr$j)) {
+      cells <- expand.grid(i = seq_len(nrow(x)), j = seq_len(ncol(x)))
+    } else if (is.na(sr$j)) {
+      cells <- expand.grid(i = sr$i, j = seq_len(ncol(x)))
+    } else if (is.na(sr$i)) {
+      cells <- expand.grid(i = seq_len(nrow(x)), j = sr$j)
+    } else {
+      cells <- sr[, c("i", "j")]
+    }
+    sr$i <- sr$j <- NULL
+    styrows[[idx]] <- merge(cells, sr)
   }
 
-  all_i <- seq_len(nrow(x))
-  idx_g <- x@group_index_i
-  idx_d <- setdiff(all_i, idx_g)
-
-  # expand i to full rows
-  if (any(is.na(sty$i))) {
-    alli <- data.frame(i = seq_len(nrow(x)))
-    alli <- merge(
-      alli,
-      sty[is.na(sty$i), colnames(sty) != "i"],
-      all = TRUE,
-      sort = FALSE
-    )
-    sty <- rbind(sty, alli)
-    sty <- sty[!is.na(sty$i), ]
-    sty <- sty[order(sty$i, sty$j), ]
-  }
-
-  last <- function(k) {
+  grid_style_last <- function(k) {
     if (all(is.na(k))) {
       return(NA)
     }
+    # NA are sometimes logical, so don't use } else if {
     if (is.logical(k)) {
-      return(as.logical(max(k, na.rm = TRUE)))
+      return(any(k))
     }
-    return(utils::tail(stats::na.omit(k), 1))
+    return(unname(utils::tail(stats::na.omit(k), 1)))
   }
 
-  sty <- split(sty, list(sty$i, sty$j))
-  sty <- lapply(sty, utils::tail, n = 1)
+  sty <- do.call(rbind, styrows)
+  sty <- split(sty, list(sty$i, sty$j), drop = TRUE)
+  sty <- lapply(sty, function(z) data.frame(lapply(z, grid_style_last)))
   sty <- do.call(rbind, sty)
-
-  if (nrow(sty) == 0) {
-    return(sty)
-  }
 
   return(sty)
 }

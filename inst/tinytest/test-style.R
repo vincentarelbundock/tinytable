@@ -9,7 +9,7 @@ tab <- tt(mtcars[1:8, 1:3]) |>
     style_tt(i = 6, strikeout = TRUE) |>
     style_tt(i = 8, bold = TRUE)
 t <- expect_table(tab)
-expect_snapshot_print(t[["markdown"]], "issue507_markdown_styles.md")
-expect_snapshot_print(t[["latex"]], "issue507_markdown_styles.tex")
-expect_snapshot_print(t[["typst"]], "issue507_markdown_styles.typ")
-expect_snapshot_print(t[["html"]], "issue507_markdown_styles.html")
+expect_snapshot_print(t[["markdown"]], "style-issue507_markdown_styles.md")
+expect_snapshot_print(t[["latex"]], "style-issue507_markdown_styles.tex")
+expect_snapshot_print(t[["typst"]], "style-issue507_markdown_styles.typ")
+expect_snapshot_print(t[["html"]], "style-issue507_markdown_styles.html")
