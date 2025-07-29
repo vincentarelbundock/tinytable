@@ -54,6 +54,8 @@ setClass(
     style_caption = "list",
     style_notes = "list",
     table_string = "character",
+    tabulator_cdn = "character",
+    tabulator_options = "character",
     theme = "list",
     width = "NULLorNumeric",
     width_cols = "numeric"
@@ -110,6 +112,8 @@ setMethod(
     .Object@portable <- FALSE
     .Object@style <- data.frame()
     .Object@lazy_theme <- list()
+    .Object@tabulator_cdn <- ""
+    .Object@tabulator_options <- ""
 
     return(.Object)
   }

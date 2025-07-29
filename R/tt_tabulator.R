@@ -19,18 +19,40 @@ setMethod(
     )
 
     # Convert data to JSON for Tabulator
+    # Use original data to preserve types, but apply same row selection as data_body
+    if (nrow(x@data_body) == nrow(x@data)) {
+      # No row modifications, use original data
+      data_clean <- x@data
+    } else {
+      # Row modifications exist, use data_body but try to preserve types
+      data_clean <- x@data_body
+      # Convert back to appropriate types where possible
+      for (i in seq_along(data_clean)) {
+        original_col <- x@data[[names(x@data)[i]]]
+        if (is.logical(original_col)) {
+          # Convert logical strings back to logical
+          data_clean[[i]] <- as.logical(data_clean[[i]])
+        } else if (is.numeric(original_col)) {
+          # Keep numeric as numeric if not formatted
+          suppressWarnings({
+            numeric_version <- as.numeric(data_clean[[i]])
+            if (!any(is.na(numeric_version) & !is.na(data_clean[[i]]))) {
+              data_clean[[i]] <- numeric_version
+            }
+          })
+        }
+      }
+    }
+    
     # Clean column names (replace dots with underscores)
-    data_clean <- x@data_body
     names(data_clean) <- gsub("\\.", "_", names(data_clean))
     
-    # Clean problematic quotes in character columns
-    data_clean <- as.data.frame(lapply(data_clean, function(col) {
-      if (is.character(col)) {
-        gsub('"', "'", col) # Replace double quotes with single quotes
-      } else {
-        col
+    # Clean problematic quotes in character columns only
+    for (i in seq_along(data_clean)) {
+      if (is.character(data_clean[[i]])) {
+        data_clean[[i]] <- gsub('"', "'", data_clean[[i]])
       }
-    }))
+    }
 
     # Convert to JSON
     js_data <- jsonlite::toJSON(
@@ -38,8 +60,7 @@ setMethod(
       dataframe = "rows",
       auto_unbox = TRUE,
       pretty = FALSE,
-      na = "null",
-      force = TRUE
+      na = "null"
     )
 
     # Build column definitions

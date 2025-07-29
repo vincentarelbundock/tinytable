@@ -726,3 +726,21 @@ assert_true <- function(
     stop(msg, call. = FALSE)
   }
 }
+
+assert_number <- function(
+  x,
+  lower = NULL,
+  upper = NULL,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
+  # Use assert_numeric with len = 1 to ensure single number
+  assert_numeric(
+    x,
+    len = 1,
+    lower = lower,
+    upper = upper,
+    null.ok = null.ok,
+    name = name
+  )
+}

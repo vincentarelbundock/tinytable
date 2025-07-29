@@ -1,161 +1,127 @@
 # Helper function to handle CDN theme selection
-tabulator_cdn_helper <- function(theme = "bootstrap5") {
+tabulator_cdn_helper <- function(x, cdn) {
   # Check if it's a custom CDN URL
-  if (startsWith(theme, "http")) {
-    return(sprintf('<link href="%s" rel="stylesheet">', theme))
-  }
-
-  # Map theme names to CSS filenames
-  theme_map <- list(
-    default = "tabulator.min.css",
-    simple = "tabulator_simple.min.css",
-    midnight = "tabulator_midnight.min.css",
-    modern = "tabulator_modern.min.css",
-    site = "tabulator_site.min.css",
-    site_dark = "tabulator_site_dark.min.css",
-    bootstrap3 = "tabulator_bootstrap.min.css",
-    bootstrap4 = "tabulator_bootstrap4.min.css",
-    bootstrap5 = "tabulator_bootstrap5.min.css",
-    semanticui = "tabulator_semanticui.min.css",
-    bulma = "tabulator_bulma.min.css",
-    materialize = "tabulator_materialize.min.css"
-  )
-
-  # Validate theme choice using theme_map names
-  valid_themes <- names(theme_map)
-
-  if (!theme %in% valid_themes) {
-    warning(
-      "Invalid theme '",
-      theme,
-      "'. Valid themes are: ",
-      paste(valid_themes, collapse = ", "),
-      ". Or provide a custom CDN URL starting with 'http'. Using default bootstrap5"
+  if (startsWith(cdn, "http")) {
+    css_link <- sprintf('<link href="%s" rel="stylesheet">', cdn)
+  } else {
+    # Map theme names to CSS filenames
+    theme_map <- list(
+      default = "tabulator.min.css",
+      simple = "tabulator_simple.min.css",
+      midnight = "tabulator_midnight.min.css",
+      modern = "tabulator_modern.min.css",
+      site = "tabulator_site.min.css",
+      site_dark = "tabulator_site_dark.min.css",
+      bootstrap3 = "tabulator_bootstrap.min.css",
+      bootstrap4 = "tabulator_bootstrap4.min.css",
+      bootstrap5 = "tabulator_bootstrap5.min.css",
+      semanticui = "tabulator_semanticui.min.css",
+      bulma = "tabulator_bulma.min.css",
+      materialize = "tabulator_materialize.min.css"
     )
-    theme <- "bootstrap5"
+
+    # Validate theme choice using theme_map names
+    valid_themes <- names(theme_map)
+
+    if (!cdn %in% valid_themes) {
+      warning(
+        "Invalid theme '",
+        cdn,
+        "'. Valid themes are: ",
+        paste(valid_themes, collapse = ", "),
+        ". Or provide a custom CDN URL starting with 'http'. Using default bootstrap5"
+      )
+      cdn <- "bootstrap5"
+    }
+
+    css_file <- theme_map[[cdn]]
+    css_link <- sprintf(
+      '<link href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/%s" rel="stylesheet">',
+      css_file
+    )
   }
 
-  css_file <- theme_map[[theme]]
-  sprintf(
-    '<link href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/%s" rel="stylesheet">',
-    css_file
+  # Replace the CSS link in the table string
+  x@table_string <- gsub(
+    '<link href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/tabulator_bootstrap5.min.css" rel="stylesheet">',
+    css_link,
+    x@table_string,
+    fixed = TRUE
   )
+
+  return(x)
 }
 
 # Helper function to convert options to JavaScript string
 tabulator_options_helper <- function(options = NULL) {
-  if (is.null(options)) {
+  if (is.null(options) || !is.character(options)) {
     return("")
   }
 
-  if (is.character(options)) {
-    # If options is a string, use it directly
-    return(paste0(options, ifelse(nchar(options) > 0, ",", "")))
-  } else if (is.list(options)) {
-    # If options is a list, convert to JavaScript object notation
-    options_parts <- character(0)
-    for (name in names(options)) {
-      value <- options[[name]]
-      if (is.character(value)) {
-        options_parts <- c(options_parts, sprintf('%s: "%s"', name, value))
-      } else if (is.logical(value)) {
-        options_parts <- c(
-          options_parts,
-          sprintf("%s: %s", name, tolower(as.character(value)))
-        )
-      } else if (is.numeric(value)) {
-        options_parts <- c(options_parts, sprintf("%s: %s", name, value))
-      } else if (is.list(value)) {
-        # For nested objects, convert to JSON
-        options_parts <- c(
-          options_parts,
-          sprintf("%s: %s", name, jsonlite::toJSON(value, auto_unbox = TRUE))
-        )
-      }
-    }
-    options_string <- paste(options_parts, collapse = ",\n        ")
-    return(paste0(options_string, ifelse(nchar(options_string) > 0, ",", "")))
-  } else {
-    warning("options must be a character string or named list")
-    return("")
-  }
+  # Add comma if options string is not empty
+  return(paste0(options, ifelse(nchar(options) > 0, ",", "")))
 }
 
 
 theme_tabulator <- function(
     x,
     cdn = get_option("tinytable_theme_tabulator_cdn", default = "bootstrap5"),
-    options = get_option(
-      "tinytable_theme_tabulator_options",
-      default = list(
-        pagination = "local",
-        paginationSize = 50,
-        height = "500px",
-        headerSort = TRUE,
-        resizableColumns = TRUE,
-        movableColumns = TRUE
-      )
-    ),
-    format_column_name = get_option(
-      "tinytable_theme_tabulator_format_column_name",
-      default = NULL
-    ),
-    format_column_type = get_option(
-      "tinytable_theme_tabulator_format_column_type",
-      default = NULL
-    ),
+    height = 40,
+    pagination = c(10, 50, 100, 500),
+    layout_width = "fitData",
+    layout_height = NULL,
+    options = get_option("tinytable_theme_tabulator_options", default = NULL),
     ...) {
+  assert_number(height, lower = 1)
+  assert_choice(layout_width, choice = c("fitData", "fitDataFill", "fitDataStretch", "fitDataTable", "fitColumns"))
+  assert_string(layout_height, null.ok = TRUE)
+
+  if (is.null(pagination)) {
+    # No pagination
+    pagination_opts <- ""
+  } else if (is.numeric(pagination)) {
+    # Vector of integers: first is size, sorted vector is selector
+    paginationSize <- pagination[1]
+    paginationSizeSelector <- sort(pagination)
+    selector_str <- paste0("[", paste(paginationSizeSelector, collapse = ", "), "]")
+    pagination_opts <- sprintf("
+      pagination: 'local',
+      paginationSizeSelector: %s,
+      paginationSize: %s,", selector_str, paginationSize)
+  }
+
+  # Build layout options
+  layout_opts <- sprintf("layout: '%s',", layout_width)
+  if (!is.null(layout_height)) {
+    layout_opts <- paste0(layout_opts, sprintf("\n    height: '%s',", layout_height))
+  }
+
+  opts <- sprintf(
+    "
+    %s
+    %s
+    height: '%sem'
+    ",
+    pagination_opts,
+    layout_opts,
+    height
+  )
+
+  # If options is provided, use it instead of the individual arguments
+  if (!is.null(options)) {
+    opts <- options
+  }
+
   # Only apply to tabulator output
   tabulator_theme_fn <- function(table) {
     if (!isTRUE(table@output == "tabulator")) {
       return(table)
     }
 
-    # Replace CDN theme in template
-    if (!is.null(cdn)) {
-      css_link <- tabulator_cdn_helper(cdn)
+    # Store CDN and options in S4 slots
+    table@tabulator_cdn <- cdn
+    table@tabulator_options <- opts
 
-      # Replace the CSS link in the table string
-      table@table_string <- gsub(
-        '<link href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/tabulator_bootstrap5.min.css" rel="stylesheet">',
-        css_link,
-        table@table_string,
-        fixed = TRUE
-      )
-    }
-
-    # Add custom options to tabulator configuration
-    if (!is.null(options)) {
-      options_string <- tabulator_options_helper(options)
-
-      # Replace the placeholder in the template
-      table@table_string <- gsub(
-        "$tinytable_TABULATOR_OPTIONS",
-        options_string,
-        table@table_string,
-        fixed = TRUE
-      )
-    }
-
-    # Handle custom column formatters (only use what user specifies)
-    if (!is.null(format_column_name) || !is.null(format_column_type)) {
-      # Use only the formatters specified by the user - no defaults or merging
-      column_type_formatters <- format_column_type
-      column_name_formatters <- format_column_name
-
-      # Regenerate columns JSON with custom formatters
-      # Extract data from the existing JSON
-      data_match <- regmatches(
-        table@table_string,
-        regexpr("data: \\[.*?\\]", table@table_string)
-      )
-      if (length(data_match) > 0) {
-        # This is complex - for now we'll warn that this requires regenerating the entire table
-        warning(
-          "Custom column formatters require regenerating the table. Consider applying theme_tabulator() before other styling operations."
-        )
-      }
-    }
 
     return(table)
   }

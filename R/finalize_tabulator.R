@@ -7,13 +7,29 @@ setMethod(
       x <- fn(x)
     }
     
-    # Clean up any remaining placeholders that weren't replaced by themes
-    x@table_string <- gsub(
-      "$tinytable_TABULATOR_OPTIONS",
-      "",
-      x@table_string,
-      fixed = TRUE
-    )
+    # Replace CDN theme from S4 slot
+    if (nchar(x@tabulator_cdn) > 0) {
+      x <- tabulator_cdn_helper(x, x@tabulator_cdn)
+    }
+    
+    # Replace tabulator options from S4 slot
+    if (nchar(x@tabulator_options) > 0) {
+      options_string <- tabulator_options_helper(x@tabulator_options)
+      x@table_string <- gsub(
+        "$tinytable_TABULATOR_OPTIONS",
+        options_string,
+        x@table_string,
+        fixed = TRUE
+      )
+    } else {
+      # Clean up placeholder if no options
+      x@table_string <- gsub(
+        "$tinytable_TABULATOR_OPTIONS",
+        "",
+        x@table_string,
+        fixed = TRUE
+      )
+    }
     
     return(x)
   }
