@@ -8,60 +8,44 @@ style_eval_grid <- function(x) {
 
   sty <- prepare_grid_style(x)
 
-  # Ensure sty is a proper data frame after prepare_grid_style
-  if (!is.data.frame(sty) || nrow(sty) == 0) {
-    return(x)
-  }
-
-  for (col in seq_along(out)) {
-    out[[col]] <- as.character(out[[col]])
-  }
-
+  # styling
   for (idx in seq_len(nrow(sty))) {
     row <- sty[idx, "i"]
     col <- sty[idx, "j"]
-    bold <- sty[which(sty$i == row & sty$j == col), "bold"]
-    italic <- sty[which(sty$i == row & sty$j == col), "italic"]
-    strikeout <- sty[which(sty$i == row & sty$j == col), "strikeout"]
-    rowspan <- sty[which(sty$i == row & sty$j == col), "rowspan"]
-    colspan <- sty[which(sty$i == row & sty$j == col), "colspan"]
-    if (isTRUE(bold)) {
-      out[row, col] <- sprintf("**%s**", out[row, col])
-    }
-    if (isTRUE(italic)) {
-      out[row, col] <- sprintf("*%s*", out[row, col])
-    }
-    if (isTRUE(strikeout)) {
-      out[row, col] <- sprintf("~~%s~~", out[row, col])
-    }
-    if (!is.null(rowspan) || !is.null(colspan)) {
-      idx_row <- if (isTRUE(rowspan > 1)) row + seq_len(rowspan) - 1 else row
-      idx_col <- if (isTRUE(colspan > 1)) col + seq_len(colspan) - 1 else col
-      backup <- out[row, col]
-      for (w in idx_row) {
-        for (z in idx_col) {
-          if (z <= x@ncol) {
-            out[w, z] <- ""
-          }
-        }
+    if (isTRUE(sty[idx, "bold"])) {
+      fn <- function(z) {
+        if (identical(trimws(z), "")) "" else sprintf("**%s**", z)
       }
-      out[row, col] <- backup
+      x <- format_tt(x, i = row, j = col, fn = fn)
+    }
+    if (isTRUE(sty[idx, "italic"])) {
+      fn <- function(z) if (identical(trimws(z), "")) "" else sprintf("_%s_", z)
+      x <- format_tt(x, i = row, j = col, fn = fn)
+    }
+    if (isTRUE(sty[idx, "strikeout"])) {
+      fn <- function(z) {
+        if (identical(trimws(z), "")) "" else sprintf("~~%s~~", z)
+      }
+      x <- format_tt(x, i = row, j = col, fn = fn)
+    }
+
+    # wipe adjacent cells
+    rowspan <- sty[idx, "rowspan"]
+    colspan <- sty[idx, "colspan"]
+    rowspan <- if (is.na(rowspan)) 1 else rowspan
+    colspan <- if (is.na(colspan)) 1 else colspan
+    wipe <- expand.grid(
+      i = row:(row + rowspan - 1),
+      j = col:(col + colspan - 1)
+    )
+    wipe <- wipe[which(wipe$i != row | wipe$j != col), ]
+    for (idx in seq_len(nrow(wipe))) {
+      x <- format_tt(x, i = wipe$i[idx], j = wipe$j[idx], fn = function(k) "")
     }
   }
 
-  x@data_body <- out
   return(x)
 }
-
-
-#' tinytable S4 method
-#'
-#' @keywords internal
-setMethod(
-  f = "style_eval",
-  signature = "tinytable_grid",
-  definition = style_eval_grid
-)
 
 
 grid_colspan <- function(x) {
@@ -179,54 +163,89 @@ prepare_grid_style <- function(x) {
     return(sty)
   }
 
-  # Ensure sty is a data frame (defensive programming)
-  if (!is.data.frame(sty)) {
-    return(data.frame())
+  sty <- sty[, c(
+    "i",
+    "j",
+    "bold",
+    "italic",
+    "strikeout",
+    "indent",
+    "colspan",
+    "rowspan"
+  )]
+  styrows <- lapply(seq_len(nrow(sty)), function(i) sty[i, , drop = FALSE])
+
+  for (idx in seq_along(styrows)) {
+    sr <- styrows[[idx]]
+    if (is.na(sr$i) && is.na(sr$j)) {
+      cells <- expand.grid(i = seq_len(nrow(x)), j = seq_len(ncol(x)))
+    } else if (is.na(sr$j)) {
+      cells <- expand.grid(i = sr$i, j = seq_len(ncol(x)))
+    } else if (is.na(sr$i)) {
+      cells <- expand.grid(i = seq_len(nrow(x)), j = sr$j)
+    } else {
+      cells <- sr[, c("i", "j")]
+    }
+    sr$i <- sr$j <- NULL
+    styrows[[idx]] <- merge(cells, sr)
   }
 
-  all_i <- seq_len(nrow(x))
-  idx_g <- x@group_index_i
-  idx_d <- setdiff(all_i, idx_g)
-
-  # expand i to full rows
-  if (any(is.na(sty$i))) {
-    alli <- data.frame(i = seq_len(nrow(x)))
-    alli <- merge(
-      alli,
-      sty[is.na(sty$i), colnames(sty) != "i"],
-      all = TRUE,
-      sort = FALSE
-    )
-    sty <- rbind(sty, alli)
-    sty <- sty[!is.na(sty$i), ]
-    sty <- sty[order(sty$i, sty$j), ]
-  }
-
-  last <- function(k) {
+  grid_style_last <- function(k) {
     if (all(is.na(k))) {
       return(NA)
     }
+    # NA are sometimes logical, so don't use } else if {
     if (is.logical(k)) {
-      return(as.logical(max(k, na.rm = TRUE)))
+      return(any(k))
     }
-    return(utils::tail(stats::na.omit(k), 1))
+    return(unname(utils::tail(stats::na.omit(k), 1)))
   }
 
-  sty <- split(sty, list(sty$i, sty$j))
-  sty <- lapply(sty, utils::tail, n = 1)
+  sty <- do.call(rbind, styrows)
+  sty <- split(sty, list(sty$i, sty$j), drop = TRUE)
+  sty <- lapply(sty, function(z) data.frame(lapply(z, grid_style_last)))
   sty <- do.call(rbind, sty)
 
-  # TODO: style groups
-  sty <- sty[which(!sty$i %in% idx_g), ]
-
-  if (nrow(sty) == 0) {
-    return(sty)
-  }
-
-  # user-supplied indices are post-groups
-  # adjust indices to match original data rows since we only operate on those
-  for (g in rev(idx_g)) {
-    sty[sty$i > g, "i"] <- sty[sty$i > g, "i"] - 1
-  }
   return(sty)
 }
+
+
+###### MUST BE PLACED AFTER style_eval_grid definition
+#' tinytable S4 method
+#'
+#' @keywords internal
+setMethod(
+  f = "style_eval",
+  signature = "tinytable_grid",
+  definition = style_eval_grid
+)
+
+
+#' tinytable S4 method
+#'
+#' @keywords internal
+setMethod(
+  f = "style_eval",
+  signature = "tinytable_dataframe",
+  definition = style_eval_grid
+)
+
+
+#' tinytable S4 method
+#'
+#' @keywords internal
+setMethod(
+  f = "group_eval_j",
+  signature = "tinytable_dataframe",
+  definition = identity
+)
+
+
+#' tinytable S4 method
+#'
+#' @keywords internal
+setMethod(
+  f = "finalize",
+  signature = "tinytable_dataframe",
+  definition = identity
+)

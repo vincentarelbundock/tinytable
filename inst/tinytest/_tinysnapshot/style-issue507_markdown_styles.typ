@@ -8,10 +8,14 @@ block[ // start block
 
   #let style-dict = (
     // tinytable style-dict after
+    "9_0": 0, "9_1": 0, "9_2": 0, "3_0": 1, "4_0": 1, "5_0": 1, "3_1": 1, "4_1": 1, "5_1": 1, "3_2": 1, "4_2": 1, "5_2": 1, "7_0": 2, "7_1": 2, "7_2": 2
   )
 
   #let style-array = ( 
     // tinytable cell style after
+    (bold: true,),
+    (italic: true,),
+    (strikeout: true,),
   )
 
   // Helper function to get cell style
@@ -21,7 +25,7 @@ block[ // start block
   }
 
   // tinytable align-default-array before
-  #let align-default-array = ( left, left, left, left, left, ) // tinytable align-default-array here
+  #let align-default-array = ( left, left, left, ) // tinytable align-default-array here
   #show table.cell: it => {
     if style-array.len() == 0 { return it }
     
@@ -43,7 +47,8 @@ block[ // start block
   #align(center, [
 
   #table( // tinytable table start
-    columns: (auto, auto, auto, auto, auto),
+    column-gutter: 5pt,
+    columns: (auto, auto, auto),
     stroke: none,
     rows: auto,
     align: (x, y) => {
@@ -54,25 +59,30 @@ block[ // start block
       let style = get-style(x, y)
       if style != none and "background" in style { style.background }
     },
- table.hline(y: 1, start: 0, end: 5, stroke: 0.05em + black),
- table.hline(y: 7, start: 0, end: 5, stroke: 0.1em + black),
- table.hline(y: 0, start: 0, end: 5, stroke: 0.1em + black),
+ table.hline(y: 2, start: 0, end: 3, stroke: 0.05em + black),
+ table.hline(y: 12, start: 0, end: 3, stroke: 0.1em + black),
+ table.hline(y: 0, start: 0, end: 3, stroke: 0.1em + black),
     // tinytable lines before
 
     // tinytable header start
     table.header(
       repeat: true,
-[Sepal.Length], [Sepal.Width], [Petal.Length], [Petal.Width], [Species],
+table.cell(stroke: (bottom: .05em + black), colspan: 1, align: center)[Hello],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[World],
+[mpg], [cyl], [disp],
     ),
     // tinytable header end
 
     // tinytable cell content after
-[Header], [Row], [At], [Top], [Position],
-[5.1], [3.5], [1.4], [0.2], [setosa],
-[4.9], [3.0], [1.4], [0.2], [setosa],
-[4.7], [3.2], [1.3], [0.2], [setosa],
-[4.6], [3.1], [1.5], [0.2], [setosa],
-[Footer], [Row], [At], [Bottom], [Position],
+[21.0], [6], [160.0],
+[21.0], [6], [160.0],
+table.cell(colspan: 3)[Hello],
+[22.8], [4], [108.0],
+[21.4], [6], [258.0],
+[18.7], [8], [360.0],
+table.cell(colspan: 3)[World],
+[18.1], [6], [225.0],
+[14.3], [8], [360.0],
+[24.4], [4], [146.7],
 
     // tinytable footer after
 

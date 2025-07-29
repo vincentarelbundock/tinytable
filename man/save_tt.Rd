@@ -6,7 +6,7 @@
 \usage{
 save_tt(
   x,
-  output,
+  output = get_option("tinytable_save_output", default = NULL),
   overwrite = get_option("tinytable_save_overwrite", default = FALSE)
 )
 }

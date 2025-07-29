@@ -94,46 +94,18 @@ tab <- format_tt(tt(x), digits = 1, num_mark_big = " ")
 expect_snapshot_print(tab, "format_tt-issue149")
 # expect_error(format_tt(tt(x), num_mark_big = " "))
 
-# Issue #218
-options(tinytable_print_output = "dataframe")
-tab <- data.frame(x = 1, y = Inf) |>
-  tt() |>
-  print()
-tab <- data.frame(x = 1, y = NaN) |>
-  tt() |>
-  print()
-tab <- data.frame(x = 1, y = NA) |>
-  tt() |>
-  print()
-tab <- data.frame(x = 1, y = Inf) |>
-  tt() |>
-  print()
-tab <- data.frame(x = 1, y = Inf) |>
-  tt() |>
-  format_tt() |>
-  print()
-tab <- data.frame(x = 1, y = NaN) |>
-  tt() |>
-  format_tt() |>
-  print()
-tab <- data.frame(x = 1, y = NA) |>
-  tt() |>
-  format_tt() |>
-  print()
-expect_inherits(tab, "data.frame")
-
 x <- data.frame(x = 1:5, y = c(pi, NA, NaN, -Inf, Inf))
 dict <- list("-" = c(NA, NaN), "Tiny" = -Inf, "Huge" = Inf)
 tab <- tt(x) |>
   format_tt(replace = dict) |>
-  print()
+  save_tt("dataframe")
 expect_equivalent(tab$y, c("3.141593", "-", "-", "Tiny", "Huge"))
 
 # Issue #256: big mark for integers
 tab <- data.frame(x = c(1332037, 1299128, 805058, 206840, 698511)) |>
   tt() |>
   format_tt(num_mark_big = " ", digits = 0, num_fmt = "decimal") |>
-  print("dataframe")
+  save_tt("dataframe")
 expect_equivalent(
   tab$x,
   c("1 332 037", "1 299 128", "805 058", "206 840", "698 511")
@@ -141,15 +113,15 @@ expect_equivalent(
 
 x <- data.frame(x = pi, y = NA)
 options(tinytable_tt_digits = 2)
-tab <- tt(x) |> print()
+tab <- tt(x) |> save_tt("dataframe")
 expect_equivalent(tab$y, "")
 
 options(tinytable_format_replace = "zzz")
-tab <- tt(x) |> print()
+tab <- tt(x) |> save_tt("dataframe")
 expect_equivalent(tab$y, "zzz")
 
 options(tinytable_format_replace = FALSE)
-tab <- tt(x) |> print()
+tab <- tt(x) |> save_tt("dataframe")
 expect_equivalent(tab$y, "NA")
 
 options(tinytable_print_output = NULL)
@@ -194,7 +166,7 @@ tab <- tt(thumbdrives) |>
   format_tt(j = 4, fn = scales::label_bytes()) |>
   format_tt(j = 5, fn = scales::label_percent()) |>
   format_tt(escape = TRUE) |>
-  print("dataframe")
+  save_tt("dataframe")
 expect_true("January 15 2024" %in% tab$date_lookup)
 expect_true("$18.49" %in% tab$price)
 expect_true("16 GB" %in% tab$memory)
@@ -204,13 +176,13 @@ expect_false("2024-01-15" %in% tab$date_lookup)
 # Issue #409: both NA and NaN should be replaced
 options(tinytable_format_replace = NULL)
 tab <- data.frame(x = c(1, NA, NaN, Inf))
-tab0 <- tt(tab) |> print("dataframe")
+tab0 <- tt(tab) |> save_tt("dataframe")
 tab1 <- tt(tab) |>
   format_tt() |>
-  print("dataframe")
+  save_tt("dataframe")
 tab2 <- tt(tab) |>
   format_tt(replace = TRUE) |>
-  print("dataframe")
+  save_tt("dataframe")
 expect_equivalent(tab0$x, c("1", "NA", "NaN", "Inf"))
 expect_equivalent(tab1$x, c("1", "NA", "NaN", "Inf"))
 expect_equivalent(tab2$x, c("1", "", "", "Inf"))
@@ -229,8 +201,8 @@ expect_snapshot_print(print_html(tab), "format_tt-vignette_html_markdown.html")
 
 # boolean formatting
 tab <- tt(data.frame(a = c(TRUE, FALSE, TRUE, NA)))
-tab1 <- format_tt(tab, bool = tolower) |> print("dataframe")
-tab2 <- format_tt(tab, j = 1, bool = tolower) |> print("dataframe")
+tab1 <- format_tt(tab, bool = tolower) |> save_tt("dataframe")
+tab2 <- format_tt(tab, j = 1, bool = tolower) |> save_tt("dataframe")
 expect_equivalent(tab1$a, tab2$a)
 
 
@@ -262,9 +234,15 @@ expect_true(grepl("| Note: |", save_tt(tab3, "markdown"), fixed = TRUE))
 expect_true(grepl("| Test  |", save_tt(tab3, "markdown"), fixed = TRUE))
 
 # Test multiple components at once
-tab4 <- format_tt(tab, i = c("colnames", "caption"), fn = function(x) paste0("Prefix_", x))
+tab4 <- format_tt(tab, i = c("colnames", "caption"), fn = function(x) {
+  paste0("Prefix_", x)
+})
 expect_true(grepl("Prefix_x", save_tt(tab4, "markdown"), fixed = TRUE))
-expect_true(grepl("Prefix_Test Caption", save_tt(tab4, "markdown"), fixed = TRUE))
+expect_true(grepl(
+  "Prefix_Test Caption",
+  save_tt(tab4, "markdown"),
+  fixed = TRUE
+))
 
 
 # groupi vs. ~groupi
@@ -272,7 +250,7 @@ tab = head(iris) |>
   tt() |>
   group_tt(i = list("Hello" = 1, "World" = 3)) |>
   format_tt("~groupi", j = 1, sprintf = "--%s--") |>
-  print("dataframe")
+  save_tt("dataframe")
 expect_true("Hello" %in% tab[[1]])
 expect_true("--5.1--" %in% tab[[1]])
 expect_false("--Hello--" %in% tab[[1]])
@@ -282,7 +260,7 @@ tab = head(iris) |>
   tt() |>
   group_tt(i = list("Hello" = 1, "World" = 3)) |>
   format_tt("groupi", j = 1, sprintf = "--%s--") |>
-  print("dataframe")
+  save_tt("dataframe")
 expect_true("--Hello--" %in% tab[[1]])
 expect_true("5.1" %in% tab[[1]])
 expect_false("Hello" %in% tab[[1]])
@@ -294,14 +272,18 @@ options(tinytable_print_output = "latex")
 tab <- data.frame(
   "A_B" = rnorm(5),
   "B_C" = rnorm(5),
-  "C_D" = rnorm(5))
+  "C_D" = rnorm(5)
+)
 tab <- tt(tab, digits = 2, notes = "_Source_: Simulated data.") |>
   group_tt(i = list("Down" = 1, "Up" = 3)) |>
   format_tt("colnames", fn = \(x) sub("_", " / ", x)) |>
   format_tt("notes", markdown = TRUE) |>
   format_tt("groupi", replace = list("↓" = "Down", "↑" = "Up"))
 
-expect_snapshot_print(tab, label = "format_tt-format_components_vignette_01.tex")
+expect_snapshot_print(
+  tab,
+  label = "format_tt-format_components_vignette_01.tex"
+)
 options(tinytable_print_output = NULL)
 
 

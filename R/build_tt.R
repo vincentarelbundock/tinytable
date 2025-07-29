@@ -67,6 +67,9 @@ build_tt <- function(x, output = NULL) {
 
   x@output <- output
 
+  # before format_tt() because we need the indices
+  x@nrow <- nrow(x@data) + nrow(x@group_data_i)
+
   # apply the style_notes
   x <- style_notes(x)
   x <- style_caption(x)
@@ -80,23 +83,20 @@ build_tt <- function(x, output = NULL) {
 
   x <- render_fansi(x)
 
-  # separate group parts for individual formatting
+  # Calculate which positions are body vs group
   if (nrow(x@group_data_i) == 0) {
-    # No row group insertions - set index for full table as body
-    x@index_body <- seq_len(nrow(x@data))
+    x@index_body <- seq_len(nrow(x))
   } else {
-    # Calculate which positions are body vs group
-    all_positions <- seq_len(nrow(x@data) + nrow(x@group_data_i))
-    group_positions <- x@group_index_i
-    body_positions <- setdiff(all_positions, group_positions)
-
-    x@index_body <- body_positions
+    x@index_body <- setdiff(seq_len(nrow(x)), x@group_index_i)
   }
 
-  # before format_tt() because we need the indices
-  x@nrow <- nrow(x@data) + nrow(x@group_data_i)
+  # markdown styles are applied via special format_tt() calls, so they need to
+  # happen before evaluating x@lazy_format
+  if (x@output %in% c("markdown", "gfm", "dataframe")) {
+    x <- style_eval(x)
+  }
 
-  # format each component individually
+  # format each component individually, including groups before inserting them into the body
   for (l in x@lazy_format) {
     l[["x"]] <- x
     x <- eval(l)
@@ -105,14 +105,14 @@ build_tt <- function(x, output = NULL) {
   # insert group rows into body
   x <- rbind_body_groupi(x)
 
-  # add footnote markers just after formatting, otherwise appending converts to string
-  x <- footnote_markers(x)
-
   # plots and images
   for (l in x@lazy_plot) {
     l[["x"]] <- x
     x <- eval(l)
   }
+
+  # add footnote markers just after formatting, otherwise appending converts to string
+  x <- footnote_markers(x)
 
   # data frame we trim strings, pre-padded for markdown
   if (x@output == "dataframe") {
@@ -121,11 +121,6 @@ build_tt <- function(x, output = NULL) {
       tmp[[i]] <- trimws(tmp[[i]])
     }
     x@data_body <- tmp
-  }
-
-  # markdown styles need to be applied before creating the table but after `format_tt()`, otherwise there's annoying parsing, etc.
-  if (x@output %in% c("markdown", "gfm", "dataframe")) {
-    x <- style_eval(x)
   }
 
   # draw the table
@@ -137,9 +132,10 @@ build_tt <- function(x, output = NULL) {
     # Calculate ihead for the group headers - start from -1 for the top header row
     ihead <- -1
     # Apply group_eval_j once with all groups
-    x <- group_eval_j(x, j = seq_len(ncol(x@data)), ihead = ihead)
+    x <- group_eval_j(x, j = seq_len(ncol(x)), ihead = ihead)
   }
 
+  # style is separate from content in formats that allow it
   if (!x@output %in% c("markdown", "gfm", "dataframe")) {
     for (l in x@lazy_style) {
       l[["x"]] <- x

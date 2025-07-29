@@ -1,12 +1,13 @@
 # News
 
-## Development
+## 0.11.0
 
 Breaking changes:
 
 * `theme_spacing()` function has been removed. Use the new `height` argument in `tt()` instead for row height control.
 * Indexing for `format_tt()` is now consistent with `style_tt()` and `plot_tt()`. It refers to rows and columns in the final table, after insertions by `group_tt()`.
 * Argument `indent` is removed form the `group_tt()` function. Use `style_tt(x, "~groupi", indent = 1)` instead.
+* `print("dataframe")` is now consistent with other formats and only prints the result. Use `save_tt("dataframe")` to obtain a data frame.
 
 New features:
 
