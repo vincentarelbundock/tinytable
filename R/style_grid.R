@@ -48,16 +48,6 @@ style_eval_grid <- function(x) {
 }
 
 
-#' tinytable S4 method
-#'
-#' @keywords internal
-setMethod(
-  f = "style_eval",
-  signature = "tinytable_grid",
-  definition = style_eval_grid
-)
-
-
 grid_colspan <- function(x) {
   sty <- prepare_grid_style(x)
 
@@ -218,3 +208,44 @@ prepare_grid_style <- function(x) {
 
   return(sty)
 }
+
+
+###### MUST BE PLACED AFTER style_eval_grid definition
+#' tinytable S4 method
+#'
+#' @keywords internal
+setMethod(
+  f = "style_eval",
+  signature = "tinytable_grid",
+  definition = style_eval_grid
+)
+
+
+#' tinytable S4 method
+#'
+#' @keywords internal
+setMethod(
+  f = "style_eval",
+  signature = "tinytable_dataframe",
+  definition = style_eval_grid
+)
+
+
+#' tinytable S4 method
+#'
+#' @keywords internal
+setMethod(
+  f = "group_eval_j",
+  signature = "tinytable_dataframe",
+  definition = identity
+)
+
+
+#' tinytable S4 method
+#'
+#' @keywords internal
+setMethod(
+  f = "finalize",
+  signature = "tinytable_dataframe",
+  definition = identity
+)
