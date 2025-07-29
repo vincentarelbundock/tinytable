@@ -119,7 +119,8 @@ sanitize_output <- function(output) {
       "html",
       "typst",
       "dataframe",
-      "gfm"
+      "gfm",
+      "tabulator"
     ),
     null.ok = TRUE
   )

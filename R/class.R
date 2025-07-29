@@ -224,6 +224,7 @@ setClass("tinytable_bootstrap", contains = "tinytable")
 setClass("tinytable_typst", contains = "tinytable")
 setClass("tinytable_grid", contains = "tinytable")
 setClass("tinytable_dataframe", contains = "tinytable")
+setClass("tinytable_tabulator", contains = "tinytable")
 
 #' Apply style settings to a tinytable
 #'

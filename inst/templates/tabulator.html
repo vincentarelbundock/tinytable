@@ -1,0 +1,35 @@
+<!-- preamble start -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$tinytable_TABLE_ID</title>
+    <link href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/tabulator_bootstrap5.min.css" rel="stylesheet">
+  </head>
+  <body>
+<!-- preamble end -->
+
+    <div class="container">
+      <div id="$tinytable_TABLE_ID" style="margin-left: auto; margin-right: auto;"></div>
+    </div>
+
+    <!-- Tabulator JS -->
+    <script src="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/js/tabulator.min.js"></script>
+    <script>
+      const table_$tinytable_TABLE_ID = new Tabulator("#$tinytable_TABLE_ID", {
+        data: $tinytable_TABULATOR_DATA,
+        columns: $tinytable_TABULATOR_COLUMNS,
+        layout: "fitDataTable",
+        responsiveLayout: "collapse",
+        placeholder: "No Data Available",
+        $tinytable_TABULATOR_OPTIONS
+      });
+    </script>
+
+<!-- postamble start -->
+  </body>
+</html>
+<!-- postamble end -->
+<!-- hack to avoid NA insertion in last line -->
+

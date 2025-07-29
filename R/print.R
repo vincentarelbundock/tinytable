@@ -39,7 +39,7 @@ knit_print.tinytable <- function(
   x <- build_tt(x, output = output)
   out <- x@table_string
 
-  if (isTRUE(x@output == "html")) {
+  if (isTRUE(x@output %in% c("html", "tabulator"))) {
     # from htmltools:::html_preserve
     # GPL3
     inline <- grepl(out, "\n", fixed = TRUE)
@@ -70,7 +70,7 @@ knit_print.tinytable <- function(
 #' This function is called automatically by `R` whenever a `tinytable` object is anprinted to the console or in an HTML viewer pane.
 #'
 #' @inheritParams tt
-#' @param output format in which a Tiny Table is printed: `NULL` or one of `"latex"`, `"markdown"`, `"html"`, `"typst"`, `"dataframe"`. If `NULL`, the output is chosen based on these rules:
+#' @param output format in which a Tiny Table is printed: `NULL` or one of `"latex"`, `"markdown"`, `"html"`, `"typst"`, `"dataframe"`, `"tabulator"`. If `NULL`, the output is chosen based on these rules:
 #' + When called from a script in non-interactive mode, the default is "markdown" (`interactive() == FALSE`).
 #' + When called interactively in RStudio, the default is to display an HTML table in the viewer pane.
 #' + When called interactively in another development environment, the default is "markdown".
@@ -90,7 +90,7 @@ print.tinytable <- function(
     output <- sanitize_output(output)
   }
 
-  if (output == "html") {
+  if (output %in% c("html", "tabulator")) {
     dir <- tempfile()
     dir.create(dir)
     x@output_dir <- dir
@@ -105,7 +105,7 @@ print.tinytable <- function(
   # lazy styles get evaluated here by build_tt(), at the very end
   if (output %in% c("latex", "typst", "markdown", "gfm")) {
     cat(tab, "\n")
-  } else if (output == "html") {
+  } else if (output %in% c("html", "tabulator")) {
     if (is_rstudio_notebook()) {
       html_kable <- htmltools_browsable(tab)
       print(html_kable)

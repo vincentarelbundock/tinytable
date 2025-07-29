@@ -63,6 +63,7 @@ build_tt <- function(x, output = NULL) {
     gfm = swap_class(x, "tinytable_grid"),
     typst = swap_class(x, "tinytable_typst"),
     dataframe = swap_class(x, "tinytable_dataframe"),
+    tabulator = swap_class(x, "tinytable_tabulator"),
   )
 
   x@output <- output

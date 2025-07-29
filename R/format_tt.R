@@ -203,6 +203,11 @@ format_tt_lazy <- function(
     x_is_tibble <- FALSE
   }
 
+  # Early return for tabulator format - skip formatting for now
+  if (inherits(x, "tinytable") && identical(x@output, "tabulator")) {
+    return(x)
+  }
+
   # Check if i contains component names (do this before processing tinytable objects)
   if (identical(i, "groupi")) {
     components <- "cells"

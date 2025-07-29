@@ -4,7 +4,7 @@
 #'
 #' @param x The tinytable object to be saved.
 #' @param output String or file path.
-#' + If `output` is "markdown", "latex", "html", "html_portable", or "typst", the table is returned in a string as an `R` object.
+#' + If `output` is "markdown", "latex", "html", "html_portable", "typst", or "tabulator", the table is returned in a string as an `R` object.
 #' + If `output` is a valid file path, the table is saved to file. The supported extensions are: .docx, .html, .png, .pdf, .tex, .typ, and .md (with aliases .txt, .Rmd and .qmd).
 #' + If `output` is "html_portable" or the global option `tinytable_html_portable` is `TRUE`,
 #' the images are included in the HTML as base64 encoded string instead of link to a local file.
@@ -63,6 +63,9 @@ save_tt <- function(
     return(as.character(out))
   } else if (identical(output, "typst")) {
     out <- build_tt(x, output = "typst")@table_string
+    return(as.character(out))
+  } else if (identical(output, "tabulator")) {
+    out <- build_tt(x, output = "tabulator")@table_string
     return(as.character(out))
   } else if (identical(output, "dataframe")) {
     out <- build_tt(x, output = "dataframe")@data_body
