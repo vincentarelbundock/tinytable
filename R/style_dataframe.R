@@ -4,7 +4,7 @@
 setMethod(
   f = "style_eval",
   signature = "tinytable_dataframe",
-  definition = style_eval_grid
+  definition = identity
 )
 
 #' tinytable S4 method

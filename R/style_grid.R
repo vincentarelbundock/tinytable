@@ -8,48 +8,42 @@ style_eval_grid <- function(x) {
 
   sty <- prepare_grid_style(x)
 
-  # Ensure sty is a proper data frame after prepare_grid_style
-  if (!is.data.frame(sty) || nrow(sty) == 0) {
-    return(x)
-  }
-
-  for (col in seq_along(out)) {
-    out[[col]] <- as.character(out[[col]])
-  }
-
+  # styling
   for (idx in seq_len(nrow(sty))) {
     row <- sty[idx, "i"]
     col <- sty[idx, "j"]
-    bold <- sty[which(sty$i == row & sty$j == col), "bold"]
-    italic <- sty[which(sty$i == row & sty$j == col), "italic"]
-    strikeout <- sty[which(sty$i == row & sty$j == col), "strikeout"]
-    rowspan <- sty[which(sty$i == row & sty$j == col), "rowspan"]
-    colspan <- sty[which(sty$i == row & sty$j == col), "colspan"]
-    if (isTRUE(bold)) {
-      out[row, col] <- sprintf("**%s**", out[row, col])
-    }
-    if (isTRUE(italic)) {
-      out[row, col] <- sprintf("*%s*", out[row, col])
-    }
-    if (isTRUE(strikeout)) {
-      out[row, col] <- sprintf("~~%s~~", out[row, col])
-    }
-    if (!is.null(rowspan) || !is.null(colspan)) {
-      idx_row <- if (isTRUE(rowspan > 1)) row + seq_len(rowspan) - 1 else row
-      idx_col <- if (isTRUE(colspan > 1)) col + seq_len(colspan) - 1 else col
-      backup <- out[row, col]
-      for (w in idx_row) {
-        for (z in idx_col) {
-          if (z <= x@ncol) {
-            out[w, z] <- ""
-          }
-        }
+    if (isTRUE(sty[idx, "bold"])) {
+      fn <- function(z) {
+        if (identical(trimws(z), "")) "" else sprintf("**%s**", z)
       }
-      out[row, col] <- backup
+      x <- format_tt(x, i = row, j = col, fn = fn)
+    }
+    if (isTRUE(sty[idx, "italic"])) {
+      fn <- function(z) if (identical(trimws(z), "")) "" else sprintf("*%s*", z)
+      x <- format_tt(x, i = row, j = col, fn = fn)
+    }
+    if (isTRUE(sty[idx, "strikeout"])) {
+      fn <- function(z) {
+        if (identical(trimws(z), "")) "" else sprintf("~~%s~~", z)
+      }
+      x <- format_tt(x, i = row, j = col, fn = fn)
+    }
+
+    # wipe adjacent cells
+    rowspan <- sty[idx, "rowspan"]
+    colspan <- sty[idx, "colspan"]
+    rowspan <- if (is.na(rowspan)) 1 else rowspan
+    colspan <- if (is.na(colspan)) 1 else colspan
+    wipe <- expand.grid(
+      i = row:(row + rowspan - 1),
+      j = col:(col + colspan - 1)
+    )
+    wipe <- wipe[which(wipe$i != row | wipe$j != col), ]
+    for (idx in seq_len(nrow(wipe))) {
+      x <- format_tt(x, i = wipe$i[idx], j = wipe$j[idx], fn = function(k) "")
     }
   }
 
-  x@data_body <- out
   return(x)
 }
 
@@ -216,17 +210,9 @@ prepare_grid_style <- function(x) {
   sty <- lapply(sty, utils::tail, n = 1)
   sty <- do.call(rbind, sty)
 
-  # TODO: style groups
-  sty <- sty[which(!sty$i %in% idx_g), ]
-
   if (nrow(sty) == 0) {
     return(sty)
   }
 
-  # user-supplied indices are post-groups
-  # adjust indices to match original data rows since we only operate on those
-  for (g in rev(idx_g)) {
-    sty[sty$i > g, "i"] <- sty[sty$i > g, "i"] - 1
-  }
   return(sty)
 }
