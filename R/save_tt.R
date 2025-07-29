@@ -89,7 +89,7 @@ save_tt <- function(
     "docx" = "markdown",
     "typ" = "typst",
     stop(
-      "The supported file extensions are: .png, .html, .pdf, .tex, .typ, .qmd, .Rmd, .txt, .docx, and .md. Supported output formats are: markdown, latex, html, typst, and dataframe.",
+      "The supported file extensions are: .png, .html, .pdf, .tex, .typ, .qmd, .Rmd, .txt, .docx, and .md. Supported output formats are: markdown, latex, html, typst, tabulator, and dataframe.",
       call. = FALSE
     )
   )

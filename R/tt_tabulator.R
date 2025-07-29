@@ -95,13 +95,16 @@ setMethod(
       fixed = TRUE
     )
 
-    # Add default options (empty for now)
+    # Add default CDN (bootstrap5)
     template <- gsub(
-      "$tinytable_TABULATOR_OPTIONS",
-      "",
+      "$tinytable_TABULATOR_CDN",
+      '<link href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/tabulator_bootstrap5.min.css" rel="stylesheet">',
       template,
       fixed = TRUE
     )
+
+    # Leave options placeholder for potential theme replacement
+    # (it will be cleaned up in finalize if not replaced)
 
     out <- paste(template, collapse = "\n")
 

@@ -9,6 +9,7 @@ theme_dictionary <- list(
   "rotate" = theme_rotate,
   "striped" = theme_striped,
   "tabular" = theme_tabular,
+  "tabulator" = theme_tabulator,
   "void" = theme_void
 )
 
@@ -30,6 +31,7 @@ theme_dictionary <- list(
 #'   + "resize": Scale a LaTeX `tinytable` to fit the `width` argument.
 #'   + "striped": Grey stripes on alternating rows
 #'   + "tabular": Remove table environment (LaTeX) or Javascript/CSS (HTML)
+#'   + "tabulator": Customize Tabulator.js tables (tabulator output only)
 #'   + "void": No rules
 #' @param ... Additional arguments passed the themeing function. See the "Arguments" section below for a list of supported arguments for each theme.
 #' @section Arguments:
@@ -56,6 +58,17 @@ theme_dictionary <- list(
 #'   - "tabular": Drop all LaTeX dependencies and floating environments, except `\\begin{tabular}`
 #'   - "tabularray": Drop all LaTeX dependencies and floating environments, except `\\begin{tblr}`
 #'   - Set globally with `options("tinytable_theme_tabular_style" = "tblr")`
+#'
+#' tabulator
+#'
+#' + `cdn`: String. Tabulator CSS theme. One of: "default", "simple", "midnight", "modern", "site", "site_dark", "bootstrap3", "bootstrap4", "bootstrap5", "semantic_ui", "bulma", "materialize". Or a custom CDN URL starting with "http".
+#'   - Set globally with `options("tinytable_theme_tabulator_cdn" = "midnight")`
+#' + `options`: List or character string. Tabulator.js configuration options. If a list, will be converted to JavaScript object notation. If a string, will be inserted directly.
+#'   - Set globally with `options("tinytable_theme_tabulator_options" = list(pagination = "local", paginationSize = 50))`
+#' + `format_column_name`: Named list. Custom column formatters based on column names. Each element should be a list with "formatter" and optional "formatterParams".
+#'   - Set globally with `options("tinytable_theme_tabulator_format_column_name" = list(price = list(formatter = "money", formatterParams = list(symbol = "€"))))`
+#' + `format_column_type`: Named list. Custom column formatters based on column data types. Each element should be a list with "formatter" and optional "formatterParams".
+#'   - Set globally with `options("tinytable_theme_tabulator_format_column_type" = list(numeric = list(formatter = "number", formatterParams = list(precision = 3))))`
 #'
 #' placement
 #'
