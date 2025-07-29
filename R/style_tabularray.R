@@ -117,9 +117,22 @@ style_spans <- function(span, sty_row) {
 #' @keywords internal
 #' @noRd
 style_lines <- function(rec, sty_row, x) {
+  # Handle NA values for i and j (apply to all rows/columns)
+  idx_i <- sty_row$i
+  if (is.na(idx_i)) {
+    idx_i <- unique(rec$i)
+  }
+  idx_j <- sty_row$j
+  if (is.na(idx_j)) {
+    idx_j <- unique(rec$j)
+  }
+
+  # Create index for matching cells
+  idx <- rec$i %in% idx_i & rec$j %in% idx_j
+
   # Line type
   if (!is.na(sty_row$line)) {
-    rec$line[rec$i == sty_row$i & rec$j == sty_row$j] <- sty_row$line
+    rec$line[idx] <- sty_row$line
   }
 
   # Line color
@@ -130,14 +143,12 @@ style_lines <- function(rec, sty_row, x) {
     if (grepl("^#", lcol)) {
       lcol <- sub("^#", "c", lcol)
     }
-    rec$line_color[rec$i == sty_row$i & rec$j == sty_row$j] <- lcol
+    rec$line_color[idx] <- lcol
   }
 
   # Line width
   if (!is.na(sty_row$line_width)) {
-    rec$line_width[
-      rec$i == sty_row$i & rec$j == sty_row$j
-    ] <- sty_row$line_width
+    rec$line_width[idx] <- sty_row$line_width
   }
 
   return(list(rec = rec, x = x))
@@ -313,9 +324,10 @@ tabularray_hlines <- function(x, rec) {
     horizontal_bottom
   )
 
-  spec <- by(horizontal, list(horizontal$i, horizontal$lin), function(k) {
+  spec <- by(horizontal, list(horizontal$lin), function(k) {
+    ival <- latex_range_string(k$i)
     jval <- latex_range_string(k$j)
-    sprintf("hline{%s}={%s}{%s}", k$i, jval, k$lin)
+    sprintf("hline{%s}={%s}{%s}", ival, jval, k$lin[1])
   })
   spec <- unique(as.vector(unlist(spec)))
 
@@ -347,9 +359,10 @@ tabularray_vlines <- function(x, rec) {
     vertical_right
   )
 
-  spec <- by(vertical, list(vertical$j, vertical$lin), function(k) {
+  spec <- by(vertical, list(vertical$lin), function(k) {
     ival <- latex_range_string(k$i)
-    sprintf("vline{%s}={%s}{%s}", k$j, ival, k$lin)
+    jval <- latex_range_string(k$j)
+    sprintf("vline{%s}={%s}{%s}", jval, ival, k$lin[1])
   })
   spec <- unique(as.vector(unlist(spec)))
 

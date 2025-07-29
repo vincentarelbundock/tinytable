@@ -1,6 +1,24 @@
 source("helpers.R")
 using("tinysnapshot")
 
+
+# Issue #514: vignette white lines with blue background
+dat <- data.frame(1:2, 3:4, 5:6, 7:8)
+tab <- tt(dat, theme = "void", colnames = FALSE) |>
+    style_tt(
+        line = "tblr",
+        line_color = "white",
+        line_width = 0.5,
+        background = "blue",
+        color = "white"
+    )
+t <- expect_table(tab)
+expect_snapshot_print(t[["markdown"]], "style-issue514_white_blue.md")
+expect_snapshot_print(t[["latex"]], "style-issue514_white_blue.tex")
+expect_snapshot_print(t[["typst"]], "style-issue514_white_blue.typ")
+expect_snapshot_print(t[["html"]], "style-issue514_white_blue.html")
+
+
 # Issue #507: Test group row styling functionality
 tab <- tt(mtcars[1:8, 1:3]) |>
     group_tt(i = list("Hello" = 3, "World" = 6)) |>
