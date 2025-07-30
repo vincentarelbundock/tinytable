@@ -14,10 +14,16 @@
       <div id="$tinytable_TABLE_ID" style="margin-left: auto; margin-right: auto;"></div>
     </div>
 
+    <!-- Luxon for date handling -->
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
+    
     <!-- Tabulator JS -->
     <script src="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/js/tabulator.min.js"></script>
     <script>
+      const { DateTime } = luxon;
+      
       const table_$tinytable_TABLE_ID = new Tabulator("#$tinytable_TABLE_ID", {
+        dependencies: { DateTime },
         data: $tinytable_TABULATOR_DATA,
         columns: $tinytable_TABULATOR_COLUMNS,
         $tinytable_TABULATOR_OPTIONS

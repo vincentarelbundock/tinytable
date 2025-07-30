@@ -203,10 +203,6 @@ format_tt_lazy <- function(
     x_is_tibble <- FALSE
   }
 
-  # Early return for tabulator format - skip formatting for now
-  if (inherits(x, "tinytable") && identical(x@output, "tabulator")) {
-    return(x)
-  }
 
   # Check if i contains component names (do this before processing tinytable objects)
   if (identical(i, "groupi")) {
@@ -240,6 +236,7 @@ format_tt_lazy <- function(
     # if no other format_tt() call has been applied, we ctan have numeric values
     out <- x@data_body
     ori <- x@data
+    
   } else {
     stop(
       "`x` must be a `tinytable` object, a data frame, or an atomic vector.",

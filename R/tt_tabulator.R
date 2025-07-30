@@ -2,6 +2,11 @@ setMethod(
   f = "tt_eval",
   signature = "tinytable_tabulator",
   definition = function(x, ...) {
+    # Check that column names exist
+    if (is.null(x@names) || length(x@names) == 0) {
+      stop("Column names are required for tabulator tables. Use `colnames(x) <- ...` to set column names.", call. = FALSE)
+    }
+    
     template <- readLines(
       system.file("templates/tabulator.html", package = "tinytable")
     )
@@ -19,30 +24,31 @@ setMethod(
     )
 
     # Convert data to JSON for Tabulator
-    # Use original data to preserve types, but apply same row selection as data_body
-    if (nrow(x@data_body) == nrow(x@data)) {
-      # No row modifications, use original data
-      data_clean <- x@data
-    } else {
-      # Row modifications exist, use data_body but try to preserve types
-      data_clean <- x@data_body
-      # Convert back to appropriate types where possible
-      for (i in seq_along(data_clean)) {
-        original_col <- x@data[[names(x@data)[i]]]
-        if (is.logical(original_col)) {
-          # Convert logical strings back to logical
-          data_clean[[i]] <- as.logical(data_clean[[i]])
-        } else if (is.numeric(original_col)) {
-          # Keep numeric as numeric if not formatted
-          suppressWarnings({
-            numeric_version <- as.numeric(data_clean[[i]])
-            if (!any(is.na(numeric_version) & !is.na(data_clean[[i]]))) {
-              data_clean[[i]] <- numeric_version
-            }
-          })
+    # Use raw data for numeric/logical columns, formatted data for others
+    data_clean <- list()
+    
+    for (i in seq_along(x@data)) {
+      col_name <- names(x@data)[i]
+      original_col <- x@data[[i]]
+      col_type <- class(original_col)[1]
+      
+      if (col_type %in% c("integer", "numeric", "double", "logical", "Date", "POSIXct", "POSIXlt")) {
+        # Use raw data for numeric, logical, and date columns (formatters will handle display)
+        data_clean[[col_name]] <- original_col
+      } else {
+        # Use formatted data for other column types (character, factor, etc.)
+        if (nrow(x@data_body) == nrow(x@data)) {
+          data_clean[[col_name]] <- as.character(x@data_body[[i]])
+        } else {
+          # Handle case where rows were modified (groups, etc.)
+          # For now, fall back to original data as character
+          data_clean[[col_name]] <- as.character(original_col)
         }
       }
     }
+    
+    # Convert to data frame
+    data_clean <- as.data.frame(data_clean, stringsAsFactors = FALSE)
     
     # Clean column names (replace dots with underscores)
     names(data_clean) <- gsub("\\.", "_", names(data_clean))
@@ -54,6 +60,18 @@ setMethod(
       }
     }
 
+    # Convert dates to ISO strings for Tabulator datetime parsing
+    for (i in seq_along(data_clean)) {
+      col_data <- data_clean[[i]]
+      if (inherits(col_data, "Date")) {
+        # Convert Date to ISO string
+        data_clean[[i]] <- format(col_data, "%Y-%m-%d")
+      } else if (inherits(col_data, c("POSIXct", "POSIXlt"))) {
+        # Convert datetime to ISO string with time
+        data_clean[[i]] <- format(col_data, "%Y-%m-%dT%H:%M:%S")
+      }
+    }
+    
     # Convert to JSON
     js_data <- jsonlite::toJSON(
       data_clean,
@@ -78,21 +96,45 @@ setMethod(
       
       # Add basic formatter based on type
       if (col_type %in% c("integer", "numeric", "double")) {
-        col_def$formatter <- "number"
+        col_def$formatter <- "money"
         if (col_type == "integer") {
-          col_def$formatterParams <- list(decimal = ".", thousand = ",", precision = 0)
+          col_def$formatterParams <- list(
+            decimal = ".", 
+            thousand = ",", 
+            precision = 0,
+            symbol = "",
+            symbolAfter = FALSE,
+            negativeSign = TRUE
+          )
         } else {
-          col_def$formatterParams <- list(decimal = ".", thousand = ",", precision = 2)
+          col_def$formatterParams <- list(
+            decimal = ".", 
+            thousand = ",", 
+            precision = 2,
+            symbol = "",
+            symbolAfter = FALSE,
+            negativeSign = TRUE
+          )
         }
       } else if (col_type == "logical") {
         col_def$formatter <- "tickCross"
       } else if (col_type == "Date") {
-        col_def$formatter <- "date"
-        col_def$formatterParams <- list(outputFormat = "YYYY-MM-DD")
+        col_def$formatter <- "datetime"
+        col_def$sorter <- "datetime"
+        col_def$formatterParams <- list(
+          outputFormat = "M/d/yyyy",
+          invalidPlaceholder = ""
+        )
       } else if (col_type %in% c("POSIXct", "POSIXlt")) {
-        col_def$formatter <- "date"
-        col_def$formatterParams <- list(outputFormat = "YYYY-MM-DD HH:mm:ss")
+        col_def$formatter <- "datetime"
+        col_def$sorter <- "datetime"
+        col_def$formatterParams <- list(
+          outputFormat = "M/d/yyyy HH:mm:ss",
+          invalidPlaceholder = ""
+        )
       } else {
+        # For other types (character, factor, etc.), use plaintext 
+        # since data comes pre-formatted from x@data_body
         col_def$formatter <- "plaintext"
       }
       
