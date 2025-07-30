@@ -106,7 +106,9 @@ setMethod(
               columns_list[[i]][["sorter"]] <- formatter_obj[["sorter"]]
             }
             if (!is.null(formatter_obj[["sorterParams"]])) {
-              columns_list[[i]][["sorterParams"]] <- formatter_obj[["sorterParams"]]
+              columns_list[[i]][["sorterParams"]] <- formatter_obj[[
+                "sorterParams"
+              ]]
             }
           }
         }
@@ -115,7 +117,7 @@ setMethod(
         new_columns_json <- jsonlite::toJSON(
           columns_list,
           auto_unbox = TRUE,
-          pretty = FALSE
+          pretty = TRUE
         )
         x@table_string <- gsub(
           "columns: \\[.*?\\]",

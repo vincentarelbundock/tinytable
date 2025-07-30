@@ -23,10 +23,13 @@ theme_tabulator <- function(
     if (nrow(x) < 10) {
       pagination_opts <- ""
     } else {
-      pagination <- min(nrow(x), 10)
-      if (pagination > 10) {
-        pagination <- c(10, 25, 50, 100, 250)
-        pagination <- pagination[pagination <= nrow(x)]
+      # Create pagination options: 10, 25, 50, 100, 250 (filtered by available rows)
+      pagination <- c(10, 25, 50, 100, 250)
+      pagination <- pagination[pagination <= nrow(x)]
+
+      # If there are no options above nrow(x), add nrow(x) as an option
+      if (max(pagination) < nrow(x)) {
+        pagination <- c(pagination, nrow(x))
       }
     }
   }
@@ -35,36 +38,38 @@ theme_tabulator <- function(
     # Vector of integers: first is size, sorted vector is selector
     paginationSize <- pagination[1]
 
-    # If the number of rows is smaller than the pagination size, disable pagination
+    # If the number of rows is smaller than the pagination size, adjust pagination size
     if (nrow(x) <= paginationSize) {
-      pagination_opts <- ""
-      pagination <- FALSE
+      # Use the actual number of rows as pagination size
+      paginationSize <- nrow(x)
+      pagination <- paginationSize
+    }
+
+    # Now set up pagination options
+    if (length(pagination) > 1) {
+      # Multiple pagination options: include selector
+      paginationSizeSelector <- sort(pagination)
+      selector_str <- paste0(
+        "[",
+        paste(paginationSizeSelector, collapse = ", "),
+        "]"
+      )
+      pagination_opts <- sprintf(
+        "
+        pagination: 'local',
+        paginationSizeSelector: %s,
+        paginationSize: %s,",
+        selector_str,
+        paginationSize
+      )
     } else {
-      if (length(pagination) > 1) {
-        # Multiple pagination options: include selector
-        paginationSizeSelector <- sort(pagination)
-        selector_str <- paste0(
-          "[",
-          paste(paginationSizeSelector, collapse = ", "),
-          "]"
-        )
-        pagination_opts <- sprintf(
-          "
-          pagination: 'local',
-          paginationSizeSelector: %s,
-          paginationSize: %s,",
-          selector_str,
-          paginationSize
-        )
-      } else {
-        # Single pagination option: no selector
-        pagination_opts <- sprintf(
-          "
-          pagination: 'local',
-          paginationSize: %s,",
-          paginationSize
-        )
-      }
+      # Single pagination option: no selector
+      pagination_opts <- sprintf(
+        "
+        pagination: 'local',
+        paginationSize: %s,",
+        paginationSize
+      )
     }
   }
 
