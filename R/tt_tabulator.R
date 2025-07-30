@@ -2,11 +2,16 @@ setMethod(
   f = "tt_eval",
   signature = "tinytable_tabulator",
   definition = function(x, ...) {
+    assert_dependency("jsonlite")
+    
     # Check that column names exist
     if (is.null(x@names) || length(x@names) == 0) {
-      stop("Column names are required for tabulator tables. Use `colnames(x) <- ...` to set column names.", call. = FALSE)
+      stop(
+        "Column names are required for tabulator tables. Use `colnames(x) <- ...` to set column names.",
+        call. = FALSE
+      )
     }
-    
+
     template <- readLines(
       system.file("templates/tabulator.html", package = "tinytable")
     )
@@ -26,13 +31,24 @@ setMethod(
     # Convert data to JSON for Tabulator
     # Use raw data for numeric/logical columns, formatted data for others
     data_clean <- list()
-    
+
     for (i in seq_along(x@data)) {
       col_name <- names(x@data)[i]
       original_col <- x@data[[i]]
       col_type <- class(original_col)[1]
-      
-      if (col_type %in% c("integer", "numeric", "double", "logical", "Date", "POSIXct", "POSIXlt")) {
+
+      if (
+        col_type %in%
+          c(
+            "integer",
+            "numeric",
+            "double",
+            "logical",
+            "Date",
+            "POSIXct",
+            "POSIXlt"
+          )
+      ) {
         # Use raw data for numeric, logical, and date columns (formatters will handle display)
         data_clean[[col_name]] <- original_col
       } else {
@@ -46,13 +62,13 @@ setMethod(
         }
       }
     }
-    
+
     # Convert to data frame
     data_clean <- as.data.frame(data_clean, stringsAsFactors = FALSE)
-    
+
     # Clean column names (replace dots with underscores)
     names(data_clean) <- gsub("\\.", "_", names(data_clean))
-    
+
     # Clean problematic quotes in character columns only
     for (i in seq_along(data_clean)) {
       if (is.character(data_clean[[i]])) {
@@ -71,7 +87,7 @@ setMethod(
         data_clean[[i]] <- format(col_data, "%Y-%m-%dT%H:%M:%S")
       }
     }
-    
+
     # Convert to JSON
     js_data <- jsonlite::toJSON(
       data_clean,
@@ -83,24 +99,26 @@ setMethod(
 
     # Build column definitions
     columns <- lapply(names(data_clean), function(nm) {
-      original_name <- colnames(x@data_body)[which(gsub("\\.", "_", colnames(x@data_body)) == nm)]
+      original_name <- colnames(x@data_body)[which(
+        gsub("\\.", "_", colnames(x@data_body)) == nm
+      )]
       # Use original data for type detection since @data_body is processed to character
       col_data <- x@data[[original_name]]
       col_type <- class(col_data)[1]
-      
+
       # Basic column definition
       col_def <- list(
         title = original_name,
         field = nm
       )
-      
+
       # Add basic formatter based on type
       if (col_type %in% c("integer", "numeric", "double")) {
         col_def$formatter <- "money"
         if (col_type == "integer") {
           col_def$formatterParams <- list(
-            decimal = ".", 
-            thousand = ",", 
+            decimal = ".",
+            thousand = ",",
             precision = 0,
             symbol = "",
             symbolAfter = FALSE,
@@ -108,8 +126,8 @@ setMethod(
           )
         } else {
           col_def$formatterParams <- list(
-            decimal = ".", 
-            thousand = ",", 
+            decimal = ".",
+            thousand = ",",
             precision = 2,
             symbol = "",
             symbolAfter = FALSE,
@@ -133,11 +151,11 @@ setMethod(
           invalidPlaceholder = ""
         )
       } else {
-        # For other types (character, factor, etc.), use plaintext 
+        # For other types (character, factor, etc.), use plaintext
         # since data comes pre-formatted from x@data_body
         col_def$formatter <- "plaintext"
       }
-      
+
       return(col_def)
     })
 
@@ -150,7 +168,7 @@ setMethod(
       template,
       fixed = TRUE
     )
-    
+
     template <- gsub(
       "$tinytable_TABULATOR_COLUMNS",
       js_columns,
@@ -182,7 +200,7 @@ setMethod(
 tabulator_setting <- function(x, new, component = "option") {
   att <- attributes(x)
   out <- strsplit(x, "\n")[[1]]
-  
+
   if (component == "option") {
     # Find the options line and insert before it
     idx <- grep("$tinytable_TABULATOR_OPTIONS", out, fixed = TRUE)
@@ -194,7 +212,7 @@ tabulator_setting <- function(x, new, component = "option") {
       )
     }
   }
-  
+
   out <- paste(out, collapse = "\n")
   attributes(out) <- att
   class(out) <- class(x)
