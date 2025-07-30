@@ -58,6 +58,7 @@ build_tt <- function(x, output = NULL) {
   x <- switch(
     output,
     html = swap_class(x, "tinytable_bootstrap"),
+    bootstrap = swap_class(x, "tinytable_bootstrap"),
     latex = swap_class(x, "tinytable_tabularray"),
     markdown = swap_class(x, "tinytable_grid"),
     gfm = swap_class(x, "tinytable_grid"),

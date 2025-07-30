@@ -60,7 +60,7 @@ format_vector_escape <- function(vec, output = "latex", ...) {
 
   if (isTRUE(output == "latex")) {
     out <- apply_escape_pattern(out, escape_patterns$latex)
-  } else if (isTRUE(output == "html")) {
+  } else if (isTRUE(output %in% c("html", "bootstrap", "tabulator"))) {
     out <- apply_escape_pattern(out, escape_patterns$html)
   } else if (isTRUE(output == "typst")) {
     out <- apply_escape_pattern(out, escape_patterns$typst)

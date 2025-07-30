@@ -3,7 +3,7 @@ format_vector_markdown <- function(vec, output_format, ...) {
     return(NULL)
   }
 
-  if (output_format == "html") {
+  if (output_format %in% c("html", "bootstrap", "tabulator")) {
     vapply(
       vec,
       function(k) {

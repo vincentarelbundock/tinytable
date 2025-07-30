@@ -314,6 +314,11 @@ format_tabulator_column <- function(
   # Add sorter for datetime columns
   if (formatter_config$formatter == "datetime") {
     col_def$sorter <- "datetime"
+    # Add sorterParams to ensure proper date parsing for sorting
+    col_def$sorterParams <- list(
+      format = "yyyy-MM-dd",
+      alignEmptyValues = "bottom"
+    )
   }
 
   # Add formatter parameters if they exist

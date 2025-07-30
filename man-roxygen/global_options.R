@@ -70,6 +70,7 @@
 #'
 #' * `tinytable_html_mathjax`: Insert MathJax scripts (warning: may conflict if MathJax is loaded elsewhere)
 #' * `tinytable_html_portable`: Insert base64 encoded images directly in HTML for `plot_tt()`
+#' * `tinytable_html_engine`: Default HTML engine (default: "bootstrap"). Set to "tabulator" to use interactive tables by default in HTML documents instead of static Bootstrap tables.
 #'
 #' ### PDF
 #'

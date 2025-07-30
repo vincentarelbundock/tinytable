@@ -39,7 +39,7 @@ knit_print.tinytable <- function(
   x <- build_tt(x, output = output)
   out <- x@table_string
 
-  if (isTRUE(x@output %in% c("html", "tabulator"))) {
+  if (isTRUE(x@output %in% c("html", "tabulator", "bootstrap"))) {
     # from htmltools:::html_preserve
     # GPL3
     inline <- grepl(out, "\n", fixed = TRUE)
@@ -90,7 +90,7 @@ print.tinytable <- function(
     output <- sanitize_output(output)
   }
 
-  if (output %in% c("html", "tabulator")) {
+  if (output %in% c("html", "tabulator", "bootstrap")) {
     dir <- tempfile()
     dir.create(dir)
     x@output_dir <- dir
@@ -105,7 +105,7 @@ print.tinytable <- function(
   # lazy styles get evaluated here by build_tt(), at the very end
   if (output %in% c("latex", "typst", "markdown", "gfm")) {
     cat(tab, "\n")
-  } else if (output %in% c("html", "tabulator")) {
+  } else if (output %in% c("html", "tabulator", "bootstrap")) {
     if (is_rstudio_notebook()) {
       html_kable <- htmltools_browsable(tab)
       print(html_kable)

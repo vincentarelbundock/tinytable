@@ -57,7 +57,7 @@ theme_tabular <- function(
         a <- sprintf("begin{tabular}{%s}", strrep("l", ncol(table)))
         tab <- sub("begin{tabular}", a, tab, fixed = TRUE)
       }
-    } else if (isTRUE(table@output == "html")) {
+    } else if (isTRUE(table@output %in% c("html", "bootstrap", "tabulator"))) {
       tab <- lines_drop(tab, regex = "<table class", position = "before")
       tab <- lines_drop(tab, regex = "<\\/table>", position = "after")
     } else if (isTRUE(table@output == "typst")) {

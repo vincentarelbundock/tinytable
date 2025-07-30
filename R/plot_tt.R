@@ -27,19 +27,18 @@
 #' @details The `plot_tt()` can insert images and inline plots into tables.
 #' @export
 plot_tt <- function(
-  x,
-  i = NULL,
-  j = NULL,
-  fun = NULL,
-  data = NULL,
-  color = "black",
-  xlim = NULL,
-  height = 1,
-  asp = 1 / 3,
-  images = NULL,
-  assets = "tinytable_assets",
-  ...
-) {
+    x,
+    i = NULL,
+    j = NULL,
+    fun = NULL,
+    data = NULL,
+    color = "black",
+    xlim = NULL,
+    height = 1,
+    asp = 1 / 3,
+    images = NULL,
+    assets = "tinytable_assets",
+    ...) {
   jval <- sanitize_j(j, x)
   assert_integerish(i, null.ok = TRUE)
   assert_numeric(height, len = 1, lower = 0)
@@ -118,26 +117,25 @@ plot_tt <- function(
 }
 
 plot_tt_lazy <- function(
-  x,
-  i = NULL,
-  j = NULL,
-  height = 1,
-  asp = 1 / 3,
-  fun = NULL,
-  color = NULL,
-  data = NULL,
-  xlim = NULL,
-  images = NULL,
-  assets = "tinytable_assets",
-  ...
-) {
+    x,
+    i = NULL,
+    j = NULL,
+    height = 1,
+    asp = 1 / 3,
+    fun = NULL,
+    color = NULL,
+    data = NULL,
+    xlim = NULL,
+    images = NULL,
+    assets = "tinytable_assets",
+    ...) {
   out <- x@data_body
 
   if (!is.null(data)) {
     assert_dependency("ggplot2")
     images <- NULL
 
-    if (isTRUE(x@output == "html") && isTRUE(x@portable)) {
+    if (isTRUE(x@output %in% c("html", "bootstrap")) && isTRUE(x@portable)) {
       path_full <- tempdir()
       assets <- tempdir()
     } else {
@@ -195,13 +193,13 @@ plot_tt_lazy <- function(
   if (isTRUE(x@output == "latex")) {
     cell <- "\\includegraphics[height=%sem]{%s}"
     cell <- sprintf(cell, height, images)
-  } else if (isTRUE(x@output == "html") && isTRUE(x@portable)) {
+  } else if (isTRUE(x@output %in% c("html", "bootstrap", "tabulator")) && isTRUE(x@portable)) {
     assert_dependency("base64enc")
 
     http <- grepl("^http", trimws(images))
     images[!http] <- encode(images[!http])
     cell <- sprintf('<img src="%s" style="height: %sem;">', images, height)
-  } else if (isTRUE(x@output == "html")) {
+  } else if (isTRUE(x@output %in% c("html", "bootstrap", "tabulator"))) {
     cell <- ifelse(
       grepl("^http", trimws(images)),
       '<img src="%s" style="height: %sem;">',

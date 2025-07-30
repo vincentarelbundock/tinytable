@@ -6,6 +6,8 @@ footnote_markers <- function(x) {
   superscript_syntax <- list(
     latex = "\\textsuperscript{%s}",
     html = "<sup>%s</sup>",
+    bootstrap = "<sup>%s</sup>",
+    tabulator = "<sup>%s</sup>",
     typst = "#super[%s]",
     markdown = "^%s^"
   )

@@ -18,12 +18,20 @@ theme_tabulator <- function(
   } else if (is.numeric(pagination)) {
     # Vector of integers: first is size, sorted vector is selector
     paginationSize <- pagination[1]
-    paginationSizeSelector <- sort(pagination)
-    selector_str <- paste0("[", paste(paginationSizeSelector, collapse = ", "), "]")
-    pagination_opts <- sprintf("
-      pagination: 'local',
-      paginationSizeSelector: %s,
-      paginationSize: %s,", selector_str, paginationSize)
+    if (length(pagination) > 1) {
+      # Multiple pagination options: include selector
+      paginationSizeSelector <- sort(pagination)
+      selector_str <- paste0("[", paste(paginationSizeSelector, collapse = ", "), "]")
+      pagination_opts <- sprintf("
+        pagination: 'local',
+        paginationSizeSelector: %s,
+        paginationSize: %s,", selector_str, paginationSize)
+    } else {
+      # Single pagination option: no selector
+      pagination_opts <- sprintf("
+        pagination: 'local',
+        paginationSize: %s,", paginationSize)
+    }
   }
 
   # Build layout options

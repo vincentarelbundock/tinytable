@@ -120,7 +120,8 @@ sanitize_output <- function(output) {
       "typst",
       "dataframe",
       "gfm",
-      "tabulator"
+      "tabulator",
+      "bootstrap"
     ),
     null.ok = TRUE
   )
@@ -129,6 +130,11 @@ sanitize_output <- function(output) {
   if (is.null(output) || isTRUE(output == "tinytable")) {
     has_viewer <- interactive() && !is.null(getOption("viewer"))
     out <- if (has_viewer) "html" else "markdown"
+  } else if (output == "html") {
+    # When user explicitly asks for "html", check global option for engine
+    tinytable_html_engine <- getOption("tinytable_html_engine", default = "bootstrap")
+    assert_choice(tinytable_html_engine, choice = c("tabulator", "bootstrap"))
+    out <- if (tinytable_html_engine == "tabulator") "tabulator" else "bootstrap"
   } else {
     out <- output
   }
@@ -167,7 +173,11 @@ sanitize_output <- function(output) {
       }
       if (is.null(output)) out <- "latex"
     } else if (isTRUE(knitr::pandoc_to() %in% c("html", "revealjs"))) {
-      if (is.null(output)) out <- "html"
+      if (is.null(output)) {
+        # Check global HTML engine preference for notebooks
+        html_engine <- getOption("tinytable_html_engine", default = "bootstrap")
+        out <- if (html_engine == "tabulator") "tabulator" else "bootstrap"
+      }
     } else if (isTRUE(knitr::pandoc_to() == "typst")) {
       if (is.null(output)) {
         out <- "typst"

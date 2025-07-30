@@ -105,6 +105,9 @@ setMethod(
             if (!is.null(formatter_obj[["sorter"]])) {
               columns_list[[i]][["sorter"]] <- formatter_obj[["sorter"]]
             }
+            if (!is.null(formatter_obj[["sorterParams"]])) {
+              columns_list[[i]][["sorterParams"]] <- formatter_obj[["sorterParams"]]
+            }
           }
         }
 

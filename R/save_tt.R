@@ -26,10 +26,9 @@
 #' tt(mtcars[1:4, 1:4]) |> save_tt(filename)
 #'
 save_tt <- function(
-  x,
-  output = get_option("tinytable_save_output", default = NULL),
-  overwrite = get_option("tinytable_save_overwrite", default = FALSE)
-) {
+    x,
+    output = get_option("tinytable_save_output", default = NULL),
+    overwrite = get_option("tinytable_save_overwrite", default = FALSE)) {
   assert_class(x, "tinytable")
   assert_string(output)
   assert_flag(overwrite)
@@ -45,7 +44,7 @@ save_tt <- function(
 
   if (identical(output, "html_portable")) {
     assert_dependency("base64enc")
-    output <- "html"
+    output <- "bootstrap"
     x@portable <- TRUE
   }
 
@@ -57,6 +56,9 @@ save_tt <- function(
     return(as.character(out))
   } else if (identical(output, "html")) {
     out <- build_tt(x, output = "html")@table_string
+    return(as.character(out))
+  } else if (identical(output, "bootstrap")) {
+    out <- build_tt(x, output = "bootstrap")@table_string
     return(as.character(out))
   } else if (identical(output, "latex")) {
     out <- build_tt(x, output = "latex")@table_string
@@ -76,10 +78,9 @@ save_tt <- function(
 
   file_ext <- tools::file_ext(output)
 
-  output_format <- switch(
-    file_ext,
+  output_format <- switch(file_ext,
     "png" = "html",
-    "html" = "html",
+    "html" = get_option("tinytable_html_engine", default = "bootstrap"),
     "pdf" = "latex",
     "tex" = "latex",
     "md" = "markdown",
