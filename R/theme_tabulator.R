@@ -1,7 +1,10 @@
 theme_tabulator <- function(
   x,
   cdn = get_option("tinytable_theme_tabulator_cdn", default = "bootstrap5"),
-  layout = "fitData",
+  layout = get_option(
+    "tinytable_theme_tabulator_layout",
+    default = "fitDataTable"
+  ),
   pagination = TRUE,
   options = get_option("tinytable_theme_tabulator_options", default = NULL),
   ...
@@ -9,10 +12,10 @@ theme_tabulator <- function(
   assert_choice(
     layout,
     choice = c(
+      "fitDataTable",
       "fitData",
       "fitDataFill",
       "fitDataStretch",
-      "fitDataTable",
       "fitColumns"
     )
   )
