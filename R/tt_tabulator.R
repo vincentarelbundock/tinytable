@@ -106,57 +106,11 @@ setMethod(
       col_data <- x@data[[original_name]]
       col_type <- class(col_data)[1]
 
-      # Basic column definition
+      # Basic column definition - no formatters unless explicitly applied via format_tt()
       col_def <- list(
         title = original_name,
         field = nm
       )
-
-      # Add basic formatter based on type
-      if (col_type %in% c("integer", "numeric", "double")) {
-        col_def$formatter <- "money"
-        if (col_type == "integer") {
-          col_def$formatterParams <- list(
-            decimal = ".",
-            thousand = ",",
-            precision = 0,
-            symbol = "",
-            symbolAfter = FALSE,
-            negativeSign = TRUE
-          )
-        } else {
-          col_def$formatterParams <- list(
-            decimal = ".",
-            thousand = ",",
-            precision = 2,
-            symbol = "",
-            symbolAfter = FALSE,
-            negativeSign = TRUE
-          )
-        }
-      } else if (col_type == "logical") {
-        col_def$formatter <- "tickCross"
-      } else if (col_type == "Date") {
-        col_def$formatter <- "datetime"
-        col_def$sorter <- "datetime"
-        col_def$formatterParams <- list(
-          inputFormat = "yyyy-MM-dd",
-          outputFormat = "yyyy-MM-dd",
-          invalidPlaceholder = ""
-        )
-      } else if (col_type %in% c("POSIXct", "POSIXlt")) {
-        col_def$formatter <- "datetime"
-        col_def$sorter <- "datetime"
-        col_def$formatterParams <- list(
-          inputFormat = "yyyy-MM-ddTHH:mm:ss",
-          outputFormat = "yyyy-MM-dd HH:mm:ss",
-          invalidPlaceholder = ""
-        )
-      } else {
-        # For other types (character, factor, etc.), use plaintext
-        # since data comes pre-formatted from x@data_body
-        col_def$formatter <- "plaintext"
-      }
 
       return(col_def)
     })
