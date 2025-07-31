@@ -8,7 +8,7 @@ theme_default <- function(x, ...) {
   )
   x <- style_tt(x, finalize = fn)
 
-  if (isTRUE(x@output %in% c("html", "bootstrap", "tabulator", "typst"))) {
+  if (isTRUE(x@output %in% c("html", "bootstrap", "typst"))) {
     col <- if (x@output == "typst") "black" else "#d3d8dc"
     bc <- if (length(x@bootstrap_class) == 0) {
       "table table-borderless"
@@ -19,7 +19,7 @@ theme_default <- function(x, ...) {
     x <- style_tt(x, bootstrap_class = bc)
 
     # top border
-    if (x@output %in% c("html", "bootstrap", "tabulator") && length(x@names) == 0) {
+    if (x@output %in% c("html", "bootstrap") && length(x@names) == 0) {
       # For HTML with no column names, apply border to the first data row
       x <- style_tt(
         x,

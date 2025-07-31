@@ -39,15 +39,17 @@ setMethod(
       x <- fn(x)
     }
 
-    # Replace CDN theme from S4 slot
-    if (nchar(x@tabulator_cdn) > 0) {
-      x <- tabulator_cdn_helper(x, x@tabulator_cdn)
+    # Replace stylesheet theme from S4 slot
+    if (nchar(x@tabulator_stylesheet) > 0) {
+      x <- tabulator_cdn_helper(x, x@tabulator_stylesheet)
     }
 
     # Apply column formatters if they exist or create them from formatting applied to data
-    # Check if formatting was applied by looking at lazy_format operations
+    # Check if formatting was applied by looking at lazy_format operations or styles
     if (
-      length(x@lazy_format) > 0 || length(x@tabulator_column_formatters) > 0
+      length(x@lazy_format) > 0 || 
+      length(x@tabulator_column_formatters) > 0 ||
+      length(x@tabulator_column_styles) > 0
     ) {
       # Parse existing columns and update with formatters
       current_columns <- regmatches(
@@ -150,6 +152,21 @@ setMethod(
               columns_list[[i]][["sorterParams"]] <- formatter_obj[[
                 "sorterParams"
               ]]
+            }
+          }
+        }
+        
+        # Update columns with styles (alignment)
+        for (i in seq_along(columns_list)) {
+          col_title <- columns_list[[i]][["title"]]
+          if (col_title %in% names(x@tabulator_column_styles)) {
+            # Apply stored column styles
+            style_obj <- x@tabulator_column_styles[[col_title]]
+            if (!is.null(style_obj$hozAlign)) {
+              columns_list[[i]][["hozAlign"]] <- style_obj$hozAlign
+            }
+            if (!is.null(style_obj$vertAlign)) {
+              columns_list[[i]][["vertAlign"]] <- style_obj$vertAlign
             }
           }
         }

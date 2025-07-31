@@ -43,10 +43,7 @@ tabulator_cdn_helper <- function(x, cdn) {
     }
 
     css_file <- theme_map[[cdn]]
-    css_link <- sprintf(
-      '<link href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/%s" rel="stylesheet">',
-      css_file
-    )
+    css_link <- sprintf('<link href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/%s" rel="stylesheet">', css_file)
   }
 
   # Replace the CSS link in the table string

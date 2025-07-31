@@ -1,6 +1,6 @@
 theme_tabulator <- function(
     x,
-    cdn = get_option("tinytable_theme_tabulator_cdn", default = "bootstrap5"),
+    stylesheet = get_option("tinytable_theme_tabulator_stylesheet", default = "bootstrap5"),
     layout = get_option(
       "tinytable_theme_tabulator_layout",
       default = "fitDataTable"
@@ -125,8 +125,8 @@ theme_tabulator <- function(
       return(table)
     }
 
-    # Store CDN, options, and search in S4 slots
-    table@tabulator_cdn <- cdn
+    # Store stylesheet, options, and search in S4 slots
+    table@tabulator_stylesheet <- stylesheet
     table@tabulator_options <- opts
     table@tabulator_search <- search
 

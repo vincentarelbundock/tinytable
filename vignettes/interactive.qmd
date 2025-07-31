@@ -4,164 +4,84 @@ format:
     embedded-resources: true
 ---
 
-# Interactive tables
-
 ```{r}
 #| include: false
-pkgload::load_all()
 options(tinytable_html_engine = "tabulator")
+pkgload::load_all()
 ```
 
-## Introduction
+# Interactive tables
 
-The `tinytable` package supports creating interactive tables using the [Tabulator.js](https://tabulator.info/) library. Tabulator is a powerful JavaScript library that provides features like sorting, filtering, pagination, and real-time data editing directly in the browser.
+The `tinytable` package supports creating interactive tables using [the Tabulator.js library.](https://tabulator.info/) Tabulator is a powerful JavaScript library that provides features like 
 
-## About Tabulator.js
+* Sorting 
+* Filtering
+* Pagination
+* Themes
+* Data export
+* Real-time data editing in the browser
+* Accessibility features (ARIA compliant)
 
-[Tabulator.js](https://tabulator.info/) is a feature-rich, dependency-free JavaScript library for building interactive tables. Key features include:
-
-- **Interactive Sorting**: Click column headers to sort data
-- **Real-time Filtering**: Filter data with built-in or custom filters  
-- **Pagination**: Handle large datasets with client-side pagination
-- **Cell Editing**: Edit data directly in the table
-- **Responsive Design**: Tables adapt to different screen sizes
-- **Themes**: Multiple built-in CSS themes
-- **Data Export**: Export data to CSV, JSON, PDF, and other formats
-- **Accessibility**: ARIA compliant for screen readers
-
-Unlike static HTML tables, Tabulator tables are fully interactive and don't require server round-trips for basic operations like sorting and filtering.
-
-## Basic Usage
+## Drawing, printing, and saving
 
 To create an interactive table, use `output = "tabulator"` when printing your table:
 
-Alternatively, you can set a global option to make all tables in HTML documents (like Quarto or R Markdown) use tabulator by default:
+```{r}
+#| eval: false
+library(tinytable)
+dat <- head(iris)
+tt(dat) |> print("tabulator")
+```
+
+To save the table to file, we can use the `save_tt()` function. One issue to consider, however, is that `tinytable` supports two types of HTML output: `tabulator` and `bootstrap`. To select the default HTML engine, users can set a global option:
 
 ```{r}
-pkgload::load_all()
-
-# Set tabulator as default for HTML documents
+#| eval: false
 options(tinytable_html_engine = "tabulator")
+tt(dat) |> save_tt("/path/to/your/file.html")
+```
 
+In notebooks like Quarto or R markdown, `tinytable` will automatically create an HTML when appropriate. Whenn the `tinytable_html_engine` option is set to `"tabulator"`, the table will be rendered using Tabulator.js.
 
+```{r}
 dat <- data.frame(
-  k = c("Montréal", "Toronto", "Vancouver"),
-  w = c(143002.2092, 201399.181, 100188.3883),
-  x = c(1.43402, 201.399, 0.134588),
-  y = as.Date(sample(1:1000, 3), origin = "1970-01-01"),
-  z = c(TRUE, TRUE, FALSE)
+  city = c("Montréal", "Toronto", "Vancouver"),
+  salary = c(14002.22, 201399.11, 80188.38),
+  random = c(1.43402, 201.399, 0.134588),
+  date = as.Date(sample(1:1000, 3), origin = "1970-01-01"),
+  boolean = c(TRUE, TRUE, FALSE)
 )
 
 tt(dat)
 ```
 
-To create a single interactive table explicitly:
+## Pagination and filtering
+
+`tinytable` includes a built-in theme to add pagination, sorting, and filtering capabilities to a Tabulator table. This is particularly useful for large datasets. 
+
+To apply a theme, call the `theme_tt()` function with the `"tabulator"` argument. See `?theme_tt` for a list of arguments that can be used to customize the number of pagination rows, behaviour of the search bar, and various other elements.
+
+Try typing the letters "vir" in the search box to filter the `iris` dataset and find the Virginica flowers.
 
 ```{r}
-dat <- data.frame(
-  name = c("Alice", "Bob", "Charlie"),
-  age = c(25, 30, 35),
-  city = c("New York", "London", "Paris")
-)
-tt(dat)
+tt(iris) |> theme_tt("tabulator", pagination = c(5, 10, 50))
 ```
 
-## Theme
+## Style sheets
+
+Tabulator ships with multiple complete CSS style sheets. The default in `tinytable` is Bootstrap 5, but you can customize the appearance using the `theme_tt()` function (when available). Alternatives include `"default"`, `"simple"`, `"midnight"`, `"modern"`, `"site"`, `"site_dark"`, `"bootstrap3"`, `"bootstrap4"`, `"bootstrap5"`, `"semanticui"`, `"bulma"`, and `"materialize"`.
 
 ```{r}
-tt(iris) |> theme_tt("tabulator")
+tt(iris) |> theme_tt("tabulator", stylesheet = "midnight")
 ```
 
 
+## Format
 
-## Comprehensive Example
-
-Here's a more comprehensive example showing various data types and formatting options:
-
-```{r}
-# Create comprehensive test data with various variable types
-set.seed(123)
-N <- 8
-dat <- data.frame(
-    # Character column
-    employee_name = c(
-        "Alice Johnson", "Bob Smith", "Charlie Brown", "Diana Prince",
-        "Edward Norton", "Fiona Apple", "George Lucas", "Hannah Montana"),
-
-    # Integer column
-    age = as.integer(c(25, 32, 28, 35, 42, 29, 38, 31)),
-
-    # Numeric columns with different scales
-    salary = c(45000.75, 62000.50, 58000.25, 71000.00, 85000.33, 52000.80, 69000.45, 61000.90),
-    bonus_pct = c(0.125, 0.18, 0.095, 0.22, 0.15, 0.11, 0.175, 0.14),
-
-    # Large numbers for thousands separator testing
-    stock_value = c(
-        1234567.89, 2345678.12, 987654.32, 3456789.01,
-        4567890.23, 1987654.45, 2876543.67, 3987654.21),
-
-    # Logical columns
-    active = c(TRUE, FALSE, TRUE, TRUE, FALSE, TRUE, FALSE, TRUE),
-    remote_work = c(FALSE, TRUE, FALSE, TRUE, TRUE, FALSE, TRUE, FALSE),
-
-    # Date column
-    hire_date = as.Date(c(
-        "2020-01-15", "2019-06-01", "2021-03-10", "2018-09-20",
-        "2022-02-14", "2020-11-05", "2019-12-01", "2021-07-30")),
-
-    # Factor column (will be treated as character)
-    department = factor(c(
-        "Engineering", "Sales", "Marketing", "Engineering",
-        "HR", "Sales", "Engineering", "Marketing")),
-    stringsAsFactors = FALSE
-)
-
-# Create tinytable object and apply formatting using pipes
-tt(dat) |>
-  # Format salary with 0 decimal places and space thousands separator
-  format_tt(j = "salary", digits = 0, num_mark_big = " ") |>
-  # Format bonus percentage with 1 decimal place
-  format_tt(j = "bonus_pct", digits = 1, num_fmt = "decimal") |>
-  # Format stock value with suffix notation (K, M, B)
-  format_tt(j = "stock_value", digits = 2, num_suffix = TRUE, num_mark_big = ",") |>
-  # Format age with no decimal places (should work since it's integer)
-  format_tt(j = "age", digits = 0) |>
-  # Try to format character column (should be skipped)
-  format_tt(j = "employee_name", sprintf = "Mr/Ms %s") |>
-  # Format date column using Luxon date format
-  format_tt(j = "hire_date", date = "M/d/yyyy")
-```
-
-## Data Type Handling
-
-Tabulator output handles different data types intelligently:
-
-### Numeric Data
-- **Integers**: Formatted with `money` formatter, no decimal places by default
-- **Doubles/Numeric**: Formatted with `money` formatter, 2 decimal places by default  
-- **Thousands separators**: Controlled by `num_mark_big` parameter
-- **Decimal separators**: Controlled by `num_mark_dec` parameter
-- **Suffix notation**: Use `num_suffix = TRUE` for K/M/B/T suffixes
-
-### Logical Data
-- **Boolean values**: Displayed as checkmarks (✓) and crosses (✗) using `tickCross` formatter
-- Provides clear visual indication of TRUE/FALSE values
-
-### Date Data
-- **Date columns**: Use Luxon library for proper date parsing and formatting
-- **Sorting**: True chronological sorting, not alphabetical
-- **Display formats**: Controlled by `date` parameter in `format_tt()`
-- **Input format**: Always expects ISO date strings (YYYY-MM-DD) from R
-
-### Character Data
-- **Text columns**: Use `plaintext` formatter
-- **Pre-formatted**: Character columns use formatted data from `format_tt()`
-
-## Formatting Features
-
-### Number Formatting
+### Numbers Formatting
 
 ```{r}
+#| eval: false
 # Chain multiple number formatting operations
 tab <- tt(dat) |>
   # Basic number formatting
@@ -172,9 +92,10 @@ tab <- tt(dat) |>
   format_tt(j = "stock_value", digits = 2, num_suffix = TRUE)
 ```
 
-### Date Formatting  
+### Dates
 
 ```{r}
+#| eval: false
 # Different date format examples
 # US format: M/d/yyyy -> 1/15/2020
 tab <- tt(dat) |>
@@ -202,82 +123,17 @@ tab
 | `yyyy-MM-dd` | 2020-01-15 | ISO format |
 | `MMM d, yyyy` | Jan 15, 2020 | Long month name |
 
-## Interactive Features
+## Style
 
-Once rendered in a browser, Tabulator tables provide several interactive features:
+Support for `style_tt()` is very limited in interactive tables. For now, only the `align` and `alignv` arguments are supported.
 
-### Sorting
-- **Click column headers** to sort ascending/descending
-- **Multiple column sorting** with Shift+click
-- **Date columns** sort chronologically, not alphabetically
-- **Numeric columns** sort numerically, not as strings
-
-### Built-in Functionality
-- **Responsive design** adapts to screen size
-- **Keyboard navigation** with arrow keys
-- **Accessibility** features for screen readers
-- **Mobile-friendly** touch interactions
-
-### Themes
-Tabulator supports multiple CSS themes. The default is Bootstrap 5, but you can customize the appearance using the `theme_tabulator()` function (when available).
-
-## Technical Implementation
-
-### Dependencies
-- **Luxon.js**: Used for date parsing and formatting
-- **Tabulator.js v6.3**: Core table functionality
-- **jsonlite**: R package for JSON serialization (automatically loaded)
-
-### Data Processing
-1. **Raw data preservation**: Numeric, logical, and date columns use original R data
-2. **Client-side formatting**: Display formatting happens in the browser
-3. **String pre-processing**: Character columns are pre-formatted in R
-4. **Date serialization**: Dates converted to ISO strings for JavaScript parsing
-
-### Browser Compatibility
-Tabulator.js supports all modern browsers including:
-- Chrome/Edge 70+
-- Firefox 60+  
-- Safari 12+
-- Mobile browsers (iOS Safari, Android Chrome)
-
-## Comparison with Static Tables
-
-| Feature | Static HTML | Interactive Tabulator |
-|---------|------------|---------------------|
-| Sorting | No | Yes, client-side |
-| Filtering | No | Yes, built-in |
-| Pagination | No | Yes, client-side |
-| Editing | No | Yes, in-place |
-| File Export | No | Yes, multiple formats |
-| Responsive | Basic | Advanced |
-| Performance | Fast load | Fast interaction |
-| Dependencies | None | Tabulator.js + Luxon |
-
-## Best Practices
-
-1. **Use for interactive reports**: Best for dashboards and interactive documents
-2. **Consider data size**: Client-side processing works well up to ~10,000 rows  
-3. **Format appropriately**: Use `format_tt()` to prepare data display
-4. **Test in browsers**: Always test interactive features in target browsers
-5. **Provide fallbacks**: Consider offering static alternatives for accessibility
-
-## Limitations
-
-- **R Markdown/Quarto compatibility**: Works in HTML output formats only
-- **Printing**: Interactive features don't translate to printed documents  
-- **Email compatibility**: Most email clients don't support interactive JavaScript
-- **Dependency requirement**: Requires `jsonlite` package for JSON serialization
-
-## Getting Help
-
-For issues specific to:
-- **tinytable integration**: Use the [tinytable GitHub issues](https://github.com/vincentarelbundock/tinytable/issues)
-- **Tabulator.js features**: Consult the [official Tabulator documentation](https://tabulator.info/docs/)
-- **Date formatting**: See the [Luxon format documentation](https://moment.github.io/luxon/#/formatting)
+```{r}
+tt(dat) |> style_tt(align = "r")
+```
 
 
 ```{r}
+#| include: false
 # reset the global option to Bootstrap to avoid affecting other documents
 options(tinytable_html_engine = NULL)
 ```
