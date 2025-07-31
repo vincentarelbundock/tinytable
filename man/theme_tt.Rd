@@ -20,6 +20,7 @@ theme_tt(x, theme, ...)
 \item "resize": Scale a LaTeX \code{tinytable} to fit the \code{width} argument.
 \item "striped": Grey stripes on alternating rows
 \item "tabular": Remove table environment (LaTeX) or Javascript/CSS (HTML)
+\item "tabulator": Customize Tabulator.js tables (tabulator output only)
 \item "void": No rules
 }}
 
@@ -71,6 +72,26 @@ tabular
 \item "tabular": Drop all LaTeX dependencies and floating environments, except \verb{\\\\begin\{tabular\}}
 \item "tabularray": Drop all LaTeX dependencies and floating environments, except \verb{\\\\begin\{tblr\}}
 \item Set globally with \code{options("tinytable_theme_tabular_style" = "tblr")}
+}
+}
+
+tabulator
+\itemize{
+\item \code{cdn}: String. Tabulator CSS theme. One of: "default", "simple", "midnight", "modern", "site", "site_dark", "bootstrap3", "bootstrap4", "bootstrap5", "semantic_ui", "bulma", "materialize". Or a custom CDN URL starting with "http".
+\itemize{
+\item Set globally with \code{options("tinytable_theme_tabulator_cdn" = "midnight")}
+}
+\item \code{options}: List or character string. Tabulator.js configuration options. If a list, will be converted to JavaScript object notation. If a string, will be inserted directly.
+\itemize{
+\item Set globally with \code{options("tinytable_theme_tabulator_options" = list(pagination = "local", paginationSize = 50))}
+}
+\item \code{format_column_name}: Named list. Custom column formatters based on column names. Each element should be a list with "formatter" and optional "formatterParams".
+\itemize{
+\item Set globally with \code{options("tinytable_theme_tabulator_format_column_name" = list(price = list(formatter = "money", formatterParams = list(symbol = "€"))))}
+}
+\item \code{format_column_type}: Named list. Custom column formatters based on column data types. Each element should be a list with "formatter" and optional "formatterParams".
+\itemize{
+\item Set globally with \code{options("tinytable_theme_tabulator_format_column_type" = list(numeric = list(formatter = "number", formatterParams = list(precision = 3))))}
 }
 }
 

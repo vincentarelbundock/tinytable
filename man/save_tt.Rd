@@ -15,7 +15,7 @@ save_tt(
 
 \item{output}{String or file path.
 \itemize{
-\item If \code{output} is "markdown", "latex", "html", "html_portable", or "typst", the table is returned in a string as an \code{R} object.
+\item If \code{output} is "markdown", "latex", "html", "html_portable", "typst", or "tabulator", the table is returned in a string as an \code{R} object.
 \item If \code{output} is a valid file path, the table is saved to file. The supported extensions are: .docx, .html, .png, .pdf, .tex, .typ, and .md (with aliases .txt, .Rmd and .qmd).
 \item If \code{output} is "html_portable" or the global option \code{tinytable_html_portable} is \code{TRUE},
 the images are included in the HTML as base64 encoded string instead of link to a local file.
@@ -147,6 +147,7 @@ Tabular:
 \itemize{
 \item \code{tinytable_html_mathjax}: Insert MathJax scripts (warning: may conflict if MathJax is loaded elsewhere)
 \item \code{tinytable_html_portable}: Insert base64 encoded images directly in HTML for \code{plot_tt()}
+\item \code{tinytable_html_engine}: Default HTML engine (default: "bootstrap"). Set to "tabulator" to use interactive tables by default in HTML documents instead of static Bootstrap tables.
 }
 }
 
