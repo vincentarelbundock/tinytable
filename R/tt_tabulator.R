@@ -12,6 +12,18 @@ setMethod(
       )
     }
 
+    # Check that no format_tt() calls use the i argument (row-based formatting)
+    # Tabulator only supports column-based or full-table formatting
+    for (l in x@lazy_format) {
+      if (!is.null(l$i)) {
+        stop(
+          "Row-based formatting (i argument) is not supported with tabulator output. ",
+          "Use column-based formatting (j argument) or full-table formatting instead.",
+          call. = FALSE
+        )
+      }
+    }
+
     template <- readLines(
       system.file("templates/tabulator.html", package = "tinytable")
     )
