@@ -3,22 +3,24 @@ tabulator_search_bar <- '
 '
 
 tabulator_search_listener <- '
-      const columns_%s = %s;
-      const searchFields_%s = columns_%s.map(col => col.field);
-      document.getElementById("search_%s").addEventListener("input", function () {
-        const term = this.value.trim();
-        if (!term) {
-          table_%s.clearFilter();
-        } else {
-          table_%s.setFilter(function(data) {
-            return searchFields_%s.some(field => {
-              const value = data[field];
-              if (value === null || value === undefined) return false;
-              return String(value).toLowerCase().includes(term.toLowerCase());
+      (function() {
+        const columns_%s = %s;
+        const searchFields_%s = columns_%s.map(col => col.field);
+        document.getElementById("search_%s").addEventListener("input", function () {
+          const term = this.value.trim();
+          if (!term) {
+            table_%s.clearFilter();
+          } else {
+            table_%s.setFilter(function(data) {
+              return searchFields_%s.some(field => {
+                const value = data[field];
+                if (value === null || value === undefined) return false;
+                return String(value).toLowerCase().includes(term.toLowerCase());
+              });
             });
-          });
-        }
-      });
+          }
+        });
+      })();
 '
 
 
