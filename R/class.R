@@ -117,7 +117,7 @@ setMethod(
     .Object@tabulator_cdn <- ""
     .Object@tabulator_options <- ""
     .Object@tabulator_column_formatters <- list()
-    .Object@tabulator_search <- TRUE
+    .Object@tabulator_search <- FALSE
 
     return(.Object)
   }
