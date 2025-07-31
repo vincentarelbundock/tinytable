@@ -42,7 +42,28 @@ setMethod(
 
     # Convert data to JSON for Tabulator
     # Use raw data for numeric/logical columns, formatted data for others
+    # Exception: use formatted data for logical columns if bool argument is used
     data_clean <- list()
+    
+    # Check if any lazy_format calls use the bool argument
+    has_bool_formatting <- function(col_idx) {
+      for (l in x@lazy_format) {
+        if (!is.null(l$bool)) {
+          # Check if this applies to our column
+          if (is.null(l$j)) {
+            # Global formatting - applies to all columns
+            return(TRUE)
+          } else {
+            # Column-specific formatting
+            j_clean <- sanitize_j(l$j, x)
+            if (col_idx %in% j_clean) {
+              return(TRUE)
+            }
+          }
+        }
+      }
+      return(FALSE)
+    }
 
     for (i in seq_along(x@data)) {
       col_name <- names(x@data)[i]
@@ -55,14 +76,26 @@ setMethod(
             "integer",
             "numeric",
             "double",
-            "logical",
             "Date",
             "POSIXct",
             "POSIXlt"
           )
       ) {
-        # Use raw data for numeric, logical, and date columns (formatters will handle display)
+        # Use raw data for numeric and date columns (formatters will handle display)
         data_clean[[col_name]] <- original_col
+      } else if (col_type == "logical") {
+        # For logical columns, use formatted data if bool argument is used
+        if (has_bool_formatting(i)) {
+          if (nrow(x@data_body) == nrow(x@data)) {
+            data_clean[[col_name]] <- as.character(x@data_body[[i]])
+          } else {
+            # Handle case where rows were modified (groups, etc.)
+            data_clean[[col_name]] <- as.character(original_col)
+          }
+        } else {
+          # Use raw logical data for Tabulator's default boolean handling
+          data_clean[[col_name]] <- original_col
+        }
       } else {
         # Use formatted data for other column types (character, factor, etc.)
         if (nrow(x@data_body) == nrow(x@data)) {
