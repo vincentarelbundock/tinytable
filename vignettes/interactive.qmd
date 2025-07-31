@@ -51,6 +51,14 @@ dat <- data.frame(
 tt(dat)
 ```
 
+## Theme
+
+```{r}
+tt(iris) |> theme_tt("tabulator")
+```
+
+
+
 ## Comprehensive Example
 
 Here's a more comprehensive example showing various data types and formatting options:
@@ -139,7 +147,6 @@ Tabulator output handles different data types intelligently:
 ### Number Formatting
 
 ```{r}
-#| eval: false
 # Chain multiple number formatting operations
 tab <- tt(dat) |>
   # Basic number formatting
@@ -153,7 +160,6 @@ tab <- tt(dat) |>
 ### Date Formatting  
 
 ```{r}
-#| eval: false
 # Different date format examples
 # US format: M/d/yyyy -> 1/15/2020
 tab <- tt(dat) |>
@@ -166,6 +172,8 @@ tab <- tt(dat) |>
 # ISO format with time: yyyy-MM-dd HH:mm -> 2020-01-15 00:00
 tab <- tt(dat) |>
   format_tt(j = "hire_date", date = "yyyy-MM-dd HH:mm")
+
+tab
 ```
 
 **Note**: For tabulator output, the `date` parameter uses Luxon date format tokens, not R's `strptime` format. Common patterns:

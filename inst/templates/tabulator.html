@@ -21,16 +21,21 @@
     <!-- Tabulator JS -->
     <script src="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/js/tabulator.min.js"></script>
     <script>
-      const { DateTime } = luxon;
+      (function() {
+        const { DateTime } = luxon;
 
-      const table_$tinytable_TABLE_ID = new Tabulator("#$tinytable_TABLE_ID", {
-        dependencies: { DateTime },
-        data: $tinytable_TABULATOR_DATA,
-        columns: $tinytable_TABULATOR_COLUMNS,
-        $tinytable_TABULATOR_OPTIONS
-      });
+        const table_$tinytable_TABLE_ID = new Tabulator("#$tinytable_TABLE_ID", {
+          dependencies: { DateTime },
+          data: $tinytable_TABULATOR_DATA,
+          columns: $tinytable_TABULATOR_COLUMNS,
+          $tinytable_TABULATOR_OPTIONS
+        });
 
-      $tinytable_TABULATOR_SEARCH_LISTENER
+        // Expose table reference globally for search functionality
+        window.table_$tinytable_TABLE_ID = table_$tinytable_TABLE_ID;
+
+        $tinytable_TABULATOR_SEARCH_LISTENER
+      })();
     </script>
 
 <!-- postamble start -->

@@ -3,24 +3,28 @@ tabulator_search_bar <- '
 '
 
 tabulator_search_listener <- '
-      (function() {
+        // Search functionality (runs within the table IIFE scope)
         const columns_%s = %s;
         const searchFields_%s = columns_%s.map(col => col.field);
-        document.getElementById("search_%s").addEventListener("input", function () {
-          const term = this.value.trim();
-          if (!term) {
-            table_%s.clearFilter();
-          } else {
-            table_%s.setFilter(function(data) {
-              return searchFields_%s.some(field => {
-                const value = data[field];
-                if (value === null || value === undefined) return false;
-                return String(value).toLowerCase().includes(term.toLowerCase());
+        
+        // Attach search listener using the globally exposed table reference
+        const searchElement = document.getElementById("search_%s");
+        if (searchElement) {
+          searchElement.addEventListener("input", function () {
+            const term = this.value.trim();
+            if (!term) {
+              window.table_tinytable_%s.clearFilter();
+            } else {
+              window.table_tinytable_%s.setFilter(function(data) {
+                return searchFields_%s.some(field => {
+                  const value = data[field];
+                  if (value === null || value === undefined) return false;
+                  return String(value).toLowerCase().includes(term.toLowerCase());
+                });
               });
-            });
-          }
-        });
-      })();
+            }
+          });
+        }
 '
 
 
@@ -187,8 +191,8 @@ setMethod(
         # Extract just the JSON array part
         columns_json <- gsub("columns: (\\[.*?\\])", "\\1", columns_match)
 
-        # Table variable name from the generated HTML
-        table_var <- paste0("tinytable_", search_id)
+        # Table variable name from the generated HTML (matches template exactly)
+        table_var <- paste0("table_tinytable_", search_id)
 
         # Create search bar HTML - uses the same unique search_id
         search_bar_html <- sprintf(
@@ -204,8 +208,8 @@ setMethod(
           search_id, # searchFields_%s
           search_id, # columns_%s in map()
           search_id, # search_%s (getElementById - same ID as input)
-          table_var, # table_%s.clearFilter()
-          table_var, # table_%s.setFilter()
+          search_id, # tinytable_%s for window.table_tinytable_xxx.clearFilter()
+          search_id, # tinytable_%s for window.table_tinytable_xxx.setFilter()
           search_id # searchFields_%s in setFilter
         )
 
