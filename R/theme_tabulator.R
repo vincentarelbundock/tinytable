@@ -1,14 +1,14 @@
 theme_tabulator <- function(
-  x,
-  cdn = get_option("tinytable_theme_tabulator_cdn", default = "bootstrap5"),
-  layout = get_option(
-    "tinytable_theme_tabulator_layout",
-    default = "fitDataTable"
-  ),
-  pagination = TRUE,
-  options = get_option("tinytable_theme_tabulator_options", default = NULL),
-  ...
-) {
+    x,
+    cdn = get_option("tinytable_theme_tabulator_cdn", default = "bootstrap5"),
+    layout = get_option(
+      "tinytable_theme_tabulator_layout",
+      default = "fitDataTable"
+    ),
+    pagination = TRUE,
+    search = TRUE,
+    options = get_option("tinytable_theme_tabulator_options", default = NULL),
+    ...) {
   assert_choice(
     layout,
     choice = c(
@@ -88,19 +88,18 @@ theme_tabulator <- function(
     }
     total_height <- (x@height * visible_rows) + 2.5 # 2.5em for header
     layout_opts <- sprintf(
-      "layout: '%s',\n    height: '%sem'",
+      "    layout: '%s',\n    height: '%sem'",
       layout,
       total_height
     )
   } else {
-    layout_opts <- sprintf("layout: '%s'", layout)
+    layout_opts <- sprintf("  layout: '%s'", layout)
   }
 
   # Build options string based on whether pagination options exist
   if (nchar(pagination_opts) > 0) {
     opts <- sprintf(
-      "
-      %s
+      "    %s
       %s
       ",
       pagination_opts,
@@ -126,9 +125,10 @@ theme_tabulator <- function(
       return(table)
     }
 
-    # Store CDN and options in S4 slots
+    # Store CDN, options, and search in S4 slots
     table@tabulator_cdn <- cdn
     table@tabulator_options <- opts
+    table@tabulator_search <- search
 
     return(table)
   }

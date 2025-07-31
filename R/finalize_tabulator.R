@@ -1,3 +1,27 @@
+tabulator_search_bar <- '
+    <div class="mb-3"><input type="text" id="search_%s" class="form-control" placeholder="Search table..." style="margin-bottom: 10px;"></div>
+'
+
+tabulator_search_listener <- '
+      const columns_%s = %s;
+      const searchFields_%s = columns_%s.map(col => col.field);
+      document.getElementById("search_%s").addEventListener("input", function () {
+        const term = this.value.trim();
+        if (!term) {
+          table_%s.clearFilter();
+        } else {
+          table_%s.setFilter(function(data) {
+            return searchFields_%s.some(field => {
+              const value = data[field];
+              if (value === null || value === undefined) return false;
+              return String(value).toLowerCase().includes(term.toLowerCase());
+            });
+          });
+        }
+      });
+'
+
+
 setMethod(
   f = "finalize",
   signature = "tinytable_tabulator",
@@ -146,6 +170,75 @@ setMethod(
       )
     }
 
+    # Handle search functionality
+    if (isTRUE(x@tabulator_search)) {
+      # Create unique search ID
+      search_id <- gsub(".*tinytable_", "", x@id)
+
+      # Extract columns JSON from the table string
+      columns_match <- regmatches(
+        x@table_string,
+        regexpr("columns: \\[.*?\\]", x@table_string)
+      )
+
+      if (length(columns_match) > 0) {
+        # Extract just the JSON array part
+        columns_json <- gsub("columns: (\\[.*?\\])", "\\1", columns_match)
+
+        # Table variable name from the generated HTML
+        table_var <- paste0("tinytable_", search_id)
+
+        # Create search bar HTML - uses the same unique search_id
+        search_bar_html <- sprintf(
+          tabulator_search_bar,
+          search_id # search_%s (input ID)
+        )
+
+        # Create search listener JS - uses the same unique search_id
+        search_listener_js <- sprintf(
+          tabulator_search_listener,
+          search_id, # columns_%s
+          columns_json, # %s (columns JSON)
+          search_id, # searchFields_%s
+          search_id, # columns_%s in map()
+          search_id, # search_%s (getElementById - same ID as input)
+          table_var, # table_%s.clearFilter()
+          table_var, # table_%s.setFilter()
+          search_id # searchFields_%s in setFilter
+        )
+
+        # Replace search bar placeholder (before table)
+        x@table_string <- sub(
+          "$tinytable_TABULATOR_SEARCH",
+          search_bar_html,
+          x@table_string,
+          fixed = TRUE
+        )
+
+        # Replace search listener placeholder (after table)
+        x@table_string <- sub(
+          "$tinytable_TABULATOR_SEARCH_LISTENER",
+          search_listener_js,
+          x@table_string,
+          fixed = TRUE
+        )
+      }
+    } else {
+      # Clean up placeholders if search is disabled
+      x@table_string <- sub(
+        "$tinytable_TABULATOR_SEARCH",
+        "",
+        x@table_string,
+        fixed = TRUE
+      )
+
+      x@table_string <- sub(
+        "$tinytable_TABULATOR_SEARCH_LISTENER",
+        "",
+        x@table_string,
+        fixed = TRUE
+      )
+    }
+
     return(x)
-  }
-)
+  })

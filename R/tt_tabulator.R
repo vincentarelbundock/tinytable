@@ -3,7 +3,7 @@ setMethod(
   signature = "tinytable_tabulator",
   definition = function(x, ...) {
     assert_dependency("jsonlite")
-    
+
     # Check that column names exist
     if (is.null(x@names) || length(x@names) == 0) {
       stop(
@@ -159,7 +159,7 @@ setMethod(
       return(col_def)
     })
 
-    js_columns <- jsonlite::toJSON(columns, auto_unbox = TRUE, pretty = FALSE)
+    js_columns <- trimws(jsonlite::toJSON(columns, auto_unbox = TRUE, pretty = FALSE))
 
     # Replace data and columns in template
     template <- gsub(
@@ -193,8 +193,7 @@ setMethod(
     x@table_string <- out
 
     return(x)
-  }
-)
+  })
 
 # Helper function to set up tabulator-specific S4 class
 tabulator_setting <- function(x, new, component = "option") {
