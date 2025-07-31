@@ -67,9 +67,15 @@ setMethod(
 
         # Create formatters for columns that had format_tt applied
         for (l in x@lazy_format) {
-          if (!is.null(l$j) && !is.null(l$date_format)) {
+          if (!is.null(l$date_format)) {
             # Date formatting was applied
-            j_clean <- sanitize_j(l$j, x)
+            if (is.null(l$j)) {
+              # Apply to all date columns when j is NULL
+              j_clean <- seq_along(x@data)
+            } else {
+              j_clean <- sanitize_j(l$j, x)
+            }
+            
             for (col_idx in j_clean) {
               col_name <- x@names[col_idx]
               col_data <- x@data[[col_idx]]
@@ -88,13 +94,18 @@ setMethod(
           }
 
           if (
-            !is.null(l$j) &&
-              (!is.null(l$digits) ||
-                !is.null(l$num_mark_big) ||
-                !is.null(l$num_suffix))
+            (!is.null(l$digits) ||
+             !is.null(l$num_mark_big) ||
+             !is.null(l$num_suffix))
           ) {
             # Numeric formatting was applied
-            j_clean <- sanitize_j(l$j, x)
+            if (is.null(l$j)) {
+              # Apply to all numeric columns when j is NULL
+              j_clean <- seq_along(x@data)
+            } else {
+              j_clean <- sanitize_j(l$j, x)
+            }
+            
             for (col_idx in j_clean) {
               col_name <- x@names[col_idx]
               col_data <- x@data[[col_idx]]

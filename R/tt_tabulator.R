@@ -140,14 +140,16 @@ setMethod(
         col_def$formatter <- "datetime"
         col_def$sorter <- "datetime"
         col_def$formatterParams <- list(
-          outputFormat = "M/d/yyyy",
+          inputFormat = "yyyy-MM-dd",
+          outputFormat = "yyyy-MM-dd",
           invalidPlaceholder = ""
         )
       } else if (col_type %in% c("POSIXct", "POSIXlt")) {
         col_def$formatter <- "datetime"
         col_def$sorter <- "datetime"
         col_def$formatterParams <- list(
-          outputFormat = "M/d/yyyy HH:mm:ss",
+          inputFormat = "yyyy-MM-ddTHH:mm:ss",
+          outputFormat = "yyyy-MM-dd HH:mm:ss",
           invalidPlaceholder = ""
         )
       } else {

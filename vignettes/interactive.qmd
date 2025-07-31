@@ -1,3 +1,9 @@
+---
+format:
+  html:
+    embedded-resources: true
+---
+
 # Interactive tables
 
 ```{r}
@@ -32,11 +38,20 @@ To create an interactive table, use `output = "tabulator"` when printing your ta
 Alternatively, you can set a global option to make all tables in HTML documents (like Quarto or R Markdown) use tabulator by default:
 
 ```{r}
-#| eval: false
+pkgload::load_all()
+
 # Set tabulator as default for HTML documents
 options(tinytable_html_engine = "tabulator")
 
-# Now all tables will be interactive by default in HTML output
+
+dat <- data.frame(
+  k = c("Montréal", "Toronto", "Vancouver"),
+  w = c(143002.2092, 201399.181, 100188.3883),
+  x = c(1.43402, 201.399, 0.134588),
+  y = as.Date(sample(1:1000, 3), origin = "1970-01-01"),
+  z = c(TRUE, TRUE, FALSE)
+)
+
 tt(dat)
 ```
 
