@@ -8,6 +8,7 @@ theme_tabulator <- function(
     pagination = TRUE,
     search = TRUE,
     options = get_option("tinytable_theme_tabulator_options", default = NULL),
+    css_rule = NULL,
     ...) {
   assert_choice(
     layout,
@@ -19,6 +20,21 @@ theme_tabulator <- function(
       "fitColumns"
     )
   )
+
+  # Validate css_rule parameter
+  if (!is.null(css_rule)) {
+    if (!is.character(css_rule) || length(css_rule) != 1) {
+      stop("css_rule must be a single character string", call. = FALSE)
+    }
+
+    if (!grepl("\\$TINYTABLE_ID", css_rule)) {
+      stop(
+        "css_rule must contain '$TINYTABLE_ID' placeholder for table scoping.\n",
+        "Example: css_rule = '$TINYTABLE_ID .tabulator-col { background: red; }'",
+        call. = FALSE
+      )
+    }
+  }
 
   if (isFALSE(pagination)) {
     pagination_opts <- "pagination: false,"
@@ -125,10 +141,13 @@ theme_tabulator <- function(
       return(table)
     }
 
-    # Store stylesheet, options, and search in S4 slots
+    # Store stylesheet, options, search, and css_rule in S4 slots
     table@tabulator_stylesheet <- stylesheet
     table@tabulator_options <- opts
     table@tabulator_search <- search
+    if (!is.null(css_rule)) {
+      table@tabulator_css_rule <- css_rule
+    }
 
     return(table)
   }

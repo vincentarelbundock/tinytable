@@ -59,6 +59,7 @@ setClass(
     tabulator_column_formatters = "list",
     tabulator_column_styles = "list",
     tabulator_search = "logical",
+    tabulator_css_rule = "character",
     theme = "list",
     width = "NULLorNumeric",
     width_cols = "numeric"
@@ -120,6 +121,7 @@ setMethod(
     .Object@tabulator_column_formatters <- list()
     .Object@tabulator_column_styles <- list()
     .Object@tabulator_search <- FALSE
+    .Object@tabulator_css_rule <- ""
 
     return(.Object)
   }

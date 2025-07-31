@@ -185,6 +185,8 @@ setMethod(
       fixed = TRUE
     )
 
+    # Leave CSS placeholder for finalize to handle
+
     # Leave options placeholder for potential theme replacement
     # (it will be cleaned up in finalize if not replaced)
 

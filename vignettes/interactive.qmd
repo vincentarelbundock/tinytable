@@ -67,14 +67,6 @@ Try typing the letters "vir" in the search box to filter the `iris` dataset and 
 tt(iris) |> theme_tt("tabulator", pagination = c(5, 10, 50))
 ```
 
-## Style sheets
-
-Tabulator ships with multiple complete CSS style sheets. The default in `tinytable` is Bootstrap 5, but you can customize the appearance using the `theme_tt()` function (when available). Alternatives include `"default"`, `"simple"`, `"midnight"`, `"modern"`, `"site"`, `"site_dark"`, `"bootstrap3"`, `"bootstrap4"`, `"bootstrap5"`, `"semanticui"`, `"bulma"`, and `"materialize"`.
-
-```{r}
-tt(iris) |> theme_tt("tabulator", stylesheet = "midnight")
-```
-
 
 ## Format
 
@@ -129,6 +121,29 @@ Support for `style_tt()` is very limited in interactive tables. For now, only th
 
 ```{r}
 tt(dat) |> style_tt(align = "r")
+```
+
+## CSS
+
+For more advanced styling, you can add custom CSS rules using the `css_rule` argument in `theme_tt()`. The CSS rule must include at least one `$TINYTABLE_ID` placeholder, which gets replaced with the unique table identifier to ensure styles only apply to that specific table.
+
+```{r}
+css_rule <- "
+$TINYTABLE_ID .tabulator-header .tabulator-col {
+  background-color: black;
+  color: white;
+}
+"
+tt(dat) |> 
+  theme_tt("tabulator", css_rule = css_rule)
+```
+
+## Style sheets
+
+Tabulator ships with multiple complete CSS style sheets. The default in `tinytable` is Bootstrap 5, but you can customize the appearance using the `theme_tt()` function (when available). Alternatives include `"default"`, `"simple"`, `"midnight"`, `"modern"`, `"site"`, `"site_dark"`, `"bootstrap3"`, `"bootstrap4"`, `"bootstrap5"`, `"semanticui"`, `"bulma"`, and `"materialize"`.
+
+```{r}
+tt(iris) |> theme_tt("tabulator")
 ```
 
 
