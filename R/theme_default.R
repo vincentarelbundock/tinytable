@@ -14,10 +14,7 @@ theme_default <- function(x, ...) {
   } else {
     x@bootstrap_class
   }
-  x <- style_tt(x, bootstrap_class = bc)
-
-  if (length(x@names) > 0) {
-  }
+  x <- theme_tt(x, "bootstrap", class = bc)
 
   if (isTRUE(x@output %in% c("html", "bootstrap", "typst"))) {
     col <- if (x@output == "typst") "black" else "#d3d8dc"
@@ -44,9 +41,9 @@ theme_default <- function(x, ...) {
     }
     # mid
     if (length(x@names) > 0) {
+      x <- theme_tt(x, "bootstrap", class = bc)
       x <- style_tt(
         x,
-        bootstrap_class = bc,
         i = 0,
         line = "b",
         line_color = col,
@@ -56,7 +53,6 @@ theme_default <- function(x, ...) {
     # bottom
     x <- style_tt(
       x,
-      bootstrap_class = bc,
       i = nrow(x),
       line = "b",
       line_color = col,

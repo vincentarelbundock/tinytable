@@ -211,14 +211,14 @@ The `rowspan` feature is also useful to create multi-row labels. For example, in
 tab <- data.frame(Letters = c("A<br>B", ""), Numbers = c("First", "Second"))
 
 tt(tab) |>
-  style_tt(bootstrap_class = "table-bordered")
+  theme_tt("bootstrap", class = "table-bordered")
 ```
 
 Now, we use `colspan` to ensure that that cells in the first column take up less space and are combined into one:
 
 ```{r} 
 tt(tab) |>
-  style_tt(bootstrap_class = "table-bordered") |>
+  theme_tt("bootstrap", class = "table-bordered") |>
   style_tt(1, 1, rowspan = 2)
 ```
 
