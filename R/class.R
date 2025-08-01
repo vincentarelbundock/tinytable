@@ -41,6 +41,7 @@ setClass(
     lazy_plot = "list",
     lazy_style = "list",
     lazy_theme = "list",
+    lazy_prepare = "list",
     names = "NULLorCharacter",
     ncol = "numeric",
     nhead = "numeric",

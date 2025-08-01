@@ -55,8 +55,7 @@ rbind_body_groupi <- function(x) {
 build_tt <- function(x, output = NULL) {
   output <- sanitize_output(output)
 
-  x <- switch(
-    output,
+  x <- switch(output,
     html = swap_class(x, "tinytable_bootstrap"),
     bootstrap = swap_class(x, "tinytable_bootstrap"),
     latex = swap_class(x, "tinytable_tabularray"),
@@ -71,6 +70,11 @@ build_tt <- function(x, output = NULL) {
 
   # before format_tt() because we need the indices
   x@nrow <- nrow(x@data) + nrow(x@group_data_i)
+
+  # pre-process: theme_*() calls that need formatting conditional on @output
+  for (p in x@lazy_prepare) {
+    x <- p(x)
+  }
 
   # apply the style_notes
   x <- style_notes(x)
@@ -101,13 +105,13 @@ build_tt <- function(x, output = NULL) {
   # format each component individually, including groups before inserting them into the body
   for (l in x@lazy_format) {
     l[["x"]] <- x
-    
+
     # For tabulator output, skip formatting for numeric/logical/date columns
     # as these will be handled by tabulator formatters
     if (x@output == "tabulator" && !is.null(l$j)) {
       j_clean <- sanitize_j(l$j, x)
       skip_format <- FALSE
-      
+
       for (col_idx in j_clean) {
         col_data <- x@data[[col_idx]]
         if (inherits(col_data, c("integer", "numeric", "double", "logical", "Date", "POSIXct", "POSIXlt"))) {
@@ -115,7 +119,7 @@ build_tt <- function(x, output = NULL) {
           break
         }
       }
-      
+
       if (!skip_format) {
         x <- eval(l)
       }

@@ -1,4 +1,4 @@
-theme_void_fn <- function(table) {
+finalize_theme_void <- function(table) {
   if (isTRUE(table@output == "latex")) {
     s <- table@table_string
     s <- gsub("\\\\toprule|\\\\bottomrule|\\\\midrule", "", s)
@@ -26,7 +26,7 @@ theme_void <- function(x, ...) {
     )
   )
 
-  x <- style_tt(x, finalize = theme_void_fn)
+  x <- style_tt(x, finalize = finalize_theme_void)
   x <- style_tt(x, finalize = place)
   x <- theme_tt(x, "bootstrap", class = "table table-borderless")
 

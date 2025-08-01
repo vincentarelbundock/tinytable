@@ -16,6 +16,7 @@ theme_bootstrap <- function(x, i = NULL, j = NULL, class = NULL, css = NULL, css
   } else {
     x@bootstrap_class <- "table"
   }
+
   if (!is.null(css_rule)) {
     x@bootstrap_css_rule <- css_rule
   }

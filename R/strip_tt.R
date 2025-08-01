@@ -4,7 +4,7 @@
 #' @param format `TRUE` reverts `format_tt()`.
 #' @param group `TRUE` reverts `group_tt()`.
 #' @param style `TRUE` reverts `style_tt()`.
-#' @param theme `TRUE` reverts `theme_tt()`.
+#' @param theme `TRUE` erases all themes and pre/post styling
 #' @param notes `TRUE` reverts the effect of the `notes` argument from `tt()`.
 #' @param caption `TRUE` reverts the effect of the `caption` argument from `tt()`.
 #' @param width `TRUE` reverts the effect of the `width` argument from `tt()`.
@@ -72,8 +72,9 @@ strip_tt <- function(
 
   # Reset theme settings
   if (theme) {
-    out@theme <- list("default")
-    out@lazy_theme <- list()
+    out@theme <- list()
+    out@lazy_prepare <- list()
+    out@lazy_finalize <- list()
   }
 
   # Reset notes and caption styling
