@@ -89,6 +89,11 @@ sanitize_j <- function(j, x) {
   # regex
   if (is.character(j) && length(j) == 1 && !is.null(colnames(x))) {
     out <- grep(j, colnames(x), perl = TRUE)
+    # Check if regex pattern matched any columns
+    if (length(out) == 0) {
+      msg <- sprintf("No columns match the pattern: %s", j)
+      stop(msg, call. = FALSE)
+    }
     # full names
   } else if (is.character(j) && length(j) > 1 && !is.null(colnames(x))) {
     bad <- setdiff(j, colnames(x))
