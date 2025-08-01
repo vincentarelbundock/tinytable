@@ -21,11 +21,8 @@ theme_grid <- function(x, ...) {
     return(table)
   }
 
-  x <- style_tt(
-    x,
-    tabularray_inner = "hlines, vlines,",
-    finalize = fn,
-    bootstrap_class = "table table-bordered"
-  )
+  x <- style_tt(x, tabularray_inner = "hlines, vlines,")
+  x <- style_tt(x, bootstrap_class = "table table-bordered")
+  x <- style_tt(x, finalize = fn)
   return(x)
 }

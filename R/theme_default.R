@@ -8,15 +8,19 @@ theme_default <- function(x, ...) {
   )
   x <- style_tt(x, finalize = fn)
 
+  # bootstrap class
+  bc <- if (length(x@bootstrap_class) == 0) {
+    "table table-borderless"
+  } else {
+    x@bootstrap_class
+  }
+  x <- style_tt(x, bootstrap_class = bc)
+
+  if (length(x@names) > 0) {
+  }
+
   if (isTRUE(x@output %in% c("html", "bootstrap", "typst"))) {
     col <- if (x@output == "typst") "black" else "#d3d8dc"
-    bc <- if (length(x@bootstrap_class) == 0) {
-      "table table-borderless"
-    } else {
-      x@bootstrap_class
-    }
-    # bootstrap class
-    x <- style_tt(x, bootstrap_class = bc)
 
     # top border
     if (x@output %in% c("html", "bootstrap") && length(x@names) == 0) {

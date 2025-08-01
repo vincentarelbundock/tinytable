@@ -486,11 +486,9 @@ assert_style_tt <- function(
   assert_choice(alignv, c("t", "m", "b"), null.ok = TRUE)
 
   # Validate output choice
-  assert_choice(
-    output,
-    c("typst", "latex", "html", "markdown", "gfm"),
-    null.ok = TRUE
-  )
+  if (!is.null(output)) {
+    assert_true(all(output %in% c("typst", "latex", "html", "markdown", "bootstrap", "tabulator", "gfm")))
+  }
 
   # Validate finalize function
   assert_function(finalize, null.ok = TRUE)

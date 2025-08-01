@@ -10,8 +10,18 @@ theme_bootstrap <- function(x, ...) {
   )
   x <- style_tt(x, finalize = fn)
 
-  clean_markdown <- function(table) {
-    if (isTRUE(table@output == "markdown")) {
+  x <- style_tt(x, finalize = fn)
+
+  fn <- function(table) {
+    if (isTRUE(table@output %in% c("latex", "typst"))) {
+      table <- style_tt(
+        table,
+        i = 0:nrow(x),
+        line = "bt",
+        line_width = 0.05,
+        line_color = "#C0C0C0"
+      )
+    } else if (isTRUE(table@output == "markdown")) {
       tab <- table@table_string
       tab <- strsplit(tab, "\n")[[1]]
       tab <- tab[!grepl("^[\\+|-]+$", tab)]
@@ -20,19 +30,9 @@ theme_bootstrap <- function(x, ...) {
     }
     return(table)
   }
-  x <- style_tt(x, finalize = clean_markdown)
+  x <- style_tt(x, finalize = fn)
 
-  if (isTRUE(x@output %in% c("latex", "typst"))) {
-    x <- style_tt(
-      x,
-      i = 0:nrow(x),
-      line = "bt",
-      line_width = 0.05,
-      line_color = "#C0C0C0"
-    )
-  } else if (isTRUE(x@output %in% c("html", "bootstrap", "tabulator"))) {
-    x <- style_tt(x, bootstrap_class = "table")
-  }
+  x <- style_tt(x, bootstrap_class = "table")
 
   return(x)
 }
