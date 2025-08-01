@@ -41,6 +41,7 @@
 #' @template latex_preamble
 #' @template limitations_word_markdown
 #' @template global_options
+#' @template tabulator
 #'
 #' @examples
 #' library(tinytable)

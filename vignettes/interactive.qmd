@@ -6,8 +6,8 @@ format:
 
 ```{r}
 #| include: false
+library(tinytable)
 options(tinytable_html_engine = "tabulator")
-pkgload::load_all()
 ```
 
 # Interactive tables
@@ -81,27 +81,12 @@ tt(dat) |>
 ```
 
 For dates, 
-### Dates
 
 ```{r}
-#| eval: false
-# Different date format examples
-# US format: M/d/yyyy -> 1/15/2020
-tab <- tt(dat) |>
-  format_tt(j = "hire_date", date = "M/d/yyyy")
-
-# European format: d/M/yyyy -> 15/1/2020  
-tab <- tt(dat) |>
-  format_tt(j = "hire_date", date = "d/M/yyyy")
-
-# ISO format with time: yyyy-MM-dd HH:mm -> 2020-01-15 00:00
-tab <- tt(dat) |>
-  format_tt(j = "hire_date", date = "yyyy-MM-dd HH:mm")
-
-tab
+tt(dat) |> format_tt(j = "date", date = "M/d/yyyy")
 ```
 
-**Note**: For tabulator output, the `date` parameter uses Luxon date format tokens, not R's `strptime` format. Common patterns:
+For dates, `tabulator` uses Luxon date format tokens, not R's `strptime` format. Common patterns include:
 
 | Luxon Format | Output Example | Description |
 |-------------|---------------|-------------|
@@ -112,9 +97,10 @@ tab
 | `yyyy-MM-dd` | 2020-01-15 | ISO format |
 | `MMM d, yyyy` | Jan 15, 2020 | Long month name |
 
+
 ## Style
 
-Support for `style_tt()` is very limited in interactive tables. For now, only the `align` and `alignv` arguments are supported.
+Support for `style_tt()` is very limited in interactive tables. For now, only the `align` and `alignv` arguments of that function are supported.
 
 ```{r}
 tt(dat) |> style_tt(align = "r")
@@ -140,9 +126,13 @@ tt(dat) |>
 Tabulator ships with multiple complete CSS style sheets. The default in `tinytable` is Bootstrap 5, but you can customize the appearance using the `theme_tt()` function (when available). Alternatives include `"default"`, `"simple"`, `"midnight"`, `"modern"`, `"site"`, `"site_dark"`, `"bootstrap3"`, `"bootstrap4"`, `"bootstrap5"`, `"semanticui"`, `"bulma"`, and `"materialize"`.
 
 ```{r}
-tt(iris) |> theme_tt("tabulator")
+#| eval: false
+tt(iris) |> theme_tt("tabulator", stylesheet = "semanticui")
 ```
 
+::: {.callout-note}
+To use a theme, the HTML file must load a style sheet *globally* in the document. Unfortunately, this means that `tinytable` cannot apply a `Tabulator` style sheet to a single table in documents with multiple table. The style that applies is always the last one loaded in the document.
+:::
 
 
 ## Options and columns
@@ -192,7 +182,6 @@ opts <- "
 
 tt(dat) |> theme_tt("tabulator", options = opts)
 ```
-
 
 
 
