@@ -3,6 +3,9 @@ tabulator_search_bar <- '
 '
 
 tabulator_search_listener <- '
+        // Expose table reference globally for search functionality
+        window.table_tinytable_%s = table_tinytable_%s;
+
         // Search functionality (runs within the table IIFE scope)
         const columns_%s = %s;
         const searchFields_%s = columns_%s.map(col => col.field);
@@ -203,6 +206,23 @@ setMethod(
         fixed = TRUE
       )
     }
+    
+    # Replace custom columns if provided
+    if (nchar(x@tabulator_columns) > 0) {
+      # Replace the existing columns array with custom columns
+      x@table_string <- gsub(
+        "columns: \\[.*?\\],",
+        paste0("columns: ", x@tabulator_columns, ","),
+        x@table_string
+      )
+      # Automatically disable search when custom columns are provided
+      x@tabulator_search <- FALSE
+    }
+    
+    # Automatically disable search when custom options are provided
+    if (nchar(x@tabulator_options) > 0) {
+      x@tabulator_search <- FALSE
+    }
 
     # Handle search functionality
     if (isTRUE(x@tabulator_search)) {
@@ -231,6 +251,8 @@ setMethod(
         # Create search listener JS - uses the same unique search_id
         search_listener_js <- sprintf(
           tabulator_search_listener,
+          search_id, # window.table_tinytable_%s =
+          search_id, # table_tinytable_%s;
           search_id, # columns_%s
           columns_json, # %s (columns JSON)
           search_id, # searchFields_%s
@@ -298,6 +320,21 @@ setMethod(
         fixed = TRUE
       )
     }
+
+    # Final cleanup of any remaining search placeholders (safety net)
+    x@table_string <- gsub(
+      "$tinytable_TABULATOR_SEARCH",
+      "",
+      x@table_string,
+      fixed = TRUE
+    )
+    
+    x@table_string <- gsub(
+      "$tinytable_TABULATOR_SEARCH_LISTENER",
+      "",
+      x@table_string,
+      fixed = TRUE
+    )
 
     return(x)
   })

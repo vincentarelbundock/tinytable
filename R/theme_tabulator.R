@@ -9,6 +9,7 @@ theme_tabulator <- function(
     search = TRUE,
     options = get_option("tinytable_theme_tabulator_options", default = NULL),
     css_rule = NULL,
+    columns = NULL,
     ...) {
   assert_choice(
     layout,
@@ -33,6 +34,13 @@ theme_tabulator <- function(
         "Example: css_rule = '$TINYTABLE_ID .tabulator-col { background: red; }'",
         call. = FALSE
       )
+    }
+  }
+
+  # Validate columns parameter
+  if (!is.null(columns)) {
+    if (!is.character(columns) || length(columns) != 1) {
+      stop("columns must be a single character string containing valid JavaScript array", call. = FALSE)
     }
   }
 
@@ -141,12 +149,15 @@ theme_tabulator <- function(
       return(table)
     }
 
-    # Store stylesheet, options, search, and css_rule in S4 slots
+    # Store stylesheet, options, search, css_rule, and columns in S4 slots
     table@tabulator_stylesheet <- stylesheet
     table@tabulator_options <- opts
     table@tabulator_search <- search
     if (!is.null(css_rule)) {
       table@tabulator_css_rule <- css_rule
+    }
+    if (!is.null(columns)) {
+      table@tabulator_columns <- columns
     }
 
     return(table)

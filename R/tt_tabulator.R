@@ -142,6 +142,7 @@ setMethod(
       na = "null"
     )
 
+
     # Build column definitions
     columns <- lapply(names(data_clean), function(nm) {
       original_name <- colnames(x@data_body)[which(
@@ -170,6 +171,8 @@ setMethod(
       fixed = TRUE
     )
 
+    # Only replace columns if no custom columns will be provided later
+    # (Custom columns are handled in finalize_tabulator.R)
     template <- gsub(
       "$tinytable_TABULATOR_COLUMNS",
       js_columns,
@@ -184,6 +187,7 @@ setMethod(
       template,
       fixed = TRUE
     )
+
 
     # Leave CSS placeholder for finalize to handle
 
