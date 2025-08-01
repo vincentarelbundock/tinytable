@@ -111,8 +111,8 @@ setMethod(
     # Convert to data frame
     data_clean <- as.data.frame(data_clean, stringsAsFactors = FALSE)
 
-    # Clean column names (replace dots with underscores)
-    names(data_clean) <- gsub("\\.", "_", names(data_clean))
+    # Clean column names (replace dots and spaces with underscores)
+    names(data_clean) <- gsub("[\\. ]", "_", names(data_clean))
 
     # Clean problematic quotes in character columns only
     for (i in seq_along(data_clean)) {
@@ -146,7 +146,7 @@ setMethod(
     # Build column definitions
     columns <- lapply(names(data_clean), function(nm) {
       original_name <- colnames(x@data_body)[which(
-        gsub("\\.", "_", colnames(x@data_body)) == nm
+        gsub("[\\. ]", "_", colnames(x@data_body)) == nm
       )]
       # Use original data for type detection since @data_body is processed to character
       col_data <- x@data[[original_name]]
