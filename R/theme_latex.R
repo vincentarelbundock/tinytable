@@ -1,7 +1,7 @@
 #' LaTeX-specific styles and options
 #'
-#' @param inner (Tabularray) A string that specifies the "inner" settings of a tabularray LaTeX table.
-#' @param outer (Tabularray) A string that specifies the "outer" settings of a tabularray LaTeX table.
+#' @param inner A string that specifies the "inner" settings of a tabularray LaTeX table.
+#' @param outer A string that specifies the "outer" settings of a tabularray LaTeX table.
 #'
 #' @export
 theme_latex <- function(x, inner = NULL, outer = NULL, environment = "tblr") {

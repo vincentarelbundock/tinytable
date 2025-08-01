@@ -7,9 +7,9 @@
 theme_latex(x, inner = NULL, outer = NULL, environment = "tblr")
 }
 \arguments{
-\item{inner}{(Tabularray) A string that specifies the "inner" settings of a tabularray LaTeX table.}
+\item{inner}{A string that specifies the "inner" settings of a tabularray LaTeX table.}
 
-\item{outer}{(Tabularray) A string that specifies the "outer" settings of a tabularray LaTeX table.}
+\item{outer}{A string that specifies the "outer" settings of a tabularray LaTeX table.}
 }
 \description{
 LaTeX-specific styles and options
