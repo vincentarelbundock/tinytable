@@ -225,7 +225,6 @@ merge_with_existing_styles <- function(x, settings) {
 #' @param bootstrap_css_rule String. Complete CSS rules (with curly braces, semicolon, etc.) that apply to the table class specified by the `bootstrap_class` argument.
 #' @param tabularray_inner A string that specifies the "inner" settings of a tabularray LaTeX table.
 #' @param tabularray_outer A string that specifies the "outer" settings of a tabularray LaTeX table.
-#' @param output Apply style only to the output format specified by this argument. `NULL` means that we apply to all formats.
 #' @param ... extra arguments are ignored
 #' @return An object of class `tt` representing the table.
 #' @template limitations_word_markdown
@@ -333,7 +332,6 @@ style_tt <- function(
   bootstrap_class = NULL,
   bootstrap_css = NULL,
   bootstrap_css_rule = NULL,
-  output = NULL,
   ...
 ) {
   out <- x
@@ -377,7 +375,6 @@ style_tt <- function(
     tabularray_outer = tabularray_outer,
     bootstrap_css = bootstrap_css,
     bootstrap_css_rule = bootstrap_css_rule,
-    output = output,
     finalize = finalize,
     ...
   )
@@ -478,17 +475,12 @@ assert_style_tt <- function(
   bootstrap_class = NULL,
   bootstrap_css = NULL,
   bootstrap_css_rule = NULL,
-  output = NULL,
   finalize = NULL,
   ...
 ) {
   # Validate alignv choice
   assert_choice(alignv, c("t", "m", "b"), null.ok = TRUE)
 
-  # Validate output choice
-  if (!is.null(output)) {
-    assert_true(all(output %in% c("typst", "latex", "html", "markdown", "bootstrap", "tabulator", "gfm")))
-  }
 
   # Validate finalize function
   assert_function(finalize, null.ok = TRUE)

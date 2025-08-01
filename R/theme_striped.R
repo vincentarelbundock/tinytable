@@ -11,15 +11,13 @@ theme_striped <- function(x, ...) {
   x <- style_tt(
     x,
     tabularray_inner = "row{even}={bg=black!5!white}",
-    bootstrap_class = "table table-striped",
-    output = "latex"
+    bootstrap_class = "table table-striped"
   )
 
   x <- style_tt(
     x,
     i = seq(1, nrow(x), by = 2),
-    background = "#ededed",
-    output = "typst"
+    background = "#ededed"
   )
 
   # theme_default

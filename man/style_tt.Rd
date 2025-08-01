@@ -30,7 +30,6 @@ style_tt(
   bootstrap_class = NULL,
   bootstrap_css = NULL,
   bootstrap_css_rule = NULL,
-  output = NULL,
   ...
 )
 }
@@ -115,8 +114,6 @@ style_tt(
 \item{bootstrap_css}{Character vector. CSS style declarations to be applied to every cell defined by \code{i} and \code{j} (ex: \code{"font-weight: bold"}).}
 
 \item{bootstrap_css_rule}{String. Complete CSS rules (with curly braces, semicolon, etc.) that apply to the table class specified by the \code{bootstrap_class} argument.}
-
-\item{output}{Apply style only to the output format specified by this argument. \code{NULL} means that we apply to all formats.}
 
 \item{...}{extra arguments are ignored}
 }

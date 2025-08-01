@@ -2,6 +2,10 @@
 
 ## Development
 
+Breaking change:
+
+* Deprecate the `output` argument from `style_tt()`.
+
 New:
 
 * The Tabulator JS framework can now be used to create interactive HTML tables with filtering, pagination, search, etc. `tt(x) |> theme_tt("tabulator") |> print("tabulator")`
