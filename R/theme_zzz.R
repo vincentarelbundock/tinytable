@@ -2,7 +2,7 @@ theme_dictionary <- list(
   "default" = theme_default,
   "bootstrap" = theme_bootstrap,
   "grid" = theme_grid,
-  "multipage" = theme_multipage,
+  "latex" = theme_latex,
   "placement" = theme_placement,
   "revealjs" = theme_revealjs,
   "resize" = theme_resize,
@@ -24,7 +24,6 @@ theme_dictionary <- list(
 #' @param theme String. Name of the theme to apply. One of:
 #'   + "bootstrap": Similar appearance to the default Bootstrap theme in HTML
 #'   + "grid": Vertical and horizontal rules around each cell.
-#'   + "multipage": Long tables continue on the next page (LaTeX only)
 #'   + "placement": Position of the table environment (LaTeX)
 #'   + "revealjs": Tables optimized for Reveal.js presentations with light/dark theme support
 #'   + "rotate": Rotate a LaTeX or Typst table.

@@ -29,8 +29,8 @@ strip_tt(
   bootstrap_class = FALSE,
   bootstrap_css = FALSE,
   bootstrap_css_rule = FALSE,
-  latex_inner = FALSE,
-  latex_outer = FALSE,
+  tabularray_inner = FALSE,
+  tabularray_outer = FALSE,
   width = FALSE
 )
 }
@@ -83,9 +83,9 @@ strip_tt(
 
 \item{bootstrap_css_rule}{\code{TRUE} reverts the effect of the \code{bootstrap_css_rule} argument from \code{style_tt()}.}
 
-\item{latex_inner}{\code{TRUE} reverts the effect of the \code{inner} argument from \code{theme_latex()}.}
+\item{tabularray_inner}{\code{TRUE} reverts the effect of the \code{inner} argument from \code{theme_latex()}.}
 
-\item{latex_outer}{\code{TRUE} reverts the effect of the \code{outer} argument from \code{theme_latex()}.}
+\item{tabularray_outer}{\code{TRUE} reverts the effect of the \code{outer} argument from \code{theme_latex()}.}
 
 \item{width}{\code{TRUE} reverts the effect of the \code{width} argument from \code{tt()}.}
 }

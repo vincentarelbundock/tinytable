@@ -13,7 +13,6 @@ theme_tt(x, theme, ...)
 \itemize{
 \item "bootstrap": Similar appearance to the default Bootstrap theme in HTML
 \item "grid": Vertical and horizontal rules around each cell.
-\item "multipage": Long tables continue on the next page (LaTeX only)
 \item "placement": Position of the table environment (LaTeX)
 \item "revealjs": Tables optimized for Reveal.js presentations with light/dark theme support
 \item "rotate": Rotate a LaTeX or Typst table.

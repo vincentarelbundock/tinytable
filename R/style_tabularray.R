@@ -381,7 +381,7 @@ tabularray_vlines <- function(x, rec) {
 #' @keywords internal
 #' @noRd
 apply_tabularray_specs <- function(x, sty) {
-  for (spec in unique(stats::na.omit(x@latex_inner))) {
+  for (spec in unique(stats::na.omit(x@tabularray_inner))) {
     x@table_string <- insert_tabularray_content(
       x@table_string,
       content = spec,
@@ -389,7 +389,7 @@ apply_tabularray_specs <- function(x, sty) {
     )
   }
 
-  for (spec in unique(stats::na.omit(x@latex_outer))) {
+  for (spec in unique(stats::na.omit(x@tabularray_outer))) {
     x@table_string <- insert_tabularray_content(
       x@table_string,
       content = spec,

@@ -319,7 +319,7 @@ expect_snapshot_print(tab, label = "latex-format_tt_math.tex")
 # Issue #493: theme_multipage does not convert to longtblr
 dat <- data.frame(a = rnorm(100), b = rnorm(100), c = rnorm(100))
 tab <- tt(dat) |>
-  theme_tt("multipage") |>
+  theme_latex(multipage = TRUE, rowhead = 1) |>
   save_tt("latex")
 matches <- lengths(gregexpr("longtblr", tab, fixed = TRUE))
 expect_equal(matches, 2)

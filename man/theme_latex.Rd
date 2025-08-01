@@ -4,7 +4,16 @@
 \alias{theme_latex}
 \title{LaTeX-specific styles and options}
 \usage{
-theme_latex(x, inner = NULL, outer = NULL, environment = "tblr")
+theme_latex(
+  x,
+  inner = NULL,
+  outer = NULL,
+  environment = NULL,
+  multipage = FALSE,
+  rowhead = get_option("tinytable_theme_multipage_rowhead", 0L),
+  rowfoot = get_option("tinytable_theme_multipage_rowfoot", 0L),
+  ...
+)
 }
 \arguments{
 \item{x}{A \code{tinytable} object.}
@@ -14,6 +23,14 @@ theme_latex(x, inner = NULL, outer = NULL, environment = "tblr")
 \item{outer}{A string that specifies the "outer" settings of a tabularray LaTeX table.}
 
 \item{environment}{A string that specifies the LaTeX environment to use, default is "tblr".}
+
+\item{multipage}{Logical. If \code{TRUE}, enables multipage mode for LaTeX tables (\code{longtblr} environments).}
+
+\item{rowhead}{Number of rows to repeat as header on each page. When >= 1, automatically enables multipage mode.}
+
+\item{rowfoot}{Number of rows to repeat as footer on each page. When >= 1, automatically enables multipage mode.}
+
+\item{...}{Additional arguments.}
 }
 \description{
 LaTeX-specific styles and options

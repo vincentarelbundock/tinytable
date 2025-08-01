@@ -62,8 +62,8 @@ setClass(
     tabulator_search = "logical",
     tabulator_css_rule = "character",
     tabulator_columns = "character",
-    latex_inner = "character",
-    latex_outer = "character",
+    tabularray_inner = "character",
+    tabularray_outer = "character",
     theme = "list",
     width = "NULLorNumeric",
     width_cols = "numeric"
@@ -125,8 +125,8 @@ setMethod(
     .Object@tabulator_search <- FALSE
     .Object@tabulator_css_rule <- ""
     .Object@tabulator_columns <- ""
-    .Object@latex_inner <- character()
-    .Object@latex_outer <- character()
+    .Object@tabularray_inner <- character()
+    .Object@tabularray_outer <- character()
 
     return(.Object)
   })
