@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{A data frame or data table to be rendered as a table.}
 
-\item{output}{format in which a Tiny Table is printed: \code{NULL} or one of \code{"latex"}, \code{"markdown"}, \code{"html"}, \code{"typst"}, \code{"dataframe"}. If \code{NULL}, the output is chosen based on these rules:
+\item{output}{format in which a Tiny Table is printed: \code{NULL} or one of \code{"latex"}, \code{"markdown"}, \code{"html"}, \code{"typst"}, \code{"dataframe"}, \code{"tabulator"}. If \code{NULL}, the output is chosen based on these rules:
 \itemize{
 \item When called from a script in non-interactive mode, the default is "markdown" (\code{interactive() == FALSE}).
 \item When called interactively in RStudio, the default is to display an HTML table in the viewer pane.

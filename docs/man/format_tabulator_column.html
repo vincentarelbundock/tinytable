@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>tinytable vignettes – tinytable</title>
+<title>format_tabulator_column – tinytable</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -168,7 +203,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">tinytable vignettes</li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -357,47 +392,262 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#format-tabulator-column-based-on-data-type" id="toc-format-tabulator-column-based-on-data-type" class="nav-link active" data-scroll-target="#format-tabulator-column-based-on-data-type">Format tabulator column based on data type</a>
+  <ul class="collapse">
+  <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
+  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
+  <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
+  <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
+  <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">tinytable vignettes</h1>
+
+
+
+<section id="format-tabulator-column-based-on-data-type" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="format-tabulator-column-based-on-data-type">Format tabulator column based on data type</h2>
+<section id="description" class="level3">
+<h3 class="anchored" data-anchor-id="description">Description</h3>
+<p>This function generates Tabulator.js column formatter configurations based on the data type of a column and the same formatting arguments as <code>format_tt()</code>. It inspects the data class of column j in x@data and returns appropriate formatter and formatterParams objects for Tabulator.js.</p>
+</section>
+<section id="usage" class="level3">
+<h3 class="anchored" data-anchor-id="usage">Usage</h3>
+<pre><code class="language-R">format_tabulator_column(
+  x,
+  j,
+  digits = get_option("tinytable_format_digits", default = NULL),
+  num_fmt = get_option("tinytable_format_num_fmt", default = "significant"),
+  num_zero = get_option("tinytable_format_num_zero", default = FALSE),
+  num_suffix = get_option("tinytable_format_num_suffix", default = FALSE),
+  num_mark_big = get_option("tinytable_format_num_mark_big", default = ""),
+  num_mark_dec = get_option("tinytable_format_num_mark_dec", default =
+    getOption("OutDec", default = ".")),
+  date = get_option("tinytable_format_date", default = NULL),
+  bool = get_option("tinytable_format_bool", default = NULL),
+  math = get_option("tinytable_format_math", default = FALSE),
+  other = get_option("tinytable_format_other", default = NULL),
+  replace = get_option("tinytable_format_replace", default = FALSE),
+  escape = get_option("tinytable_format_escape", default = FALSE),
+  markdown = get_option("tinytable_format_markdown", default = FALSE),
+  quarto = get_option("tinytable_format_quarto", default = FALSE),
+  fn = get_option("tinytable_format_fn", default = NULL),
+  sprintf = get_option("tinytable_format_sprintf", default = NULL)
+)
+</code></pre>
+</section>
+<section id="arguments" class="level3">
+<h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
+<table>
+<tbody><tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="x">x</code>
+</td>
+<td>
+A tinytable object created by <code>tt()</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="j">j</code>
+</td>
+<td>
+Column index or name to format. Must be a single column.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="digits">digits</code>
+</td>
+<td>
+Number of significant digits or decimal places.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="num_fmt">num_fmt</code>
+</td>
+<td>
+The format for numeric values; one of ‘significant’, ‘significant_cell’, ‘decimal’, or ‘scientific’.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="num_zero">num_zero</code>
+</td>
+<td>
+Logical; if TRUE, trailing zeros are kept in "decimal" format (but not in "significant" format).
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="num_suffix">num_suffix</code>
+</td>
+<td>
+Logical; if TRUE display short numbers with <code>digits</code> significant digits and K (thousands), M (millions), B (billions), or T (trillions) suffixes.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="num_mark_big">num_mark_big</code>
+</td>
+<td>
+Character to use as a thousands separator.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="num_mark_dec">num_mark_dec</code>
+</td>
+<td>
+Decimal mark character. Default is the global option ‘OutDec’.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="date">date</code>
+</td>
+<td>
+A string passed to the <code>format()</code> function, such as "%Y-%m-%d". Exception: for tabulator output, this is used directly as the Tabulator.js date format string (e.g., "MM/DD/YYYY"). Note: R and Tabulator.js use different date format specifications.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="bool">bool</code>
+</td>
+<td>
+A function to format logical columns. Defaults to title case.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="math">math</code>
+</td>
+<td>
+Logical. If TRUE, wrap cell values in math mode <code style="white-space: pre;">$..$</code>. This is useful for LaTeX output or with HTML MathJax <code>options(tinytable_html_mathjax=TRUE)</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="other">other</code>
+</td>
+<td>
+A function to format columns of other types. Defaults to <code>as.character()</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="replace">replace</code>
+</td>
+<td>
+<p>Logical, String or Named list of vectors</p>
+<ul>
+<li>
+<p>TRUE: Replace <code>NA</code> and <code>NaN</code> by an empty string.</p>
+</li>
+<li>
+<p>FALSE: Print <code>NA</code> and <code>NaN</code> as strings.</p>
+</li>
+<li>
+<p>String: Replace <code>NA</code> and <code>NaN</code> entries by the user-supplied string.</p>
+</li>
+<li>
+<p>Named list: Replace matching elements of the vectors in the list by theirs names. Example:</p>
+<ul>
+<li>
+<p><code>list(“-” = c(NA, NaN), “Tiny” = -Inf, “Massive” = Inf)</code></p>
+</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="escape">escape</code>
+</td>
+<td>
+<p>Logical or "latex" or "html". If TRUE, escape special characters to display them as text in the format of the output of a <code>tt()</code> table.</p>
+<ul>
+<li>
+<p>If <code>i</code> and <code>j</code> are both <code>NULL</code>, escape all cells, column names, caption, notes, and spanning labels created by <code>group_tt()</code>.</p>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="markdown">markdown</code>
+</td>
+<td>
+Logical; if TRUE, render markdown syntax in cells. Ex: <code style="white-space: pre;"><em>italicized text</em></code> is properly italicized in HTML and LaTeX.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="quarto">quarto</code>
+</td>
+<td>
+Logical. Enable Quarto data processing and wrap cell content in a <code>data-qmd</code> span (HTML) or <code style="white-space: pre;"></code> macro (LaTeX). See warnings in the Global Options section below.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="fn">fn</code>
+</td>
+<td>
+Function for custom formatting. Accepts a vector and returns a character vector of the same length.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="sprintf">sprintf</code>
+</td>
+<td>
+String passed to the <code>?sprintf</code> function to format numbers or interpolate strings with a user-defined pattern (similar to the <code>glue</code> package, but using Base R).
+</td>
+</tr>
+</tbody></table>
+</section>
+<section id="value" class="level3">
+<h3 class="anchored" data-anchor-id="value">Value</h3>
+<p>A character string containing complete JavaScript column definition for Tabulator.js including title, field, formatter, and formatterParams</p>
+</section>
+<section id="examples" class="level3">
+<h3 class="anchored" data-anchor-id="examples">Examples</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinytable"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">price =</span> <span class="fu">c</span>(<span class="fl">12.34</span>, <span class="fl">56.78</span>, <span class="fl">90.12</span>),</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">count =</span> <span class="fu">c</span>(<span class="dv">1</span>L, <span class="dv">2</span>L, <span class="dv">3</span>L),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">active =</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="fu">as.Date</span>(<span class="fu">c</span>(<span class="st">"2023-01-01"</span>, <span class="st">"2023-01-02"</span>, <span class="st">"2023-01-03"</span>))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">tt</span>(dat, <span class="at">output =</span> <span class="st">"tabulator"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Format numeric column with 3 decimal places</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">format_tabulator_column</span>(x, <span class="at">j =</span> <span class="st">"price"</span>, <span class="at">digits =</span> <span class="dv">3</span>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Format integer column as money</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">format_tabulator_column</span>(x, <span class="at">j =</span> <span class="st">"count"</span>, <span class="at">num_mark_big =</span> <span class="st">","</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Format date column</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">format_tabulator_column</span>(x, <span class="at">j =</span> <span class="st">"date"</span>, <span class="at">date =</span> <span class="st">"%m/%d/%Y"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 
-
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<p>The <a href="https://vincentarelbundock.github.io/tinytable/"><code>tinytable</code> website hosts</a> detailed documentation, as well as 10 vignettes with hundreds of examples. The vignettes are available in HTML and PDF formats.</p>
-<ul>
-<li><a href="https://vincentarelbundock.github.io/tinytable/">Getting started</a></li>
-<li><a href="https://vincentarelbundock.github.io/tinytable/vignettes/format.html">Format</a></li>
-<li><a href="https://vincentarelbundock.github.io/tinytable/vignettes/style.html">Style</a></li>
-<li><a href="https://vincentarelbundock.github.io/tinytable/vignettes/group.html">Group</a></li>
-<li><a href="https://vincentarelbundock.github.io/tinytable/vignettes/plot.html">Plots and images</a></li>
-<li><a href="https://vincentarelbundock.github.io/tinytable/vignettes/theme.html">Themes</a></li>
-<li><a href="https://vincentarelbundock.github.io/tinytable/vignettes/custom.html">Customization</a></li>
-<li><a href="https://vincentarelbundock.github.io/tinytable/vignettes/notebooks.html">Notebooks</a></li>
-<li><a href="https://vincentarelbundock.github.io/tinytable/vignettes/tips.html">Tips and tricks</a></li>
-<li><a href="https://vincentarelbundock.github.io/tinytable/vignettes/alternatives.html">Alternatives</a></li>
-<li><a href="https://vincentarelbundock.github.io/tinytable/vignettes/tinytable_tutorial.pdf">PDF version of the vignettes</a></li>
-</ul>
-
-
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

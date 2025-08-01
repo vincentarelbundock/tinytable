@@ -4,7 +4,7 @@
 #'
 #' @param x The tinytable object to be saved.
 #' @param output String or file path.
-#' + If `output` is "markdown", "latex", "html", "html_portable", or "typst", the table is returned in a string as an `R` object.
+#' + If `output` is "markdown", "latex", "html", "html_portable", "typst", or "tabulator", the table is returned in a string as an `R` object.
 #' + If `output` is a valid file path, the table is saved to file. The supported extensions are: .docx, .html, .png, .pdf, .tex, .typ, and .md (with aliases .txt, .Rmd and .qmd).
 #' + If `output` is "html_portable" or the global option `tinytable_html_portable` is `TRUE`,
 #' the images are included in the HTML as base64 encoded string instead of link to a local file.
@@ -26,10 +26,9 @@
 #' tt(mtcars[1:4, 1:4]) |> save_tt(filename)
 #'
 save_tt <- function(
-  x,
-  output = get_option("tinytable_save_output", default = NULL),
-  overwrite = get_option("tinytable_save_overwrite", default = FALSE)
-) {
+    x,
+    output = get_option("tinytable_save_output", default = NULL),
+    overwrite = get_option("tinytable_save_overwrite", default = FALSE)) {
   assert_class(x, "tinytable")
   assert_string(output)
   assert_flag(overwrite)
@@ -45,7 +44,7 @@ save_tt <- function(
 
   if (identical(output, "html_portable")) {
     assert_dependency("base64enc")
-    output <- "html"
+    output <- "bootstrap"
     x@portable <- TRUE
   }
 
@@ -58,11 +57,17 @@ save_tt <- function(
   } else if (identical(output, "html")) {
     out <- build_tt(x, output = "html")@table_string
     return(as.character(out))
+  } else if (identical(output, "bootstrap")) {
+    out <- build_tt(x, output = "bootstrap")@table_string
+    return(as.character(out))
   } else if (identical(output, "latex")) {
     out <- build_tt(x, output = "latex")@table_string
     return(as.character(out))
   } else if (identical(output, "typst")) {
     out <- build_tt(x, output = "typst")@table_string
+    return(as.character(out))
+  } else if (identical(output, "tabulator")) {
+    out <- build_tt(x, output = "tabulator")@table_string
     return(as.character(out))
   } else if (identical(output, "dataframe")) {
     out <- build_tt(x, output = "dataframe")@data_body
@@ -73,10 +78,9 @@ save_tt <- function(
 
   file_ext <- tools::file_ext(output)
 
-  output_format <- switch(
-    file_ext,
+  output_format <- switch(file_ext,
     "png" = "html",
-    "html" = "html",
+    "html" = get_option("tinytable_html_engine", default = "bootstrap"),
     "pdf" = "latex",
     "tex" = "latex",
     "md" = "markdown",
@@ -86,7 +90,7 @@ save_tt <- function(
     "docx" = "markdown",
     "typ" = "typst",
     stop(
-      "The supported file extensions are: .png, .html, .pdf, .tex, .typ, .qmd, .Rmd, .txt, .docx, and .md. Supported output formats are: markdown, latex, html, typst, and dataframe.",
+      "The supported file extensions are: .png, .html, .pdf, .tex, .typ, .qmd, .Rmd, .txt, .docx, and .md. Supported output formats are: markdown, latex, html, typst, tabulator, and dataframe.",
       call. = FALSE
     )
   )

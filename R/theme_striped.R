@@ -23,7 +23,7 @@ theme_striped <- function(x, ...) {
   )
 
   # theme_default
-  if (isTRUE(x@output %in% c("html", "typst"))) {
+  if (isTRUE(x@output %in% c("html", "bootstrap", "tabulator", "typst"))) {
     x <- style_tt(
       x,
       i = nrow(x),

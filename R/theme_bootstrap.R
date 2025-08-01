@@ -30,7 +30,7 @@ theme_bootstrap <- function(x, ...) {
       line_width = 0.05,
       line_color = "#C0C0C0"
     )
-  } else if (isTRUE(x@output == "html")) {
+  } else if (isTRUE(x@output %in% c("html", "bootstrap", "tabulator"))) {
     x <- style_tt(x, bootstrap_class = "table")
   }
 

@@ -58,11 +58,13 @@ build_tt <- function(x, output = NULL) {
   x <- switch(
     output,
     html = swap_class(x, "tinytable_bootstrap"),
+    bootstrap = swap_class(x, "tinytable_bootstrap"),
     latex = swap_class(x, "tinytable_tabularray"),
     markdown = swap_class(x, "tinytable_grid"),
     gfm = swap_class(x, "tinytable_grid"),
     typst = swap_class(x, "tinytable_typst"),
     dataframe = swap_class(x, "tinytable_dataframe"),
+    tabulator = swap_class(x, "tinytable_tabulator"),
   )
 
   x@output <- output
@@ -99,7 +101,27 @@ build_tt <- function(x, output = NULL) {
   # format each component individually, including groups before inserting them into the body
   for (l in x@lazy_format) {
     l[["x"]] <- x
-    x <- eval(l)
+    
+    # For tabulator output, skip formatting for numeric/logical/date columns
+    # as these will be handled by tabulator formatters
+    if (x@output == "tabulator" && !is.null(l$j)) {
+      j_clean <- sanitize_j(l$j, x)
+      skip_format <- FALSE
+      
+      for (col_idx in j_clean) {
+        col_data <- x@data[[col_idx]]
+        if (inherits(col_data, c("integer", "numeric", "double", "logical", "Date", "POSIXct", "POSIXlt"))) {
+          skip_format <- TRUE
+          break
+        }
+      }
+      
+      if (!skip_format) {
+        x <- eval(l)
+      }
+    } else {
+      x <- eval(l)
+    }
   }
 
   # insert group rows into body

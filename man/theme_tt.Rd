@@ -20,6 +20,7 @@ theme_tt(x, theme, ...)
 \item "resize": Scale a LaTeX \code{tinytable} to fit the \code{width} argument.
 \item "striped": Grey stripes on alternating rows
 \item "tabular": Remove table environment (LaTeX) or Javascript/CSS (HTML)
+\item "tabulator": Customize Tabulator.js tables \strong{Experimental}
 \item "void": No rules
 }}
 
@@ -40,15 +41,15 @@ revealjs
 \itemize{
 \item \code{css}: String. "light" (default) or "dark" for light or dark theme colors.
 \itemize{
-\item Set globally with \code{options("tinytable_theme_revealjs_css" = "dark")}
+\item \code{options("tinytable_theme_revealjs_css" = "dark")}
 }
 \item \code{fontsize}: Numeric. Font size multiplier for table content.
 \itemize{
-\item Set globally with \code{options("tinytable_theme_revealjs_fontsize" = 0.8)}
+\item \code{options("tinytable_theme_revealjs_fontsize" = 0.8)}
 }
 \item \code{fontsize_caption}: Numeric. Font size multiplier for table captions.
 \itemize{
-\item Set globally with \code{options("tinytable_theme_revealjs_fontsize_caption" = 1)}
+\item \code{options("tinytable_theme_revealjs_fontsize_caption" = 1)}
 }
 }
 
@@ -56,21 +57,11 @@ multipage
 \itemize{
 \item \code{rowhead}: Non-negative integer. The number of header rows to repeat on each page.
 \itemize{
-\item Set globally with \code{options("tinytable_theme_multipage_rowhead" = 1L)}
+\item \code{options("tinytable_theme_multipage_rowhead" = 1L)}
 }
 \item \code{rowfoot}: Non-negative integer. The number of footer rows to repeat on each page.
 \itemize{
-\item Set globally with \code{options("tinytable_theme_multipage_rowfoot" = 1L)}
-}
-}
-
-tabular
-\itemize{
-\item \code{style}:
-\itemize{
-\item "tabular": Drop all LaTeX dependencies and floating environments, except \verb{\\\\begin\{tabular\}}
-\item "tabularray": Drop all LaTeX dependencies and floating environments, except \verb{\\\\begin\{tblr\}}
-\item Set globally with \code{options("tinytable_theme_tabular_style" = "tblr")}
+\item \code{options("tinytable_theme_multipage_rowfoot" = 1L)}
 }
 }
 
@@ -78,11 +69,11 @@ placement
 \itemize{
 \item \code{horizontal} (Typst only): "l", "c", or "r" to align the table horizontally in the page.
 \itemize{
-\item Set globally with \code{options("tinytable_theme_placement_horizontal" = "l")}
+\item \code{options("tinytable_theme_placement_horizontal" = "l")}
 }
 \item \code{latex_float}: String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp". The default value is controlled by a global option:
 \itemize{
-\item Set globally with \code{options("tinytable_theme_placement_latex_float" = "H")}
+\item \code{options("tinytable_theme_placement_latex_float" = "H")}
 }
 }
 
@@ -90,11 +81,11 @@ resize
 \itemize{
 \item \code{width}: A numeric value between 0.01 and 1, representing the proportion of the line width to use
 \itemize{
-\item Set globally with \code{options("tinytable_theme_resize_width" = 0.9)}
+\item \code{options("tinytable_theme_resize_width" = 0.9)}
 }
 \item \code{direction}: "down", "up", "both" A string indicating if the table should be scaled in one direction. For example, "down" will only resize the table if it exceeds \verb{\\linewidth}
 \itemize{
-\item Set globally with \code{options("tinytable_theme_resize_direction" = "down")}
+\item \code{options("tinytable_theme_resize_direction" = "down")}
 }
 }
 
@@ -106,6 +97,48 @@ rotate
 \item LaTeX and Typst only.
 \item Typst: In Quarto documents, rotation does not work because Quarto takes over the figure environment.
 \item LaTeX: In Quarto documents, captions must be specified using the \code{caption} argument in \code{tt()} rather than via Quarto chunk options.
+}
+}
+
+tabular
+\itemize{
+\item \code{style}:
+\itemize{
+\item "tabular": Drop all LaTeX dependencies and floating environments, except \verb{\\\\begin\{tabular\}}
+\item "tabularray": Drop all LaTeX dependencies and floating environments, except \verb{\\\\begin\{tblr\}}
+\item \code{options("tinytable_theme_tabular_style" = "tblr")}
+}
+}
+
+tabulator
+\itemize{
+\item \code{stylesheet}: String. Tabulator CSS theme. One of: "default", "simple", "midnight", "modern", "site", "site_dark", "bootstrap3", "bootstrap4", "bootstrap5", "semanticui", "bulma", "materialize".
+\itemize{
+\item \code{options("tinytable_theme_tabulator_stylesheet" = "midnight")}
+}
+\item \code{layout}: String. Table layout algorithm. One of: "fitDataTable" (default), "fitData", "fitDataFill", "fitDataStretch", "fitColumns".
+\itemize{
+\item \code{options("tinytable_theme_tabulator_layout" = "fitColumns")}
+}
+\item \code{pagination}: Logical or numeric vector. If TRUE, enables pagination with automatic page sizes. If FALSE, disables pagination. If numeric vector, first element is page size, full vector provides page size options.
+\itemize{
+\item \code{options("tinytable_theme_tabulator_pagination" = c(25, 50, 100))}
+}
+\item \code{search}: Logical. Enable/disable search functionality across all columns.
+\itemize{
+\item \code{options("tinytable_theme_tabulator_search" = FALSE)}
+}
+\item \code{options}: String or NULL. Custom Tabulator.js configuration options as JavaScript string. Overrides individual arguments when provided.
+\itemize{
+\item \code{options("tinytable_theme_tabulator_options" = "pagination: 'local', paginationSize: 50")}
+}
+\item \code{css_rule}: String or NULL. Custom CSS rules that must include \verb{$TINYTABLE_ID} placeholder for table-specific scoping.
+\itemize{
+\item Example: \code{"$TINYTABLE_ID .tabulator-header { background: black; }"}
+}
+\item \code{columns}: String or NULL. Custom column definitions as JavaScript array string. Completely overrides default column configuration.
+\itemize{
+\item Example: \code{'[{"title": "Name", "field": "name", "formatter": "link"}]'}
 }
 }
 }

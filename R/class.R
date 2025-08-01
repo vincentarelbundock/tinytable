@@ -54,6 +54,13 @@ setClass(
     style_caption = "list",
     style_notes = "list",
     table_string = "character",
+    tabulator_stylesheet = "character",
+    tabulator_options = "character",
+    tabulator_column_formatters = "list",
+    tabulator_column_styles = "list",
+    tabulator_search = "logical",
+    tabulator_css_rule = "character",
+    tabulator_columns = "character",
     theme = "list",
     width = "NULLorNumeric",
     width_cols = "numeric"
@@ -110,6 +117,13 @@ setMethod(
     .Object@portable <- FALSE
     .Object@style <- data.frame()
     .Object@lazy_theme <- list()
+    .Object@tabulator_stylesheet <- ""
+    .Object@tabulator_options <- ""
+    .Object@tabulator_column_formatters <- list()
+    .Object@tabulator_column_styles <- list()
+    .Object@tabulator_search <- FALSE
+    .Object@tabulator_css_rule <- ""
+    .Object@tabulator_columns <- ""
 
     return(.Object)
   }
@@ -224,6 +238,7 @@ setClass("tinytable_bootstrap", contains = "tinytable")
 setClass("tinytable_typst", contains = "tinytable")
 setClass("tinytable_grid", contains = "tinytable")
 setClass("tinytable_dataframe", contains = "tinytable")
+setClass("tinytable_tabulator", contains = "tinytable")
 
 #' Apply style settings to a tinytable
 #'

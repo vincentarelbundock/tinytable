@@ -1,5 +1,11 @@
 # News
 
+## Development
+
+New:
+
+* The Tabulator JS framework can now be used to create interactive HTML tables with filtering, pagination, search, etc. `tt(x) |> theme_tt("tabulator") |> print("tabulator")`
+
 ## 0.11.0
 
 Breaking changes:
