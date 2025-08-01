@@ -22,7 +22,7 @@ theme_dictionary <- list(
 #'
 #' @param x A `tinytable` object
 #' @param theme String. Name of the theme to apply. One of:
-#'   + "bootstrap": Similar appearance to the default Bootstrap theme in HTML
+#'   + "bootstrap": Customize Bootstrap HTML tables (bootstrap/html output only)
 #'   + "grid": Vertical and horizontal rules around each cell.
 #'   + "multipage": Long tables continue on the next page (LaTeX only)
 #'   + "placement": Position of the table environment (LaTeX)
@@ -35,6 +35,17 @@ theme_dictionary <- list(
 #'   + "void": No rules
 #' @param ... Additional arguments passed the themeing function. See the "Arguments" section below for a list of supported arguments for each theme.
 #' @section Arguments:
+#'
+#' bootstrap
+#'
+#' + `i`: Row indices to apply bootstrap_css styling to. Same indexing rules as `style_tt()`.
+#' + `j`: Column indices to apply bootstrap_css styling to. Same indexing rules as `style_tt()`.
+#' + `bootstrap_class`: String. Bootstrap table class such as "table", "table table-dark" or "table table-dark table-hover". See the Bootstrap documentation.
+#'   - `options("tinytable_theme_bootstrap_class" = "table table-striped")`
+#' + `bootstrap_css`: Character vector. CSS style declarations to be applied to cells defined by `i` and `j` (ex: "font-weight: bold").
+#'   - `options("tinytable_theme_bootstrap_css" = c("color: red", "font-weight: bold"))`
+#' + `bootstrap_css_rule`: String. Complete CSS rules (with curly braces, semicolon, etc.) that apply to the table class.
+#'   - `options("tinytable_theme_bootstrap_css_rule" = ".table { border: 2px solid red; }")`
 #'
 #' revealjs
 #'

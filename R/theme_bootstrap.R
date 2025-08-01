@@ -1,37 +1,33 @@
-theme_bootstrap <- function(x, ...) {
-  x <- style_tt(x, finalize = theme_void_fn) # only affects LaTeX
+theme_bootstrap <- function(
+    x,
+    i = NULL,
+    j = NULL,
+    bootstrap_class = get_option("tinytable_theme_bootstrap_class", default = "table"),
+    bootstrap_css = get_option("tinytable_theme_bootstrap_css", default = NULL),
+    bootstrap_css_rule = get_option("tinytable_theme_bootstrap_css_rule", default = NULL),
+    ...) {
+  # Extract bootstrap_css from ... (undocumented argument)
+  dots <- list(...)
 
-  fn <- theme_placement_factory(
-    horizontal = get_option("tinytable_theme_default_horizontal", "c"),
-    latex_float = get_option(
-      "tinytable_theme_placement_latex_float",
-      default = NULL
-    )
-  )
-  x <- style_tt(x, finalize = fn)
+  # Validate arguments
+  assert_string(bootstrap_class, null.ok = TRUE)
+  assert_character(bootstrap_css, null.ok = TRUE)
+  assert_string(bootstrap_css_rule, null.ok = TRUE)
 
-  clean_markdown <- function(table) {
-    if (isTRUE(table@output == "markdown")) {
-      tab <- table@table_string
-      tab <- strsplit(tab, "\n")[[1]]
-      tab <- tab[!grepl("^[\\+|-]+$", tab)]
-      tab <- gsub("|", " ", tab, fixed = TRUE)
-      table@table_string <- paste(tab, collapse = "\n")
-    }
-    return(table)
+  # Apply bootstrap CSS to cells if specified with i/j
+  # need to go through style_tt() because this argument is cell-specific
+  if (!is.null(bootstrap_css)) {
+    table <- style_tt(table, i = i, j = j, bootstrap_css = bootstrap_css)
   }
-  x <- style_tt(x, finalize = clean_markdown)
 
-  if (isTRUE(x@output %in% c("latex", "typst"))) {
-    x <- style_tt(
-      x,
-      i = 0:nrow(x),
-      line = "bt",
-      line_width = 0.05,
-      line_color = "#C0C0C0"
-    )
-  } else if (isTRUE(x@output %in% c("html", "bootstrap", "tabulator"))) {
-    x <- style_tt(x, bootstrap_class = "table")
+  # Apply bootstrap class
+  if (!is.null(bootstrap_class)) {
+    table@bootstrap_class <- bootstrap_class
+  }
+
+  # Apply bootstrap CSS rule
+  if (!is.null(bootstrap_css_rule)) {
+    table@bootstrap_css_rule <- bootstrap_css_rule
   }
 
   return(x)

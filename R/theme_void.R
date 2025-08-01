@@ -29,7 +29,7 @@ theme_void <- function(x, ...) {
   x <- style_tt(
     x,
     finalize = theme_void_fn,
-    bootstrap_class = "table table-borderless"
   )
+  x <- theme_tt(x, "bootstrap", bootstrap_class = "table table-borderless")
   return(x)
 }

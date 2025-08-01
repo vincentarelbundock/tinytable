@@ -219,14 +219,12 @@ setMethod(
         x <- theme_tt(x, "default")
       }
     } else if (is.character(x@theme[[1]])) {
-      if ("bootstrap" %in% x@theme[[1]]) {
-        x <- style_tt(x, bootstrap_class = "table")
-      } else if ("striped" %in% x@theme[[1]]) {
-        x <- style_tt(x, bootstrap_class = "table table-striped")
+      if ("striped" %in% x@theme[[1]]) {
+        x <- theme_tt(x, "bootstrap", bootstrap_class = "table table-striped")
       } else if ("grid" %in% x@theme[[1]]) {
-        x <- style_tt(x, bootstrap_class = "table table-bordered")
+        x <- theme_tt(x, "bootstrap", bootstrap_class = "table table-bordered")
       } else if ("void" %in% x@theme[[1]]) {
-        x <- style_tt(x, bootstrap_class = "table table-borderless")
+        x <- theme_tt(x, "bootstrap", bootstrap_class = "table table-borderless")
       }
     }
 

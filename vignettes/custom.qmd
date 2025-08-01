@@ -30,25 +30,25 @@ The HTML customization options described in this section are not available for L
 ### Bootstrap classes
 
 ::: {.content-visible when-format="html"}
-The Bootstrap framework provides a number of built-in themes to style tables, using "classes." To use them, we call `style_tt()` with the `bootstrap_class` argument. A list of available Bootstrap classes can be found here: <https://getbootstrap.com/docs/5.3/content/tables/>
+The Bootstrap framework provides a number of built-in themes to style tables, using "classes." To use them, we call `theme_tt("bootstrap", ...)` with the `bootstrap_class` argument. A list of available Bootstrap classes can be found here: <https://getbootstrap.com/docs/5.3/content/tables/>
 
 To produce a more condensed or "small" table, we use the `table-sm` class:
 
 ```{r, eval = knitr::is_html_output()}
-tt(x) |> style_tt(bootstrap_class = "table table-sm")
+tt(x) |> theme_tt("bootstrap", bootstrap_class = "table table-sm")
 ```
 
 To produce a "bordered" table, we use the `table-bordered` class:
 
 
 ```{r, eval = knitr::is_html_output()}
-tt(x) |> style_tt(bootstrap_class = "table table-bordered")
+tt(x) |> theme_tt("bootstrap", bootstrap_class = "table table-bordered")
 ```
 
 We can also combine several Bootstrap classes. Here, we get a table with the "hover" feature:
 
 ```{r, eval = knitr::is_html_output()}
-tt(x) |> style_tt(
+tt(x) |> theme_tt("bootstrap",
   bootstrap_class = "table table-hover"
 )
 ```
@@ -58,7 +58,7 @@ By default, Bootstrap 5 places captions at the bottom of the table. This can be 
 
 ```{r}
 tt(head(iris), caption = "A caption on top") |>
-  style_tt(bootstrap_class = "table caption-top")
+  theme_tt("bootstrap", bootstrap_class = "table caption-top")
 ```
 
 :::
@@ -67,11 +67,11 @@ tt(head(iris), caption = "A caption on top") |>
 ### CSS declarations
 
 ::: {.content-visible when-format="html"}
-The `style_tt()` function allows us to declare CSS properties and values for individual cells, columns, or rows of a table. For example, if we want to make the first column bold, we could do:
+The `theme_tt("bootstrap", ...)` function allows us to declare CSS properties and values for individual cells, columns, or rows of a table. For example, if we want to make the first column bold, we could do:
 
 ```{r}
 tt(x) |>
-  style_tt(j = 1, bootstrap_css = "font-weight: bold; color: red;")
+  theme_tt("bootstrap", j = 1, bootstrap_css = "font-weight: bold; color: red;")
 ```
 :::
 
@@ -114,12 +114,8 @@ css_rule <- "
 "
 
 tt(x, width = 2 / 3) |>
-  style_tt(
-    j = 1:5,
-    align = "ccccc",
-    bootstrap_class = "table mytable",
-    bootstrap_css_rule = css_rule
-  )
+  style_tt(j = 1:5, align = "ccccc") |>
+  theme_tt(bootstrap_class = "table mytable", bootstrap_css_rule = css_rule)
 ```
 
 
@@ -137,7 +133,7 @@ css <- "
 "
 
 tt(mtcars[1:10, 1:8]) |>
-  style_tt(
+  theme_tt("bootstrap",
     bootstrap_class = "table table-borderless squirreltable",
     bootstrap_css_rule = css
   )
@@ -149,7 +145,7 @@ And yet another one. Some Rmarkdown documents like `bookdown` use older versions
 ```r
 rule <- ".bottomcaption {caption-side: bottom;}"
 tt(head(iris), caption = "Hello world") |>
-  style_tt(bootstrap_class = "table bottomcaption", bootstrap_css_rule = rule)
+  theme_tt("bootstrap", bootstrap_class = "table bottomcaption", bootstrap_css_rule = rule)
 ```
 
 ## LaTeX / PDF {#sec-tabularray}

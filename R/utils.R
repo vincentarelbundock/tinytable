@@ -135,3 +135,37 @@ rbind_nocol <- function(...) {
   out <- lapply(list(...), function(k) stats::setNames(k, seq_len(ncol(k))))
   do.call(rbind, out)
 }
+
+
+
+...get <- function(x, ifnotfound = NULL) {
+  eval(
+    quote(
+      if (!anyNA(.m1 <- match(.x, ...names())) && !is.null(.m2 <- ...elt(.m1))) {
+        .m2
+      } else {
+        .ifnotfound
+      }),
+    pairlist(.x = x[1L], .ifnotfound = ifnotfound),
+    parent.frame(1L)
+  )
+}
+
+
+...mget <- function(x) {
+  found <- match(x, eval(quote(...names()), parent.frame(1L)))
+  not_found <- is.na(found)
+  if (all(not_found)) {
+    return(list())
+  }
+  stats::setNames(
+    lapply(found[!not_found], function(z) {
+      eval(
+        quote(...elt(.z)),
+        pairlist(.z = z),
+        parent.frame(3L)
+      )
+    }),
+    x[!not_found]
+  )
+}

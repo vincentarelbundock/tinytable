@@ -16,7 +16,7 @@ theme_default <- function(x, ...) {
       x@bootstrap_class
     }
     # bootstrap class
-    x <- style_tt(x, bootstrap_class = bc)
+    x <- theme_tt(x, "bootstrap", bootstrap_class = bc)
 
     # top border
     if (x@output %in% c("html", "bootstrap") && length(x@names) == 0) {
@@ -42,22 +42,22 @@ theme_default <- function(x, ...) {
     if (length(x@names) > 0) {
       x <- style_tt(
         x,
-        bootstrap_class = bc,
         i = 0,
         line = "b",
         line_color = col,
         line_width = 0.05
       )
+      x <- theme_tt(x, "bootstrap", bootstrap_class = bc)
     }
     # bottom
     x <- style_tt(
       x,
-      bootstrap_class = bc,
       i = nrow(x),
       line = "b",
       line_color = col,
       line_width = 0.1
     )
+    x <- theme_tt(x, "bootstrap", bootstrap_class = bc)
   }
 
   return(x)

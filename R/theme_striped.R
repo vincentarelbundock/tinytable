@@ -11,9 +11,9 @@ theme_striped <- function(x, ...) {
   x <- style_tt(
     x,
     tabularray_inner = "row{even}={bg=black!5!white}",
-    bootstrap_class = "table table-striped",
     output = "latex"
   )
+  x <- theme_tt(x, "bootstrap", bootstrap_class = "table table-striped")
 
   x <- style_tt(
     x,

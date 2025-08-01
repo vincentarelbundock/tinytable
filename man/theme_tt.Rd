@@ -11,7 +11,7 @@ theme_tt(x, theme, ...)
 
 \item{theme}{String. Name of the theme to apply. One of:
 \itemize{
-\item "bootstrap": Similar appearance to the default Bootstrap theme in HTML
+\item "bootstrap": Customize Bootstrap HTML tables (bootstrap/html output only)
 \item "grid": Vertical and horizontal rules around each cell.
 \item "multipage": Long tables continue on the next page (LaTeX only)
 \item "placement": Position of the table environment (LaTeX)
@@ -36,6 +36,24 @@ Each theme can have specific arguments, which are passed to the \code{theme_tt()
 }
 \section{Arguments}{
 
+
+bootstrap
+\itemize{
+\item \code{i}: Row indices to apply bootstrap_css styling to. Same indexing rules as \code{style_tt()}.
+\item \code{j}: Column indices to apply bootstrap_css styling to. Same indexing rules as \code{style_tt()}.
+\item \code{bootstrap_class}: String. Bootstrap table class such as "table", "table table-dark" or "table table-dark table-hover". See the Bootstrap documentation.
+\itemize{
+\item \code{options("tinytable_theme_bootstrap_class" = "table table-striped")}
+}
+\item \code{bootstrap_css}: Character vector. CSS style declarations to be applied to cells defined by \code{i} and \code{j} (ex: "font-weight: bold").
+\itemize{
+\item \code{options("tinytable_theme_bootstrap_css" = c("color: red", "font-weight: bold"))}
+}
+\item \code{bootstrap_css_rule}: String. Complete CSS rules (with curly braces, semicolon, etc.) that apply to the table class.
+\itemize{
+\item \code{options("tinytable_theme_bootstrap_css_rule" = ".table { border: 2px solid red; }")}
+}
+}
 
 revealjs
 \itemize{

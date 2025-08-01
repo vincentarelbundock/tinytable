@@ -2,6 +2,10 @@
 
 ## Development
 
+Breaking changes:
+
+* `theme_tt("bootstrap")` now provides options for styling Bootstrap HTML tables (`print("bootstrap")` or `print("html")`), rather than styling all table formats with Bootstrap appearance. The `bootstrap_css` and `bootstrap_css_rule` functionality has been moved from `style_tt()` to `theme_tt("bootstrap", ...)`.
+
 New:
 
 * The Tabulator JS framework can now be used to create interactive HTML tables with filtering, pagination, search, etc. `tt(x) |> theme_tt("tabulator") |> print("tabulator")`

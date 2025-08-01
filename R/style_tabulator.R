@@ -6,29 +6,26 @@
 setMethod(
   f = "style_eval",
   signature = "tinytable_tabulator",
-  definition = function(
-      x,
-      i = NULL,
-      j = NULL,
-      bold = FALSE,
-      italic = FALSE,
-      monospace = FALSE,
-      underline = FALSE,
-      strikeout = FALSE,
-      color = NULL,
-      background = NULL,
-      fontsize = NULL,
-      align = NULL,
-      alignv = NULL,
-      line = NULL,
-      line_color = "black",
-      line_width = 0.1,
-      colspan = NULL,
-      rowspan = NULL,
-      indent = 0,
-      bootstrap_class = NULL,
-      bootstrap_css = NULL,
-      ...) {
+  definition = function(x,
+                        i = NULL,
+                        j = NULL,
+                        bold = FALSE,
+                        italic = FALSE,
+                        monospace = FALSE,
+                        underline = FALSE,
+                        strikeout = FALSE,
+                        color = NULL,
+                        background = NULL,
+                        fontsize = NULL,
+                        align = NULL,
+                        alignv = NULL,
+                        line = NULL,
+                        line_color = "black",
+                        line_width = 0.1,
+                        colspan = NULL,
+                        rowspan = NULL,
+                        indent = 0,
+                        ...) {
     # Check that row-based styling (i argument) is not supported
     if (!is.null(i)) {
       stop(
@@ -110,8 +107,6 @@ setMethod(
         if ("colspan" %in% names(style_row) && !is.na(style_row$colspan)) unsupported_styles <- c(unsupported_styles, "colspan")
         if ("rowspan" %in% names(style_row) && !is.na(style_row$rowspan)) unsupported_styles <- c(unsupported_styles, "rowspan")
         if ("indent" %in% names(style_row) && !is.na(style_row$indent)) unsupported_styles <- c(unsupported_styles, "indent")
-        if ("bootstrap_class" %in% names(style_row) && !is.na(style_row$bootstrap_class)) unsupported_styles <- c(unsupported_styles, "bootstrap_class")
-        if ("bootstrap_css" %in% names(style_row) && !is.na(style_row$bootstrap_css)) unsupported_styles <- c(unsupported_styles, "bootstrap_css")
       }
 
       unsupported_styles <- unique(unsupported_styles)
@@ -127,4 +122,3 @@ setMethod(
 
     return(x)
   })
-

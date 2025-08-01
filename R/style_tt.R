@@ -220,9 +220,6 @@ merge_with_existing_styles <- function(x, settings) {
 #' @param line_color Color of the line. See the `color` argument for details.
 #' @param line_width Width of the line in em units (default: 0.1).
 #' @param finalize A function applied to the table object at the very end of table-building, for post-processing. For example, the function could use regular expressions to add LaTeX commands to the text version of the table hosted in `x@table_string`, or it could programmatically change the caption in `x@caption`.
-#' @param bootstrap_css Character vector. CSS style declarations to be applied to every cell defined by `i` and `j` (ex: `"font-weight: bold"`).
-#' @param bootstrap_class String. Bootstrap table class such as `"table"`, `"table table-dark"` or `"table table-dark table-hover"`. See the bootstrap documentation.
-#' @param bootstrap_css_rule String. Complete CSS rules (with curly braces, semicolon, etc.) that apply to the table class specified by the `bootstrap_class` argument.
 #' @param tabularray_inner A string that specifies the "inner" settings of a tabularray LaTeX table.
 #' @param tabularray_outer A string that specifies the "outer" settings of a tabularray LaTeX table.
 #' @param output Apply style only to the output format specified by this argument. `NULL` means that we apply to all formats.
@@ -282,9 +279,6 @@ merge_with_existing_styles <- function(x, settings) {
 #'     strikeout = TRUE,
 #'     fontsize = 0.7)
 #'
-#' tt(mtcars[1:5, 1:6]) |>
-#'   style_tt(bootstrap_class = "table table-dark table-hover")
-#'
 #'
 #' inner <- "
 #' column{1-4}={halign=c},
@@ -330,15 +324,37 @@ style_tt <- function(
   finalize = NULL,
   tabularray_inner = NULL,
   tabularray_outer = NULL,
-  bootstrap_class = NULL,
-  bootstrap_css = NULL,
-  bootstrap_css_rule = NULL,
   output = NULL,
   ...
 ) {
   out <- x
 
-  # Handle special cases first (before validation)
+  # Check for deprecated bootstrap_css and bootstrap_css_rule arguments
+  if (any(c("bootstrap_css_rule", "bootstrap_class") %in% ...names())) {
+    warning(
+      "The 'bootstrap_css_rule' and 'bootstrap_class' arguments in style_tt() are deprecated. ",
+      "Use `theme_tt('bootstrap', css = ..., css_rule = ..., class = ...)` instead.",
+      call. = FALSE
+    )
+  }
+
+  # For backward compatibility, apply the deprecated functionality
+  if ("bootstrap_class" %in% ...names()) {
+    x <- theme_tt(out, "bootstrap", bootstrap_class = ...get("bootstrap_class"))
+  }
+  if ("bootstrap_css_rule" %in% ...names()) {
+    x <- theme_tt(out, "bootstrap", bootstrap_css_rule = ...get("bootstrap_css_rule"))
+  }
+
+  # bootstrap_css needs to be handled here because it is cell-specific
+  if ("bootstrap_css" %in% ...names()) {
+    bootstrap_css <- ...get("bootstrap_css")
+  } else {
+    bootstrap_css <- NULL
+  }
+
+
+  # Handle special cases first (after deprecation check)
   if (isTRUE(i %in% c("notes", "caption"))) {
     return(apply_notes_caption_styling(
       out,
@@ -375,15 +391,10 @@ style_tt <- function(
     line_width = line_width,
     tabularray_inner = tabularray_inner,
     tabularray_outer = tabularray_outer,
-    bootstrap_css = bootstrap_css,
-    bootstrap_css_rule = bootstrap_css_rule,
     output = output,
     finalize = finalize,
     ...
   )
-
-  # Set bootstrap settings
-  out <- set_bootstrap_settings(out, bootstrap_class, bootstrap_css_rule)
 
   sanity_align(align, i)
 
@@ -416,11 +427,6 @@ style_tt <- function(
   settings[["indent"]] <- if (is.null(indent)) NA else as.vector(indent)
   settings[["colspan"]] <- if (is.null(colspan)) NA else colspan
   settings[["rowspan"]] <- if (is.null(rowspan)) NA else rowspan
-  settings[["bootstrap_css_rule"]] <- if (!is.null(bootstrap_css_rule)) {
-    bootstrap_css_rule
-  } else {
-    NA
-  }
   settings[["bootstrap_css"]] <- if (!is.null(bootstrap_css)) {
     bootstrap_css
   } else {
@@ -475,9 +481,6 @@ assert_style_tt <- function(
   line_width,
   tabularray_inner,
   tabularray_outer,
-  bootstrap_class = NULL,
-  bootstrap_css = NULL,
-  bootstrap_css_rule = NULL,
   output = NULL,
   finalize = NULL,
   ...
@@ -514,9 +517,6 @@ assert_style_tt <- function(
   assert_string(line, null.ok = TRUE)
   assert_string(line_color, null.ok = FALSE) # black default
   assert_numeric(line_width, len = 1, lower = 0, null.ok = FALSE) # 0.1 default
-  assert_character(bootstrap_class, null.ok = TRUE)
-  assert_character(bootstrap_css, null.ok = TRUE)
-  assert_string(bootstrap_css_rule, null.ok = TRUE)
 
   if (is.character(line)) {
     line <- strsplit(line, split = "")[[1]]
