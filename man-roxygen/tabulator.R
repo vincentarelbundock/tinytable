@@ -1,5 +1,7 @@
 #' @section Interactive tables with Tabulator:
 #'
+#' **Experimental Feature:** The Tabulator.js integration is experimental and the API may change in future versions.
+#'
 #' The Tabulator.js library provides powerful interactive table features including sorting, filtering, pagination, data export, and real-time editing capabilities. This theme customizes the appearance and behavior of Tabulator tables.
 #'
 #' **Features:**

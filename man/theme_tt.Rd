@@ -20,7 +20,7 @@ theme_tt(x, theme, ...)
 \item "resize": Scale a LaTeX \code{tinytable} to fit the \code{width} argument.
 \item "striped": Grey stripes on alternating rows
 \item "tabular": Remove table environment (LaTeX) or Javascript/CSS (HTML)
-\item "tabulator": Customize Tabulator.js tables (tabulator output only)
+\item "tabulator": Customize Tabulator.js tables \strong{\link{Experimental}}
 \item "void": No rules
 }}
 

@@ -252,6 +252,8 @@ For more details on Quarto table processing: https://quarto.org/docs/authoring/t
 \section{Interactive tables with Tabulator}{
 
 
+\strong{Experimental Feature:} The Tabulator.js integration is experimental and the API may change in future versions.
+
 The Tabulator.js library provides powerful interactive table features including sorting, filtering, pagination, data export, and real-time editing capabilities. This theme customizes the appearance and behavior of Tabulator tables.
 
 \strong{Features:}
