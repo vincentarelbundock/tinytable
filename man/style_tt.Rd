@@ -27,9 +27,7 @@ style_tt(
   finalize = NULL,
   tabularray_inner = NULL,
   tabularray_outer = NULL,
-  bootstrap_class = NULL,
   bootstrap_css = NULL,
-  bootstrap_css_rule = NULL,
   ...
 )
 }
@@ -109,11 +107,7 @@ style_tt(
 
 \item{tabularray_outer}{A string that specifies the "outer" settings of a tabularray LaTeX table.}
 
-\item{bootstrap_class}{String. Bootstrap table class such as \code{"table"}, \code{"table table-dark"} or \code{"table table-dark table-hover"}. See the bootstrap documentation.}
-
 \item{bootstrap_css}{Character vector. CSS style declarations to be applied to every cell defined by \code{i} and \code{j} (ex: \code{"font-weight: bold"}).}
-
-\item{bootstrap_css_rule}{String. Complete CSS rules (with curly braces, semicolon, etc.) that apply to the table class specified by the \code{bootstrap_class} argument.}
 
 \item{...}{extra arguments are ignored}
 }
@@ -191,7 +185,7 @@ tt(mtcars[1:5, 1:6], theme = "bootstrap") |>
     fontsize = 0.7)
 
 tt(mtcars[1:5, 1:6]) |>
-  style_tt(bootstrap_class = "table table-dark table-hover")
+  theme_tt("bootstrap", class = "table table-dark table-hover")
 
 
 inner <- "

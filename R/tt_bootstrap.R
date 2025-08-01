@@ -255,3 +255,20 @@ bootstrap_setting <- function(x, new, component = "row") {
   class(out) <- class(x)
   return(out)
 }
+
+
+#' Set bootstrap-specific settings
+#' @keywords internal
+#' @noRd
+set_bootstrap_settings <- function(
+    x,
+    bootstrap_class = NULL,
+    bootstrap_css_rule = NULL) {
+  if (!is.null(bootstrap_class)) {
+    x@bootstrap_class <- bootstrap_class
+  }
+  if (!is.null(bootstrap_css_rule)) {
+    x@bootstrap_css_rule <- bootstrap_css_rule
+  }
+  return(x)
+}

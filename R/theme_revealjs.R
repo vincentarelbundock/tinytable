@@ -91,6 +91,6 @@ theme_revealjs <- function(
   } else if (css == "dark") {
     css <- sprintf(css_dark, fontsize, fontsize_caption)
   }
-  x <- style_tt(x, bootstrap_css_rule = css)
+  x <- theme_tt(x, "bootstrap", css_rule = css)
   return(x)
 }
