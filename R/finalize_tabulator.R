@@ -37,11 +37,6 @@ setMethod(
   definition = function(x, ...) {
     assert_dependency("jsonlite")
 
-    # Process any finalize functions that were stored in @lazy_finalize
-    for (fn in x@lazy_finalize) {
-      x <- fn(x)
-    }
-
     # Replace stylesheet theme from S4 slot
     if (nchar(x@tabulator_stylesheet) > 0) {
       x <- tabulator_cdn_helper(x, x@tabulator_stylesheet)

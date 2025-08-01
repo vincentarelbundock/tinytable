@@ -1,18 +1,8 @@
 theme_resize <- function(
-  x,
-  width = get_option("tinytable_theme_resize_width", 1),
-  direction = get_option("tinytable_theme_resize_direction", "down"),
-  ...
-) {
-  fn <- theme_placement_factory(
-    horizontal = get_option("tinytable_theme_default_horizontal", "c"),
-    latex_float = get_option(
-      "tinytable_theme_placement_latex_float",
-      default = NULL
-    )
-  )
-  x <- style_tt(x, finalize = fn)
-
+    x,
+    width = get_option("tinytable_theme_resize_width", 1),
+    direction = get_option("tinytable_theme_resize_direction", "down"),
+    ...) {
   assert_numeric(width, len = 1, lower = 0.01, upper = 1)
   assert_choice(direction, c("down", "up", "both"))
   # do not change the default theme

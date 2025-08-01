@@ -11,24 +11,23 @@ theme_striped <- function(x, ...) {
 
   # prepare
   fn <- function(x) {
-    if (!identical(x@output, "latex")) {
-      x <- style_tt(
-        x,
-        i = nrow(x),
-        line = "b",
-        line_color = "#d3d8dc",
-        line_width = 0.1
-      )
-      x <- style_tt(
-        x,
-        i = 0,
-        line = "bt",
-        line_color = "#d3d8dc",
-        line_width = 0.1
-      )
-    }
+    x <- style_tt(
+      x,
+      i = nrow(x),
+      line = "b",
+      line_color = "#d3d8dc",
+      line_width = 0.1
+    )
+    x <- style_tt(
+      x,
+      i = 0,
+      line = "bt",
+      line_color = "#d3d8dc",
+      line_width = 0.1
+    )
     return(x)
   }
+  attr(fn, "output") <- c("html", "bootstrap", "typst", "grid")
   x@lazy_prepare <- c(x@lazy_prepare, list(fn))
 
   # finalize
@@ -36,6 +35,7 @@ theme_striped <- function(x, ...) {
     horizontal = get_option("tinytable_theme_default_horizontal", "c"),
     latex_float = get_option("tinytable_theme_placement_latex_float", default = NULL)
   )
+  attr(fn, "output") <- "latex"
   x@lazy_finalize <- c(x@lazy_finalize, list(fn))
 
   return(x)

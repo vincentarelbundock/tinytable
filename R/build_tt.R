@@ -71,15 +71,6 @@ build_tt <- function(x, output = NULL) {
   # before format_tt() because we need the indices
   x@nrow <- nrow(x@data) + nrow(x@group_data_i)
 
-  # pre-process: theme_*() calls that need formatting conditional on @output
-  for (p in x@lazy_prepare) {
-    x <- p(x)
-  }
-
-  # apply the style_notes
-  x <- style_notes(x)
-  x <- style_caption(x)
-
   for (th in x@lazy_theme) {
     fn <- th[[1]]
     args <- th[[2]]
@@ -87,6 +78,17 @@ build_tt <- function(x, output = NULL) {
     x <- do.call(fn, args)
   }
 
+  # pre-process: theme_*() calls that need formatting conditional on @output
+  for (p in x@lazy_prepare) {
+    o <- attr(p, "output")
+    if (is.null(o) || x@output %in% o) {
+      x <- p(x)
+    }
+  }
+
+  # apply the style_notes
+  x <- style_notes(x)
+  x <- style_caption(x)
   x <- render_fansi(x)
 
   # Calculate which positions are body vs group
@@ -180,6 +182,14 @@ build_tt <- function(x, output = NULL) {
   }
 
   x <- finalize(x)
+
+  # post-process: theme_*() calls that need formatting conditional on @output and table drawn
+  for (p in x@lazy_finalize) {
+    o <- attr(p, "output")
+    if (is.null(o) || x@output %in% o) {
+      x <- p(x)
+    }
+  }
 
   x@table_string <- lines_drop_consecutive_empty(x@table_string)
   if (output == "gfm") {
