@@ -18,8 +18,7 @@ theme_rotate <- function(x, angle = 90, ...) {
     )
     return(table)
   }
-  attr(fn, "output") <- "latex"
-  x@lazy_finalize <- c(x@lazy_finalize, list(fn))
+  x <- build_finalize(x, fn, output = "latex")
 
   # typst
   fn <- function(table) {
@@ -38,8 +37,7 @@ theme_rotate <- function(x, angle = 90, ...) {
     )
     return(table)
   }
-  attr(fn, "output") <- "typst"
-  x@lazy_finalize <- c(x@lazy_finalize, list(fn))
+  x <- build_finalize(x, fn, output = "typst")
 
   return(x)
 }

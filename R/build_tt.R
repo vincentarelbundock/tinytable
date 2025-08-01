@@ -202,3 +202,17 @@ build_tt <- function(x, output = NULL) {
 
   return(x)
 }
+
+
+build_prepare <- function(x, fn, output = NULL) {
+  attr(fn, "output") <- output
+  x@lazy_prepare <- c(x@lazy_prepare, list(fn))
+  return(x)
+}
+
+
+build_finalize <- function(x, fn, output = NULL) {
+  attr(fn, "output") <- output
+  x@lazy_finalize <- c(x@lazy_finalize, list(fn))
+  return(x)
+}

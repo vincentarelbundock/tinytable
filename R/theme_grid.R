@@ -1,27 +1,24 @@
 theme_grid <- function(x, ...) {
+  # now
+  x <- theme_void(x)
+
   # prepare: before table is drawn
-  fn <- function(x) {
-    if (identical(x@output, "latex")) {
-      x <- theme_latex(x, inner = "hlines, vlines,")
-    } else if (identical(x@output, "html")) {
-      x <- theme_bootstrap(x, class = "table table-bordered")
-    }
-    return(x)
-  }
-  x@lazy_prepare <- c(x@lazy_prepare, list(fn))
+  fn <- function(x) theme_latex(x, inner = "hlines, vlines,")
+  x <- build_prepare(x, fn, output = "latex")
+
+  fn <- function(x) theme_bootstrap(x, class = "table table-bordered")
+  x <- build_prepare(x, fn, output = c("html", "bootstrap"))
 
   # finalize: after table is drawn
   fn <- function(x) {
-    if (isTRUE(x@output == "typst")) {
-      x@table_string <- sub(
-        "stroke: none,",
-        "stroke: (paint: black),",
-        x@table_string
-      )
-    }
+    x@table_string <- sub(
+      "stroke: none,",
+      "stroke: (paint: black),",
+      x@table_string
+    )
     return(x)
   }
-  x@lazy_finalize <- c(x@lazy_finalize, list(fn, finalize_theme_void))
+  x <- build_finalize(x, fn, output = "typst")
 
   return(x)
 }
