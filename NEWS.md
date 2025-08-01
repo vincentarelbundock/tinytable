@@ -6,7 +6,7 @@ Breaking change:
 
 * Deprecate the `output` argument from `style_tt()`.
 * Deprecate the `tabularray_inner` and `tabularray_outer` arguments from `style_tt()`. Use the LaTeX-specific themeing function instead: `theme_latex(x, inner = ..., outer = ...)`
-* Deprecate the `bootstrap_class` and `bootstrap_css_rule` arguments from `style_tt()`. Use the HTML-specific themeing function instead: `theme_html(x, class = ..., css_rule = ...)`
+* Deprecate the `bootstrap_class`, `bootstrap_css`, and `bootstrap_css_rule` arguments from `style_tt()`. Use the HTML-specific themeing function instead: `theme_html(x, class=..., css=..., css_rule=...)`
 
 New:
 

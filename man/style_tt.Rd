@@ -25,7 +25,6 @@ style_tt(
   line_color = "black",
   line_width = 0.1,
   finalize = NULL,
-  bootstrap_css = NULL,
   ...
 )
 }
@@ -100,8 +99,6 @@ style_tt(
 \item{line_width}{Width of the line in em units (default: 0.1).}
 
 \item{finalize}{A function applied to the table object at the very end of table-building, for post-processing. For example, the function could use regular expressions to add LaTeX commands to the text version of the table hosted in \code{x@table_string}, or it could programmatically change the caption in \code{x@caption}.}
-
-\item{bootstrap_css}{Character vector. CSS style declarations to be applied to every cell defined by \code{i} and \code{j} (ex: \code{"font-weight: bold"}).}
 
 \item{...}{extra arguments are ignored}
 }

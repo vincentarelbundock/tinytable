@@ -210,6 +210,13 @@ setMethod(
     # before style_eval()
     x@table_string <- out
 
+    if (length(x@width) > 1) {
+      for (j in seq_len(ncol(x))) {
+        css <- sprintf("width: %s%%;", x@width[j] / sum(x@width) * 100)
+        x <- theme_bootstrap(x, j = j, css = css)
+      }
+    }
+
     if (length(x@bootstrap_class) == 0) {
       if (
         is.null(x@theme[[1]]) ||
@@ -220,12 +227,6 @@ setMethod(
       }
     }
 
-    if (length(x@width) > 1) {
-      for (j in seq_len(ncol(x))) {
-        css <- sprintf("width: %s%%;", x@width[j] / sum(x@width) * 100)
-        x <- style_tt(x, j = j, bootstrap_css = css)
-      }
-    }
 
     return(x)
   })
@@ -254,21 +255,4 @@ bootstrap_setting <- function(x, new, component = "row") {
   attributes(out) <- att
   class(out) <- class(x)
   return(out)
-}
-
-
-#' Set bootstrap-specific settings
-#' @keywords internal
-#' @noRd
-set_bootstrap_settings <- function(
-    x,
-    bootstrap_class = NULL,
-    bootstrap_css_rule = NULL) {
-  if (!is.null(bootstrap_class)) {
-    x@bootstrap_class <- bootstrap_class
-  }
-  if (!is.null(bootstrap_css_rule)) {
-    x@bootstrap_css_rule <- bootstrap_css_rule
-  }
-  return(x)
 }

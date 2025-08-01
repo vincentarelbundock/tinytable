@@ -186,9 +186,9 @@ tt <- function(
     )
 
     # Bootstrap/HTML: use CSS padding for row height
-    out <- style_tt(
+    out <- bootstrap(
       out,
-      bootstrap_css = sprintf(
+      css = sprintf(
         "padding-top: %sem; padding-bottom: %sem;",
         height / 2,
         height / 2

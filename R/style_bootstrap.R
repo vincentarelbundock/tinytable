@@ -26,9 +26,6 @@ setMethod(
     colspan = NULL,
     rowspan = NULL,
     indent = 0,
-    bootstrap_class = NULL,
-    bootstrap_css = NULL,
-    bootstrap_css_rule = NULL,
     ...
   ) {
     if (length(x@bootstrap_css_rule) == 1) {
