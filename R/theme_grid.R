@@ -11,15 +11,15 @@ theme_grid <- function(x, ...) {
   x@lazy_prepare <- c(x@lazy_prepare, list(fn))
 
   # finalize: after table is drawn
-  fn <- function(table) {
-    if (isTRUE(table@output == "typst")) {
-      table@table_string <- sub(
+  fn <- function(x) {
+    if (isTRUE(x@output == "typst")) {
+      x@table_string <- sub(
         "stroke: none,",
         "stroke: (paint: black),",
-        table@table_string
+        x@table_string
       )
     }
-    return(table)
+    return(x)
   }
   x@lazy_finalize <- c(x@lazy_finalize, list(fn, finalize_theme_void))
 

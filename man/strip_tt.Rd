@@ -41,7 +41,7 @@ strip_tt(
 
 \item{format}{\code{TRUE} reverts \code{format_tt()}.}
 
-\item{theme}{\code{TRUE} reverts \code{theme_tt()}.}
+\item{theme}{\code{TRUE} erases all themes and pre/post styling}
 
 \item{notes}{\code{TRUE} reverts the effect of the \code{notes} argument from \code{tt()}.}
 

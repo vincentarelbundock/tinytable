@@ -7,6 +7,8 @@
 theme_latex(x, inner = NULL, outer = NULL, environment = "tblr")
 }
 \arguments{
+\item{x}{A \code{tinytable} object.}
+
 \item{inner}{A string that specifies the "inner" settings of a tabularray LaTeX table.}
 
 \item{outer}{A string that specifies the "outer" settings of a tabularray LaTeX table.}
