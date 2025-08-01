@@ -3,6 +3,7 @@
 #' @param x A `tinytable` object.
 #' @param inner A string that specifies the "inner" settings of a tabularray LaTeX table.
 #' @param outer A string that specifies the "outer" settings of a tabularray LaTeX table.
+#' @param environment A string that specifies the LaTeX environment to use, default is "tblr".
 #'
 #' @export
 theme_latex <- function(x, inner = NULL, outer = NULL, environment = "tblr") {

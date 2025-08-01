@@ -311,26 +311,26 @@ style_tt <- function(
 
   if ("tabularray_inner" %in% ...names()) {
     x <- theme_latex(inner = ...get("tabularray_inner"))
-    warn("The `tabularray_inner` argument is deprecated. Use `theme_latex(x, inner = ...)` instead.",
+    warning("The `tabularray_inner` argument is deprecated. Use `theme_latex(x, inner = ...)` instead.",
       call. = FALSE
     )
   }
   if ("tabularray_outer" %in% ...names()) {
     x <- theme_latex(outer = ...get("tabularray_outer"))
-    warn("The `tabularray_outer` argument is deprecated. Use `theme_latex(x, outer = ...)` instead.",
+    warning("The `tabularray_outer` argument is deprecated. Use `theme_latex(x, outer = ...)` instead.",
       call. = FALSE
     )
   }
   if ("bootstrap_class" %in% ...names()) {
     x <- theme_tt(x, "bootstrap", class = ...get("bootstrap_class"))
-    warn(
+    warning(
       "The `bootstrap_class` argument is deprecated. Use `theme_tt(x, 'bootstrap', class = ...)` instead.",
       call. = FALSE
     )
   }
   if ("bootstrap_css_rule" %in% ...names()) {
     x <- theme_tt(x, "bootstrap", css_rule = ...get("bootstrap_css_rule"))
-    warn("The `bootstrap_css_rule` argument is deprecated. Use `theme_tt(x, 'bootstrap', css_rule = ...)` instead.",
+    warning("The `bootstrap_css_rule` argument is deprecated. Use `theme_tt(x, 'bootstrap', css_rule = ...)` instead.",
       call. = FALSE
     )
   }

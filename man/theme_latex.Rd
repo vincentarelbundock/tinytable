@@ -12,6 +12,8 @@ theme_latex(x, inner = NULL, outer = NULL, environment = "tblr")
 \item{inner}{A string that specifies the "inner" settings of a tabularray LaTeX table.}
 
 \item{outer}{A string that specifies the "outer" settings of a tabularray LaTeX table.}
+
+\item{environment}{A string that specifies the LaTeX environment to use, default is "tblr".}
 }
 \description{
 LaTeX-specific styles and options
