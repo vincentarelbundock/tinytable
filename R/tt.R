@@ -66,18 +66,17 @@
 #'
 #' @export
 tt <- function(
-  x,
-  digits = get_option("tinytable_tt_digits", default = NULL),
-  caption = get_option("tinytable_tt_caption", default = NULL),
-  notes = get_option("tinytable_tt_notes", default = NULL),
-  width = get_option("tinytable_tt_width", default = NULL),
-  height = get_option("tinytable_tt_height", default = NULL),
-  theme = get_option("tinytable_tt_theme", default = "default"),
-  colnames = get_option("tinytable_tt_colnames", default = TRUE),
-  rownames = get_option("tinytable_tt_rownames", default = FALSE),
-  escape = get_option("tinytable_tt_escape", default = FALSE),
-  ...
-) {
+    x,
+    digits = get_option("tinytable_tt_digits", default = NULL),
+    caption = get_option("tinytable_tt_caption", default = NULL),
+    notes = get_option("tinytable_tt_notes", default = NULL),
+    width = get_option("tinytable_tt_width", default = NULL),
+    height = get_option("tinytable_tt_height", default = NULL),
+    theme = get_option("tinytable_tt_theme", default = "default"),
+    colnames = get_option("tinytable_tt_colnames", default = TRUE),
+    rownames = get_option("tinytable_tt_rownames", default = FALSE),
+    escape = get_option("tinytable_tt_escape", default = FALSE),
+    ...) {
   dots <- list(...)
 
   # sanity checks
@@ -181,9 +180,9 @@ tt <- function(
 
   if (!is.null(height)) {
     # LaTeX tabularray: use height/2 as rowsep
-    out <- style_tt(
+    out <- theme_latex(
       out,
-      tabularray_inner = sprintf("rowsep={%sem}", height / 2)
+      inner = sprintf("rowsep={%sem}", height / 2)
     )
 
     # Bootstrap/HTML: use CSS padding for row height

@@ -33,6 +33,23 @@ apply_notes_caption_styling <- function(
   return(x)
 }
 
+#' Set bootstrap-specific settings
+#' @keywords internal
+#' @noRd
+set_bootstrap_settings <- function(
+  x,
+  bootstrap_class = NULL,
+  bootstrap_css_rule = NULL
+) {
+  if (!is.null(bootstrap_class)) {
+    x@bootstrap_class <- bootstrap_class
+  }
+  if (!is.null(bootstrap_css_rule)) {
+    x@bootstrap_css_rule <- bootstrap_css_rule
+  }
+  return(x)
+}
+
 #' Process logical matrix input for styling
 #' @keywords internal
 #' @noRd
@@ -204,8 +221,6 @@ merge_with_existing_styles <- function(x, settings) {
 #' @param line_width Width of the line in em units (default: 0.1).
 #' @param finalize A function applied to the table object at the very end of table-building, for post-processing. For example, the function could use regular expressions to add LaTeX commands to the text version of the table hosted in `x@table_string`, or it could programmatically change the caption in `x@caption`.
 #' @param bootstrap_css Character vector. CSS style declarations to be applied to every cell defined by `i` and `j` (ex: `"font-weight: bold"`).
-#' @param tabularray_inner A string that specifies the "inner" settings of a tabularray LaTeX table.
-#' @param tabularray_outer A string that specifies the "outer" settings of a tabularray LaTeX table.
 #' @param ... extra arguments are ignored
 #' @return An object of class `tt` representing the table.
 #' @template limitations_word_markdown
@@ -277,7 +292,7 @@ merge_with_existing_styles <- function(x, settings) {
 #' cell{2}{2} = {r=4,c=2}{bg=azure7},
 #' "
 #' tt(mtcars[1:5, 1:4], theme = "void") |>
-#'   style_tt(tabularray_inner = inner)
+#'   theme_latex(inner = inner)
 #'
 #' # Style group rows and non-group rows
 #' dat <- data.frame(x = 1:6, y = letters[1:6])
@@ -308,8 +323,6 @@ style_tt <- function(
   line_color = "black",
   line_width = 0.1,
   finalize = NULL,
-  tabularray_inner = NULL,
-  tabularray_outer = NULL,
   bootstrap_css = NULL,
   ...
 ) {
@@ -325,6 +338,18 @@ style_tt <- function(
   if ("bootstrap_css_rule" %in% ...names()) {
     x <- theme_tt(x, "bootstrap", css_rule = ...get("bootstrap_css_rule"))
     warn("The `bootstrap_css_rule` argument is deprecated. Use `theme_tt(x, 'bootstrap', css_rule = ...)` instead.",
+      call. = FALSE
+    )
+  }
+  if ("tabularray_inner" %in% ...names()) {
+    x <- theme_latex(inner = ...get("tabularray_inner"))
+    warn("The `tabularray_inner` argument is deprecated. Use `theme_latex(x, inner = ...)` instead.",
+      call. = FALSE
+    )
+  }
+  if ("tabularray_outer" %in% ...names()) {
+    x <- theme_latex(outer = ...get("tabularray_outer"))
+    warn("The `tabularray_outer` argument is deprecated. Use `theme_latex(x, outer = ...)` instead.",
       call. = FALSE
     )
   }
@@ -364,8 +389,6 @@ style_tt <- function(
     line = line,
     line_color = line_color,
     line_width = line_width,
-    tabularray_inner = tabularray_inner,
-    tabularray_outer = tabularray_outer,
     bootstrap_css = bootstrap_css,
     finalize = finalize,
     ...
@@ -404,16 +427,6 @@ style_tt <- function(
   settings[["rowspan"]] <- if (is.null(rowspan)) NA else rowspan
   settings[["bootstrap_css"]] <- if (!is.null(bootstrap_css)) {
     bootstrap_css
-  } else {
-    NA
-  }
-  settings[["tabularray_inner"]] <- if (!is.null(tabularray_inner)) {
-    tabularray_inner
-  } else {
-    NA
-  }
-  settings[["tabularray_outer"]] <- if (!is.null(tabularray_outer)) {
-    tabularray_outer
   } else {
     NA
   }

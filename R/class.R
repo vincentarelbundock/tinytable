@@ -61,6 +61,8 @@ setClass(
     tabulator_search = "logical",
     tabulator_css_rule = "character",
     tabulator_columns = "character",
+    latex_inner = "character",
+    latex_outer = "character",
     theme = "list",
     width = "NULLorNumeric",
     width_cols = "numeric"
@@ -74,17 +76,15 @@ setClass(
 setMethod(
   "initialize",
   "tinytable",
-  function(
-    .Object,
-    data = data.frame(),
-    caption = NULL,
-    notes = NULL,
-    theme = list("default"),
-    data_body = data.frame(),
-    placement = NULL,
-    width = NULL,
-    height = NULL
-  ) {
+  function(.Object,
+           data = data.frame(),
+           caption = NULL,
+           notes = NULL,
+           theme = list("default"),
+           data_body = data.frame(),
+           placement = NULL,
+           width = NULL,
+           height = NULL) {
     # explicit
     .Object@data <- data
     .Object@data_body <- data_body
@@ -124,10 +124,11 @@ setMethod(
     .Object@tabulator_search <- FALSE
     .Object@tabulator_css_rule <- ""
     .Object@tabulator_columns <- ""
+    .Object@latex_inner <- character()
+    .Object@latex_outer <- character()
 
     return(.Object)
-  }
-)
+  })
 
 #' Method for a tinytable S4 object
 #'
@@ -183,8 +184,7 @@ setReplaceMethod(
     }
     x@names <- value
     return(x)
-  }
-)
+  })
 
 #' Method for a tinytable S4 object
 #'
@@ -206,8 +206,7 @@ setReplaceMethod(
     }
     x@names <- value
     return(x)
-  }
-)
+  })
 
 #' Dimensions a tinytable S4 object
 #'

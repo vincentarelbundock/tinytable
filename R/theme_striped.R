@@ -9,9 +9,9 @@ theme_striped <- function(x, ...) {
   x <- style_tt(x, finalize = fn)
 
   x <- theme_bootstrap(x, class = "table table-striped")
-  x <- style_tt(
+  x <- theme_latex(
     x,
-    tabularray_inner = "row{even}={bg=black!5!white}"
+    inner = "row{even}={bg=black!5!white}"
   )
 
   x <- style_tt(

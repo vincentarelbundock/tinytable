@@ -304,9 +304,9 @@ expect_snapshot_print(tab, label = "latex-issue307.tex")
 
 # Issue #419
 tab <- tt(head(iris)) |>
-  style_tt(
-    tabularray_outer = "label={tbl-species}",
-    tabularray_inner = "rowsep=0pt"
+  theme_latex(
+    outer = "label={tbl-species}",
+    inner = "rowsep=0pt"
   )
 expect_snapshot_print(tab, label = "latex-issue419.tex")
 

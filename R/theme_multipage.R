@@ -4,16 +4,16 @@ theme_multipage <- function(
     rowfoot = get_option("tinytable_theme_multipage_rowfoot", 0L),
     ...) {
   if (rowhead > 0) {
-    x <- style_tt(
+    x <- theme_latex(
       x,
-      tabularray_inner = sprintf("rowhead=%s", rowhead)
+      inner = sprintf("rowhead=%s", rowhead)
     )
   }
 
   if (rowfoot > 0) {
-    x <- style_tt(
+    x <- theme_latex(
       x,
-      tabularray_inner = sprintf("rowfoot=%s", rowfoot)
+      inner = sprintf("rowfoot=%s", rowfoot)
     )
   }
 
@@ -45,8 +45,6 @@ theme_multipage <- function(
     tab <- paste(tab, collapse = "\n")
 
     table@table_string <- tab
-
-    # table <- style_tt(table, tabularray_outer = cap)
 
     return(table)
   }

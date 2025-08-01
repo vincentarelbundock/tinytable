@@ -25,39 +25,38 @@
 #' @param bootstrap_class `TRUE` reverts the effect of the `bootstrap_class` argument from `style_tt()`.
 #' @param bootstrap_css `TRUE` reverts the effect of the `bootstrap_css` argument from `style_tt()`.
 #' @param bootstrap_css_rule `TRUE` reverts the effect of the `bootstrap_css_rule` argument from `style_tt()`.
-#' @param tabularray_inner `TRUE` reverts the effect of the `tabularray_inner` argument from `style_tt()`.
-#' @param tabularray_outer `TRUE` reverts the effect of the `tabularray_outer` argument from `style_tt()`.
+#' @param latex_inner `TRUE` reverts the effect of the `inner` argument from `theme_latex()`.
+#' @param latex_outer `TRUE` reverts the effect of the `outer` argument from `theme_latex()`.
 #' @return An object of class `tt` representing the table with stripped styling.
 #' @export
 strip_tt <- function(
-  x,
-  style = FALSE,
-  format = FALSE,
-  theme = FALSE,
-  notes = FALSE,
-  caption = FALSE,
-  group = FALSE,
-  bold = FALSE,
-  italic = FALSE,
-  monospace = FALSE,
-  underline = FALSE,
-  strikeout = FALSE,
-  color = FALSE,
-  background = FALSE,
-  fontsize = FALSE,
-  align = FALSE,
-  alignv = FALSE,
-  colspan = FALSE,
-  rowspan = FALSE,
-  indent = FALSE,
-  line = FALSE,
-  bootstrap_class = FALSE,
-  bootstrap_css = FALSE,
-  bootstrap_css_rule = FALSE,
-  tabularray_inner = FALSE,
-  tabularray_outer = FALSE,
-  width = FALSE
-) {
+    x,
+    style = FALSE,
+    format = FALSE,
+    theme = FALSE,
+    notes = FALSE,
+    caption = FALSE,
+    group = FALSE,
+    bold = FALSE,
+    italic = FALSE,
+    monospace = FALSE,
+    underline = FALSE,
+    strikeout = FALSE,
+    color = FALSE,
+    background = FALSE,
+    fontsize = FALSE,
+    align = FALSE,
+    alignv = FALSE,
+    colspan = FALSE,
+    rowspan = FALSE,
+    indent = FALSE,
+    line = FALSE,
+    bootstrap_class = FALSE,
+    bootstrap_css = FALSE,
+    bootstrap_css_rule = FALSE,
+    latex_inner = FALSE,
+    latex_outer = FALSE,
+    width = FALSE) {
   out <- x
 
   # Reset style data.frame and lazy style
@@ -150,11 +149,11 @@ strip_tt <- function(
     if (bootstrap_css) {
       out@style$bootstrap_css <- NA
     }
-    if (tabularray_inner) {
-      out@style$tabularray_inner <- NA
+    if (latex_inner) {
+      out@latex_inner <- NA
     }
-    if (tabularray_outer) {
-      out@style$tabularray_outer <- NA
+    if (latex_outer) {
+      out@latex_outer <- NA
     }
     if (width) out@style$width <- NA
   }

@@ -182,7 +182,7 @@ In Rmarkdown and Quarto documents, `tinytable` will automatically populate your 
 
 A key feature of Tabularray is its separation of style from content. This approach allows users to define the look and feel of their tables (such as color, borders, and text alignment) independently from the actual data within the table. This separation simplifies the process of formatting tables and enhances the clarity and maintainability of LaTeX code. The `tabularray` documentation is fantastic. It will teach you how to customize virtually every aspect of your tables: <https://ctan.org/pkg/tabularray?lang=en>
 
-Tabularray introduces a streamlined interface for specifying table settings. It employs two types of settings blocks: Inner and Outer. The Outer block is used for settings that apply to the entire table, like overall alignment, while the Inner block handles settings for specific elements like columns, rows, and cells. The `style_tt()` function includes `tabularray_inner` and `tabularray_outer` arguments to set these respective features.
+Tabularray introduces a streamlined interface for specifying table settings. It employs two types of settings blocks: Inner and Outer. The Outer block is used for settings that apply to the entire table, like overall alignment, while the Inner block handles settings for specific elements like columns, rows, and cells. The `theme_latex()` function includes `inner` and `outer` arguments to set these respective features.
 
 Consider this `tabularray` example, which illustrates the use of inner settings:
 
@@ -213,7 +213,7 @@ mpg & cyl & disp & hp \\
    
 The Inner block, enclosed in `{}`, defines specific styles like column formats (`column{1-4}={halign=c}`), horizontal and vertical line colors (`hlines={fg=white}`, `vlines={fg=white}`), and cell colorations (`cell{1,6}{odd}={bg=teal7}`, etc.). The last line of the inner block also species that the second cell of row 2 (`cell{2}{2}`) should span 4 rows and 2 columns (`{r=4,c=3}`), be centered (`halign=c`), and with a background color with the 7th luminance level of the azure color (`bg=azure7`).
 
-We can create this code easily by passing a string to the `tabularray_inner` argument of the `style_tt()` function:
+We can create this code easily by passing a string to the `inner` argument of the `theme_latex()` function:
 
 ```{r, eval = knitr::is_latex_output()}
 ## | tbl-cap: "\\LaTeX{} table with colors and a spanning cell."
@@ -229,7 +229,7 @@ cell{2}{2} = {r=4,c=2}{bg=azure7},
 "
 mtcars[1:5, 1:4] |>
   tt(theme = "void") |>
-  style_tt(tabularray_inner = inner)
+  theme_latex(inner = inner)
 ```
 
 
