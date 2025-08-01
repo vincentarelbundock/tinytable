@@ -31,7 +31,7 @@ theme_dictionary <- list(
 #'   + "resize": Scale a LaTeX `tinytable` to fit the `width` argument.
 #'   + "striped": Grey stripes on alternating rows
 #'   + "tabular": Remove table environment (LaTeX) or Javascript/CSS (HTML)
-#'   + "tabulator": Customize Tabulator.js tables **[Experimental]**
+#'   + "tabulator": Customize Tabulator.js tables **Experimental**
 #'   + "void": No rules
 #' @param ... Additional arguments passed the themeing function. See the "Arguments" section below for a list of supported arguments for each theme.
 #' @section Arguments:
