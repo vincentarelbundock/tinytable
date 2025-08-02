@@ -204,7 +204,7 @@ format_tt_lazy <- function(
   }
 
   # important for tabulator
-  if (!is.null(bool)) {
+  if (!is.null(bool) && inherits(x, "tinytable")) {
     x@tabulator_format_bool <- TRUE
   }
 

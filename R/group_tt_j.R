@@ -7,22 +7,22 @@ j_delim_to_named_list <- function(x, j) {
 
   # Find which columns contain the delimiter
   indices <- grepl(j, nm, fixed = TRUE)
-  
+
   if (!any(indices)) {
     return(list(colnames = nm, groupnames = NULL))
   }
 
   # For columns with delimiters, parse the hierarchical structure
   grouped_cols <- nm[indices]
-  
+
   # Split each column name by the delimiter to get all levels
   split_names <- strsplit(grouped_cols, j, fixed = TRUE)
   max_levels <- max(lengths(split_names))
-  
+
   # Build the nested grouping structure from the outermost level down
   groupings <- list()
   current_colnames <- nm
-  
+
   for (level in 1:max_levels) {
     # Extract the prefix for this level (first 'level' parts)
     prefixes <- character(length(grouped_cols))
@@ -33,49 +33,49 @@ j_delim_to_named_list <- function(x, j) {
         prefixes[i] <- paste(split_names[[i]], collapse = j)
       }
     }
-    
+
     # Map prefixes back to original column indices
-    prefix_to_col_idx <- setNames(which(indices), prefixes)
-    
+    prefix_to_col_idx <- stats::setNames(which(indices), prefixes)
+
     # Group by unique prefixes at this level
     unique_prefixes <- unique(prefixes[prefixes != ""])
     level_groups <- list()
-    
+
     for (prefix in unique_prefixes) {
       matching_indices <- which(prefixes == prefix)
       col_indices <- (which(indices))[matching_indices]
-      
+
       # Only create groupings with more than one column or if it's not the final level
       if (length(col_indices) > 1 || level < max_levels) {
         # Extract the group name (prefix up to this level, removing previous levels)
         group_parts <- strsplit(prefix, j, fixed = TRUE)[[1]]
         group_name <- group_parts[level]
-        
+
         # Handle empty group names by replacing with a space (as per tinytable convention)
         if (is.na(group_name) || group_name == "") {
           group_name <- " "
         }
-        
+
         level_groups[[group_name]] <- col_indices
       }
     }
-    
+
     # Only add level if it has meaningful groups
     if (length(level_groups) > 0) {
       groupings <- c(groupings, list(level_groups))
     }
   }
-  
+
   # Set final column names (the last part after all delimiters)
   for (i in which(indices)) {
     parts <- split_names[[which(which(indices) == i)]]
     final_name <- parts[length(parts)]
-    
+
     # Handle empty final names
     if (is.na(final_name) || final_name == "") {
       final_name <- " "
     }
-    
+
     current_colnames[i] <- final_name
   }
 
