@@ -17,12 +17,12 @@
 #' @param ... Additional arguments.
 #'
 #' @export
-theme_html <- function(x, 
-                       engine = "bootstrap", 
-                       i = NULL, 
-                       j = NULL, 
-                       class = NULL, 
-                       css = NULL, 
+theme_html <- function(x,
+                       engine = "bootstrap",
+                       i = NULL,
+                       j = NULL,
+                       class = NULL,
+                       css = NULL,
                        css_rule = NULL,
                        tabulator_stylesheet = get_option("tinytable_theme_tabulator_stylesheet", default = "bootstrap5"),
                        tabulator_layout = get_option("tinytable_theme_tabulator_layout", default = "fitDataTable"),
@@ -33,22 +33,24 @@ theme_html <- function(x,
                        tabulator_columns = NULL,
                        ...) {
   assert_choice(engine, c("bootstrap", "raw", "tabulator"))
-  
-  if (engine == "bootstrap") {
-    x <- theme_html_bootstrap(x, i = i, j = j, class = class, css = css, css_rule = css_rule, ...)
-  } else if (engine == "raw") {
+
+  if (engine == "raw") {
     x <- theme_html_raw(x, i = i, j = j, class = class, css = css, css_rule = css_rule, ...)
-  } else if (engine == "tabulator") {
-    x <- theme_html_tabulator(x, 
-                              tabulator_stylesheet = tabulator_stylesheet,
-                              tabulator_layout = tabulator_layout,
-                              tabulator_pagination = tabulator_pagination,
-                              tabulator_search = tabulator_search,
-                              tabulator_options = tabulator_options,
-                              tabulator_css_rule = tabulator_css_rule,
-                              tabulator_columns = tabulator_columns,
-                              ...)
+    return(x)
   }
-  
+
+  x <- theme_html_bootstrap(x, i = i, j = j, class = class, css = css, css_rule = css_rule, ...)
+
+  x <- theme_html_tabulator(x,
+    tabulator_stylesheet = tabulator_stylesheet,
+    tabulator_layout = tabulator_layout,
+    tabulator_pagination = tabulator_pagination,
+    tabulator_search = tabulator_search,
+    tabulator_options = tabulator_options,
+    tabulator_css_rule = tabulator_css_rule,
+    tabulator_columns = tabulator_columns,
+    ...)
+
   return(x)
 }
+
