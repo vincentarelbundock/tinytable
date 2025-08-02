@@ -4,12 +4,20 @@
 \alias{theme_typst}
 \title{Typst-specific styles and options}
 \usage{
-theme_typst(x, figure = TRUE, ...)
+theme_typst(
+  x,
+  figure = TRUE,
+  align_figure = get_option("tinytable_theme_placement_horizontal", NULL),
+  ...
+)
 }
 \arguments{
 \item{x}{A \code{tinytable} object.}
 
 \item{figure}{Logical, whether to wrap the table in a Typst figure environment and block.}
+
+\item{align_figure}{Character string indicating horizontal alignment: "l", "c", or "r".
+Defaults to \code{get_option("tinytable_theme_placement_horizontal", NULL)}. When NULL, uses default center alignment.}
 
 \item{...}{Additional arguments.}
 }

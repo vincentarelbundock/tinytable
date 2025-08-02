@@ -74,6 +74,8 @@ switch_latex_environment <- function(table_string, table = TRUE, to_env = "longt
 #'   Defaults to `get_option("tinytable_theme_resize_width", 1)`. Only applies when `resize_direction` is specified.
 #' @param resize_direction Character string indicating resize direction: "down", "up", or "both". 
 #'   Defaults to `get_option("tinytable_theme_resize_direction", "down")`. When NULL, no resizing is applied.
+#' @param placement String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp".
+#'   Defaults to `get_option("tinytable_theme_placement_latex_float", NULL)`. When NULL, no placement is applied.
 #' @param ... Additional arguments.
 #'
 #' @export
@@ -87,6 +89,7 @@ theme_latex <- function(x,
                         table = TRUE,
                         resize_width = get_option("tinytable_theme_resize_width", 1),
                         resize_direction = NULL,
+                        placement = get_option("tinytable_theme_placement_latex_float", NULL),
                         ...) {
   assert_string(inner, null.ok = TRUE)
   assert_string(outer, null.ok = TRUE)
@@ -95,6 +98,7 @@ theme_latex <- function(x,
   assert_choice(environment, c("tblr", "talltblr", "longtblr", "tabular"), null.ok = TRUE)
   assert_numeric(resize_width, len = 1, lower = 0.01, upper = 1)
   assert_choice(resize_direction, c("down", "up", "both"), null.ok = TRUE)
+  assert_string(placement, null.ok = TRUE)
 
   if (!is.null(inner)) x@tabularray_inner <- c(x@tabularray_inner, inner)
   if (!is.null(outer)) x@tabularray_outer <- c(x@tabularray_outer, outer)
@@ -159,6 +163,21 @@ theme_latex <- function(x,
       reg <- "\\\\end\\{tblr\\}|\\\\end\\{talltblr\\}"
       tab <- lines_insert(tab, regex = reg, new = new, position = "after")
 
+      table@table_string <- tab
+      return(table)
+    }
+    x <- build_finalize(x, fn, output = "latex")
+  }
+
+  # Handle placement functionality
+  if (!is.null(placement)) {
+    fn <- function(table) {
+      tab <- table@table_string
+      tab <- sub(
+        "\\\\begin\\{table\\}([^\\[])",
+        sprintf("\\\\begin{table}[%s]\\1", placement),
+        tab
+      )
       table@table_string <- tab
       return(table)
     }

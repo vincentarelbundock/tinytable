@@ -43,7 +43,7 @@ tt(
 
 \item{theme}{Function or string.
 \itemize{
-\item String: bootstrap, grid, latex, placement, revealjs, rotate, striped, tabulator, void
+\item String: bootstrap, grid, latex, revealjs, rotate, striped, tabulator, void
 \item Function: Applied to the \code{tinytable} object.
 }}
 

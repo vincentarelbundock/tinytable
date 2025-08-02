@@ -135,14 +135,14 @@ tmp <- cbind(mtcars, mtcars)[1:10, ]
 tt(tmp) |> theme_latex(resize_width = .9, resize_direction = "down")
 ```
 
-## Placement
+## LaTeX Placement
 
-The `placement` theme offers control over the positioning of the table in LaTeX documents, using floating parameters like `H` (from the `float` LaTeX package) to specify where the table should appear.
+The `theme_latex()` function includes placement control over the positioning of the table in LaTeX documents, using floating parameters like `H` (from the `float` LaTeX package) to specify where the table should appear.
 
 ```{r placement-theme}
 options(tinytable_theme_placement_latex_float = NULL)
 tt(x) |>
-  theme_tt("placement", latex_float = "H") |>
+  theme_latex(placement = "H") |>
   print(output = "latex")
 ```
 

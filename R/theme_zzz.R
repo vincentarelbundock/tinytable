@@ -3,7 +3,6 @@ theme_dictionary <- list(
   "bootstrap" = theme_bootstrap,
   "grid" = theme_grid,
   "latex" = theme_latex,
-  "placement" = theme_placement,
   "revealjs" = theme_revealjs,
   "rotate" = theme_rotate,
   "striped" = theme_striped,
@@ -22,7 +21,6 @@ theme_dictionary <- list(
 #' @param theme String. Name of the theme to apply. One of:
 #'   + "bootstrap": Similar appearance to the default Bootstrap theme in HTML
 #'   + "grid": Vertical and horizontal rules around each cell.
-#'   + "placement": Position of the table environment (LaTeX)
 #'   + "revealjs": Tables optimized for Reveal.js presentations with light/dark theme support
 #'   + "rotate": Rotate a LaTeX or Typst table.
 #'   + "striped": Grey stripes on alternating rows
@@ -46,13 +44,6 @@ theme_dictionary <- list(
 #'   - `options("tinytable_theme_multipage_rowhead" = 1L)`
 #' + `rowfoot`: Non-negative integer. The number of footer rows to repeat on each page.
 #'   - `options("tinytable_theme_multipage_rowfoot" = 1L)`
-#'
-#' placement
-#'
-#' + `horizontal` (Typst only): "l", "c", or "r" to align the table horizontally in the page.
-#'    - `options("tinytable_theme_placement_horizontal" = "l")`
-#' + `latex_float`: String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp". The default value is controlled by a global option:
-#'    - `options("tinytable_theme_placement_latex_float" = "H")`
 #'
 #' rotate
 #'

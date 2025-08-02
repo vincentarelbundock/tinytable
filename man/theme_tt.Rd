@@ -13,7 +13,6 @@ theme_tt(x, theme, ...)
 \itemize{
 \item "bootstrap": Similar appearance to the default Bootstrap theme in HTML
 \item "grid": Vertical and horizontal rules around each cell.
-\item "placement": Position of the table environment (LaTeX)
 \item "revealjs": Tables optimized for Reveal.js presentations with light/dark theme support
 \item "rotate": Rotate a LaTeX or Typst table.
 \item "striped": Grey stripes on alternating rows
@@ -59,18 +58,6 @@ multipage
 \item \code{rowfoot}: Non-negative integer. The number of footer rows to repeat on each page.
 \itemize{
 \item \code{options("tinytable_theme_multipage_rowfoot" = 1L)}
-}
-}
-
-placement
-\itemize{
-\item \code{horizontal} (Typst only): "l", "c", or "r" to align the table horizontally in the page.
-\itemize{
-\item \code{options("tinytable_theme_placement_horizontal" = "l")}
-}
-\item \code{latex_float}: String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp". The default value is controlled by a global option:
-\itemize{
-\item \code{options("tinytable_theme_placement_latex_float" = "H")}
 }
 }
 

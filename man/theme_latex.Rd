@@ -15,6 +15,7 @@ theme_latex(
   table = TRUE,
   resize_width = get_option("tinytable_theme_resize_width", 1),
   resize_direction = NULL,
+  placement = get_option("tinytable_theme_placement_latex_float", NULL),
   ...
 )
 }
@@ -40,6 +41,9 @@ Defaults to \code{get_option("tinytable_theme_resize_width", 1)}. Only applies w
 
 \item{resize_direction}{Character string indicating resize direction: "down", "up", or "both".
 Defaults to \code{get_option("tinytable_theme_resize_direction", "down")}. When NULL, no resizing is applied.}
+
+\item{placement}{String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp".
+Defaults to \code{get_option("tinytable_theme_placement_latex_float", NULL)}. When NULL, no placement is applied.}
 
 \item{...}{Additional arguments.}
 }

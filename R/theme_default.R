@@ -1,12 +1,14 @@
 theme_default <- function(x, ...) {
-  fn <- theme_placement_factory(
-    horizontal = get_option("tinytable_theme_default_horizontal", "c"),
-    latex_float = get_option(
-      "tinytable_theme_placement_latex_float",
-      default = NULL
-    )
-  )
-  x <- style_tt(x, finalize = fn)
+  # Apply placement functionality for LaTeX and Typst
+  placement_latex <- get_option("tinytable_theme_placement_latex_float", default = NULL)
+  placement_typst <- get_option("tinytable_theme_default_horizontal", "c")
+  
+  if (!is.null(placement_latex)) {
+    x <- theme_latex(x, placement = placement_latex)
+  }
+  if (!is.null(placement_typst)) {
+    x <- theme_typst(x, align_figure = placement_typst)
+  }
 
   # bootstrap class
   bc <- if (length(x@bootstrap_class) == 0) {

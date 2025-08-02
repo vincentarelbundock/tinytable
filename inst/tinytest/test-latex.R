@@ -150,7 +150,7 @@ expect_snapshot_print(
 
 # placement
 tab <- mtcars[1:3, 1:3]
-tab <- tt(tab) |> theme_tt("placement", latex_float = "H")
+tab <- tt(tab) |> theme_latex(placement = "H")
 tab@output <- "latex"
 expect_snapshot_print(tab, label = "latex-placement.tex")
 
