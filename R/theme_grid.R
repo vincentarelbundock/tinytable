@@ -6,7 +6,7 @@ theme_grid <- function(x, ...) {
   fn <- function(x) theme_latex(x, inner = "hlines, vlines,")
   x <- build_prepare(x, fn, output = "latex")
 
-  fn <- function(x) theme_bootstrap(x, class = "table table-bordered")
+  fn <- function(x) theme_html(x, engine = "bootstrap", class = "table table-bordered")
   x <- build_prepare(x, fn, output = c("html", "bootstrap"))
 
   # finalize: after table is drawn

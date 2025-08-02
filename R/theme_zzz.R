@@ -1,12 +1,12 @@
 theme_dictionary <- list(
   "default" = theme_default,
-  "bootstrap" = theme_bootstrap,
+  "bootstrap" = function(x, ...) theme_html(x, engine = "bootstrap", ...),
   "grid" = theme_grid,
   "latex" = theme_latex,
   "revealjs" = theme_revealjs,
   "rotate" = theme_rotate,
   "striped" = theme_striped,
-  "tabulator" = theme_tabulator,
+  "tabulator" = function(x, ...) theme_html(x, engine = "tabulator", ...),
   "void" = theme_void
 )
 

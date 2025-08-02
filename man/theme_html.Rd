@@ -4,12 +4,54 @@
 \alias{theme_html}
 \title{HTML-specific styles and options}
 \usage{
-theme_html(x, engine = "bootstrap", ...)
+theme_html(
+  x,
+  engine = "bootstrap",
+  i = NULL,
+  j = NULL,
+  class = NULL,
+  css = NULL,
+  css_rule = NULL,
+  tabulator_stylesheet = get_option("tinytable_theme_tabulator_stylesheet", default =
+    "bootstrap5"),
+  tabulator_layout = get_option("tinytable_theme_tabulator_layout", default =
+    "fitDataTable"),
+  tabulator_pagination = TRUE,
+  tabulator_search = TRUE,
+  tabulator_options = get_option("tinytable_theme_tabulator_options", default = NULL),
+  tabulator_css_rule = NULL,
+  tabulator_columns = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{A \code{tinytable} object.}
 
-\item{engine}{Character string specifying the HTML engine. If "raw", strips bootstrap styling and returns a simple table.}
+\item{engine}{Character string specifying the HTML engine: "bootstrap", "raw", or "tabulator".}
+
+\item{i}{Row indices (shared across engines).}
+
+\item{j}{Column indices (shared across engines).}
+
+\item{class}{String. Bootstrap table class (shared across engines).}
+
+\item{css}{Character vector. CSS style declarations (shared across engines).}
+
+\item{css_rule}{String. Complete CSS rules (shared across engines).}
+
+\item{tabulator_stylesheet}{Tabulator CSS theme (tabulator engine only).}
+
+\item{tabulator_layout}{Table layout algorithm (tabulator engine only).}
+
+\item{tabulator_pagination}{Pagination settings (tabulator engine only).}
+
+\item{tabulator_search}{Enable/disable search functionality (tabulator engine only).}
+
+\item{tabulator_options}{Custom Tabulator.js configuration options (tabulator engine only).}
+
+\item{tabulator_css_rule}{Custom CSS rules (tabulator engine only).}
+
+\item{tabulator_columns}{Custom column definitions (tabulator engine only).}
 
 \item{...}{Additional arguments.}
 }

@@ -35,20 +35,20 @@ The Bootstrap framework provides a number of built-in themes to style tables, us
 To produce a more condensed or "small" table, we use the `table-sm` class:
 
 ```{r, eval = knitr::is_html_output()}
-tt(x) |> theme_tt("bootstrap", class = "table table-sm")
+tt(x) |> theme_html(class = "table table-sm")
 ```
 
 To produce a "bordered" table, we use the `table-bordered` class:
 
 
 ```{r, eval = knitr::is_html_output()}
-tt(x) |> theme_tt("bootstrap", class = "table table-bordered")
+tt(x) |> theme_html(class = "table table-bordered")
 ```
 
 We can also combine several Bootstrap classes. Here, we get a table with the "hover" feature:
 
 ```{r, eval = knitr::is_html_output()}
-tt(x) |> theme_tt("bootstrap", class = "table table-hover")
+tt(x) |> theme_html(class = "table table-hover")
 ```
 
 
@@ -56,7 +56,7 @@ By default, Bootstrap 5 places captions at the bottom of the table. This can be 
 
 ```{r}
 tt(head(iris), caption = "A caption on top") |>
-  theme_tt("bootstrap", class = "table caption-top")
+  theme_html(class = "table caption-top")
 ```
 
 :::
@@ -69,7 +69,7 @@ The `style_tt()` function allows us to declare CSS properties and values for ind
 
 ```{r}
 tt(x) |>
-  theme_bootstrap(j = 1, css = "font-weight: bold; color: red;")
+  theme_html(j = 1, css = "font-weight: bold; color: red;")
 ```
 :::
 
@@ -115,7 +115,7 @@ tt(x, width = 2 / 3) |>
   style_tt(
     j = 1:5,
     align = "ccccc") |>
-  theme_tt("bootstrap", 
+  theme_html(
     class = "mytable", 
     css_rule = css_rule)
 ```
@@ -135,7 +135,7 @@ css <- "
 "
 
 tt(mtcars[1:10, 1:8]) |>
-  theme_tt("bootstrap", 
+  theme_html(
     css_rule = css,
     class = "table table-borderless squirreltable")
 ```
@@ -146,7 +146,7 @@ And yet another one. Some Rmarkdown documents like `bookdown` use older versions
 ```r
 rule <- ".bottomcaption {caption-side: bottom;}"
 tt(head(iris), caption = "Hello world") |>
-  theme_tt("bootstrap", class = "table bottomcaption", css_rule = rule)
+  theme_html(class = "table bottomcaption", css_rule = rule)
 ```
 
 ## LaTeX / PDF {#sec-tabularray}

@@ -213,7 +213,7 @@ setMethod(
     if (length(x@width) > 1) {
       for (j in seq_len(ncol(x))) {
         css <- sprintf("width: %s%%;", x@width[j] / sum(x@width) * 100)
-        x <- theme_bootstrap(x, j = j, css = css)
+        x <- theme_html(x, engine = "bootstrap", j = j, css = css)
       }
     }
 
