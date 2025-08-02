@@ -41,4 +41,3 @@ theme_typst <- function(x,
 
   return(x)
 }
-

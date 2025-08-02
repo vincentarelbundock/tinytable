@@ -168,12 +168,16 @@ tt <- function(
   )
 
   if (is.null(theme)) {
-    theme <- theme_default
-    out@lazy_theme <- c(out@lazy_theme, list(theme_default))
+    out <- theme_default(out)
   } else if (is.function(theme)) {
-    out@lazy_theme <- c(out@lazy_theme, list(theme))
-  } else if (isTRUE(check_string(theme))) {
-    out@lazy_theme <- c(out@lazy_theme, list(theme_dictionary[[theme]]))
+    out <- theme(out)
+  } else if (is.character(theme)) {
+    for (th in theme) {
+      if (!th %in% names(theme_dictionary)) {
+        stop(sprintf("Unknown theme: '%s'. Available themes: %s", th, paste(names(theme_dictionary), collapse = ", ")), call. = FALSE)
+      }
+    }
+    out <- theme_dictionary[[theme]](out)
   }
 
   if (isTRUE(escape)) {

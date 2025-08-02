@@ -71,10 +71,6 @@ build_tt <- function(x, output = NULL) {
   # before format_tt() because we need the indices
   x@nrow <- nrow(x@data) + nrow(x@group_data_i)
 
-  for (th in x@lazy_theme) {
-    x <- th(x)
-  }
-
   # pre-process: theme_*() calls that need formatting conditional on @output
   for (p in x@lazy_prepare) {
     o <- attr(p, "output")
@@ -158,17 +154,6 @@ build_tt <- function(x, output = NULL) {
     ihead <- -1
     # Apply group_eval_j once with all groups
     x <- group_eval_j(x, j = seq_len(ncol(x)), ihead = ihead)
-  }
-
-  # style is separate from content in formats that allow it
-  if (!x@output %in% c("markdown", "gfm", "dataframe")) {
-    for (l in x@lazy_style) {
-      l[["x"]] <- x
-      # output-specific styling
-      if (is.null(l$output) || isTRUE(x@output == l$output)) {
-        x <- eval(l)
-      }
-    }
   }
 
   # markdown styles are applied earlier

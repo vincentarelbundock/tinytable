@@ -39,8 +39,6 @@ setClass(
     lazy_finalize = "list",
     lazy_format = "list",
     lazy_plot = "list",
-    lazy_style = "list",
-    lazy_theme = "list",
     lazy_prepare = "list",
     names = "NULLorCharacter",
     ncol = "numeric",
@@ -117,7 +115,6 @@ setMethod(
     .Object@css <- data.frame(i = NA, j = NA, bootstrap = NA, id = NA)
     .Object@portable <- FALSE
     .Object@style <- data.frame()
-    .Object@lazy_theme <- list()
     .Object@tabulator_stylesheet <- ""
     .Object@tabulator_options <- ""
     .Object@tabulator_column_formatters <- list()

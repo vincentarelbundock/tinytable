@@ -62,7 +62,6 @@ strip_tt <- function(
   # Reset style data.frame and lazy style
   if (style) {
     out@style <- data.frame()
-    out@lazy_style <- list()
   }
 
   # Reset format settings
