@@ -1,8 +1,7 @@
 setMethod(
-  f = "tt_eval",
+  f = "build_eval",
   signature = "tinytable_tabulator",
   definition = function(x, ...) {
-
     # Check that column names exist
     if (is.null(x@names) || length(x@names) == 0) {
       stop(
@@ -138,7 +137,6 @@ setMethod(
       dataframe = "rows"
     )
 
-
     # Build column definitions
     columns <- lapply(names(data_clean), function(nm) {
       original_name <- colnames(x@data_body)[which(
@@ -179,7 +177,6 @@ setMethod(
       fixed = TRUE
     )
 
-
     # Leave CSS placeholder for finalize to handle
 
     # Leave options placeholder for potential theme replacement
@@ -191,7 +188,8 @@ setMethod(
     x@table_string <- out
 
     return(x)
-  })
+  }
+)
 
 # Helper function to set up tabulator-specific S4 class
 tabulator_setting <- function(x, new, component = "option") {

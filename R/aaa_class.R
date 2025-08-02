@@ -75,15 +75,17 @@ setClass(
 setMethod(
   "initialize",
   "tinytable",
-  function(.Object,
-           data = data.frame(),
-           caption = NULL,
-           notes = NULL,
-           theme = list("default"),
-           data_body = data.frame(),
-           placement = NULL,
-           width = NULL,
-           height = NULL) {
+  function(
+    .Object,
+    data = data.frame(),
+    caption = NULL,
+    notes = NULL,
+    theme = list("default"),
+    data_body = data.frame(),
+    placement = NULL,
+    width = NULL,
+    height = NULL
+  ) {
     # explicit
     .Object@data <- data
     .Object@data_body <- data_body
@@ -126,7 +128,8 @@ setMethod(
     .Object@tabularray_outer <- character()
 
     return(.Object)
-  })
+  }
+)
 
 #' Method for a tinytable S4 object
 #'
@@ -182,7 +185,8 @@ setReplaceMethod(
     }
     x@names <- value
     return(x)
-  })
+  }
+)
 
 #' Method for a tinytable S4 object
 #'
@@ -204,7 +208,8 @@ setReplaceMethod(
     }
     x@names <- value
     return(x)
-  })
+  }
+)
 
 #' Dimensions a tinytable S4 object
 #'
@@ -251,8 +256,8 @@ setGeneric(
 #' @inheritParams tt
 #' @keywords internal
 setGeneric(
-  name = "tt_eval",
-  def = function(x, ...) standardGeneric("tt_eval")
+  name = "build_eval",
+  def = function(x, ...) standardGeneric("build_eval")
 )
 
 #' Apply group settings to a tinytable

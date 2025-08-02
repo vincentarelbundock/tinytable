@@ -1,5 +1,5 @@
 setMethod(
-  f = "tt_eval",
+  f = "build_eval",
   signature = "tinytable_bootstrap",
   definition = function(x, ...) {
     template <- readLines(
@@ -228,9 +228,9 @@ setMethod(
       }
     }
 
-
     return(x)
-  })
+  }
+)
 
 bootstrap_setting <- function(x, new, component = "row") {
   att <- attributes(x)

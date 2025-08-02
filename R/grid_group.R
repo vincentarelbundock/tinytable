@@ -67,7 +67,7 @@ group_grid_col <- function(x, j, ...) {
         header <- empty_cells(j_list)
         cw_grouped <- sapply(header, function(k) sum(cw[k]) + length(cw[k]) - 1)
         header_matrix <- t(matrix(names(cw_grouped)))
-        header_formatted <- tt_eval(header_matrix, cw_grouped)
+        header_formatted <- build_eval(header_matrix, cw_grouped)
         header_lines <- strsplit(header_formatted, split = "\\n")[[1]]
         header_lines <- header_lines[header_lines != "\\n"]
         header_lines <- header_lines[!header_lines %in% c("\\n", "")]

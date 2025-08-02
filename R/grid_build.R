@@ -355,7 +355,7 @@ assemble_table_string <- function(body, header, width_cols) {
 # MAIN FUNCTION
 # =============================================================================
 
-tt_eval_grid <- function(x, width_cols = NULL, ...) {
+build_eval_grid <- function(x, width_cols = NULL, ...) {
   is_matrix <- is.matrix(x)
   if (is_matrix) {
     tab <- x
@@ -460,19 +460,19 @@ grid_hlines <- function(x) {
 }
 
 setMethod(
-  f = "tt_eval",
+  f = "build_eval",
   signature = "tinytable_grid",
-  definition = tt_eval_grid
+  definition = build_eval_grid
 )
 
 setMethod(
-  f = "tt_eval",
+  f = "build_eval",
   signature = "matrix",
-  definition = tt_eval_grid
+  definition = build_eval_grid
 )
 
 setMethod(
-  f = "tt_eval",
+  f = "build_eval",
   signature = "tinytable_dataframe",
-  definition = tt_eval_grid
+  definition = build_eval_grid
 )

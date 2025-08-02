@@ -1,5 +1,5 @@
 setMethod(
-  f = "tt_eval",
+  f = "build_eval",
   signature = "tinytable_tabularray",
   definition = function(x, ...) {
     template <- readLines(

@@ -55,7 +55,8 @@ rbind_body_groupi <- function(x) {
 build_tt <- function(x, output = NULL) {
   output <- sanitize_output(output)
 
-  x <- switch(output,
+  x <- switch(
+    output,
     html = swap_class(x, "tinytable_bootstrap"),
     bootstrap = swap_class(x, "tinytable_bootstrap"),
     latex = swap_class(x, "tinytable_tabularray"),
@@ -109,7 +110,20 @@ build_tt <- function(x, output = NULL) {
 
       for (col_idx in j_clean) {
         col_data <- x@data[[col_idx]]
-        if (inherits(col_data, c("integer", "numeric", "double", "logical", "Date", "POSIXct", "POSIXlt"))) {
+        if (
+          inherits(
+            col_data,
+            c(
+              "integer",
+              "numeric",
+              "double",
+              "logical",
+              "Date",
+              "POSIXct",
+              "POSIXlt"
+            )
+          )
+        ) {
           skip_format <- TRUE
           break
         }
@@ -145,7 +159,7 @@ build_tt <- function(x, output = NULL) {
   }
 
   # draw the table
-  x <- tt_eval(x)
+  x <- build_eval(x)
 
   # groups require the table to be drawn first, expecially group_tabularray_col() and friends
   # Handle column groups from @group_data_j

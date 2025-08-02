@@ -68,7 +68,7 @@ apply_typst_spans <- function(body, sty) {
 }
 
 setMethod(
-  f = "tt_eval",
+  f = "build_eval",
   signature = "tinytable_typst",
   definition = function(x, ...) {
     out <- typst_template()
