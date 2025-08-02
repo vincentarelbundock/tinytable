@@ -174,10 +174,7 @@ theme_html_tabulator <- function(
 
     return(table)
   }
-
-  # Apply the theme function using style_tt's finalize mechanism
-  x <- style_tt(x, finalize = tabulator_theme_fn)
+  x <- build_prepare(x, tabulator_theme_fn, output = "tabulator")
 
   return(x)
 }
-

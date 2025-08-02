@@ -8,10 +8,12 @@ switch_latex_environment <- function(table_string, table = TRUE, to_env = "longt
     return(table_string)
   }
 
-  if (to_env == "longtblr" || isFALSE(table)) {
-    remove_table_wrapper <- FALSE
-  } else {
+  if (to_env == "longtblr") {
+    remove_table_wrapper <- TRUE  # longtblr is incompatible with table environment
+  } else if (isFALSE(table)) {
     remove_table_wrapper <- TRUE
+  } else {
+    remove_table_wrapper <- FALSE
   }
 
   # Remove table wrapper elements if requested
@@ -44,11 +46,9 @@ switch_latex_environment <- function(table_string, table = TRUE, to_env = "longt
   }
 
   # Switch the environment
-  table_string <- gsub("\\{tblr\\}\\[*", sprintf("{%s}", to_env), table_string)
-  table_string <- gsub("\\{talltblr\\}\\[", sprintf("{%s}", to_env), table_string)
-  table_string <- gsub("\\{talltblr\\}", sprintf("{%s}", to_env), table_string)
-  table_string <- gsub("\\{longtblr\\}\\[", sprintf("{%s}", to_env), table_string)
-  table_string <- gsub("\\{longtblr\\}", sprintf("{%s}", to_env), table_string)
+  table_string <- gsub("\\{tblr\\}(\\[.*?\\])?", sprintf("{%s}\\1", to_env), table_string)
+  table_string <- gsub("\\{talltblr\\}(\\[.*?\\])?", sprintf("{%s}\\1", to_env), table_string)
+  table_string <- gsub("\\{longtblr\\}(\\[.*?\\])?", sprintf("{%s}\\1", to_env), table_string)
 
   # Set proper column alignment for tabular
   if (to_env == "tabular" && !is.null(ncol)) {

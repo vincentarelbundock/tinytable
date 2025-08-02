@@ -1,3 +1,10 @@
+#' Rotate table theme (LaTeX and Typst only)
+#'
+#' @param x A `tinytable` object.
+#' @param angle Numeric. Rotation angle in degrees (0-360).
+#' @param ... Additional arguments (ignored).
+#' @return A modified `tinytable` object.
+#' @export
 theme_rotate <- function(x, angle = 90, ...) {
   assert_numeric(angle, len = 1, lower = 0, upper = 360)
 

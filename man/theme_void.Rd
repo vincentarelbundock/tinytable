@@ -9,7 +9,7 @@ theme_void(x, ...)
 \arguments{
 \item{x}{A tinytable object.}
 
-\item{...}{Additional arguments  are ignored.}
+\item{...}{Additional arguments are ignored.}
 }
 \description{
 Theme for a void table

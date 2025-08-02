@@ -1,3 +1,9 @@
+#' Striped theme with alternating row colors
+#'
+#' @param x A `tinytable` object.
+#' @param ... Additional arguments (ignored).
+#' @return A modified `tinytable` object.
+#' @export
 theme_striped <- function(x, ...) {
   x <- theme_drop_default(x)
 

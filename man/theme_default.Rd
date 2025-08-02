@@ -9,7 +9,10 @@ theme_default(x, ...)
 \arguments{
 \item{x}{A tinytable object.}
 
-\item{...}{Additional arguments  are ignored.}
+\item{...}{Additional arguments are ignored.}
+}
+\value{
+A modified \code{tinytable} object.
 }
 \description{
 Default theme for TinyTable

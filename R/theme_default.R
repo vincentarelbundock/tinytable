@@ -1,6 +1,9 @@
 #' Default theme for TinyTable
+#'
 #' @param x A tinytable object.
-#' @param ... Additional arguments  are ignored.
+#' @param ... Additional arguments are ignored.
+#' @return A modified `tinytable` object.
+#' @export
 theme_default <- function(x, ...) {
   # Apply placement functionality for LaTeX and Typst
   placement_latex <- get_option("tinytable_theme_placement_latex_float", default = NULL)

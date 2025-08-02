@@ -1,3 +1,9 @@
+#' Grid theme with borders around all cells
+#'
+#' @param x A `tinytable` object.
+#' @param ... Additional arguments (ignored).
+#' @return A modified `tinytable` object.
+#' @export
 theme_grid <- function(x, ...) {
   # now
   x <- theme_void(x)

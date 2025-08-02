@@ -219,6 +219,7 @@ setMethod(
 
     if (length(x@bootstrap_class) == 0) {
       if (
+        length(x@theme) == 0 ||
         is.null(x@theme[[1]]) ||
           is.function(x@theme[[1]]) ||
           isTRUE("default" %in% x@theme[[1]])
