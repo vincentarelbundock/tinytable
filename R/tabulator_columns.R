@@ -12,7 +12,7 @@ TABULATOR_FORMATTABLE_TYPES <- c(
 )
 TABULATOR_DATA_TYPE_FORMATTERS <- list(
     numeric = "money",
-    integer = "number",
+    integer = "money",
     double = "money",
     logical = "tickCross",
     Date = "datetime",
@@ -122,21 +122,14 @@ tabulator_format_numeric <- function(col_def, args) {
     num_zero <- args$num_zero %||%
         get_option("tinytable_format_num_zero", default = FALSE)
 
-    if (num_fmt == "money") {
-        col_def$formatter <- "money"
-        col_def$formatterParams <- list(
-            decimal = num_mark_dec,
-            thousand = num_mark_big,
-            precision = digits %||% 2,
-            symbol = "",
-            symbolAfter = FALSE
-        )
-    } else {
-        col_def$formatter <- "number"
-        if (!is.null(digits)) {
-            col_def$formatterParams <- list(precision = digits)
-        }
-    }
+    col_def$formatter <- "money"
+    col_def$formatterParams <- list(
+        decimal = num_mark_dec,
+        thousand = num_mark_big,
+        precision = digits %||% 2,
+        symbol = "",
+        symbolAfter = FALSE
+    )
 
     return(col_def)
 }
@@ -227,11 +220,7 @@ tabulator_apply_columns <- function(x) {
             if (!is.null(l$date_format)) {
                 x <- tabulator_apply_date_formatting(x, l)
             }
-            if (
-                !is.null(l$digits) ||
-                    !is.null(l$num_mark_big) ||
-                    !is.null(l$num_suffix)
-            ) {
+            if (tabulator_has_numeric_formatting(l)) {
                 x <- tabulator_apply_numeric_formatting(x, l)
             }
         }
@@ -307,6 +296,14 @@ tabulator_apply_date_formatting <- function(x, l) {
     return(x)
 }
 
+#' Check if lazy_format has numeric formatting
+#' @param l lazy_format operation
+#' @return TRUE if numeric formatting is present
+#' @keywords internal
+#' @noRd
+tabulator_has_numeric_formatting <- function(l) {
+    !is.null(l$digits) || !is.null(l$num_mark_big) || !is.null(l$num_suffix)
+}
 
 #' Apply numeric formatting to columns
 #' @param x tinytable object

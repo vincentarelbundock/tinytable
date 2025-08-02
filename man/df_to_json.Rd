@@ -4,14 +4,10 @@
 \alias{df_to_json}
 \title{Convert data frame or list to JSON}
 \usage{
-df_to_json(data, dataframe = "rows", auto_unbox = FALSE)
+df_to_json(data)
 }
 \arguments{
 \item{data}{A data frame or list to convert to JSON}
-
-\item{dataframe}{How to encode data frames ("rows" or "columns")}
-
-\item{auto_unbox}{Whether to automatically unbox single-element arrays}
 }
 \value{
 JSON string

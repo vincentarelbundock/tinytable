@@ -22,8 +22,11 @@ tabulator_clean_data <- function(x) {
         original_col <- x@data[[i]]
         col_type <- class(original_col)[1]
 
-        if (col_type %in% c(TABULATOR_NUMERIC_TYPES, TABULATOR_DATE_TYPES)) {
-            # Use raw data for numeric and date columns (formatters will handle display)
+        if (col_type %in% TABULATOR_NUMERIC_TYPES) {
+            # Use raw data for numeric columns (Tabulator formatters will handle display)
+            data_clean[[col_name]] <- original_col
+        } else if (col_type %in% TABULATOR_DATE_TYPES) {
+            # Use raw data for date columns (formatters will handle display)
             data_clean[[col_name]] <- original_col
         } else if (col_type == "logical") {
             # For logical columns, use formatted data if bool formatting is applied

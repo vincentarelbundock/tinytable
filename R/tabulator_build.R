@@ -42,16 +42,18 @@ setMethod(
     data_clean <- tabulator_clean_data(x)
     js_data <- df_to_json(data_clean)
 
-    # Build basic column definitions
-    columns <- lapply(seq_along(x@names), function(i) {
-      list(
-        title = x@names[i],
-        field = tabulator_clean_column_name(x@names[i])
-      )
-    })
+    # Build basic column definitions only if not already set by theme
+    if (length(x@tabulator_columns) == 0) {
+      columns <- lapply(seq_along(x@names), function(i) {
+        list(
+          title = x@names[i],
+          field = tabulator_clean_column_name(x@names[i])
+        )
+      })
 
-    # Store columns list for later processing
-    x@tabulator_columns <- columns
+      # Store columns list for later processing
+      x@tabulator_columns <- columns
+    }
 
     # Replace data in template
     template <- gsub(

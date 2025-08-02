@@ -14,7 +14,7 @@ df_to_json <- function(data) {
     } else if (length(value) == 1 && is.na(value)) {
       return("null")
     } else if (is.numeric(value) && length(value) == 1) {
-      return(as.character(value))
+      return(as.character(value)) # Return as unquoted number for JSON
     } else if (is.logical(value) && length(value) == 1) {
       return(if (value) "true" else "false")
     } else if (is.list(value)) {
