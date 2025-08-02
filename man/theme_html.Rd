@@ -6,21 +6,22 @@
 \usage{
 theme_html(
   x,
-  engine = "bootstrap",
+  engine = get_option("tinytable_html_engine", default = "bootstrap"),
   i = NULL,
   j = NULL,
-  class = NULL,
-  css = NULL,
-  css_rule = NULL,
-  tabulator_stylesheet = get_option("tinytable_theme_tabulator_stylesheet", default =
-    "bootstrap5"),
-  tabulator_layout = get_option("tinytable_theme_tabulator_layout", default =
+  class = get_option("tinytable_html_class", default = NULL),
+  css = get_option("tinytable_html_css", default = NULL),
+  css_rule = get_option("tinytable_html_css_rule", default = NULL),
+  tabulator_columns = get_option("tinytable_html_tabulator_columns", default = NULL),
+  tabulator_css_rule = get_option("tinytable_html_tabulator_css_rule", default = NULL),
+  tabulator_layout = get_option("tinytable_html_tabulator_layout", default =
     "fitDataTable"),
-  tabulator_pagination = TRUE,
-  tabulator_search = TRUE,
-  tabulator_options = get_option("tinytable_theme_tabulator_options", default = NULL),
-  tabulator_css_rule = NULL,
-  tabulator_columns = NULL,
+  tabulator_options = get_option("tinytable_html_tabulator_options", default = NULL),
+  tabulator_pagination = get_option("tinytable_html_tabulator_pagination", default =
+    TRUE),
+  tabulator_search = get_option("tinytable_html_tabulator_search", default = TRUE),
+  tabulator_stylesheet = get_option("tinytable_html_tabulator_stylesheet", default =
+    "bootstrap5"),
   ...
 )
 }
@@ -39,19 +40,19 @@ theme_html(
 
 \item{css_rule}{String. Complete CSS rules (shared across engines).}
 
-\item{tabulator_stylesheet}{Tabulator CSS theme (tabulator engine only).}
+\item{tabulator_columns}{Custom column definitions (tabulator engine only).}
+
+\item{tabulator_css_rule}{Custom CSS rules (tabulator engine only).}
 
 \item{tabulator_layout}{Table layout algorithm (tabulator engine only).}
+
+\item{tabulator_options}{Custom Tabulator.js configuration options (tabulator engine only).}
 
 \item{tabulator_pagination}{Pagination settings (tabulator engine only).}
 
 \item{tabulator_search}{Enable/disable search functionality (tabulator engine only).}
 
-\item{tabulator_options}{Custom Tabulator.js configuration options (tabulator engine only).}
-
-\item{tabulator_css_rule}{Custom CSS rules (tabulator engine only).}
-
-\item{tabulator_columns}{Custom column definitions (tabulator engine only).}
+\item{tabulator_stylesheet}{Tabulator CSS theme (tabulator engine only).}
 
 \item{...}{Additional arguments.}
 }

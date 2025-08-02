@@ -12,16 +12,13 @@
 #' @noRd
 theme_html_tabulator <- function(
     x,
-    tabulator_stylesheet = get_option("tinytable_theme_tabulator_stylesheet", default = "bootstrap5"),
-    tabulator_layout = get_option(
-      "tinytable_theme_tabulator_layout",
-      default = "fitDataTable"
-    ),
-    tabulator_pagination = TRUE,
-    tabulator_search = TRUE,
-    tabulator_options = get_option("tinytable_theme_tabulator_options", default = NULL),
-    tabulator_css_rule = NULL,
-    tabulator_columns = NULL,
+    tabulator_stylesheet,
+    tabulator_layout,
+    tabulator_pagination,
+    tabulator_search,
+    tabulator_options,
+    tabulator_css_rule,
+    tabulator_columns,
     ...) {
   assert_choice(
     tabulator_layout,

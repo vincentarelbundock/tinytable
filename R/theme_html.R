@@ -1,5 +1,4 @@
 #' HTML-specific styles and options
-#'
 #' @param x A `tinytable` object.
 #' @param engine Character string specifying the HTML engine: "bootstrap", "raw", or "tabulator".
 #' @param i Row indices (shared across engines).
@@ -18,19 +17,19 @@
 #'
 #' @export
 theme_html <- function(x,
-                       engine = "bootstrap",
+                       engine = get_option("tinytable_html_engine", default = "bootstrap"),
                        i = NULL,
                        j = NULL,
-                       class = NULL,
-                       css = NULL,
-                       css_rule = NULL,
-                       tabulator_stylesheet = get_option("tinytable_theme_tabulator_stylesheet", default = "bootstrap5"),
-                       tabulator_layout = get_option("tinytable_theme_tabulator_layout", default = "fitDataTable"),
-                       tabulator_pagination = TRUE,
-                       tabulator_search = TRUE,
-                       tabulator_options = get_option("tinytable_theme_tabulator_options", default = NULL),
-                       tabulator_css_rule = NULL,
-                       tabulator_columns = NULL,
+                       class = get_option("tinytable_html_class", default = NULL),
+                       css = get_option("tinytable_html_css", default = NULL),
+                       css_rule = get_option("tinytable_html_css_rule", default = NULL),
+                       tabulator_columns = get_option("tinytable_html_tabulator_columns", default = NULL),
+                       tabulator_css_rule = get_option("tinytable_html_tabulator_css_rule", default = NULL),
+                       tabulator_layout = get_option("tinytable_html_tabulator_layout", default = "fitDataTable"),
+                       tabulator_options = get_option("tinytable_html_tabulator_options", default = NULL),
+                       tabulator_pagination = get_option("tinytable_html_tabulator_pagination", default = TRUE),
+                       tabulator_search = get_option("tinytable_html_tabulator_search", default = TRUE),
+                       tabulator_stylesheet = get_option("tinytable_html_tabulator_stylesheet", default = "bootstrap5"),
                        ...) {
   assert_choice(engine, c("bootstrap", "raw", "tabulator"))
 
@@ -53,4 +52,3 @@ theme_html <- function(x,
 
   return(x)
 }
-

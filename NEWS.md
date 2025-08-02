@@ -10,6 +10,7 @@ Deprecated or replaced features:
 * `output` argument from `style_tt()`.
 * `tabularray_inner` and `tabularray_outer` arguments from `style_tt()`. Use `theme_latex()` instead.
 * `bootstrap_class`, `bootstrap_css`, and `bootstrap_css_rule` arguments from `style_tt()`. Use `theme_html()` instead.
+* `options(tinytable_latex_float_placement)` has been deprecated. Use `options(tinytable_latex_placement)` instead.
 
 New:
 

@@ -6,8 +6,8 @@
 \usage{
 theme_typst(
   x,
-  figure = TRUE,
-  align_figure = get_option("tinytable_theme_placement_horizontal", NULL),
+  figure = get_option("tinytable_typst_figure", default = TRUE),
+  align_figure = get_option("tinytable_typst_align_figure", NULL),
   ...
 )
 }

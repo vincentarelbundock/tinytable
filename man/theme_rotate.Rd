@@ -4,7 +4,11 @@
 \alias{theme_rotate}
 \title{Rotate table theme (LaTeX and Typst only)}
 \usage{
-theme_rotate(x, angle = 90, ...)
+theme_rotate(
+  x,
+  angle = get_option("tinytable_rotate_angle", default = 90),
+  ...
+)
 }
 \arguments{
 \item{x}{A \code{tinytable} object.}

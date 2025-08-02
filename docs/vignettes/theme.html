@@ -333,12 +333,88 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text"><code>style_tt</code></span></a>
   </div>
 </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Theme formats</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/theme_html.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_html</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/theme_latex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_latex</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/theme_typst.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_typst</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Theme styles</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/theme_default.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_default</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/theme_grid.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_grid</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/theme_revealjs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_revealjs</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/theme_rotate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_rotate</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/theme_striped.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_striped</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/theme_void.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_void</code></span></a>
+  </div>
+</li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/theme_tt.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><code>theme_tt</code></span></a>
+ <span class="menu-text"><code>theme_tt</code> (deprecated)</span></a>
   </div>
 </li>
+      </ul>
+  </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../man/group_tt.html" class="sidebar-item-text sidebar-link">
@@ -404,7 +480,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#visual-themes" id="toc-visual-themes" class="nav-link" data-scroll-target="#visual-themes">Visual themes</a></li>
   <li><a href="#custom-themes" id="toc-custom-themes" class="nav-link" data-scroll-target="#custom-themes">Custom themes</a></li>
   <li><a href="#tabular-latex-and-html" id="toc-tabular-latex-and-html" class="nav-link" data-scroll-target="#tabular-latex-and-html">Tabular (LaTeX and HTML)</a></li>
-  <li><a href="#resize" id="toc-resize" class="nav-link" data-scroll-target="#resize">Resize</a></li>
+  <li><a href="#latex-resize" id="toc-latex-resize" class="nav-link" data-scroll-target="#latex-resize">LaTeX Resize</a></li>
   <li><a href="#placement" id="toc-placement" class="nav-link" data-scroll-target="#placement">Placement</a></li>
   <li><a href="#rotate" id="toc-rotate" class="nav-link" data-scroll-target="#rotate">Rotate</a></li>
   <li><a href="#multipage" id="toc-multipage" class="nav-link" data-scroll-target="#multipage">Multipage</a></li>
@@ -435,12 +511,12 @@ MathJax = {
   }
 };
 </script>
-<p><code>tinytable</code> offers a very flexible theming framwork, which includes a few basic visual looks, as well as other functions to apply collections of transformations to <code>tinytable</code> objects in a repeatable way. These themes can be applied by supplying a string or function to the <code>theme</code> argument in <code>tt()</code>. Alternatively, users can call the <code>theme_tt()</code> function.</p>
-<p>The main difference between <code>theme_tt()</code> and the other options in package, is that whereas <code>style_tt()</code> and <code>format_tt()</code> aim to be output agnostic, <code>theme_tt()</code> supplies transformations that can be output-specific, and which can have their own sets of distinct arguments. See below for a few examples.</p>
+<p><code>tinytable</code> offers a very flexible theming framwork, which includes a few basic visual looks, as well as other functions to apply collections of transformations to <code>tinytable</code> objects in a repeatable way. These themes can be applied by supplying a string or function to the <code>theme</code> argument in <code>tt()</code>. Alternatively, users can call the specific theme functions like <code>theme_striped()</code>, <code>theme_grid()</code>, etc.</p>
+<p>The main difference between theme functions and the other options in package, is that whereas <code>style_tt()</code> and <code>format_tt()</code> aim to be output agnostic, theme functions supply transformations that can be output-specific, and which can have their own sets of distinct arguments. See below for a few examples.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tinytable_tt_digits =</span> <span class="dv">3</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tinytable_theme_placement_latex_float =</span> <span class="st">"H"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tinytable_latex_placement =</span> <span class="st">"H"</span>)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="visual-themes" class="level2">
@@ -453,8 +529,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_2bipi28l6cn0k30d7yib(i, j, css_id) {
-          var table = document.getElementById("tinytable_2bipi28l6cn0k30d7yib");
+      function styleCell_lw5cyrd30u2y2dy8isw7(i, j, css_id) {
+          var table = document.getElementById("tinytable_lw5cyrd30u2y2dy8isw7");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -463,8 +539,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function spanCell_2bipi28l6cn0k30d7yib(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_2bipi28l6cn0k30d7yib");
+      function spanCell_lw5cyrd30u2y2dy8isw7(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_lw5cyrd30u2y2dy8isw7");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -495,14 +571,14 @@ MathJax = {
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '1', j: 0 }, { i: '3', j: 0 }, { i: '1', j: 1 }, { i: '3', j: 1 }, { i: '1', j: 2 }, { i: '3', j: 2 }, { i: '1', j: 3 }, { i: '3', j: 3 }, { i: '1', j: 4 }, { i: '3', j: 4 },  ], css_id: 'tinytable_css_pehoortb38riyr1ch7ay',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '4', j: 0 }, { i: '0', j: 1 }, { i: '4', j: 1 }, { i: '0', j: 2 }, { i: '4', j: 2 }, { i: '0', j: 3 }, { i: '4', j: 3 }, { i: '0', j: 4 }, { i: '4', j: 4 },  ], css_id: 'tinytable_css_jl6l8volclyqhgud5fap',}, 
+          { positions: [ { i: '1', j: 0 }, { i: '3', j: 0 }, { i: '1', j: 1 }, { i: '3', j: 1 }, { i: '1', j: 2 }, { i: '3', j: 2 }, { i: '1', j: 3 }, { i: '3', j: 3 }, { i: '1', j: 4 }, { i: '3', j: 4 },  ], css_id: 'tinytable_css_6m048g2aonguoarc3wp4',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '4', j: 0 }, { i: '0', j: 1 }, { i: '4', j: 1 }, { i: '0', j: 2 }, { i: '4', j: 2 }, { i: '0', j: 3 }, { i: '4', j: 3 }, { i: '0', j: 4 }, { i: '4', j: 4 },  ], css_id: 'tinytable_css_5g58ut56czkjbo7w0ss7',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_2bipi28l6cn0k30d7yib(cell.i, cell.j, group.css_id);
+                  styleCell_lw5cyrd30u2y2dy8isw7(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -510,11 +586,11 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_pehoortb38riyr1ch7ay, .table th.tinytable_css_pehoortb38riyr1ch7ay { background-color: #ededed; }
-      .table td.tinytable_css_jl6l8volclyqhgud5fap, .table th.tinytable_css_jl6l8volclyqhgud5fap { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_6m048g2aonguoarc3wp4, .table th.tinytable_css_6m048g2aonguoarc3wp4 { background-color: #ededed; }
+      .table td.tinytable_css_5g58ut56czkjbo7w0ss7, .table th.tinytable_css_5g58ut56czkjbo7w0ss7 { border-bottom: solid #d3d8dc 0.1em; }
     </style>
     <div class="container">
-      <table class="table table-striped" id="tinytable_2bipi28l6cn0k30d7yib" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-striped" id="tinytable_lw5cyrd30u2y2dy8isw7" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -560,14 +636,16 @@ MathJax = {
     </div>
 <!-- hack to avoid NA insertion in last line -->
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x) <span class="sc">|&gt;</span> <span class="fu">theme_tt</span>(<span class="st">"striped"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x) <span class="sc">|&gt;</span> <span class="fu">theme_striped</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
     <script>
 
-      function styleCell_1fwpugq0frfyj3oxbnas(i, j, css_id) {
-          var table = document.getElementById("tinytable_1fwpugq0frfyj3oxbnas");
+      function styleCell_c2u8ejcqrpqf91iz5evc(i, j, css_id) {
+          var table = document.getElementById("tinytable_c2u8ejcqrpqf91iz5evc");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -576,8 +654,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function spanCell_1fwpugq0frfyj3oxbnas(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_1fwpugq0frfyj3oxbnas");
+      function spanCell_c2u8ejcqrpqf91iz5evc(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_c2u8ejcqrpqf91iz5evc");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -608,15 +686,15 @@ MathJax = {
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '4', j: 0 }, { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 },  ], css_id: 'tinytable_css_mcs3s31la82cue1zdovj',}, 
-          { positions: [ { i: '1', j: 0 }, { i: '3', j: 0 }, { i: '1', j: 1 }, { i: '3', j: 1 }, { i: '1', j: 2 }, { i: '3', j: 2 }, { i: '1', j: 3 }, { i: '3', j: 3 }, { i: '1', j: 4 }, { i: '3', j: 4 },  ], css_id: 'tinytable_css_34s7qw8l7szo2s52pz2j',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_n8vfptx46cuorg00kcu4',}, 
+          { positions: [ { i: '4', j: 0 }, { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 },  ], css_id: 'tinytable_css_maf9uc003f88j4knodyl',}, 
+          { positions: [ { i: '1', j: 0 }, { i: '3', j: 0 }, { i: '1', j: 1 }, { i: '3', j: 1 }, { i: '1', j: 2 }, { i: '3', j: 2 }, { i: '1', j: 3 }, { i: '3', j: 3 }, { i: '1', j: 4 }, { i: '3', j: 4 },  ], css_id: 'tinytable_css_gci818uldz816rfu5e04',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_ed5u1oct3qn0qqkn7cgc',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_1fwpugq0frfyj3oxbnas(cell.i, cell.j, group.css_id);
+                  styleCell_c2u8ejcqrpqf91iz5evc(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -624,12 +702,12 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_mcs3s31la82cue1zdovj, .table th.tinytable_css_mcs3s31la82cue1zdovj { border-bottom: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_34s7qw8l7szo2s52pz2j, .table th.tinytable_css_34s7qw8l7szo2s52pz2j { background-color: #ededed; }
-      .table td.tinytable_css_n8vfptx46cuorg00kcu4, .table th.tinytable_css_n8vfptx46cuorg00kcu4 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_maf9uc003f88j4knodyl, .table th.tinytable_css_maf9uc003f88j4knodyl { border-bottom: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_gci818uldz816rfu5e04, .table th.tinytable_css_gci818uldz816rfu5e04 { background-color: #ededed; }
+      .table td.tinytable_css_ed5u1oct3qn0qqkn7cgc, .table th.tinytable_css_ed5u1oct3qn0qqkn7cgc { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; border-bottom: solid #d3d8dc 0.1em; }
     </style>
     <div class="container">
-      <table class="table table-striped" id="tinytable_1fwpugq0frfyj3oxbnas" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-striped" id="tinytable_c2u8ejcqrpqf91iz5evc" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -683,8 +761,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_azshzn4s99qos1ffg9qy(i, j, css_id) {
-          var table = document.getElementById("tinytable_azshzn4s99qos1ffg9qy");
+      function styleCell_fhmb4hy73n6xbnlq2m5o(i, j, css_id) {
+          var table = document.getElementById("tinytable_fhmb4hy73n6xbnlq2m5o");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -693,8 +771,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function spanCell_azshzn4s99qos1ffg9qy(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_azshzn4s99qos1ffg9qy");
+      function spanCell_fhmb4hy73n6xbnlq2m5o(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_fhmb4hy73n6xbnlq2m5o");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -730,7 +808,7 @@ MathJax = {
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_azshzn4s99qos1ffg9qy(cell.i, cell.j, group.css_id);
+                  styleCell_fhmb4hy73n6xbnlq2m5o(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -740,7 +818,7 @@ MathJax = {
       /* tinytable css entries after */
     </style>
     <div class="container">
-      <table class="table table-bordered" id="tinytable_azshzn4s99qos1ffg9qy" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-bordered" id="tinytable_fhmb4hy73n6xbnlq2m5o" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -788,14 +866,14 @@ MathJax = {
 </div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x, <span class="at">theme =</span> <span class="st">"bootstrap"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x, <span class="at">theme =</span> <span class="st">"void"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
     <script>
 
-      function styleCell_8m2hqhfqfiypsccvij8j(i, j, css_id) {
-          var table = document.getElementById("tinytable_8m2hqhfqfiypsccvij8j");
+      function styleCell_i2j71suqrv4qvy2k2slh(i, j, css_id) {
+          var table = document.getElementById("tinytable_i2j71suqrv4qvy2k2slh");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -804,8 +882,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function spanCell_8m2hqhfqfiypsccvij8j(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_8m2hqhfqfiypsccvij8j");
+      function spanCell_i2j71suqrv4qvy2k2slh(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_i2j71suqrv4qvy2k2slh");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -841,7 +919,7 @@ MathJax = {
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_8m2hqhfqfiypsccvij8j(cell.i, cell.j, group.css_id);
+                  styleCell_i2j71suqrv4qvy2k2slh(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -851,7 +929,7 @@ MathJax = {
       /* tinytable css entries after */
     </style>
     <div class="container">
-      <table class="table" id="tinytable_8m2hqhfqfiypsccvij8j" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_i2j71suqrv4qvy2k2slh" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -906,7 +984,7 @@ MathJax = {
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>theme_vincent <span class="ot">&lt;-</span> <span class="cf">function</span>(x, ...) {</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">&lt;-</span> x <span class="sc">|&gt;</span> </span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">style_tt</span>(<span class="at">color =</span> <span class="st">"teal"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_tt</span>(<span class="st">"default"</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_default</span>()</span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  out<span class="sc">@</span>caption <span class="ot">&lt;-</span> <span class="st">"Always use the same caption."</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  out<span class="sc">@</span>width <span class="ot">&lt;-</span> .<span class="dv">5</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out)</span>
@@ -920,8 +998,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_2rnxt19wbehy17n5stvf(i, j, css_id) {
-          var table = document.getElementById("tinytable_2rnxt19wbehy17n5stvf");
+      function styleCell_r1929fcxfgw564viiz60(i, j, css_id) {
+          var table = document.getElementById("tinytable_r1929fcxfgw564viiz60");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -930,8 +1008,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function spanCell_2rnxt19wbehy17n5stvf(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_2rnxt19wbehy17n5stvf");
+      function spanCell_r1929fcxfgw564viiz60(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_r1929fcxfgw564viiz60");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -962,15 +1040,15 @@ MathJax = {
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '2', j: 0 }, { i: '2', j: 1 },  ], css_id: 'tinytable_css_xhi9s3xk6899b0sftv09',}, 
-          { positions: [ { i: '1', j: 0 }, { i: '1', j: 1 },  ], css_id: 'tinytable_css_9dnd6dvj1vjn8ovdgb7m',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 },  ], css_id: 'tinytable_css_xa800u7jbm34q5wlegc4',}, 
+          { positions: [ { i: '2', j: 0 }, { i: '2', j: 1 },  ], css_id: 'tinytable_css_4ua3xz14t09nkdzyxp93',}, 
+          { positions: [ { i: '1', j: 0 }, { i: '1', j: 1 },  ], css_id: 'tinytable_css_f4vi0uagg5r97evll2mc',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 },  ], css_id: 'tinytable_css_t5lq0uvbp17p1lbqk1m0',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_2rnxt19wbehy17n5stvf(cell.i, cell.j, group.css_id);
+                  styleCell_r1929fcxfgw564viiz60(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -978,12 +1056,12 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_xhi9s3xk6899b0sftv09, .table th.tinytable_css_xhi9s3xk6899b0sftv09 { color: #008080; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_9dnd6dvj1vjn8ovdgb7m, .table th.tinytable_css_9dnd6dvj1vjn8ovdgb7m { color: #008080; }
-      .table td.tinytable_css_xa800u7jbm34q5wlegc4, .table th.tinytable_css_xa800u7jbm34q5wlegc4 { color: #008080; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_4ua3xz14t09nkdzyxp93, .table th.tinytable_css_4ua3xz14t09nkdzyxp93 { color: #008080; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_f4vi0uagg5r97evll2mc, .table th.tinytable_css_f4vi0uagg5r97evll2mc { color: #008080; }
+      .table td.tinytable_css_t5lq0uvbp17p1lbqk1m0, .table th.tinytable_css_t5lq0uvbp17p1lbqk1m0 { color: #008080; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_2rnxt19wbehy17n5stvf" style="table-layout: fixed; width: 50% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_r1929fcxfgw564viiz60" style="table-layout: fixed; width: 50% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         </thead><caption>Always use the same caption.</caption>
               <tbody><tr>
@@ -1012,8 +1090,8 @@ MathJax = {
 
     <script>
 
-      function styleCell_j6a63tozd17a8x82xa9a(i, j, css_id) {
-          var table = document.getElementById("tinytable_j6a63tozd17a8x82xa9a");
+      function styleCell_kplivhbze3shl7dzv80x(i, j, css_id) {
+          var table = document.getElementById("tinytable_kplivhbze3shl7dzv80x");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -1022,8 +1100,8 @@ MathJax = {
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function spanCell_j6a63tozd17a8x82xa9a(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_j6a63tozd17a8x82xa9a");
+      function spanCell_kplivhbze3shl7dzv80x(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_kplivhbze3shl7dzv80x");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -1054,15 +1132,15 @@ MathJax = {
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '3', j: 0 }, { i: '3', j: 1 }, { i: '3', j: 2 },  ], css_id: 'tinytable_css_jzj8bwdq5ozmd25xnk2s',}, 
-          { positions: [ { i: '1', j: 0 }, { i: '2', j: 0 }, { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '1', j: 2 }, { i: '2', j: 2 },  ], css_id: 'tinytable_css_56p9an86e51yxnrsyeil',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 },  ], css_id: 'tinytable_css_gzejc7icfa3va6o8slpb',}, 
+          { positions: [ { i: '3', j: 0 }, { i: '3', j: 1 }, { i: '3', j: 2 },  ], css_id: 'tinytable_css_94et9100xuxboxs1lg9w',}, 
+          { positions: [ { i: '1', j: 0 }, { i: '2', j: 0 }, { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '1', j: 2 }, { i: '2', j: 2 },  ], css_id: 'tinytable_css_tc8e4nkte04gmgd5bcac',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 },  ], css_id: 'tinytable_css_66tihpfjhq407xhnjfwb',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_j6a63tozd17a8x82xa9a(cell.i, cell.j, group.css_id);
+                  styleCell_kplivhbze3shl7dzv80x(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1070,12 +1148,12 @@ MathJax = {
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_jzj8bwdq5ozmd25xnk2s, .table th.tinytable_css_jzj8bwdq5ozmd25xnk2s { color: #008080; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_56p9an86e51yxnrsyeil, .table th.tinytable_css_56p9an86e51yxnrsyeil { color: #008080; }
-      .table td.tinytable_css_gzejc7icfa3va6o8slpb, .table th.tinytable_css_gzejc7icfa3va6o8slpb { color: #008080; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_94et9100xuxboxs1lg9w, .table th.tinytable_css_94et9100xuxboxs1lg9w { color: #008080; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_tc8e4nkte04gmgd5bcac, .table th.tinytable_css_tc8e4nkte04gmgd5bcac { color: #008080; }
+      .table td.tinytable_css_66tihpfjhq407xhnjfwb, .table th.tinytable_css_66tihpfjhq407xhnjfwb { color: #008080; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_j6a63tozd17a8x82xa9a" style="table-layout: fixed; width: 50% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_kplivhbze3shl7dzv80x" style="table-layout: fixed; width: 50% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         </thead><caption>Always use the same caption.</caption>
               <tbody><tr>
@@ -1130,10 +1208,12 @@ MathJax = {
 <p>The <code>tabular</code> theme is designed to provide a more “raw” table, without a floating table environment in LaTeX, and without CSS or Javascript in HTML.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x) <span class="sc">|&gt;</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_tt</span>(<span class="st">"tabular"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_latex</span>(<span class="at">environment =</span> <span class="st">"tabular"</span>, <span class="at">table =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">"latex"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>\begin{tabular}{lllll}
+<pre><code>\begin{table}[H]
+\centering
+\begin{tabular}{lllll}
 \hline
 mpg &amp; cyl &amp; disp &amp; hp &amp; drat \\ \hline
 21 &amp; 6 &amp; 160 &amp; 110 &amp; 3.9 \\
@@ -1141,12 +1221,13 @@ mpg &amp; cyl &amp; disp &amp; hp &amp; drat \\ \hline
 22.8 &amp; 4 &amp; 108 &amp; 93 &amp; 3.85 \\
 21.4 &amp; 6 &amp; 258 &amp; 110 &amp; 3.08 \\
 \hline
-\end{tabular} </code></pre>
+\end{tabular}
+\end{table} </code></pre>
 </div>
 </div>
 </section>
-<section id="resize" class="level2">
-<h2 class="anchored" data-anchor-id="resize">Resize</h2>
+<section id="latex-resize" class="level2">
+<h2 class="anchored" data-anchor-id="latex-resize">LaTeX Resize</h2>
 <p>LaTeX only.</p>
 </section>
 <section id="placement" class="level2">

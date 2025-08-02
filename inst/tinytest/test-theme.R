@@ -2,12 +2,12 @@ source("helpers.R")
 using("tinysnapshot")
 
 # Bug: \begin{table}[H][H]
-options(tinytable_theme_placement_latex_float = "H")
+options(tinytable_latex_placement = "H")
 x <- mtcars[1:4, 1:4]
 tab <- tt(x) |> theme_latex(resize_width = .9, resize_direction = "down")
 tab@output <- "latex"
 expect_snapshot_print(tab, label = "theme-placement_options_no_doubling")
-options(tinytable_theme_placement_latex_float = "H")
+options(tinytable_latex_placement = "H")
 
 # Issue #206: resize with footnote
 k <- data.frame(X = 1) |>

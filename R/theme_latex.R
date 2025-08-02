@@ -74,21 +74,21 @@ switch_latex_environment <- function(table_string,
 #' @param resize_direction Character string indicating resize direction: "down", "up", or "both".
 #'   Defaults to `get_option("tinytable_theme_resize_direction", "down")`. When NULL, no resizing is applied.
 #' @param placement String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp".
-#'   Defaults to `get_option("tinytable_theme_placement_latex_float", NULL)`. When NULL, no placement is applied.
+#'   Defaults to `get_option("tinytable_latex_placement", NULL)`. When NULL, no placement is applied.
 #' @param ... Additional arguments.
 #'
 #' @export
 theme_latex <- function(x,
                         inner = NULL,
                         outer = NULL,
-                        environment = NULL,
-                        environment_table = TRUE,
-                        multipage = FALSE,
-                        rowhead = get_option("tinytable_theme_multipage_rowhead", 0L),
-                        rowfoot = get_option("tinytable_theme_multipage_rowfoot", 0L),
-                        resize_width = get_option("tinytable_theme_resize_width", 1),
-                        resize_direction = NULL,
-                        placement = get_option("tinytable_theme_placement_latex_float", NULL),
+                        environment = get_option("tinytable_latex_environment", default = NULL),
+                        environment_table = get_option("tinytable_latex_environment_table", default = TRUE),
+                        multipage = get_option("tinytable_latex_multipage", default = FALSE),
+                        rowhead = get_option("tinytable_latex_rowhead", 0L),
+                        rowfoot = get_option("tinytable_latex_rowfoot", 0L),
+                        resize_width = get_option("tinytable_latex_resize_width", 1),
+                        resize_direction = get_option("tinytable_latex_resize_direction", default = NULL),
+                        placement = get_option("tinytable_latex_placement", NULL),
                         ...) {
   assert_flag(environment_table)
   assert_string(inner, null.ok = TRUE)

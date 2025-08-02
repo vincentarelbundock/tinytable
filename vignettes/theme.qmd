@@ -21,7 +21,7 @@ The main difference between theme functions and the other options in package, is
 ```{r}
 library(tinytable)
 options(tinytable_tt_digits = 3)
-options(tinytable_theme_placement_latex_float = "H")
+options(tinytable_latex_placement = "H")
 x <- mtcars[1:4, 1:5]
 ```
 
@@ -31,7 +31,9 @@ To begin, let's explore a few of the basic looks supplied by themes:
 
 ```{r}
 tt(x, theme = "striped")
+```
 
+```{r}
 tt(x) |> theme_striped()
 ```
 
@@ -39,11 +41,9 @@ tt(x) |> theme_striped()
 tt(x, theme = "grid")
 ```
 
-::: {.content-visible when-format="pdf"}
 ```{r}
 tt(x, theme = "void")
 ```
-:::
 
 
 ## Custom themes
@@ -135,7 +135,7 @@ tt(tmp) |> theme_latex(resize_width = .9, resize_direction = "down")
 The `theme_latex()` function includes placement control over the positioning of the table in LaTeX documents, using floating parameters like `H` (from the `float` LaTeX package) to specify where the table should appear.
 
 ```{r placement-theme}
-options(tinytable_theme_placement_latex_float = NULL)
+options(tinytable_latex_placement = NULL)
 tt(x) |>
   theme_latex(placement = "H") |>
   print(output = "latex")

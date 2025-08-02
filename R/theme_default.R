@@ -6,8 +6,8 @@
 #' @export
 theme_default <- function(x, ...) {
   # Apply placement functionality for LaTeX and Typst
-  placement_latex <- get_option("tinytable_theme_placement_latex_float", default = NULL)
-  placement_typst <- get_option("tinytable_theme_default_horizontal", "c")
+  placement_latex <- get_option("tinytable_latex_placement", default = NULL)
+  placement_typst <- get_option("tinytable_typst_align_figure", "c")
 
   if (!is.null(placement_latex)) {
     x <- theme_latex(x, placement = placement_latex)

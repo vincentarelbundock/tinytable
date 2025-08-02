@@ -87,9 +87,9 @@ css_dark <- "
 #' @export
 theme_revealjs <- function(
   x,
-  css = get_option("tinytable_theme_revealjs_css", default = "light"),
-  fontsize = get_option("tinytable_theme_revealjs_fontsize", default = 0.8),
-  fontsize_caption = get_option( "tinytable_theme_revealjs_fontsize_caption", default = 1)) {
+  css = get_option("tinytable_revealjs_css", default = "light"),
+  fontsize = get_option("tinytable_revealjs_fontsize", default = 0.8),
+  fontsize_caption = get_option("tinytable_revealjs_fontsize_caption", default = 1)) {
   if (css == "light") {
     css <- sprintf(css_light, fontsize, fontsize_caption)
   } else if (css == "dark") {
