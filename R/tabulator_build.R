@@ -40,7 +40,7 @@ setMethod(
 
     # Convert data to JSON for Tabulator
     data_clean <- tabulator_clean_data(x)
-    js_data <- df_to_json(data_clean, dataframe = "rows")
+    js_data <- df_to_json(data_clean)
 
     # Build basic column definitions
     columns <- lapply(seq_along(x@names), function(i) {

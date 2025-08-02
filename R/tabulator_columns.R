@@ -256,7 +256,7 @@ tabulator_apply_columns <- function(x) {
     }
 
     # Convert columns to JSON and replace in template
-    columns_json <- df_to_json(x@tabulator_columns, auto_unbox = TRUE)
+    columns_json <- df_to_json(x@tabulator_columns)
 
     # Replace both patterns - placeholder and existing columns array
     x@table_string <- gsub(
@@ -401,7 +401,7 @@ tabulator_finalize_columns_placeholder <- function(x) {
         columns_json <- if (is.list(columns) && !is.null(columns$json_string)) {
             columns$json_string
         } else if (is.list(columns)) {
-            df_to_json(columns, auto_unbox = TRUE)
+            df_to_json(columns)
         } else {
             columns
         }

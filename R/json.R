@@ -3,13 +3,10 @@
 #' Simple helper function to convert a data frame or list to JSON format
 #'
 #' @param data A data frame or list to convert to JSON
-#' @param dataframe How to encode data frames ("rows" or "columns")
-#' @param auto_unbox Whether to automatically unbox single-element arrays
 #'
 #' @return JSON string
 #' @keywords internal
-df_to_json <- function(data, dataframe = "rows", auto_unbox = FALSE) {
-  
+df_to_json <- function(data) {
   # Helper function to convert a value to JSON
   value_to_json <- function(value) {
     if (is.null(value)) {
@@ -44,21 +41,21 @@ df_to_json <- function(data, dataframe = "rows", auto_unbox = FALSE) {
       return(paste0("[", paste(json_values, collapse = ","), "]"))
     }
   }
-  
+
   # Helper function to convert a list to JSON object
   list_to_json <- function(lst) {
     if (length(lst) == 0) {
       return("{}")
     }
-    
+
     pairs <- sapply(names(lst), function(name) {
       value_json <- value_to_json(lst[[name]])
       paste0('"', name, '":', value_json)
     })
-    
+
     return(paste0("{", paste(pairs, collapse = ","), "}"))
   }
-  
+
   # Handle list input (for column definitions)
   if (is.list(data) && !is.data.frame(data)) {
     # Check if this is a list of lists (array of objects)
@@ -73,34 +70,28 @@ df_to_json <- function(data, dataframe = "rows", auto_unbox = FALSE) {
       return(list_to_json(data))
     }
   }
-  
-  # Handle data frame input
-  if (dataframe == "rows") {
-    # Convert to array of objects
-    rows <- list()
-    for (i in seq_len(nrow(data))) {
-      row <- list()
-      for (j in seq_len(ncol(data))) {
-        col_name <- names(data)[j]
-        value <- data[i, j]
-        row[[col_name]] <- value_to_json(value)
-      }
-      # Build row JSON
-      row_json <- paste0(
-        "{",
-        paste(
-          sapply(names(row), function(name) {
-            paste0('"', name, '":', row[[name]])
-          }),
-          collapse = ","
-        ),
-        "}"
-      )
-      rows[[i]] <- row_json
-    }
-    return(paste0("[", paste(rows, collapse = ","), "]"))
-  } else {
-    stop("Only dataframe='rows' is supported")
-  }
-}
 
+  # Handle data frame input - convert to array of objects
+  rows <- list()
+  for (i in seq_len(nrow(data))) {
+    row <- list()
+    for (j in seq_len(ncol(data))) {
+      col_name <- names(data)[j]
+      value <- data[i, j]
+      row[[col_name]] <- value_to_json(value)
+    }
+    # Build row JSON
+    row_json <- paste0(
+      "{",
+      paste(
+        sapply(names(row), function(name) {
+          paste0('"', name, '":', row[[name]])
+        }),
+        collapse = ","
+      ),
+      "}"
+    )
+    rows[[i]] <- row_json
+  }
+  return(paste0("[", paste(rows, collapse = ","), "]"))
+}

@@ -77,7 +77,7 @@ tabulator_apply_search <- function(x) {
     return(x)
   }
 
-  columns_json <- df_to_json(x@tabulator_columns, auto_unbox = TRUE)
+  columns_json <- df_to_json(x@tabulator_columns)
 
   # Create search bar HTML
   search_bar_template <- '
