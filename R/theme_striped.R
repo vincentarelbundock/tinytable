@@ -1,27 +1,20 @@
+#' Striped theme with alternating row colors
+#'
+#' @param x A `tinytable` object.
+#' @param ... Additional arguments (ignored).
+#' @return A modified `tinytable` object.
+#' @export
 theme_striped <- function(x, ...) {
-  fn <- theme_placement_factory(
-    horizontal = get_option("tinytable_theme_default_horizontal", "c"),
-    latex_float = get_option(
-      "tinytable_theme_placement_latex_float",
-      default = NULL
-    )
-  )
-  x <- style_tt(x, finalize = fn)
-
-  x <- style_tt(
-    x,
-    tabularray_inner = "row{even}={bg=black!5!white}",
-    bootstrap_class = "table table-striped"
-  )
-
+  # now: all formats
+  x <- theme_html(x, engine = "bootstrap", class = "table table-striped")
+  x <- theme_latex(x, inner = "row{even}={bg=black!5!white}")
   x <- style_tt(
     x,
     i = seq(1, nrow(x), by = 2),
-    background = "#ededed"
-  )
+    background = "#ededed")
 
-  # theme_default
-  if (isTRUE(x@output %in% c("html", "bootstrap", "tabulator", "typst"))) {
+  # prepare
+  fn <- function(x) {
     x <- style_tt(
       x,
       i = nrow(x),
@@ -36,6 +29,9 @@ theme_striped <- function(x, ...) {
       line_color = "#d3d8dc",
       line_width = 0.1
     )
+    return(x)
   }
+  x <- build_prepare(x, fn, output = c("html", "bootstrap", "typst", "grid"))
+
   return(x)
 }

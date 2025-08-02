@@ -1,28 +1,30 @@
+#' Grid theme with borders around all cells
+#'
+#' @param x A `tinytable` object.
+#' @param ... Additional arguments (ignored).
+#' @return A modified `tinytable` object.
+#' @export
 theme_grid <- function(x, ...) {
-  fn <- theme_placement_factory(
-    horizontal = get_option("tinytable_theme_default_horizontal", "c"),
-    latex_float = get_option(
-      "tinytable_theme_placement_latex_float",
-      default = NULL
+  # now
+  x <- theme_void(x)
+
+  # prepare: before table is drawn
+  fn <- function(x) theme_latex(x, inner = "hlines, vlines,")
+  x <- build_prepare(x, fn, output = "latex")
+
+  fn <- function(x) theme_html(x, engine = "bootstrap", class = "table table-bordered")
+  x <- build_prepare(x, fn, output = c("html", "bootstrap"))
+
+  # finalize: after table is drawn
+  fn <- function(x) {
+    x@table_string <- sub(
+      "stroke: none,",
+      "stroke: (paint: black),",
+      x@table_string
     )
-  )
-  x <- style_tt(x, finalize = fn)
-
-  fn <- function(table) {
-    if (isTRUE(table@output == "latex")) {
-      table <- theme_void_fn(table)
-    } else if (isTRUE(table@output == "typst")) {
-      table@table_string <- sub(
-        "stroke: none,",
-        "stroke: (paint: black),",
-        table@table_string
-      )
-    }
-    return(table)
+    return(x)
   }
+  x <- build_finalize(x, fn, output = "typst")
 
-  x <- style_tt(x, tabularray_inner = "hlines, vlines,")
-  x <- style_tt(x, bootstrap_class = "table table-bordered")
-  x <- style_tt(x, finalize = fn)
   return(x)
 }

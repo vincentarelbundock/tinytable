@@ -4,7 +4,7 @@
 #' @param format `TRUE` reverts `format_tt()`.
 #' @param group `TRUE` reverts `group_tt()`.
 #' @param style `TRUE` reverts `style_tt()`.
-#' @param theme `TRUE` reverts `theme_tt()`.
+#' @param theme `TRUE` erases all themes and pre/post styling
 #' @param notes `TRUE` reverts the effect of the `notes` argument from `tt()`.
 #' @param caption `TRUE` reverts the effect of the `caption` argument from `tt()`.
 #' @param width `TRUE` reverts the effect of the `width` argument from `tt()`.
@@ -25,45 +25,43 @@
 #' @param bootstrap_class `TRUE` reverts the effect of the `bootstrap_class` argument from `style_tt()`.
 #' @param bootstrap_css `TRUE` reverts the effect of the `bootstrap_css` argument from `style_tt()`.
 #' @param bootstrap_css_rule `TRUE` reverts the effect of the `bootstrap_css_rule` argument from `style_tt()`.
-#' @param tabularray_inner `TRUE` reverts the effect of the `tabularray_inner` argument from `style_tt()`.
-#' @param tabularray_outer `TRUE` reverts the effect of the `tabularray_outer` argument from `style_tt()`.
+#' @param tabularray_inner `TRUE` reverts the effect of the `inner` argument from `theme_latex()`.
+#' @param tabularray_outer `TRUE` reverts the effect of the `outer` argument from `theme_latex()`.
 #' @return An object of class `tt` representing the table with stripped styling.
 #' @export
 strip_tt <- function(
-  x,
-  style = FALSE,
-  format = FALSE,
-  theme = FALSE,
-  notes = FALSE,
-  caption = FALSE,
-  group = FALSE,
-  bold = FALSE,
-  italic = FALSE,
-  monospace = FALSE,
-  underline = FALSE,
-  strikeout = FALSE,
-  color = FALSE,
-  background = FALSE,
-  fontsize = FALSE,
-  align = FALSE,
-  alignv = FALSE,
-  colspan = FALSE,
-  rowspan = FALSE,
-  indent = FALSE,
-  line = FALSE,
-  bootstrap_class = FALSE,
-  bootstrap_css = FALSE,
-  bootstrap_css_rule = FALSE,
-  tabularray_inner = FALSE,
-  tabularray_outer = FALSE,
-  width = FALSE
-) {
+    x,
+    style = FALSE,
+    format = FALSE,
+    theme = FALSE,
+    notes = FALSE,
+    caption = FALSE,
+    group = FALSE,
+    bold = FALSE,
+    italic = FALSE,
+    monospace = FALSE,
+    underline = FALSE,
+    strikeout = FALSE,
+    color = FALSE,
+    background = FALSE,
+    fontsize = FALSE,
+    align = FALSE,
+    alignv = FALSE,
+    colspan = FALSE,
+    rowspan = FALSE,
+    indent = FALSE,
+    line = FALSE,
+    bootstrap_class = FALSE,
+    bootstrap_css = FALSE,
+    bootstrap_css_rule = FALSE,
+    tabularray_inner = FALSE,
+    tabularray_outer = FALSE,
+    width = FALSE) {
   out <- x
 
   # Reset style data.frame and lazy style
   if (style) {
     out@style <- data.frame()
-    out@lazy_style <- list()
   }
 
   # Reset format settings
@@ -73,8 +71,9 @@ strip_tt <- function(
 
   # Reset theme settings
   if (theme) {
-    out@theme <- list("default")
-    out@lazy_theme <- list()
+    out@theme <- list()
+    out@lazy_prepare <- list()
+    out@lazy_finalize <- list()
   }
 
   # Reset notes and caption styling
@@ -151,10 +150,10 @@ strip_tt <- function(
       out@style$bootstrap_css <- NA
     }
     if (tabularray_inner) {
-      out@style$tabularray_inner <- NA
+      out@tabularray_inner <- NA
     }
     if (tabularray_outer) {
-      out@style$tabularray_outer <- NA
+      out@tabularray_outer <- NA
     }
     if (width) out@style$width <- NA
   }

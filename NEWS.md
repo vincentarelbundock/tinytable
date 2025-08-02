@@ -2,9 +2,15 @@
 
 ## Development
 
-Breaking change:
+Deprecated or replaced features:
 
-* Deprecate the `output` argument from `style_tt()`.
+* `theme_tt()` function has been deprecated. Use format-specific or style-specific theme functions instead:
+  - Format-specific: `theme_html()`, `theme_latex()`, `theme_typst()`
+  - Style-specific: `theme_grid()`, `theme_revealjs()`, `theme_rotate()`, `theme_striped()`, `theme_void()`
+* `output` argument from `style_tt()`.
+* `tabularray_inner` and `tabularray_outer` arguments from `style_tt()`. Use `theme_latex()` instead.
+* `bootstrap_class`, `bootstrap_css`, and `bootstrap_css_rule` arguments from `style_tt()`. Use `theme_html()` instead.
+* `options(tinytable_latex_float_placement)` has been deprecated. Use `options(tinytable_latex_placement)` instead.
 
 New:
 
@@ -182,7 +188,7 @@ Typst:
 
 Bugs:
 
-* `theme_tabular()` is no longer greedy in replacing `cmidrule`. Thanks to @jsr-p for code submission #349.
+* Fixed bug in replacing `cmidrule`. Thanks to @jsr-p for code submission #349.
 
 ## 0.4.0
 

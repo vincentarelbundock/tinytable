@@ -77,20 +77,24 @@ css_dark <- "
 }
 "
 
+#' RevealJS presentation theme
+#'
+#' @param x A `tinytable` object.
+#' @param css String. CSS theme: "light" (default) or "dark".
+#' @param fontsize Numeric. Font size multiplier for table content.
+#' @param fontsize_caption Numeric. Font size multiplier for table captions.
+#' @return A modified `tinytable` object.
+#' @export
 theme_revealjs <- function(
   x,
-  css = get_option("tinytable_theme_revealjs_css", default = "light"),
-  fontsize = get_option("tinytable_theme_revealjs_fontsize", default = 0.8),
-  fontsize_caption = get_option(
-    "tinytable_theme_revealjs_fontsize_caption",
-    default = 1
-  )
-) {
+  css = get_option("tinytable_revealjs_css", default = "light"),
+  fontsize = get_option("tinytable_revealjs_fontsize", default = 0.8),
+  fontsize_caption = get_option("tinytable_revealjs_fontsize_caption", default = 1)) {
   if (css == "light") {
     css <- sprintf(css_light, fontsize, fontsize_caption)
   } else if (css == "dark") {
     css <- sprintf(css_dark, fontsize, fontsize_caption)
   }
-  x <- style_tt(x, bootstrap_css_rule = css)
+  x <- theme_html(x, engine = "bootstrap", css_rule = css)
   return(x)
 }

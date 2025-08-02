@@ -27,9 +27,9 @@ tt(head(iris))
 
 ### Custom crossref styles
 
-In `Quarto`, it is possible to create a custom crossref type for things like appendix tables. One challenge, is that LaTeX will not allow users to nest a `tblr` environment, inside a `table` environment, inside the new environment that `Quarto` creates for the crossref. Therefore, when rendering a table to LaTeX/PDF, it is important to drop the `\begin{table}` environment. This can be done using the `theme_tt()` function.
+In `Quarto`, it is possible to create a custom crossref type for things like appendix tables. One challenge, is that LaTeX will not allow users to nest a `tblr` environment, inside a `table` environment, inside the new environment that `Quarto` creates for the crossref. Therefore, when rendering a table to LaTeX/PDF, it is important to drop the `\begin{table}` environment. This can be done using the `theme_latex()` function.
 
-In the example below, we call `theme_tt()` explicitly for a single table, but the [themes vignette](https://vincentarelbundock.github.io/tinytable/vignettes/theme.html) shows how to set a global theme using the `tinytable_tt_theme` option.
+In the example below, we call `theme_latex()` explicitly for a single table, but the [themes vignette](https://vincentarelbundock.github.io/tinytable/vignettes/theme.html) shows how to set a global theme using the `tinytable_tt_theme` option.
 
 ````{verbatim}
 ---
@@ -55,7 +55,7 @@ See @apptbl-testing
 ```{r}
 library(tinytable)
 
-tt(mtcars[1:5, ]) |> theme_tt("tabular", style = "tabularray")
+tt(mtcars[1:5, ]) |> theme_latex(environment = "tabular")
 ```
 
 Caption goes here.
@@ -130,8 +130,8 @@ See @tbl-example, @tbl-example-1, or @tbl-example-2.
 #| layout-ncol: 2
 
 library(tinytable)
-tt(head(cars)) |> theme_tt("tabular", style = "tabularray")
-tt(head(pressure)) |> theme_tt("tabular", style = "tabularray")
+tt(head(cars)) |> theme_latex(table = FALSE)
+tt(head(pressure)) |> theme_latex(table = FALSE)
 ```
 ````
 
@@ -144,7 +144,7 @@ A good workaround is to use the `theme_revealjs()` function. For a one time use:
 ````{verbatim}
 ```{r}
 library(tinytable)
-tt(head(iris)) |> theme_tt("revealjs")
+tt(head(iris)) |> theme_revealjs()
 ```
 ````
 
@@ -166,7 +166,7 @@ This is a nice table:
 
 ```{r}
 library(tinytable)
-options(tinytable_tt_theme = \(x) theme_tt(x, "revealjs", fontsize = .5))
+options(tinytable_tt_theme = \(x) theme_revealjs(x, fontsize = .5))
 tt(head(iris))
 ```
 ````

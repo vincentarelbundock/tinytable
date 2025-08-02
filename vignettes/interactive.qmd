@@ -58,12 +58,14 @@ tt(dat)
 
 `tinytable` includes a built-in theme to add pagination, sorting, and filtering capabilities to a Tabulator table. This is particularly useful for large datasets. 
 
-To apply a theme, call the `theme_tt()` function with the `"tabulator"` argument. See `?theme_tt` for a list of arguments that can be used to customize the number of pagination rows, behaviour of the search bar, and various other elements.
+To apply a theme, call the `theme_html()` function. See `?theme_html` for a list of arguments that can be used to customize the number of pagination rows, behaviour of the search bar, and various other elements. Below, we supply a vector to control both the number of rows per page and the options available in the drop down menu that controls pagination. 
 
-Try typing the letters "vir" in the search box to filter the `iris` dataset and find the Virginica flowers.
+We also set `search=TRUE` to include a filtering box. Try typing the letters "vir" in the search box to filter the `iris` dataset and find the Virginica flowers.
 
 ```{r}
-tt(iris) |> theme_tt("tabulator", pagination = c(5, 10, 50))
+tt(iris) |> theme_html(
+  tabulator_pagination = c(5, 10, 50), 
+  tabulator_search = TRUE)
 ```
 
 
@@ -79,13 +81,13 @@ tt(dat) |>
   format_tt(j = "random", digits = 4)
 ```
 
-For dates, 
+For dates, `tabulator` uses Luxon date format tokens, not R's `strptime` format. Common patterns include:
 
 ```{r}
 tt(dat) |> format_tt(j = "date", date = "M/d/yyyy")
 ```
 
-For dates, `tabulator` uses Luxon date format tokens, not R's `strptime` format. Common patterns include:
+Here is a table with some common Luxon date formats and their output examples:
 
 ```{r}
 #| echo: false
@@ -109,7 +111,7 @@ tt(dat) |> style_tt(align = "r")
 
 ## CSS
 
-For more advanced styling, you can add custom CSS rules using the `css_rule` argument in `theme_tt()`. The CSS rule must include at least one `$TINYTABLE_ID` placeholder, which gets replaced with the unique table identifier to ensure styles only apply to that specific table.
+For more advanced styling, you can add custom CSS rules using the `tabulator_css_rule` argument in `theme_html()`. The CSS rule must include at least one `$TINYTABLE_ID` placeholder, which gets replaced with the unique table identifier to ensure styles only apply to that specific table.
 
 ```{r}
 css_rule <- "
@@ -118,17 +120,16 @@ $TINYTABLE_ID .tabulator-header .tabulator-col {
   color: white;
 }
 "
-tt(dat) |> 
-  theme_tt("tabulator", css_rule = css_rule)
+tt(dat) |> theme_html(tabulator_css_rule = css_rule)
 ```
 
 ## Style sheets
 
-Tabulator ships with multiple complete CSS style sheets. The default in `tinytable` is Bootstrap 5, but you can customize the appearance using the `theme_tt()` function (when available). Alternatives include `"default"`, `"simple"`, `"midnight"`, `"modern"`, `"site"`, `"site_dark"`, `"bootstrap3"`, `"bootstrap4"`, `"bootstrap5"`, `"semanticui"`, `"bulma"`, and `"materialize"`.
+Tabulator ships with multiple complete CSS style sheets. The default in `tinytable` is Bootstrap 5, but you can customize the appearance using the `theme_html()` function (when available). Alternatives include `"default"`, `"simple"`, `"midnight"`, `"modern"`, `"site"`, `"site_dark"`, `"bootstrap3"`, `"bootstrap4"`, `"bootstrap5"`, `"semanticui"`, `"bulma"`, and `"materialize"`.
 
 ```{r}
 #| eval: false
-tt(iris) |> theme_tt("tabulator", stylesheet = "semanticui")
+tt(iris) |> theme_html(tabulator_stylesheet = "semanticui")
 ```
 
 ::: {.callout-note}
@@ -138,7 +139,7 @@ To use a theme, the HTML file must load a style sheet *globally* in the document
 
 ## Options and columns
 
-The `theme_tt()` function accepts `options` and `columns` arguments for advanced customization of Tabulator tables.
+The `theme_html()` function accepts `tabulator_options` and `tabulator_columns` arguments for advanced customization of Tabulator tables.
 
 The `options` argument allows you to override any default Tabulator configuration. The `columns` argument lets you completely customize column definitions, including formatters, styling, and behavior.
 
@@ -170,7 +171,7 @@ custom_columns <- '
   },
 ]'
 
-tt(dat) |> theme_tt("tabulator", columns = custom_columns)
+tt(dat) |> theme_html(tabulator_columns = custom_columns)
 ```
 
 And now we change more options, such as the layout and height of the table:
@@ -181,7 +182,7 @@ opts <- "
   height: '200px'
 "
 
-tt(dat) |> theme_tt("tabulator", options = opts)
+tt(dat) |> theme_html(tabulator_options = opts)
 ```
 
 

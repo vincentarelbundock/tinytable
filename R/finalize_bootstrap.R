@@ -57,8 +57,7 @@ setMethod(
         css_rules,
         function(z) {
           transform(z, bootstrap = paste(bootstrap, collapse = " "))[1, ]
-        }
-      )
+        })
       css_rules <- do.call(rbind, css_rules)
       id <- unique(css_rules[, "bootstrap", drop = FALSE])
       id$id <- sapply(
@@ -92,10 +91,5 @@ setMethod(
 
     x@table_string <- out
 
-    for (fn in x@lazy_finalize) {
-      x <- fn(x)
-    }
-
     return(x)
-  }
-)
+  })

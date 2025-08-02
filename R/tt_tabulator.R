@@ -44,7 +44,7 @@ setMethod(
     # Use raw data for numeric/logical columns, formatted data for others
     # Exception: use formatted data for logical columns if bool argument is used
     data_clean <- list()
-    
+
     # Check if any lazy_format calls use the bool argument
     has_bool_formatting <- function(col_idx) {
       for (l in x@lazy_format) {

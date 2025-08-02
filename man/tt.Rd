@@ -43,7 +43,7 @@ tt(
 
 \item{theme}{Function or string.
 \itemize{
-\item String: bootstrap, grid, multipage, placement, revealjs, resize, rotate, striped, tabular, tabulator, void
+\item String: grid, revealjs, rotate, striped, void
 \item Function: Applied to the \code{tinytable} object.
 }}
 
@@ -68,9 +68,9 @@ The \code{tt} function renders a table in different formats with various styling
 \item \code{style_tt()}: style fonts, colors, alignment, etc.
 \item \code{format_tt()}: format numbers, dates, strings, etc.
 \item \code{group_tt()}: row or column group labels.
-\item \code{theme_tt()}: apply a collection of transformations to a \code{tinytable.}
 \item \code{save_tt()}: save the table to a file or return the table as a string.
 \item \code{print()}: print to a specific format, ex: \code{print(x, "latex")}
+\item \verb{theme_*()} functions apply a collection of format-specific or visual transformations to a \code{tinytable.}
 }
 
 \code{tinytable} attempts to determine the appropriate way to print the table based on interactive use, RStudio availability, and output format in RMarkdown or Quarto documents. Users can call \code{print(x, output="markdown")} to print the table in a specific format. Alternatively, they can set a global option: \code{options("tinytable_print_output"="markdown")}
@@ -117,6 +117,33 @@ syntax for the other options, and that we create Word documents by converting a 
 via the Pandoc software.
 }
 
+\section{Tabulator (interactive tables)}{
+
+
+\strong{Experimental Feature:} The Tabulator.js integration is experimental and the API may change in future versions.
+
+The Tabulator.js library provides powerful interactive table features including sorting, filtering, pagination, data export, and real-time editing capabilities. This theme customizes the appearance and behavior of Tabulator tables.
+
+\strong{Features:}
+\itemize{
+\item Sorting and filtering of all columns
+\item Pagination with configurable page sizes
+\item Search functionality across all columns
+\item Multiple CSS themes and custom styling
+\item Real-time data export options
+\item Accessibility features (ARIA compliant)
+}
+
+\strong{Limitations:}
+\itemize{
+\item Limited \code{style_tt()} support (only \code{align} and \code{alignv})
+\item Row-based formatting (\code{format_tt()} with \code{i} argument) not supported
+\item Global stylesheets affect all tables in multi-table documents
+\item Date formatting uses Luxon tokens, not R's \code{strptime} format
+\item Boolean formatting requires \code{format_tt()} with \code{bool} argument for custom display
+}
+}
+
 \section{Global options}{
 
 
@@ -128,78 +155,13 @@ tt(head(iris))
 
 You can set options in a script or via \code{.Rprofile}. Note: be cautious with \code{.Rprofile} settings as they may affect reproducibility.
 \subsection{Default values for function arguments}{
-\subsection{tt()}{
-\itemize{
-\item \code{tinytable_tt_digits}
-\item \code{tinytable_tt_caption}
-\item \code{tinytable_tt_notes}
-\item \code{tinytable_tt_width}
-\item \code{tinytable_tt_theme}
-\item \code{tinytable_tt_rownames}
-}
-}
 
-\subsection{format_tt()}{
-\itemize{
-\item \code{tinytable_format_digits}
-\item \code{tinytable_format_num_fmt}
-\item \code{tinytable_format_num_zero}
-\item \code{tinytable_format_num_suffix}
-\item \code{tinytable_format_num_mark_big}
-\item \code{tinytable_format_num_mark_dec}
-\item \code{tinytable_format_date}
-\item \code{tinytable_format_bool}
-\item \code{tinytable_format_other}
-\item \code{tinytable_format_replace}
-\item \code{tinytable_format_escape}
-\item \code{tinytable_format_markdown}
-\item \code{tinytable_format_quarto}
-\item \code{tinytable_format_fn}
-\item \code{tinytable_format_sprintf}
-}
-}
+Nearly all of the package's functions retrieve their default values from global options. This allows you to set defaults once and apply them to all tables without needing to specify them each time. For example, to fix the the \code{digits} argument of the \code{tt()} function globally, call:
 
-\subsection{save_tt()}{
-\itemize{
-\item \code{tinytable_save_overwrite}
-}
-}
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(tinytable_tt_digits = 4)
+}\if{html}{\out{</div>}}
 
-\subsection{theme_tt()}{
-
-Placement:
-\itemize{
-\item \code{tinytable_theme_placement_float}
-\item \code{tinytable_theme_placement_horizontal}
-}
-
-Resize:
-\itemize{
-\item \code{tinytable_theme_resize_width}
-\item \code{tinytable_theme_resize_direction}
-}
-
-Multipage:
-\itemize{
-\item \code{tinytable_theme_multipage_rowhead}
-\item \code{tinytable_theme_multipage_rowfoot}
-}
-
-Tabular:
-\itemize{
-\item \code{tinytable_theme_tabular_style}
-}
-}
-
-\subsection{print.tinytable()}{
-\itemize{
-\item \code{tinytable_print_output}
-}
-}
-
-}
-
-\subsection{Output-specific options}{
+In addition, some more specific options are available to control the behavior of the package in specific contexts.
 \subsection{HTML}{
 \itemize{
 \item \code{tinytable_html_mathjax}: Insert MathJax scripts (warning: may conflict if MathJax is loaded elsewhere)
@@ -215,12 +177,14 @@ Tabular:
 }
 }
 
-}
-
 \subsection{Color processing}{
 \itemize{
-\item \code{tinytable_color_name_normalization}: Enable/disable automatic color name processing (default: TRUE). When enabled, R color names recognized by \code{col2rgb()} are converted to hex format for consistent rendering across HTML, LaTeX, and Typst formats. If R color conversion fails, LaTeX color names are used as fallback. Colors explicitly supplied as hex values with "#" prefix are passed through unchanged. Set to FALSE to disable processing and pass color names unchanged.
+\item \code{tinytable_color_name_normalization}: Enable/disable automatic color name processing (default: TRUE).
 }
+
+When enabled, R color names recognized by \code{col2rgb()} are converted to hex format for consistent rendering across HTML, LaTeX, and Typst formats. If R color conversion fails, LaTeX color names are used as fallback. Colors explicitly supplied as hex values with "#" prefix are passed through unchanged. Set to FALSE to disable processing and pass color names unchanged.
+}
+
 \subsection{Quarto}{
 
 The \code{format_tt(quarto=TRUE)} argument enables Quarto data processing with some limitations:
@@ -246,33 +210,6 @@ tt(x) |> format_tt(i = 1, fn = fn)
 For more details on Quarto table processing: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing
 }
 
-}
-}
-
-\section{Interactive tables with Tabulator}{
-
-
-\strong{Experimental Feature:} The Tabulator.js integration is experimental and the API may change in future versions.
-
-The Tabulator.js library provides powerful interactive table features including sorting, filtering, pagination, data export, and real-time editing capabilities. This theme customizes the appearance and behavior of Tabulator tables.
-
-\strong{Features:}
-\itemize{
-\item Sorting and filtering of all columns
-\item Pagination with configurable page sizes
-\item Search functionality across all columns
-\item Multiple CSS themes and custom styling
-\item Real-time data export options
-\item Accessibility features (ARIA compliant)
-}
-
-\strong{Limitations:}
-\itemize{
-\item Limited \code{style_tt()} support (only \code{align} and \code{alignv})
-\item Row-based formatting (\code{format_tt()} with \code{i} argument) not supported
-\item Global stylesheets affect all tables in multi-table documents
-\item Date formatting uses Luxon tokens, not R's \code{strptime} format
-\item Boolean formatting requires \code{format_tt()} with \code{bool} argument for custom display
 }
 }
 

@@ -41,7 +41,7 @@ strip_tt(
 
 \item{format}{\code{TRUE} reverts \code{format_tt()}.}
 
-\item{theme}{\code{TRUE} reverts \code{theme_tt()}.}
+\item{theme}{\code{TRUE} erases all themes and pre/post styling}
 
 \item{notes}{\code{TRUE} reverts the effect of the \code{notes} argument from \code{tt()}.}
 
@@ -83,9 +83,9 @@ strip_tt(
 
 \item{bootstrap_css_rule}{\code{TRUE} reverts the effect of the \code{bootstrap_css_rule} argument from \code{style_tt()}.}
 
-\item{tabularray_inner}{\code{TRUE} reverts the effect of the \code{tabularray_inner} argument from \code{style_tt()}.}
+\item{tabularray_inner}{\code{TRUE} reverts the effect of the \code{inner} argument from \code{theme_latex()}.}
 
-\item{tabularray_outer}{\code{TRUE} reverts the effect of the \code{tabularray_outer} argument from \code{style_tt()}.}
+\item{tabularray_outer}{\code{TRUE} reverts the effect of the \code{outer} argument from \code{theme_latex()}.}
 
 \item{width}{\code{TRUE} reverts the effect of the \code{width} argument from \code{tt()}.}
 }

@@ -9,7 +9,7 @@ tabulator_search_listener <- '
         // Search functionality (runs within the table IIFE scope)
         const columns_%s = %s;
         const searchFields_%s = columns_%s.map(col => col.field);
-        
+
         // Attach search listener using the globally exposed table reference
         const searchElement = document.getElementById("search_%s");
         if (searchElement) {
@@ -37,11 +37,6 @@ setMethod(
   definition = function(x, ...) {
     assert_dependency("jsonlite")
 
-    # Process any finalize functions that were stored in @lazy_finalize
-    for (fn in x@lazy_finalize) {
-      x <- fn(x)
-    }
-
     # Replace stylesheet theme from S4 slot
     if (nchar(x@tabulator_stylesheet) > 0) {
       x <- tabulator_cdn_helper(x, x@tabulator_stylesheet)
@@ -50,9 +45,9 @@ setMethod(
     # Apply column formatters if they exist or create them from formatting applied to data
     # Check if formatting was applied by looking at lazy_format operations or styles
     if (
-      length(x@lazy_format) > 0 || 
-      length(x@tabulator_column_formatters) > 0 ||
-      length(x@tabulator_column_styles) > 0
+      length(x@lazy_format) > 0 ||
+        length(x@tabulator_column_formatters) > 0 ||
+        length(x@tabulator_column_styles) > 0
     ) {
       # Parse existing columns and update with formatters
       current_columns <- regmatches(
@@ -80,7 +75,7 @@ setMethod(
             } else {
               j_clean <- sanitize_j(l$j, x)
             }
-            
+
             for (col_idx in j_clean) {
               col_name <- x@names[col_idx]
               col_data <- x@data[[col_idx]]
@@ -100,8 +95,8 @@ setMethod(
 
           if (
             (!is.null(l$digits) ||
-             !is.null(l$num_mark_big) ||
-             !is.null(l$num_suffix))
+              !is.null(l$num_mark_big) ||
+              !is.null(l$num_suffix))
           ) {
             # Numeric formatting was applied
             if (is.null(l$j)) {
@@ -110,7 +105,7 @@ setMethod(
             } else {
               j_clean <- sanitize_j(l$j, x)
             }
-            
+
             for (col_idx in j_clean) {
               col_name <- x@names[col_idx]
               col_data <- x@data[[col_idx]]
@@ -158,7 +153,7 @@ setMethod(
             }
           }
         }
-        
+
         # Update columns with styles (alignment)
         for (i in seq_along(columns_list)) {
           col_title <- columns_list[[i]][["title"]]
@@ -206,7 +201,7 @@ setMethod(
         fixed = TRUE
       )
     }
-    
+
     # Replace custom columns if provided
     if (nchar(x@tabulator_columns) > 0) {
       # Replace the existing columns array with custom columns
@@ -216,11 +211,6 @@ setMethod(
         x@table_string
       )
       # Automatically disable search when custom columns are provided
-      x@tabulator_search <- FALSE
-    }
-    
-    # Automatically disable search when custom options are provided
-    if (nchar(x@tabulator_options) > 0) {
       x@tabulator_search <- FALSE
     }
 
@@ -301,9 +291,9 @@ setMethod(
       # Replace $TINYTABLE_ID with actual table ID
       table_id <- paste0("tinytable_", x@id)
       custom_css <- gsub("\\$TINYTABLE_ID", paste0("#", table_id), x@tabulator_css_rule)
-      css_block <- sprintf('<style>\n%s\n</style>', custom_css)
-      
-      
+      css_block <- sprintf("<style>\n%s\n</style>", custom_css)
+
+
       # Replace CSS placeholder
       x@table_string <- gsub(
         "$tinytable_TABULATOR_CSS",
@@ -328,7 +318,7 @@ setMethod(
       x@table_string,
       fixed = TRUE
     )
-    
+
     x@table_string <- gsub(
       "$tinytable_TABULATOR_SEARCH_LISTENER",
       "",

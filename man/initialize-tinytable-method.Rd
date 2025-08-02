@@ -29,7 +29,7 @@
 
 \item{theme}{Function or string.
 \itemize{
-\item String: bootstrap, grid, multipage, placement, revealjs, resize, rotate, striped, tabular, tabulator, void
+\item String: grid, revealjs, rotate, striped, void
 \item Function: Applied to the \code{tinytable} object.
 }}
 

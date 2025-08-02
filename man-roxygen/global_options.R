@@ -12,59 +12,13 @@
 #'
 #' ## Default values for function arguments
 #'
-#' ### tt()
+#' Nearly all of the package's functions retrieve their default values from global options. This allows you to set defaults once and apply them to all tables without needing to specify them each time. For example, to fix the the `digits` argument of the `tt()` function globally, call:
 #'
-#' * `tinytable_tt_digits`
-#' * `tinytable_tt_caption`
-#' * `tinytable_tt_notes`
-#' * `tinytable_tt_width`
-#' * `tinytable_tt_theme`
-#' * `tinytable_tt_rownames`
+#' ```r
+#' options(tinytable_tt_digits = 4)
+#' ```
 #'
-#' ### format_tt()
-#'
-#' * `tinytable_format_digits`
-#' * `tinytable_format_num_fmt`
-#' * `tinytable_format_num_zero`
-#' * `tinytable_format_num_suffix`
-#' * `tinytable_format_num_mark_big`
-#' * `tinytable_format_num_mark_dec`
-#' * `tinytable_format_date`
-#' * `tinytable_format_bool`
-#' * `tinytable_format_other`
-#' * `tinytable_format_replace`
-#' * `tinytable_format_escape`
-#' * `tinytable_format_markdown`
-#' * `tinytable_format_quarto`
-#' * `tinytable_format_fn`
-#' * `tinytable_format_sprintf`
-#'
-#' ### save_tt()
-#'
-#' * `tinytable_save_overwrite`
-#'
-#' ### theme_tt()
-#'
-#' Placement:
-#' * `tinytable_theme_placement_float`
-#' * `tinytable_theme_placement_horizontal`
-#'
-#' Resize:
-#' * `tinytable_theme_resize_width`
-#' * `tinytable_theme_resize_direction`
-#'
-#' Multipage:
-#' * `tinytable_theme_multipage_rowhead`
-#' * `tinytable_theme_multipage_rowfoot`
-#'
-#' Tabular:
-#' * `tinytable_theme_tabular_style`
-#'
-#' ### print.tinytable()
-#'
-#' * `tinytable_print_output`
-#'
-#' ## Output-specific options
+#' In addition, some more specific options are available to control the behavior of the package in specific contexts.
 #'
 #' ### HTML
 #'
@@ -77,9 +31,11 @@
 #' * `tinytable_pdf_clean`: Delete temporary and log files
 #' * `tinytable_pdf_engine`: Choose between "xelatex", "pdflatex", "lualatex"
 #'
-#' ## Color processing
+#' ### Color processing
 #'
-#' * `tinytable_color_name_normalization`: Enable/disable automatic color name processing (default: TRUE). When enabled, R color names recognized by `col2rgb()` are converted to hex format for consistent rendering across HTML, LaTeX, and Typst formats. If R color conversion fails, LaTeX color names are used as fallback. Colors explicitly supplied as hex values with "#" prefix are passed through unchanged. Set to FALSE to disable processing and pass color names unchanged.
+#' * `tinytable_color_name_normalization`: Enable/disable automatic color name processing (default: TRUE).
+#'
+#' When enabled, R color names recognized by `col2rgb()` are converted to hex format for consistent rendering across HTML, LaTeX, and Typst formats. If R color conversion fails, LaTeX color names are used as fallback. Colors explicitly supplied as hex values with "#" prefix are passed through unchanged. Set to FALSE to disable processing and pass color names unchanged.
 #'
 #' ### Quarto
 #'

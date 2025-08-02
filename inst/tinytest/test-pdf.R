@@ -11,7 +11,7 @@ dest_log <- file.path(dest_dir, "somelog.log")
 
 expect_warning(
   tt(x) |>
-    theme_tt("resize") |>
+    theme_latex(resize_direction = "down") |>
     save_tt(dest_pdf, overwrite = TRUE),
   "Table width is too small"
 )
@@ -27,7 +27,7 @@ cat("some content", file = dest_log)
 
 expect_warning(
   tt(x) |>
-    theme_tt("resize") |>
+    theme_latex(resize_direction = "down") |>
     save_tt(dest_pdf, overwrite = TRUE),
   "Table width is too small"
 )

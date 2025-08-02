@@ -6,9 +6,9 @@
 #' * `style_tt()`: style fonts, colors, alignment, etc.
 #' * `format_tt()`: format numbers, dates, strings, etc.
 #' * `group_tt()`: row or column group labels.
-#' * `theme_tt()`: apply a collection of transformations to a `tinytable.`
 #' * `save_tt()`: save the table to a file or return the table as a string.
 #' * `print()`: print to a specific format, ex: `print(x, "latex")`
+#' * `theme_*()` functions apply a collection of format-specific or visual transformations to a `tinytable.`
 #'
 #' `tinytable` attempts to determine the appropriate way to print the table based on interactive use, RStudio availability, and output format in RMarkdown or Quarto documents. Users can call `print(x, output="markdown")` to print the table in a specific format. Alternatively, they can set a global option: `options("tinytable_print_output"="markdown")`
 #'
@@ -40,8 +40,8 @@
 #' @template dependencies
 #' @template latex_preamble
 #' @template limitations_word_markdown
-#' @template global_options
 #' @template tabulator
+#' @template global_options
 #'
 #' @examples
 #' library(tinytable)
@@ -66,18 +66,17 @@
 #'
 #' @export
 tt <- function(
-  x,
-  digits = get_option("tinytable_tt_digits", default = NULL),
-  caption = get_option("tinytable_tt_caption", default = NULL),
-  notes = get_option("tinytable_tt_notes", default = NULL),
-  width = get_option("tinytable_tt_width", default = NULL),
-  height = get_option("tinytable_tt_height", default = NULL),
-  theme = get_option("tinytable_tt_theme", default = "default"),
-  colnames = get_option("tinytable_tt_colnames", default = TRUE),
-  rownames = get_option("tinytable_tt_rownames", default = FALSE),
-  escape = get_option("tinytable_tt_escape", default = FALSE),
-  ...
-) {
+    x,
+    digits = get_option("tinytable_tt_digits", default = NULL),
+    caption = get_option("tinytable_tt_caption", default = NULL),
+    notes = get_option("tinytable_tt_notes", default = NULL),
+    width = get_option("tinytable_tt_width", default = NULL),
+    height = get_option("tinytable_tt_height", default = NULL),
+    theme = get_option("tinytable_tt_theme", default = "default"),
+    colnames = get_option("tinytable_tt_colnames", default = TRUE),
+    rownames = get_option("tinytable_tt_rownames", default = FALSE),
+    escape = get_option("tinytable_tt_escape", default = FALSE),
+    ...) {
   dots <- list(...)
 
   # sanity checks
@@ -87,6 +86,9 @@ tt <- function(
 
   if (!isTRUE(check_function(theme)) && !isTRUE(check_string(theme))) {
     stop("The `theme` argument must be a function or a string.", call. = FALSE)
+  }
+  if (isTRUE(check_string(theme))) {
+    assert_choice(theme, names(theme_dictionary), null.ok = TRUE)
   }
 
   # x should be a data frame, not a tibble or slopes, for indexing convenience
@@ -166,13 +168,16 @@ tt <- function(
   )
 
   if (is.null(theme)) {
-    out <- theme_tt(out, theme = "default")
-  } else {
-    out <- theme_tt(out, theme = theme)
-  }
-
-  if ("placement" %in% names(dots)) {
-    out <- theme_tt(out, "placement", latex_float = dots[["placement"]])
+    out <- theme_default(out)
+  } else if (is.function(theme)) {
+    out <- theme(out)
+  } else if (is.character(theme)) {
+    for (th in theme) {
+      if (!th %in% names(theme_dictionary)) {
+        stop(sprintf("Unknown theme: '%s'. Available themes: %s", th, paste(names(theme_dictionary), collapse = ", ")), call. = FALSE)
+      }
+    }
+    out <- theme_dictionary[[theme]](out)
   }
 
   if (isTRUE(escape)) {
@@ -181,15 +186,15 @@ tt <- function(
 
   if (!is.null(height)) {
     # LaTeX tabularray: use height/2 as rowsep
-    out <- style_tt(
+    out <- theme_latex(
       out,
-      tabularray_inner = sprintf("rowsep={%sem}", height / 2)
+      inner = sprintf("rowsep={%sem}", height / 2)
     )
 
     # Bootstrap/HTML: use CSS padding for row height
-    out <- style_tt(
+    out <- theme_html(
       out,
-      bootstrap_css = sprintf(
+      css = sprintf(
         "padding-top: %sem; padding-bottom: %sem;",
         height / 2,
         height / 2
