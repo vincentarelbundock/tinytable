@@ -299,7 +299,7 @@ expect_inherits(tab, "character")
 # Issue #307
 tab <- tt(head(iris)) |>
   group_tt(j = list("blah" = 1:2)) |>
-  theme_latex(environment = "tabular", table = FALSE)
+  theme_latex(environment = "tabular", environment_table = FALSE)
 expect_snapshot_print(tab, label = "latex-issue307.tex")
 
 # Issue #419

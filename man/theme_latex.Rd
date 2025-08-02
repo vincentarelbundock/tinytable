@@ -9,10 +9,10 @@ theme_latex(
   inner = NULL,
   outer = NULL,
   environment = NULL,
+  environment_table = TRUE,
   multipage = FALSE,
   rowhead = get_option("tinytable_theme_multipage_rowhead", 0L),
   rowfoot = get_option("tinytable_theme_multipage_rowfoot", 0L),
-  table = TRUE,
   resize_width = get_option("tinytable_theme_resize_width", 1),
   resize_direction = NULL,
   placement = get_option("tinytable_theme_placement_latex_float", NULL),
@@ -28,13 +28,13 @@ theme_latex(
 
 \item{environment}{A string that specifies the LaTeX environment to use, default is "tblr".}
 
+\item{environment_table}{Logical. If \code{TRUE}, wraps the table in a LaTeX \code{table} environment. If \code{FALSE}, uses the \code{tblr} environment directly. A \code{table} environment cannot be used with \code{longtblr} environments.}
+
 \item{multipage}{Logical. If \code{TRUE}, enables multipage mode for LaTeX tables (\code{longtblr} environments).}
 
 \item{rowhead}{Number of rows to repeat as header on each page. When >= 1, automatically enables multipage mode.}
 
 \item{rowfoot}{Number of rows to repeat as footer on each page. When >= 1, automatically enables multipage mode.}
-
-\item{table}{Logical. If \code{TRUE}, wraps the table in a LaTeX \code{table} environment. If \code{FALSE}, uses the \code{tblr} environment directly. A \code{table} environment cannot be used with \code{longtblr} environments.}
 
 \item{resize_width}{Numeric between 0.01 and 1, representing the proportion of line width for table resizing.
 Defaults to \code{get_option("tinytable_theme_resize_width", 1)}. Only applies when \code{resize_direction} is specified.}
