@@ -227,7 +227,11 @@ tabulator_apply_columns <- function(x) {
             if (!is.null(l$date_format)) {
                 x <- tabulator_apply_date_formatting(x, l)
             }
-            if (tabulator_has_numeric_formatting(l)) {
+            if (
+                !is.null(l$digits) ||
+                    !is.null(l$num_mark_big) ||
+                    !is.null(l$num_suffix)
+            ) {
                 x <- tabulator_apply_numeric_formatting(x, l)
             }
         }
@@ -303,14 +307,6 @@ tabulator_apply_date_formatting <- function(x, l) {
     return(x)
 }
 
-#' Check if lazy_format has numeric formatting
-#' @param l lazy_format operation
-#' @return TRUE if numeric formatting is present
-#' @keywords internal
-#' @noRd
-tabulator_has_numeric_formatting <- function(l) {
-    !is.null(l$digits) || !is.null(l$num_mark_big) || !is.null(l$num_suffix)
-}
 
 #' Apply numeric formatting to columns
 #' @param x tinytable object
@@ -384,28 +380,6 @@ tabulator_update_columns_with_formatters <- function(x) {
     return(x)
 }
 
-
-# =============================================================================
-# TABULATOR COLUMN CONVERSION
-# =============================================================================
-
-#' Convert columns to string format
-#' @param columns Columns object
-#' @return JSON string
-#' @keywords internal
-#' @noRd
-tabulator_convert_columns_to_string <- function(columns) {
-    if (is.list(columns) && !is.null(columns$json_string)) {
-        # This is a JSON string wrapped in a list (from theme function)
-        columns$json_string
-    } else if (is.list(columns)) {
-        # This is a proper R list of column definitions
-        df_to_json(columns, auto_unbox = TRUE)
-    } else {
-        # Fallback for direct character assignment (shouldn't happen now)
-        columns
-    }
-}
 
 # =============================================================================
 # TABULATOR COLUMN HANDLING
