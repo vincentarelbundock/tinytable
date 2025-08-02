@@ -72,22 +72,12 @@ tabulator_apply_search <- function(x) {
     # Create unique search ID
     search_id <- gsub(".*tinytable_", "", x@id)
 
-    # Extract columns JSON from the table string
-    columns_match <- regmatches(
-        x@table_string,
-        regexpr("columns: \\[.*?\\]", x@table_string)
-    )
-
-    columns_json <- if (length(columns_match) > 0) {
-        # Extract just the JSON array part
-        gsub("columns: (\\[.*?\\])", "\\1", columns_match)
-    } else {
-        NULL
-    }
-
-    if (is.null(columns_json)) {
+    # Get columns JSON directly from the S4 object
+    if (length(x@tabulator_columns) == 0) {
         return(x)
     }
+
+    columns_json <- df_to_json(x@tabulator_columns, auto_unbox = TRUE)
 
     # Create search bar HTML
     search_bar_template <- '

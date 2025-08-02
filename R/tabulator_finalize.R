@@ -7,16 +7,13 @@ setMethod(
       x <- tabulator_stylesheet(x, x@tabulator_stylesheet)
     }
 
-    # Apply column formatting and styling
-    x <- tabulator_apply_column_formatters(x)
-    x <- tabulator_apply_column_styles(x)
-    x <- tabulator_convert_columns_to_json(x)
+    # Process columns (formatting, styling, conversion)
+    x <- tabulator_apply_columns(x)
 
     # Apply options
     x <- tabulator_apply_options(x)
 
     # Handle custom columns
-    x <- tabulator_handle_custom_columns(x)
 
     # Apply search functionality
     x <- tabulator_apply_search(x)

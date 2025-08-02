@@ -206,39 +206,66 @@ tabulator_format_date <- function(col_def, col_type, args) {
 }
 
 # =============================================================================
-# TABULATOR COLUMN APPLICATION
+# TABULATOR COLUMN PROCESSING
 # =============================================================================
 
-#' Apply column formatters from lazy_format operations
+#' Process all column operations (formatting, styling, conversion)
 #' @param x tinytable object
 #' @return Modified tinytable object
 #' @keywords internal
 #' @noRd
-tabulator_apply_column_formatters <- function(x) {
-    if (length(x@lazy_format) == 0) {
-        return(x)
-    }
-
-    # Use columns list directly from S4 object (no JSON parsing needed)
+tabulator_apply_columns <- function(x) {
     if (length(x@tabulator_columns) == 0) {
         return(x)
     }
 
     columns_list <- x@tabulator_columns
 
-    # Create formatters for columns that had format_tt applied
-    for (l in x@lazy_format) {
-        if (!is.null(l$date_format)) {
-            x <- tabulator_apply_date_formatting(x, l)
+    # Apply formatters from lazy_format operations
+    if (length(x@lazy_format) > 0) {
+        for (l in x@lazy_format) {
+            if (!is.null(l$date_format)) {
+                x <- tabulator_apply_date_formatting(x, l)
+            }
+            if (tabulator_has_numeric_formatting(l)) {
+                x <- tabulator_apply_numeric_formatting(x, l)
+            }
         }
-
-        if (tabulator_has_numeric_formatting(l)) {
-            x <- tabulator_apply_numeric_formatting(x, l)
-        }
+        x <- tabulator_update_columns_with_formatters(x)
     }
 
-    # Update columns with formatters
-    x <- tabulator_update_columns_with_formatters(x)
+    # Apply column styles
+    if (length(x@tabulator_column_styles) > 0) {
+        for (i in seq_along(columns_list)) {
+            col_title <- columns_list[[i]][["title"]]
+            if (col_title %in% names(x@tabulator_column_styles)) {
+                style_obj <- x@tabulator_column_styles[[col_title]]
+                if (!is.null(style_obj$hozAlign)) {
+                    columns_list[[i]][["hozAlign"]] <- style_obj$hozAlign
+                }
+                if (!is.null(style_obj$vertAlign)) {
+                    columns_list[[i]][["vertAlign"]] <- style_obj$vertAlign
+                }
+            }
+        }
+        x@tabulator_columns <- columns_list
+    }
+
+    # Convert columns to JSON and replace in template
+    columns_json <- df_to_json(x@tabulator_columns, auto_unbox = TRUE)
+
+    # Replace both patterns - placeholder and existing columns array
+    x@table_string <- gsub(
+        "\\$tinytable_TABULATOR_COLUMNS",
+        columns_json,
+        x@table_string,
+        fixed = TRUE
+    )
+    x@table_string <- gsub(
+        "columns: \\[.*?\\]",
+        paste0("columns: ", columns_json),
+        x@table_string
+    )
 
     return(x)
 }
@@ -357,72 +384,10 @@ tabulator_update_columns_with_formatters <- function(x) {
     return(x)
 }
 
-#' Apply column styles
-#' @param x tinytable object
-#' @return Modified tinytable object
-#' @keywords internal
-#' @noRd
-tabulator_apply_column_styles <- function(x) {
-    if (
-        length(x@tabulator_column_styles) == 0 ||
-            length(x@tabulator_columns) == 0
-    ) {
-        return(x)
-    }
-
-    columns_list <- x@tabulator_columns
-
-    # Update columns with styles (alignment)
-    for (i in seq_along(columns_list)) {
-        col_title <- columns_list[[i]][["title"]]
-        if (col_title %in% names(x@tabulator_column_styles)) {
-            # Apply stored column styles
-            style_obj <- x@tabulator_column_styles[[col_title]]
-            if (!is.null(style_obj$hozAlign)) {
-                columns_list[[i]][["hozAlign"]] <- style_obj$hozAlign
-            }
-            if (!is.null(style_obj$vertAlign)) {
-                columns_list[[i]][["vertAlign"]] <- style_obj$vertAlign
-            }
-        }
-    }
-
-    x@tabulator_columns <- columns_list
-    return(x)
-}
 
 # =============================================================================
 # TABULATOR COLUMN CONVERSION
 # =============================================================================
-
-#' Convert columns to JSON and replace in template
-#' @param x tinytable object
-#' @return Modified tinytable object
-#' @keywords internal
-#' @noRd
-tabulator_convert_columns_to_json <- function(x) {
-    if (length(x@tabulator_columns) == 0) {
-        return(x)
-    }
-
-    # Convert to JSON and replace in template
-    new_columns_json <- df_to_json(x@tabulator_columns, auto_unbox = TRUE)
-
-    # Replace both patterns - placeholder and existing columns array
-    x@table_string <- gsub(
-        "\\$tinytable_TABULATOR_COLUMNS",
-        new_columns_json,
-        x@table_string,
-        fixed = TRUE
-    )
-    x@table_string <- gsub(
-        "columns: \\[.*?\\]",
-        paste0("columns: ", new_columns_json),
-        x@table_string
-    )
-
-    return(x)
-}
 
 #' Convert columns to string format
 #' @param columns Columns object
@@ -445,32 +410,6 @@ tabulator_convert_columns_to_string <- function(columns) {
 # =============================================================================
 # TABULATOR COLUMN HANDLING
 # =============================================================================
-
-#' Handle custom columns replacement
-#' @param x tinytable object
-#' @return Modified tinytable object
-#' @keywords internal
-#' @noRd
-tabulator_handle_custom_columns <- function(x) {
-    if (length(x@tabulator_columns) == 0) {
-        return(x)
-    }
-
-    # Handle different column formats for backward compatibility
-    columns_json <- tabulator_convert_columns_to_string(x@tabulator_columns)
-
-    # Replace the existing columns array with custom columns
-    x@table_string <- gsub(
-        "columns: \\[.*?\\],",
-        paste0("columns: ", columns_json, ","),
-        x@table_string
-    )
-
-    # Automatically disable search when custom columns are provided
-    x@tabulator_search <- FALSE
-
-    return(x)
-}
 
 #' Finalize columns placeholder cleanup
 #' @param x tinytable object

@@ -43,19 +43,20 @@ tabulator_pagination_options <- function(tabulator_pagination, nrow) {
   }
 
   if (isTRUE(tabulator_pagination)) {
-    if (nrow < 10) {
-      pagination_opts <- ""
-    } else {
-      # Create pagination options: 10, 25, 50, 100, 250 (filtered by available rows)
-      tabulator_pagination <- c(10, 25, 50, 100, 250)
-      tabulator_pagination <- tabulator_pagination[
-        tabulator_pagination <= nrow
-      ]
+    # Create pagination options: 10, 25, 50, 100, 250 (filtered by available rows)
+    tabulator_pagination <- c(10, 25, 50, 100, 250)
+    tabulator_pagination <- tabulator_pagination[
+      tabulator_pagination <= nrow
+    ]
 
-      # If there are no options above nrow, add nrow as an option
-      if (max(tabulator_pagination) < nrow) {
-        tabulator_pagination <- c(tabulator_pagination, nrow)
-      }
+    # If there are no options above nrow, add nrow as an option
+    if (length(tabulator_pagination) > 0 && max(tabulator_pagination) < nrow) {
+      tabulator_pagination <- c(tabulator_pagination, nrow)
+    }
+
+    # If no pagination options remain, use the actual number of rows
+    if (length(tabulator_pagination) == 0) {
+      tabulator_pagination <- nrow
     }
   }
 
@@ -102,9 +103,10 @@ tabulator_pagination_options <- function(tabulator_pagination, nrow) {
 }
 
 tabulator_layout_options <- function(
-    tabulator_layout,
-    x,
-    tabulator_pagination) {
+  tabulator_layout,
+  x,
+  tabulator_pagination
+) {
   # Build layout options
   if (!is.null(x@height)) {
     # Calculate total height: height per row * number of visible rows + header space
@@ -129,15 +131,16 @@ tabulator_layout_options <- function(
 }
 
 theme_html_tabulator <- function(
-    x,
-    tabulator_stylesheet,
-    tabulator_layout,
-    tabulator_pagination,
-    tabulator_search,
-    tabulator_options,
-    tabulator_css_rule,
-    tabulator_columns,
-    ...) {
+  x,
+  tabulator_stylesheet,
+  tabulator_layout,
+  tabulator_pagination,
+  tabulator_search,
+  tabulator_options,
+  tabulator_css_rule,
+  tabulator_columns,
+  ...
+) {
   assert_choice(
     tabulator_layout,
     choice = c(
