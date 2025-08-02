@@ -20,6 +20,29 @@ tables.
 
 <https://vincentarelbundock.github.io/tinytable/>
 
+> [!NOTE]
+>
+> The documentation on this website uses the latest development version
+> of `tinytable`. This version can normally be installed from
+> R-Universe:
+>
+> ``` r
+> install.packages('tinytable', repos = c('https://vincentarelbundock.r-universe.dev', 'https://cloud.r-project.org'))
+> ```
+>
+> or from Github:
+>
+> ``` r
+> remotes::install_github("vincentarelbundock/tinytable")
+> ```
+>
+> Remember to restart `R` completely after installation, to ensure that
+> the latest version is loaded.
+>
+> The documentation for the current version of `tinytable` is available
+> on the [CRAN package
+> page.](https://CRAN.R-project.org/package=tinytable)
+
 ## Why?
 
 There are already many excellent table-drawing packages in the `R`
@@ -63,24 +86,6 @@ three pillars:
     `R` ecosystem are very heavy: A single `library()` call can
     sometimes load upwards of 65 `R` packages. In contrast, `tinytable`
     imports zero 3rd party `R` package by default.
-
-## Installation
-
-`tinytable` is a relatively new package with rapid development. If you
-want to benefit from the latest features—showcased on the package
-website—you should install from R-Universe:
-
-``` r
-install.packages('tinytable', repos = c('https://vincentarelbundock.r-universe.dev', 'https://cloud.r-project.org'))
-```
-
-Alternatively, you can install it from CRAN:
-
-``` r
-install.packages("tinytable")
-```
-
-Restart `R` completely for the installation to take effect.
 
 ## First steps
 

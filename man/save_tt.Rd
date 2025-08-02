@@ -71,73 +71,13 @@ tt(head(iris))
 
 You can set options in a script or via \code{.Rprofile}. Note: be cautious with \code{.Rprofile} settings as they may affect reproducibility.
 \subsection{Default values for function arguments}{
-\subsection{tt()}{
-\itemize{
-\item \code{tinytable_tt_digits}
-\item \code{tinytable_tt_caption}
-\item \code{tinytable_tt_notes}
-\item \code{tinytable_tt_width}
-\item \code{tinytable_tt_theme}
-\item \code{tinytable_tt_rownames}
-}
-}
 
-\subsection{format_tt()}{
-\itemize{
-\item \code{tinytable_format_digits}
-\item \code{tinytable_format_num_fmt}
-\item \code{tinytable_format_num_zero}
-\item \code{tinytable_format_num_suffix}
-\item \code{tinytable_format_num_mark_big}
-\item \code{tinytable_format_num_mark_dec}
-\item \code{tinytable_format_date}
-\item \code{tinytable_format_bool}
-\item \code{tinytable_format_other}
-\item \code{tinytable_format_replace}
-\item \code{tinytable_format_escape}
-\item \code{tinytable_format_markdown}
-\item \code{tinytable_format_quarto}
-\item \code{tinytable_format_fn}
-\item \code{tinytable_format_sprintf}
-}
-}
+Nearly all of the package's functions retrieve their default values from global options. This allows you to set defaults once and apply them to all tables without needing to specify them each time. For example, to fix the the \code{digits} argument of the \code{tt()} function globally, call:
 
-\subsection{save_tt()}{
-\itemize{
-\item \code{tinytable_save_overwrite}
-}
-}
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(tinytable_tt_digits = 4)
+}\if{html}{\out{</div>}}
 
-\subsection{theme_tt()}{
-
-Placement:
-\itemize{
-\item \code{tinytable_theme_placement_float}
-\item \code{tinytable_theme_placement_horizontal}
-}
-
-Resize:
-\itemize{
-\item \code{tinytable_theme_resize_width}
-\item \code{tinytable_theme_resize_direction}
-}
-
-Multipage:
-\itemize{
-\item \code{tinytable_theme_multipage_rowhead}
-\item \code{tinytable_theme_multipage_rowfoot}
-}
-}
-
-\subsection{print.tinytable()}{
-\itemize{
-\item \code{tinytable_print_output}
-}
-}
-
-}
-
-\subsection{Output-specific options}{
+In addition, some more specific options are available to control the behavior of the package in specific contexts.
 \subsection{HTML}{
 \itemize{
 \item \code{tinytable_html_mathjax}: Insert MathJax scripts (warning: may conflict if MathJax is loaded elsewhere)
@@ -153,12 +93,14 @@ Multipage:
 }
 }
 
-}
-
 \subsection{Color processing}{
 \itemize{
-\item \code{tinytable_color_name_normalization}: Enable/disable automatic color name processing (default: TRUE). When enabled, R color names recognized by \code{col2rgb()} are converted to hex format for consistent rendering across HTML, LaTeX, and Typst formats. If R color conversion fails, LaTeX color names are used as fallback. Colors explicitly supplied as hex values with "#" prefix are passed through unchanged. Set to FALSE to disable processing and pass color names unchanged.
+\item \code{tinytable_color_name_normalization}: Enable/disable automatic color name processing (default: TRUE).
 }
+
+When enabled, R color names recognized by \code{col2rgb()} are converted to hex format for consistent rendering across HTML, LaTeX, and Typst formats. If R color conversion fails, LaTeX color names are used as fallback. Colors explicitly supplied as hex values with "#" prefix are passed through unchanged. Set to FALSE to disable processing and pass color names unchanged.
+}
+
 \subsection{Quarto}{
 
 The \code{format_tt(quarto=TRUE)} argument enables Quarto data processing with some limitations:
