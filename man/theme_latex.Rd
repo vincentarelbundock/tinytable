@@ -13,6 +13,8 @@ theme_latex(
   rowhead = get_option("tinytable_theme_multipage_rowhead", 0L),
   rowfoot = get_option("tinytable_theme_multipage_rowfoot", 0L),
   table = TRUE,
+  resize_width = get_option("tinytable_theme_resize_width", 1),
+  resize_direction = NULL,
   ...
 )
 }
@@ -32,6 +34,12 @@ theme_latex(
 \item{rowfoot}{Number of rows to repeat as footer on each page. When >= 1, automatically enables multipage mode.}
 
 \item{table}{Logical. If \code{TRUE}, wraps the table in a LaTeX \code{table} environment. If \code{FALSE}, uses the \code{tblr} environment directly. A \code{table} environment cannot be used with \code{longtblr} environments.}
+
+\item{resize_width}{Numeric between 0.01 and 1, representing the proportion of line width for table resizing.
+Defaults to \code{get_option("tinytable_theme_resize_width", 1)}. Only applies when \code{resize_direction} is specified.}
+
+\item{resize_direction}{Character string indicating resize direction: "down", "up", or "both".
+Defaults to \code{get_option("tinytable_theme_resize_direction", "down")}. When NULL, no resizing is applied.}
 
 \item{...}{Additional arguments.}
 }

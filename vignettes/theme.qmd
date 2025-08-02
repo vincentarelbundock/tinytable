@@ -113,7 +113,7 @@ LaTeX and HTML only.
 :::
 
 ::: {.content-visible unless-format="pdf"}
-## Resize
+## LaTeX Resize
 LaTeX only.
 
 ## Placement
@@ -127,12 +127,12 @@ LaTeX only.
 :::
 
 ::: {.content-hidden unless-format="pdf"}
-The `resize` theme allows you to adjust the size of the table in LaTeX outputs, making it fit within a specified width of the page. This is useful for large tables that need to be scaled down to fit the document layout. This table will be scaled to 90% of the available line width, ensuring it fits nicely within the document.
+The `theme_latex()` function includes resize functionality to adjust the size of tables in LaTeX outputs, making them fit within a specified width of the page. This is useful for large tables that need to be scaled down to fit the document layout. This table will be scaled to 90% of the available line width, ensuring it fits nicely within the document.
 
 ```{r}
 tmp <- cbind(mtcars, mtcars)[1:10, ]
 
-tt(tmp) |> theme_tt("resize", width = .9)
+tt(tmp) |> theme_latex(resize_width = .9, resize_direction = "down")
 ```
 
 ## Placement

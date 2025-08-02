@@ -16,7 +16,6 @@ theme_tt(x, theme, ...)
 \item "placement": Position of the table environment (LaTeX)
 \item "revealjs": Tables optimized for Reveal.js presentations with light/dark theme support
 \item "rotate": Rotate a LaTeX or Typst table.
-\item "resize": Scale a LaTeX \code{tinytable} to fit the \code{width} argument.
 \item "striped": Grey stripes on alternating rows
 \item "tabulator": Customize Tabulator.js tables \strong{Experimental}
 \item "void": No rules
@@ -72,18 +71,6 @@ placement
 \item \code{latex_float}: String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp". The default value is controlled by a global option:
 \itemize{
 \item \code{options("tinytable_theme_placement_latex_float" = "H")}
-}
-}
-
-resize
-\itemize{
-\item \code{width}: A numeric value between 0.01 and 1, representing the proportion of the line width to use
-\itemize{
-\item \code{options("tinytable_theme_resize_width" = 0.9)}
-}
-\item \code{direction}: "down", "up", "both" A string indicating if the table should be scaled in one direction. For example, "down" will only resize the table if it exceeds \verb{\\linewidth}
-\itemize{
-\item \code{options("tinytable_theme_resize_direction" = "down")}
 }
 }
 
@@ -144,7 +131,7 @@ tt(x) |> theme_tt("striped")
 # resize w/ argument
 x <- cbind(mtcars[1:10, ], mtcars[1:10, ])
 tt(x) |>
-  theme_tt("resize", width = .9) |>
+  theme_latex(resize_width = .9, resize_direction = "down") |>
   print("latex")
 
 }
