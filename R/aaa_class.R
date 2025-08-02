@@ -53,15 +53,16 @@ setClass(
     style_caption = "list",
     style_notes = "list",
     table_string = "character",
-    tabulator_stylesheet = "character",
-    tabulator_options = "character",
-    tabulator_column_formatters = "list",
-    tabulator_column_styles = "list",
-    tabulator_search = "logical",
-    tabulator_css_rule = "character",
-    tabulator_columns = "list",
     tabularray_inner = "character",
     tabularray_outer = "character",
+    tabulator_format_bool = "logical",
+    tabulator_column_formatters = "list",
+    tabulator_column_styles = "list",
+    tabulator_columns = "list",
+    tabulator_css_rule = "character",
+    tabulator_options = "character",
+    tabulator_search = "logical",
+    tabulator_stylesheet = "character",
     theme = "list",
     width = "NULLorNumeric",
     width_cols = "numeric"
@@ -122,6 +123,7 @@ setMethod(
     .Object@tabulator_column_formatters <- list()
     .Object@tabulator_column_styles <- list()
     .Object@tabulator_search <- FALSE
+    .Object@tabulator_format_bool <- FALSE
     .Object@tabulator_css_rule <- ""
     .Object@tabulator_columns <- list()
     .Object@tabularray_inner <- character()
