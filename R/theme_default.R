@@ -1,3 +1,6 @@
+#' Default theme for TinyTable
+#' @param x A tinytable object.
+#' @param ... Additional arguments  are ignored.
 theme_default <- function(x, ...) {
   # Apply placement functionality for LaTeX and Typst
   placement_latex <- get_option("tinytable_theme_placement_latex_float", default = NULL)
@@ -17,7 +20,7 @@ theme_default <- function(x, ...) {
     x@bootstrap_class
   }
   fn <- function(x) theme_html(x, class = bc)
-  x@lazy_theme <- c(x@lazy_theme, list(fn))
+  x <- theme_html(x, class = bc)
 
   if (isTRUE(x@output %in% c("html", "bootstrap", "typst"))) {
     col <- if (x@output == "typst") "black" else "#d3d8dc"

@@ -168,7 +168,7 @@ tt(mtcars[1:5, 1:6], theme = "void") |>
     line_width = 0.4,
     line_color = "teal")
 
-tt(mtcars[1:5, 1:6], theme = "bootstrap") |>
+tt(mtcars[1:5, 1:6], theme = "striped") |>
   style_tt(
     i = c(2, 5),
     j = 3,

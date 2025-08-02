@@ -2,11 +2,14 @@
 
 ## Development
 
-Breaking change:
+Deprecated or replaced features:
 
-* Deprecate the `output` argument from `style_tt()`.
-* Deprecate the `tabularray_inner` and `tabularray_outer` arguments from `style_tt()`. Use the LaTeX-specific themeing function instead: `theme_latex(x, inner = ..., outer = ...)`
-* Deprecate the `bootstrap_class`, `bootstrap_css`, and `bootstrap_css_rule` arguments from `style_tt()`. Use the HTML-specific themeing function instead: `theme_html(x, class=..., css=..., css_rule=...)`
+* `theme_tt()` function has been deprecated. Use format-specific or style-specific theme functions instead:
+  - Format-specific: `theme_html()`, `theme_latex()`, `theme_typst()`
+  - Style-specific: `theme_grid()`, `theme_revealjs()`, `theme_rotate()`, `theme_striped()`, `theme_void()`
+* `output` argument from `style_tt()`.
+* `tabularray_inner` and `tabularray_outer` arguments from `style_tt()`. Use `theme_latex()` instead.
+* `bootstrap_class`, `bootstrap_css`, and `bootstrap_css_rule` arguments from `style_tt()`. Use `theme_html()` instead.
 
 New:
 

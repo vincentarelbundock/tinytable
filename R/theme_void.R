@@ -1,3 +1,6 @@
+#' Theme for a void table
+#' @inheritParams theme_default
+#' @export
 theme_void <- function(x, ...) {
   x <- theme_html(x, class = "table table-borderless")
 

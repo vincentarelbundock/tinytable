@@ -87,6 +87,9 @@ tt <- function(
   if (!isTRUE(check_function(theme)) && !isTRUE(check_string(theme))) {
     stop("The `theme` argument must be a function or a string.", call. = FALSE)
   }
+  if (isTRUE(check_string(theme))) {
+    assert_choice(theme, names(theme_dictionary), null.ok = TRUE)
+  }
 
   # x should be a data frame, not a tibble or slopes, for indexing convenience
   assert_data_frame(x, min_rows = 1, min_cols = 1)
