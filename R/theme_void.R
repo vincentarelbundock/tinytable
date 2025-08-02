@@ -1,5 +1,5 @@
 theme_void <- function(x, ...) {
-  x <- theme_html(x, engine = "bootstrap", class = "table table-borderless")
+  x <- theme_html(x, class = "table table-borderless")
 
   fn <- function(table) {
     s <- table@table_string

@@ -165,13 +165,12 @@ tt <- function(
   )
 
   if (is.null(theme)) {
-    out <- theme_tt(out, theme = "default")
-  } else {
-    out <- theme_tt(out, theme = theme)
-  }
-
-  if ("placement" %in% names(dots)) {
-    out <- theme_tt(out, "placement", latex_float = dots[["placement"]])
+    theme <- theme_default
+    out@lazy_theme <- c(out@lazy_theme, list(theme_default))
+  } else if (is.function(theme)) {
+    out@lazy_theme <- c(out@lazy_theme, list(theme))
+  } else if (isTRUE(check_string(theme))) {
+    out@lazy_theme <- c(out@lazy_theme, list(theme_dictionary[[theme]]))
   }
 
   if (isTRUE(escape)) {

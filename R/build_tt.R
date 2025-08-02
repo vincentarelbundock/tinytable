@@ -72,10 +72,7 @@ build_tt <- function(x, output = NULL) {
   x@nrow <- nrow(x@data) + nrow(x@group_data_i)
 
   for (th in x@lazy_theme) {
-    fn <- th[[1]]
-    args <- th[[2]]
-    args[["x"]] <- x
-    x <- do.call(fn, args)
+    x <- th(x)
   }
 
   # pre-process: theme_*() calls that need formatting conditional on @output
