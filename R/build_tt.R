@@ -55,8 +55,7 @@ rbind_body_groupi <- function(x) {
 build_tt <- function(x, output = NULL) {
   output <- sanitize_output(output)
 
-  x <- switch(
-    output,
+  x <- switch(output,
     html = swap_class(x, "tinytable_bootstrap"),
     bootstrap = swap_class(x, "tinytable_bootstrap"),
     latex = swap_class(x, "tinytable_tabularray"),
@@ -72,17 +71,17 @@ build_tt <- function(x, output = NULL) {
   # before format_tt() because we need the indices
   x@nrow <- nrow(x@data) + nrow(x@group_data_i)
 
+  # pre-process: theme_*() calls that need formatting conditional on @output
+  for (p in x@lazy_prepare) {
+    o <- attr(p, "output")
+    if (is.null(o) || x@output %in% o) {
+      x <- p(x)
+    }
+  }
+
   # apply the style_notes
   x <- style_notes(x)
   x <- style_caption(x)
-
-  for (th in x@lazy_theme) {
-    fn <- th[[1]]
-    args <- th[[2]]
-    args[["x"]] <- x
-    x <- do.call(fn, args)
-  }
-
   x <- render_fansi(x)
 
   # Calculate which positions are body vs group
@@ -101,13 +100,13 @@ build_tt <- function(x, output = NULL) {
   # format each component individually, including groups before inserting them into the body
   for (l in x@lazy_format) {
     l[["x"]] <- x
-    
+
     # For tabulator output, skip formatting for numeric/logical/date columns
     # as these will be handled by tabulator formatters
     if (x@output == "tabulator" && !is.null(l$j)) {
       j_clean <- sanitize_j(l$j, x)
       skip_format <- FALSE
-      
+
       for (col_idx in j_clean) {
         col_data <- x@data[[col_idx]]
         if (inherits(col_data, c("integer", "numeric", "double", "logical", "Date", "POSIXct", "POSIXlt"))) {
@@ -115,7 +114,7 @@ build_tt <- function(x, output = NULL) {
           break
         }
       }
-      
+
       if (!skip_format) {
         x <- eval(l)
       }
@@ -157,17 +156,6 @@ build_tt <- function(x, output = NULL) {
     x <- group_eval_j(x, j = seq_len(ncol(x)), ihead = ihead)
   }
 
-  # style is separate from content in formats that allow it
-  if (!x@output %in% c("markdown", "gfm", "dataframe")) {
-    for (l in x@lazy_style) {
-      l[["x"]] <- x
-      # output-specific styling
-      if (is.null(l$output) || isTRUE(x@output == l$output)) {
-        x <- eval(l)
-      }
-    }
-  }
-
   # markdown styles are applied earlier
   if (!x@output %in% c("markdown", "gfm", "dataframe")) {
     x <- style_eval(x)
@@ -176,6 +164,14 @@ build_tt <- function(x, output = NULL) {
   }
 
   x <- finalize(x)
+
+  # post-process: theme_*() calls that need formatting conditional on @output and table drawn
+  for (p in x@lazy_finalize) {
+    o <- attr(p, "output")
+    if (is.null(o) || x@output %in% o) {
+      x <- p(x)
+    }
+  }
 
   x@table_string <- lines_drop_consecutive_empty(x@table_string)
   if (output == "gfm") {
@@ -186,5 +182,19 @@ build_tt <- function(x, output = NULL) {
     )
   }
 
+  return(x)
+}
+
+
+build_prepare <- function(x, fn, output = NULL) {
+  attr(fn, "output") <- output
+  x@lazy_prepare <- c(x@lazy_prepare, list(fn))
+  return(x)
+}
+
+
+build_finalize <- function(x, fn, output = NULL) {
+  attr(fn, "output") <- output
+  x@lazy_finalize <- c(x@lazy_finalize, list(fn))
   return(x)
 }

@@ -14,14 +14,14 @@ MathJax = {
 </script>
 ```
 
-`tinytable` offers a very flexible theming framwork, which includes a few basic visual looks, as well as other functions to apply collections of transformations to `tinytable` objects in a repeatable way. These themes can be applied by supplying a string or function to the `theme` argument in `tt()`. Alternatively, users can call the `theme_tt()` function.
+`tinytable` offers a very flexible theming framwork, which includes a few basic visual looks, as well as other functions to apply collections of transformations to `tinytable` objects in a repeatable way. These themes can be applied by supplying a string or function to the `theme` argument in `tt()`. Alternatively, users can call the specific theme functions like `theme_striped()`, `theme_grid()`, etc.
 
-The main difference between `theme_tt()` and the other options in package, is that whereas `style_tt()` and `format_tt()` aim to be output agnostic, `theme_tt()` supplies transformations that can be output-specific, and which can have their own sets of distinct arguments. See below for a few examples.
+The main difference between theme functions and the other options in package, is that whereas `style_tt()` and `format_tt()` aim to be output agnostic, theme functions supply transformations that can be output-specific, and which can have their own sets of distinct arguments. See below for a few examples.
 
 ```{r}
 library(tinytable)
 options(tinytable_tt_digits = 3)
-options(tinytable_theme_placement_latex_float = "H")
+options(tinytable_latex_placement = "H")
 x <- mtcars[1:4, 1:5]
 ```
 
@@ -31,8 +31,10 @@ To begin, let's explore a few of the basic looks supplied by themes:
 
 ```{r}
 tt(x, theme = "striped")
+```
 
-tt(x) |> theme_tt("striped")
+```{r}
+tt(x) |> theme_striped()
 ```
 
 ```{r}
@@ -40,15 +42,8 @@ tt(x, theme = "grid")
 ```
 
 ```{r}
-tt(x, theme = "bootstrap")
-```
-
-
-::: {.content-visible when-format="pdf"}
-```{r}
 tt(x, theme = "void")
 ```
-:::
 
 
 ## Custom themes
@@ -59,7 +54,7 @@ Users can also define their own themes to apply consistent visual tweaks to tabl
 theme_vincent <- function(x, ...) {
   out <- x |> 
     style_tt(color = "teal") |>
-    theme_tt("default")
+    theme_default()
   out@caption <- "Always use the same caption."
   out@width <- .5
   return(out)
@@ -103,7 +98,7 @@ The `tabular` theme is designed to provide a more "raw" table, without a floatin
 
 ```{r tabular-theme}
 tt(x) |>
-  theme_tt("tabular") |>
+  theme_latex(environment = "tabular", table = FALSE) |>
   print("latex")
 ```
 :::
@@ -113,7 +108,7 @@ LaTeX and HTML only.
 :::
 
 ::: {.content-visible unless-format="pdf"}
-## Resize
+## LaTeX Resize
 LaTeX only.
 
 ## Placement
@@ -127,22 +122,22 @@ LaTeX only.
 :::
 
 ::: {.content-hidden unless-format="pdf"}
-The `resize` theme allows you to adjust the size of the table in LaTeX outputs, making it fit within a specified width of the page. This is useful for large tables that need to be scaled down to fit the document layout. This table will be scaled to 90% of the available line width, ensuring it fits nicely within the document.
+The `theme_latex()` function includes resize functionality to adjust the size of tables in LaTeX outputs, making them fit within a specified width of the page. This is useful for large tables that need to be scaled down to fit the document layout. This table will be scaled to 90% of the available line width, ensuring it fits nicely within the document.
 
 ```{r}
 tmp <- cbind(mtcars, mtcars)[1:10, ]
 
-tt(tmp) |> theme_tt("resize", width = .9)
+tt(tmp) |> theme_latex(resize_width = .9, resize_direction = "down")
 ```
 
-## Placement
+## LaTeX Placement
 
-The `placement` theme offers control over the positioning of the table in LaTeX documents, using floating parameters like `H` (from the `float` LaTeX package) to specify where the table should appear.
+The `theme_latex()` function includes placement control over the positioning of the table in LaTeX documents, using floating parameters like `H` (from the `float` LaTeX package) to specify where the table should appear.
 
 ```{r placement-theme}
-options(tinytable_theme_placement_latex_float = NULL)
+options(tinytable_latex_placement = NULL)
 tt(x) |>
-  theme_tt("placement", latex_float = "H") |>
+  theme_latex(placement = "H") |>
   print(output = "latex")
 ```
 
@@ -150,7 +145,7 @@ tt(x) |>
 
 ```{r}
 tt(head(iris), caption = "Rotated table.") |>
-  theme_tt("rotate", angle = 45)
+  theme_rotate(angle = 45)
 ```
 
 ## Multipage
@@ -163,7 +158,7 @@ tmp <- rbind(mtcars, mtcars)[, 1:6]
 cap <- "A long 80\\% width table with repeating headers."
 
 tt(tmp, width = .8, caption = cap) |>
-  theme_tt("multipage", rowhead = 1)
+  theme_latex(multipage = TRUE, rowhead = 1)
 ```
 :::
 

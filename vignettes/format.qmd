@@ -21,7 +21,7 @@ MathJax = {
 ```{r}
 library(tinytable)
 options(tinytable_tt_digits = 3)
-options(tinytable_theme_placement_latex_float = "H")
+options(tinytable_latex_placement = "H")
 x <- mtcars[1:4, 1:5]
 ```
 
@@ -172,7 +172,8 @@ In LaTeX (PDF), you can also use the `mode` inner setting from `tabularray` to r
 ```{r, eval = knitr::is_latex_output()}
 dat <- data.frame(Math = c("x^2 + y^2 = z^2", "\\frac{1}{2}"))
 tt(dat) |>
-  style_tt(j = 1, align = "c", tabularray_inner = "column{1}={mode=math},")
+  style_tt(j = 1, align = "c") |>
+  theme_latex(inner = "column{1}={mode=math},")
 ```
 :::
 

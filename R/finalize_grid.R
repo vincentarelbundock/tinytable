@@ -37,13 +37,8 @@ setMethod(
 
     x@table_string <- out
 
-    for (fn in x@lazy_finalize) {
-      x <- fn(x)
-    }
-
     return(x)
-  }
-)
+  })
 
 replace_char_at_position <- function(input_string, position, replacement_char) {
   before <- substr(input_string, 1, position - 1)

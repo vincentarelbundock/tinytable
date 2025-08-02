@@ -39,8 +39,7 @@ setClass(
     lazy_finalize = "list",
     lazy_format = "list",
     lazy_plot = "list",
-    lazy_style = "list",
-    lazy_theme = "list",
+    lazy_prepare = "list",
     names = "NULLorCharacter",
     ncol = "numeric",
     nhead = "numeric",
@@ -61,6 +60,8 @@ setClass(
     tabulator_search = "logical",
     tabulator_css_rule = "character",
     tabulator_columns = "character",
+    tabularray_inner = "character",
+    tabularray_outer = "character",
     theme = "list",
     width = "NULLorNumeric",
     width_cols = "numeric"
@@ -74,17 +75,15 @@ setClass(
 setMethod(
   "initialize",
   "tinytable",
-  function(
-    .Object,
-    data = data.frame(),
-    caption = NULL,
-    notes = NULL,
-    theme = list("default"),
-    data_body = data.frame(),
-    placement = NULL,
-    width = NULL,
-    height = NULL
-  ) {
+  function(.Object,
+           data = data.frame(),
+           caption = NULL,
+           notes = NULL,
+           theme = list("default"),
+           data_body = data.frame(),
+           placement = NULL,
+           width = NULL,
+           height = NULL) {
     # explicit
     .Object@data <- data
     .Object@data_body <- data_body
@@ -116,7 +115,6 @@ setMethod(
     .Object@css <- data.frame(i = NA, j = NA, bootstrap = NA, id = NA)
     .Object@portable <- FALSE
     .Object@style <- data.frame()
-    .Object@lazy_theme <- list()
     .Object@tabulator_stylesheet <- ""
     .Object@tabulator_options <- ""
     .Object@tabulator_column_formatters <- list()
@@ -124,10 +122,11 @@ setMethod(
     .Object@tabulator_search <- FALSE
     .Object@tabulator_css_rule <- ""
     .Object@tabulator_columns <- ""
+    .Object@tabularray_inner <- character()
+    .Object@tabularray_outer <- character()
 
     return(.Object)
-  }
-)
+  })
 
 #' Method for a tinytable S4 object
 #'
@@ -183,8 +182,7 @@ setReplaceMethod(
     }
     x@names <- value
     return(x)
-  }
-)
+  })
 
 #' Method for a tinytable S4 object
 #'
@@ -206,8 +204,7 @@ setReplaceMethod(
     }
     x@names <- value
     return(x)
-  }
-)
+  })
 
 #' Dimensions a tinytable S4 object
 #'

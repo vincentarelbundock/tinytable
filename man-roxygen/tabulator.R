@@ -1,4 +1,4 @@
-#' @section Interactive tables with Tabulator:
+#' @section Tabulator (interactive tables):
 #'
 #' **Experimental Feature:** The Tabulator.js integration is experimental and the API may change in future versions.
 #'
@@ -20,4 +20,3 @@
 #' * Global stylesheets affect all tables in multi-table documents
 #' * Date formatting uses Luxon tokens, not R's `strptime` format
 #' * Boolean formatting requires `format_tt()` with `bool` argument for custom display
-

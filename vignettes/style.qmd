@@ -17,7 +17,7 @@ MathJax = {
 The main styling function for the `tinytable` package is `style_tt()`. Via this function, you can access three main interfaces to customize tables:
 
 1. A general interface to frequently used style choices which works for both HTML and LaTeX (PDF): colors, font style and size, row and column spans, etc. This is accessed through several distinct arguments in the `style_tt()`  function, such as `italic`, `color`, etc.
-2. A specialized interface which allows users to use the [powerful `tabularray` package](https://ctan.org/pkg/tabularray?lang=en) to customize LaTeX tables. This is accessed by passing `tabularray` settings as strings to the `tabularray_inner` and `tabularray_outer` arguments of `style_tt()`.
+2. A specialized interface which allows users to use the [powerful `tabularray` package](https://ctan.org/pkg/tabularray?lang=en) to customize LaTeX tables. This is accessed by passing `tabularray` settings as strings to the `inner` and `outer` arguments of `theme_latex()`.
 3. A specialized interface which allows users to use the [powerful `Bootstrap` framework](https://getbootstrap.com/docs/5.3/content/tables/) to customize HTML tables. This is accessed by passing CSS declarations and rules to the `bootstrap_css` and `bootstrap_css_rule` arguments of `style_tt()`.
 
 These functions can be used to customize rows, columns, or individual cells. They control many features, including:
@@ -40,7 +40,7 @@ The `style_*()` functions can modify individual cells, or entire columns and row
 ```{r}
 library(tinytable)
 options(tinytable_tt_digits = 3)
-options(tinytable_theme_placement_latex_float = "H")
+options(tinytable_latex_placement = "H")
 x <- mtcars[1:4, 1:5]
 ```
 
@@ -211,14 +211,14 @@ The `rowspan` feature is also useful to create multi-row labels. For example, in
 tab <- data.frame(Letters = c("A<br>B", ""), Numbers = c("First", "Second"))
 
 tt(tab) |>
-  style_tt(bootstrap_class = "table-bordered")
+  theme_html(class = "table-bordered")
 ```
 
 Now, we use `colspan` to ensure that that cells in the first column take up less space and are combined into one:
 
 ```{r} 
 tt(tab) |>
-  style_tt(bootstrap_class = "table-bordered") |>
+  theme_html(class = "table-bordered") |>
   style_tt(1, 1, rowspan = 2)
 ```
 
@@ -238,7 +238,7 @@ df |>
     style_tt(1, 1, rowspan = 2, bold = TRUE) |>
     style_tt(1, c(2, 4), colspan = 2, bold = TRUE) |>
     style_tt(5, c(2, 4), colspan = 2) |>
-    theme_tt("grid")
+    theme_grid()
 ```
 
 ## Headers

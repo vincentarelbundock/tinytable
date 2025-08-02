@@ -25,11 +25,6 @@ style_tt(
   line_color = "black",
   line_width = 0.1,
   finalize = NULL,
-  tabularray_inner = NULL,
-  tabularray_outer = NULL,
-  bootstrap_class = NULL,
-  bootstrap_css = NULL,
-  bootstrap_css_rule = NULL,
   ...
 )
 }
@@ -105,16 +100,6 @@ style_tt(
 
 \item{finalize}{A function applied to the table object at the very end of table-building, for post-processing. For example, the function could use regular expressions to add LaTeX commands to the text version of the table hosted in \code{x@table_string}, or it could programmatically change the caption in \code{x@caption}.}
 
-\item{tabularray_inner}{A string that specifies the "inner" settings of a tabularray LaTeX table.}
-
-\item{tabularray_outer}{A string that specifies the "outer" settings of a tabularray LaTeX table.}
-
-\item{bootstrap_class}{String. Bootstrap table class such as \code{"table"}, \code{"table table-dark"} or \code{"table table-dark table-hover"}. See the bootstrap documentation.}
-
-\item{bootstrap_css}{Character vector. CSS style declarations to be applied to every cell defined by \code{i} and \code{j} (ex: \code{"font-weight: bold"}).}
-
-\item{bootstrap_css_rule}{String. Complete CSS rules (with curly braces, semicolon, etc.) that apply to the table class specified by the \code{bootstrap_class} argument.}
-
 \item{...}{extra arguments are ignored}
 }
 \value{
@@ -183,7 +168,7 @@ tt(mtcars[1:5, 1:6], theme = "void") |>
     line_width = 0.4,
     line_color = "teal")
 
-tt(mtcars[1:5, 1:6], theme = "bootstrap") |>
+tt(mtcars[1:5, 1:6], theme = "striped") |>
   style_tt(
     i = c(2, 5),
     j = 3,
@@ -191,7 +176,7 @@ tt(mtcars[1:5, 1:6], theme = "bootstrap") |>
     fontsize = 0.7)
 
 tt(mtcars[1:5, 1:6]) |>
-  style_tt(bootstrap_class = "table table-dark table-hover")
+  theme_html(class = "table table-dark table-hover")
 
 
 inner <- "
@@ -205,7 +190,7 @@ cell{3,5}{1,4} = {bg=purple7},
 cell{2}{2} = {r=4,c=2}{bg=azure7},
 "
 tt(mtcars[1:5, 1:4], theme = "void") |>
-  style_tt(tabularray_inner = inner)
+  theme_latex(inner = inner)
 
 # Style group rows and non-group rows
 dat <- data.frame(x = 1:6, y = letters[1:6])

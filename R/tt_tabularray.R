@@ -39,7 +39,7 @@ setMethod(
     body <- paste(body, "\\\\")
 
     # theme: booktabs
-    th <- x@theme[[1]]
+    th <- if (length(x@theme) > 0) x@theme[[1]] else NULL
     if (
       is.null(th) || is.function(th) || isTRUE(th %in% c("default", "striped"))
     ) {
