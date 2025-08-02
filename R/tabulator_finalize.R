@@ -35,7 +35,6 @@ setMethod(
   f = "finalize",
   signature = "tinytable_tabulator",
   definition = function(x, ...) {
-    assert_dependency("jsonlite")
 
     # Replace stylesheet theme from S4 slot
     if (nchar(x@tabulator_stylesheet) > 0) {
@@ -44,26 +43,12 @@ setMethod(
 
     # Apply column formatters if they exist or create them from formatting applied to data
     # Check if formatting was applied by looking at lazy_format operations or styles
-    if (
-      length(x@lazy_format) > 0 ||
-        length(x@tabulator_column_formatters) > 0 ||
-        length(x@tabulator_column_styles) > 0
-    ) {
-      # Parse existing columns and update with formatters
-      current_columns <- regmatches(
-        x@table_string,
-        regexpr("columns: \\[.*?\\]", x@table_string)
-      )
-
-      if (length(current_columns) > 0) {
-        # Extract JSON array content
-        json_content <- gsub("columns: \\[(.*)\\]", "\\1", current_columns)
-
-        # Parse existing columns
-        columns_list <- jsonlite::fromJSON(
-          paste0("[", json_content, "]"),
-          simplifyDataFrame = FALSE
-        )
+    main_condition <- length(x@lazy_format) > 0 || length(x@tabulator_column_formatters) > 0 || length(x@tabulator_column_styles) > 0
+    
+    if (main_condition) {
+      # Use columns list directly from S4 object (no JSON parsing needed)
+      if (length(x@tabulator_columns) > 0) {
+        columns_list <- x@tabulator_columns
 
         # Create formatters for columns that had format_tt applied
         for (l in x@lazy_format) {
@@ -133,10 +118,8 @@ setMethod(
         for (i in seq_along(columns_list)) {
           col_title <- columns_list[[i]][["title"]]
           if (col_title %in% names(x@tabulator_column_formatters)) {
-            # Parse the stored formatter
-            formatter_obj <- jsonlite::fromJSON(x@tabulator_column_formatters[[
-              col_title
-            ]])
+            # Use the stored formatter list directly (no JSON parsing needed)
+            formatter_obj <- x@tabulator_column_formatters[[col_title]]
             columns_list[[i]][["formatter"]] <- formatter_obj[["formatter"]]
             if (!is.null(formatter_obj[["formatterParams"]])) {
               columns_list[[i]][["formatterParams"]] <- formatter_obj[[
@@ -169,11 +152,18 @@ setMethod(
           }
         }
 
-        # Convert back to JSON and replace in template
-        new_columns_json <- jsonlite::toJSON(
+        # Convert to JSON and replace in template
+        new_columns_json <- df_to_json(
           columns_list,
-          auto_unbox = TRUE,
-          pretty = TRUE
+          auto_unbox = TRUE
+        )
+        
+        # Replace both patterns - placeholder and existing columns array
+        x@table_string <- gsub(
+          "\\$tinytable_TABULATOR_COLUMNS",
+          new_columns_json,
+          x@table_string,
+          fixed = TRUE
         )
         x@table_string <- gsub(
           "columns: \\[.*?\\]",
@@ -182,6 +172,9 @@ setMethod(
         )
       }
     }
+
+    # Always replace the columns placeholder if columns exist (moved to end of function)
+    # This ensures replacement happens regardless of formatting conditions
 
     # Replace tabulator options from S4 slot
     if (nchar(x@tabulator_options) > 0) {
@@ -203,11 +196,23 @@ setMethod(
     }
 
     # Replace custom columns if provided
-    if (nchar(x@tabulator_columns) > 0) {
+    if (length(x@tabulator_columns) > 0) {
+      # Handle different column formats for backward compatibility
+      if (is.list(x@tabulator_columns) && !is.null(x@tabulator_columns$json_string)) {
+        # This is a JSON string wrapped in a list (from theme function)
+        columns_json <- x@tabulator_columns$json_string
+      } else if (is.list(x@tabulator_columns)) {
+        # This is a proper R list of column definitions
+        columns_json <- df_to_json(x@tabulator_columns, auto_unbox = TRUE)
+      } else {
+        # Fallback for direct character assignment (shouldn't happen now)
+        columns_json <- x@tabulator_columns
+      }
+      
       # Replace the existing columns array with custom columns
       x@table_string <- gsub(
         "columns: \\[.*?\\],",
-        paste0("columns: ", x@tabulator_columns, ","),
+        paste0("columns: ", columns_json, ","),
         x@table_string
       )
       # Automatically disable search when custom columns are provided
@@ -325,6 +330,28 @@ setMethod(
       x@table_string,
       fixed = TRUE
     )
+
+    # Replace the columns placeholder only if it hasn't been replaced yet
+    # This ensures replacement happens for cases without formatting/styling
+    if (length(x@tabulator_columns) > 0 && grepl("$tinytable_TABULATOR_COLUMNS", x@table_string, fixed = TRUE)) {
+      # Handle different column formats for backward compatibility
+      if (is.list(x@tabulator_columns) && !is.null(x@tabulator_columns$json_string)) {
+        # This is a JSON string wrapped in a list (from theme function)
+        columns_json <- x@tabulator_columns$json_string
+      } else if (is.list(x@tabulator_columns)) {
+        # This is a proper R list of column definitions
+        columns_json <- df_to_json(x@tabulator_columns, auto_unbox = TRUE)
+      } else {
+        # Fallback for direct character assignment (shouldn't happen now)
+        columns_json <- x@tabulator_columns
+      }
+      x@table_string <- gsub(
+        "$tinytable_TABULATOR_COLUMNS",
+        columns_json,
+        x@table_string,
+        fixed = TRUE
+      )
+    }
 
     return(x)
   })

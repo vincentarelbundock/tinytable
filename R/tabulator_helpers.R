@@ -26,7 +26,6 @@ tabulator_cdn_helper <- function(x, cdn) {
       materialize = "tabulator_materialize.min.css"
     )
 
-    assert_dependency("jsonlite")
 
     # Validate theme choice using theme_map names
     valid_themes <- names(theme_map)
@@ -323,8 +322,6 @@ format_tabulator_column <- function(
     col_def$formatterParams <- formatter_config$formatterParams
   }
 
-  # Convert to JavaScript string
-  js_string <- jsonlite::toJSON(col_def, auto_unbox = TRUE, pretty = FALSE)
-
-  return(js_string)
+  # Return the R list directly (no JSON conversion)
+  return(col_def)
 }

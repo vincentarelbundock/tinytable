@@ -59,7 +59,7 @@ setClass(
     tabulator_column_styles = "list",
     tabulator_search = "logical",
     tabulator_css_rule = "character",
-    tabulator_columns = "character",
+    tabulator_columns = "list",
     tabularray_inner = "character",
     tabularray_outer = "character",
     theme = "list",
@@ -121,7 +121,7 @@ setMethod(
     .Object@tabulator_column_styles <- list()
     .Object@tabulator_search <- FALSE
     .Object@tabulator_css_rule <- ""
-    .Object@tabulator_columns <- ""
+    .Object@tabulator_columns <- list()
     .Object@tabularray_inner <- character()
     .Object@tabularray_outer <- character()
 

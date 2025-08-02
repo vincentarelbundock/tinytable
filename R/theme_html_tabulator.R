@@ -19,9 +19,15 @@ sanity_tabulator_css_rule <- function(tabulator_css_rule) {
 
 sanity_tabulator_columns <- function(tabulator_columns) {
   if (!is.null(tabulator_columns)) {
-    if (!is.character(tabulator_columns) || length(tabulator_columns) != 1) {
+    if (!is.character(tabulator_columns) && !is.list(tabulator_columns)) {
       stop(
-        "tabulator_columns must be a single character string containing valid JavaScript array",
+        "tabulator_columns must be a character string containing valid JavaScript array or a list of column definitions",
+        call. = FALSE
+      )
+    }
+    if (is.character(tabulator_columns) && length(tabulator_columns) != 1) {
+      stop(
+        "tabulator_columns character string must be a single element",
         call. = FALSE
       )
     }
@@ -190,7 +196,15 @@ theme_html_tabulator <- function(
       table@tabulator_css_rule <- tabulator_css_rule
     }
     if (!is.null(tabulator_columns)) {
-      table@tabulator_columns <- tabulator_columns
+      # Handle both character strings (backward compatibility) and lists
+      if (is.character(tabulator_columns)) {
+        # Keep as character for now - will be handled in finalize_tabulator.R
+        # But we need to store it in a way that doesn't break S4 validation
+        # Convert to a temporary list structure that indicates it's a JSON string
+        table@tabulator_columns <- list(json_string = tabulator_columns)
+      } else {
+        table@tabulator_columns <- tabulator_columns
+      }
     }
 
     return(table)

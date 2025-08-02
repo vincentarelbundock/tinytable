@@ -2,7 +2,6 @@ setMethod(
   f = "tt_eval",
   signature = "tinytable_tabulator",
   definition = function(x, ...) {
-    assert_dependency("jsonlite")
 
     # Check that column names exist
     if (is.null(x@names) || length(x@names) == 0) {
@@ -134,12 +133,9 @@ setMethod(
     }
 
     # Convert to JSON
-    js_data <- jsonlite::toJSON(
+    js_data <- df_to_json(
       data_clean,
-      dataframe = "rows",
-      auto_unbox = TRUE,
-      pretty = FALSE,
-      na = "null"
+      dataframe = "rows"
     )
 
 
@@ -161,9 +157,10 @@ setMethod(
       return(col_def)
     })
 
-    js_columns <- trimws(jsonlite::toJSON(columns, auto_unbox = TRUE, pretty = FALSE))
+    # Store columns list directly in S4 object for later processing
+    x@tabulator_columns <- columns
 
-    # Replace data and columns in template
+    # Replace data in template
     template <- gsub(
       "$tinytable_TABULATOR_DATA",
       js_data,
@@ -171,14 +168,8 @@ setMethod(
       fixed = TRUE
     )
 
-    # Only replace columns if no custom columns will be provided later
-    # (Custom columns are handled in finalize_tabulator.R)
-    template <- gsub(
-      "$tinytable_TABULATOR_COLUMNS",
-      js_columns,
-      template,
-      fixed = TRUE
-    )
+    # Leave columns placeholder for finalize_tabulator.R to handle
+    # (Custom columns and formatting are handled there)
 
     # Add default CDN (bootstrap5)
     template <- gsub(
