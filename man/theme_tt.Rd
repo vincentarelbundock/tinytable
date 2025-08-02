@@ -18,7 +18,6 @@ theme_tt(x, theme, ...)
 \item "rotate": Rotate a LaTeX or Typst table.
 \item "resize": Scale a LaTeX \code{tinytable} to fit the \code{width} argument.
 \item "striped": Grey stripes on alternating rows
-\item "tabular": Remove table environment (LaTeX) or Javascript/CSS (HTML)
 \item "tabulator": Customize Tabulator.js tables \strong{Experimental}
 \item "void": No rules
 }}
@@ -96,16 +95,6 @@ rotate
 \item LaTeX and Typst only.
 \item Typst: In Quarto documents, rotation does not work because Quarto takes over the figure environment.
 \item LaTeX: In Quarto documents, captions must be specified using the \code{caption} argument in \code{tt()} rather than via Quarto chunk options.
-}
-}
-
-tabular
-\itemize{
-\item \code{style}:
-\itemize{
-\item "tabular": Drop all LaTeX dependencies and floating environments, except \verb{\\\\begin\{tabular\}}
-\item "tabularray": Drop all LaTeX dependencies and floating environments, except \verb{\\\\begin\{tblr\}}
-\item \code{options("tinytable_theme_tabular_style" = "tblr")}
 }
 }
 

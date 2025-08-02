@@ -11,6 +11,7 @@ theme_bootstrap(
   class = NULL,
   css = NULL,
   css_rule = NULL,
+  engine = "bootstrap",
   ...
 )
 }
@@ -36,6 +37,8 @@ theme_bootstrap(
 \item{css}{Character vector. CSS style declarations to be applied to every cell defined by \code{i} and \code{j} (ex: \code{"font-weight: bold"}).}
 
 \item{css_rule}{String. Complete CSS rules (with curly braces, semicolon, etc.) that apply to the table class specified by the \code{bootstrap_class} argument.}
+
+\item{engine}{Character string specifying the HTML engine. If "raw", strips bootstrap styling and returns a simple table.}
 
 \item{...}{extra arguments are ignored}
 }

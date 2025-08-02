@@ -43,7 +43,7 @@ tt(
 
 \item{theme}{Function or string.
 \itemize{
-\item String: bootstrap, grid, latex, placement, revealjs, resize, rotate, striped, tabular, tabulator, void
+\item String: bootstrap, grid, latex, placement, revealjs, resize, rotate, striped, tabulator, void
 \item Function: Applied to the \code{tinytable} object.
 }}
 
@@ -183,11 +183,6 @@ Multipage:
 \itemize{
 \item \code{tinytable_theme_multipage_rowhead}
 \item \code{tinytable_theme_multipage_rowfoot}
-}
-
-Tabular:
-\itemize{
-\item \code{tinytable_theme_tabular_style}
 }
 }
 

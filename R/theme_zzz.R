@@ -8,7 +8,6 @@ theme_dictionary <- list(
   "resize" = theme_resize,
   "rotate" = theme_rotate,
   "striped" = theme_striped,
-  "tabular" = theme_tabular,
   "tabulator" = theme_tabulator,
   "void" = theme_void
 )
@@ -29,7 +28,6 @@ theme_dictionary <- list(
 #'   + "rotate": Rotate a LaTeX or Typst table.
 #'   + "resize": Scale a LaTeX `tinytable` to fit the `width` argument.
 #'   + "striped": Grey stripes on alternating rows
-#'   + "tabular": Remove table environment (LaTeX) or Javascript/CSS (HTML)
 #'   + "tabulator": Customize Tabulator.js tables **Experimental**
 #'   + "void": No rules
 #' @param ... Additional arguments passed the themeing function. See the "Arguments" section below for a list of supported arguments for each theme.
@@ -72,13 +70,6 @@ theme_dictionary <- list(
 #'   - LaTeX and Typst only.
 #'   - Typst: In Quarto documents, rotation does not work because Quarto takes over the figure environment.
 #'   - LaTeX: In Quarto documents, captions must be specified using the `caption` argument in `tt()` rather than via Quarto chunk options.
-#'
-#' tabular
-#'
-#' + `style`:
-#'   - "tabular": Drop all LaTeX dependencies and floating environments, except `\\begin{tabular}`
-#'   - "tabularray": Drop all LaTeX dependencies and floating environments, except `\\begin{tblr}`
-#'   - `options("tinytable_theme_tabular_style" = "tblr")`
 #'
 #' tabulator
 #'

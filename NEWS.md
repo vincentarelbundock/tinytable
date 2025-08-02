@@ -184,7 +184,7 @@ Typst:
 
 Bugs:
 
-* `theme_tabular()` is no longer greedy in replacing `cmidrule`. Thanks to @jsr-p for code submission #349.
+* Fixed bug in replacing `cmidrule`. Thanks to @jsr-p for code submission #349.
 
 ## 0.4.0
 

@@ -57,9 +57,6 @@
 #' * `tinytable_theme_multipage_rowhead`
 #' * `tinytable_theme_multipage_rowfoot`
 #'
-#' Tabular:
-#' * `tinytable_theme_tabular_style`
-#'
 #' ### print.tinytable()
 #'
 #' * `tinytable_print_output`

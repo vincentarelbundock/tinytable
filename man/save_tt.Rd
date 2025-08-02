@@ -127,11 +127,6 @@ Multipage:
 \item \code{tinytable_theme_multipage_rowhead}
 \item \code{tinytable_theme_multipage_rowfoot}
 }
-
-Tabular:
-\itemize{
-\item \code{tinytable_theme_tabular_style}
-}
 }
 
 \subsection{print.tinytable()}{
