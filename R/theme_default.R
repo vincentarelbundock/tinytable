@@ -5,27 +5,13 @@
 #' @return A modified `tinytable` object.
 #' @export
 theme_default <- function(x, ...) {
-  # Apply placement functionality for LaTeX and Typst
-  placement_latex <- get_option("tinytable_latex_placement", default = NULL)
-  placement_typst <- get_option("tinytable_typst_align_figure", "c")
+  # Placement for LaTeX and Typst
+  x <- theme_latex(x, placement = get_option("tinytable_latex_placement", default = NULL))
+  x <- theme_typst(x, align_figure = get_option("tinytable_typst_align_figure", "c"))
 
-  if (!is.null(placement_latex)) {
-    x <- theme_latex(x, placement = placement_latex)
-  }
-  if (!is.null(placement_typst)) {
-    x <- theme_typst(x, align_figure = placement_typst)
-  }
+  x@bootstrap_class <- "table table-borderless"
 
-  # bootstrap class
-  bc <- if (length(x@bootstrap_class) == 0) {
-    "table table-borderless"
-  } else {
-    x@bootstrap_class
-  }
-  fn <- function(x) theme_html(x, class = bc)
-  x <- theme_html(x, class = bc)
-
-  if (isTRUE(x@output %in% c("html", "bootstrap", "typst"))) {
+  fn <- function(x) {
     col <- if (x@output == "typst") "black" else "#d3d8dc"
 
     # top border
@@ -50,7 +36,6 @@ theme_default <- function(x, ...) {
     }
     # mid
     if (length(x@names) > 0) {
-      x <- theme_html(x, class = bc)
       x <- style_tt(
         x,
         i = 0,
@@ -69,5 +54,6 @@ theme_default <- function(x, ...) {
     )
   }
 
+  x <- build_prepare(x, fn, output = c("html", "bootstrap", "typst"))
   return(x)
 }
