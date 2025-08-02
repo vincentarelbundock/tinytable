@@ -478,7 +478,7 @@ ul.task-list li input[type="checkbox"] {
   tabulator_options = get_option("tinytable_html_tabulator_options", default = NULL),
   tabulator_pagination = get_option("tinytable_html_tabulator_pagination", default =
     NULL),
-  tabulator_search = get_option("tinytable_html_tabulator_search", default = TRUE),
+  tabulator_search = get_option("tinytable_html_tabulator_search", default = NULL),
   tabulator_stylesheet = get_option("tinytable_html_tabulator_stylesheet", default =
     "bootstrap5"),
   ...
@@ -509,7 +509,7 @@ Character string specifying the HTML engine: "bootstrap", "raw", or "tabulator".
 <code id="i">i</code>
 </td>
 <td>
-Row indices (shared across engines).
+Row indices.
 </td>
 </tr>
 <tr>
@@ -517,7 +517,7 @@ Row indices (shared across engines).
 <code id="j">j</code>
 </td>
 <td>
-Column indices (shared across engines).
+Column indices.
 </td>
 </tr>
 <tr>
@@ -525,7 +525,7 @@ Column indices (shared across engines).
 <code id="class">class</code>
 </td>
 <td>
-String. Bootstrap table class (shared across engines).
+String. Bootstrap table class.
 </td>
 </tr>
 <tr>
@@ -533,7 +533,7 @@ String. Bootstrap table class (shared across engines).
 <code id="css">css</code>
 </td>
 <td>
-Character vector. CSS style declarations (shared across engines).
+Character vector. CSS style declarations.
 </td>
 </tr>
 <tr>
@@ -541,7 +541,7 @@ Character vector. CSS style declarations (shared across engines).
 <code id="css_rule">css_rule</code>
 </td>
 <td>
-String. Complete CSS rules (shared across engines).
+String. Complete CSS rules.
 </td>
 </tr>
 <tr>
@@ -549,7 +549,7 @@ String. Complete CSS rules (shared across engines).
 <code id="tabulator_columns">tabulator_columns</code>
 </td>
 <td>
-Custom column definitions (tabulator engine only).
+Custom column definitions.
 </td>
 </tr>
 <tr>
@@ -557,7 +557,7 @@ Custom column definitions (tabulator engine only).
 <code id="tabulator_css_rule">tabulator_css_rule</code>
 </td>
 <td>
-Custom CSS rules (tabulator engine only).
+Complete CSS rules.
 </td>
 </tr>
 <tr>
@@ -565,7 +565,7 @@ Custom CSS rules (tabulator engine only).
 <code id="tabulator_layout">tabulator_layout</code>
 </td>
 <td>
-Table layout algorithm (tabulator engine only).
+Character string. Table layout algorithm for column sizing. Default is "fitDataTable". Available options: "fitDataTable", "fitData", "fitDataFill", "fitDataStretch", "fitColumns".
 </td>
 </tr>
 <tr>
@@ -573,7 +573,7 @@ Table layout algorithm (tabulator engine only).
 <code id="tabulator_options">tabulator_options</code>
 </td>
 <td>
-Custom Tabulator.js configuration options (tabulator engine only).
+Custom Tabulator.js configuration options.
 </td>
 </tr>
 <tr>
@@ -581,7 +581,21 @@ Custom Tabulator.js configuration options (tabulator engine only).
 <code id="tabulator_pagination">tabulator_pagination</code>
 </td>
 <td>
-Pagination settings (tabulator engine only).
+<p>Logical or numeric vector. Pagination settings for large tables.</p>
+<ul>
+<li>
+<p>NULL (default): Preserves existing pagination settings, does not change previous configuration</p>
+</li>
+<li>
+<p>FALSE: Explicitly disable pagination</p>
+</li>
+<li>
+<p>TRUE: Enable pagination with automatic page sizes (10, 25, 50, 100, 250) filtered by row count</p>
+</li>
+<li>
+<p>Numeric vector: First element is default page size, full vector provides page size options</p>
+</li>
+</ul>
 </td>
 </tr>
 <tr>
@@ -589,7 +603,18 @@ Pagination settings (tabulator engine only).
 <code id="tabulator_search">tabulator_search</code>
 </td>
 <td>
-Enable/disable search functionality (tabulator engine only).
+<p>Logical. Enable/disable search functionality.</p>
+<ul>
+<li>
+<p>NULL (default): Preserves existing search settings, does not change previous configuration</p>
+</li>
+<li>
+<p>TRUE: Adds search box allowing users to filter table content</p>
+</li>
+<li>
+<p>FALSE: Explicitly disable search</p>
+</li>
+</ul>
 </td>
 </tr>
 <tr>
@@ -597,7 +622,7 @@ Enable/disable search functionality (tabulator engine only).
 <code id="tabulator_stylesheet">tabulator_stylesheet</code>
 </td>
 <td>
-Tabulator CSS theme (tabulator engine only).
+Character string. CSS stylesheet theme for Tabulator.js tables. Default is "bootstrap5". Available options: "default", "simple", "midnight", "modern", "site", "site_dark", "bootstrap3", "bootstrap4", "bootstrap5", "semanticui", "bulma", "materialize", or a custom HTTP URL starting with "http".
 </td>
 </tr>
 <tr>
@@ -605,7 +630,7 @@ Tabulator CSS theme (tabulator engine only).
 <code id="...">…</code>
 </td>
 <td>
-Additional arguments.
+Additional arguments are ignored.
 </td>
 </tr>
 </tbody></table>
