@@ -149,7 +149,14 @@ process_delimiter_grouping <- function(x, j) {
   if (any(grepl(j, x@names, fixed = TRUE))) {
     j_delim <- j_delim_to_named_list(x = x, j = j)
     x@names <- j_delim$colnames
-    j <- j_delim$groupnames
+    
+    # Apply multiple levels of grouping if they exist (in reverse order)
+    if (length(j_delim$groupnames) > 0) {
+      for (level_groups in rev(j_delim$groupnames)) {
+        x <- process_column_grouping(x, level_groups)
+      }
+    }
+    j <- NULL  # Set to NULL since we've already applied the groupings
   } else {
     j <- NULL
   }

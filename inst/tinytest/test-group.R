@@ -187,3 +187,51 @@ expect_snapshot_print(t[["latex"]], "group-issue165_extra_row.tex")
 expect_snapshot_print(t[["typst"]], "group-issue165_extra_row.typ")
 expect_snapshot_print(t[["html"]], "group-issue165_extra_row.html")
 expect_snapshot_print(t[["markdown"]], "group-issue165_extra_row.md")
+
+
+# Issue #518: Multi-level delimiter grouping
+# Test basic multi-level structure
+tab <- data.frame(
+  hi_hi_hi = 1,
+  hi_ho_hu = 2
+) |>
+  tt() |>
+  group_tt(j = "_")
+t <- expect_table(tab)
+expect_snapshot_print(t[["markdown"]], "group-multilevel-basic.md")
+expect_snapshot_print(t[["latex"]], "group-multilevel-basic.tex")
+expect_snapshot_print(t[["html"]], "group-multilevel-basic.html")
+expect_snapshot_print(t[["typst"]], "group-multilevel-basic.typ")
+
+# Test complex multi-level structure with mixed levels
+tab <- data.frame(
+  A_X_1 = 1,
+  A_X_2 = 2,
+  A_Y_1 = 3,
+  B_Z_1 = 4,
+  B_Z_2 = 5,
+  C_W = 6
+) |>
+  tt() |>
+  group_tt(j = "_")
+t <- expect_table(tab)
+expect_snapshot_print(t[["markdown"]], "group-multilevel-complex.md")
+expect_snapshot_print(t[["latex"]], "group-multilevel-complex.tex")
+expect_snapshot_print(t[["html"]], "group-multilevel-complex.html")
+expect_snapshot_print(t[["typst"]], "group-multilevel-complex.typ")
+
+# Test multi-level structure with empty fields
+tab <- data.frame(
+  "A__C" = 1,
+  "A_B_C" = 2,
+  "A_B_" = 3,
+  "_D_E" = 4,
+  check.names = FALSE
+) |>
+  tt() |>
+  group_tt(j = "_")
+t <- expect_table(tab)
+expect_snapshot_print(t[["markdown"]], "group-multilevel-empty.md")
+expect_snapshot_print(t[["latex"]], "group-multilevel-empty.tex")
+expect_snapshot_print(t[["html"]], "group-multilevel-empty.html")
+expect_snapshot_print(t[["typst"]], "group-multilevel-empty.typ")

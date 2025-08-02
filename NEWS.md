@@ -15,6 +15,8 @@ Deprecated or replaced features:
 New:
 
 * The Tabulator JS framework can now be used to create interactive HTML tables with filtering, pagination, search, etc. `tt(x) |> theme_tt("tabulator") |> print("tabulator")`
+* `theme_*()` functions are now systematically documented and much more robust, instead of being routed via `theme_tt()`.
+* `group_tt(j = "_")` allows multiple delimiters in column names to easily create multiple level headers. Thanks to @nmercadeb for feature request #518.
 
 ## 0.11.0
 

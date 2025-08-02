@@ -5,29 +5,81 @@
 j_delim_to_named_list <- function(x, j) {
   nm <- x@names
 
-  # Find which elements contain the delimiter, and optionally j. Others are left as is
-  check_for_multiple_delims <- any(
-    lengths(gregexec(pattern = j, text = nm)) > 1L
-  )
-  if (check_for_multiple_delims) {
-    warning(
-      "Multiple delimiters found in column names. Only the first delimiter will be used for grouping."
-    )
+  # Find which columns contain the delimiter
+  indices <- grepl(j, nm, fixed = TRUE)
+  
+  if (!any(indices)) {
+    return(list(colnames = nm, groupnames = NULL))
   }
 
-  indices <- grepl(j, nm, fixed = TRUE)
-  groupnames <- sub(
-    pattern = paste0(j, ".*"),
-    replacement = "",
-    x = nm[indices]
-  )
-  indices <- which(grepl(j, nm, fixed = TRUE))
-  groupnames <- split(indices, groupnames)
+  # For columns with delimiters, parse the hierarchical structure
+  grouped_cols <- nm[indices]
+  
+  # Split each column name by the delimiter to get all levels
+  split_names <- strsplit(grouped_cols, j, fixed = TRUE)
+  max_levels <- max(lengths(split_names))
+  
+  # Build the nested grouping structure from the outermost level down
+  groupings <- list()
+  current_colnames <- nm
+  
+  for (level in 1:max_levels) {
+    # Extract the prefix for this level (first 'level' parts)
+    prefixes <- character(length(grouped_cols))
+    for (i in seq_along(split_names)) {
+      if (length(split_names[[i]]) >= level) {
+        prefixes[i] <- paste(split_names[[i]][1:level], collapse = j)
+      } else {
+        prefixes[i] <- paste(split_names[[i]], collapse = j)
+      }
+    }
+    
+    # Map prefixes back to original column indices
+    prefix_to_col_idx <- setNames(which(indices), prefixes)
+    
+    # Group by unique prefixes at this level
+    unique_prefixes <- unique(prefixes[prefixes != ""])
+    level_groups <- list()
+    
+    for (prefix in unique_prefixes) {
+      matching_indices <- which(prefixes == prefix)
+      col_indices <- (which(indices))[matching_indices]
+      
+      # Only create groupings with more than one column or if it's not the final level
+      if (length(col_indices) > 1 || level < max_levels) {
+        # Extract the group name (prefix up to this level, removing previous levels)
+        group_parts <- strsplit(prefix, j, fixed = TRUE)[[1]]
+        group_name <- group_parts[level]
+        
+        # Handle empty group names by replacing with a space (as per tinytable convention)
+        if (is.na(group_name) || group_name == "") {
+          group_name <- " "
+        }
+        
+        level_groups[[group_name]] <- col_indices
+      }
+    }
+    
+    # Only add level if it has meaningful groups
+    if (length(level_groups) > 0) {
+      groupings <- c(groupings, list(level_groups))
+    }
+  }
+  
+  # Set final column names (the last part after all delimiters)
+  for (i in which(indices)) {
+    parts <- split_names[[which(which(indices) == i)]]
+    final_name <- parts[length(parts)]
+    
+    # Handle empty final names
+    if (is.na(final_name) || final_name == "") {
+      final_name <- " "
+    }
+    
+    current_colnames[i] <- final_name
+  }
 
-  # Extract suffixes (after delimiter) used as new sub-headers
-  colnames <- sub(pattern = paste0(".*?", j), replacement = "", x = nm)
-
-  out <- list(colnames = colnames, groupnames = groupnames)
+  out <- list(colnames = current_colnames, groupnames = groupings)
   return(out)
 }
 
