@@ -423,7 +423,14 @@ tabulator_finalize_columns_placeholder <- function(x) {
         length(x@tabulator_columns) > 0 &&
             grepl("$tinytable_TABULATOR_COLUMNS", x@table_string, fixed = TRUE)
     ) {
-        columns_json <- tabulator_convert_columns_to_string(x@tabulator_columns)
+        columns <- x@tabulator_columns
+        columns_json <- if (is.list(columns) && !is.null(columns$json_string)) {
+            columns$json_string
+        } else if (is.list(columns)) {
+            df_to_json(columns, auto_unbox = TRUE)
+        } else {
+            columns
+        }
         x@table_string <- gsub(
             "$tinytable_TABULATOR_COLUMNS",
             columns_json,
@@ -431,6 +438,5 @@ tabulator_finalize_columns_placeholder <- function(x) {
             fixed = TRUE
         )
     }
-
     return(x)
 }
