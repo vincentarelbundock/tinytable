@@ -58,12 +58,14 @@ tt(dat)
 
 `tinytable` includes a built-in theme to add pagination, sorting, and filtering capabilities to a Tabulator table. This is particularly useful for large datasets. 
 
-To apply a theme, call the `theme_html()` function with `engine = "tabulator"` argument. See `?theme_html` for a list of arguments that can be used to customize the number of pagination rows, behaviour of the search bar, and various other elements.
+To apply a theme, call the `theme_html()` function. See `?theme_html` for a list of arguments that can be used to customize the number of pagination rows, behaviour of the search bar, and various other elements. Below, we supply a vector to control both the number of rows per page and the options available in the drop down menu that controls pagination. 
 
-Try typing the letters "vir" in the search box to filter the `iris` dataset and find the Virginica flowers.
+We also set `search=TRUE` to include a filtering box. Try typing the letters "vir" in the search box to filter the `iris` dataset and find the Virginica flowers.
 
 ```{r}
-tt(iris) |> theme_html(engine = "tabulator", tabulator_pagination = c(5, 10, 50))
+tt(iris) |> theme_html(
+  tabulator_pagination = c(5, 10, 50), 
+  tabulator_search = TRUE)
 ```
 
 
@@ -79,13 +81,13 @@ tt(dat) |>
   format_tt(j = "random", digits = 4)
 ```
 
-For dates, 
+For dates, `tabulator` uses Luxon date format tokens, not R's `strptime` format. Common patterns include:
 
 ```{r}
 tt(dat) |> format_tt(j = "date", date = "M/d/yyyy")
 ```
 
-For dates, `tabulator` uses Luxon date format tokens, not R's `strptime` format. Common patterns include:
+Here is a table with some common Luxon date formats and their output examples:
 
 ```{r}
 #| echo: false
@@ -118,8 +120,7 @@ $TINYTABLE_ID .tabulator-header .tabulator-col {
   color: white;
 }
 "
-tt(dat) |> 
-  theme_html(engine = "tabulator", tabulator_css_rule = css_rule)
+tt(dat) |> theme_html(tabulator_css_rule = css_rule)
 ```
 
 ## Style sheets
@@ -128,7 +129,7 @@ Tabulator ships with multiple complete CSS style sheets. The default in `tinytab
 
 ```{r}
 #| eval: false
-tt(iris) |> theme_html(engine = "tabulator", tabulator_stylesheet = "semanticui")
+tt(iris) |> theme_html(tabulator_stylesheet = "semanticui")
 ```
 
 ::: {.callout-note}
@@ -170,7 +171,7 @@ custom_columns <- '
   },
 ]'
 
-tt(dat) |> theme_html(engine = "tabulator", tabulator_columns = custom_columns)
+tt(dat) |> theme_html(tabulator_columns = custom_columns)
 ```
 
 And now we change more options, such as the layout and height of the table:
@@ -181,7 +182,7 @@ opts <- "
   height: '200px'
 "
 
-tt(dat) |> theme_html(engine = "tabulator", tabulator_options = opts)
+tt(dat) |> theme_html(tabulator_options = opts)
 ```
 
 

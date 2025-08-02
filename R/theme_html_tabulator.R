@@ -143,8 +143,9 @@ theme_html_tabulator <- function(
     )
   )
 
-  sanity_tabulator_css_rule(tabulator_css_rule)
-  sanity_tabulator_columns(tabulator_columns)
+  if (!is.null(tabulator_search)) {
+    x@tabulator_search <- tabulator_search
+  }
 
   pagination_opts <- tabulator_pagination_options(tabulator_pagination, nrow(x))
   layout_opts <- tabulator_layout_options(
@@ -185,7 +186,6 @@ theme_html_tabulator <- function(
     # Store stylesheet, options, search, css_rule, and columns in S4 slots
     table@tabulator_stylesheet <- tabulator_stylesheet
     table@tabulator_options <- opts
-    table@tabulator_search <- tabulator_search
     if (!is.null(tabulator_css_rule)) {
       table@tabulator_css_rule <- tabulator_css_rule
     }

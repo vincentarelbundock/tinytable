@@ -19,7 +19,7 @@ theme_html(
   tabulator_options = get_option("tinytable_html_tabulator_options", default = NULL),
   tabulator_pagination = get_option("tinytable_html_tabulator_pagination", default =
     NULL),
-  tabulator_search = get_option("tinytable_html_tabulator_search", default = TRUE),
+  tabulator_search = get_option("tinytable_html_tabulator_search", default = NULL),
   tabulator_stylesheet = get_option("tinytable_html_tabulator_stylesheet", default =
     "bootstrap5"),
   ...
@@ -30,31 +30,47 @@ theme_html(
 
 \item{engine}{Character string specifying the HTML engine: "bootstrap", "raw", or "tabulator".}
 
-\item{i}{Row indices (shared across engines).}
+\item{i}{Row indices.}
 
-\item{j}{Column indices (shared across engines).}
+\item{j}{Column indices.}
 
-\item{class}{String. Bootstrap table class (shared across engines).}
+\item{class}{String. Bootstrap table class.}
 
-\item{css}{Character vector. CSS style declarations (shared across engines).}
+\item{css}{Character vector. CSS style declarations.}
 
-\item{css_rule}{String. Complete CSS rules (shared across engines).}
+\item{css_rule}{String. Complete CSS rules.}
 
-\item{tabulator_columns}{Custom column definitions (tabulator engine only).}
+\item{tabulator_columns}{Custom column definitions.}
 
-\item{tabulator_css_rule}{Custom CSS rules (tabulator engine only).}
+\item{tabulator_css_rule}{Complete CSS rules.}
 
-\item{tabulator_layout}{Table layout algorithm (tabulator engine only).}
+\item{tabulator_layout}{Character string. Table layout algorithm for column sizing.
+Default is "fitDataTable". Available options: "fitDataTable", "fitData", "fitDataFill",
+"fitDataStretch", "fitColumns".}
 
-\item{tabulator_options}{Custom Tabulator.js configuration options (tabulator engine only).}
+\item{tabulator_options}{Custom Tabulator.js configuration options.}
 
-\item{tabulator_pagination}{Pagination settings (tabulator engine only).}
+\item{tabulator_pagination}{Logical or numeric vector. Pagination settings for large tables.
+\itemize{
+\item NULL (default): Preserves existing pagination settings, does not change previous configuration
+\item FALSE: Explicitly disable pagination
+\item TRUE: Enable pagination with automatic page sizes (10, 25, 50, 100, 250) filtered by row count
+\item Numeric vector: First element is default page size, full vector provides page size options
+}}
 
-\item{tabulator_search}{Enable/disable search functionality (tabulator engine only).}
+\item{tabulator_search}{Logical. Enable/disable search functionality.
+\itemize{
+\item NULL (default): Preserves existing search settings, does not change previous configuration
+\item TRUE: Adds search box allowing users to filter table content
+\item FALSE: Explicitly disable search
+}}
 
-\item{tabulator_stylesheet}{Tabulator CSS theme (tabulator engine only).}
+\item{tabulator_stylesheet}{Character string. CSS stylesheet theme for Tabulator.js tables.
+Default is "bootstrap5". Available options: "default", "simple", "midnight", "modern",
+"site", "site_dark", "bootstrap3", "bootstrap4", "bootstrap5", "semanticui", "bulma",
+"materialize", or a custom HTTP URL starting with "http".}
 
-\item{...}{Additional arguments.}
+\item{...}{Additional arguments are ignored.}
 }
 \description{
 HTML-specific styles and options
