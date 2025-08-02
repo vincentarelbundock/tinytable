@@ -16,39 +16,80 @@
 #' @param ... Additional arguments.
 #'
 #' @export
-theme_html <- function(x,
-                       engine = get_option("tinytable_html_engine", default = "bootstrap"),
-                       i = NULL,
-                       j = NULL,
-                       class = get_option("tinytable_html_class", default = NULL),
-                       css = get_option("tinytable_html_css", default = NULL),
-                       css_rule = get_option("tinytable_html_css_rule", default = NULL),
-                       tabulator_columns = get_option("tinytable_html_tabulator_columns", default = NULL),
-                       tabulator_css_rule = get_option("tinytable_html_tabulator_css_rule", default = NULL),
-                       tabulator_layout = get_option("tinytable_html_tabulator_layout", default = "fitDataTable"),
-                       tabulator_options = get_option("tinytable_html_tabulator_options", default = NULL),
-                       tabulator_pagination = get_option("tinytable_html_tabulator_pagination", default = TRUE),
-                       tabulator_search = get_option("tinytable_html_tabulator_search", default = TRUE),
-                       tabulator_stylesheet = get_option("tinytable_html_tabulator_stylesheet", default = "bootstrap5"),
-                       ...) {
+theme_html <- function(
+  x,
+  engine = get_option("tinytable_html_engine", default = "bootstrap"),
+  i = NULL,
+  j = NULL,
+  class = get_option("tinytable_html_class", default = NULL),
+  css = get_option("tinytable_html_css", default = NULL),
+  css_rule = get_option("tinytable_html_css_rule", default = NULL),
+  tabulator_columns = get_option(
+    "tinytable_html_tabulator_columns",
+    default = NULL
+  ),
+  tabulator_css_rule = get_option(
+    "tinytable_html_tabulator_css_rule",
+    default = NULL
+  ),
+  tabulator_layout = get_option(
+    "tinytable_html_tabulator_layout",
+    default = "fitDataTable"
+  ),
+  tabulator_options = get_option(
+    "tinytable_html_tabulator_options",
+    default = NULL
+  ),
+  tabulator_pagination = get_option(
+    "tinytable_html_tabulator_pagination",
+    default = NULL
+  ),
+  tabulator_search = get_option(
+    "tinytable_html_tabulator_search",
+    default = TRUE
+  ),
+  tabulator_stylesheet = get_option(
+    "tinytable_html_tabulator_stylesheet",
+    default = "bootstrap5"
+  ),
+  ...
+) {
   assert_choice(engine, c("bootstrap", "raw", "tabulator"))
 
   if (engine == "raw") {
-    x <- theme_html_raw(x, i = i, j = j, class = class, css = css, css_rule = css_rule, ...)
+    x <- theme_html_raw(
+      x,
+      i = i,
+      j = j,
+      class = class,
+      css = css,
+      css_rule = css_rule,
+      ...
+    )
     return(x)
+  } else if (engine == "bootstrap") {
+    x <- theme_html_bootstrap(
+      x,
+      i = i,
+      j = j,
+      class = class,
+      css = css,
+      css_rule = css_rule,
+      ...
+    )
+  } else if (engine == "tabulator") {
+    x <- theme_html_tabulator(
+      x,
+      tabulator_stylesheet = tabulator_stylesheet,
+      tabulator_layout = tabulator_layout,
+      tabulator_pagination = tabulator_pagination,
+      tabulator_search = tabulator_search,
+      tabulator_options = tabulator_options,
+      tabulator_css_rule = tabulator_css_rule,
+      tabulator_columns = tabulator_columns,
+      ...
+    )
   }
-
-  x <- theme_html_bootstrap(x, i = i, j = j, class = class, css = css, css_rule = css_rule, ...)
-
-  x <- theme_html_tabulator(x,
-    tabulator_stylesheet = tabulator_stylesheet,
-    tabulator_layout = tabulator_layout,
-    tabulator_pagination = tabulator_pagination,
-    tabulator_search = tabulator_search,
-    tabulator_options = tabulator_options,
-    tabulator_css_rule = tabulator_css_rule,
-    tabulator_columns = tabulator_columns,
-    ...)
 
   return(x)
 }

@@ -18,7 +18,7 @@ theme_html(
     "fitDataTable"),
   tabulator_options = get_option("tinytable_html_tabulator_options", default = NULL),
   tabulator_pagination = get_option("tinytable_html_tabulator_pagination", default =
-    TRUE),
+    NULL),
   tabulator_search = get_option("tinytable_html_tabulator_search", default = TRUE),
   tabulator_stylesheet = get_option("tinytable_html_tabulator_stylesheet", default =
     "bootstrap5"),

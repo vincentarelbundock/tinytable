@@ -220,11 +220,11 @@ setMethod(
     if (length(x@bootstrap_class) == 0) {
       if (
         length(x@theme) == 0 ||
-        is.null(x@theme[[1]]) ||
+          is.null(x@theme[[1]]) ||
           is.function(x@theme[[1]]) ||
           isTRUE("default" %in% x@theme[[1]])
       ) {
-        x@lazy_theme <- c(x@lazy_theme, list(theme_default))
+        x <- theme_default(x)
       }
     }
 

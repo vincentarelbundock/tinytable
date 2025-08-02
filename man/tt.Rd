@@ -117,6 +117,33 @@ syntax for the other options, and that we create Word documents by converting a 
 via the Pandoc software.
 }
 
+\section{Tabulator (interactive tables)}{
+
+
+\strong{Experimental Feature:} The Tabulator.js integration is experimental and the API may change in future versions.
+
+The Tabulator.js library provides powerful interactive table features including sorting, filtering, pagination, data export, and real-time editing capabilities. This theme customizes the appearance and behavior of Tabulator tables.
+
+\strong{Features:}
+\itemize{
+\item Sorting and filtering of all columns
+\item Pagination with configurable page sizes
+\item Search functionality across all columns
+\item Multiple CSS themes and custom styling
+\item Real-time data export options
+\item Accessibility features (ARIA compliant)
+}
+
+\strong{Limitations:}
+\itemize{
+\item Limited \code{style_tt()} support (only \code{align} and \code{alignv})
+\item Row-based formatting (\code{format_tt()} with \code{i} argument) not supported
+\item Global stylesheets affect all tables in multi-table documents
+\item Date formatting uses Luxon tokens, not R's \code{strptime} format
+\item Boolean formatting requires \code{format_tt()} with \code{bool} argument for custom display
+}
+}
+
 \section{Global options}{
 
 
@@ -183,33 +210,6 @@ tt(x) |> format_tt(i = 1, fn = fn)
 For more details on Quarto table processing: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing
 }
 
-}
-}
-
-\section{Interactive tables with Tabulator}{
-
-
-\strong{Experimental Feature:} The Tabulator.js integration is experimental and the API may change in future versions.
-
-The Tabulator.js library provides powerful interactive table features including sorting, filtering, pagination, data export, and real-time editing capabilities. This theme customizes the appearance and behavior of Tabulator tables.
-
-\strong{Features:}
-\itemize{
-\item Sorting and filtering of all columns
-\item Pagination with configurable page sizes
-\item Search functionality across all columns
-\item Multiple CSS themes and custom styling
-\item Real-time data export options
-\item Accessibility features (ARIA compliant)
-}
-
-\strong{Limitations:}
-\itemize{
-\item Limited \code{style_tt()} support (only \code{align} and \code{alignv})
-\item Row-based formatting (\code{format_tt()} with \code{i} argument) not supported
-\item Global stylesheets affect all tables in multi-table documents
-\item Date formatting uses Luxon tokens, not R's \code{strptime} format
-\item Boolean formatting requires \code{format_tt()} with \code{bool} argument for custom display
 }
 }
 

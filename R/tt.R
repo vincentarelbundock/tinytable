@@ -40,8 +40,8 @@
 #' @template dependencies
 #' @template latex_preamble
 #' @template limitations_word_markdown
-#' @template global_options
 #' @template tabulator
+#' @template global_options
 #'
 #' @examples
 #' library(tinytable)
