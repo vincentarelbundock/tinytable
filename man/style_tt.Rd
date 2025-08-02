@@ -176,7 +176,7 @@ tt(mtcars[1:5, 1:6], theme = "bootstrap") |>
     fontsize = 0.7)
 
 tt(mtcars[1:5, 1:6]) |>
-  theme_tt("bootstrap", class = "table table-dark table-hover")
+  theme_html(class = "table table-dark table-hover")
 
 
 inner <- "

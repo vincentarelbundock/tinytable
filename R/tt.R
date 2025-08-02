@@ -6,9 +6,9 @@
 #' * `style_tt()`: style fonts, colors, alignment, etc.
 #' * `format_tt()`: format numbers, dates, strings, etc.
 #' * `group_tt()`: row or column group labels.
-#' * `theme_tt()`: apply a collection of transformations to a `tinytable.`
 #' * `save_tt()`: save the table to a file or return the table as a string.
 #' * `print()`: print to a specific format, ex: `print(x, "latex")`
+#' * `theme_*()` functions apply a collection of format-specific or visual transformations to a `tinytable.`
 #'
 #' `tinytable` attempts to determine the appropriate way to print the table based on interactive use, RStudio availability, and output format in RMarkdown or Quarto documents. Users can call `print(x, output="markdown")` to print the table in a specific format. Alternatively, they can set a global option: `options("tinytable_print_output"="markdown")`
 #'

@@ -2,7 +2,7 @@ theme_default <- function(x, ...) {
   # Apply placement functionality for LaTeX and Typst
   placement_latex <- get_option("tinytable_theme_placement_latex_float", default = NULL)
   placement_typst <- get_option("tinytable_theme_default_horizontal", "c")
-  
+
   if (!is.null(placement_latex)) {
     x <- theme_latex(x, placement = placement_latex)
   }
@@ -16,7 +16,8 @@ theme_default <- function(x, ...) {
   } else {
     x@bootstrap_class
   }
-  x <- theme_tt(x, "bootstrap", class = bc)
+  fn <- function(x) theme_html(x, class = bc)
+  x@lazy_theme <- c(x@lazy_theme, list(fn))
 
   if (isTRUE(x@output %in% c("html", "bootstrap", "typst"))) {
     col <- if (x@output == "typst") "black" else "#d3d8dc"
@@ -43,7 +44,7 @@ theme_default <- function(x, ...) {
     }
     # mid
     if (length(x@names) > 0) {
-      x <- theme_tt(x, "bootstrap", class = bc)
+      x <- theme_html(x, class = bc)
       x <- style_tt(
         x,
         i = 0,

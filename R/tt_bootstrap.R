@@ -223,7 +223,7 @@ setMethod(
           is.function(x@theme[[1]]) ||
           isTRUE("default" %in% x@theme[[1]])
       ) {
-        x <- theme_tt(x, "default")
+        x@lazy_theme <- c(x@lazy_theme, list(theme_default))
       }
     }
 

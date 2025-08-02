@@ -29,7 +29,6 @@ theme_mitex <- function(x, ...) {
     return(table)
   }
   x <- style_tt(x, finalize = fn)
-  x <- theme_tt(x, theme = "default")
   return(x)
 }
 tab <- data.frame(Math = c("$\\alpha$", "$a_{it}$", "$e^{i\\pi} + 1 = 0$")) |>

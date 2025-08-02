@@ -14,9 +14,9 @@ MathJax = {
 </script>
 ```
 
-`tinytable` offers a very flexible theming framwork, which includes a few basic visual looks, as well as other functions to apply collections of transformations to `tinytable` objects in a repeatable way. These themes can be applied by supplying a string or function to the `theme` argument in `tt()`. Alternatively, users can call the `theme_tt()` function.
+`tinytable` offers a very flexible theming framwork, which includes a few basic visual looks, as well as other functions to apply collections of transformations to `tinytable` objects in a repeatable way. These themes can be applied by supplying a string or function to the `theme` argument in `tt()`. Alternatively, users can call the specific theme functions like `theme_striped()`, `theme_grid()`, etc.
 
-The main difference between `theme_tt()` and the other options in package, is that whereas `style_tt()` and `format_tt()` aim to be output agnostic, `theme_tt()` supplies transformations that can be output-specific, and which can have their own sets of distinct arguments. See below for a few examples.
+The main difference between theme functions and the other options in package, is that whereas `style_tt()` and `format_tt()` aim to be output agnostic, theme functions supply transformations that can be output-specific, and which can have their own sets of distinct arguments. See below for a few examples.
 
 ```{r}
 library(tinytable)
@@ -32,7 +32,7 @@ To begin, let's explore a few of the basic looks supplied by themes:
 ```{r}
 tt(x, theme = "striped")
 
-tt(x) |> theme_tt("striped")
+tt(x) |> theme_striped()
 ```
 
 ```{r}
@@ -59,7 +59,7 @@ Users can also define their own themes to apply consistent visual tweaks to tabl
 theme_vincent <- function(x, ...) {
   out <- x |> 
     style_tt(color = "teal") |>
-    theme_tt("default")
+    theme_default()
   out@caption <- "Always use the same caption."
   out@width <- .5
   return(out)
@@ -150,7 +150,7 @@ tt(x) |>
 
 ```{r}
 tt(head(iris), caption = "Rotated table.") |>
-  theme_tt("rotate", angle = 45)
+  theme_rotate(angle = 45)
 ```
 
 ## Multipage
@@ -163,7 +163,7 @@ tmp <- rbind(mtcars, mtcars)[, 1:6]
 cap <- "A long 80\\% width table with repeating headers."
 
 tt(tmp, width = .8, caption = cap) |>
-  theme_tt("latex", multipage = TRUE, rowhead = 1)
+  theme_latex(multipage = TRUE, rowhead = 1)
 ```
 :::
 

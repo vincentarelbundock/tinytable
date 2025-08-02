@@ -260,7 +260,7 @@ merge_with_existing_styles <- function(x, settings) {
 #'     fontsize = 0.7)
 #'
 #' tt(mtcars[1:5, 1:6]) |>
-#'   theme_tt("bootstrap", class = "table table-dark table-hover")
+#'   theme_html(class = "table table-dark table-hover")
 #'
 #'
 #' inner <- "
@@ -322,15 +322,15 @@ style_tt <- function(
     )
   }
   if ("bootstrap_class" %in% ...names()) {
-    x <- theme_tt(x, "bootstrap", class = ...get("bootstrap_class"))
+    x <- theme_html(x, class = ...get("bootstrap_class"))
     warning(
-      "The `bootstrap_class` argument is deprecated. Use `theme_tt(x, 'bootstrap', class = ...)` instead.",
+      "The `bootstrap_class` argument is deprecated. Use `theme_html(x, class = ...)` instead.",
       call. = FALSE
     )
   }
   if ("bootstrap_css_rule" %in% ...names()) {
-    x <- theme_tt(x, "bootstrap", css_rule = ...get("bootstrap_css_rule"))
-    warning("The `bootstrap_css_rule` argument is deprecated. Use `theme_tt(x, 'bootstrap', css_rule = ...)` instead.",
+    x <- theme_html(x, css_rule = ...get("bootstrap_css_rule"))
+    warning("The `bootstrap_css_rule` argument is deprecated. Use `theme_html(x, css_rule = ...)` instead.",
       call. = FALSE
     )
   }
