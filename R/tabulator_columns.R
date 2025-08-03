@@ -188,15 +188,6 @@ tabulator_format_date <- function(col_def, col_type, args) {
     return(col_def)
 }
 
-#' Helper function to get value with fallback
-#' @param value Primary value
-#' @param fallback Fallback value
-#' @return Value or fallback
-#' @keywords internal
-#' @noRd
-`%||%` <- function(value, fallback) {
-    if (is.null(value)) fallback else value
-}
 
 # =============================================================================
 # TABULATOR COLUMN PROCESSING

@@ -146,3 +146,14 @@ rbind_nocol <- function(...) {
     parent.frame(1L)
   )
 }
+
+
+#' Helper function to get value with fallback
+#' @param value Primary value
+#' @param fallback Fallback value
+#' @return Value or fallback
+#' @keywords internal
+#' @noRd
+`%||%` <- function(value, fallback) {
+  if (is.null(value)) fallback else value
+}
