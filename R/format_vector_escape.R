@@ -38,6 +38,7 @@ format_vector_escape <- function(vec, output = "latex", ...) {
     ),
     typst = list(
       chars = c(
+        "\\" = "\\\\",
         "<" = "\\<",
         ">" = "\\>",
         "*" = "\\*",
@@ -52,7 +53,7 @@ format_vector_escape <- function(vec, output = "latex", ...) {
         "[" = "\\[",
         "]" = "\\]"
       ),
-      pattern = "[<>*_@=+/\\$#\\[\\]\\-]"
+      pattern = "[\\\\<>*_@=+/\\$#\\[\\]\\-]"
     )
   )
 
@@ -69,24 +70,31 @@ format_vector_escape <- function(vec, output = "latex", ...) {
   return(out)
 }
 
-# Helper function to apply escape patterns
+
+
 apply_escape_pattern <- function(vec, pattern_info) {
   na_out <- is.na(vec)
   if (all(na_out)) {
     return(vec)
   }
 
+  vec_clean <- vec[!na_out]
+
   # Short circuit if no special characters found (performance optimization)
-  if (!any(grepl(pattern_info$pattern, vec[!na_out], perl = TRUE))) {
+  if (!any(grepl(pattern_info$pattern, vec_clean, perl = TRUE))) {
     return(vec)
   }
 
-  m <- gregexpr(pattern_info$pattern, vec[!na_out], perl = TRUE)
-  special_chars <- regmatches(vec[!na_out], m)
+  m <- gregexpr(pattern_info$pattern, vec_clean, perl = TRUE)
+  special_chars <- regmatches(vec_clean, m)
+
+  # Safer lookup
   escaped_chars <- lapply(special_chars, function(x) {
-    pattern_info$chars[x]
+    vapply(x, function(ch) pattern_info$chars[[ch]], character(1))
   })
-  regmatches(vec[!na_out], m) <- escaped_chars
+
+  regmatches(vec_clean, m) <- escaped_chars
+  vec[!na_out] <- vec_clean
 
   return(vec)
 }

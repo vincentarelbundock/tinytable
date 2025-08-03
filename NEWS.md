@@ -21,6 +21,7 @@ New:
 Bug fixes:
 
 * `group_tt(i = x)` works when `x` is a factor vector.
+* Typst: fix backslash escaping in `format_tt(escape=TRUE)`
 
 ## 0.11.0
 

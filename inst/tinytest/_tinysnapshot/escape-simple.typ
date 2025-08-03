@@ -70,7 +70,7 @@ block[ // start block
 [Dollars \$], [\<br\>], [\$100 & \<b\>bold\<\/b\>],
 [Percent %], [\<sup\>4\<\/sup\>], [50% & \<i\>italic\<\/i\>],
 [Underscore \_], [\<emph\>blah\<\/emph\>], [user\_name & \<code\>code\<\/code\>],
-[Backslash \], [&amp;], [\$100 & \<b\>bold\<\/b\>],
+[Backslash \\], [&amp;], [\$100 & \<b\>bold\<\/b\>],
 [Hash \#], [&lt;], [50% & \<i\>italic\<\/i\>],
 [Ampersand &], [&gt;], [user\_name & \<code\>code\<\/code\>],
 
