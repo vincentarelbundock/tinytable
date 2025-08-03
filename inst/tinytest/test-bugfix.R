@@ -7,3 +7,12 @@ DT1 <- as.data.table(dat1)
 colnames(DT1) <- NULL
 tab <- tt(DT1)
 expect_inherits(tab, "tinytable")
+
+
+# Bug group_tt(i) accepts factor variables
+dat <- do.call(rbind, by(iris, iris$Species, head, n = 3))
+tab <- tt(dat) |>
+  group_tt(dat$Species) |>
+  save_tt("markdown")
+tab <- unlist(strsplit(tab, "\\n"))
+expect_equal(sum(grepl("^\\| virginica", tab)), 1)

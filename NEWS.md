@@ -18,6 +18,10 @@ New:
 * `theme_*()` functions are now systematically documented and much more robust, instead of being routed via `theme_tt()`.
 * `group_tt(j = "_")` allows multiple delimiters in column names to easily create multiple level headers. Thanks to @nmercadeb for feature request #518.
 
+Bug fixes:
+
+* `group_tt(i = x)` works when `x` is a factor vector.
+
 ## 0.11.0
 
 Breaking changes:
