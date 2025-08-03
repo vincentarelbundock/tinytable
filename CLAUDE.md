@@ -8,6 +8,8 @@ Whenever running code from this package, always run `pkgload::load_all()` first 
 
 To run all tests: `pkgload::load_all(); tinytest::run_test_dir()`
 
+Many operations inside `tinytable` are "lazy", and the s4 slots will not be filled until a table is "built". To build a table in a given format, call `print(x, "html")` or `build_tt(x, "html")` where `x` is a `tinytable` object. This will trigger the lazy evaluation and fill the S4 slots with the necessary data.
+
 ### Development workflow
 - Always use `pkgload::load_all()` before testing any code changes
 - Test changes with specific test files: `tinytest::run_test_file("inst/tinytest/test-html.R")`
