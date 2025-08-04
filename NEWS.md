@@ -1,6 +1,6 @@
 # News
 
-## Development
+## 0.12.0
 
 Deprecated or replaced features:
 
