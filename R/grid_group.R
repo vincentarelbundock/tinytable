@@ -1,16 +1,3 @@
-#' tinytable S4 method
-#'
-#' @keywords internal
-setMethod(
-  f = "group_eval_j",
-  signature = "tinytable_grid",
-  definition = function(x, i = NULL, j = NULL, ...) {
-    # Only handle column grouping - row insertions now use matrix insertion
-    x <- group_grid_col(x, j)
-    return(x)
-  }
-)
-
 group_grid_col <- function(x, j, ...) {
   # Check if there are any column groups to process
   if (nrow(x@group_data_j) == 0) {
@@ -111,5 +98,16 @@ setMethod(
     # Only handle column grouping - row insertions now use matrix insertion
     x <- group_grid_col(x, j)
     return(x)
-  }
-)
+  })
+
+#' tinytable S4 method
+#'
+#' @keywords internal
+setMethod(
+  f = "group_eval_j",
+  signature = "tinytable_grid",
+  definition = function(x, i = NULL, j = NULL, ...) {
+    # Only handle column grouping - row insertions now use matrix insertion
+    x <- group_grid_col(x, j)
+    return(x)
+  })
