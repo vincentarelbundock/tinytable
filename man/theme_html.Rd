@@ -21,7 +21,7 @@ theme_html(
     NULL),
   tabulator_search = get_option("tinytable_html_tabulator_search", default = NULL),
   tabulator_stylesheet = get_option("tinytable_html_tabulator_stylesheet", default =
-    "bootstrap5"),
+    NULL),
   ...
 )
 }
@@ -58,11 +58,11 @@ Default is "fitDataTable". Available options: "fitDataTable", "fitData", "fitDat
 \item Numeric vector: First element is default page size, full vector provides page size options
 }}
 
-\item{tabulator_search}{Logical. Enable/disable search functionality.
+\item{tabulator_search}{Character or NULL. Search functionality position.
 \itemize{
 \item NULL (default): Preserves existing search settings, does not change previous configuration
-\item TRUE: Adds search box allowing users to filter table content
-\item FALSE: Explicitly disable search
+\item "top": Adds search box above the table
+\item "bottom": Adds search box below the table
 }}
 
 \item{tabulator_stylesheet}{Character string. CSS stylesheet theme for Tabulator.js tables.

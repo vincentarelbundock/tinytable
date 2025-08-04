@@ -26,8 +26,8 @@ expect_true(grepl("true", out, ignore.case = TRUE))
 
 # Pagination and filtering
 tab <- tt(iris) |> theme_html(
-  tabulator_pagination = c(5, 10, 50), 
-  tabulator_search = TRUE
+  tabulator_pagination = c(5, 10, 50),
+  tabulator_search = "top"
 )
 out <- save_tt(tab, "tabulator")
 expect_true(grepl("pagination", out))
@@ -84,18 +84,18 @@ dat_custom <- data.frame(
 
 custom_columns <- '[
   {
-    "title": "City", 
+    "title": "City",
     "field": "city"
-  }, 
+  },
   {
-    "title": "Best city", 
-    "field": "best", 
+    "title": "Best city",
+    "field": "best",
     "formatter": "tickCross"
-  }, 
+  },
   {
-    "title": "Salary", 
-    "field": "salary", 
-    "formatter": "money", 
+    "title": "Salary",
+    "field": "salary",
+    "formatter": "money",
     "formatterParams": {"precision": 0, "symbol": "$"}
   }
 ]'
@@ -119,3 +119,4 @@ expect_true(grepl("200px", out))
 
 # Reset global option
 options(tinytable_html_engine = NULL)
+
