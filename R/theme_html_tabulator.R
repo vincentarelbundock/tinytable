@@ -103,10 +103,9 @@ tabulator_pagination_options <- function(tabulator_pagination, nrow) {
 }
 
 tabulator_layout_options <- function(
-  tabulator_layout,
-  x,
-  tabulator_pagination
-) {
+    tabulator_layout,
+    x,
+    tabulator_pagination) {
   # Build layout options
   if (!is.null(x@height)) {
     # Calculate total height: height per row * number of visible rows + header space
@@ -131,16 +130,15 @@ tabulator_layout_options <- function(
 }
 
 theme_html_tabulator <- function(
-  x,
-  tabulator_stylesheet,
-  tabulator_layout,
-  tabulator_pagination,
-  tabulator_search,
-  tabulator_options,
-  tabulator_css_rule,
-  tabulator_columns,
-  ...
-) {
+    x,
+    tabulator_stylesheet,
+    tabulator_layout,
+    tabulator_pagination,
+    tabulator_search,
+    tabulator_options,
+    tabulator_css_rule,
+    tabulator_columns,
+    ...) {
   assert_choice(
     tabulator_layout,
     choice = c(
@@ -193,7 +191,9 @@ theme_html_tabulator <- function(
     }
 
     # Store stylesheet, options, search, css_rule, and columns in S4 slots
-    table@tabulator_stylesheet <- tabulator_stylesheet
+    if (!is.null(tabulator_stylesheet)) {
+      table@tabulator_stylesheet <- tabulator_stylesheet
+    }
     table@tabulator_options <- opts
     if (!is.null(tabulator_css_rule)) {
       table@tabulator_css_rule <- tabulator_css_rule

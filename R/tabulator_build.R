@@ -69,7 +69,7 @@ setMethod(
     # Add default CDN (bootstrap5)
     template <- gsub(
       "$tinytable_TABULATOR_CDN",
-      '<link href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/tabulator_bootstrap5.min.css" rel="stylesheet">',
+      '<link href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/scss/tabulator_tinytable.min.css" rel="stylesheet">',
       template,
       fixed = TRUE
     )
@@ -85,5 +85,4 @@ setMethod(
     x@table_string <- out
 
     return(x)
-  }
-)
+  })

@@ -62,7 +62,7 @@ theme_html <- function(
     ),
     tabulator_stylesheet = get_option(
       "tinytable_html_tabulator_stylesheet",
-      default = "bootstrap5"
+      default = NULL
     ),
     ...) {
   assert_choice(engine, c("bootstrap", "raw", "tabulator"))
