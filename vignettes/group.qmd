@@ -194,14 +194,14 @@ Group labels can be specified using column names with delimiters. For example, s
 
 ```{r}
 dat <- data.frame(
-  id = 1, 
-  A_a1 = 2, 
-  A_a2 = "3", 
-  B_b1 = 4, 
-  B_b2 = 5,  
-  C_ = 6)
+  "A__D" = rnorm(3),
+  "A_B_D" = rnorm(3),
+  "A_B_" = rnorm(3),
+  "_C_E" = rnorm(3),
+  check.names = FALSE
+)
 
-tt(dat) |> group_tt(j = "_")
+tt(dat) |> group_tt(j = "_") |> print("html")
 ```
 
 ## Case studies

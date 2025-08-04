@@ -109,6 +109,35 @@ Support for `style_tt()` is very limited in interactive tables. For now, only th
 tt(dat) |> style_tt(align = "r")
 ```
 
+## Style sheets
+
+Tabulator ships with multiple complete CSS style sheets. The default in `tinytable` is Bootstrap 5, but you can customize the appearance using the `theme_html()` function (when available). Alternatives include `"default"`, `"simple"`, `"midnight"`, `"modern"`, `"site"`, `"site_dark"`, `"bootstrap3"`, `"bootstrap4"`, `"bootstrap5"`, `"semanticui"`, `"bulma"`, and `"materialize"`.
+
+The syntax looks like this:
+
+```{r}
+#| eval: false
+tt(iris) |> theme_html(tabulator_stylesheet = "semanticui")
+```
+
+::: {.callout-warning}
+To use a theme, the HTML file must load a style sheet *globally* in the document. Unfortunately, this means that `tinytable` cannot apply a `Tabulator` style sheet to a single table in documents with multiple tables. The style that applies is always the last one loaded in the document.
+:::
+
+Here are some screenshots of different stylesheets.
+
+![semanticui](figures/tabulator_stylesheet_semanticui.png)
+
+![bulma](figures/tabulator_stylesheet_bulma)
+
+![modern](figures/tabulator_stylesheet_modern.png)
+
+![simple](figures/tabulator_stylesheet_simple.png)
+
+![default](figures/tabulator_stylesheet_default.png)
+
+![midnight](figures/tabulator_stylesheet_midnight.png)
+
 ## CSS
 
 For more advanced styling, you can add custom CSS rules using the `tabulator_css_rule` argument in `theme_html()`. The CSS rule must include at least one `$TINYTABLE_ID` placeholder, which gets replaced with the unique table identifier to ensure styles only apply to that specific table.
@@ -122,19 +151,6 @@ $TINYTABLE_ID .tabulator-header .tabulator-col {
 "
 tt(dat) |> theme_html(tabulator_css_rule = css_rule)
 ```
-
-## Style sheets
-
-Tabulator ships with multiple complete CSS style sheets. The default in `tinytable` is Bootstrap 5, but you can customize the appearance using the `theme_html()` function (when available). Alternatives include `"default"`, `"simple"`, `"midnight"`, `"modern"`, `"site"`, `"site_dark"`, `"bootstrap3"`, `"bootstrap4"`, `"bootstrap5"`, `"semanticui"`, `"bulma"`, and `"materialize"`.
-
-```{r}
-#| eval: false
-tt(iris) |> theme_html(tabulator_stylesheet = "semanticui")
-```
-
-::: {.callout-note}
-To use a theme, the HTML file must load a style sheet *globally* in the document. Unfortunately, this means that `tinytable` cannot apply a `Tabulator` style sheet to a single table in documents with multiple tables. The style that applies is always the last one loaded in the document.
-:::
 
 
 ## Options and columns
