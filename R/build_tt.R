@@ -48,6 +48,9 @@ rbind_body_groupi <- function(x) {
 
   x@data_body <- final_df
 
+  # before format_tt() because we need the indices
+  x@nrow <- nrow(x@data) + nrow(x@group_data_i)
+
   return(x)
 }
 
@@ -68,9 +71,6 @@ build_tt <- function(x, output = NULL) {
   )
 
   x@output <- output
-
-  # before format_tt() because we need the indices
-  x@nrow <- nrow(x@data) + nrow(x@group_data_i)
 
   # pre-process: theme_*() calls that need formatting conditional on @output
   for (p in x@lazy_prepare) {

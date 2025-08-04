@@ -44,3 +44,7 @@ tab <- tt(tmp, width = .8, caption = cap) |>
   theme_latex(multipage = TRUE, rowhead = 1) |>
   save_tt("latex")
 expect_true(grepl("rowhead=1", tab))
+
+
+# theme_tt() deprecation warning
+expect_warning(theme_tt(tt(head(iris)), "striped"), pattern = "deprecated")
