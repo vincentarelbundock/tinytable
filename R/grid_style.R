@@ -12,21 +12,63 @@ style_eval_grid <- function(x) {
   for (idx in seq_len(nrow(sty))) {
     row <- sty[idx, "i"]
     col <- sty[idx, "j"]
-    if (isTRUE(sty[idx, "bold"])) {
-      fn <- function(z) {
-        if (identical(trimws(z), "")) "" else sprintf("**%s**", z)
+    
+    # Handle column names (i = 0)
+    if (row == 0) {
+      current_name <- colnames(x)[col]
+      if (!identical(trimws(current_name), "")) {
+        if (isTRUE(sty[idx, "bold"])) {
+          colnames(x)[col] <- sprintf("**%s**", current_name)
+        }
+        if (isTRUE(sty[idx, "italic"])) {
+          current_name <- colnames(x)[col]
+          colnames(x)[col] <- sprintf("_%s_", current_name)
+        }
+        if (isTRUE(sty[idx, "strikeout"])) {
+          current_name <- colnames(x)[col]
+          colnames(x)[col] <- sprintf("~~%s~~", current_name)
+        }
       }
-      x <- format_tt(x, i = row, j = col, fn = fn)
     }
-    if (isTRUE(sty[idx, "italic"])) {
-      fn <- function(z) if (identical(trimws(z), "")) "" else sprintf("_%s_", z)
-      x <- format_tt(x, i = row, j = col, fn = fn)
-    }
-    if (isTRUE(sty[idx, "strikeout"])) {
-      fn <- function(z) {
-        if (identical(trimws(z), "")) "" else sprintf("~~%s~~", z)
+    # Handle group headers (negative i)
+    else if (row < 0) {
+      if (nrow(x@group_data_j) > 0) {
+        # Convert negative row index to positive index in group_data_j
+        group_row <- abs(row)
+        if (group_row <= nrow(x@group_data_j) && col <= ncol(x@group_data_j)) {
+          current_value <- x@group_data_j[group_row, col]
+          if (!is.na(current_value) && !identical(trimws(current_value), "")) {
+            if (isTRUE(sty[idx, "bold"])) {
+              x@group_data_j[group_row, col] <- sprintf("**%s**", current_value)
+            }
+            if (isTRUE(sty[idx, "italic"])) {
+              current_value <- x@group_data_j[group_row, col]
+              x@group_data_j[group_row, col] <- sprintf("_%s_", current_value)
+            }
+            if (isTRUE(sty[idx, "strikeout"])) {
+              current_value <- x@group_data_j[group_row, col]
+              x@group_data_j[group_row, col] <- sprintf("~~%s~~", current_value)
+            }
+          }
+        }
       }
-      x <- format_tt(x, i = row, j = col, fn = fn)
+    }
+    # Handle main table body (positive i)
+    else {
+      current_value <- x@data_body[row, col]
+      if (!identical(trimws(current_value), "")) {
+        if (isTRUE(sty[idx, "bold"])) {
+          x@data_body[row, col] <- sprintf("**%s**", current_value)
+        }
+        if (isTRUE(sty[idx, "italic"])) {
+          current_value <- x@data_body[row, col]
+          x@data_body[row, col] <- sprintf("_%s_", current_value)
+        }
+        if (isTRUE(sty[idx, "strikeout"])) {
+          current_value <- x@data_body[row, col]
+          x@data_body[row, col] <- sprintf("~~%s~~", current_value)
+        }
+      }
     }
 
     # wipe adjacent cells
@@ -40,7 +82,7 @@ style_eval_grid <- function(x) {
     )
     wipe <- wipe[which(wipe$i != row | wipe$j != col), ]
     for (idx in seq_len(nrow(wipe))) {
-      x <- format_tt(x, i = wipe$i[idx], j = wipe$j[idx], fn = function(k) "")
+      x@data_body[wipe$i[idx], wipe$j[idx]] <- ""
     }
   }
 

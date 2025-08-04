@@ -58,8 +58,7 @@ rbind_body_groupi <- function(x) {
 build_tt <- function(x, output = NULL) {
   output <- sanitize_output(output)
 
-  x <- switch(
-    output,
+  x <- switch(output,
     html = swap_class(x, "tinytable_bootstrap"),
     bootstrap = swap_class(x, "tinytable_bootstrap"),
     latex = swap_class(x, "tinytable_tabularray"),
@@ -92,12 +91,6 @@ build_tt <- function(x, output = NULL) {
     x@index_body <- setdiff(seq_len(nrow(x)), x@group_index_i)
   }
 
-  # markdown styles are applied via special format_tt() calls, so they need to
-  # happen before evaluating x@lazy_format
-  if (x@output %in% c("markdown", "gfm", "dataframe")) {
-    x <- style_eval(x)
-  }
-
   # format each component individually, including groups before inserting them into the body
   for (l in x@lazy_format) {
     l[["x"]] <- x
@@ -106,6 +99,7 @@ build_tt <- function(x, output = NULL) {
 
   # insert group rows into body
   x <- rbind_body_groupi(x)
+
 
   # plots and images
   for (l in x@lazy_plot) {
@@ -123,6 +117,12 @@ build_tt <- function(x, output = NULL) {
       tmp[[i]] <- trimws(tmp[[i]])
     }
     x@data_body <- tmp
+  }
+
+  # markdown styles are applied manually after formatting to have consistent decimals
+  # but before drawing the table becuase we need to act on individual cells
+  if (x@output %in% c("markdown", "gfm", "dataframe")) {
+    x <- style_eval(x)
   }
 
   # draw the table

@@ -3,8 +3,8 @@
 #' @description
 #' **DEPRECATED**: The `theme_tt()` function has been deprecated. Please use the format-specific or style-specific theme functions instead.
 #'
-#' @param x tinytable object
-
+#' @param x deprecated
+#' @param theme deprecated
 #' @param ... Additional arguments
 #'
 #' @return Throws an informative error message

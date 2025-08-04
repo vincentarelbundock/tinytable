@@ -7,7 +7,9 @@
 theme_tt(x, theme, ...)
 }
 \arguments{
-\item{x}{tinytable object}
+\item{x}{deprecated}
+
+\item{theme}{deprecated}
 
 \item{...}{Additional arguments}
 }

@@ -55,7 +55,6 @@ tab <- tt(head(iris)) |>
     format_tt(-1, sprintf = "**%s**")
 expect_snapshot_print(tab, "style-groupj_colnames.md")
 
-exit_file("error: double bold")
 tab <- tt(head(iris)) |>
     group_tt(j = list("a" = 1:2, "b" = 3:5)) |>
     style_tt("colnames", italic = TRUE) |>
