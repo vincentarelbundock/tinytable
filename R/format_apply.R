@@ -140,7 +140,9 @@ apply_format <- function(
       classref <- out
     }
 
-    if (is.character(inherit_class)) {
+    if (length(j) == 0) {
+      j_filtered <- integer(0)
+    } else if (is.character(inherit_class)) {
       j_filtered <- j[sapply(j, function(col) {
         inherits(classref[[col]], inherit_class)
       })]

@@ -85,7 +85,7 @@ sanitize_i <- function(
   return(out)
 }
 
-sanitize_j <- function(j, x) {
+sanitize_j <- function(j, x, skip_tabulator_types = FALSE) {
   # regex
   if (is.character(j) && length(j) == 1 && !is.null(colnames(x))) {
     out <- grep(j, colnames(x), perl = TRUE)
@@ -110,6 +110,19 @@ sanitize_j <- function(j, x) {
       out <- j
     }
   }
+  
+  # Filter out columns that should be skipped for tabulator formatting
+  if (skip_tabulator_types && inherits(x, "tinytable") && x@output == "tabulator") {
+    skip_cols <- c()
+    for (col_idx in out) {
+      col_data <- x@data[[col_idx]]
+      if (inherits(col_data, c("integer", "numeric", "double", "logical", "Date", "POSIXct", "POSIXlt"))) {
+        skip_cols <- c(skip_cols, col_idx)
+      }
+    }
+    out <- setdiff(out, skip_cols)
+  }
+  
   attr(out, "null") <- is.null(j)
   return(out)
 }

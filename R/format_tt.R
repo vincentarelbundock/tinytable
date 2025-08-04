@@ -252,7 +252,7 @@ format_tt_lazy <- function(
   # NULL for all formats since this is applied before creating the table.
   # nrow(out) because nrow(x) sometimes includes rows that will be added **in the lazy future** by group_tt()
   i <- sanitize_i(i, x, lazy = FALSE, calling_function = "format_tt")
-  j <- sanitize_j(j, x)
+  j <- sanitize_j(j, x, skip_tabulator_types = TRUE)
 
   x <- apply_format(
     x = x,

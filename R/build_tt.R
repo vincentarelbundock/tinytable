@@ -101,40 +101,7 @@ build_tt <- function(x, output = NULL) {
   # format each component individually, including groups before inserting them into the body
   for (l in x@lazy_format) {
     l[["x"]] <- x
-
-    # For tabulator output, skip formatting for numeric/logical/date columns
-    # as these will be handled by tabulator formatters
-    if (x@output == "tabulator" && !is.null(l$j)) {
-      j_clean <- sanitize_j(l$j, x)
-      skip_format <- FALSE
-
-      for (col_idx in j_clean) {
-        col_data <- x@data[[col_idx]]
-        if (
-          inherits(
-            col_data,
-            c(
-              "integer",
-              "numeric",
-              "double",
-              "logical",
-              "Date",
-              "POSIXct",
-              "POSIXlt"
-            )
-          )
-        ) {
-          skip_format <- TRUE
-          break
-        }
-      }
-
-      if (!skip_format) {
-        x <- eval(l)
-      }
-    } else {
-      x <- eval(l)
-    }
+    x <- eval(l)
   }
 
   # insert group rows into body
