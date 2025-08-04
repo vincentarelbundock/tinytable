@@ -18,10 +18,10 @@
 #'   - FALSE: Explicitly disable pagination
 #'   - TRUE: Enable pagination with automatic page sizes (10, 25, 50, 100, 250) filtered by row count
 #'   - Numeric vector: First element is default page size, full vector provides page size options
-#' @param tabulator_search Logical. Enable/disable search functionality.
+#' @param tabulator_search Character or NULL. Search functionality position.
 #'   - NULL (default): Preserves existing search settings, does not change previous configuration
-#'   - TRUE: Adds search box allowing users to filter table content
-#'   - FALSE: Explicitly disable search
+#'   - "top": Adds search box above the table
+#'   - "bottom": Adds search box below the table
 #' @param tabulator_options Custom Tabulator.js configuration options.
 #' @param tabulator_css_rule Complete CSS rules.
 #' @param tabulator_columns Custom column definitions.
@@ -66,7 +66,7 @@ theme_html <- function(
     ),
     ...) {
   assert_choice(engine, c("bootstrap", "raw", "tabulator"))
-  assert_flag(tabulator_search, null.ok = TRUE)
+  assert_choice(tabulator_search, c("top", "bottom"), null.ok = TRUE)
   sanity_tabulator_css_rule(tabulator_css_rule)
   sanity_tabulator_columns(tabulator_columns)
 

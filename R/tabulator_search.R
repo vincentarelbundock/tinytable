@@ -51,10 +51,17 @@ tabulator_search_listener <- function(search_id, columns_json) {
 #' @keywords internal
 #' @noRd
 tabulator_apply_search <- function(x) {
-  if (!isTRUE(x@tabulator_search)) {
+  if (is.null(x@tabulator_search)) {
     # Clean up placeholders if search is disabled
     x@table_string <- sub(
-      "$tinytable_TABULATOR_SEARCH",
+      "$tinytable_TABULATOR_SEARCH_TOP",
+      "",
+      x@table_string,
+      fixed = TRUE
+    )
+
+    x@table_string <- sub(
+      "$tinytable_TABULATOR_SEARCH_BOTTOM",
       "",
       x@table_string,
       fixed = TRUE
@@ -79,6 +86,9 @@ tabulator_apply_search <- function(x) {
 
   columns_json <- df_to_json(x@tabulator_columns)
 
+  # Determine search position
+  search_position <- x@tabulator_search
+  
   # Create search bar HTML
   search_bar_template <- '
         <div class="mb-3"><input type="text" id="search_%s" class="form-control" placeholder="Search table..." style="margin-bottom: 10px;"></div>
@@ -88,13 +98,34 @@ tabulator_apply_search <- function(x) {
   # Create search listener JS
   search_listener_js <- tabulator_search_listener(search_id, columns_json)
 
-  # Replace search bar placeholder (before table)
-  x@table_string <- sub(
-    "$tinytable_TABULATOR_SEARCH",
-    search_bar_html,
-    x@table_string,
-    fixed = TRUE
-  )
+  # Replace search bar placeholder based on position
+  if (search_position == "top") {
+    x@table_string <- sub(
+      "$tinytable_TABULATOR_SEARCH_TOP",
+      search_bar_html,
+      x@table_string,
+      fixed = TRUE
+    )
+    x@table_string <- sub(
+      "$tinytable_TABULATOR_SEARCH_BOTTOM",
+      "",
+      x@table_string,
+      fixed = TRUE
+    )
+  } else if (search_position == "bottom") {
+    x@table_string <- sub(
+      "$tinytable_TABULATOR_SEARCH_TOP",
+      "",
+      x@table_string,
+      fixed = TRUE
+    )
+    x@table_string <- sub(
+      "$tinytable_TABULATOR_SEARCH_BOTTOM",
+      search_bar_html,
+      x@table_string,
+      fixed = TRUE
+    )
+  }
 
   # Replace search listener placeholder (after table)
   x@table_string <- sub(
@@ -106,7 +137,14 @@ tabulator_apply_search <- function(x) {
 
   # Final cleanup of any remaining search placeholders (safety net)
   x@table_string <- gsub(
-    "$tinytable_TABULATOR_SEARCH",
+    "$tinytable_TABULATOR_SEARCH_TOP",
+    "",
+    x@table_string,
+    fixed = TRUE
+  )
+
+  x@table_string <- gsub(
+    "$tinytable_TABULATOR_SEARCH_BOTTOM",
     "",
     x@table_string,
     fixed = TRUE
