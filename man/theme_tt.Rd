@@ -4,9 +4,11 @@
 \alias{theme_tt}
 \title{Deprecated: Use format-specific theme functions instead}
 \usage{
-theme_tt(...)
+theme_tt(x, theme, ...)
 }
 \arguments{
+\item{x}{tinytable object}
+
 \item{...}{Additional arguments}
 }
 \value{
