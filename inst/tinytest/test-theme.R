@@ -48,3 +48,15 @@ expect_true(grepl("rowhead=1", tab))
 
 # theme_tt() deprecation warning
 expect_warning(theme_tt(tt(head(iris)), "striped"), pattern = "deprecated")
+
+
+# Issue #531: style_tt() overrides triped theme
+iris_dt <- do.call(rbind, by(iris, ~Species, head, 2))
+cap <- "Colors in first column should apply in both odd and even rows."
+tab <- tt(iris_dt, theme = "striped", caption = cap) |>
+  style_tt(i = 1:2, j = 1, color = "white", background = "#4B0055") |>
+  style_tt(i = 3:4, j = 1, color = "white", background = "#009B95") |>
+  style_tt(i = 5:6, j = 1, color = "white", background = "#FDE333")
+expect_snapshot_print(
+  print_html(tab),
+  "theme-issue531_style_colors_override_stripes.html")
