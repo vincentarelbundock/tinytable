@@ -12,7 +12,7 @@ style_eval_grid <- function(x) {
   for (idx in seq_len(nrow(sty))) {
     row <- sty[idx, "i"]
     col <- sty[idx, "j"]
-    
+
     # Handle column names (i = 0)
     if (row == 0) {
       current_name <- colnames(x)[col]
@@ -67,6 +67,11 @@ style_eval_grid <- function(x) {
         if (isTRUE(sty[idx, "strikeout"])) {
           current_value <- x@data_body[row, col]
           x@data_body[row, col] <- sprintf("~~%s~~", current_value)
+        }
+        if (!is.na(sty[idx, "indent"])) {
+          indent <- sty[idx, "indent"]
+          current_value <- x@data_body[row, col]
+          x@data_body[row, col] <- sprintf("%s%s", strrep(" ", indent), current_value)
         }
       }
     }
