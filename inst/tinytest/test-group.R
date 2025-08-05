@@ -235,3 +235,11 @@ expect_snapshot_print(t[["markdown"]], "group-multilevel-empty.md")
 expect_snapshot_print(t[["latex"]], "group-multilevel-empty.tex")
 expect_snapshot_print(t[["html"]], "group-multilevel-empty.html")
 expect_snapshot_print(t[["typst"]], "group-multilevel-empty.typ")
+
+
+# Indent markdown
+dat <- do.call(rbind, by(iris, iris$Species, head, 3))
+tab <- tt(dat) |>
+  group_tt(i = dat$Species) |>
+  style_tt(i = "~groupi", j = 1, indent = 3)
+expect_snapshot_print(tab, "group-indent.md")
