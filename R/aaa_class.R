@@ -77,16 +77,15 @@ setMethod(
   "initialize",
   "tinytable",
   function(
-    .Object,
-    data = data.frame(),
-    caption = NULL,
-    notes = NULL,
-    theme = list("default"),
-    data_body = data.frame(),
-    placement = NULL,
-    width = NULL,
-    height = NULL
-  ) {
+      .Object,
+      data = data.frame(),
+      caption = NULL,
+      notes = NULL,
+      theme = list("default"),
+      data_body = data.frame(),
+      placement = NULL,
+      width = NULL,
+      height = NULL) {
     # explicit
     .Object@data <- data
     .Object@data_body <- data_body
@@ -130,8 +129,7 @@ setMethod(
     .Object@tabularray_outer <- character()
 
     return(.Object)
-  }
-)
+  })
 
 #' Method for a tinytable S4 object
 #'
@@ -187,8 +185,7 @@ setReplaceMethod(
     }
     x@names <- value
     return(x)
-  }
-)
+  })
 
 #' Method for a tinytable S4 object
 #'
@@ -210,8 +207,7 @@ setReplaceMethod(
     }
     x@names <- value
     return(x)
-  }
-)
+  })
 
 #' Dimensions a tinytable S4 object
 #'
@@ -219,14 +215,6 @@ setReplaceMethod(
 #' @keywords internal
 setMethod("dim", "tinytable", function(x) {
   return(c(x@nrow, x@ncol))
-})
-
-#' Column names of a tinytable
-#'
-#' @inheritParams tt
-#' @keywords internal
-setMethod("names", "tinytable", function(x) {
-  return(x@names)
 })
 
 #' Convert a tinytable S4 object to a string

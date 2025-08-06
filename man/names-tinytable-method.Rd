@@ -5,15 +5,11 @@
 \title{Method for a tinytable S4 object}
 \usage{
 \S4method{names}{tinytable}(x)
-
-\S4method{names}{tinytable}(x)
 }
 \arguments{
 \item{x}{A data frame or data table to be rendered as a table.}
 }
 \description{
 Method for a tinytable S4 object
-
-Column names of a tinytable
 }
 \keyword{internal}
