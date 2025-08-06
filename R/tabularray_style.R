@@ -16,23 +16,29 @@ map_alignv_values <- function(sty) {
 #' @keywords internal
 #' @noRd
 style_text <- function(sty_row) {
+  font <- ""
   cmd <- ""
+  
+  # Use descriptive font commands for tabularray font key
   if (isTRUE(sty_row$bold)) {
-    cmd <- paste0(cmd, "\\bfseries")
+    font <- paste0(font, "\\bfseries")
   }
   if (isTRUE(sty_row$italic)) {
-    cmd <- paste0(cmd, "\\textit")
+    font <- paste0(font, "\\itshape")
   }
+  if (isTRUE(sty_row$monospace)) {
+    font <- paste0(font, "\\ttfamily")
+  }
+  
+  # Keep underline and strikeout as cmd since they need special macros
   if (isTRUE(sty_row$underline)) {
     cmd <- paste0(cmd, "\\tinytableTabularrayUnderline")
   }
   if (isTRUE(sty_row$strikeout)) {
     cmd <- paste0(cmd, "\\tinytableTabularrayStrikeout")
   }
-  if (isTRUE(sty_row$monospace)) {
-    cmd <- paste0(cmd, "\\texttt")
-  }
-  return(cmd)
+  
+  return(list(font = font, cmd = cmd))
 }
 
 #' Style colors for tabularray
@@ -462,14 +468,21 @@ setMethod(
       idx <- rec$i == idx_i & rec$j == idx_j
 
       # Build style commands
-      cmd <- style_text(sty[row, ])
+      text_style <- style_text(sty[row, ])
+      font_cmd <- text_style$font
+      cmd <- text_style$cmd
 
       # Style colors
       color_result <- style_colors(cmd, sty[row, ], x)
       cmd <- color_result$cmd
       x <- color_result$x
 
-      # Format command string
+      # Add font styling if present
+      if (trimws(font_cmd) != "") {
+        set[idx] <- sprintf("%s font=%s, ", set[idx], font_cmd)
+      }
+
+      # Format command string for remaining cmd styles
       if (grepl("^,", cmd)) {
         tmp <- "%s, %s, "
       } else {

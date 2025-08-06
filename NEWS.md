@@ -2,6 +2,8 @@
 
 ## Development version
 
+* Tabularray: use `font=` instead of `cmd=` for italic, bold, and monospace. This allows using more than one style in a single cell. Thanks to @lvjr for the recommendation in Issue #524.
+
 ## 0.12.0
 
 Deprecated or replaced features:
