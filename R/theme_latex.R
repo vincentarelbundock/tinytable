@@ -1,64 +1,3 @@
-switch_latex_environment <- function(table_string,
-                                     environment = "longtblr",
-                                     environment_table = TRUE,
-                                     ncol = NULL) {
-  # Define all possible environments
-  from_env <- "tblr"
-  assert_choice(environment, c("tblr", "talltblr", "longtblr", "table", "tabular"))
-
-  # If no environment found, return unchanged
-  if (is.null(from_env)) {
-    return(table_string)
-  }
-
-  if (environment == "longtblr") {
-    environment_table <- FALSE
-  }
-
-  # Remove table wrapper elements if requested
-  if (!environment_table) {
-    regex <- "\\\\begin\\s*\\{(?:tabular|(?:long|tall)?tblr)\\}"
-    table_string <- lines_drop(table_string, regex = regex, position = "before", perl = TRUE)
-    table_string <- lines_drop(table_string, regex = "\\\\end\\{table\\}", position = "after")
-    table_string <- lines_drop(table_string, regex = "\\\\end\\{table\\}", position = "equal")
-  }
-
-  # Switch the environment
-  table_string <- gsub("\\{tblr\\}(\\[.*?\\])?", sprintf("{%s}\\1", environment), table_string)
-  table_string <- gsub("\\{talltblr\\}(\\[.*?\\])?", sprintf("{%s}\\1", environment), table_string)
-  table_string <- gsub("\\{longtblr\\}(\\[.*?\\])?", sprintf("{%s}\\1", environment), table_string)
-
-  # Special handling for tabular environment
-  if (environment == "tabular") {
-    # insert a duplicate \begin{tabular} without the tblr baggage
-    table_string <- lines_insert(table_string,
-      new = "\\begin{tabular}",
-      regex = "\\\\begin\\{tabular\\}",
-      position = "before")
-    # tabularray options
-    table_string <- lines_drop_between(
-      table_string,
-      regex_start = "tabularray outer open",
-      regex_end = "tabularray inner close"
-    )
-
-    # Convert tabularray syntax to tabular
-    table_string <- gsub("cmidrule\\[(.*?)\\]", "cmidrule(\\1)", table_string)
-    table_string <- gsub("\\\\toprule|\\\\midrule|\\\\bottomrule", "\\\\hline", table_string)
-    table_string <- sub("\\s*%% tabularray outer open", "", table_string)
-    table_string <- sub("\\s*%% TinyTableHeader", "", table_string)
-  }
-
-  # Set proper column alignment for tabular
-  if (environment == "tabular" && !is.null(ncol)) {
-    a <- sprintf("begin{tabular}{%s}", strrep("l", ncol))
-    table_string <- sub("begin{tabular}", a, table_string, fixed = TRUE)
-  }
-
-  return(table_string)
-}
-
-
 #' LaTeX-specific styles and options
 #'
 #' @param x A `tinytable` object.
@@ -77,6 +16,77 @@ switch_latex_environment <- function(table_string,
 #'   Defaults to `get_option("tinytable_latex_placement", NULL)`. When NULL, no placement is applied.
 #' @param ... Additional arguments.
 #'
+handle_latex_environment <- function(x, environment, environment_table) {
+  if (!is.null(environment)) {
+    fn <- function(table) {
+      table_string <- table@table_string
+      
+      # Define all possible environments
+      from_env <- "tblr"
+      assert_choice(environment, c("tblr", "talltblr", "longtblr", "table", "tabular"))
+
+      # If no environment found, return unchanged
+      if (is.null(from_env)) {
+        return(table)
+      }
+
+      # Switch the environment
+      table_string <- gsub("\\{tblr\\}(\\[.*?\\])?", sprintf("{%s}\\1", environment), table_string)
+      table_string <- gsub("\\{talltblr\\}(\\[.*?\\])?", sprintf("{%s}\\1", environment), table_string)
+      table_string <- gsub("\\{longtblr\\}(\\[.*?\\])?", sprintf("{%s}\\1", environment), table_string)
+
+      # Special handling for tabular environment
+      if (environment == "tabular") {
+        # insert a duplicate \begin{tabular} without the tblr baggage
+        table_string <- lines_insert(table_string,
+          new = "\\begin{tabular}",
+          regex = "\\\\begin\\{tabular\\}",
+          position = "before")
+        # tabularray options
+        table_string <- lines_drop_between(
+          table_string,
+          regex_start = "tabularray outer open",
+          regex_end = "tabularray inner close"
+        )
+
+        # Convert tabularray syntax to tabular
+        table_string <- gsub("cmidrule\\[(.*?)\\]", "cmidrule(\\1)", table_string)
+        table_string <- gsub("\\\\toprule|\\\\midrule|\\\\bottomrule", "\\\\hline", table_string)
+        table_string <- sub("\\s*%% tabularray outer open", "", table_string)
+        table_string <- sub("\\s*%% TinyTableHeader", "", table_string)
+      }
+
+      # Set proper column alignment for tabular
+      if (environment == "tabular" && !is.null(ncol(table))) {
+        a <- sprintf("begin{tabular}{%s}", strrep("l", ncol(table)))
+        table_string <- sub("begin{tabular}", a, table_string, fixed = TRUE)
+      }
+
+      table@table_string <- table_string
+      return(table)
+    }
+    x <- build_finalize(x, fn, output = "latex")
+  }
+  return(x)
+}
+
+handle_latex_environment_table <- function(x, environment_table) {
+  if (!environment_table) {
+    fn <- function(table) {
+      # Remove table wrapper elements if requested
+      table_string <- table@table_string
+      regex <- "\\\\begin\\s*\\{(?:tabular|(?:long|tall)?tblr)\\}"
+      table_string <- lines_drop(table_string, regex = regex, position = "before", perl = TRUE)
+      table_string <- lines_drop(table_string, regex = "\\\\end\\{table\\}", position = "after")
+      table_string <- lines_drop(table_string, regex = "\\\\end\\{table\\}", position = "equal")
+      table@table_string <- table_string
+      return(table)
+    }
+    x <- build_finalize(x, fn, output = "latex")
+  }
+  return(x)
+}
+
 #' @export
 theme_latex <- function(x,
                         inner = NULL,
@@ -100,6 +110,11 @@ theme_latex <- function(x,
   assert_choice(resize_direction, c("down", "up", "both"), null.ok = TRUE)
   assert_string(placement, null.ok = TRUE)
 
+  # Set environment_table = FALSE when environment is longtblr
+  if (!is.null(environment) && environment == "longtblr") {
+    environment_table <- FALSE
+  }
+
   if (!is.null(inner)) x@tabularray_inner <- c(x@tabularray_inner, inner)
   if (!is.null(outer)) x@tabularray_outer <- c(x@tabularray_outer, outer)
 
@@ -107,18 +122,12 @@ theme_latex <- function(x,
   if (!is.null(environment) && (rowhead >= 1 || rowfoot >= 1)) {
     stop("When using multipage functionality (rowhead or rowfoot >= 1), the environment must be 'longtblr'.", call. = FALSE)
   }
-  if (!is.null(environment)) {
-    fn <- function(table) {
-      table@table_string <- switch_latex_environment(
-        table@table_string,
-        environment = environment,
-        environment_table = environment_table,
-        ncol = ncol(table)
-      )
-      return(table)
-    }
-    x <- build_finalize(x, fn, output = "latex")
-  }
+  
+  # Handle environment using separate helper function
+  x <- handle_latex_environment(x, environment, environment_table)
+  
+  # Handle environment_table using separate helper function
+  x <- handle_latex_environment_table(x, environment_table)
 
   # multipage
   if (isTRUE(multipage)) {
@@ -128,16 +137,9 @@ theme_latex <- function(x,
     if (rowfoot > 0) {
       x@tabularray_inner <- c(x@tabularray_inner, sprintf("rowfoot=%s", rowfoot))
     }
-    fn <- function(table) {
-      table@table_string <- switch_latex_environment(
-        table@table_string,
-        environment = "longtblr",
-        environment_table = FALSE,
-        ncol = ncol(table)
-      )
-      return(table)
-    }
-    x <- build_finalize(x, fn, output = "latex")
+    # Apply both environment and environment_table changes for multipage
+    x <- handle_latex_environment(x, "longtblr", FALSE)
+    x <- handle_latex_environment_table(x, FALSE)
   }
 
   # Handle resize functionality
