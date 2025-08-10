@@ -4,6 +4,10 @@
 
 * Tabularray: use `font=` instead of `cmd=` for italic, bold, and monospace. This allows using more than one style in a single cell. Thanks to @lvjr for the recommendation in Issue #524.
 
+Bugs:
+
+* `theme_latex()`: support removal of `environment_table` when `environment=NULL`. Thanks to @wklimowicz for report #535.
+
 ## 0.12.0
 
 Deprecated or replaced features:

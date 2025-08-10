@@ -325,5 +325,30 @@ matches <- lengths(gregexpr("longtblr", tab, fixed = TRUE))
 expect_equal(matches, 2)
 
 
+# Issue #535: environment_table = FALSE without an environment argument
+tab1 <- head(mtcars, 1) |>
+  tt() |>
+  theme_latex(environment_table = FALSE) |>
+  save_tt("latex")
+table_matches <- gregexpr("\\\\begin\\{table\\}", tab1)[[1]]
+expect_equal(ifelse(table_matches[1] == -1, 0, length(table_matches)), 0)
+expect_equal(lengths(gregexpr("\\{tblr", tab1)), 2)
+
+tab2 <- head(mtcars, 1) |>
+  tt() |>
+  theme_latex(environment = "longtblr") |>
+  save_tt("latex")
+table_matches2 <- gregexpr("\\\\begin\\{table\\}", tab2)[[1]]
+expect_equal(ifelse(table_matches2[1] == -1, 0, length(table_matches2)), 0)
+expect_equal(lengths(gregexpr("longtblr", tab2)), 2)
+
+tab3 <- head(mtcars, 1) |>
+  tt() |>
+  theme_latex(environment = "talltblr") |>
+  save_tt("latex")
+expect_equal(lengths(gregexpr("\\{table", tab3)), 2)
+expect_equal(lengths(gregexpr("\\{talltblr", tab3)), 2)
+
+
 
 options(tinytable_print_output = NULL)
