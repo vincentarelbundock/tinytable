@@ -1,21 +1,3 @@
-#' LaTeX-specific styles and options
-#'
-#' @param x A `tinytable` object.
-#' @param inner A string that specifies the "inner" settings of a tabularray LaTeX table.
-#' @param outer A string that specifies the "outer" settings of a tabularray LaTeX table.
-#' @param environment A string that specifies the LaTeX environment to use, default is "tblr".
-#' @param environment_table Logical. If `TRUE`, wraps the table in a LaTeX `table` environment. If `FALSE`, uses the `tblr` environment directly. A `table` environment cannot be used with `longtblr` environments.
-#' @param rowhead Number of rows to repeat as header on each page. When >= 1, automatically enables multipage mode.
-#' @param rowfoot Number of rows to repeat as footer on each page. When >= 1, automatically enables multipage mode.
-#' @param multipage Logical. If `TRUE`, enables multipage mode for LaTeX tables (`longtblr` environments).
-#' @param resize_width Numeric between 0.01 and 1, representing the proportion of line width for table resizing.
-#'   Defaults to `get_option("tinytable_theme_resize_width", 1)`. Only applies when `resize_direction` is specified.
-#' @param resize_direction Character string indicating resize direction: "down", "up", or "both".
-#'   Defaults to `get_option("tinytable_theme_resize_direction", "down")`. When NULL, no resizing is applied.
-#' @param placement String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp".
-#'   Defaults to `get_option("tinytable_latex_placement", NULL)`. When NULL, no placement is applied.
-#' @param ... Additional arguments.
-#'
 handle_latex_environment <- function(x, environment, environment_table) {
   if (!is.null(environment)) {
     fn <- function(table) {
