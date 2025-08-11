@@ -2,7 +2,7 @@ handle_latex_environment <- function(x, environment, environment_table) {
   if (!is.null(environment)) {
     fn <- function(table) {
       table_string <- table@table_string
-      
+
       # Define all possible environments
       from_env <- "tblr"
       assert_choice(environment, c("tblr", "talltblr", "longtblr", "table", "tabular"))
@@ -69,6 +69,87 @@ handle_latex_environment_table <- function(x, environment_table) {
   return(x)
 }
 
+
+#' LaTeX-Specific Theme for `tinytable`
+#'
+#' This function provides comprehensive LaTeX-specific theming and configuration options
+#' for `tinytable` objects. It allows customization of LaTeX environments, table layout,
+#' multipage behavior, resizing, and placement within LaTeX documents.
+#'
+#' @param x A `tinytable` object to apply LaTeX theming to.
+#' @param inner Character string specifying inner tabularray options. These options
+#'   control the internal formatting of the table (e.g., column alignment, spacing).
+#'   Will be added to any existing inner options. Default is `NULL`.
+#' @param outer Character string specifying outer tabularray options. These options
+#'   control the external formatting around the table. Will be added to any existing
+#'   outer options. Default is `NULL`.
+#' @param environment Character string specifying the LaTeX table environment to use.
+#'   Options are:
+#'   - `"tblr"` - Standard tabularray table (default)
+#'   - `"talltblr"` - Tall tabularray table for tables that may break across pages
+#'   - `"longtblr"` - Long tabularray table for multi-page tables
+#'   - `"tabular"` - Basic LaTeX tabular environment without tabularray features
+#'
+#'   Default is controlled by `tinytable_latex_environment` option.
+#' @param environment_table Logical indicating whether to wrap the table in a `table`
+#'   environment. When `FALSE`, only the core table structure is output without the
+#'   surrounding table wrapper. Automatically set to `FALSE` when `environment = "longtblr"`.
+#'   Default is controlled by `tinytable_latex_environment_table` option.
+#' @param multipage Logical indicating whether to enable multipage table functionality.
+#'   When `TRUE`, automatically switches to `longtblr` environment and sets appropriate
+#'   options for tables that span multiple pages. Default is controlled by
+#'   `tinytable_latex_multipage` option.
+#' @param rowhead Integer specifying the number of header rows to repeat on each page
+#'   in multipage tables. Only valid with `longtblr` environment. Default is controlled
+#'   by `tinytable_latex_rowhead` option.
+#' @param rowfoot Integer specifying the number of footer rows to repeat on each page
+#'   in multipage tables. Only valid with `longtblr` environment. Default is controlled
+#'   by `tinytable_latex_rowfoot` option.
+#' @param resize_width Numeric value between 0.01 and 1.0 specifying the target width
+#'   as a fraction of `\\linewidth` when resizing tables. Only used when `resize_direction`
+#'   is specified. Default is controlled by `tinytable_latex_resize_width` option.
+#' @param resize_direction Character string specifying how to resize tables that are
+#'   too wide or too narrow. Options are:
+#'   - `"down"` - Only shrink tables wider than `\\linewidth`
+#'   - `"up"` - Only expand tables narrower than `\\linewidth`
+#'   - `"both"` - Resize all tables to exactly `resize_width * \\linewidth`
+#'
+#'   Default is controlled by `tinytable_latex_resize_direction` option.
+#' @param placement Character string specifying LaTeX float placement options for the
+#'   table environment (e.g., "h", "t", "b", "p", "H"). Only used when `environment_table = TRUE`.
+#'   Default is controlled by `tinytable_latex_placement` option.
+#' @param ... Additional arguments (currently unused).
+#'
+#' @return A modified `tinytable` object with LaTeX-specific theming applied.
+#'
+#' @details
+#' The function provides fine-grained control over LaTeX table output through several mechanisms:
+#'
+#' **Environment Selection:**
+#' Different LaTeX environments offer different capabilities:
+#' - `tblr`: Modern tabularray syntax with full styling support
+#' - `talltblr`: Like `tblr` but optimized for tall tables
+#' - `longtblr`: Supports page breaks and repeated headers/footers
+#' - `tabular`: Basic LaTeX syntax, limited styling but maximum compatibility
+#'
+#' **Multipage Tables:**
+#' When `multipage = TRUE` or when `rowhead`/`rowfoot` are specified, the function
+#' automatically switches to `longtblr` environment and disables the table wrapper.
+#' This allows tables to break across pages while maintaining headers and footers.
+#'
+#' **Resizing:**
+#' The resize functionality uses LaTeX's `\\resizebox` command to automatically
+#' adjust table width based on content and page constraints. This is particularly
+#' useful for tables with many columns.
+#'
+#' **Tabularray Options:**
+#' Inner and outer options directly control tabularray formatting. Inner options
+#' affect cell content and spacing, while outer options control the table's
+#' relationship with surrounding text.
+#'
+#' @seealso
+#' [tt()], [style_tt()], [save_tt()]
+#'
 #' @export
 theme_latex <- function(x,
                         inner = NULL,
@@ -104,10 +185,10 @@ theme_latex <- function(x,
   if (!is.null(environment) && (rowhead >= 1 || rowfoot >= 1)) {
     stop("When using multipage functionality (rowhead or rowfoot >= 1), the environment must be 'longtblr'.", call. = FALSE)
   }
-  
+
   # Handle environment using separate helper function
   x <- handle_latex_environment(x, environment, environment_table)
-  
+
   # Handle environment_table using separate helper function
   x <- handle_latex_environment_table(x, environment_table)
 
