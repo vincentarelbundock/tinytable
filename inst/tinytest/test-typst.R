@@ -150,4 +150,16 @@ tab <- tt(
 )
 expect_snapshot_print(tab, label = "typst-issue456.typ")
 
+# Single row colspan bug fix
+df <- data.frame(
+  column_a = c("No data"),
+  column_b = c(NA),
+  column_c = c(NA)
+)
+tab <- df |>
+  tt() |>
+  style_tt(i = 1, j = 1, colspan = ncol(df), align = "c") |>
+  save_tt("typst")
+expect_true(is.character(tab) && nchar(tab) > 0)
+
 options(tinytable_print_output = NULL)

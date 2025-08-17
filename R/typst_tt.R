@@ -91,7 +91,8 @@ typst_template <- function() {
 # Helper function to process table body
 typst_body <- function(x, out) {
   # Prepare body data
-  body <- apply(x@data_body, 2, function(k) paste0("[", k, "]"))
+  body <- apply(x@data_body, 2, function(k) paste0("[", k, "]"), simplify = FALSE)
+  body <- do.call(cbind, body)
 
   # Apply colspan and rowspan transformations
   body <- apply_typst_spans(body, x@style)

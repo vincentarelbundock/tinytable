@@ -70,10 +70,7 @@ table.cell(stroke: (bottom: .05em + black), colspan: 3, align: center)[A],[ ],
     // tinytable header end
 
     // tinytable cell content after
-[1],
-[2],
-[3],
-[4],
+[1], [2], [3], [4],
 
     // tinytable footer after
 
