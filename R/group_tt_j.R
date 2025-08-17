@@ -34,29 +34,42 @@ j_delim_to_named_list <- function(x, j) {
       }
     }
 
-    # Map prefixes back to original column indices
-    prefix_to_col_idx <- stats::setNames(which(indices), prefixes)
+    # Extract just the group name at this level
+    level_names <- character(length(grouped_cols))
+    for (i in seq_along(split_names)) {
+      if (length(split_names[[i]]) >= level) {
+        level_names[i] <- split_names[[i]][level]
+      } else {
+        level_names[i] <- ""
+      }
+    }
 
-    # Group by unique prefixes at this level
-    unique_prefixes <- unique(prefixes[prefixes != ""])
+    unique_level_names <- unique(level_names[level_names != ""])
     level_groups <- list()
+    
+    for (level_name in unique_level_names) {
+      unique_prefixes <- unique(prefixes[level_names == level_name])
+      for (prefix in unique_prefixes) {
+        matching_indices <- which(prefixes == prefix)
+        col_indices <- (which(indices))[matching_indices]
 
-    for (prefix in unique_prefixes) {
-      matching_indices <- which(prefixes == prefix)
-      col_indices <- (which(indices))[matching_indices]
+        # Only create groupings with more than one column or if it's not the final level
+        if (length(col_indices) > 1 || level < max_levels) {
+          # Use the level name as the group name
+          group_name <- level_name
+          
+          # Handle empty group names by replacing with a space (as per tinytable convention)
+          if (is.na(group_name) || group_name == "") {
+            group_name <- " "
+          }
 
-      # Only create groupings with more than one column or if it's not the final level
-      if (length(col_indices) > 1 || level < max_levels) {
-        # Extract the group name (prefix up to this level, removing previous levels)
-        group_parts <- strsplit(prefix, j, fixed = TRUE)[[1]]
-        group_name <- group_parts[level]
-
-        # Handle empty group names by replacing with a space (as per tinytable convention)
-        if (is.na(group_name) || group_name == "") {
-          group_name <- " "
+          # If this group name already exists, append to it
+          if (group_name %in% names(level_groups)) {
+            level_groups[[group_name]] <- c(level_groups[[group_name]], col_indices)
+          } else {
+            level_groups[[group_name]] <- col_indices
+          }
         }
-
-        level_groups[[group_name]] <- col_indices
       }
     }
 

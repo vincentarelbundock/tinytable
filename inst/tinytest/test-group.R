@@ -237,6 +237,18 @@ expect_snapshot_print(t[["html"]], "group-multilevel-empty.html")
 expect_snapshot_print(t[["typst"]], "group-multilevel-empty.typ")
 
 
+# Issue #543: Multi-level delimiter with shared level names spanning all columns
+dat <- data.frame(
+  "Strata group\nSex\nStrata level\nMale" = NA,
+  "Strata group\nSex\nStrata level\nFemale" = NA,
+  "Strata group\nAge\nStrata level\n<18" = NA,
+  "Strata group\nAge\nStrata level\n>=18" = NA,
+  check.names = FALSE
+)
+tab <- tt(dat) |> group_tt(j = "\n")
+t <- expect_table(tab, "markdown")
+expect_snapshot_print(t[["markdown"]], "group-shared-level-spanning.md")
+
 # Indent markdown
 dat <- do.call(rbind, by(iris, iris$Species, head, 3))
 tab <- tt(dat) |>
