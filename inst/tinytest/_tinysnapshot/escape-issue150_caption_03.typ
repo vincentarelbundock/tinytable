@@ -1,6 +1,6 @@
 #show figure: set block(breakable: true)
 #figure( // start preamble figure
-  caption: text(\[banana\_fish \$100 & \<b\>bold\<\/b\>\]),
+  caption: text([banana\_fish \$100 & \<b\>bold\<\/b\>]),
   kind: "tinytable",
   supplement: "Table", // end preamble figure
 
@@ -78,8 +78,8 @@ table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[foo\_bar]
     table.footer(
       repeat: false,
       // tinytable notes after
-    table.cell(align: left, colspan: 4, text(\[banana\_fish \$100 & \<b\>bold\<\/b\>\])),
-    table.cell(align: left, colspan: 4, text(\[#super[b] banana\_fish \$100 & \<b\>bold\<\/b\>\])),
+    table.cell(align: left, colspan: 4, text([banana\_fish \$100 & \<b\>bold\<\/b\>])),
+    table.cell(align: left, colspan: 4, text([#super[b] banana\_fish \$100 & \<b\>bold\<\/b\>])),
     ),
     
 

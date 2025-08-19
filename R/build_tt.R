@@ -79,9 +79,6 @@ build_tt <- function(x, output = NULL) {
     }
   }
 
-  # apply the style_notes
-  x <- style_notes(x)
-  x <- style_caption(x)
   x <- render_fansi(x)
 
   # Calculate which positions are body vs group
@@ -96,6 +93,10 @@ build_tt <- function(x, output = NULL) {
     l[["x"]] <- x
     x <- eval(l)
   }
+
+  # apply styling AFTER formatting/escaping to avoid escaping the style brackets
+  x <- style_notes(x)
+  x <- style_caption(x)
 
   # insert group rows into body
   x <- rbind_body_groupi(x)
