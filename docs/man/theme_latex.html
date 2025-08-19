@@ -451,11 +451,14 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#latex-specific-styles-and-options" id="toc-latex-specific-styles-and-options" class="nav-link active" data-scroll-target="#latex-specific-styles-and-options">LaTeX-specific styles and options</a>
+  <li><a href="#latex-specific-theme-for-tinytable" id="toc-latex-specific-theme-for-tinytable" class="nav-link active" data-scroll-target="#latex-specific-theme-for-tinytable">LaTeX-Specific Theme for <code>tinytable</code></a>
   <ul class="collapse">
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
   <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
+  <li><a href="#details" id="toc-details" class="nav-link" data-scroll-target="#details">Details</a></li>
+  <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
+  <li><a href="#see-also" id="toc-see-also" class="nav-link" data-scroll-target="#see-also">See Also</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -466,11 +469,11 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="latex-specific-styles-and-options" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="latex-specific-styles-and-options">LaTeX-specific styles and options</h2>
+<section id="latex-specific-theme-for-tinytable" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="latex-specific-theme-for-tinytable">LaTeX-Specific Theme for <code>tinytable</code></h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>LaTeX-specific styles and options</p>
+<p>This function provides comprehensive LaTeX-specific theming and configuration options for <code>tinytable</code> objects. It allows customization of LaTeX environments, table layout, multipage behavior, resizing, and placement within LaTeX documents.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
@@ -498,7 +501,7 @@ ul.task-list li input[type="checkbox"] {
 <code id="x">x</code>
 </td>
 <td>
-A <code>tinytable</code> object.
+A <code>tinytable</code> object to apply LaTeX theming to.
 </td>
 </tr>
 <tr>
@@ -506,7 +509,7 @@ A <code>tinytable</code> object.
 <code id="inner">inner</code>
 </td>
 <td>
-A string that specifies the "inner" settings of a tabularray LaTeX table.
+Character string specifying inner tabularray options. These options control the internal formatting of the table (e.g., column alignment, spacing). Will be added to any existing inner options. Default is <code>NULL</code>.
 </td>
 </tr>
 <tr>
@@ -514,7 +517,7 @@ A string that specifies the "inner" settings of a tabularray LaTeX table.
 <code id="outer">outer</code>
 </td>
 <td>
-A string that specifies the "outer" settings of a tabularray LaTeX table.
+Character string specifying outer tabularray options. These options control the external formatting around the table. Will be added to any existing outer options. Default is <code>NULL</code>.
 </td>
 </tr>
 <tr>
@@ -522,7 +525,22 @@ A string that specifies the "outer" settings of a tabularray LaTeX table.
 <code id="environment">environment</code>
 </td>
 <td>
-A string that specifies the LaTeX environment to use, default is "tblr".
+<p>Character string specifying the LaTeX table environment to use. Options are:</p>
+<ul>
+<li>
+<p><code>“tblr”</code> - Standard tabularray table (default)</p>
+</li>
+<li>
+<p><code>“talltblr”</code> - Tall tabularray table for tables that may break across pages</p>
+</li>
+<li>
+<p><code>“longtblr”</code> - Long tabularray table for multi-page tables</p>
+</li>
+<li>
+<p><code>“tabular”</code> - Basic LaTeX tabular environment without tabularray features</p>
+</li>
+</ul>
+Default is controlled by <code>tinytable_latex_environment</code> option.
 </td>
 </tr>
 <tr>
@@ -530,7 +548,7 @@ A string that specifies the LaTeX environment to use, default is "tblr".
 <code id="environment_table">environment_table</code>
 </td>
 <td>
-Logical. If <code>TRUE</code>, wraps the table in a LaTeX <code>table</code> environment. If <code>FALSE</code>, uses the <code>tblr</code> environment directly. A <code>table</code> environment cannot be used with <code>longtblr</code> environments.
+Logical indicating whether to wrap the table in a <code>table</code> environment. When <code>FALSE</code>, only the core table structure is output without the surrounding table wrapper. Automatically set to <code>FALSE</code> when <code>environment = “longtblr”</code>. Default is controlled by <code>tinytable_latex_environment_table</code> option.
 </td>
 </tr>
 <tr>
@@ -538,7 +556,7 @@ Logical. If <code>TRUE</code>, wraps the table in a LaTeX <code>table</code> env
 <code id="multipage">multipage</code>
 </td>
 <td>
-Logical. If <code>TRUE</code>, enables multipage mode for LaTeX tables (<code>longtblr</code> environments).
+Logical indicating whether to enable multipage table functionality. When <code>TRUE</code>, automatically switches to <code>longtblr</code> environment and sets appropriate options for tables that span multiple pages. Default is controlled by <code>tinytable_latex_multipage</code> option.
 </td>
 </tr>
 <tr>
@@ -546,7 +564,7 @@ Logical. If <code>TRUE</code>, enables multipage mode for LaTeX tables (<code>lo
 <code id="rowhead">rowhead</code>
 </td>
 <td>
-Number of rows to repeat as header on each page. When &gt;= 1, automatically enables multipage mode.
+Integer specifying the number of header rows to repeat on each page in multipage tables. Only valid with <code>longtblr</code> environment. Default is controlled by <code>tinytable_latex_rowhead</code> option.
 </td>
 </tr>
 <tr>
@@ -554,7 +572,7 @@ Number of rows to repeat as header on each page. When &gt;= 1, automatically ena
 <code id="rowfoot">rowfoot</code>
 </td>
 <td>
-Number of rows to repeat as footer on each page. When &gt;= 1, automatically enables multipage mode.
+Integer specifying the number of footer rows to repeat on each page in multipage tables. Only valid with <code>longtblr</code> environment. Default is controlled by <code>tinytable_latex_rowfoot</code> option.
 </td>
 </tr>
 <tr>
@@ -562,7 +580,7 @@ Number of rows to repeat as footer on each page. When &gt;= 1, automatically ena
 <code id="resize_width">resize_width</code>
 </td>
 <td>
-Numeric between 0.01 and 1, representing the proportion of line width for table resizing. Defaults to <code>get_option(“tinytable_theme_resize_width”, 1)</code>. Only applies when <code>resize_direction</code> is specified.
+Numeric value between 0.01 and 1.0 specifying the target width as a fraction of <code style="white-space: pre;">\linewidth</code> when resizing tables. Only used when <code>resize_direction</code> is specified. Default is controlled by <code>tinytable_latex_resize_width</code> option.
 </td>
 </tr>
 <tr>
@@ -570,7 +588,19 @@ Numeric between 0.01 and 1, representing the proportion of line width for table 
 <code id="resize_direction">resize_direction</code>
 </td>
 <td>
-Character string indicating resize direction: "down", "up", or "both". Defaults to <code>get_option(“tinytable_theme_resize_direction”, “down”)</code>. When NULL, no resizing is applied.
+<p>Character string specifying how to resize tables that are too wide or too narrow. Options are:</p>
+<ul>
+<li>
+<p><code>“down”</code> - Only shrink tables wider than <code style="white-space: pre;">\linewidth</code></p>
+</li>
+<li>
+<p><code>“up”</code> - Only expand tables narrower than <code style="white-space: pre;">\linewidth</code></p>
+</li>
+<li>
+<p><code>“both”</code> - Resize all tables to exactly <code style="white-space: pre;">resize_width * \linewidth</code></p>
+</li>
+</ul>
+Default is controlled by <code>tinytable_latex_resize_direction</code> option.
 </td>
 </tr>
 <tr>
@@ -578,7 +608,7 @@ Character string indicating resize direction: "down", "up", or "both". Defaults 
 <code id="placement">placement</code>
 </td>
 <td>
-String to insert in square brackets after the LaTeX table environment, ex: "H", "htbp". Defaults to <code>get_option(“tinytable_latex_placement”, NULL)</code>. When NULL, no placement is applied.
+Character string specifying LaTeX float placement options for the table environment (e.g., "h", "t", "b", "p", "H"). Only used when <code>environment_table = TRUE</code>. Default is controlled by <code>tinytable_latex_placement</code> option.
 </td>
 </tr>
 <tr>
@@ -586,10 +616,40 @@ String to insert in square brackets after the LaTeX table environment, ex: "H", 
 <code id="...">…</code>
 </td>
 <td>
-Additional arguments.
+Additional arguments (currently unused).
 </td>
 </tr>
 </tbody></table>
+</section>
+<section id="details" class="level3">
+<h3 class="anchored" data-anchor-id="details">Details</h3>
+<p>The function provides fine-grained control over LaTeX table output through several mechanisms:</p>
+<p><strong>Environment Selection:</strong> Different LaTeX environments offer different capabilities:</p>
+<ul>
+<li>
+<p><code>tblr</code>: Modern tabularray syntax with full styling support</p>
+</li>
+<li>
+<p><code>talltblr</code>: Like <code>tblr</code> but optimized for tall tables</p>
+</li>
+<li>
+<p><code>longtblr</code>: Supports page breaks and repeated headers/footers</p>
+</li>
+<li>
+<p><code>tabular</code>: Basic LaTeX syntax, limited styling but maximum compatibility</p>
+</li>
+</ul>
+<p><strong>Multipage Tables:</strong> When <code>multipage = TRUE</code> or when <code>rowhead</code>/<code>rowfoot</code> are specified, the function automatically switches to <code>longtblr</code> environment and disables the table wrapper. This allows tables to break across pages while maintaining headers and footers.</p>
+<p><strong>Resizing:</strong> The resize functionality uses LaTeX’s <code style="white-space: pre;">\resizebox</code> command to automatically adjust table width based on content and page constraints. This is particularly useful for tables with many columns.</p>
+<p><strong>Tabularray Options:</strong> Inner and outer options directly control tabularray formatting. Inner options affect cell content and spacing, while outer options control the table’s relationship with surrounding text.</p>
+</section>
+<section id="value" class="level3">
+<h3 class="anchored" data-anchor-id="value">Value</h3>
+<p>A modified <code>tinytable</code> object with LaTeX-specific theming applied.</p>
+</section>
+<section id="see-also" class="level3">
+<h3 class="anchored" data-anchor-id="see-also">See Also</h3>
+<p><code>tt()</code>, <code>style_tt()</code>, <code>save_tt()</code></p>
 
 
 </section>
