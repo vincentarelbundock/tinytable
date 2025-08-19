@@ -1,6 +1,6 @@
 # News
 
-## Development version
+## 0.13.0
 
 * New aliases to facilitate completion in IDEs: `tt_style()`, `tt_format()`, `tt_plot()`, `tt_group()`, `tt_save()`. Thanks to @rpruim for the suggestion in Issue #540.
 * Tabularray: use `font=` instead of `cmd=` for italic, bold, and monospace. This allows using more than one style in a single cell. Thanks to @lvjr for the recommendation in Issue #524.
