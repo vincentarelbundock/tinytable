@@ -1,5 +1,11 @@
 # News
 
+## Development
+
+Breaking change:
+
+* `theme_void()` calls `strip_tt()` to drop every change made to this point, so the order of operations matter.
+
 ## 0.13.0
 
 * New aliases to facilitate completion in IDEs: `tt_style()`, `tt_format()`, `tt_plot()`, `tt_group()`, `tt_save()`. Thanks to @rpruim for the suggestion in Issue #540.
