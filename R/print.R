@@ -31,10 +31,9 @@ record_print.tinytable = function(x, ...) {
 #' @rawNamespace S3method(knitr::knit_print, tinytable)
 #' @export
 knit_print.tinytable <- function(
-  x,
-  output = get_option("tinytable_print_output", default = NULL),
-  ...
-) {
+    x,
+    output = get_option("tinytable_print_output", default = NULL),
+    ...) {
   # lazy styles get evaluated here, at the very end
   x <- build_tt(x, output = output)
   out <- x@table_string
@@ -76,23 +75,27 @@ knit_print.tinytable <- function(
 #' + When called interactively in another development environment, the default is "markdown".
 #' + The default print output can be changed for an entire R session by calling: `options(tinytable_print_output = "html")`
 #' + The default print output can be changed for a single `tinytable` object by modifying the `output` S4 slot.
+#' @details
+#' When printing to HTML in `interactive()` mode, a temporary file is created and `viewer()` is called to preview the file with the local browser (ex: Firefox or Chrome). The temporary file is then automatically cleaned up. On some operating systems, like some Linux distributions, browser do not have read access to the `/tmp/` directory. In such cases, users can specify a custom location to store temporary HTML files. Note that this prevents `tinytable` from automatically cleaning up temporary files automatically.
+#'
+#' `options(tinytable_tempdir = "/home/username/temp_directory")`
 #' @param ... Other arguments are ignored.
 #' @return launch a browser window or cat() the table to console.
 #' @export
 print.tinytable <- function(
-  x,
-  output = get_option("tinytable_print_output", default = NULL),
-  ...
-) {
+    x,
+    output = get_option("tinytable_print_output", default = NULL),
+    ...) {
   if (is.null(output)) {
     output <- sanitize_output(x@output)
   } else {
     output <- sanitize_output(output)
   }
 
+  dir <- getOption("tinytable_tempdir", default = tempdir())
+  dir <- sub("\\/$", "", dir)
+
   if (output %in% c("html", "tabulator", "bootstrap")) {
-    dir <- tempfile()
-    dir.create(dir)
     x@output_dir <- dir
   } else if (output == "dataframe") {
     output <- "markdown"
@@ -114,7 +117,9 @@ print.tinytable <- function(
 
     # need to change the output directory to a temporary directory
     # for plot_tt() inline plots to show up in RStudio
-    htmlFile <- file.path(dir, "index.html")
+    random_name <- paste0(get_id("tinytable_"), ".html")
+    htmlFile <- path.expand(normalizePath(file.path(dir, random_name), mustWork = FALSE))
+    # on.exit(unlink(htmlFile))
     cat(tab, file = htmlFile)
 
     if (interactive()) {
