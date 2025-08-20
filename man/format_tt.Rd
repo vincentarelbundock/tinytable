@@ -66,6 +66,7 @@ tt_format(
 \item Integer vectors indicating column positions.
 \item Character vector indicating column names.
 \item A single string specifying a Perl-style regular expression used to match column names.
+\item Unquoted expression: Non-standard evaluation is supported. When supplying an unquoted expression, it is first evaluated in the calling environment, then in the data frame passed to \code{tt()}.
 }}
 
 \item{digits}{Number of significant digits or decimal places.}
@@ -220,6 +221,16 @@ format_tt(y, digits = 3, num_mark_big = " ")
 
 x <- tt(data.frame(Text = c("_italicized text_", "__bold text__")))
 format_tt(x, markdown = TRUE)
+
+# Non-standard evaluation (NSE)
+dat <- data.frame(
+  w = c(143002.2092, 201399.181, 100188.3883),
+  x = c(1.43402, 201.399, 0.134588),
+  y = as.Date(c(897, 232, 198), origin = "1970-01-01"),
+  z = c(TRUE, TRUE, FALSE)
+)
+tt(dat) |>
+  format_tt(i = w > 150000, j = w, digits = 0, num_mark_big = ",")
 
 tab <- data.frame(a = c(NA, 1, 2), b = c(3, NA, 5))
 tt(tab) |> format_tt(replace = "-")

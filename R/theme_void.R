@@ -6,7 +6,7 @@
 theme_void <- function(x, ...) {
   # strip everything done up to this point
   strip <- names(formals(strip_tt))
-  strip <- setNames(c(list(x), rep(list(TRUE), length(strip) - 1)), strip)
+  strip <- stats::setNames(c(list(x), rep(list(TRUE), length(strip) - 1)), strip)
   x <- do.call(strip_tt, strip)
 
   fn <- function(table) {

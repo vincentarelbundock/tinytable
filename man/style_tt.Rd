@@ -56,11 +56,12 @@ tt_style(
 \arguments{
 \item{x}{A table object created by \code{tt()}.}
 
-\item{i}{Numeric vector, logical matrix, or string.
+\item{i}{Numeric vector, logical matrix, string, or unquoted expression.
 \itemize{
 \item Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.
 \item Logical matrix: A matrix with the same number of rows and columns as \code{x}. \code{i=0} is the header, and negative values are higher level headers. Row indices refer to rows \emph{after} the insertion of row labels by \code{group_tt()}, when applicable.
 \item String: Table components "caption", "colnames", "groupi" (row group labels), "~groupi" (non-group rows), "groupj" (column group labels), "notes".
+\item Unquoted expression: When supplying an unquoted expression, it is first evaluated in the calling environment, then in the data frame passed to \code{tt()}.
 }}
 
 \item{j}{Column indices where the styling should be applied. Can be:
@@ -68,6 +69,7 @@ tt_style(
 \item Integer vectors indicating column positions.
 \item Character vector indicating column names.
 \item A single string specifying a Perl-style regular expression used to match column names.
+\item Unquoted expression: Non-standard evaluation is supported. When supplying an unquoted expression, it is first evaluated in the calling environment, then in the data frame passed to \code{tt()}.
 }}
 
 \item{bold}{Logical; if \code{TRUE}, text is styled in bold.}
@@ -201,6 +203,17 @@ tt(mtcars[1:5, 1:6], theme = "striped") |>
     j = 3,
     strikeout = TRUE,
     fontsize = 0.7)
+
+# Non-standard evaluation (NSE)
+dat <- data.frame(
+  w = c(143002.2092, 201399.181, 100188.3883),
+  x = c(1.43402, 201.399, 0.134588),
+  y = as.Date(c(897, 232, 198), origin = "1970-01-01"),
+  z = c(TRUE, TRUE, FALSE)
+)
+tt(dat) |>
+  style_tt(i = w > 150000, j = c("w", "x"), 
+           color = "white", background = "black")
 
 tt(mtcars[1:5, 1:6]) |>
   theme_html(class = "table table-dark table-hover")

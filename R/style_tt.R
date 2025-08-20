@@ -165,14 +165,16 @@ merge_with_existing_styles <- function(x, settings) {
 #' This function applies styling to a table created by `tt()`. It allows customization of text style (bold, italic, monospace), text and background colors, font size, cell width, text alignment, column span, and indentation. The function also supports passing native instructions to LaTeX (tabularray) and HTML (bootstrap) formats.
 #'
 #' @param x A table object created by `tt()`.
-#' @param i Numeric vector, logical matrix, or string.
+#' @param i Numeric vector, logical matrix, string, or unquoted expression.
 #'   - Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.
 #'   - Logical matrix: A matrix with the same number of rows and columns as `x`. `i=0` is the header, and negative values are higher level headers. Row indices refer to rows *after* the insertion of row labels by `group_tt()`, when applicable.
 #'   - String: Table components "caption", "colnames", "groupi" (row group labels), "~groupi" (non-group rows), "groupj" (column group labels), "notes".
+#'   - Unquoted expression: When supplying an unquoted expression, it is first evaluated in the calling environment, then in the data frame passed to `tt()`.
 #' @param j Column indices where the styling should be applied. Can be:
 #' + Integer vectors indicating column positions.
 #' + Character vector indicating column names.
 #' + A single string specifying a Perl-style regular expression used to match column names.
+#' + Unquoted expression: Non-standard evaluation is supported. When supplying an unquoted expression, it is first evaluated in the calling environment, then in the data frame passed to `tt()`.
 #' @param bold Logical; if `TRUE`, text is styled in bold.
 #' @param italic Logical; if `TRUE`, text is styled in italic.
 #' @param monospace Logical; if `TRUE`, text is styled in monospace font.
@@ -258,6 +260,17 @@ merge_with_existing_styles <- function(x, settings) {
 #'     j = 3,
 #'     strikeout = TRUE,
 #'     fontsize = 0.7)
+#'
+#' # Non-standard evaluation (NSE)
+#' dat <- data.frame(
+#'   w = c(143002.2092, 201399.181, 100188.3883),
+#'   x = c(1.43402, 201.399, 0.134588),
+#'   y = as.Date(c(897, 232, 198), origin = "1970-01-01"),
+#'   z = c(TRUE, TRUE, FALSE)
+#' )
+#' tt(dat) |>
+#'   style_tt(i = w > 150000, j = c("w", "x"), 
+#'            color = "white", background = "black")
 #'
 #' tt(mtcars[1:5, 1:6]) |>
 #'   theme_html(class = "table table-dark table-hover")
