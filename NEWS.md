@@ -9,6 +9,7 @@ Breaking change:
 New:
 
 * A global option can be used to choose the temporary directory where HTML files are saved for preview: `options(tinytable_tempdir = "/home/username/tempdir")`
+* Non-standard evaluation is supported for `i` and `j` arguments in `style_tt()`, `format_tt()`, and `plot_tt()`.
 
 ## 0.13.0
 

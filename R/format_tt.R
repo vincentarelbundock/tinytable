@@ -123,6 +123,10 @@ format_tt <- function(
 
   out <- x
 
+  # non-standard evaluation before anything else
+  tmp <- nse_i_j(x, i_expr = substitute(i), j_expr = substitute(j), pf = parent.frame())
+  list2env(tmp, environment())
+
   if (inherits(out, "tinytable")) {
     cal <- call(
       "format_tt_lazy",

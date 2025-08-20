@@ -335,6 +335,10 @@ style_tt <- function(
     )
   }
 
+  # non-standard evaluation before anything else
+  tmp <- nse_i_j(x, i_expr = substitute(i), j_expr = substitute(j), pf = parent.frame())
+  list2env(tmp, environment())
+
   # this must be handled here rather than theme_html() because it is a cell-level issue
   bootstrap_css <- ...get("bootstrap_css")
 

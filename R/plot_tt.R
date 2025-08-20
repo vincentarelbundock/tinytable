@@ -39,6 +39,10 @@ plot_tt <- function(
     images = NULL,
     assets = "tinytable_assets",
     ...) {
+  # non-standard evaluation before anything else
+  tmp <- nse_i_j(x, i_expr = substitute(i), j_expr = substitute(j), pf = parent.frame())
+  list2env(tmp, environment())
+
   jval <- sanitize_j(j, x)
   assert_integerish(i, null.ok = TRUE)
   assert_numeric(height, len = 1, lower = 0)
