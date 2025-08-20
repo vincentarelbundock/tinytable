@@ -12,5 +12,5 @@ theme_void(x, ...)
 \item{...}{Additional arguments are ignored.}
 }
 \description{
-Theme for a void table
+This function calls \code{strip_tt()} to remove all the styles, groups, and formatting applied to a \code{tinytable} object. It returns a nearly blank table, with only the cell information. Warning: since this function strips the \code{tinytable} object, the order in which it is called in a pipeline matters.
 }

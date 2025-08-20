@@ -1,4 +1,6 @@
 #' Theme for a void table
+#'
+#' This function calls `strip_tt()` to remove all the styles, groups, and formatting applied to a `tinytable` object. It returns a nearly blank table, with only the cell information. Warning: since this function strips the `tinytable` object, the order in which it is called in a pipeline matters.
 #' @inheritParams theme_default
 #' @export
 theme_void <- function(x, ...) {
