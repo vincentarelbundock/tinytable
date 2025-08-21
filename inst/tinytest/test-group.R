@@ -255,3 +255,14 @@ tab <- tt(dat) |>
   group_tt(i = dat$Species) |>
   style_tt(i = "~groupi", j = 1, indent = 3)
 expect_snapshot_print(tab, "group-indent.md")
+
+# nse
+t <- mtcars |>
+  sort_by(~am) |>
+  tt() |>
+  group_tt(i = am)
+t <- expect_table(t)
+expect_snapshot_print(t[["markdown"]], "group-nse.md")
+expect_snapshot_print(t[["latex"]], "group-nse.tex")
+expect_snapshot_print(t[["html"]], "group-nse.html")
+expect_snapshot_print(t[["typst"]], "group-nse.typ")
