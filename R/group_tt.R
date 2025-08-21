@@ -183,6 +183,7 @@ process_delimiter_grouping <- function(x, j) {
 #' - Named list of column indices to group, ex: `j=list("A"=1:2,"B"=3:6)`. The names of the list will be used as labels. See below for more examples. Note: empty labels must be a space: " ".
 #' - A single string when column names include the group name as a prefix, ex: group1_column1, group1_column2, etc.
 #' - Character matrix for inserting rows at positions specified by `i`. The matrix must have the same number of columns as the table, or be a single column with a number of elements that is a multiple of the table's column count (which will be automatically reshaped). Each row of the matrix matches an element
+#' - Unquoted expression: Non-standard evaluation is supported. When supplying an unquoted expression, it is first evaluated in the calling environment, then in the data frame passed to `tt()`.
 #' @param ... Other arguments are ignored.
 #' @return An object of class `tt` representing the table.
 #' @template limitations_word_markdown

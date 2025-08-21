@@ -69,7 +69,7 @@ tt_style(
 \item Integer vectors indicating column positions.
 \item Character vector indicating column names.
 \item A single string specifying a Perl-style regular expression used to match column names.
-\item Unquoted expression: Non-standard evaluation is supported. When supplying an unquoted expression, it is first evaluated in the calling environment, then in the data frame passed to \code{tt()}.
+\item Unquoted expression: Non-standard evaluation is supported. When supplying an unquoted expression, it is first evaluated in the calling environment, then in the data frame passed to \code{tt()}. See examples below.
 }}
 
 \item{bold}{Logical; if \code{TRUE}, text is styled in bold.}
@@ -240,4 +240,10 @@ dat |>
   style_tt(i = "groupi", background = "lightblue") |>
   style_tt(i = "~groupi", background = "lightgray")
 
+# unquote expressions
+mtcars[1:10,] |>
+   sort_by(~am) |>
+   tt() |>
+   subset(mpg > 20) |>
+   group_tt(am)
 }

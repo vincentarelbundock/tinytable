@@ -174,7 +174,7 @@ merge_with_existing_styles <- function(x, settings) {
 #' + Integer vectors indicating column positions.
 #' + Character vector indicating column names.
 #' + A single string specifying a Perl-style regular expression used to match column names.
-#' + Unquoted expression: Non-standard evaluation is supported. When supplying an unquoted expression, it is first evaluated in the calling environment, then in the data frame passed to `tt()`.
+#' + Unquoted expression: Non-standard evaluation is supported. When supplying an unquoted expression, it is first evaluated in the calling environment, then in the data frame passed to `tt()`. See examples below.
 #' @param bold Logical; if `TRUE`, text is styled in bold.
 #' @param italic Logical; if `TRUE`, text is styled in italic.
 #' @param monospace Logical; if `TRUE`, text is styled in monospace font.
@@ -297,6 +297,12 @@ merge_with_existing_styles <- function(x, settings) {
 #'   style_tt(i = "groupi", background = "lightblue") |>
 #'   style_tt(i = "~groupi", background = "lightgray")
 #'
+#' # unquote expressions
+#' mtcars[1:10,] |>
+#'    sort_by(~am) |>
+#'    tt() |>
+#'    subset(mpg > 20) |>
+#'    group_tt(am)
 style_tt <- function(
   x,
   i = NULL,
