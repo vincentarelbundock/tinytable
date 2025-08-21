@@ -298,9 +298,9 @@ merge_with_existing_styles <- function(x, settings) {
 #'   style_tt(i = "~groupi", background = "lightgray")
 #'
 #' # unquote expressions
-#' mtcars[1:10,] |>
-#'    sort_by(~am) |>
-#'    tt() |>
+#' dat <- mtcars[1:10,]
+#' dat <- dat[order(dat$am),]
+#' tt(dat) |>
 #'    subset(mpg > 20) |>
 #'    group_tt(am)
 style_tt <- function(
