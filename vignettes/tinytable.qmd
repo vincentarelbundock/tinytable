@@ -272,8 +272,33 @@ Bind tables by position rather than column names:
 rbind2(a, b, use_names = FALSE)
 ```
 
+## Select columns
 
-## Renaming columns
+The `subset()` function from base `R` can be used to select columns from a `tinytable`. This is especially useful when applying conditional styling based on column values, and then removing them. For example, if we have a table with 6 rows and three `Species`:
+
+```{r}
+dat <- do.call(rbind, by(iris, ~Species, head, n = 2))
+dat
+```
+
+We highlight the `versicolor` rows in pink and remove the `Species` column:
+
+```{r}
+tt(dat) |>
+  style_tt(Species == "versicolor", background = "pink") |>
+  subset(select = -Species)
+```
+
+Or 
+
+```{r}
+tt(dat) |>
+  style_tt(Species == "versicolor", background = "pink") |>
+  subset(select = c(Sepal.Length, Sepal.Width))
+```
+
+
+## Rename columns
 
 As noted above, `tinytable` tries to be standards-compliant, by defining methods for many base `R` functions. The benefit of this approach is that instead of having to learn a `tinytable`-specific syntax, users can rename columns using all the tools they already know:
 
