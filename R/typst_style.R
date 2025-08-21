@@ -181,6 +181,11 @@ typst_add_line_data <- function(lin, sty, row, rec, idx) {
     return(lin)
   }
 
+  # Check if idx matches any cells
+  if (!any(idx)) {
+    return(lin)
+  }
+
   line_color <- standardize_colors(
     sty[row, "line_color"],
     format = "typst"

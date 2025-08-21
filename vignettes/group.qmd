@@ -44,6 +44,17 @@ tt(head(iris)) |>
   group_tt(i = list("After 0" = 1, "After 3a" = 4, "After 3b" = 4, "After 5" = 6))
 ```
 
+It is also possible to use unquoted expressions (non-standard evaluation) to specify row groups. For example,
+
+```{r}
+tmp <- do.call(rbind, by(iris, ~Species, head, n = 2))
+tt(tmp) |>
+  group_tt(i = Species) |>
+  subset(select = -Species) |>
+  style_tt(align = "c") |>
+  style_tt(i = "groupi", align = "c", color = "teal", line = "b")
+```
+
 ### Styling row groups
 
 

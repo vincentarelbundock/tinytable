@@ -14,9 +14,11 @@ group_tt_ij_k <- function(x, i, j) {
       stop("All list entries must have names for group labels.", call. = FALSE)
     }
 
-    # Create matrix with labels in first column, empty in others
+    # Create matrix with labels repeated in all columns
     matrix_data <- matrix("", nrow = length(labels), ncol = ncol(x))
-    matrix_data[, 1] <- labels
+    for (k in seq_len(ncol(x))) {
+      matrix_data[, k] <- labels
+    }
 
     # Convert to matrix insertion format
     i <- positions

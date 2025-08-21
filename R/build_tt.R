@@ -98,9 +98,11 @@ build_tt <- function(x, output = NULL) {
   x <- style_notes(x)
   x <- style_caption(x)
 
+  # apply lazy subset operations before inserting group rows
+  x <- subset_lazy(x)
+
   # insert group rows into body
   x <- rbind_body_groupi(x)
-
 
   # plots and images
   for (l in x@lazy_plot) {

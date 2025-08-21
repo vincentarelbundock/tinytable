@@ -40,6 +40,7 @@ setClass(
     lazy_format = "list",
     lazy_plot = "list",
     lazy_prepare = "list",
+    lazy_subset = "ANY",
     names = "NULLorCharacter",
     ncol = "numeric",
     nhead = "numeric",
@@ -127,6 +128,11 @@ setMethod(
     .Object@tabulator_columns <- list()
     .Object@tabularray_inner <- character()
     .Object@tabularray_outer <- character()
+    .Object@lazy_finalize <- list()
+    .Object@lazy_format <- list()
+    .Object@lazy_plot <- list()
+    .Object@lazy_prepare <- list()
+    .Object@lazy_subset <- NULL
 
     return(.Object)
   })
