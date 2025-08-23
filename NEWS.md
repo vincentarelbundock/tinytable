@@ -12,6 +12,10 @@ New:
 * Non-standard evaluation is supported for `i` and `j` arguments in `style_tt()`, `format_tt()`, and `plot_tt()`.
 * `subset(x, select = c(x, y))` can now be used to select columns.
 
+Bugs:
+
+* `tabulator` output works with hyphens in columns names
+
 ## 0.13.0
 
 * New aliases to facilitate completion in IDEs: `tt_style()`, `tt_format()`, `tt_plot()`, `tt_group()`, `tt_save()`. Thanks to @rpruim for the suggestion in Issue #540.

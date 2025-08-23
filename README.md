@@ -1,7 +1,6 @@
 
 
 <p align="center">
-
 <img src="man/figures/gallery/tinytable_gallery.gif" height = "250" class = "center">
 <br> <!-- badges: start -->
 <a href = "https://github.com/vincentarelbundock/tinytable/blob/main/LICENSE.md" target = "_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a>
@@ -135,7 +134,7 @@ tt(x,
 
 ## Tutorial
 
-The `tinytable` 0.13.0.3 tutorial will take you much further. It is
+The `tinytable` 0.13.0.4 tutorial will take you much further. It is
 available in two formats:
 
 - [Tutorial

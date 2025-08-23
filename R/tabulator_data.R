@@ -4,7 +4,7 @@
 #' @keywords internal
 #' @noRd
 tabulator_clean_column_name <- function(name) {
-    gsub("[\\. ]", "_", name)
+    gsub("[\\. -]", "_", name)
 }
 
 
