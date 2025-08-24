@@ -15,6 +15,7 @@ New:
 Bugs:
 
 * `tabulator` output works with hyphens in columns names
+* Selective formatting with `format_tt(i = "colnames")` is no longer applied twice. Issue #551.
 
 ## 0.13.0
 
