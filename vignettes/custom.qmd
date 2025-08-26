@@ -372,7 +372,8 @@ Alternatively, we can create an S3 method for the `lm` class, and then pass any 
 tt.lm <- function(x, ...) {
   results <- broom::tidy(x)
   out <- tt(results, ...)
-  out <- format_tt(out, j = "p.value", fn = \(p) format.pval(p, digits = 1))
+  out <- format_tt(out, j = "p.value", escape = TRUE,
+    fn = \(p) format.pval(p, digits = 1))
   return(out)
 }
 
