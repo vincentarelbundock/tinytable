@@ -30,12 +30,24 @@ prepare_grid_style <- function(x) {
 
   for (idx in seq_along(styrows)) {
     sr <- styrows[[idx]]
+    
+    # Check if table has column names (header row exists)
+    has_header <- length(colnames(x)) > 0 && any(nzchar(colnames(x)))
+    
     if (is.na(sr$i) && is.na(sr$j)) {
-      cells <- expand.grid(i = seq_len(nrow(x)), j = seq_len(ncol(x)))
+      if (has_header) {
+        cells <- expand.grid(i = c(0, seq_len(nrow(x))), j = seq_len(ncol(x)))
+      } else {
+        cells <- expand.grid(i = seq_len(nrow(x)), j = seq_len(ncol(x)))
+      }
     } else if (is.na(sr$j)) {
       cells <- expand.grid(i = sr$i, j = seq_len(ncol(x)))
     } else if (is.na(sr$i)) {
-      cells <- expand.grid(i = seq_len(nrow(x)), j = sr$j)
+      if (has_header) {
+        cells <- expand.grid(i = c(0, seq_len(nrow(x))), j = sr$j)
+      } else {
+        cells <- expand.grid(i = seq_len(nrow(x)), j = sr$j)
+      }
     } else {
       cells <- sr[, c("i", "j")]
     }

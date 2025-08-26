@@ -22,6 +22,29 @@ options(tinytable_print_output = "dataframe")
 expect_snapshot_print(tab, label = "ansi-styles_01.txt")
 
 
+# bugfix i = NULL applies to colnames
+options(tinytable_print_output = "markdown")
+tab <- tt(head(iris)) |>
+  style_tt(color = "orange") |>
+  theme_markdown(ansi = TRUE)
+expect_snapshot_print(tab, label = "ansi-style_colnames_01.md")
+tab <- tt(head(iris)) |>
+  style_tt(i = 0:3, j = 1:2, color = "orange") |>
+  theme_markdown(ansi = TRUE)
+expect_snapshot_print(tab, label = "ansi-style_colnames_02.md")
+
+# groupj
+tab <- tt(head(iris)) |>
+  group_tt(j = list("Group1" = 1:2, "Group2" = 3:5)) |>
+  style_tt(i = -1, color = "orange") |>
+  theme_markdown(ansi = TRUE)
+expect_snapshot_print(tab, label = "ansi-style_groupj_01.md")
+tab <- tt(head(iris)) |>
+  group_tt(j = list("Group1" = 1:2, "Group2" = 3:5)) |>
+  style_tt(i = "groupj", color = "orange") |>
+  theme_markdown(ansi = TRUE)
+expect_snapshot_print(tab, label = "ansi-style_groupj_01.md")
+
 
 exit_file("broken")
 data <- data.frame(
