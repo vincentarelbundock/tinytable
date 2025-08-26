@@ -65,7 +65,13 @@
 #' tt(k, digits = 2)
 #'
 #' @export
-tt <- function(
+# Generic function
+tt <- function(x, ...) {
+  UseMethod("tt")
+}
+
+# Default method (for data.frame, data.table, tbl_df, and other data frame-like objects)
+tt.default <- function(
     x,
     digits = get_option("tinytable_tt_digits", default = NULL),
     caption = get_option("tinytable_tt_caption", default = NULL),
@@ -216,4 +222,19 @@ tt <- function(
   }
 
   return(out)
+}
+
+#' @export
+tt.data.frame <- function(x, ...) {
+  tt.default(x, ...)
+}
+
+#' @export  
+tt.data.table <- function(x, ...) {
+  tt.default(x, ...)
+}
+
+#' @export
+tt.tbl_df <- function(x, ...) {
+  tt.default(x, ...)
 }

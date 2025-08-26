@@ -8,6 +8,7 @@ Breaking change:
 
 New:
 
+* `tt()` is now a generic function, allowing special table-drawing methods for specific classes of objects. `tinytable` provides methods for `data.frame`, `data.table`, and `tbl_df`. See the "Custom" vignette for examples.
 * `theme_markdown()` enables support for `style_tt()` colors, backgrounds, and text styles in Markdown output, via the `ansi` argument. The same function can suppress horizontal and vertical lines.
 * A global option can be used to choose the temporary directory where HTML files are saved for preview: `options(tinytable_tempdir = "/home/username/tempdir")`
 * Non-standard evaluation is supported for `i` and `j` arguments in `style_tt()`, `format_tt()`, and `plot_tt()`.

@@ -532,8 +532,16 @@ window.Quarto = {
 </ul>
 <p>New:</p>
 <ul>
+<li><code>tt()</code> is now a generic function, allowing special table-drawing methods for specific classes of objects. <code>tinytable</code> provides methods for <code>data.frame</code>, <code>data.table</code>, and <code>tbl_df</code>. See the “Custom” vignette for examples.</li>
+<li><code>theme_markdown()</code> enables support for <code>style_tt()</code> colors, backgrounds, and text styles in Markdown output, via the <code>ansi</code> argument. The same function can suppress horizontal and vertical lines.</li>
 <li>A global option can be used to choose the temporary directory where HTML files are saved for preview: <code>options(tinytable_tempdir = "/home/username/tempdir")</code></li>
 <li>Non-standard evaluation is supported for <code>i</code> and <code>j</code> arguments in <code>style_tt()</code>, <code>format_tt()</code>, and <code>plot_tt()</code>.</li>
+<li><code>subset(x, select = c(x, y))</code> can now be used to select columns.</li>
+</ul>
+<p>Bugs:</p>
+<ul>
+<li><code>tabulator</code> output works with hyphens in columns names</li>
+<li>Selective formatting with <code>format_tt(i = "colnames")</code> is no longer applied twice. Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/551">#551</a>.</li>
 </ul>
 </section>
 <section id="section" class="level2">
