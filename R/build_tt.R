@@ -113,15 +113,6 @@ build_tt <- function(x, output = NULL) {
   # add footnote markers just after formatting, otherwise appending converts to string
   x <- footnote_markers(x)
 
-  # data frame we trim strings, pre-padded for markdown
-  if (x@output == "dataframe") {
-    tmp <- x@data_body
-    for (i in seq_along(tmp)) {
-      tmp[[i]] <- trimws(tmp[[i]])
-    }
-    x@data_body <- tmp
-  }
-
   # draw the table
   x <- build_eval(x)
 
@@ -174,4 +165,3 @@ build_finalize <- function(x, fn, output = NULL) {
   x@lazy_finalize <- c(x@lazy_finalize, list(fn))
   return(x)
 }
-

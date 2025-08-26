@@ -1,7 +1,7 @@
 source("helpers.R")
 using("tinysnapshot")
-options(tinytable_print_output = "markdown")
 
+options(tinytable_print_output = "markdown")
 data <- data.frame(
   Name = c("Alice", "Bob", "Charlie"),
   Age = c(25, 30, 35),
@@ -16,8 +16,11 @@ tab <- tt(data, caption = "Three friends.") |>
   style_tt(i = "caption", bold = TRUE, color = "red") |>
   style_tt(i = "notes", bold = TRUE, color = "red") |>
   theme_markdown(ansi = TRUE, hline = FALSE)
-
 expect_snapshot_print(tab, label = "ansi-styles_01.md")
+
+options(tinytable_print_output = "dataframe")
+expect_snapshot_print(tab, label = "ansi-styles_01.txt")
+
 
 
 exit_file("broken")

@@ -6,11 +6,10 @@
 #' @keywords internal
 #' @noRd
 grid_create_line <- function(
-  width_cols,
-  char = "-",
-  corner_char = "+",
-  x = NULL
-) {
+    width_cols,
+    char = "-",
+    corner_char = "+",
+    x = NULL) {
   # Always use "+" for corner characters
   corner_char <- "+"
 
@@ -441,6 +440,10 @@ build_eval_grid <- function(x, width_cols = NULL, ...) {
   # Apply background styling to padded cells (for grid formats only)
   if (!is_matrix && inherits(x, "tinytable") && nrow(x@style) > 0) {
     tab <- style_grid_body_background(tab, x, header)
+  }
+
+  if (inherits(x, "tinytable")) {
+    x@data_body <- stats::setNames(as.data.frame(tab), names(x@data_body))
   }
 
   # Format rows with proper separators

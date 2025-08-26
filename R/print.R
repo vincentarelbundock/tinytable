@@ -97,8 +97,6 @@ print.tinytable <- function(
 
   if (output %in% c("html", "tabulator", "bootstrap")) {
     x@output_dir <- dir
-  } else if (output == "dataframe") {
-    output <- "markdown"
   }
 
   x <- build_tt(x, output = output)
@@ -106,7 +104,18 @@ print.tinytable <- function(
   tab <- x@table_string
 
   # lazy styles get evaluated here by build_tt(), at the very end
-  if (output %in% c("latex", "typst", "markdown", "gfm")) {
+  if (identical(output, "dataframe")) {
+    out <- x@data_body
+    colnames(out) <- NULL
+    if (x@ansi) {
+      rows <- apply(out, 1, paste, collapse = " ")
+      tabl <- paste(rows, collapse = "\n")
+      cat("\n", tabl, "\n")
+      return(invisible(out))
+    } else {
+      return(out)
+    }
+  } else if (output %in% c("latex", "typst", "markdown", "gfm")) {
     cat(tab, "\n")
   } else if (output %in% c("html", "tabulator", "bootstrap")) {
     if (is_rstudio_notebook()) {

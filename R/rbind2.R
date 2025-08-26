@@ -54,8 +54,8 @@ setMethod(
     assert_flag(use_names)
     assert_flag(headers)
 
-    x_df <- save_tt(x, output = "dataframe")
-    y_df <- save_tt(y, output = "dataframe")
+    x_df <- x@data_body
+    y_df <- y@data_body
 
     if (isTRUE(headers) && !is.null(colnames(y))) {
       y_df <- base::rbind(colnames(y_df), y_df)

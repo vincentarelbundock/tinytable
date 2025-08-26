@@ -4,8 +4,8 @@ if (isTRUE(requiet("marginaleffects"))) {
   mod <- lm(mpg ~ hp * qsec, mtcars)
   s <- avg_slopes(mod)
   k <- tt(s) |> save_tt("dataframe")
-  expect_equal(nrow(k), 2)
-  expect_true(all(c("term", "estimate", "std.error") %in% colnames(k)))
+  expect_equal(nrow(k), 3)
+  expect_true(all(c("term", "estimate", "std.error") %in% k[1, ]))
 }
 
 # Issue #264: Row names global option

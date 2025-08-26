@@ -71,6 +71,8 @@ save_tt <- function(
     return(as.character(out))
   } else if (identical(output, "dataframe")) {
     out <- build_tt(x, output = "dataframe")@data_body
+    out <- as.data.frame(lapply(out, trimws))
+    colnames(out) <- NULL
     return(out)
   }
 
