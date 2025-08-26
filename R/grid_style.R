@@ -74,6 +74,114 @@ style_grid_cell <- function(s, x, italic = FALSE, bold = FALSE, strikeout = FALS
 }
 
 
+style_notes_grid <- function(x) {
+  for (i in seq_along(x@notes)) {
+    if (length(x@notes[[i]]) == 3 && "text" %in% names(x@notes[[i]])) {
+      x@notes[[i]][["text"]] <- style_grid_cell(
+        x@notes[[i]][["text"]], x,
+        bold = isTRUE(x@style_notes[["bold"]]),
+        italic = isTRUE(x@style_notes[["italic"]]),
+        strikeout = isTRUE(x@style_notes[["strikeout"]]),
+        underline = isTRUE(x@style_notes[["underline"]]),
+        color = if (!is.null(x@style_notes[["color"]])) x@style_notes[["color"]] else NULL
+      )
+    } else {
+      x@notes[[i]] <- style_grid_cell(
+        x@notes[[i]], x,
+        bold = isTRUE(x@style_notes[["bold"]]),
+        italic = isTRUE(x@style_notes[["italic"]]),
+        strikeout = isTRUE(x@style_notes[["strikeout"]]),
+        underline = isTRUE(x@style_notes[["underline"]]),
+        color = if (!is.null(x@style_notes[["color"]])) x@style_notes[["color"]] else NULL
+      )
+    }
+  }
+  return(x)
+}
+
+style_caption_grid <- function(x) {
+  if (length(x@caption) > 0) {
+    x@caption <- style_grid_cell(
+      x@caption, x,
+      bold = isTRUE(x@style_caption[["bold"]]),
+      italic = isTRUE(x@style_caption[["italic"]]),
+      strikeout = isTRUE(x@style_caption[["strikeout"]]),
+      underline = isTRUE(x@style_caption[["underline"]]),
+      color = if (!is.null(x@style_caption[["color"]])) x@style_caption[["color"]] else NULL
+    )
+  }
+  return(x)
+}
+
+apply_grid_group_styling <- function(x) {
+  # Apply styling to row groups (group_data_i)
+  if (nrow(x@group_data_i) > 0) {
+    sty <- x@style
+    
+    # Find styling that applies to row groups (i = "groupi")
+    group_styles <- sty[sty$i == "groupi" & is.na(sty$j), ]
+    
+    if (nrow(group_styles) > 0) {
+      # Apply styling to all row group labels
+      for (row_idx in seq_len(nrow(x@group_data_i))) {
+        for (col_idx in seq_len(ncol(x@group_data_i))) {
+          current_value <- x@group_data_i[row_idx, col_idx]
+          if (!is.na(current_value) && !identical(trimws(current_value), "")) {
+            # Apply the last (most recent) styling for each property
+            for (style_idx in seq_len(nrow(group_styles))) {
+              x@group_data_i[row_idx, col_idx] <- style_grid_cell(
+                current_value, x,
+                bold = if (!is.na(group_styles[style_idx, "bold"])) group_styles[style_idx, "bold"] else FALSE,
+                italic = if (!is.na(group_styles[style_idx, "italic"])) group_styles[style_idx, "italic"] else FALSE,
+                strikeout = if (!is.na(group_styles[style_idx, "strikeout"])) group_styles[style_idx, "strikeout"] else FALSE,
+                underline = if (!is.na(group_styles[style_idx, "underline"])) group_styles[style_idx, "underline"] else FALSE,
+                color = if (!is.na(group_styles[style_idx, "color"])) group_styles[style_idx, "color"] else NULL,
+                background = if (!is.na(group_styles[style_idx, "background"])) group_styles[style_idx, "background"] else NULL
+              )
+              current_value <- x@group_data_i[row_idx, col_idx]
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  # Apply styling to column groups (group_data_j) - this is already handled in apply_grid_text_styling
+  # but we can add explicit handling here if needed
+  if (nrow(x@group_data_j) > 0) {
+    sty <- x@style
+    
+    # Find styling that applies to column groups (i = "groupj")  
+    group_styles <- sty[sty$i == "groupj" & is.na(sty$j), ]
+    
+    if (nrow(group_styles) > 0) {
+      # Apply styling to all column group labels
+      for (row_idx in seq_len(nrow(x@group_data_j))) {
+        for (col_idx in seq_len(ncol(x@group_data_j))) {
+          current_value <- x@group_data_j[row_idx, col_idx]
+          if (!is.na(current_value) && !identical(trimws(current_value), "")) {
+            # Apply the last (most recent) styling for each property
+            for (style_idx in seq_len(nrow(group_styles))) {
+              x@group_data_j[row_idx, col_idx] <- style_grid_cell(
+                current_value, x,
+                bold = if (!is.na(group_styles[style_idx, "bold"])) group_styles[style_idx, "bold"] else FALSE,
+                italic = if (!is.na(group_styles[style_idx, "italic"])) group_styles[style_idx, "italic"] else FALSE,
+                strikeout = if (!is.na(group_styles[style_idx, "strikeout"])) group_styles[style_idx, "strikeout"] else FALSE,
+                underline = if (!is.na(group_styles[style_idx, "underline"])) group_styles[style_idx, "underline"] else FALSE,
+                color = if (!is.na(group_styles[style_idx, "color"])) group_styles[style_idx, "color"] else NULL,
+                background = if (!is.na(group_styles[style_idx, "background"])) group_styles[style_idx, "background"] else NULL
+              )
+              current_value <- x@group_data_j[row_idx, col_idx]
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  return(x)
+}
+
 style_eval_grid <- function(x) {
   # For grid formats, styling is handled inside build_eval_grid
   # This allows proper ordering of text styles before padding and background after padding
@@ -161,7 +269,7 @@ grid_colspan <- function(x) {
         ) {
           total_width <- sum(x@width_cols[col_idx:(col_idx + colspan - 1)]) +
             (colspan - 1)
-          current_width <- nchar(spanned_content)
+          current_width <- ansi_aware_nchar(spanned_content)
           if (current_width < total_width) {
             padding <- total_width - current_width
             spanned_content <- paste0(spanned_content, strrep(" ", padding))

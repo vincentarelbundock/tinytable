@@ -26,6 +26,17 @@ calculate_text_width <- function(text) {
   }
 }
 
+#' ANSI-aware version of nchar for multiple strings
+#' @keywords internal
+#' @noRd
+ansi_aware_nchar <- function(text) {
+  if (is.character(text) && length(text) > 1) {
+    sapply(text, calculate_text_width)
+  } else {
+    calculate_text_width(text)
+  }
+}
+
 # =============================================================================
 # DATA EXTRACTION FUNCTIONS
 # =============================================================================
@@ -176,7 +187,7 @@ adjust_group_widths <- function(x, width_cols) {
       # Adjust widths for each span
       for (span in spans) {
         group_cols <- span$start:span$end
-        g_len <- nchar(span$label) + 2
+        g_len <- ansi_aware_nchar(span$label) + 2
         c_len <- sum(width_cols[group_cols])
 
         if (g_len > c_len) {
@@ -193,8 +204,8 @@ adjust_group_widths <- function(x, width_cols) {
     if (ncol(x@group_data_i) >= 1) {
       labels <- x@group_data_i[, 1]
       for (label in labels) {
-        if (!is.na(label) && nchar(label) > 0) {
-          g_len <- nchar(label) + 2
+        if (!is.na(label) && ansi_aware_nchar(label) > 0) {
+          g_len <- ansi_aware_nchar(label) + 2
           # Total table width including separators
           c_len <- sum(width_cols) + length(width_cols) - 1
           if (g_len > c_len) {
@@ -409,7 +420,7 @@ pad_table_cells <- function(tab, width_cols) {
 #' @noRd
 is_spanning_group_row <- function(row_idx, row_data, group_rows) {
   is_group_row <- row_idx %in% group_rows
-  has_content <- nchar(trimws(row_data[1])) > 0
+  has_content <- ansi_aware_nchar(trimws(row_data[1])) > 0
   others_empty <- all(trimws(row_data[-1]) == "")
   return(is_group_row && has_content && others_empty)
 }
@@ -445,7 +456,7 @@ format_table_rows <- function(tab, x, header, width_cols) {
     if (is_spanning_group_row(row_idx, row_data, group_rows)) {
       # This is a colspan row - create a single spanning cell
       total_width <- sum(width_cols) + length(width_cols) - 1
-      content_width <- nchar(row_data[1])
+      content_width <- ansi_aware_nchar(row_data[1])
       padding_needed <- total_width - content_width
       body[row_idx] <- paste0(
         left_border,
@@ -558,6 +569,7 @@ build_eval_grid <- function(x, width_cols = NULL, ...) {
   # Apply text styling before padding (for non-matrix formats)
   if (!is_matrix && inherits(x, "tinytable") && nrow(x@style) > 0) {
     x <- apply_grid_text_styling(x)
+    x <- apply_grid_group_styling(x)
     tab <- x@data_body
   }
 

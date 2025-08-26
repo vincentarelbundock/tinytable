@@ -75,9 +75,9 @@ group_grid_col <- function(x, j, ...) {
       z <- c(z[1], header_lines_to_insert, z[2:length(z)])
 
       # missing cell at the end
-      nc <- nchar(z)
-      idx <- nchar(z) < max(nc)
-      z[idx] <- paste0(z[idx], strrep(" ", max(nc) - nchar(z[idx]) - 1), "|")
+      nc <- ansi_aware_nchar(z)
+      idx <- ansi_aware_nchar(z) < max(nc)
+      z[idx] <- paste0(z[idx], strrep(" ", max(nc) - ansi_aware_nchar(z[idx]) - 1), "|")
 
       tab <- paste(z, collapse = "\n")
       x@table_string <- tab

@@ -10,6 +10,7 @@ apply_notes_caption_styling <- function(
   i,
   color = NULL,
   fontsize = NULL,
+  bold = FALSE,
   italic = FALSE,
   monospace = FALSE,
   strikeout = FALSE,
@@ -18,6 +19,7 @@ apply_notes_caption_styling <- function(
   style_params <- list(
     color = color,
     fontsize = fontsize,
+    bold = bold,
     italic = italic,
     monospace = monospace,
     strikeout = strikeout,
@@ -368,6 +370,7 @@ style_tt <- function(
       i,
       color,
       fontsize,
+      bold,
       italic,
       monospace,
       strikeout,
