@@ -4,7 +4,7 @@ grid_notes_caption <- function(x) {
   # notes
   for (i in seq_along(x@notes)) {
     lines <- strsplit(out, split = "\\n")[[1]]
-    target <- max(ansi_aware_nchar(lines)) - 4
+    target <- max(ansi_nchar(lines)) - 4
     no <- x@notes[[i]]
     if (is.list(no)) {
       txt <- no$text
@@ -42,7 +42,7 @@ grid_notes_caption <- function(x) {
       # Append at the end with proper borders
       # Create a border line based on the table width
       if (length(lines) > 0) {
-        table_width <- max(ansi_aware_nchar(lines))
+        table_width <- max(ansi_nchar(lines))
         border_line <- paste0("+", strrep("=", table_width - 2), "+")
       } else {
         border_line <- "+===+"
@@ -54,7 +54,7 @@ grid_notes_caption <- function(x) {
 
   # caption
   cap <- x@caption
-  if (is.character(cap) && length(cap) == 1 && ansi_aware_nchar(cap) > 0) {
+  if (is.character(cap) && length(cap) == 1 && ansi_nchar(cap) > 0) {
     out <- paste0(out, "\n", "Table: ", cap, "\n")
   }
 

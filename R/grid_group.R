@@ -72,7 +72,7 @@ group_grid_col <- function(x, j, ...) {
 
       # Determine insertion position based on grid_hline setting
       header_lines_to_insert <- unlist(all_header_lines)
-      
+
       if (isTRUE(x@grid_hline)) {
         # With hlines: insert after the first line (top border)
         z <- c(z[1], header_lines_to_insert, z[2:length(z)])
@@ -82,9 +82,13 @@ group_grid_col <- function(x, j, ...) {
       }
 
       # missing cell at the end
-      nc <- ansi_aware_nchar(z)
-      idx <- ansi_aware_nchar(z) < max(nc)
-      z[idx] <- paste0(z[idx], strrep(" ", max(nc) - ansi_aware_nchar(z[idx]) - 1), "|")
+      nc <- ansi_nchar(z)
+      idx <- ansi_nchar(z) < max(nc)
+      z[idx] <- paste0(
+        z[idx],
+        strrep(" ", max(nc) - ansi_nchar(z[idx]) - 1),
+        "|"
+      )
 
       tab <- paste(z, collapse = "\n")
       x@table_string <- tab
@@ -105,7 +109,8 @@ setMethod(
     # Only handle column grouping - row insertions now use matrix insertion
     x <- group_grid_col(x, j)
     return(x)
-  })
+  }
+)
 
 #' tinytable S4 method
 #'
@@ -117,4 +122,5 @@ setMethod(
     # Only handle column grouping - row insertions now use matrix insertion
     x <- group_grid_col(x, j)
     return(x)
-  })
+  }
+)

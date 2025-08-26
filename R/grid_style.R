@@ -83,7 +83,6 @@ style_grid_cell <- function(
 }
 
 
-
 style_grid_group <- function(x) {
   # Determine the styling function to use based on output type and ANSI setting
   style_string_grid <- if (isTRUE(x@ansi)) {
@@ -91,7 +90,7 @@ style_grid_group <- function(x) {
   } else {
     style_string_markdown
   }
-  
+
   # Apply styling to row groups (group_data_i)
   if (nrow(x@group_data_i) > 0) {
     sty <- x@style
@@ -133,13 +132,18 @@ style_grid_group <- function(x) {
                 } else {
                   NULL
                 },
-                background = if (!is.na(group_styles[style_idx, "background"])) {
+                background = if (
+                  !is.na(group_styles[style_idx, "background"])
+                ) {
                   group_styles[style_idx, "background"]
                 } else {
                   NULL
                 }
               )
-              x@group_data_i[row_idx, col_idx] <- style_string_grid(current_value, styles)
+              x@group_data_i[row_idx, col_idx] <- style_string_grid(
+                current_value,
+                styles
+              )
               current_value <- x@group_data_i[row_idx, col_idx]
             }
           }
@@ -190,13 +194,18 @@ style_grid_group <- function(x) {
                 } else {
                   NULL
                 },
-                background = if (!is.na(group_styles[style_idx, "background"])) {
+                background = if (
+                  !is.na(group_styles[style_idx, "background"])
+                ) {
                   group_styles[style_idx, "background"]
                 } else {
                   NULL
                 }
               )
-              x@group_data_j[row_idx, col_idx] <- style_string_grid(current_value, styles)
+              x@group_data_j[row_idx, col_idx] <- style_string_grid(
+                current_value,
+                styles
+              )
               current_value <- x@group_data_j[row_idx, col_idx]
             }
           }
@@ -294,7 +303,7 @@ grid_colspan <- function(x) {
         ) {
           total_width <- sum(x@width_cols[col_idx:(col_idx + colspan - 1)]) +
             (colspan - 1)
-          current_width <- ansi_aware_nchar(spanned_content)
+          current_width <- ansi_nchar(spanned_content)
           if (current_width < total_width) {
             padding <- total_width - current_width
             spanned_content <- paste0(spanned_content, strrep(" ", padding))
