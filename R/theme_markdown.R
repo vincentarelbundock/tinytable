@@ -8,11 +8,11 @@
 #' @param ... Additional arguments (ignored).
 #' @return A modified `tinytable` object.
 #' @details
-#' When `ansi = TRUE`, colors and text styling (bold, italic, strikeout, underline) 
-#' are applied using ANSI escape sequences for terminal display. ANSI colors require 
-#' a terminal or application that supports ANSI escape sequences. Common supported 
-#' terminals include: Terminal.app (macOS), iTerm2 (macOS), Windows Terminal, most 
-#' Linux terminals, RStudio Console, and VS Code terminal. Colors may not display 
+#' When `ansi = TRUE`, colors and text styling (bold, italic, strikeout, underline)
+#' are applied using ANSI escape sequences for terminal display. ANSI colors require
+#' a terminal or application that supports ANSI escape sequences. Common supported
+#' terminals include: Terminal.app (macOS), iTerm2 (macOS), Windows Terminal, most
+#' Linux terminals, RStudio Console, and VS Code terminal. Colors may not display
 #' correctly in basic text editors or older terminals.
 #' @export
 theme_markdown <- function(x,
@@ -28,7 +28,10 @@ theme_markdown <- function(x,
   assert_flag(vline)
 
   # Set the ansi slot based on the argument
-  x@ansi <- ansi
+  if (isTRUE(ansi)) {
+    assert_dependency("fansi")
+    x@ansi <- ansi
+  }
 
   # Set the grid formatting slots
   x@grid_hline <- hline
@@ -37,4 +40,3 @@ theme_markdown <- function(x,
 
   return(x)
 }
-

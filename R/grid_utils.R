@@ -31,14 +31,10 @@ ansi_format <- function(txt, width) {
 ansi_nchar <- function(text) {
     # Helper function to calculate width of a single text element
     if (isTRUE(check_dependency("fansi"))) {
-        fun <- function(x) nchar(as.character(fansi::strip_ctl(x)))
+        out <- fansi::nchar_ctl(text)
     } else {
-        fun <- function(x) nchar(x)
+        out <- nchar(text)
     }
-
-    if (is.character(text) && length(text) > 1) {
-        sapply(text, fun)
-    } else {
-        fun(text)
-    }
+    return(out)
 }
+
