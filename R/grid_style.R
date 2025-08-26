@@ -1,3 +1,68 @@
+
+style_grid_cell <- function(x, name = "italic", indent = NULL, color = NULL, background = NULL) {
+  engine <- getOption("tinytable_grid_style_engine", default = "markdown")
+
+  if (engine == "ansi") {
+    # ANSI escape codes
+    if (name == "italic") {
+      out <- sprintf("\033[3m%s\033[23m", x)
+    } else if (name == "bold") {
+      out <- sprintf("\033[1m%s\033[22m", x)
+    } else if (name == "strikeout") {
+      out <- sprintf("\033[9m%s\033[29m", x)
+    } else if (name == "underline") {
+      out <- sprintf("\033[4m%s\033[24m", x)
+    } else if (name == "indent" && !is.null(indent)) {
+      out <- sprintf("%s%s", strrep(" ", indent), x)
+    } else if (name == "color" && !is.null(color)) {
+      ansi_color_code <- standardize_colors(color, format = "ansi")
+      if (!is.na(ansi_color_code) && ansi_color_code != color) {
+        out <- sprintf("\033[%sm%s\033[39m", ansi_color_code, x)
+      } else {
+        out <- x  # Unknown color, return unchanged
+      }
+    } else if (name == "background" && !is.null(background)) {
+      ansi_bg_code <- standardize_colors(background, format = "ansi")
+      if (!is.na(ansi_bg_code) && ansi_bg_code != background) {
+        # Convert foreground ANSI code to background by replacing 38 with 48
+        if (grepl("^38;2;", ansi_bg_code)) {
+          ansi_bg_code <- sub("^38;2;", "48;2;", ansi_bg_code)
+        } else if (grepl("^3[0-7]$", ansi_bg_code)) {
+          # Convert standard foreground colors (30-37) to background (40-47)
+          fg_code <- as.numeric(ansi_bg_code)
+          ansi_bg_code <- as.character(fg_code + 10)
+        } else if (grepl("^9[0-7]$", ansi_bg_code)) {
+          # Convert bright foreground colors (90-97) to bright background (100-107)
+          fg_code <- as.numeric(ansi_bg_code)
+          ansi_bg_code <- as.character(fg_code + 10)
+        }
+        out <- sprintf("\033[%sm%s\033[49m", ansi_bg_code, x)
+      } else {
+        out <- x  # Unknown background color, return unchanged
+      }
+    } else {
+      out <- x
+    }
+  } else {
+    # Default markdown approach (colors not supported in markdown)
+    if (name == "italic") {
+      out <- sprintf("_%s_", x)
+    } else if (name == "bold") {
+      out <- sprintf("**%s**", x)
+    } else if (name == "strikeout") {
+      out <- sprintf("~~%s~~", x)
+    } else if (name == "underline") {
+      out <- sprintf("<u>%s</u>", x)
+    } else if (name == "indent" && !is.null(indent)) {
+      out <- sprintf("%s%s", strrep(" ", indent), x)
+    } else {
+      out <- x  # Colors ignored in markdown mode
+    }
+  }
+  return(out)
+}
+
+
 style_eval_grid <- function(x) {
   out <- x@data_body
   sty <- x@style
@@ -5,6 +70,7 @@ style_eval_grid <- function(x) {
   if (nrow(sty) == 0) {
     return(x)
   }
+
 
   sty <- prepare_grid_style(x)
 
@@ -18,15 +84,27 @@ style_eval_grid <- function(x) {
       current_name <- colnames(x)[col]
       if (!identical(trimws(current_name), "")) {
         if (isTRUE(sty[idx, "bold"])) {
-          colnames(x)[col] <- sprintf("**%s**", current_name)
+          colnames(x)[col] <- style_grid_cell(current_name, "bold")
         }
         if (isTRUE(sty[idx, "italic"])) {
           current_name <- colnames(x)[col]
-          colnames(x)[col] <- sprintf("_%s_", current_name)
+          colnames(x)[col] <- style_grid_cell(current_name, "italic")
         }
         if (isTRUE(sty[idx, "strikeout"])) {
           current_name <- colnames(x)[col]
-          colnames(x)[col] <- sprintf("~~%s~~", current_name)
+          colnames(x)[col] <- style_grid_cell(current_name, "strikeout")
+        }
+        if (isTRUE(sty[idx, "underline"])) {
+          current_name <- colnames(x)[col]
+          colnames(x)[col] <- style_grid_cell(current_name, "underline")
+        }
+        if (!is.na(sty[idx, "color"])) {
+          current_name <- colnames(x)[col]
+          colnames(x)[col] <- style_grid_cell(current_name, "color", color = sty[idx, "color"])
+        }
+        if (!is.na(sty[idx, "background"])) {
+          current_name <- colnames(x)[col]
+          colnames(x)[col] <- style_grid_cell(current_name, "background", background = sty[idx, "background"])
         }
       }
     }
@@ -39,15 +117,27 @@ style_eval_grid <- function(x) {
           current_value <- x@group_data_j[group_row, col]
           if (!is.na(current_value) && !identical(trimws(current_value), "")) {
             if (isTRUE(sty[idx, "bold"])) {
-              x@group_data_j[group_row, col] <- sprintf("**%s**", current_value)
+              x@group_data_j[group_row, col] <- style_grid_cell(current_value, "bold")
             }
             if (isTRUE(sty[idx, "italic"])) {
               current_value <- x@group_data_j[group_row, col]
-              x@group_data_j[group_row, col] <- sprintf("_%s_", current_value)
+              x@group_data_j[group_row, col] <- style_grid_cell(current_value, "italic")
             }
             if (isTRUE(sty[idx, "strikeout"])) {
               current_value <- x@group_data_j[group_row, col]
-              x@group_data_j[group_row, col] <- sprintf("~~%s~~", current_value)
+              x@group_data_j[group_row, col] <- style_grid_cell(current_value, "strikeout")
+            }
+            if (isTRUE(sty[idx, "underline"])) {
+              current_value <- x@group_data_j[group_row, col]
+              x@group_data_j[group_row, col] <- style_grid_cell(current_value, "underline")
+            }
+            if (!is.na(sty[idx, "color"])) {
+              current_value <- x@group_data_j[group_row, col]
+              x@group_data_j[group_row, col] <- style_grid_cell(current_value, "color", color = sty[idx, "color"])
+            }
+            if (!is.na(sty[idx, "background"])) {
+              current_value <- x@group_data_j[group_row, col]
+              x@group_data_j[group_row, col] <- style_grid_cell(current_value, "background", background = sty[idx, "background"])
             }
           }
         }
@@ -58,20 +148,32 @@ style_eval_grid <- function(x) {
       current_value <- x@data_body[row, col]
       if (!identical(trimws(current_value), "")) {
         if (isTRUE(sty[idx, "bold"])) {
-          x@data_body[row, col] <- sprintf("**%s**", current_value)
+          x@data_body[row, col] <- style_grid_cell(current_value, "bold")
         }
         if (isTRUE(sty[idx, "italic"])) {
           current_value <- x@data_body[row, col]
-          x@data_body[row, col] <- sprintf("_%s_", current_value)
+          x@data_body[row, col] <- style_grid_cell(current_value, "italic")
         }
         if (isTRUE(sty[idx, "strikeout"])) {
           current_value <- x@data_body[row, col]
-          x@data_body[row, col] <- sprintf("~~%s~~", current_value)
+          x@data_body[row, col] <- style_grid_cell(current_value, "strikeout")
+        }
+        if (isTRUE(sty[idx, "underline"])) {
+          current_value <- x@data_body[row, col]
+          x@data_body[row, col] <- style_grid_cell(current_value, "underline")
         }
         if (!is.na(sty[idx, "indent"])) {
           indent <- sty[idx, "indent"]
           current_value <- x@data_body[row, col]
-          x@data_body[row, col] <- sprintf("%s%s", strrep(" ", indent), current_value)
+          x@data_body[row, col] <- style_grid_cell(current_value, "indent", indent)
+        }
+        if (!is.na(sty[idx, "color"])) {
+          current_value <- x@data_body[row, col]
+          x@data_body[row, col] <- style_grid_cell(current_value, "color", color = sty[idx, "color"])
+        }
+        if (!is.na(sty[idx, "background"])) {
+          current_value <- x@data_body[row, col]
+          x@data_body[row, col] <- style_grid_cell(current_value, "background", background = sty[idx, "background"])
         }
       }
     }
@@ -216,7 +318,10 @@ prepare_grid_style <- function(x) {
     "bold",
     "italic",
     "strikeout",
+    "underline",
     "indent",
+    "color",
+    "background",
     "colspan",
     "rowspan"
   )]

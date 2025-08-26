@@ -48,5 +48,42 @@ standardize_colors <- function(col, format = "hex") {
     )
   }
 
+  # Format for ANSI if needed
+  if (format == "ansi") {
+    format_ansi_color <- function(color_val) {
+      if (is.na(color_val)) {
+        return(NA)
+      }
+      
+      # If it's a hex color, convert to RGB ANSI
+      if (grepl("^#[0-9A-Fa-f]{6}$", color_val)) {
+        hex_color <- substr(color_val, 2, 7)  # Remove #
+        r <- as.integer(paste0("0x", substr(hex_color, 1, 2)))
+        g <- as.integer(paste0("0x", substr(hex_color, 3, 4)))
+        b <- as.integer(paste0("0x", substr(hex_color, 5, 6)))
+        return(sprintf("38;2;%d;%d;%d", r, g, b))
+      }
+      
+      # Check if it's a named ANSI color
+      ansi_colors <- list(
+        "black" = "30", "red" = "31", "green" = "32", "yellow" = "33",
+        "blue" = "34", "magenta" = "35", "cyan" = "36", "white" = "37",
+        "gray" = "90", "grey" = "90", "bright_red" = "91", "bright_green" = "92",
+        "bright_yellow" = "93", "bright_blue" = "94", "bright_magenta" = "95",
+        "bright_cyan" = "96", "bright_white" = "97"
+      )
+      
+      color_code <- ansi_colors[[tolower(color_val)]]
+      if (!is.null(color_code)) {
+        return(color_code)
+      }
+      
+      # If no match, return original
+      return(color_val)
+    }
+    
+    result <- sapply(result, format_ansi_color, USE.NAMES = FALSE)
+  }
+
   return(result)
 }
