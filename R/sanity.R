@@ -262,12 +262,16 @@ assert_choice <- function(
   stop(msg, call. = FALSE)
 }
 
-check_string <- function(x, null.ok = FALSE) {
+check_string <- function(x, null.ok = FALSE, len = NULL) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(invisible(TRUE))
   }
   if (is.character(x) && length(x) == 1) {
-    return(invisible(TRUE))
+    if (is.null(len)) {
+      return(invisible(TRUE))
+    } else if (nchar(x) == len) {
+      return(invisible(TRUE))
+    }
   }
   return(FALSE)
 }
@@ -275,10 +279,18 @@ check_string <- function(x, null.ok = FALSE) {
 assert_string <- function(
   x,
   null.ok = FALSE,
-  name = as.character(substitute(x))
-) {
-  msg <- sprintf("`%s` must be a string.", name)
-  if (!isTRUE(check_string(x, null.ok = null.ok))) {
+  len = NULL,
+  name = as.character(substitute(x))) {
+  if (is.null(len)) {
+    msg <- sprintf("`%s` must be a string.", name)
+  } else {
+    msg <- sprintf("`%s` must be a string of length %s.", name, len)
+  }
+  if (!isTRUE(check_string(x, len = len, null.ok = null.ok))) {
+    stop(msg, call. = FALSE)
+  }
+  if (!is.null(x) && !is.null(len) && nchar(x) != len) {
+    msg <- sprintf("`%s` must be a string of length %s.", name, len)
     stop(msg, call. = FALSE)
   }
 }

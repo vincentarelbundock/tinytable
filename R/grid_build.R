@@ -5,10 +5,13 @@
 #' Create a grid line with specified character
 #' @keywords internal
 #' @noRd
-grid_create_line <- function(width_cols, char = "-") {
+grid_create_line <- function(width_cols, char = "-", corner_char = "+", x = NULL) {
+  # Always use "+" for corner characters
+  corner_char <- "+"
+  
   line_sep <- lapply(width_cols, function(k) strrep(char, k))
-  line_sep <- paste(line_sep, collapse = "+")
-  line_sep <- paste0("+", line_sep, "+")
+  line_sep <- paste(line_sep, collapse = corner_char)
+  line_sep <- paste0(corner_char, line_sep, corner_char)
   return(line_sep)
 }
 
@@ -273,6 +276,19 @@ is_spanning_group_row <- function(row_idx, row_data, group_rows) {
 format_table_rows <- function(tab, x, header, width_cols) {
   body <- character(nrow(tab))
 
+  # Get vertical line character - use "|" if enabled, space if disabled
+  vline_char <- if (inherits(x, "tinytable") && isTRUE(x@grid_vline)) {
+    "|"
+  } else if (inherits(x, "tinytable") && !isTRUE(x@grid_vline)) {
+    " "  # Use space if vertical lines are disabled
+  } else {
+    "|"  # Default fallback
+  }
+
+  # Use vertical line character for borders
+  left_border <- vline_char
+  right_border <- vline_char
+
   # Get group row indices if available
   group_rows <- if (inherits(x, "tinytable")) x@group_index_i else integer(0)
   if (header) {
@@ -288,14 +304,14 @@ format_table_rows <- function(tab, x, header, width_cols) {
       content_width <- nchar(row_data[1])
       padding_needed <- total_width - content_width
       body[row_idx] <- paste0(
-        "|",
+        left_border,
         row_data[1],
         strrep(" ", padding_needed),
-        "|"
+        right_border
       )
     } else {
       # Regular row - use column separators
-      body[row_idx] <- paste0("|", paste(row_data, collapse = "|"), "|")
+      body[row_idx] <- paste0(left_border, paste(row_data, collapse = vline_char), right_border)
     }
   }
 
@@ -305,22 +321,75 @@ format_table_rows <- function(tab, x, header, width_cols) {
 #' Assemble final table string with borders
 #' @keywords internal
 #' @noRd
-assemble_table_string <- function(body, header, width_cols) {
-  rule_head <- grid_create_line(width_cols, "=")
-  rule_line <- grid_create_line(width_cols, "-")
+assemble_table_string <- function(body, header, width_cols, x = NULL) {
+  # Get line characters - use hardcoded values
+  if (!is.null(x) && inherits(x, "tinytable")) {
+    hline_char <- if (isTRUE(x@grid_hline)) "-" else NULL
+    hline_header_char <- if (isTRUE(x@grid_hline_header)) "=" else NULL
+  } else {
+    hline_char <- "-"
+    hline_header_char <- "="
+  }
+
+  # Create rule lines only if enabled
+  rule_head <- if (!is.null(hline_header_char)) {
+    grid_create_line(width_cols, hline_header_char, x = x)
+  } else {
+    NULL
+  }
+  
+  rule_line <- if (!is.null(hline_char)) {
+    grid_create_line(width_cols, hline_char, x = x)
+  } else {
+    NULL
+  }
 
   if (header) {
-    tab <- c(
-      "\n",
-      rule_line,
-      body[1],
-      rule_head,
-      body[2:length(body)],
-      rule_line,
-      "\n"
-    )
+    tab_parts <- list("\n")
+    
+    # Top border
+    if (!is.null(rule_line)) {
+      tab_parts <- append(tab_parts, rule_line)
+    }
+    
+    # Header row
+    tab_parts <- append(tab_parts, body[1])
+    
+    # Header separator
+    if (!is.null(rule_head)) {
+      tab_parts <- append(tab_parts, rule_head)
+    }
+    
+    # Body rows
+    if (length(body) > 1) {
+      tab_parts <- append(tab_parts, body[2:length(body)])
+    }
+    
+    # Bottom border
+    if (!is.null(rule_line)) {
+      tab_parts <- append(tab_parts, rule_line)
+    }
+    
+    tab_parts <- append(tab_parts, "\n")
+    tab <- unlist(tab_parts)
   } else {
-    tab <- c("\n", rule_line, body, rule_line, "\n")
+    tab_parts <- list("\n")
+    
+    # Top border
+    if (!is.null(rule_line)) {
+      tab_parts <- append(tab_parts, rule_line)
+    }
+    
+    # Body rows
+    tab_parts <- append(tab_parts, body)
+    
+    # Bottom border
+    if (!is.null(rule_line)) {
+      tab_parts <- append(tab_parts, rule_line)
+    }
+    
+    tab_parts <- append(tab_parts, "\n")
+    tab <- unlist(tab_parts)
   }
 
   return(paste(tab, collapse = "\n"))
@@ -367,7 +436,7 @@ build_eval_grid <- function(x, width_cols = NULL, ...) {
   body <- format_table_rows(tab, x, header, width_cols)
 
   # Assemble final table string
-  out <- assemble_table_string(body, header, width_cols)
+  out <- assemble_table_string(body, header, width_cols, x)
 
   if (is_matrix) {
     return(out)
@@ -412,14 +481,20 @@ empty_cells <- function(lst) {
 
 # insert horizontal rules everywhere (important for word)
 grid_hlines <- function(x) {
-  rule_line <- grid_create_line(x@width_cols, "-")
+  # Only add lines if horizontal lines are enabled
+  if (!isTRUE(x@grid_hline)) {
+    return(x)
+  }
+  
+  rule_line <- grid_create_line(x@width_cols, "-", x = x)
   out <- x@table_string
   lines <- strsplit(out, split = "\\n")[[1]]
   if (length(lines) > 1) {
+    corner_char <- "+"
     for (idlines in length(lines):2) {
       if (
-        !startsWith(lines[idlines - 1], "+") &&
-          !startsWith(lines[idlines], "+") &&
+        !startsWith(lines[idlines - 1], corner_char) &&
+          !startsWith(lines[idlines], corner_char) &&
           lines[idlines] != ""
       ) {
         lines <- c(

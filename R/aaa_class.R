@@ -23,6 +23,7 @@ setClassUnion("NULLorList", c("NULL", "list"))
 setClass(
   Class = "tinytable",
   slots = representation(
+    ansi = "logical",
     body = "character",
     bootstrap_class = "character",
     bootstrap_css_rule = "character",
@@ -30,6 +31,9 @@ setClass(
     css = "data.frame",
     data = "data.frame",
     data_body = "data.frame",
+    grid_hline = "logical",
+    grid_hline_header = "logical",
+    grid_vline = "logical",
     group_data_i = "data.frame",
     group_data_j = "data.frame",
     group_index_i = "numeric",
@@ -108,6 +112,10 @@ setMethod(
     }
 
     # empty
+    .Object@ansi <- FALSE
+    .Object@grid_hline <- TRUE
+    .Object@grid_hline_header <- TRUE
+    .Object@grid_vline <- TRUE
     .Object@group_data_i <- data.frame()
     .Object@group_data_j <- data.frame()
     .Object@index_body <- numeric(0)
