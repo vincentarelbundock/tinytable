@@ -83,61 +83,15 @@ style_grid_cell <- function(
 }
 
 
-style_grid_notes <- function(x) {
-  for (i in seq_along(x@notes)) {
-    if (length(x@notes[[i]]) == 3 && "text" %in% names(x@notes[[i]])) {
-      x@notes[[i]][["text"]] <- style_grid_cell(
-        x@notes[[i]][["text"]],
-        x,
-        bold = isTRUE(x@style_notes[["bold"]]),
-        italic = isTRUE(x@style_notes[["italic"]]),
-        strikeout = isTRUE(x@style_notes[["strikeout"]]),
-        underline = isTRUE(x@style_notes[["underline"]]),
-        color = if (!is.null(x@style_notes[["color"]])) {
-          x@style_notes[["color"]]
-        } else {
-          NULL
-        }
-      )
-    } else {
-      x@notes[[i]] <- style_grid_cell(
-        x@notes[[i]],
-        x,
-        bold = isTRUE(x@style_notes[["bold"]]),
-        italic = isTRUE(x@style_notes[["italic"]]),
-        strikeout = isTRUE(x@style_notes[["strikeout"]]),
-        underline = isTRUE(x@style_notes[["underline"]]),
-        color = if (!is.null(x@style_notes[["color"]])) {
-          x@style_notes[["color"]]
-        } else {
-          NULL
-        }
-      )
-    }
-  }
-  return(x)
-}
-
-style_grid_caption <- function(x) {
-  if (length(x@caption) > 0) {
-    x@caption <- style_grid_cell(
-      x@caption,
-      x,
-      bold = isTRUE(x@style_caption[["bold"]]),
-      italic = isTRUE(x@style_caption[["italic"]]),
-      strikeout = isTRUE(x@style_caption[["strikeout"]]),
-      underline = isTRUE(x@style_caption[["underline"]]),
-      color = if (!is.null(x@style_caption[["color"]])) {
-        x@style_caption[["color"]]
-      } else {
-        NULL
-      }
-    )
-  }
-  return(x)
-}
 
 style_grid_group <- function(x) {
+  # Determine the styling function to use based on output type and ANSI setting
+  style_string_grid <- if (isTRUE(x@ansi)) {
+    style_string_ansi
+  } else {
+    style_string_markdown
+  }
+  
   # Apply styling to row groups (group_data_i)
   if (nrow(x@group_data_i) > 0) {
     sty <- x@style
@@ -153,9 +107,7 @@ style_grid_group <- function(x) {
           if (!is.na(current_value) && !identical(trimws(current_value), "")) {
             # Apply the last (most recent) styling for each property
             for (style_idx in seq_len(nrow(group_styles))) {
-              x@group_data_i[row_idx, col_idx] <- style_grid_cell(
-                current_value,
-                x,
+              styles <- list(
                 bold = if (!is.na(group_styles[style_idx, "bold"])) {
                   group_styles[style_idx, "bold"]
                 } else {
@@ -181,14 +133,13 @@ style_grid_group <- function(x) {
                 } else {
                   NULL
                 },
-                background = if (
-                  !is.na(group_styles[style_idx, "background"])
-                ) {
+                background = if (!is.na(group_styles[style_idx, "background"])) {
                   group_styles[style_idx, "background"]
                 } else {
                   NULL
                 }
               )
+              x@group_data_i[row_idx, col_idx] <- style_string_grid(current_value, styles)
               current_value <- x@group_data_i[row_idx, col_idx]
             }
           }
@@ -213,9 +164,7 @@ style_grid_group <- function(x) {
           if (!is.na(current_value) && !identical(trimws(current_value), "")) {
             # Apply the last (most recent) styling for each property
             for (style_idx in seq_len(nrow(group_styles))) {
-              x@group_data_j[row_idx, col_idx] <- style_grid_cell(
-                current_value,
-                x,
+              styles <- list(
                 bold = if (!is.na(group_styles[style_idx, "bold"])) {
                   group_styles[style_idx, "bold"]
                 } else {
@@ -241,14 +190,13 @@ style_grid_group <- function(x) {
                 } else {
                   NULL
                 },
-                background = if (
-                  !is.na(group_styles[style_idx, "background"])
-                ) {
+                background = if (!is.na(group_styles[style_idx, "background"])) {
                   group_styles[style_idx, "background"]
                 } else {
                   NULL
                 }
               )
+              x@group_data_j[row_idx, col_idx] <- style_string_grid(current_value, styles)
               current_value <- x@group_data_j[row_idx, col_idx]
             }
           }

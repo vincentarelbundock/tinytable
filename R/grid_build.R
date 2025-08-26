@@ -268,24 +268,33 @@ apply_grid_text_styling <- function(x) {
     return(x)
   }
   
+  # Determine the styling function to use based on output type and ANSI setting
+  style_string_grid <- if (isTRUE(x@ansi)) {
+    style_string_ansi
+  } else {
+    style_string_markdown
+  }
+  
   # Apply text styling to each cell (excluding background)
   for (idx in seq_len(nrow(sty))) {
     row <- sty[idx, "i"]
     col <- sty[idx, "j"]
     
+    # Prepare styles list for the current cell
+    styles <- list(
+      bold = isTRUE(sty[idx, "bold"]),
+      italic = isTRUE(sty[idx, "italic"]),
+      strikeout = isTRUE(sty[idx, "strikeout"]),
+      underline = isTRUE(sty[idx, "underline"]),
+      color = if (!is.na(sty[idx, "color"])) sty[idx, "color"] else NULL,
+      indent = if (!is.na(sty[idx, "indent"])) sty[idx, "indent"] else NULL
+    )
+    
     # Handle column names (i = 0)
     if (row == 0) {
       current_name <- colnames(x)[col]
       if (!identical(trimws(current_name), "")) {
-        colnames(x)[col] <- style_grid_cell(
-          current_name, x,
-          bold = isTRUE(sty[idx, "bold"]),
-          italic = isTRUE(sty[idx, "italic"]),
-          strikeout = isTRUE(sty[idx, "strikeout"]),
-          underline = isTRUE(sty[idx, "underline"]),
-          color = if (!is.na(sty[idx, "color"])) sty[idx, "color"] else NULL
-          # background excluded - applied later after padding
-        )
+        colnames(x)[col] <- style_string_grid(current_name, styles)
       }
     }
     # Handle group headers (negative i)
@@ -296,15 +305,7 @@ apply_grid_text_styling <- function(x) {
         if (group_row <= nrow(x@group_data_j) && col <= ncol(x@group_data_j)) {
           current_value <- x@group_data_j[group_row, col]
           if (!is.na(current_value) && !identical(trimws(current_value), "")) {
-            x@group_data_j[group_row, col] <- style_grid_cell(
-              current_value, x,
-              bold = isTRUE(sty[idx, "bold"]),
-              italic = isTRUE(sty[idx, "italic"]),
-              strikeout = isTRUE(sty[idx, "strikeout"]),
-              underline = isTRUE(sty[idx, "underline"]),
-              color = if (!is.na(sty[idx, "color"])) sty[idx, "color"] else NULL
-              # background excluded - applied later after padding
-            )
+            x@group_data_j[group_row, col] <- style_string_grid(current_value, styles)
           }
         }
       }
@@ -313,16 +314,7 @@ apply_grid_text_styling <- function(x) {
     else {
       current_value <- x@data_body[row, col]
       if (!identical(trimws(current_value), "")) {
-        x@data_body[row, col] <- style_grid_cell(
-          current_value, x,
-          bold = isTRUE(sty[idx, "bold"]),
-          italic = isTRUE(sty[idx, "italic"]),
-          strikeout = isTRUE(sty[idx, "strikeout"]),
-          underline = isTRUE(sty[idx, "underline"]),
-          indent = if (!is.na(sty[idx, "indent"])) sty[idx, "indent"] else NULL,
-          color = if (!is.na(sty[idx, "color"])) sty[idx, "color"] else NULL
-          # background excluded - applied later after padding
-        )
+        x@data_body[row, col] <- style_string_grid(current_value, styles)
       }
     }
 
@@ -360,6 +352,13 @@ apply_grid_background_styling <- function(tab, x, header) {
     return(tab)
   }
   
+  # Determine the styling function to use based on output type and ANSI setting
+  style_string_grid <- if (isTRUE(x@ansi)) {
+    style_string_ansi
+  } else {
+    style_string_markdown
+  }
+  
   # Apply only background styling to each cell
   for (idx in seq_len(nrow(sty))) {
     # Skip if no background styling
@@ -370,15 +369,15 @@ apply_grid_background_styling <- function(tab, x, header) {
     row <- sty[idx, "i"]
     col <- sty[idx, "j"]
     
+    # Prepare styles list with only background
+    styles <- list(background = sty[idx, "background"])
+    
     # Handle column names (i = 0)
     if (row == 0 && header) {
       tab_row <- 1  # Header is first row in tab matrix
       if (tab_row <= nrow(tab) && col <= ncol(tab)) {
         current_content <- tab[tab_row, col]
-        tab[tab_row, col] <- style_grid_cell(
-          current_content, x,
-          background = sty[idx, "background"]
-        )
+        tab[tab_row, col] <- style_string_grid(current_content, styles)
       }
     }
     # Handle main table body (positive i)
@@ -386,10 +385,7 @@ apply_grid_background_styling <- function(tab, x, header) {
       tab_row <- if (header) row + 1 else row  # Adjust for header row
       if (tab_row <= nrow(tab) && col <= ncol(tab)) {
         current_content <- tab[tab_row, col]
-        tab[tab_row, col] <- style_grid_cell(
-          current_content, x,
-          background = sty[idx, "background"]
-        )
+        tab[tab_row, col] <- style_string_grid(current_content, styles)
       }
     }
     # Handle group headers would go here if needed (negative i)
@@ -569,7 +565,7 @@ build_eval_grid <- function(x, width_cols = NULL, ...) {
   # Apply text styling before padding (for non-matrix formats)
   if (!is_matrix && inherits(x, "tinytable") && nrow(x@style) > 0) {
     x <- apply_grid_text_styling(x)
-    x <- apply_grid_group_styling(x)
+    x <- style_grid_group(x)
     tab <- x@data_body
   }
 

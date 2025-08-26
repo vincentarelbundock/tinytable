@@ -67,8 +67,8 @@ setMethod(
   f = "finalize",
   signature = "tinytable_grid",
   definition = function(x, ...) {
-    x <- style_grid_notes(x)
-    x <- style_grid_caption(x)
+    x <- style_notes(x)
+    x <- style_caption(x)
     x <- grid_hlines(x)
     x <- grid_notes_caption(x)
     return(x)
