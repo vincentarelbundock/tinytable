@@ -2,18 +2,41 @@
 % Please edit documentation in R/tt.R
 \name{tt}
 \alias{tt}
+\alias{tt.default}
 \title{Draw a Tiny Table}
 \usage{
 tt(x, ...)
+
+\method{tt}{default}(
+  x,
+  digits = get_option("tinytable_tt_digits", default = NULL),
+  caption = get_option("tinytable_tt_caption", default = NULL),
+  notes = get_option("tinytable_tt_notes", default = NULL),
+  width = get_option("tinytable_tt_width", default = NULL),
+  height = get_option("tinytable_tt_height", default = NULL),
+  theme = get_option("tinytable_tt_theme", default = "default"),
+  colnames = get_option("tinytable_tt_colnames", default = TRUE),
+  rownames = get_option("tinytable_tt_rownames", default = FALSE),
+  escape = get_option("tinytable_tt_escape", default = FALSE),
+  ...
+)
 }
 \arguments{
-\item{x}{A data frame or data table to be rendered as a table.}
+\item{x}{A data frame, data table, or tibble to be rendered as a table.}
 
 \item{...}{Additional arguments are ignored}
 
 \item{digits}{Number of significant digits to keep for numeric variables. When \code{digits} is an integer, \code{tt()} calls \code{format_tt(x, digits = digits)} before proceeding to draw the table. Note that this will apply all default argument values of \code{format_tt()}, such as replacing \code{NA} by "". Users who need more control can use the \code{format_tt()} function instead.}
 
 \item{caption}{A string that will be used as the caption of the table. This argument should \emph{not} be used in Quarto or Rmarkdown documents. In that context, please use the appropriate chunk options.}
+
+\item{notes}{Notes to append to the bottom of the table. This argument accepts several different inputs:
+\itemize{
+\item Single string insert a single note: \code{"blah blah"}
+\item Multiple strings insert multiple notes sequentially: \code{list("Hello world", "Foo bar")}
+\item A named list inserts a list with the name as superscript: \code{list("a" = list("Hello World"))}
+\item A named list with positions inserts markers as superscripts inside table cells: \code{list("a" = list(i = 0:1, j = 2, text = "Hello World"))}
+}}
 
 \item{width}{Table or column width.
 \itemize{
@@ -27,14 +50,6 @@ tt(x, ...)
 \itemize{
 \item String: grid, revealjs, rotate, striped, void
 \item Function: Applied to the \code{tinytable} object.
-}}
-
-\item{notes}{Notes to append to the bottom of the table. This argument accepts several different inputs:
-\itemize{
-\item Single string insert a single note: \code{"blah blah"}
-\item Multiple strings insert multiple notes sequentially: \code{list("Hello world", "Foo bar")}
-\item A named list inserts a list with the name as superscript: \code{list("a" = list("Hello World"))}
-\item A named list with positions inserts markers as superscripts inside table cells: \code{list("a" = list(i = 0:1, j = 2, text = "Hello World"))}
 }}
 
 \item{colnames}{Logical. If \code{FALSE}, column names are omitted.}

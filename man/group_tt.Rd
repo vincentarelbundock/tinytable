@@ -20,7 +20,7 @@ tt_group(
 )
 }
 \arguments{
-\item{x}{A data frame or data table to be rendered as a table.}
+\item{x}{A data frame, data table, or tibble to be rendered as a table.}
 
 \item{i}{Character vector, named list, or integer vector
 \itemize{

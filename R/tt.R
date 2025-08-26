@@ -12,7 +12,7 @@
 #'
 #' `tinytable` attempts to determine the appropriate way to print the table based on interactive use, RStudio availability, and output format in RMarkdown or Quarto documents. Users can call `print(x, output="markdown")` to print the table in a specific format. Alternatively, they can set a global option: `options("tinytable_print_output"="markdown")`
 #'
-#' @param x A data frame or data table to be rendered as a table.
+#' @param x A data frame, data table, or tibble to be rendered as a table.
 #' @param digits Number of significant digits to keep for numeric variables. When `digits` is an integer, `tt()` calls `format_tt(x, digits = digits)` before proceeding to draw the table. Note that this will apply all default argument values of `format_tt()`, such as replacing `NA` by "". Users who need more control can use the `format_tt()` function instead.
 #' @param caption A string that will be used as the caption of the table. This argument should *not* be used in Quarto or Rmarkdown documents. In that context, please use the appropriate chunk options.
 #' @param width Table or column width.
@@ -69,6 +69,9 @@
 tt <- function(x, ...) {
   UseMethod("tt")
 }
+
+#' @rdname tt
+#' @export
 
 # Default method (for data.frame, data.table, tbl_df, and other data frame-like objects)
 tt.default <- function(
