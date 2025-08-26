@@ -122,12 +122,6 @@ build_tt <- function(x, output = NULL) {
     x@data_body <- tmp
   }
 
-  # markdown styles are applied manually after formatting to have consistent decimals
-  # but before drawing the table becuase we need to act on individual cells
-  if (x@output %in% c("markdown", "gfm", "dataframe")) {
-    x <- style_eval(x)
-  }
-
   # draw the table
   x <- build_eval(x)
 
@@ -140,12 +134,10 @@ build_tt <- function(x, output = NULL) {
     x <- group_eval_j(x, j = seq_len(ncol(x)), ihead = ihead)
   }
 
-  # markdown styles are applied earlier
-  if (!x@output %in% c("markdown", "gfm", "dataframe")) {
-    x <- style_eval(x)
-  } else {
-    x <- grid_colspan(x)
-  }
+  x <- style_eval(x)
+
+  # no-op: only modifies markdown
+  x <- grid_colspan(x)
 
   x <- finalize(x)
 
@@ -182,3 +174,4 @@ build_finalize <- function(x, fn, output = NULL) {
   x@lazy_finalize <- c(x@lazy_finalize, list(fn))
   return(x)
 }
+

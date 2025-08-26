@@ -75,94 +75,18 @@ style_grid_cell <- function(s, x, italic = FALSE, bold = FALSE, strikeout = FALS
 
 
 style_eval_grid <- function(x) {
-  out <- x@data_body
-  sty <- x@style
-
-  if (nrow(sty) == 0) {
-    return(x)
-  }
-
-
-  sty <- prepare_grid_style(x)
-
-  # styling
-  for (idx in seq_len(nrow(sty))) {
-    row <- sty[idx, "i"]
-    col <- sty[idx, "j"]
-
-    # Handle column names (i = 0)
-    if (row == 0) {
-      current_name <- colnames(x)[col]
-      if (!identical(trimws(current_name), "")) {
-        colnames(x)[col] <- style_grid_cell(
-          current_name, x,
-          bold = isTRUE(sty[idx, "bold"]),
-          italic = isTRUE(sty[idx, "italic"]),
-          strikeout = isTRUE(sty[idx, "strikeout"]),
-          underline = isTRUE(sty[idx, "underline"]),
-          color = if (!is.na(sty[idx, "color"])) sty[idx, "color"] else NULL,
-          background = if (!is.na(sty[idx, "background"])) sty[idx, "background"] else NULL
-        )
-      }
-    }
-    # Handle group headers (negative i)
-    else if (row < 0) {
-      if (nrow(x@group_data_j) > 0) {
-        # Convert negative row index to positive index in group_data_j
-        group_row <- abs(row)
-        if (group_row <= nrow(x@group_data_j) && col <= ncol(x@group_data_j)) {
-          current_value <- x@group_data_j[group_row, col]
-          if (!is.na(current_value) && !identical(trimws(current_value), "")) {
-            x@group_data_j[group_row, col] <- style_grid_cell(
-              current_value, x,
-              bold = isTRUE(sty[idx, "bold"]),
-              italic = isTRUE(sty[idx, "italic"]),
-              strikeout = isTRUE(sty[idx, "strikeout"]),
-              underline = isTRUE(sty[idx, "underline"]),
-              color = if (!is.na(sty[idx, "color"])) sty[idx, "color"] else NULL,
-              background = if (!is.na(sty[idx, "background"])) sty[idx, "background"] else NULL
-            )
-          }
-        }
-      }
-    }
-    # Handle main table body (positive i)
-    else {
-      current_value <- x@data_body[row, col]
-      if (!identical(trimws(current_value), "")) {
-        x@data_body[row, col] <- style_grid_cell(
-          current_value, x,
-          bold = isTRUE(sty[idx, "bold"]),
-          italic = isTRUE(sty[idx, "italic"]),
-          strikeout = isTRUE(sty[idx, "strikeout"]),
-          underline = isTRUE(sty[idx, "underline"]),
-          indent = if (!is.na(sty[idx, "indent"])) sty[idx, "indent"] else NULL,
-          color = if (!is.na(sty[idx, "color"])) sty[idx, "color"] else NULL,
-          background = if (!is.na(sty[idx, "background"])) sty[idx, "background"] else NULL
-        )
-      }
-    }
-
-    # wipe adjacent cells
-    rowspan <- sty[idx, "rowspan"]
-    colspan <- sty[idx, "colspan"]
-    rowspan <- if (is.na(rowspan)) 1 else rowspan
-    colspan <- if (is.na(colspan)) 1 else colspan
-    wipe <- expand.grid(
-      i = row:(row + rowspan - 1),
-      j = col:(col + colspan - 1)
-    )
-    wipe <- wipe[which(wipe$i != row | wipe$j != col), ]
-    for (idx in seq_len(nrow(wipe))) {
-      x@data_body[wipe$i[idx], wipe$j[idx]] <- ""
-    }
-  }
-
+  # For grid formats, styling is handled inside build_eval_grid
+  # This allows proper ordering of text styles before padding and background after padding
   return(x)
 }
 
 
 grid_colspan <- function(x) {
+
+  if (!x@output %in% c("markdown", "gfm", "dataframe")) {
+    return(x)
+  }
+
   sty <- prepare_grid_style(x)
 
   if (nrow(sty) == 0 || !is.data.frame(sty)) {

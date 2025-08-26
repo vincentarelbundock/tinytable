@@ -7,6 +7,13 @@
 #' @param vline Logical. Enable/disable vertical lines. Default is TRUE.
 #' @param ... Additional arguments (ignored).
 #' @return A modified `tinytable` object.
+#' @details
+#' When `ansi = TRUE`, colors and text styling (bold, italic, strikeout, underline) 
+#' are applied using ANSI escape sequences for terminal display. ANSI colors require 
+#' a terminal or application that supports ANSI escape sequences. Common supported 
+#' terminals include: Terminal.app (macOS), iTerm2 (macOS), Windows Terminal, most 
+#' Linux terminals, RStudio Console, and VS Code terminal. Colors may not display 
+#' correctly in basic text editors or older terminals.
 #' @export
 theme_markdown <- function(x,
                            ansi = FALSE,
