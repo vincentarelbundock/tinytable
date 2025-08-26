@@ -1,30 +1,3 @@
-# ANSI-aware utility functions
-ansi_aware_strwrap <- function(text, width) {
-  # For ANSI text, only wrap if visual width exceeds target width
-  visual_width <- calculate_text_width(text)
-  if (visual_width <= width) {
-    return(text)
-  } else {
-    # If it's too long, fall back to regular strwrap
-    # This is a simplified implementation - could be enhanced for better ANSI handling
-    return(strwrap(text, width = width))
-  }
-}
-
-ansi_aware_format <- function(txt, width) {
-  formatted <- character(length(txt))
-  for (i in seq_along(txt)) {
-    visual_width <- calculate_text_width(txt[i])
-    if (visual_width < width) {
-      padding_needed <- width - visual_width
-      formatted[i] <- paste0(txt[i], strrep(" ", padding_needed))
-    } else {
-      formatted[i] <- txt[i]
-    }
-  }
-  return(formatted)
-}
-
 grid_notes_caption <- function(x) {
   out <- x@table_string
 
@@ -41,10 +14,10 @@ grid_notes_caption <- function(x) {
     if (isTRUE(names(x@notes)[i] != "")) {
       txt <- sprintf("^%s^ %s", names(x@notes)[i], txt)
     }
-    txt <- ansi_aware_strwrap(txt, width = target)
-    txt <- ansi_aware_format(txt, target)
+    txt <- ansi_strwrap(txt, width = target)
+    txt <- ansi_format(txt, target)
     txt <- sprintf("| %s |", txt)
-    
+
     # Find the correct insertion point for notes
     plus_lines <- grep("^+", lines)
     if (length(plus_lines) >= 2) {
@@ -58,7 +31,7 @@ grid_notes_caption <- function(x) {
       # No border lines - append at the end
       idx <- length(lines)
     }
-    
+
     if (idx <= length(lines) && idx %in% plus_lines) {
       # We found a border line - replace it and add notes
       bot <- lines[idx]
@@ -94,9 +67,10 @@ setMethod(
   f = "finalize",
   signature = "tinytable_grid",
   definition = function(x, ...) {
-    x <- style_notes_grid(x)
-    x <- style_caption_grid(x)
+    x <- style_grid_notes(x)
+    x <- style_grid_caption(x)
     x <- grid_hlines(x)
     x <- grid_notes_caption(x)
     return(x)
-  })
+  }
+)
