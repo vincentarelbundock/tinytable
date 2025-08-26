@@ -17,15 +17,15 @@
 #' @export
 theme_markdown <- function(x,
                            ansi = FALSE,
-                           hline = TRUE,
-                           hline_header = TRUE,
-                           vline = TRUE,
+                           vline = NULL,
+                           hline = NULL,
+                           hline_header = NULL,
                            ...) {
   # Validate logical arguments
   assert_flag(ansi)
-  assert_flag(hline)
-  assert_flag(hline_header)
-  assert_flag(vline)
+  assert_flag(vline, null.ok = TRUE)
+  assert_flag(hline, null.ok = TRUE)
+  assert_flag(hline_header, null.ok = TRUE)
 
   # Set the ansi slot based on the argument
   if (isTRUE(ansi)) {
@@ -34,9 +34,9 @@ theme_markdown <- function(x,
   }
 
   # Set the grid formatting slots
-  x@grid_hline <- hline
-  x@grid_hline_header <- hline_header
-  x@grid_vline <- vline
+  if (is.logical(hline)) x@grid_hline <- hline
+  if (is.logical(hline_header)) x@grid_hline_header <- hline_header
+  if (is.logical(vline)) x@grid_vline <- vline
 
   return(x)
 }

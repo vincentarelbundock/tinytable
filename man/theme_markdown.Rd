@@ -7,9 +7,9 @@
 theme_markdown(
   x,
   ansi = FALSE,
-  hline = TRUE,
-  hline_header = TRUE,
-  vline = TRUE,
+  vline = NULL,
+  hline = NULL,
+  hline_header = NULL,
   ...
 )
 }
@@ -18,11 +18,11 @@ theme_markdown(
 
 \item{ansi}{Logical. If TRUE, enables ANSI color codes for grid styling. Default is FALSE.}
 
+\item{vline}{Logical. Enable/disable vertical lines. Default is TRUE.}
+
 \item{hline}{Logical. Enable/disable horizontal lines. Default is TRUE.}
 
 \item{hline_header}{Logical. Enable/disable the special header separator line below column names. Default is TRUE.}
-
-\item{vline}{Logical. Enable/disable vertical lines. Default is TRUE.}
 
 \item{...}{Additional arguments (ignored).}
 }

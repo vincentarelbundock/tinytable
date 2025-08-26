@@ -9,6 +9,8 @@ theme_void <- function(x, ...) {
   strip <- stats::setNames(c(list(x), rep(list(TRUE), length(strip) - 1)), strip)
   x <- do.call(strip_tt, strip)
 
+  x <- theme_markdown(x, vline = FALSE, hline = FALSE)
+
   fn <- function(table) {
     s <- table@table_string
     s <- gsub("\\\\toprule|\\\\bottomrule|\\\\midrule", "", s)
@@ -22,9 +24,15 @@ theme_void <- function(x, ...) {
   fn <- function(table) {
     tab <- table@table_string
     tab <- strsplit(tab, "\n")[[1]]
-    tab <- tab[!grepl("^[\\+|-]+$", tab)]
-    tab <- tab[!grepl("^[\\+|=]+$", tab)]
-    tab <- gsub("|", " ", tab, fixed = TRUE)
+    # Only remove horizontal lines if grid_hline is FALSE
+    if (isFALSE(table@grid_hline)) {
+      tab <- tab[!grepl("^[\\+|-]+$", tab)]
+      tab <- tab[!grepl("^[\\+|=]+$", tab)]
+    }
+    # Only remove vertical lines if grid_vline is FALSE
+    if (isFALSE(table@grid_vline)) {
+      tab <- gsub("|", " ", tab, fixed = TRUE)
+    }
     table@table_string <- paste(tab, collapse = "\n")
     return(table)
   }
