@@ -79,8 +79,6 @@ build_tt <- function(x, output = NULL) {
     }
   }
 
-  x <- render_fansi(x)
-
   # Calculate which positions are body vs group
   if (nrow(x@group_data_i) == 0) {
     x@index_body <- seq_len(nrow(x))

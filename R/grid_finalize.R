@@ -15,7 +15,7 @@ grid_notes_caption <- function(x) {
       txt <- sprintf("^%s^ %s", names(x@notes)[i], txt)
     }
     txt <- ansi_strwrap(txt, width = target)
-    txt <- ansi_format(txt, target)
+    txt <- ansi_pad(txt, target)
     txt <- sprintf("| %s |", txt)
 
     # Find the correct insertion point for notes

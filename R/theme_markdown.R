@@ -29,7 +29,6 @@ theme_markdown <- function(x,
 
   # Set the ansi slot based on the argument
   if (isTRUE(ansi)) {
-    assert_dependency("fansi")
     x@ansi <- ansi
   }
 
