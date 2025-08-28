@@ -494,7 +494,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#value" id="toc-value" class="nav-link" data-scroll-target="#value">Value</a></li>
   <li><a href="#dependencies" id="toc-dependencies" class="nav-link" data-scroll-target="#dependencies">Dependencies</a></li>
   <li><a href="#latex-preamble" id="toc-latex-preamble" class="nav-link" data-scroll-target="#latex-preamble">LaTeX preamble</a></li>
-  <li><a href="#word-and-markdown-limitations" id="toc-word-and-markdown-limitations" class="nav-link" data-scroll-target="#word-and-markdown-limitations">Word and Markdown limitations</a></li>
+  <li><a href="#markdown-limitations" id="toc-markdown-limitations" class="nav-link" data-scroll-target="#markdown-limitations">Markdown limitations</a></li>
+  <li><a href="#word-limitations" id="toc-word-limitations" class="nav-link" data-scroll-target="#word-limitations">Word limitations</a></li>
   <li><a href="#tabulator-interactive-tables" id="toc-tabulator-interactive-tables" class="nav-link" data-scroll-target="#tabulator-interactive-tables">Tabulator (interactive tables)</a></li>
   <li><a href="#global-options" id="toc-global-options" class="nav-link" data-scroll-target="#global-options">Global options</a></li>
   <li><a href="#examples" id="toc-examples" class="nav-link" data-scroll-target="#examples">Examples</a></li>
@@ -557,9 +558,9 @@ tt(
 </section>
 <section id="arguments" class="level3">
 <h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
-<table>
+<table role="presentation">
 <tbody><tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="x">x</code>
 </td>
 <td>
@@ -567,7 +568,7 @@ A data frame, data table, or tibble to be rendered as a table.
 </td>
 </tr>
 <tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="...">…</code>
 </td>
 <td>
@@ -575,7 +576,7 @@ Additional arguments are ignored
 </td>
 </tr>
 <tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="digits">digits</code>
 </td>
 <td>
@@ -583,7 +584,7 @@ Number of significant digits to keep for numeric variables. When <code>digits</c
 </td>
 </tr>
 <tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="caption">caption</code>
 </td>
 <td>
@@ -591,7 +592,7 @@ A string that will be used as the caption of the table. This argument should <em
 </td>
 </tr>
 <tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="notes">notes</code>
 </td>
 <td>
@@ -613,7 +614,7 @@ A string that will be used as the caption of the table. This argument should <em
 </td>
 </tr>
 <tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="width">width</code>
 </td>
 <td>
@@ -629,7 +630,7 @@ A string that will be used as the caption of the table. This argument should <em
 </td>
 </tr>
 <tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="height">height</code>
 </td>
 <td>
@@ -637,7 +638,7 @@ Row height in em units. Single numeric value greater than zero that determines t
 </td>
 </tr>
 <tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="theme">theme</code>
 </td>
 <td>
@@ -653,7 +654,7 @@ Row height in em units. Single numeric value greater than zero that determines t
 </td>
 </tr>
 <tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="colnames">colnames</code>
 </td>
 <td>
@@ -661,7 +662,7 @@ Logical. If <code>FALSE</code>, column names are omitted.
 </td>
 </tr>
 <tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="rownames">rownames</code>
 </td>
 <td>
@@ -669,7 +670,7 @@ Logical. If <code>TRUE</code>, rownames are included as the first column
 </td>
 </tr>
 <tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="escape">escape</code>
 </td>
 <td>
@@ -717,9 +718,14 @@ Logical. If <code>TRUE</code>, escape special characters in the table. Equivalen
 </pre>
 </div>
 </section>
-<section id="word-and-markdown-limitations" class="level3">
-<h3 class="anchored" data-anchor-id="word-and-markdown-limitations">Word and Markdown limitations</h3>
-<p>Markdown and Word tables only support these styles: italic, bold, strikeout. The <code>width</code> argument is also unavailable Moreover, the <code>style_tt()</code> function cannot be used to style headers inserted by the <code>group_tt()</code> function; instead, you should style the headers directly in the header definition using markdown syntax: <code>group_tt(i = list(“<em>italic header</em>” = 2))</code>. These limitations are due to the fact that there is no markdown syntax for the other options, and that we create Word documents by converting a markdown table to .docx via the Pandoc software.</p>
+<section id="markdown-limitations" class="level3">
+<h3 class="anchored" data-anchor-id="markdown-limitations">Markdown limitations</h3>
+<p>Markdown is a text-only format that only supports these styles: italic, bold, strikeout. The <code>width</code> argument is also unavailable. These limitations exist because there is no standard markdown syntax for the other styling options.</p>
+<p>However, in terminals (consoles) that support it, <code>tinytable</code> can display colors and text styles using ANSI escape codes by setting <code>theme_markdown(ansi = TRUE)</code>. This allows for rich formatting in compatible terminal environments.</p>
+</section>
+<section id="word-limitations" class="level3">
+<h3 class="anchored" data-anchor-id="word-limitations">Word limitations</h3>
+<p>Word tables only support these styles: italic, bold, strikeout. The <code>width</code> argument is also unavailable. Moreover, the <code>style_tt()</code> function cannot be used to style headers inserted by the <code>group_tt()</code> function; instead, you should style the headers directly in the header definition using markdown syntax: <code>group_tt(i = list(“<em>italic header</em>” = 2))</code>. These limitations are due to the fact that we create Word documents by converting a markdown table to .docx via the Pandoc software, which requires going through a text-only intermediate format.</p>
 </section>
 <section id="tabulator-interactive-tables" class="level3">
 <h3 class="anchored" data-anchor-id="tabulator-interactive-tables">Tabulator (interactive tables)</h3>
@@ -864,8 +870,8 @@ tt(x) |&gt; format_tt(i = 1, fn = fn)
 
     <script>
 
-      function styleCell_apo2gfayt5mcn0w6hh5x(i, j, css_id) {
-          var table = document.getElementById("tinytable_apo2gfayt5mcn0w6hh5x");
+      function styleCell_g6gfk5pvjwydczpzoqfz(i, j, css_id) {
+          var table = document.getElementById("tinytable_g6gfk5pvjwydczpzoqfz");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -874,8 +880,8 @@ tt(x) |&gt; format_tt(i = 1, fn = fn)
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function spanCell_apo2gfayt5mcn0w6hh5x(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_apo2gfayt5mcn0w6hh5x");
+      function spanCell_g6gfk5pvjwydczpzoqfz(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_g6gfk5pvjwydczpzoqfz");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -906,14 +912,14 @@ tt(x) |&gt; format_tt(i = 1, fn = fn)
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '4', j: 0 }, { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 },  ], css_id: 'tinytable_css_hhf0ofpebh258kw9na3h',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_b2jz6izxjzbr437hb1ka',}, 
+          { positions: [ { i: '4', j: 0 }, { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 },  ], css_id: 'tinytable_css_ruylkky89vtiqo4bqzmv',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_elp2w2nxqdaekmq5c5on',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_apo2gfayt5mcn0w6hh5x(cell.i, cell.j, group.css_id);
+                  styleCell_g6gfk5pvjwydczpzoqfz(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -921,11 +927,11 @@ tt(x) |&gt; format_tt(i = 1, fn = fn)
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_hhf0ofpebh258kw9na3h, .table th.tinytable_css_hhf0ofpebh258kw9na3h { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_b2jz6izxjzbr437hb1ka, .table th.tinytable_css_b2jz6izxjzbr437hb1ka { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_ruylkky89vtiqo4bqzmv, .table th.tinytable_css_ruylkky89vtiqo4bqzmv { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_elp2w2nxqdaekmq5c5on, .table th.tinytable_css_elp2w2nxqdaekmq5c5on { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_apo2gfayt5mcn0w6hh5x" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_g6gfk5pvjwydczpzoqfz" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -981,8 +987,8 @@ tt(x) |&gt; format_tt(i = 1, fn = fn)
 
     <script>
 
-      function styleCell_917f7dym90stvvp6nv9s(i, j, css_id) {
-          var table = document.getElementById("tinytable_917f7dym90stvvp6nv9s");
+      function styleCell_y9idvguc191egxdi4ubv(i, j, css_id) {
+          var table = document.getElementById("tinytable_y9idvguc191egxdi4ubv");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -991,8 +997,8 @@ tt(x) |&gt; format_tt(i = 1, fn = fn)
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function spanCell_917f7dym90stvvp6nv9s(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_917f7dym90stvvp6nv9s");
+      function spanCell_y9idvguc191egxdi4ubv(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_y9idvguc191egxdi4ubv");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -1023,14 +1029,14 @@ tt(x) |&gt; format_tt(i = 1, fn = fn)
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '1', j: 0 }, { i: '3', j: 0 }, { i: '1', j: 1 }, { i: '3', j: 1 }, { i: '1', j: 2 }, { i: '3', j: 2 }, { i: '1', j: 3 }, { i: '3', j: 3 }, { i: '1', j: 4 }, { i: '3', j: 4 },  ], css_id: 'tinytable_css_feijinn7ffsg38893qic',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '4', j: 0 }, { i: '0', j: 1 }, { i: '4', j: 1 }, { i: '0', j: 2 }, { i: '4', j: 2 }, { i: '0', j: 3 }, { i: '4', j: 3 }, { i: '0', j: 4 }, { i: '4', j: 4 },  ], css_id: 'tinytable_css_nx52d9lm12mn5w60qjtk',}, 
+          { positions: [ { i: '1', j: 0 }, { i: '3', j: 0 }, { i: '1', j: 1 }, { i: '3', j: 1 }, { i: '1', j: 2 }, { i: '3', j: 2 }, { i: '1', j: 3 }, { i: '3', j: 3 }, { i: '1', j: 4 }, { i: '3', j: 4 },  ], css_id: 'tinytable_css_451w5z4vio0h68qdqup6',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '4', j: 0 }, { i: '0', j: 1 }, { i: '4', j: 1 }, { i: '0', j: 2 }, { i: '4', j: 2 }, { i: '0', j: 3 }, { i: '4', j: 3 }, { i: '0', j: 4 }, { i: '4', j: 4 },  ], css_id: 'tinytable_css_ddrlh1ye5w5hcyetwbra',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_917f7dym90stvvp6nv9s(cell.i, cell.j, group.css_id);
+                  styleCell_y9idvguc191egxdi4ubv(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1038,11 +1044,11 @@ tt(x) |&gt; format_tt(i = 1, fn = fn)
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_feijinn7ffsg38893qic, .table th.tinytable_css_feijinn7ffsg38893qic { background-color: #ededed; }
-      .table td.tinytable_css_nx52d9lm12mn5w60qjtk, .table th.tinytable_css_nx52d9lm12mn5w60qjtk { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_451w5z4vio0h68qdqup6, .table th.tinytable_css_451w5z4vio0h68qdqup6 { background-color: #ededed; }
+      .table td.tinytable_css_ddrlh1ye5w5hcyetwbra, .table th.tinytable_css_ddrlh1ye5w5hcyetwbra { border-bottom: solid #d3d8dc 0.1em; }
     </style>
     <div class="container">
-      <table class="table table-striped" id="tinytable_917f7dym90stvvp6nv9s" style="table-layout: fixed; width: 50% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-striped" id="tinytable_y9idvguc191egxdi4ubv" style="table-layout: fixed; width: 50% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         </thead><caption>Data about cars.</caption>
               <tbody><tr>
@@ -1094,8 +1100,8 @@ tt(x) |&gt; format_tt(i = 1, fn = fn)
 
     <script>
 
-      function styleCell_l9swf0pbgei2ffg8mzsh(i, j, css_id) {
-          var table = document.getElementById("tinytable_l9swf0pbgei2ffg8mzsh");
+      function styleCell_9gavugieisjfns616gee(i, j, css_id) {
+          var table = document.getElementById("tinytable_9gavugieisjfns616gee");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -1104,8 +1110,8 @@ tt(x) |&gt; format_tt(i = 1, fn = fn)
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function spanCell_l9swf0pbgei2ffg8mzsh(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_l9swf0pbgei2ffg8mzsh");
+      function spanCell_9gavugieisjfns616gee(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_9gavugieisjfns616gee");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -1136,14 +1142,14 @@ tt(x) |&gt; format_tt(i = 1, fn = fn)
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '4', j: 0 }, { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 },  ], css_id: 'tinytable_css_oa5qlruo15fxj8f00g1u',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_zsti1ozx04e0bdc564im',}, 
+          { positions: [ { i: '4', j: 0 }, { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 },  ], css_id: 'tinytable_css_okclp3rr0t4kyumavqhb',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_gzur29nr6bn4gqx63tgi',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_l9swf0pbgei2ffg8mzsh(cell.i, cell.j, group.css_id);
+                  styleCell_9gavugieisjfns616gee(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1151,11 +1157,11 @@ tt(x) |&gt; format_tt(i = 1, fn = fn)
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_oa5qlruo15fxj8f00g1u, .table th.tinytable_css_oa5qlruo15fxj8f00g1u { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_zsti1ozx04e0bdc564im, .table th.tinytable_css_zsti1ozx04e0bdc564im { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_okclp3rr0t4kyumavqhb, .table th.tinytable_css_okclp3rr0t4kyumavqhb { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_gzur29nr6bn4gqx63tgi, .table th.tinytable_css_gzur29nr6bn4gqx63tgi { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_l9swf0pbgei2ffg8mzsh" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_9gavugieisjfns616gee" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -1231,8 +1237,8 @@ mpg &amp; cyl\textsuperscript{*} &amp; disp &amp; hp &amp; drat \\ \midrule %% T
 
     <script>
 
-      function styleCell_tpqph7h7ykg40lop3hg4(i, j, css_id) {
-          var table = document.getElementById("tinytable_tpqph7h7ykg40lop3hg4");
+      function styleCell_pwkrxc2m3or8po60z2fb(i, j, css_id) {
+          var table = document.getElementById("tinytable_pwkrxc2m3or8po60z2fb");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -1241,8 +1247,8 @@ mpg &amp; cyl\textsuperscript{*} &amp; disp &amp; hp &amp; drat \\ \midrule %% T
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function spanCell_tpqph7h7ykg40lop3hg4(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_tpqph7h7ykg40lop3hg4");
+      function spanCell_pwkrxc2m3or8po60z2fb(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_pwkrxc2m3or8po60z2fb");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -1273,14 +1279,14 @@ mpg &amp; cyl\textsuperscript{*} &amp; disp &amp; hp &amp; drat \\ \midrule %% T
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '2', j: 0 },  ], css_id: 'tinytable_css_55d2s5hf5gi8xfm2s048',}, 
-          { positions: [ { i: '0', j: 0 },  ], css_id: 'tinytable_css_9getjolh39ep0jwupphi',}, 
+          { positions: [ { i: '2', j: 0 },  ], css_id: 'tinytable_css_9ltulcq8lr68cdrely6m',}, 
+          { positions: [ { i: '0', j: 0 },  ], css_id: 'tinytable_css_9829f6mfushq7tfkcubm',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_tpqph7h7ykg40lop3hg4(cell.i, cell.j, group.css_id);
+                  styleCell_pwkrxc2m3or8po60z2fb(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1288,11 +1294,11 @@ mpg &amp; cyl\textsuperscript{*} &amp; disp &amp; hp &amp; drat \\ \midrule %% T
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_55d2s5hf5gi8xfm2s048, .table th.tinytable_css_55d2s5hf5gi8xfm2s048 { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_9getjolh39ep0jwupphi, .table th.tinytable_css_9getjolh39ep0jwupphi { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_9ltulcq8lr68cdrely6m, .table th.tinytable_css_9ltulcq8lr68cdrely6m { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_9829f6mfushq7tfkcubm, .table th.tinytable_css_9829f6mfushq7tfkcubm { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_tpqph7h7ykg40lop3hg4" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_pwkrxc2m3or8po60z2fb" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
