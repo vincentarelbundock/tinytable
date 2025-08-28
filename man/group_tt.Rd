@@ -55,15 +55,26 @@ Alias for \code{group_tt()}
 \details{
 Warning: The \code{style_tt()} can normally be used to style the group headers, as expected, but that feature is not available for Markdown and Word tables.
 }
-\section{Word and Markdown limitations}{
+\section{Markdown limitations}{
 
 
-Markdown and Word tables only support these styles: italic, bold, strikeout. The \code{width} argument is also unavailable
+Markdown is a text-only format that only supports these styles: italic, bold, strikeout. The \code{width} argument is also unavailable.
+These limitations exist because there is no standard markdown syntax for the other styling options.
+
+However, in terminals (consoles) that support it, \code{tinytable} can display colors and text styles using
+ANSI escape codes by setting \code{theme_markdown(ansi = TRUE)}. This allows for rich formatting in
+compatible terminal environments.
+}
+
+\section{Word limitations}{
+
+
+Word tables only support these styles: italic, bold, strikeout. The \code{width} argument is also unavailable.
 Moreover, the \code{style_tt()} function cannot be used to style headers inserted by the \code{group_tt()} function;
 instead, you should style the headers directly in the header definition using markdown syntax:
-\code{group_tt(i = list("*italic header*" = 2))}. These limitations are due to the fact that there is no markdown
-syntax for the other options, and that we create Word documents by converting a markdown table to .docx
-via the Pandoc software.
+\code{group_tt(i = list("*italic header*" = 2))}. These limitations are due to the fact that we create
+Word documents by converting a markdown table to .docx via the Pandoc software, which requires
+going through a text-only intermediate format.
 }
 
 \examples{

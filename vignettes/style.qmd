@@ -395,16 +395,38 @@ tt(dat, theme = "void", colnames = FALSE) |>
   )
 ```
 
-## Markdown and Word
+## Markdown
 
-Styling for Markdown and Word tables is more limited than for the other formats. In particular:
+Markdown is a text-only format with limited styling options. The only supported arguments are: `bold`, `italic`, and `strikeout`. These limitations exist because there is no standard markdown syntax for other styling options (ex: colors and background).
 
-* The only supported arguments are: `bold`, `italic`, and `strikeout`.
-* Headers inserted by `group_tt()` cannot be styled using the `style_tt()` function.
+However, in terminals (consoles) that support it, `tinytable` can display colors and text styles using ANSI escape codes by setting `theme_markdown(ansi = TRUE)`. This allows for rich formatting in compatible terminal environments.
 
-These limitations are due to the fact that there is no markdown syntax for the other options (ex: colors and background), and that we create Word documents by converting a markdown table to .docx via the Pandoc software.
+Here's an example with multiple ANSI styles:
 
-One workaround is to style the group headers directly in their definition by using markdown syntax:
+```r
+data <- data.frame(
+  Name = c("Alice", "Bob", "Charlie"),
+  Age = c(25, 30, 35),
+  Score = c(95.5, 87.2, 92.8)
+)
+
+tt(data, caption = "Three friends.") |>
+  style_tt(i = c(0, 3), color = "orange") |>
+  style_tt(i = 1, background = "teal", color = "black", bold = TRUE) |>
+  style_tt(i = 2, j = 2, underline = TRUE, color = "red") |>
+  style_tt(i = 3, strikeout = TRUE) |>
+  group_tt(j = list("Characteristics" = 2:3)) |>
+  style_tt(i = "caption", bold = TRUE, color = "red") |>
+  theme_markdown(ansi = TRUE)
+```
+
+![ANSI Terminal Output](figures/ansi_example.png)
+
+## Word
+
+Word tables have limited styling support. The only supported arguments are: `bold`, `italic`, and `strikeout`. These limitations are due to the fact that we create Word documents by converting a markdown table to .docx via the Pandoc software, which requires going through a text-only intermediate format.
+
+Here's a basic example styling the group headers directly using markdown syntax:
 
 ```{r}
 mtcars[1:4, 1:4] |>
