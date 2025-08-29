@@ -116,7 +116,7 @@ process_align_argument <- function(settings, align, jval) {
 #' @keywords internal
 #' @noRd
 remove_empty_settings <- function(settings) {
-  empty <- settings[, 4:ncol(settings)]
+  empty <- settings[, 3:ncol(settings)]
   empty <- sapply(empty, function(x) is.na(x) | (is.logical(x) && !any(x)))
 
   if (nrow(settings) == 1) {

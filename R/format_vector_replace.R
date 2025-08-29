@@ -35,7 +35,10 @@ format_vector_replace <- function(
               typeof(x0) == "double" &&
               sign(x0) == sign(old),
             identical(old, x),
-            identical(old, x0)
+            identical(old, x0),
+            # Add string conversion matching for mixed types
+            identical(as.character(old), as.character(x)),
+            identical(as.character(old), as.character(x0))
           ))
         },
         logical(1)
