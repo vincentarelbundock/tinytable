@@ -16,8 +16,20 @@ theme_typst <- function(x,
   if (!figure) {
     fn <- function(table) {
       tab <- table@table_string
-      tab <- lines_drop(tab, regex = "table\\(", position = "before")
-      tab <- lines_drop(tab, regex = "\\/\\/ end table", position = "after")
+      # Remove first 5 lines (show figure + figure start)
+      tab <- lines_drop(tab, "^#show figure:", position = "equal")
+      tab <- lines_drop(tab, "^#figure\\(", position = "equal")
+      tab <- lines_drop(tab, "^  \\$TINYTABLE_TYPST_CAPTION", position = "equal")
+      tab <- lines_drop(tab, "^  kind:", position = "equal")
+      tab <- lines_drop(tab, "^  supplement:", position = "equal")
+      # Remove the last line (end figure)
+      tab <- lines_drop(tab, "^\\) // end figure$", position = "equal")
+      # Remove block wrapper lines but keep the content
+      tab <- lines_drop(tab, "block\\[.*start block", position = "equal")
+      tab <- lines_drop(tab, "\\].*end block", position = "equal")
+      # Remove align wrapper lines but keep the content
+      tab <- lines_drop(tab, "^  #align\\(center, \\[$", position = "equal")
+      tab <- lines_drop(tab, "^  \\]\\) // end align$", position = "equal")
       table@table_string <- tab
       return(table)
     }
