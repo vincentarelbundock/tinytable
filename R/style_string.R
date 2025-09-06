@@ -90,11 +90,9 @@ style_string_typst <- function(n, styles) {
 }
 
 style_notes <- function(x) {
-  fun <- switch(
-    x@output,
+  fun <- switch(x@output,
     "typst" = style_string_typst,
     "html" = style_string_html,
-    "html_portable" = style_string_html,
     "latex" = style_string_latex,
     function(k, ...) identity(k)
   )
@@ -173,11 +171,9 @@ style_string_ansi <- function(n, styles) {
 }
 
 style_notes <- function(x) {
-  fun <- switch(
-    x@output,
+  fun <- switch(x@output,
     "typst" = style_string_typst,
     "html" = style_string_html,
-    "html_portable" = style_string_html,
     "latex" = style_string_latex,
     "markdown" = style_string_markdown,
     "gfm" = style_string_markdown,
@@ -198,11 +194,9 @@ style_notes <- function(x) {
 }
 
 style_caption <- function(x) {
-  fun <- switch(
-    x@output,
+  fun <- switch(x@output,
     "typst" = style_string_typst,
     "html" = style_string_html,
-    "html_portable" = style_string_html,
     "latex" = style_string_latex,
     "markdown" = style_string_markdown,
     "gfm" = style_string_markdown,

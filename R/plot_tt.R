@@ -139,7 +139,7 @@ plot_tt_lazy <- function(
     assert_dependency("ggplot2")
     images <- NULL
 
-    if (isTRUE(x@output %in% c("html", "bootstrap")) && isTRUE(x@portable)) {
+    if (isTRUE(x@output %in% c("html", "bootstrap")) && isTRUE(x@html_portable)) {
       path_full <- tempdir()
       assets <- tempdir()
     } else {
@@ -197,7 +197,7 @@ plot_tt_lazy <- function(
   if (isTRUE(x@output == "latex")) {
     cell <- "\\includegraphics[height=%sem]{%s}"
     cell <- sprintf(cell, height, images)
-  } else if (isTRUE(x@output %in% c("html", "bootstrap", "tabulator")) && isTRUE(x@portable)) {
+  } else if (isTRUE(x@output %in% c("html", "bootstrap", "tabulator")) && isTRUE(x@html_portable)) {
     assert_dependency("base64enc")
 
     http <- grepl("^http", trimws(images))

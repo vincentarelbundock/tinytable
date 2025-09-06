@@ -6,6 +6,7 @@
 #' @param class String. Bootstrap table class.
 #' @param css Character vector. CSS style declarations.
 #' @param css_rule String. Complete CSS rules.
+#' @param portable Logical. If not NULL, sets whether to create portable HTML output with base64-encoded images (bootstrap engine only).
 #' @param tabulator_stylesheet Character string. CSS stylesheet theme for Tabulator.js tables.
 #'   Default is "bootstrap5". Available options: "default", "simple", "midnight", "modern",
 #'   "site", "site_dark", "bootstrap3", "bootstrap4", "bootstrap5", "semanticui", "bulma",
@@ -36,6 +37,7 @@ theme_html <- function(
     class = get_option("tinytable_html_class", default = NULL),
     css = get_option("tinytable_html_css", default = NULL),
     css_rule = get_option("tinytable_html_css_rule", default = NULL),
+    portable = get_option("tinytable_html_portable", default = NULL),
     tabulator_columns = get_option(
       "tinytable_html_tabulator_columns",
       default = NULL
@@ -69,6 +71,14 @@ theme_html <- function(
   assert_choice(tabulator_search, c("top", "bottom"), null.ok = TRUE)
   sanity_tabulator_css_rule(tabulator_css_rule)
   sanity_tabulator_columns(tabulator_columns)
+
+  if (!is.null(portable)) {
+    assert_flag(portable)
+    if (isTRUE(portable)) {
+      assert_dependency("base64enc")
+    }
+    x@html_portable <- portable
+  }
 
   if (engine == "raw") {
     x <- theme_html_raw(

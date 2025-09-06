@@ -53,7 +53,7 @@ setClass(
     output = "character",
     output_dir = "character",
     placement = "NULLorCharacter",
-    portable = "logical",
+    html_portable = "logical",
     style = "data.frame",
     style_caption = "list",
     style_notes = "list",
@@ -124,7 +124,7 @@ setMethod(
     .Object@output <- "tinytable"
     .Object@output_dir <- getwd()
     .Object@css <- data.frame(i = NA, j = NA, bootstrap = NA, id = NA)
-    .Object@portable <- FALSE
+    .Object@html_portable <- FALSE
     .Object@style <- data.frame()
     .Object@tabulator_stylesheet <- ""
     .Object@tabulator_options <- ""

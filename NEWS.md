@@ -5,6 +5,7 @@
 Breaking change:
 
 * `theme_void()` calls `strip_tt()` to drop every change made to this point, so the order of operations matter.
+* `"html_portable"` is no longer a valid output format in `save_tt()` or `print()`. Use `theme_html(portable = TRUE)` instead.
 
 New:
 
