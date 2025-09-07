@@ -131,11 +131,11 @@ save_tt <- function(
     )
 
     # render
-    engine <- get_option("tinytable_pdf_engine", default = "xelatex")
+    engine <- x@latex_engine
     assert_choice(
       engine,
       c("xelatex", "pdflatex", "lualatex"),
-      name = "tinytable_pdf_engine"
+      name = "latex_engine"
     )
     tinytex::latexmk(f, pdf_file = output, engine = engine)
 

@@ -17,6 +17,7 @@ theme_latex(
   resize_direction = get_option("tinytable_latex_resize_direction", default = NULL),
   placement = get_option("tinytable_latex_placement", NULL),
   preamble = NULL,
+  engine = NULL,
   ...
 )
 }
@@ -80,6 +81,9 @@ Default is controlled by \code{tinytable_latex_placement} option.}
 
 \item{preamble}{Logical value specifying whether to include LaTeX preamble packages.
 If not NULL, overrides the table's preamble setting.}
+
+\item{engine}{Character string specifying the LaTeX engine to use for PDF compilation.
+Options are "xelatex", "pdflatex", or "lualatex". If not NULL, overrides the table's engine setting.}
 
 \item{...}{Additional arguments (currently unused).}
 }

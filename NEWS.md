@@ -8,6 +8,7 @@ Breaking change:
 * `"html_portable"` is no longer a valid output format in `save_tt()` or `print()`. Use `theme_html(portable = TRUE)` instead.
 * Global options `tinytable_html_engine` and `tinytable_html_portable` are deprecated and no longer used. Use `theme_html(engine = "bootstrap")` and `theme_html(portable = TRUE)` instead.
 * Global option `tinytable_latex_preamble` is deprecated and no longer used. Use `theme_latex(preamble = TRUE)` instead.
+* Global option `tinytable_pdf_engine` is deprecated and no longer used. Use `theme_latex(engine = "xelatex")` instead.
 
 New:
 

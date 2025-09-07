@@ -34,38 +34,17 @@ theme_html <- function(
     engine = get_option("tinytable_html_engine", default = "bootstrap"),
     i = NULL,
     j = NULL,
-    class = get_option("tinytable_html_class", default = NULL),
-    css = get_option("tinytable_html_css", default = NULL),
-    css_rule = get_option("tinytable_html_css_rule", default = NULL),
-    portable = get_option("tinytable_html_portable", default = NULL),
-    tabulator_columns = get_option(
-      "tinytable_html_tabulator_columns",
-      default = NULL
-    ),
-    tabulator_css_rule = get_option(
-      "tinytable_html_tabulator_css_rule",
-      default = NULL
-    ),
-    tabulator_layout = get_option(
-      "tinytable_html_tabulator_layout",
-      default = "fitDataTable"
-    ),
-    tabulator_options = get_option(
-      "tinytable_html_tabulator_options",
-      default = NULL
-    ),
-    tabulator_pagination = get_option(
-      "tinytable_html_tabulator_pagination",
-      default = NULL
-    ),
-    tabulator_search = get_option(
-      "tinytable_html_tabulator_search",
-      default = NULL
-    ),
-    tabulator_stylesheet = get_option(
-      "tinytable_html_tabulator_stylesheet",
-      default = NULL
-    ),
+    class = get_option("tinytable_html_class"),
+    css = get_option("tinytable_html_css"),
+    css_rule = get_option("tinytable_html_css_rule"),
+    portable = get_option("tinytable_html_portable"),
+    tabulator_columns = get_option("tinytable_html_tabulator_columns"),
+    tabulator_css_rule = get_option("tinytable_html_tabulator_css_rule"),
+    tabulator_layout = get_option("tinytable_html_tabulator_layout", default = "fitDataTable"),
+    tabulator_options = get_option("tinytable_html_tabulator_options"),
+    tabulator_pagination = get_option("tinytable_html_tabulator_pagination"),
+    tabulator_search = get_option("tinytable_html_tabulator_search"),
+    tabulator_stylesheet = get_option("tinytable_html_tabulator_stylesheet"),
     ...) {
   assert_choice(engine, c("bootstrap", "raw", "tabulator"))
   assert_choice(tabulator_search, c("top", "bottom"), null.ok = TRUE)

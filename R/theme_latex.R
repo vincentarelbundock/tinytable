@@ -120,6 +120,8 @@ handle_latex_environment_table <- function(x, environment_table) {
 #'   Default is controlled by `tinytable_latex_placement` option.
 #' @param preamble Logical value specifying whether to include LaTeX preamble packages.
 #'   If not NULL, overrides the table's preamble setting.
+#' @param engine Character string specifying the LaTeX engine to use for PDF compilation.
+#'   Options are "xelatex", "pdflatex", or "lualatex". If not NULL, overrides the table's engine setting.
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return A modified `tinytable` object with LaTeX-specific theming applied.
@@ -165,6 +167,7 @@ theme_latex <- function(x,
                         resize_direction = get_option("tinytable_latex_resize_direction", default = NULL),
                         placement = get_option("tinytable_latex_placement", NULL),
                         preamble = NULL,
+                        engine = NULL,
                         ...) {
   assert_flag(environment_table)
   assert_string(inner, null.ok = TRUE)
@@ -176,9 +179,14 @@ theme_latex <- function(x,
   assert_choice(resize_direction, c("down", "up", "both"), null.ok = TRUE)
   assert_string(placement, null.ok = TRUE)
   assert_flag(preamble, null.ok = TRUE)
+  assert_choice(engine, c("xelatex", "pdflatex", "lualatex"), null.ok = TRUE)
 
   if (!is.null(preamble)) {
     x@latex_preamble <- preamble
+  }
+
+  if (!is.null(engine)) {
+    x@latex_engine <- engine
   }
 
   # Set environment_table = FALSE when environment is longtblr

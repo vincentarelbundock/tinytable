@@ -56,6 +56,7 @@ setClass(
     html_portable = "logical",
     html_engine = "character",
     latex_preamble = "logical",
+    latex_engine = "character",
     style = "data.frame",
     style_caption = "list",
     style_notes = "list",
@@ -129,6 +130,7 @@ setMethod(
     .Object@html_portable <- FALSE
     .Object@html_engine <- "bootstrap"
     .Object@latex_preamble <- TRUE
+    .Object@latex_engine <- "xelatex"
     .Object@style <- data.frame()
     .Object@tabulator_stylesheet <- ""
     .Object@tabulator_options <- ""
