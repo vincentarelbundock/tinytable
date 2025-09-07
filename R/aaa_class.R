@@ -55,6 +55,7 @@ setClass(
     placement = "NULLorCharacter",
     html_portable = "logical",
     html_engine = "character",
+    latex_preamble = "logical",
     style = "data.frame",
     style_caption = "list",
     style_notes = "list",
@@ -127,6 +128,7 @@ setMethod(
     .Object@css <- data.frame(i = NA, j = NA, bootstrap = NA, id = NA)
     .Object@html_portable <- FALSE
     .Object@html_engine <- "bootstrap"
+    .Object@latex_preamble <- TRUE
     .Object@style <- data.frame()
     .Object@tabulator_stylesheet <- ""
     .Object@tabulator_options <- ""

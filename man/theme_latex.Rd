@@ -16,6 +16,7 @@ theme_latex(
   resize_width = get_option("tinytable_latex_resize_width", 1),
   resize_direction = get_option("tinytable_latex_resize_direction", default = NULL),
   placement = get_option("tinytable_latex_placement", NULL),
+  preamble = NULL,
   ...
 )
 }
@@ -76,6 +77,9 @@ Default is controlled by \code{tinytable_latex_resize_direction} option.}
 \item{placement}{Character string specifying LaTeX float placement options for the
 table environment (e.g., "h", "t", "b", "p", "H"). Only used when \code{environment_table = TRUE}.
 Default is controlled by \code{tinytable_latex_placement} option.}
+
+\item{preamble}{Logical value specifying whether to include LaTeX preamble packages.
+If not NULL, overrides the table's preamble setting.}
 
 \item{...}{Additional arguments (currently unused).}
 }

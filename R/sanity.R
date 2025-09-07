@@ -187,8 +187,7 @@ infer_output <- function(x) {
 
   if (isTRUE(check_dependency("knitr"))) {
     if (isTRUE(knitr::pandoc_to() %in% c("latex", "beamer"))) {
-      flag <- getOption("tinytable_latex_preamble", default = TRUE)
-      if (isTRUE(flag)) {
+      if (isTRUE(x@latex_preamble)) {
         usepackage_latex("float")
         usepackage_latex(
           "tabularray",
