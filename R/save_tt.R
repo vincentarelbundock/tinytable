@@ -44,19 +44,19 @@ save_tt <- function(
     out <- build_tt(x, output = "gfm")@table_string
     return(as.character(out))
   } else if (identical(output, "html")) {
-    out <- build_tt(x, output = "html")@table_string
+    out <- build_tt(x, output = x@html_engine)@table_string
     return(as.character(out))
   } else if (identical(output, "bootstrap")) {
     out <- build_tt(x, output = "bootstrap")@table_string
+    return(as.character(out))
+  } else if (identical(output, "tabulator")) {
+    out <- build_tt(x, output = "tabulator")@table_string
     return(as.character(out))
   } else if (identical(output, "latex")) {
     out <- build_tt(x, output = "latex")@table_string
     return(as.character(out))
   } else if (identical(output, "typst")) {
     out <- build_tt(x, output = "typst")@table_string
-    return(as.character(out))
-  } else if (identical(output, "tabulator")) {
-    out <- build_tt(x, output = "tabulator")@table_string
     return(as.character(out))
   } else if (identical(output, "dataframe")) {
     out <- build_tt(x, output = "dataframe")@data_body
@@ -71,7 +71,7 @@ save_tt <- function(
 
   output_format <- switch(file_ext,
     "png" = "html",
-    "html" = get_option("tinytable_html_engine", default = "bootstrap"),
+    "html" = x@html_engine,
     "pdf" = "latex",
     "tex" = "latex",
     "md" = "markdown",
@@ -81,7 +81,7 @@ save_tt <- function(
     "docx" = "markdown",
     "typ" = "typst",
     stop(
-      "The supported file extensions are: .png, .html, .pdf, .tex, .typ, .qmd, .Rmd, .txt, .docx, and .md. Supported output formats are: markdown, latex, html, typst, tabulator, and dataframe.",
+      "The supported file extensions are: .png, .html, .pdf, .tex, .typ, .qmd, .Rmd, .txt, .docx, and .md. Supported output formats are: markdown, latex, typst, html, bootstrap, tabulator, and dataframe.",
       call. = FALSE
     )
   )
