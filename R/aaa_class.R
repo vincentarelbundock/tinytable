@@ -54,6 +54,7 @@ setClass(
     output_dir = "character",
     placement = "NULLorCharacter",
     html_portable = "logical",
+    html_engine = "character",
     style = "data.frame",
     style_caption = "list",
     style_notes = "list",
@@ -125,6 +126,7 @@ setMethod(
     .Object@output_dir <- getwd()
     .Object@css <- data.frame(i = NA, j = NA, bootstrap = NA, id = NA)
     .Object@html_portable <- FALSE
+    .Object@html_engine <- "bootstrap"
     .Object@style <- data.frame()
     .Object@tabulator_stylesheet <- ""
     .Object@tabulator_options <- ""

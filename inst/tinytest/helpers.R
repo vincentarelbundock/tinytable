@@ -72,7 +72,7 @@ print.custom_html_string <- function(x, ...) {
   invisible(x)
 }
 
-print_html <- function(x, output = c("html", "html_portable")) {
+print_html <- function(x, output = c("html")) {
   output <- match.arg(output)
   x <- save_tt(x, output)
   class(x) <- c("custom_html_string", class(x))

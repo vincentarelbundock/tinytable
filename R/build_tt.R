@@ -56,7 +56,8 @@ rbind_body_groupi <- function(x) {
 
 
 build_tt <- function(x, output = NULL) {
-  output <- sanitize_output(output)
+  x <- sanitize_output(x, output)
+  output <- infer_output(x)
 
   x <- switch(output,
     html = swap_class(x, "tinytable_bootstrap"),

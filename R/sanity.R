@@ -127,7 +127,11 @@ sanitize_j <- function(j, x, skip_tabulator_types = FALSE) {
   return(out)
 }
 
-sanitize_output <- function(output) {
+sanitize_output <- function(x, output) {
+  if (is.null(output)) {
+    return(x)
+  }
+  
   assert_choice(
     output,
     choice = c(
@@ -140,28 +144,38 @@ sanitize_output <- function(output) {
       "gfm",
       "tabulator",
       "bootstrap"
-    ),
-    null.ok = TRUE
+    )
   )
+  
+  x@output <- output
+  return(x)
+}
 
-  # default output format
-  if (is.null(output) || isTRUE(output == "tinytable")) {
-    has_viewer <- interactive() && !is.null(getOption("viewer"))
-    if (has_viewer) {
-      output <- "tabulator"
+infer_output <- function(x) {
+  output <- x@output
+  
+  # If output is already set to a specific format, respect it
+  if (!is.null(output) && !isTRUE(output == "tinytable")) {
+    if (output == "html") {
+      # When user explicitly asks for "html", check object slot or global option for engine
+      if (!is.null(x@html_engine)) {
+        html_framework <- x@html_engine
+      } else {
+        html_framework <- getOption("tinytable_html_engine", default = "bootstrap")
+      }
+      assert_choice(html_framework, choice = c("tabulator", "bootstrap"))
+      return(if (html_framework == "tabulator") "tabulator" else "bootstrap")
     } else {
-      out <- "markdown"
+      # For all other specific formats, use them as-is
+      return(output)
     }
-    out <- if (has_viewer) "html" else "markdown"
-  } else if (output == "html") {
-    # When user explicitly asks for "html", check global option for engine
-    tinytable_html_engine <- getOption("tinytable_html_engine", default = "bootstrap")
-    assert_choice(tinytable_html_engine, choice = c("tabulator", "bootstrap"))
-    out <- if (tinytable_html_engine == "tabulator") "tabulator" else "bootstrap"
   } else {
-    out <- output
+    # Only do inference when output is NULL or "tinytable"
+    has_viewer <- interactive() && !is.null(getOption("viewer"))
+    out <- if (has_viewer) "html" else "markdown"
   }
 
+  # Environmental overrides only apply when we're doing inference (not explicit output)
   if (isTRUE(check_dependency("litedown"))) {
     fmt <- tryCatch(litedown::get_context("format"), error = function(e) NULL)
     if (identical(fmt, "latex")) {
@@ -194,17 +208,17 @@ sanitize_output <- function(output) {
           )
         )
       }
-      if (is.null(output)) out <- "latex"
+      out <- "latex"
     } else if (isTRUE(knitr::pandoc_to() %in% c("html", "revealjs"))) {
-      if (is.null(output)) {
-        # Check global HTML engine preference for notebooks
+      # Check HTML engine preference from object slot or global option
+      if (!is.null(x@html_engine)) {
+        html_framework <- x@html_engine
+      } else {
         html_framework <- getOption("tinytable_html_engine", default = "bootstrap")
-        out <- if (html_framework == "tabulator") "tabulator" else "bootstrap"
       }
+      out <- if (html_framework == "tabulator") "tabulator" else "bootstrap"
     } else if (isTRUE(knitr::pandoc_to() == "typst")) {
-      if (is.null(output)) {
-        out <- "typst"
-      }
+      out <- "typst"
       if (isTRUE(check_dependency("quarto"))) {
         if (isTRUE(quarto::quarto_version() < "1.5.29")) {
           msg <- "Typst tables require version 1.5.29 or later of Quarto and version 0.11.0 or later of Typst. This software may (or may not) only be available in pre-release builds: https://quarto.org/docs/download"
@@ -212,9 +226,9 @@ sanitize_output <- function(output) {
         }
       }
     } else if (isTRUE(knitr::pandoc_to() == "docx")) {
-      if (is.null(output)) out <- "markdown"
+      out <- "markdown"
     } else {
-      if (is.null(output)) out <- "markdown"
+      out <- "markdown"
     }
   }
 

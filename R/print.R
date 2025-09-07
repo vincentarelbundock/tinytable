@@ -86,11 +86,8 @@ print.tinytable <- function(
     x,
     output = get_option("tinytable_print_output", default = NULL),
     ...) {
-  if (is.null(output)) {
-    output <- sanitize_output(x@output)
-  } else {
-    output <- sanitize_output(output)
-  }
+  x <- sanitize_output(x, output)
+  output <- infer_output(x)
 
   dir <- getOption("tinytable_tempdir", default = tempdir())
   dir <- sub("\\/$", "", dir)
