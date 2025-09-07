@@ -12,6 +12,7 @@ theme_html(
   class = get_option("tinytable_html_class", default = NULL),
   css = get_option("tinytable_html_css", default = NULL),
   css_rule = get_option("tinytable_html_css_rule", default = NULL),
+  portable = get_option("tinytable_html_portable", default = NULL),
   tabulator_columns = get_option("tinytable_html_tabulator_columns", default = NULL),
   tabulator_css_rule = get_option("tinytable_html_tabulator_css_rule", default = NULL),
   tabulator_layout = get_option("tinytable_html_tabulator_layout", default =
@@ -39,6 +40,8 @@ theme_html(
 \item{css}{Character vector. CSS style declarations.}
 
 \item{css_rule}{String. Complete CSS rules.}
+
+\item{portable}{Logical. If not NULL, sets whether to create portable HTML output with base64-encoded images (bootstrap engine only).}
 
 \item{tabulator_columns}{Custom column definitions.}
 

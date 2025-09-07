@@ -157,12 +157,8 @@ infer_output <- function(x) {
   # If output is already set to a specific format, respect it
   if (!is.null(output) && !isTRUE(output == "tinytable")) {
     if (output == "html") {
-      # When user explicitly asks for "html", check object slot or global option for engine
-      if (!is.null(x@html_engine)) {
-        html_framework <- x@html_engine
-      } else {
-        html_framework <- getOption("tinytable_html_engine", default = "bootstrap")
-      }
+      # When user explicitly asks for "html", use the object's engine setting
+      html_framework <- x@html_engine
       assert_choice(html_framework, choice = c("tabulator", "bootstrap"))
       return(if (html_framework == "tabulator") "tabulator" else "bootstrap")
     } else {
@@ -210,12 +206,8 @@ infer_output <- function(x) {
       }
       out <- "latex"
     } else if (isTRUE(knitr::pandoc_to() %in% c("html", "revealjs"))) {
-      # Check HTML engine preference from object slot or global option
-      if (!is.null(x@html_engine)) {
-        html_framework <- x@html_engine
-      } else {
-        html_framework <- getOption("tinytable_html_engine", default = "bootstrap")
-      }
+      # Check HTML engine preference from object slot
+      html_framework <- x@html_engine
       out <- if (html_framework == "tabulator") "tabulator" else "bootstrap"
     } else if (isTRUE(knitr::pandoc_to() == "typst")) {
       out <- "typst"

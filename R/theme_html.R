@@ -72,6 +72,10 @@ theme_html <- function(
   sanity_tabulator_css_rule(tabulator_css_rule)
   sanity_tabulator_columns(tabulator_columns)
 
+  if (!is.null(engine)) {
+    x@html_engine <- engine
+  }
+
   if (!is.null(portable)) {
     assert_flag(portable)
     if (isTRUE(portable)) {
