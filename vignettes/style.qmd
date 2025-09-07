@@ -118,6 +118,15 @@ tt(x) |>
   style_tt(i = mpg > 21, background = "lightblue", bold = TRUE)
 ```
 
+There is also a `groupi` object with indices that can be manipulated as an unquoted numeric expression.
+
+```{r}
+tt(head(mtcars, 10)) |>
+    group_tt(i = list("Hello" = 3, "World" = 5)) |>
+    group_tt(j = list("Cyl" = 1:3, "Disp" = 4:6)) |>
+    style_tt(groupi, background = "pink", align = "c") |>
+    style_tt(groupi + 1, color = "white", background = "teal")
+```
 
 ## Colors
 

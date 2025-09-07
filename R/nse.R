@@ -6,8 +6,12 @@ nse_i_j <- function(x, i_expr, j_expr, pf) {
   i <- i_expr
   j <- j_expr
 
-  i <- tryCatch(eval(i, pf),
-    error = function(e) eval(i, x@data_body))
+  tmpenv <- new.env()
+  val <- as.list(x@data_body)
+  val <- c(val, list(groupi = x@group_index_i))
+  val <- val[names(val) != ""]
+  list2env(val, tmpenv)
+  i <- tryCatch(eval(i, pf), error = function(e) eval(i, tmpenv))
 
   if (is.logical(i) && length(i) == nrow(x@data_body)) {
     i <- which(i)

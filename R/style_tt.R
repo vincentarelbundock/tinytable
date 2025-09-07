@@ -176,7 +176,7 @@ merge_with_existing_styles <- function(x, settings) {
 #' + Integer vectors indicating column positions.
 #' + Character vector indicating column names.
 #' + A single string specifying a Perl-style regular expression used to match column names.
-#' + Unquoted expression: Non-standard evaluation is supported. When supplying an unquoted expression, it is first evaluated in the calling environment, then in the data frame passed to `tt()`. See examples below.
+#' + Unquoted expression: Non-standard evaluation is supported. When supplying an unquoted expression, it is first evaluated in the calling environment, then in an environment that includes the columns of the original data passed to `tt()`, and `groupi` indices. See examples below.
 #' @param bold Logical; if `TRUE`, text is styled in bold.
 #' @param italic Logical; if `TRUE`, text is styled in italic.
 #' @param monospace Logical; if `TRUE`, text is styled in monospace font.

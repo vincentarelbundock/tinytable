@@ -69,7 +69,7 @@ tt_style(
 \item Integer vectors indicating column positions.
 \item Character vector indicating column names.
 \item A single string specifying a Perl-style regular expression used to match column names.
-\item Unquoted expression: Non-standard evaluation is supported. When supplying an unquoted expression, it is first evaluated in the calling environment, then in the data frame passed to \code{tt()}. See examples below.
+\item Unquoted expression: Non-standard evaluation is supported. When supplying an unquoted expression, it is first evaluated in the calling environment, then in an environment that includes the columns of the original data passed to \code{tt()}, and \code{groupi} indices. See examples below.
 }}
 
 \item{bold}{Logical; if \code{TRUE}, text is styled in bold.}

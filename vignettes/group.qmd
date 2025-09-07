@@ -259,12 +259,13 @@ rowmat
 ```
 
 ```{r}
-tab <- tt(dat[, 2:5], colnames = FALSE) |>
-  group_tt(i = region_indices, j = rowmat)
+odd <- function(x) x[seq(1, length(x), 2)]
+even <- function(x) x[seq(2, length(x), 2)]
 
-idx <- tab@group_index_i[c(TRUE, diff(tab@group_index_i) != 1)]
-
-tab |>
-  style_tt(i = idx, j = 1, align = "c", colspan = 4, background = "lightgrey", line = "b") |>
-  style_tt(i = idx + 1, line = "tb")
+tt(dat[, 2:5], colnames = FALSE) |>
+  group_tt(i = region_indices, j = rowmat) |>
+  style_tt(even(groupi), bold = TRUE) |>
+  style_tt(odd(groupi), line = "tb") |> 
+  style_tt(odd(groupi), j = 1, align = "c", colspan = 4, 
+    background = "lightgrey")
 ```
