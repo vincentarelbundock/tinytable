@@ -5,18 +5,29 @@
 Breaking change:
 
 * `theme_void()` calls `strip_tt()` to drop every change made to this point, so the order of operations matter.
-* `"html_portable"` is no longer a valid output format in `save_tt()` or `print()`. Use `theme_html(portable = TRUE)` instead.
-* Global options `tinytable_html_engine` and `tinytable_html_portable` are deprecated and no longer used. Use `theme_html(engine = "bootstrap")` and `theme_html(portable = TRUE)` instead.
-* Global option `tinytable_latex_preamble` is deprecated and no longer used. Use `theme_latex(preamble = TRUE)` instead.
-* Global option `tinytable_pdf_engine` is deprecated and no longer used. Use `theme_latex(engine = "xelatex")` instead.
+* `"html_portable"` is no longer a valid `output` format in `save_tt()` or `print()`. Use `theme_html(portable = TRUE)` instead.
+
+Deprecated global options:
+
+* `tinytable_html_engine` 
+  - Alternative: `theme_html(tab, engine = "bootstrap")`
+* `tinytable_html_portable`
+  - Alternative: `theme_html(tab, portable = TRUE)`
+* `tinytable_latex_preamble` 
+  - Alternative: `theme_latex(tab, preamble = TRUE)`
+* `tinytable_pdf_engine` 
+  - Alternative: `theme_latex(tab, engine = "pdflatex")`
+* `tinytable_quarto_figure`
+  - No alternative.
 
 New:
 
 * `tt()` is now a generic function, allowing special table-drawing methods for specific classes of objects. `tinytable` provides methods for `data.frame`, `data.table`, and `tbl_df`. See the "Custom" vignette for examples.
-* `theme_markdown()` enables support for `style_tt()` colors, backgrounds, and text styles in Markdown output, via the `ansi` argument. The same function can suppress horizontal and vertical lines.
-* A global option can be used to choose the temporary directory where HTML files are saved for preview: `options(tinytable_tempdir = "/home/username/tempdir")`
 * Non-standard evaluation is supported for `i` and `j` arguments in `style_tt()`, `format_tt()`, and `plot_tt()`.
 * `subset(x, select = c(x, y))` can now be used to select columns.
+* `theme_markdown(tab, ansi=TRUE)` enables support for `style_tt()` colors, backgrounds, and text styles in Markdown output. 
+* `theme_markdown(tab, vline=FALSE, hline=FALSE)` suppresses lines.
+* A global option can be used to choose the temporary directofy where HTML files are saved for preview: `options(tinytable_tempdir = "/home/username/tempdir")`
 
 Bugs:
 
