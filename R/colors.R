@@ -3,9 +3,9 @@ standardize_colors <- function(col, format = "hex") {
   if (length(col) == 1 && is.na(col)) {
     return(NA)
   }
-  if (
-    isFALSE(getOption("tinytable_color_name_normalization", default = TRUE))
-  ) {
+
+  normalize <- isTRUE(getOption("tinytable_color_name_normalization", default = TRUE))
+  if (!normalize) {
     return(col)
   }
 
@@ -54,16 +54,16 @@ standardize_colors <- function(col, format = "hex") {
       if (is.na(color_val)) {
         return(NA)
       }
-      
+
       # If it's a hex color, convert to RGB ANSI
       if (grepl("^#[0-9A-Fa-f]{6}$", color_val)) {
-        hex_color <- substr(color_val, 2, 7)  # Remove #
+        hex_color <- substr(color_val, 2, 7) # Remove #
         r <- as.integer(paste0("0x", substr(hex_color, 1, 2)))
         g <- as.integer(paste0("0x", substr(hex_color, 3, 4)))
         b <- as.integer(paste0("0x", substr(hex_color, 5, 6)))
         return(sprintf("38;2;%d;%d;%d", r, g, b))
       }
-      
+
       # Check if it's a named ANSI color
       ansi_colors <- list(
         "black" = "30", "red" = "31", "green" = "32", "yellow" = "33",
@@ -72,16 +72,16 @@ standardize_colors <- function(col, format = "hex") {
         "bright_yellow" = "93", "bright_blue" = "94", "bright_magenta" = "95",
         "bright_cyan" = "96", "bright_white" = "97"
       )
-      
+
       color_code <- ansi_colors[[tolower(color_val)]]
       if (!is.null(color_code)) {
         return(color_code)
       }
-      
+
       # If no match, return original
       return(color_val)
     }
-    
+
     result <- sapply(result, format_ansi_color, USE.NAMES = FALSE)
   }
 
