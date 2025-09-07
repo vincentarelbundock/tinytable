@@ -489,6 +489,8 @@ ul.task-list li input[type="checkbox"] {
   resize_width = get_option("tinytable_latex_resize_width", 1),
   resize_direction = get_option("tinytable_latex_resize_direction", default = NULL),
   placement = get_option("tinytable_latex_placement", NULL),
+  preamble = NULL,
+  engine = NULL,
   ...
 )
 </code></pre>
@@ -609,6 +611,22 @@ Default is controlled by <code>tinytable_latex_resize_direction</code> option.
 </td>
 <td>
 Character string specifying LaTeX float placement options for the table environment (e.g., "h", "t", "b", "p", "H"). Only used when <code>environment_table = TRUE</code>. Default is controlled by <code>tinytable_latex_placement</code> option.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="preamble">preamble</code>
+</td>
+<td>
+Logical value specifying whether to include LaTeX preamble packages. If not NULL, overrides the table’s preamble setting.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="engine">engine</code>
+</td>
+<td>
+Character string specifying the LaTeX engine to use for PDF compilation. Options are "xelatex", "pdflatex", or "lualatex". If not NULL, overrides the table’s engine setting.
 </td>
 </tr>
 <tr>

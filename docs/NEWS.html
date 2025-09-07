@@ -529,6 +529,10 @@ window.Quarto = {
 <p>Breaking change:</p>
 <ul>
 <li><code>theme_void()</code> calls <code>strip_tt()</code> to drop every change made to this point, so the order of operations matter.</li>
+<li><code>"html_portable"</code> is no longer a valid output format in <code>save_tt()</code> or <code>print()</code>. Use <code>theme_html(portable = TRUE)</code> instead.</li>
+<li>Global options <code>tinytable_html_engine</code> and <code>tinytable_html_portable</code> are deprecated and no longer used. Use <code>theme_html(engine = "bootstrap")</code> and <code>theme_html(portable = TRUE)</code> instead.</li>
+<li>Global option <code>tinytable_latex_preamble</code> is deprecated and no longer used. Use <code>theme_latex(preamble = TRUE)</code> instead.</li>
+<li>Global option <code>tinytable_pdf_engine</code> is deprecated and no longer used. Use <code>theme_latex(engine = "xelatex")</code> instead.</li>
 </ul>
 <p>New:</p>
 <ul>
@@ -542,6 +546,7 @@ window.Quarto = {
 <ul>
 <li><code>tabulator</code> output works with hyphens in columns names</li>
 <li>Selective formatting with <code>format_tt(i = "colnames")</code> is no longer applied twice. Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/551">#551</a>.</li>
+<li><code>color</code> ignored in matrix indexing.</li>
 </ul>
 </section>
 <section id="section" class="level2">
