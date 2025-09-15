@@ -269,6 +269,7 @@ expect_false("--5.1--" %in% tab[[1]])
 
 # Vignette with multiple components
 options(tinytable_print_output = "latex")
+set.seed(48103)
 tab <- data.frame(
   "A_B" = rnorm(5),
   "B_C" = rnorm(5),

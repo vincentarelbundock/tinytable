@@ -1,15 +1,6 @@
 swap_class <- function(x, new_class) {
-  out <- methods::new(new_class)
-  for (s in methods::slotNames(x)) {
-    # modelsummary issue #727
-    tmp <- methods::slot(x, s)
-    if (inherits(tmp, "data.table")) {
-      assert_dependency("data.table")
-      data.table::setDT(tmp)
-    }
-    methods::slot(out, s) <- tmp
-  }
-  return(out)
+  class(x) <- new_class
+  return(x)
 }
 
 setClassUnion("NULLorCharacter", c("NULL", "character"))
@@ -84,16 +75,16 @@ setClass(
 setMethod(
   "initialize",
   "tinytable",
-  function(
-      .Object,
-      data = data.frame(),
-      caption = NULL,
-      notes = NULL,
-      theme = list("default"),
-      data_body = data.frame(),
-      placement = NULL,
-      width = NULL,
-      height = NULL) {
+  function(.Object,
+           data = data.frame(),
+           caption = NULL,
+           notes = NULL,
+           theme = list("default"),
+           data_body = data.frame(),
+           placement = NULL,
+           width = NULL,
+           height = NULL,
+           colnames = TRUE) {
     # explicit
     .Object@data <- data
     .Object@data_body <- data_body
@@ -107,11 +98,24 @@ setMethod(
     # dynamic
     .Object@nrow <- nrow(.Object@data)
     .Object@ncol <- ncol(.Object@data)
-    .Object@nhead <- if (is.null(colnames(data))) 0 else 1
-    .Object@names <- if (is.null(colnames(data))) {
-      character()
-    } else {
-      colnames(data)
+    .Object@nhead <- if (is.null(colnames(data)) || isFALSE(colnames)) 0 else 1
+
+    # colnames
+    if (isTRUE(colnames)) {
+      .Object@names <- colnames(data)
+    } else if (isFALSE(colnames) || is.null(colnames(data))) {
+      .Object@names <- character()
+    } else if (identical(colnames, "label")) {
+      cols <- character()
+      for (cn in colnames(data)) {
+        lab <- attr(data[[cn]], "label")
+        if (!is.null(lab)) {
+          cols <- c(cols, lab)
+        } else {
+          cols <- c(cols, cn)
+        }
+      }
+      .Object@names <- cols
     }
 
     # empty

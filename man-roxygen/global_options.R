@@ -20,22 +20,9 @@
 #'
 #' In addition, some more specific options are available to control the behavior of the package in specific contexts.
 #'
-#' ### HTML
-#'
 #' * `tinytable_html_mathjax`: Insert MathJax scripts (warning: may conflict if MathJax is loaded elsewhere)
-#' * `tinytable_html_portable`: Insert base64 encoded images directly in HTML for `plot_tt()`
-#' * `tinytable_html_engine`: Default HTML engine (default: "bootstrap"). Set to "tabulator" to use interactive tables by default in HTML documents instead of static Bootstrap tables.
-#'
-#' ### PDF
-#'
-#' * `tinytable_pdf_clean`: Delete temporary and log files
-#' * `tinytable_pdf_engine`: Choose between "xelatex", "pdflatex", "lualatex"
-#'
-#' ### Color processing
-#'
-#' * `tinytable_color_name_normalization`: Enable/disable automatic color name processing (default: TRUE).
-#'
-#' When enabled, R color names recognized by `col2rgb()` are converted to hex format for consistent rendering across HTML, LaTeX, and Typst formats. If R color conversion fails, LaTeX color names are used as fallback. Colors explicitly supplied as hex values with "#" prefix are passed through unchanged. Set to FALSE to disable processing and pass color names unchanged.
+#' * `tinytable_pdf_clean`: Delete temporary and log files for pdf output in `save_tt()`
+#' * `tinytable_color_name_normalization`: Enable/disable automatic color name processing (default: TRUE). When enabled, R color names recognized by `col2rgb()` are converted to hex format for consistent rendering across HTML, LaTeX, and Typst formats. If R color conversion fails, LaTeX color names are used as fallback. Colors explicitly supplied as hex values with "#" prefix are passed through unchanged. Set to FALSE to disable processing and pass color names unchanged.
 #'
 #' ### Quarto
 #'
@@ -47,8 +34,6 @@
 #' Options:
 #'
 #' * `tinytable_quarto_disable_processing`: Disable Quarto cell processing
-#' * `tinytable_print_rstudio_notebook`: Display tables "inline" or in "viewer" for RStudio notebooks
-#' * `tinytable_quarto_figure`: Control Typst figure environment in Quarto
 #'
 #' Example of Quarto-specific code in cells:
 #'

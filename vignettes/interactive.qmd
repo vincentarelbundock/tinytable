@@ -32,12 +32,13 @@ dat <- head(iris)
 tt(dat) |> print("tabulator")
 ```
 
-To save the table to file, we can use the `save_tt()` function. One issue to consider, however, is that `tinytable` supports two types of HTML output: `tabulator` and `bootstrap`. To select the default HTML engine, users can set a global option:
+To save the table to file, we can use the `save_tt()` function. One issue to consider, however, is that `tinytable` supports two types of HTML output: `tabulator` and `bootstrap`. To select the default HTML engine, users can call the `theme_html()` function:
 
 ```{r}
 #| eval: false
-options(tinytable_html_engine = "tabulator")
-tt(dat) |> save_tt("/path/to/your/file.html")
+tt(dat) |> 
+  theme_html(engine = "tabulator") |>
+  save_tt("/path/to/your/file.html")
 ```
 
 In notebooks like Quarto or R markdown, `tinytable` will automatically create an HTML when appropriate. Whenn the `tinytable_html_engine` option is set to `"tabulator"`, the table will be rendered using Tabulator.js.

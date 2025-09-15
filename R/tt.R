@@ -27,7 +27,7 @@
 #' * Multiple strings insert multiple notes sequentially: `list("Hello world", "Foo bar")`
 #' * A named list inserts a list with the name as superscript: `list("a" = list("Hello World"))`
 #' * A named list with positions inserts markers as superscripts inside table cells: `list("a" = list(i = 0:1, j = 2, text = "Hello World"))`
-#' @param colnames Logical. If `FALSE`, column names are omitted.
+#' @param colnames `TRUE`, `FALSE`, or "label". If "label", use the `attr(x$col,"label")` attribute if available and fall back on column names otherwise.
 #' @param rownames Logical. If `TRUE`, rownames are included as the first column
 #' @param escape Logical. If `TRUE`, escape special characters in the table. Equivalent to `format_tt(tt(x), escape = TRUE)`.
 #' @param ... Additional arguments are ignored
@@ -63,6 +63,13 @@
 #'
 #' k <- data.frame(x = c(0.000123456789, 12.4356789))
 #' tt(k, digits = 2)
+#'
+#' # use variable labels stored in attributes as column names
+#' dat = mtcars[1:5, c("cyl", "mpg", "hp")]
+#' attr(dat$cyl, "label") <- "Cylinders"
+#' attr(dat$mpg, "label") <- "Miles per Gallon"
+#' attr(dat$hp, "label") <- "Horse Power"
+#' tt(dat, colnames = "label")
 #'
 #' @export
 # Generic function
@@ -114,9 +121,8 @@ tt.default <- function(
     }
   }
 
-  assert_flag(colnames)
-  if (!isTRUE(colnames)) {
-    colnames(x) <- NULL
+  if (!(is.logical(colnames) && length(colnames) == 1) && !identical(colnames, "label")) {
+    stop("The `colnames` argument must be TRUE, FALSE, or 'label'.", call. = FALSE)
   }
 
   # factors should all be characters (for replace, etc.)
@@ -173,7 +179,8 @@ tt.default <- function(
     notes = notes,
     theme = list(theme),
     width = width,
-    height = height
+    height = height,
+    colnames = colnames
   )
 
   if (is.null(theme)) {
@@ -232,7 +239,7 @@ tt.data.frame <- function(x, ...) {
   tt.default(x, ...)
 }
 
-#' @export  
+#' @export
 tt.data.table <- function(x, ...) {
   tt.default(x, ...)
 }

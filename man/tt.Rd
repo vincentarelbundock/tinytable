@@ -52,7 +52,7 @@ tt(x, ...)
 \item Function: Applied to the \code{tinytable} object.
 }}
 
-\item{colnames}{Logical. If \code{FALSE}, column names are omitted.}
+\item{colnames}{\code{TRUE}, \code{FALSE}, or "label". If "label", use the \code{attr(x$col,"label")} attribute if available and fall back on column names otherwise.}
 
 \item{rownames}{Logical. If \code{TRUE}, rownames are included as the first column}
 
@@ -176,29 +176,11 @@ Nearly all of the package's functions retrieve their default values from global 
 }\if{html}{\out{</div>}}
 
 In addition, some more specific options are available to control the behavior of the package in specific contexts.
-\subsection{HTML}{
 \itemize{
 \item \code{tinytable_html_mathjax}: Insert MathJax scripts (warning: may conflict if MathJax is loaded elsewhere)
-\item \code{tinytable_html_portable}: Insert base64 encoded images directly in HTML for \code{plot_tt()}
-\item \code{tinytable_html_engine}: Default HTML engine (default: "bootstrap"). Set to "tabulator" to use interactive tables by default in HTML documents instead of static Bootstrap tables.
+\item \code{tinytable_pdf_clean}: Delete temporary and log files for pdf output in \code{save_tt()}
+\item \code{tinytable_color_name_normalization}: Enable/disable automatic color name processing (default: TRUE). When enabled, R color names recognized by \code{col2rgb()} are converted to hex format for consistent rendering across HTML, LaTeX, and Typst formats. If R color conversion fails, LaTeX color names are used as fallback. Colors explicitly supplied as hex values with "#" prefix are passed through unchanged. Set to FALSE to disable processing and pass color names unchanged.
 }
-}
-
-\subsection{PDF}{
-\itemize{
-\item \code{tinytable_pdf_clean}: Delete temporary and log files
-\item \code{tinytable_pdf_engine}: Choose between "xelatex", "pdflatex", "lualatex"
-}
-}
-
-\subsection{Color processing}{
-\itemize{
-\item \code{tinytable_color_name_normalization}: Enable/disable automatic color name processing (default: TRUE).
-}
-
-When enabled, R color names recognized by \code{col2rgb()} are converted to hex format for consistent rendering across HTML, LaTeX, and Typst formats. If R color conversion fails, LaTeX color names are used as fallback. Colors explicitly supplied as hex values with "#" prefix are passed through unchanged. Set to FALSE to disable processing and pass color names unchanged.
-}
-
 \subsection{Quarto}{
 
 The \code{format_tt(quarto=TRUE)} argument enables Quarto data processing with some limitations:
@@ -210,8 +192,6 @@ The \code{format_tt(quarto=TRUE)} argument enables Quarto data processing with s
 Options:
 \itemize{
 \item \code{tinytable_quarto_disable_processing}: Disable Quarto cell processing
-\item \code{tinytable_print_rstudio_notebook}: Display tables "inline" or in "viewer" for RStudio notebooks
-\item \code{tinytable_quarto_figure}: Control Typst figure environment in Quarto
 }
 
 Example of Quarto-specific code in cells:
@@ -247,5 +227,12 @@ print(tab, "latex")
 
 k <- data.frame(x = c(0.000123456789, 12.4356789))
 tt(k, digits = 2)
+
+# use variable labels stored in attributes as column names
+dat = mtcars[1:5, c("cyl", "mpg", "hp")]
+attr(dat$cyl, "label") <- "Cylinders"
+attr(dat$mpg, "label") <- "Miles per Gallon"
+attr(dat$hp, "label") <- "Horse Power"
+tt(dat, colnames = "label")
 
 }
