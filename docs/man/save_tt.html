@@ -622,40 +622,17 @@ Default values for function arguments
 </pre>
 </div>
 <p>In addition, some more specific options are available to control the behavior of the package in specific contexts.</p>
-<h5 class="anchored">
-HTML
-</h5>
 <ul>
 <li>
 <p><code>tinytable_html_mathjax</code>: Insert MathJax scripts (warning: may conflict if MathJax is loaded elsewhere)</p>
 </li>
 <li>
-<p><code>tinytable_html_portable</code>: Insert base64 encoded images directly in HTML for <code>plot_tt()</code></p>
+<p><code>tinytable_pdf_clean</code>: Delete temporary and log files for pdf output in <code>save_tt()</code></p>
 </li>
 <li>
-<p><code>tinytable_html_engine</code>: Default HTML engine (default: "bootstrap"). Set to "tabulator" to use interactive tables by default in HTML documents instead of static Bootstrap tables.</p>
+<p><code>tinytable_color_name_normalization</code>: Enable/disable automatic color name processing (default: TRUE). When enabled, R color names recognized by <code>col2rgb()</code> are converted to hex format for consistent rendering across HTML, LaTeX, and Typst formats. If R color conversion fails, LaTeX color names are used as fallback. Colors explicitly supplied as hex values with "#" prefix are passed through unchanged. Set to FALSE to disable processing and pass color names unchanged.</p>
 </li>
 </ul>
-<h5 class="anchored">
-PDF
-</h5>
-<ul>
-<li>
-<p><code>tinytable_pdf_clean</code>: Delete temporary and log files</p>
-</li>
-<li>
-<p><code>tinytable_pdf_engine</code>: Choose between "xelatex", "pdflatex", "lualatex"</p>
-</li>
-</ul>
-<h5 class="anchored">
-Color processing
-</h5>
-<ul>
-<li>
-<p><code>tinytable_color_name_normalization</code>: Enable/disable automatic color name processing (default: TRUE).</p>
-</li>
-</ul>
-<p>When enabled, R color names recognized by <code>col2rgb()</code> are converted to hex format for consistent rendering across HTML, LaTeX, and Typst formats. If R color conversion fails, LaTeX color names are used as fallback. Colors explicitly supplied as hex values with "#" prefix are passed through unchanged. Set to FALSE to disable processing and pass color names unchanged.</p>
 <h5 class="anchored">
 Quarto
 </h5>
@@ -672,12 +649,6 @@ Quarto
 <ul>
 <li>
 <p><code>tinytable_quarto_disable_processing</code>: Disable Quarto cell processing</p>
-</li>
-<li>
-<p><code>tinytable_print_rstudio_notebook</code>: Display tables "inline" or in "viewer" for RStudio notebooks</p>
-</li>
-<li>
-<p><code>tinytable_quarto_figure</code>: Control Typst figure environment in Quarto</p>
 </li>
 </ul>
 <p>Example of Quarto-specific code in cells:</p>

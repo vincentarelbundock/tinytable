@@ -278,6 +278,28 @@ tt(head(iris, 50))
 ```
 ````
 
+### `kind`
+
+By default, `tinytable` adds `kind:"tinytable"` to all tables produced by the package. This can easily be modified using the `finalize` argument of the `style_tt()` function, and it can be applied automatically to all tables by setting a default theme. For example,
+
+```r
+theme_fancy <- function(x, ...) {
+  fancytable <- function(x) {
+    if (x@output == "typst") {
+    x@table_string <- sub(
+        'kind: "tinytable"', 
+        'kind: "fancytable"', 
+        x@table_string, fixed = TRUE)
+    }
+    return(x)
+  }
+  x |> style_tt(finalize = fancytable)
+}
+options(tinytable_tt_theme = theme_fancy)
+
+tt(head(iris)) |> print("typst")
+```
+
 ## `rowspan` and `colspan`
 
 If a table has cells that span across the full table (`colspan` equal to `nrow(tab)`), the `rowspan` argument can collapse multiple rows into a single cell. See this forum post for explanation why:

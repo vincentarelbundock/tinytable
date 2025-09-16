@@ -538,10 +538,11 @@ Experimental Feature
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">head</span>(iris)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat) <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="st">"tabulator"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>To save the table to file, we can use the <code>save_tt()</code> function. One issue to consider, however, is that <code>tinytable</code> supports two types of HTML output: <code>tabulator</code> and <code>bootstrap</code>. To select the default HTML engine, users can set a global option:</p>
+<p>To save the table to file, we can use the <code>save_tt()</code> function. One issue to consider, however, is that <code>tinytable</code> supports two types of HTML output: <code>tabulator</code> and <code>bootstrap</code>. To select the default HTML engine, users can call the <code>theme_html()</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tinytable_html_engine =</span> <span class="st">"tabulator"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat) <span class="sc">|&gt;</span> <span class="fu">save_tt</span>(<span class="st">"/path/to/your/file.html"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat) <span class="sc">|&gt;</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_html</span>(<span class="at">engine =</span> <span class="st">"tabulator"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">save_tt</span>(<span class="st">"/path/to/your/file.html"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>In notebooks like Quarto or R markdown, <code>tinytable</code> will automatically create an HTML when appropriate. Whenn the <code>tinytable_html_engine</code> option is set to <code>"tabulator"</code>, the table will be rendered using Tabulator.js.</p>
 <div class="cell">
@@ -559,8 +560,8 @@ Experimental Feature
 
     <script>
 
-      function styleCell_8q62wdp0k89uskhrrsiw(i, j, css_id) {
-          var table = document.getElementById("tinytable_8q62wdp0k89uskhrrsiw");
+      function styleCell_1texfwjwm79dlwj6kbop(i, j, css_id) {
+          var table = document.getElementById("tinytable_1texfwjwm79dlwj6kbop");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -569,8 +570,8 @@ Experimental Feature
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function spanCell_8q62wdp0k89uskhrrsiw(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_8q62wdp0k89uskhrrsiw");
+      function spanCell_1texfwjwm79dlwj6kbop(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_1texfwjwm79dlwj6kbop");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -601,14 +602,14 @@ Experimental Feature
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '3', j: 0 }, { i: '3', j: 1 }, { i: '3', j: 2 }, { i: '3', j: 3 }, { i: '3', j: 4 },  ], css_id: 'tinytable_css_m9cg67sy9v5vsbiqurnv',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_clyjnw6jh7clkhufm1sk',}, 
+          { positions: [ { i: '3', j: 0 }, { i: '3', j: 1 }, { i: '3', j: 2 }, { i: '3', j: 3 }, { i: '3', j: 4 },  ], css_id: 'tinytable_css_kqst6dpwnpmib6zsvysd',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_rp3l7xbyhh0u0nolvi63',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_8q62wdp0k89uskhrrsiw(cell.i, cell.j, group.css_id);
+                  styleCell_1texfwjwm79dlwj6kbop(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -616,11 +617,11 @@ Experimental Feature
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_m9cg67sy9v5vsbiqurnv, .table th.tinytable_css_m9cg67sy9v5vsbiqurnv { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_clyjnw6jh7clkhufm1sk, .table th.tinytable_css_clyjnw6jh7clkhufm1sk { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_kqst6dpwnpmib6zsvysd, .table th.tinytable_css_kqst6dpwnpmib6zsvysd { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_rp3l7xbyhh0u0nolvi63, .table th.tinytable_css_rp3l7xbyhh0u0nolvi63 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_8q62wdp0k89uskhrrsiw" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_1texfwjwm79dlwj6kbop" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -637,21 +638,21 @@ Experimental Feature
                   <td data-row="1" data-col="0">Montréal</td>
                   <td data-row="1" data-col="1">14002.22</td>
                   <td data-row="1" data-col="2">1.434020</td>
-                  <td data-row="1" data-col="3">1970-08-07</td>
+                  <td data-row="1" data-col="3">1972-02-08</td>
                   <td data-row="1" data-col="4">TRUE</td>
                 </tr>
                 <tr>
                   <td data-row="2" data-col="0">Toronto</td>
                   <td data-row="2" data-col="1">201399.11</td>
                   <td data-row="2" data-col="2">201.399000</td>
-                  <td data-row="2" data-col="3">1970-12-02</td>
+                  <td data-row="2" data-col="3">1971-08-20</td>
                   <td data-row="2" data-col="4">FALSE</td>
                 </tr>
                 <tr>
                   <td data-row="3" data-col="0">Vancouver</td>
                   <td data-row="3" data-col="1">80188.38</td>
                   <td data-row="3" data-col="2">0.134588</td>
-                  <td data-row="3" data-col="3">1970-11-28</td>
+                  <td data-row="3" data-col="3">1971-04-18</td>
                   <td data-row="3" data-col="4">FALSE</td>
                 </tr>
         </tbody>
@@ -677,7 +678,7 @@ Experimental Feature
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_6kcbi6o97b5ig2qmp3wr</title>
+    <title>tinytable_vlq39v0uej9nfwc75x7e</title>
     <link href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/scss/tabulator_tinytable.min.css" rel="stylesheet">
   
   
@@ -685,9 +686,9 @@ Experimental Feature
 
     <div class="container">
       
-      <div id="tinytable_6kcbi6o97b5ig2qmp3wr" style="margin-left: auto; margin-right: auto;"></div>
+      <div id="tinytable_vlq39v0uej9nfwc75x7e" style="margin-left: auto; margin-right: auto;"></div>
       
-        <div class="mb-3"><input type="text" id="search_6kcbi6o97b5ig2qmp3wr" class="form-control" placeholder="Search table..." style="margin-bottom: 10px;"></div>
+        <div class="mb-3"><input type="text" id="search_vlq39v0uej9nfwc75x7e" class="form-control" placeholder="Search table..." style="margin-bottom: 10px;"></div>
     
       <br>
     </div>
@@ -701,7 +702,7 @@ Experimental Feature
       (function() {
         const { DateTime } = luxon;
 
-        const table_tinytable_6kcbi6o97b5ig2qmp3wr = new Tabulator("#tinytable_6kcbi6o97b5ig2qmp3wr", {
+        const table_tinytable_vlq39v0uej9nfwc75x7e = new Tabulator("#tinytable_vlq39v0uej9nfwc75x7e", {
           dependencies: { DateTime },
           data: [{"Sepal_Length":5.1,"Sepal_Width":3.5,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.9,"Sepal_Width":3,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.7,"Sepal_Width":3.2,"Petal_Length":1.3,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.6,"Sepal_Width":3.1,"Petal_Length":1.5,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5,"Sepal_Width":3.6,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.4,"Sepal_Width":3.9,"Petal_Length":1.7,"Petal_Width":0.4,"Species":"setosa"},{"Sepal_Length":4.6,"Sepal_Width":3.4,"Petal_Length":1.4,"Petal_Width":0.3,"Species":"setosa"},{"Sepal_Length":5,"Sepal_Width":3.4,"Petal_Length":1.5,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.4,"Sepal_Width":2.9,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.9,"Sepal_Width":3.1,"Petal_Length":1.5,"Petal_Width":0.1,"Species":"setosa"},{"Sepal_Length":5.4,"Sepal_Width":3.7,"Petal_Length":1.5,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.8,"Sepal_Width":3.4,"Petal_Length":1.6,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.8,"Sepal_Width":3,"Petal_Length":1.4,"Petal_Width":0.1,"Species":"setosa"},{"Sepal_Length":4.3,"Sepal_Width":3,"Petal_Length":1.1,"Petal_Width":0.1,"Species":"setosa"},{"Sepal_Length":5.8,"Sepal_Width":4,"Petal_Length":1.2,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.7,"Sepal_Width":4.4,"Petal_Length":1.5,"Petal_Width":0.4,"Species":"setosa"},{"Sepal_Length":5.4,"Sepal_Width":3.9,"Petal_Length":1.3,"Petal_Width":0.4,"Species":"setosa"},{"Sepal_Length":5.1,"Sepal_Width":3.5,"Petal_Length":1.4,"Petal_Width":0.3,"Species":"setosa"},{"Sepal_Length":5.7,"Sepal_Width":3.8,"Petal_Length":1.7,"Petal_Width":0.3,"Species":"setosa"},{"Sepal_Length":5.1,"Sepal_Width":3.8,"Petal_Length":1.5,"Petal_Width":0.3,"Species":"setosa"},{"Sepal_Length":5.4,"Sepal_Width":3.4,"Petal_Length":1.7,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.1,"Sepal_Width":3.7,"Petal_Length":1.5,"Petal_Width":0.4,"Species":"setosa"},{"Sepal_Length":4.6,"Sepal_Width":3.6,"Petal_Length":1,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.1,"Sepal_Width":3.3,"Petal_Length":1.7,"Petal_Width":0.5,"Species":"setosa"},{"Sepal_Length":4.8,"Sepal_Width":3.4,"Petal_Length":1.9,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5,"Sepal_Width":3,"Petal_Length":1.6,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5,"Sepal_Width":3.4,"Petal_Length":1.6,"Petal_Width":0.4,"Species":"setosa"},{"Sepal_Length":5.2,"Sepal_Width":3.5,"Petal_Length":1.5,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.2,"Sepal_Width":3.4,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.7,"Sepal_Width":3.2,"Petal_Length":1.6,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.8,"Sepal_Width":3.1,"Petal_Length":1.6,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.4,"Sepal_Width":3.4,"Petal_Length":1.5,"Petal_Width":0.4,"Species":"setosa"},{"Sepal_Length":5.2,"Sepal_Width":4.1,"Petal_Length":1.5,"Petal_Width":0.1,"Species":"setosa"},{"Sepal_Length":5.5,"Sepal_Width":4.2,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.9,"Sepal_Width":3.1,"Petal_Length":1.5,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5,"Sepal_Width":3.2,"Petal_Length":1.2,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.5,"Sepal_Width":3.5,"Petal_Length":1.3,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.9,"Sepal_Width":3.6,"Petal_Length":1.4,"Petal_Width":0.1,"Species":"setosa"},{"Sepal_Length":4.4,"Sepal_Width":3,"Petal_Length":1.3,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.1,"Sepal_Width":3.4,"Petal_Length":1.5,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5,"Sepal_Width":3.5,"Petal_Length":1.3,"Petal_Width":0.3,"Species":"setosa"},{"Sepal_Length":4.5,"Sepal_Width":2.3,"Petal_Length":1.3,"Petal_Width":0.3,"Species":"setosa"},{"Sepal_Length":4.4,"Sepal_Width":3.2,"Petal_Length":1.3,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5,"Sepal_Width":3.5,"Petal_Length":1.6,"Petal_Width":0.6,"Species":"setosa"},{"Sepal_Length":5.1,"Sepal_Width":3.8,"Petal_Length":1.9,"Petal_Width":0.4,"Species":"setosa"},{"Sepal_Length":4.8,"Sepal_Width":3,"Petal_Length":1.4,"Petal_Width":0.3,"Species":"setosa"},{"Sepal_Length":5.1,"Sepal_Width":3.8,"Petal_Length":1.6,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.6,"Sepal_Width":3.2,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.3,"Sepal_Width":3.7,"Petal_Length":1.5,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5,"Sepal_Width":3.3,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":7,"Sepal_Width":3.2,"Petal_Length":4.7,"Petal_Width":1.4,"Species":"versicolor"},{"Sepal_Length":6.4,"Sepal_Width":3.2,"Petal_Length":4.5,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":6.9,"Sepal_Width":3.1,"Petal_Length":4.9,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":5.5,"Sepal_Width":2.3,"Petal_Length":4,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":6.5,"Sepal_Width":2.8,"Petal_Length":4.6,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":5.7,"Sepal_Width":2.8,"Petal_Length":4.5,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":6.3,"Sepal_Width":3.3,"Petal_Length":4.7,"Petal_Width":1.6,"Species":"versicolor"},{"Sepal_Length":4.9,"Sepal_Width":2.4,"Petal_Length":3.3,"Petal_Width":1,"Species":"versicolor"},{"Sepal_Length":6.6,"Sepal_Width":2.9,"Petal_Length":4.6,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":5.2,"Sepal_Width":2.7,"Petal_Length":3.9,"Petal_Width":1.4,"Species":"versicolor"},{"Sepal_Length":5,"Sepal_Width":2,"Petal_Length":3.5,"Petal_Width":1,"Species":"versicolor"},{"Sepal_Length":5.9,"Sepal_Width":3,"Petal_Length":4.2,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":6,"Sepal_Width":2.2,"Petal_Length":4,"Petal_Width":1,"Species":"versicolor"},{"Sepal_Length":6.1,"Sepal_Width":2.9,"Petal_Length":4.7,"Petal_Width":1.4,"Species":"versicolor"},{"Sepal_Length":5.6,"Sepal_Width":2.9,"Petal_Length":3.6,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":6.7,"Sepal_Width":3.1,"Petal_Length":4.4,"Petal_Width":1.4,"Species":"versicolor"},{"Sepal_Length":5.6,"Sepal_Width":3,"Petal_Length":4.5,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":5.8,"Sepal_Width":2.7,"Petal_Length":4.1,"Petal_Width":1,"Species":"versicolor"},{"Sepal_Length":6.2,"Sepal_Width":2.2,"Petal_Length":4.5,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":5.6,"Sepal_Width":2.5,"Petal_Length":3.9,"Petal_Width":1.1,"Species":"versicolor"},{"Sepal_Length":5.9,"Sepal_Width":3.2,"Petal_Length":4.8,"Petal_Width":1.8,"Species":"versicolor"},{"Sepal_Length":6.1,"Sepal_Width":2.8,"Petal_Length":4,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":6.3,"Sepal_Width":2.5,"Petal_Length":4.9,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":6.1,"Sepal_Width":2.8,"Petal_Length":4.7,"Petal_Width":1.2,"Species":"versicolor"},{"Sepal_Length":6.4,"Sepal_Width":2.9,"Petal_Length":4.3,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":6.6,"Sepal_Width":3,"Petal_Length":4.4,"Petal_Width":1.4,"Species":"versicolor"},{"Sepal_Length":6.8,"Sepal_Width":2.8,"Petal_Length":4.8,"Petal_Width":1.4,"Species":"versicolor"},{"Sepal_Length":6.7,"Sepal_Width":3,"Petal_Length":5,"Petal_Width":1.7,"Species":"versicolor"},{"Sepal_Length":6,"Sepal_Width":2.9,"Petal_Length":4.5,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":5.7,"Sepal_Width":2.6,"Petal_Length":3.5,"Petal_Width":1,"Species":"versicolor"},{"Sepal_Length":5.5,"Sepal_Width":2.4,"Petal_Length":3.8,"Petal_Width":1.1,"Species":"versicolor"},{"Sepal_Length":5.5,"Sepal_Width":2.4,"Petal_Length":3.7,"Petal_Width":1,"Species":"versicolor"},{"Sepal_Length":5.8,"Sepal_Width":2.7,"Petal_Length":3.9,"Petal_Width":1.2,"Species":"versicolor"},{"Sepal_Length":6,"Sepal_Width":2.7,"Petal_Length":5.1,"Petal_Width":1.6,"Species":"versicolor"},{"Sepal_Length":5.4,"Sepal_Width":3,"Petal_Length":4.5,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":6,"Sepal_Width":3.4,"Petal_Length":4.5,"Petal_Width":1.6,"Species":"versicolor"},{"Sepal_Length":6.7,"Sepal_Width":3.1,"Petal_Length":4.7,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":6.3,"Sepal_Width":2.3,"Petal_Length":4.4,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":5.6,"Sepal_Width":3,"Petal_Length":4.1,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":5.5,"Sepal_Width":2.5,"Petal_Length":4,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":5.5,"Sepal_Width":2.6,"Petal_Length":4.4,"Petal_Width":1.2,"Species":"versicolor"},{"Sepal_Length":6.1,"Sepal_Width":3,"Petal_Length":4.6,"Petal_Width":1.4,"Species":"versicolor"},{"Sepal_Length":5.8,"Sepal_Width":2.6,"Petal_Length":4,"Petal_Width":1.2,"Species":"versicolor"},{"Sepal_Length":5,"Sepal_Width":2.3,"Petal_Length":3.3,"Petal_Width":1,"Species":"versicolor"},{"Sepal_Length":5.6,"Sepal_Width":2.7,"Petal_Length":4.2,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":5.7,"Sepal_Width":3,"Petal_Length":4.2,"Petal_Width":1.2,"Species":"versicolor"},{"Sepal_Length":5.7,"Sepal_Width":2.9,"Petal_Length":4.2,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":6.2,"Sepal_Width":2.9,"Petal_Length":4.3,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":5.1,"Sepal_Width":2.5,"Petal_Length":3,"Petal_Width":1.1,"Species":"versicolor"},{"Sepal_Length":5.7,"Sepal_Width":2.8,"Petal_Length":4.1,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":6.3,"Sepal_Width":3.3,"Petal_Length":6,"Petal_Width":2.5,"Species":"virginica"},{"Sepal_Length":5.8,"Sepal_Width":2.7,"Petal_Length":5.1,"Petal_Width":1.9,"Species":"virginica"},{"Sepal_Length":7.1,"Sepal_Width":3,"Petal_Length":5.9,"Petal_Width":2.1,"Species":"virginica"},{"Sepal_Length":6.3,"Sepal_Width":2.9,"Petal_Length":5.6,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":6.5,"Sepal_Width":3,"Petal_Length":5.8,"Petal_Width":2.2,"Species":"virginica"},{"Sepal_Length":7.6,"Sepal_Width":3,"Petal_Length":6.6,"Petal_Width":2.1,"Species":"virginica"},{"Sepal_Length":4.9,"Sepal_Width":2.5,"Petal_Length":4.5,"Petal_Width":1.7,"Species":"virginica"},{"Sepal_Length":7.3,"Sepal_Width":2.9,"Petal_Length":6.3,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":6.7,"Sepal_Width":2.5,"Petal_Length":5.8,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":7.2,"Sepal_Width":3.6,"Petal_Length":6.1,"Petal_Width":2.5,"Species":"virginica"},{"Sepal_Length":6.5,"Sepal_Width":3.2,"Petal_Length":5.1,"Petal_Width":2,"Species":"virginica"},{"Sepal_Length":6.4,"Sepal_Width":2.7,"Petal_Length":5.3,"Petal_Width":1.9,"Species":"virginica"},{"Sepal_Length":6.8,"Sepal_Width":3,"Petal_Length":5.5,"Petal_Width":2.1,"Species":"virginica"},{"Sepal_Length":5.7,"Sepal_Width":2.5,"Petal_Length":5,"Petal_Width":2,"Species":"virginica"},{"Sepal_Length":5.8,"Sepal_Width":2.8,"Petal_Length":5.1,"Petal_Width":2.4,"Species":"virginica"},{"Sepal_Length":6.4,"Sepal_Width":3.2,"Petal_Length":5.3,"Petal_Width":2.3,"Species":"virginica"},{"Sepal_Length":6.5,"Sepal_Width":3,"Petal_Length":5.5,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":7.7,"Sepal_Width":3.8,"Petal_Length":6.7,"Petal_Width":2.2,"Species":"virginica"},{"Sepal_Length":7.7,"Sepal_Width":2.6,"Petal_Length":6.9,"Petal_Width":2.3,"Species":"virginica"},{"Sepal_Length":6,"Sepal_Width":2.2,"Petal_Length":5,"Petal_Width":1.5,"Species":"virginica"},{"Sepal_Length":6.9,"Sepal_Width":3.2,"Petal_Length":5.7,"Petal_Width":2.3,"Species":"virginica"},{"Sepal_Length":5.6,"Sepal_Width":2.8,"Petal_Length":4.9,"Petal_Width":2,"Species":"virginica"},{"Sepal_Length":7.7,"Sepal_Width":2.8,"Petal_Length":6.7,"Petal_Width":2,"Species":"virginica"},{"Sepal_Length":6.3,"Sepal_Width":2.7,"Petal_Length":4.9,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":6.7,"Sepal_Width":3.3,"Petal_Length":5.7,"Petal_Width":2.1,"Species":"virginica"},{"Sepal_Length":7.2,"Sepal_Width":3.2,"Petal_Length":6,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":6.2,"Sepal_Width":2.8,"Petal_Length":4.8,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":6.1,"Sepal_Width":3,"Petal_Length":4.9,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":6.4,"Sepal_Width":2.8,"Petal_Length":5.6,"Petal_Width":2.1,"Species":"virginica"},{"Sepal_Length":7.2,"Sepal_Width":3,"Petal_Length":5.8,"Petal_Width":1.6,"Species":"virginica"},{"Sepal_Length":7.4,"Sepal_Width":2.8,"Petal_Length":6.1,"Petal_Width":1.9,"Species":"virginica"},{"Sepal_Length":7.9,"Sepal_Width":3.8,"Petal_Length":6.4,"Petal_Width":2,"Species":"virginica"},{"Sepal_Length":6.4,"Sepal_Width":2.8,"Petal_Length":5.6,"Petal_Width":2.2,"Species":"virginica"},{"Sepal_Length":6.3,"Sepal_Width":2.8,"Petal_Length":5.1,"Petal_Width":1.5,"Species":"virginica"},{"Sepal_Length":6.1,"Sepal_Width":2.6,"Petal_Length":5.6,"Petal_Width":1.4,"Species":"virginica"},{"Sepal_Length":7.7,"Sepal_Width":3,"Petal_Length":6.1,"Petal_Width":2.3,"Species":"virginica"},{"Sepal_Length":6.3,"Sepal_Width":3.4,"Petal_Length":5.6,"Petal_Width":2.4,"Species":"virginica"},{"Sepal_Length":6.4,"Sepal_Width":3.1,"Petal_Length":5.5,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":6,"Sepal_Width":3,"Petal_Length":4.8,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":6.9,"Sepal_Width":3.1,"Petal_Length":5.4,"Petal_Width":2.1,"Species":"virginica"},{"Sepal_Length":6.7,"Sepal_Width":3.1,"Petal_Length":5.6,"Petal_Width":2.4,"Species":"virginica"},{"Sepal_Length":6.9,"Sepal_Width":3.1,"Petal_Length":5.1,"Petal_Width":2.3,"Species":"virginica"},{"Sepal_Length":5.8,"Sepal_Width":2.7,"Petal_Length":5.1,"Petal_Width":1.9,"Species":"virginica"},{"Sepal_Length":6.8,"Sepal_Width":3.2,"Petal_Length":5.9,"Petal_Width":2.3,"Species":"virginica"},{"Sepal_Length":6.7,"Sepal_Width":3.3,"Petal_Length":5.7,"Petal_Width":2.5,"Species":"virginica"},{"Sepal_Length":6.7,"Sepal_Width":3,"Petal_Length":5.2,"Petal_Width":2.3,"Species":"virginica"},{"Sepal_Length":6.3,"Sepal_Width":2.5,"Petal_Length":5,"Petal_Width":1.9,"Species":"virginica"},{"Sepal_Length":6.5,"Sepal_Width":3,"Petal_Length":5.2,"Petal_Width":2,"Species":"virginica"},{"Sepal_Length":6.2,"Sepal_Width":3.4,"Petal_Length":5.4,"Petal_Width":2.3,"Species":"virginica"},{"Sepal_Length":5.9,"Sepal_Width":3,"Petal_Length":5.1,"Petal_Width":1.8,"Species":"virginica"}],
           columns: [{"title":"Sepal.Length","field":"Sepal_Length"},{"title":"Sepal.Width","field":"Sepal_Width"},{"title":"Petal.Length","field":"Petal_Length"},{"title":"Petal.Width","field":"Petal_Width"},{"title":"Species","field":"Species"}],
@@ -715,22 +716,22 @@ Experimental Feature
 
         
         // Expose table reference globally for search functionality
-        window.table_tinytable_6kcbi6o97b5ig2qmp3wr = table_tinytable_6kcbi6o97b5ig2qmp3wr;
+        window.table_tinytable_vlq39v0uej9nfwc75x7e = table_tinytable_vlq39v0uej9nfwc75x7e;
 
         // Search functionality (runs within the table IIFE scope)
-        const columns_6kcbi6o97b5ig2qmp3wr = [{"title":"Sepal.Length","field":"Sepal_Length"},{"title":"Sepal.Width","field":"Sepal_Width"},{"title":"Petal.Length","field":"Petal_Length"},{"title":"Petal.Width","field":"Petal_Width"},{"title":"Species","field":"Species"}];
-        const searchFields_6kcbi6o97b5ig2qmp3wr = columns_6kcbi6o97b5ig2qmp3wr.map(col => col.field);
+        const columns_vlq39v0uej9nfwc75x7e = [{"title":"Sepal.Length","field":"Sepal_Length"},{"title":"Sepal.Width","field":"Sepal_Width"},{"title":"Petal.Length","field":"Petal_Length"},{"title":"Petal.Width","field":"Petal_Width"},{"title":"Species","field":"Species"}];
+        const searchFields_vlq39v0uej9nfwc75x7e = columns_vlq39v0uej9nfwc75x7e.map(col => col.field);
 
         // Attach search listener using the globally exposed table reference
-        const searchElement = document.getElementById("search_6kcbi6o97b5ig2qmp3wr");
+        const searchElement = document.getElementById("search_vlq39v0uej9nfwc75x7e");
         if (searchElement) {
           searchElement.addEventListener("input", function () {
             const term = this.value.trim();
             if (!term) {
-              window.table_tinytable_6kcbi6o97b5ig2qmp3wr.clearFilter();
+              window.table_tinytable_vlq39v0uej9nfwc75x7e.clearFilter();
             } else {
-              window.table_tinytable_6kcbi6o97b5ig2qmp3wr.setFilter(function(data) {
-                return searchFields_6kcbi6o97b5ig2qmp3wr.some(field => {
+              window.table_tinytable_vlq39v0uej9nfwc75x7e.setFilter(function(data) {
+                return searchFields_vlq39v0uej9nfwc75x7e.some(field => {
                   const value = data[field];
                   if (value === null || value === undefined) return false;
                   return String(value).toLowerCase().includes(term.toLowerCase());
@@ -766,8 +767,8 @@ Experimental Feature
 
     <script>
 
-      function styleCell_o2va0vkhojzg0tgb2oql(i, j, css_id) {
-          var table = document.getElementById("tinytable_o2va0vkhojzg0tgb2oql");
+      function styleCell_amuwrveitsznjcdzcgs0(i, j, css_id) {
+          var table = document.getElementById("tinytable_amuwrveitsznjcdzcgs0");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -776,8 +777,8 @@ Experimental Feature
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function spanCell_o2va0vkhojzg0tgb2oql(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_o2va0vkhojzg0tgb2oql");
+      function spanCell_amuwrveitsznjcdzcgs0(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_amuwrveitsznjcdzcgs0");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -808,14 +809,14 @@ Experimental Feature
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '3', j: 0 }, { i: '3', j: 1 }, { i: '3', j: 2 }, { i: '3', j: 3 }, { i: '3', j: 4 },  ], css_id: 'tinytable_css_8k69ybxzr0y99agmzn2x',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_0pcmt8qolhdgzbmcud4g',}, 
+          { positions: [ { i: '3', j: 0 }, { i: '3', j: 1 }, { i: '3', j: 2 }, { i: '3', j: 3 }, { i: '3', j: 4 },  ], css_id: 'tinytable_css_rak31shnys6irppi1tvd',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_14ayt1sw6p4yoowu8nms',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_o2va0vkhojzg0tgb2oql(cell.i, cell.j, group.css_id);
+                  styleCell_amuwrveitsznjcdzcgs0(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -823,11 +824,11 @@ Experimental Feature
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_8k69ybxzr0y99agmzn2x, .table th.tinytable_css_8k69ybxzr0y99agmzn2x { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_0pcmt8qolhdgzbmcud4g, .table th.tinytable_css_0pcmt8qolhdgzbmcud4g { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_rak31shnys6irppi1tvd, .table th.tinytable_css_rak31shnys6irppi1tvd { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_14ayt1sw6p4yoowu8nms, .table th.tinytable_css_14ayt1sw6p4yoowu8nms { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_o2va0vkhojzg0tgb2oql" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_amuwrveitsznjcdzcgs0" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -844,21 +845,21 @@ Experimental Feature
                   <td data-row="1" data-col="0">Montréal</td>
                   <td data-row="1" data-col="1">14,002</td>
                   <td data-row="1" data-col="2">1.434</td>
-                  <td data-row="1" data-col="3">1970-08-07</td>
+                  <td data-row="1" data-col="3">1972-02-08</td>
                   <td data-row="1" data-col="4">TRUE</td>
                 </tr>
                 <tr>
                   <td data-row="2" data-col="0">Toronto</td>
                   <td data-row="2" data-col="1">201,399</td>
                   <td data-row="2" data-col="2">201.399</td>
-                  <td data-row="2" data-col="3">1970-12-02</td>
+                  <td data-row="2" data-col="3">1971-08-20</td>
                   <td data-row="2" data-col="4">FALSE</td>
                 </tr>
                 <tr>
                   <td data-row="3" data-col="0">Vancouver</td>
                   <td data-row="3" data-col="1">80,188</td>
                   <td data-row="3" data-col="2">0.1346</td>
-                  <td data-row="3" data-col="3">1970-11-28</td>
+                  <td data-row="3" data-col="3">1971-04-18</td>
                   <td data-row="3" data-col="4">FALSE</td>
                 </tr>
         </tbody>
@@ -875,8 +876,8 @@ Experimental Feature
 
     <script>
 
-      function styleCell_fve8g9f0nd13bwb1fji3(i, j, css_id) {
-          var table = document.getElementById("tinytable_fve8g9f0nd13bwb1fji3");
+      function styleCell_p7v5tl9tda8mluqmrese(i, j, css_id) {
+          var table = document.getElementById("tinytable_p7v5tl9tda8mluqmrese");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -885,8 +886,8 @@ Experimental Feature
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function spanCell_fve8g9f0nd13bwb1fji3(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_fve8g9f0nd13bwb1fji3");
+      function spanCell_p7v5tl9tda8mluqmrese(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_p7v5tl9tda8mluqmrese");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -917,14 +918,14 @@ Experimental Feature
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '3', j: 0 }, { i: '3', j: 1 }, { i: '3', j: 2 }, { i: '3', j: 3 }, { i: '3', j: 4 },  ], css_id: 'tinytable_css_ma6j8a21e406w6wej68y',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_inz5bqnumz973b8iprrc',}, 
+          { positions: [ { i: '3', j: 0 }, { i: '3', j: 1 }, { i: '3', j: 2 }, { i: '3', j: 3 }, { i: '3', j: 4 },  ], css_id: 'tinytable_css_y0eesyf2o635roc05uvm',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_rxtyem8qf1tivq3bihn1',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_fve8g9f0nd13bwb1fji3(cell.i, cell.j, group.css_id);
+                  styleCell_p7v5tl9tda8mluqmrese(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -932,11 +933,11 @@ Experimental Feature
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_ma6j8a21e406w6wej68y, .table th.tinytable_css_ma6j8a21e406w6wej68y { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_inz5bqnumz973b8iprrc, .table th.tinytable_css_inz5bqnumz973b8iprrc { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_y0eesyf2o635roc05uvm, .table th.tinytable_css_y0eesyf2o635roc05uvm { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_rxtyem8qf1tivq3bihn1, .table th.tinytable_css_rxtyem8qf1tivq3bihn1 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_fve8g9f0nd13bwb1fji3" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_p7v5tl9tda8mluqmrese" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -983,8 +984,8 @@ Experimental Feature
 
     <script>
 
-      function styleCell_2qav1e30teozrx7mw94d(i, j, css_id) {
-          var table = document.getElementById("tinytable_2qav1e30teozrx7mw94d");
+      function styleCell_wm01cht9cen1r9mklhv4(i, j, css_id) {
+          var table = document.getElementById("tinytable_wm01cht9cen1r9mklhv4");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -993,8 +994,8 @@ Experimental Feature
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function spanCell_2qav1e30teozrx7mw94d(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_2qav1e30teozrx7mw94d");
+      function spanCell_wm01cht9cen1r9mklhv4(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_wm01cht9cen1r9mklhv4");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -1025,14 +1026,14 @@ Experimental Feature
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '6', j: 0 }, { i: '6', j: 1 }, { i: '6', j: 2 },  ], css_id: 'tinytable_css_l70s9q53qx0reda9hy6i',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 },  ], css_id: 'tinytable_css_6wgnkxvucmom46j93d5w',}, 
+          { positions: [ { i: '6', j: 0 }, { i: '6', j: 1 }, { i: '6', j: 2 },  ], css_id: 'tinytable_css_befauh60kmdklde339ie',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 },  ], css_id: 'tinytable_css_e2ysnthrcguxxp16ocrx',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_2qav1e30teozrx7mw94d(cell.i, cell.j, group.css_id);
+                  styleCell_wm01cht9cen1r9mklhv4(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1040,11 +1041,11 @@ Experimental Feature
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_l70s9q53qx0reda9hy6i, .table th.tinytable_css_l70s9q53qx0reda9hy6i { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_6wgnkxvucmom46j93d5w, .table th.tinytable_css_6wgnkxvucmom46j93d5w { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_befauh60kmdklde339ie, .table th.tinytable_css_befauh60kmdklde339ie { border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_e2ysnthrcguxxp16ocrx, .table th.tinytable_css_e2ysnthrcguxxp16ocrx { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_2qav1e30teozrx7mw94d" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_wm01cht9cen1r9mklhv4" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -1102,8 +1103,8 @@ Experimental Feature
 
     <script>
 
-      function styleCell_retu216t076v4nqh0usy(i, j, css_id) {
-          var table = document.getElementById("tinytable_retu216t076v4nqh0usy");
+      function styleCell_68vkaa5eapbdvnqci5hf(i, j, css_id) {
+          var table = document.getElementById("tinytable_68vkaa5eapbdvnqci5hf");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -1112,8 +1113,8 @@ Experimental Feature
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function spanCell_retu216t076v4nqh0usy(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_retu216t076v4nqh0usy");
+      function spanCell_68vkaa5eapbdvnqci5hf(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_68vkaa5eapbdvnqci5hf");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -1144,15 +1145,15 @@ Experimental Feature
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '3', j: 0 }, { i: '3', j: 1 }, { i: '3', j: 2 }, { i: '3', j: 3 }, { i: '3', j: 4 },  ], css_id: 'tinytable_css_s1l4yus7fb1v98f78cbi',}, 
-          { positions: [ { i: '1', j: 0 }, { i: '2', j: 0 }, { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 },  ], css_id: 'tinytable_css_pjmjybtwhdoz17f7000z',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_p7xtsboff35s7ykb0oaw',}, 
+          { positions: [ { i: '3', j: 0 }, { i: '3', j: 1 }, { i: '3', j: 2 }, { i: '3', j: 3 }, { i: '3', j: 4 },  ], css_id: 'tinytable_css_gvrbvmqunmpu26rji6tb',}, 
+          { positions: [ { i: '1', j: 0 }, { i: '2', j: 0 }, { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 },  ], css_id: 'tinytable_css_68lsgo34p5z2x0p57xhx',}, 
+          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_w33y2cv58op0svrv8s73',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_retu216t076v4nqh0usy(cell.i, cell.j, group.css_id);
+                  styleCell_68vkaa5eapbdvnqci5hf(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1160,12 +1161,12 @@ Experimental Feature
 
     <style>
       /* tinytable css entries after */
-      .table td.tinytable_css_s1l4yus7fb1v98f78cbi, .table th.tinytable_css_s1l4yus7fb1v98f78cbi { text-align: right; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_pjmjybtwhdoz17f7000z, .table th.tinytable_css_pjmjybtwhdoz17f7000z { text-align: right; }
-      .table td.tinytable_css_p7xtsboff35s7ykb0oaw, .table th.tinytable_css_p7xtsboff35s7ykb0oaw { text-align: right; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+      .table td.tinytable_css_gvrbvmqunmpu26rji6tb, .table th.tinytable_css_gvrbvmqunmpu26rji6tb { text-align: right; border-bottom: solid #d3d8dc 0.1em; }
+      .table td.tinytable_css_68lsgo34p5z2x0p57xhx, .table th.tinytable_css_68lsgo34p5z2x0p57xhx { text-align: right; }
+      .table td.tinytable_css_w33y2cv58op0svrv8s73, .table th.tinytable_css_w33y2cv58op0svrv8s73 { text-align: right; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_retu216t076v4nqh0usy" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="table table-borderless" id="tinytable_68vkaa5eapbdvnqci5hf" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
         
               <tr>
@@ -1182,21 +1183,21 @@ Experimental Feature
                   <td data-row="1" data-col="0">Montréal</td>
                   <td data-row="1" data-col="1">14002.22</td>
                   <td data-row="1" data-col="2">1.434020</td>
-                  <td data-row="1" data-col="3">1970-08-07</td>
+                  <td data-row="1" data-col="3">1972-02-08</td>
                   <td data-row="1" data-col="4">TRUE</td>
                 </tr>
                 <tr>
                   <td data-row="2" data-col="0">Toronto</td>
                   <td data-row="2" data-col="1">201399.11</td>
                   <td data-row="2" data-col="2">201.399000</td>
-                  <td data-row="2" data-col="3">1970-12-02</td>
+                  <td data-row="2" data-col="3">1971-08-20</td>
                   <td data-row="2" data-col="4">FALSE</td>
                 </tr>
                 <tr>
                   <td data-row="3" data-col="0">Vancouver</td>
                   <td data-row="3" data-col="1">80188.38</td>
                   <td data-row="3" data-col="2">0.134588</td>
-                  <td data-row="3" data-col="3">1970-11-28</td>
+                  <td data-row="3" data-col="3">1971-04-18</td>
                   <td data-row="3" data-col="4">FALSE</td>
                 </tr>
         </tbody>
@@ -1288,7 +1289,7 @@ Warning
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_goqsbr2cv4hadtn00qhy</title>
+    <title>tinytable_9p6baoa6cyu55y6jjqqv</title>
     <link href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/scss/tabulator_tinytable.min.css" rel="stylesheet">
   
   
@@ -1296,7 +1297,7 @@ Warning
 
     <div class="container">
       
-      <div id="tinytable_goqsbr2cv4hadtn00qhy" style="margin-left: auto; margin-right: auto;"></div>
+      <div id="tinytable_9p6baoa6cyu55y6jjqqv" style="margin-left: auto; margin-right: auto;"></div>
       
       <br>
     </div>
@@ -1310,9 +1311,9 @@ Warning
       (function() {
         const { DateTime } = luxon;
 
-        const table_tinytable_goqsbr2cv4hadtn00qhy = new Tabulator("#tinytable_goqsbr2cv4hadtn00qhy", {
+        const table_tinytable_9p6baoa6cyu55y6jjqqv = new Tabulator("#tinytable_9p6baoa6cyu55y6jjqqv", {
           dependencies: { DateTime },
-          data: [{"city":"Montréal","salary":14002.22,"random":1.43402,"date":"1970-08-07","best":true},{"city":"Toronto","salary":201399.11,"random":201.399,"date":"1970-12-02","best":false},{"city":"Vancouver","salary":80188.38,"random":0.134588,"date":"1970-11-28","best":false}],
+          data: [{"city":"Montréal","salary":14002.22,"random":1.43402,"date":"1972-02-08","best":true},{"city":"Toronto","salary":201399.11,"random":201.399,"date":"1971-08-20","best":false},{"city":"Vancouver","salary":80188.38,"random":0.134588,"date":"1971-04-18","best":false}],
           columns: [{"title":"city","field":"city"},{"title":"salary","field":"salary"},{"title":"random","field":"random"},{"title":"date","field":"date"},{"title":"best","field":"best"}],
           
         layout: 'fitDataTable'
@@ -1325,7 +1326,7 @@ Warning
 
     <style>
 
-#tinytable_goqsbr2cv4hadtn00qhy .tabulator-header .tabulator-col {
+#tinytable_9p6baoa6cyu55y6jjqqv .tabulator-header .tabulator-col {
   background-color: black;
   color: white;
 }
@@ -1379,7 +1380,7 @@ Warning
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_1w3e6kb4uahgziissp2b</title>
+    <title>tinytable_vl3yzl06mgoz8d32mbt9</title>
     <link href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/scss/tabulator_tinytable.min.css" rel="stylesheet">
   
   
@@ -1387,7 +1388,7 @@ Warning
 
     <div class="container">
       
-      <div id="tinytable_1w3e6kb4uahgziissp2b" style="margin-left: auto; margin-right: auto;"></div>
+      <div id="tinytable_vl3yzl06mgoz8d32mbt9" style="margin-left: auto; margin-right: auto;"></div>
       
       <br>
     </div>
@@ -1401,7 +1402,7 @@ Warning
       (function() {
         const { DateTime } = luxon;
 
-        const table_tinytable_1w3e6kb4uahgziissp2b = new Tabulator("#tinytable_1w3e6kb4uahgziissp2b", {
+        const table_tinytable_vl3yzl06mgoz8d32mbt9 = new Tabulator("#tinytable_vl3yzl06mgoz8d32mbt9", {
           dependencies: { DateTime },
           data: [{"city":"Toronto","salary":75000,"best":false},{"city":"Montreal","salary":68000,"best":true},{"city":"Vancouver","salary":82000,"best":false}],
           columns: 
@@ -1455,7 +1456,7 @@ Warning
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_ao1pxfinhoqrarz0cvpj</title>
+    <title>tinytable_w2zshbjqtb0buavirt4t</title>
     <link href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/scss/tabulator_tinytable.min.css" rel="stylesheet">
   
   
@@ -1463,7 +1464,7 @@ Warning
 
     <div class="container">
       
-      <div id="tinytable_ao1pxfinhoqrarz0cvpj" style="margin-left: auto; margin-right: auto;"></div>
+      <div id="tinytable_w2zshbjqtb0buavirt4t" style="margin-left: auto; margin-right: auto;"></div>
       
       <br>
     </div>
@@ -1477,7 +1478,7 @@ Warning
       (function() {
         const { DateTime } = luxon;
 
-        const table_tinytable_ao1pxfinhoqrarz0cvpj = new Tabulator("#tinytable_ao1pxfinhoqrarz0cvpj", {
+        const table_tinytable_w2zshbjqtb0buavirt4t = new Tabulator("#tinytable_w2zshbjqtb0buavirt4t", {
           dependencies: { DateTime },
           data: [{"city":"Toronto","salary":75000,"best":false},{"city":"Montreal","salary":68000,"best":true},{"city":"Vancouver","salary":82000,"best":false}],
           columns: [{"title":"city","field":"city"},{"title":"salary","field":"salary"},{"title":"best","field":"best"}],
