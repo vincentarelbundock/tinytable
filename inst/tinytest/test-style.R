@@ -60,3 +60,13 @@ tab <- tt(head(iris)) |>
     style_tt("colnames", italic = TRUE) |>
     style_tt("groupj", bold = TRUE)
 expect_snapshot_print(tab, "style-groupj_colnames.md")
+
+
+# Issue #564: Empty which() index should proceed silently
+dat <- data.frame(feed = c("fish", "meat", "soy"), weight = c(10, 20, 30))
+tab1 <- tt(dat)
+tab2 <- tt(dat)
+
+# These should not error when no rows match the condition
+expect_silent(style_tt(tab1, i = {feed == 'cool'}, bold = TRUE))
+expect_silent(style_tt(tab2, i = which(feed == 'cool'), bold = TRUE))
