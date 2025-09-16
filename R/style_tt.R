@@ -55,6 +55,11 @@ process_regular_input <- function(x, i, j) {
   ival <- sanitize_i(i, x, calling_function = "style_tt")
   jval <- sanitize_j(j, x)
 
+  # Handle empty index case - return empty settings dataframe with proper structure
+  if (length(ival) == 0) {
+    return(data.frame(i = integer(0), j = integer(0), tabularray = character(0)))
+  }
+
   # Create settings grid
   settings <- expand.grid(i = ival, j = jval, tabularray = "")
 
@@ -72,7 +77,9 @@ process_regular_input <- function(x, i, j) {
 #' @noRd
 process_align_argument <- function(settings, align, jval) {
   if (is.null(align)) {
-    settings[["align"]] <- NA
+    if (nrow(settings) > 0) {
+      settings[["align"]] <- NA
+    }
     return(settings)
   }
 
@@ -116,6 +123,11 @@ process_align_argument <- function(settings, align, jval) {
 #' @keywords internal
 #' @noRd
 remove_empty_settings <- function(settings) {
+  # Return early if no settings to process
+  if (nrow(settings) == 0 || ncol(settings) < 3) {
+    return(settings)
+  }
+
   empty <- settings[, 3:ncol(settings)]
   empty <- sapply(empty, function(x) is.na(x) | (is.logical(x) && !any(x)))
 
@@ -415,30 +427,32 @@ style_tt <- function(
     settings <- process_regular_input(x, i, j)
   }
 
-  # Build complete settings
-  settings[["color"]] <- if (is.null(color)) NA else as.vector(color)
-  settings[["background"]] <- if (is.null(background)) {
-    NA
-  } else {
-    as.vector(background)
-  }
-  settings[["fontsize"]] <- if (is.null(fontsize)) NA else as.vector(fontsize)
-  settings[["alignv"]] <- if (is.null(alignv)) NA else alignv
-  settings[["line"]] <- if (is.null(line)) NA else line
-  settings[["line_color"]] <- if (is.null(line)) NA else line_color
-  settings[["line_width"]] <- if (is.null(line)) NA else line_width
-  settings[["bold"]] <- bold
-  settings[["italic"]] <- italic
-  settings[["monospace"]] <- monospace
-  settings[["strikeout"]] <- strikeout
-  settings[["underline"]] <- underline
-  settings[["indent"]] <- if (is.null(indent)) NA else as.vector(indent)
-  settings[["colspan"]] <- if (is.null(colspan)) NA else colspan
-  settings[["rowspan"]] <- if (is.null(rowspan)) NA else rowspan
-  settings[["bootstrap_css"]] <- if (!is.null(bootstrap_css)) {
-    bootstrap_css
-  } else {
-    NA
+  # Build complete settings - skip if no rows to style
+  if (nrow(settings) > 0) {
+    settings[["color"]] <- if (is.null(color)) NA else as.vector(color)
+    settings[["background"]] <- if (is.null(background)) {
+      NA
+    } else {
+      as.vector(background)
+    }
+    settings[["fontsize"]] <- if (is.null(fontsize)) NA else as.vector(fontsize)
+    settings[["alignv"]] <- if (is.null(alignv)) NA else alignv
+    settings[["line"]] <- if (is.null(line)) NA else line
+    settings[["line_color"]] <- if (is.null(line)) NA else line_color
+    settings[["line_width"]] <- if (is.null(line)) NA else line_width
+    settings[["bold"]] <- bold
+    settings[["italic"]] <- italic
+    settings[["monospace"]] <- monospace
+    settings[["strikeout"]] <- strikeout
+    settings[["underline"]] <- underline
+    settings[["indent"]] <- if (is.null(indent)) NA else as.vector(indent)
+    settings[["colspan"]] <- if (is.null(colspan)) NA else colspan
+    settings[["rowspan"]] <- if (is.null(rowspan)) NA else rowspan
+    settings[["bootstrap_css"]] <- if (!is.null(bootstrap_css)) {
+      bootstrap_css
+    } else {
+      NA
+    }
   }
 
   if (!is.matrix(i) || !is.logical(i)) {
