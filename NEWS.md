@@ -29,6 +29,7 @@ New:
 * `theme_markdown(tab, ansi=TRUE)` enables support for `style_tt()` colors, backgrounds, and text styles in Markdown output. 
 * `theme_markdown(tab, vline=FALSE, hline=FALSE)` suppresses lines.
 * A global option can be used to choose the temporary directofy where HTML files are saved for preview: `options(tinytable_tempdir = "/home/username/tempdir")`
+* Tabulator interactive tables support images with `plot_tt()`.
 
 Bugs:
 

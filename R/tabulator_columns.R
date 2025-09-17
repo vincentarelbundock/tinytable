@@ -215,7 +215,12 @@ tabulator_apply_columns <- function(x) {
                 x <- tabulator_apply_numeric_formatting(x, l)
             }
         }
+    }
+
+    # Apply any column formatters (from lazy_format or plot_tt)
+    if (length(x@lazy_format) > 0 || length(x@tabulator_column_formatters) > 0) {
         x <- tabulator_update_columns_with_formatters(x)
+        columns_list <- x@tabulator_columns  # Update local copy
     }
 
     # Apply column styles
@@ -232,8 +237,10 @@ tabulator_apply_columns <- function(x) {
                 }
             }
         }
-        x@tabulator_columns <- columns_list
     }
+
+    # Save the final columns_list back to the object
+    x@tabulator_columns <- columns_list
 
     # Convert columns to JSON and replace in template
     columns_json <- df_to_json(x@tabulator_columns)

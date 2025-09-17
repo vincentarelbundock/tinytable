@@ -227,6 +227,16 @@ plot_tt_lazy <- function(
 
   x@data_body <- out
 
+  # Mark columns with HTML content for HTML formatter in Tabulator
+  if (isTRUE(x@html_engine == "tabulator")) {
+    for (col_idx in j) {
+      col_name <- x@names[col_idx]
+      if (!is.null(col_name) && !(col_name %in% names(x@tabulator_column_formatters))) {
+        x@tabulator_column_formatters[[col_name]] <- list(formatter = "html")
+      }
+    }
+  }
+
   return(x)
 }
 
