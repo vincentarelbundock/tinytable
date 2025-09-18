@@ -15,7 +15,7 @@ theme_html_bootstrap <- function(x, i = NULL, j = NULL, class = NULL, css = NULL
 
   if (!is.null(class)) {
     x@bootstrap_class <- class
-  } else {
+  } else if (length(x@bootstrap_class) == 0) {
     x@bootstrap_class <- "table"
   }
 

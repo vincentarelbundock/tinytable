@@ -9,7 +9,10 @@ theme_default <- function(x, ...) {
   x <- theme_latex(x, placement = get_option("tinytable_latex_placement", default = NULL))
   x <- theme_typst(x, align_figure = get_option("tinytable_typst_align_figure", "c"))
 
-  x@bootstrap_class <- "table table-borderless"
+  # Only set bootstrap_class if it's not already set
+  if (length(x@bootstrap_class) == 0) {
+    x@bootstrap_class <- "table table-borderless"
+  }
 
   fn <- function(x) {
     col <- if (x@output == "typst") "black" else "#d3d8dc"
