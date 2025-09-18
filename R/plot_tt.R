@@ -44,14 +44,18 @@ plot_tt <- function(
   list2env(tmp, environment())
 
   jval <- sanitize_j(j, x)
-  assert_integerish(i, null.ok = TRUE)
+  ival <- sanitize_i(i, x, calling_function = "plot_tt")
   assert_numeric(height, len = 1, lower = 0)
   assert_numeric(asp, len = 1, lower = 0, upper = 1)
   assert_class(x, "tinytable")
 
-  ival <- if (is.null(i)) seq_len(nrow(x)) else i
-
-  len <- length(ival) * length(jval)
+  # Calculate actual length considering NULL i values
+  ival_length <- if (isTRUE(attr(ival, "null"))) {
+    length(attr(ival, "body"))
+  } else {
+    length(ival)
+  }
+  len <- ival_length * length(jval)
 
   assert_list(data, len = len, null.ok = TRUE)
   assert_character(images, len = len, null.ok = TRUE)
@@ -207,7 +211,11 @@ plot_tt_lazy <- function(
     cell <- ifelse(
       grepl("^http", trimws(images)),
       '<img src="%s" style="height: %sem;">',
-      '<img src="./%s" style="height: %sem;">'
+      ifelse(
+        grepl("^/", trimws(images)) | grepl("^[A-Za-z]:", trimws(images)),  # absolute paths (Unix/Windows)
+        '<img src="%s" style="height: %sem;">',
+        '<img src="./%s" style="height: %sem;">'  # relative paths
+      )
     )
     cell <- sprintf(cell, images, height)
   } else if (isTRUE(x@output == "markdown")) {
@@ -223,7 +231,47 @@ plot_tt_lazy <- function(
     stop("here be dragons")
   }
 
-  out[i, j] <- cell
+  # Handle column header insertions (i=0)
+  if (0 %in% i) {
+    # Insert into header (column names)
+    if (is.null(x@names) || length(x@names) == 0) {
+      stop("Cannot insert images into header: table has no column names.", call. = FALSE)
+    }
+    header_indices <- which(i == 0)
+    body_indices <- which(i > 0)
+
+    # Insert into column headers
+    cell_idx <- 1
+    for (idx in header_indices) {
+      for (j_val in j) {
+        if (j_val <= length(x@names)) {
+          x@names[j_val] <- cell[cell_idx]
+        }
+        cell_idx <- cell_idx + 1
+      }
+    }
+
+    # Insert into body rows
+    if (length(body_indices) > 0) {
+      body_i <- i[body_indices]
+      for (i_val in body_i) {
+        for (j_val in j) {
+          out[i_val, j_val] <- cell[cell_idx]
+          cell_idx <- cell_idx + 1
+        }
+      }
+    }
+  } else {
+    # Original behavior: insert into data body
+    # Handle the case where i is NA (from sanitize_i when i was NULL)
+    if (all(is.na(i)) && isTRUE(attr(i, "null"))) {
+      # Use the body rows from the attributes
+      i_body <- attr(i, "body")
+      out[i_body, j] <- cell
+    } else {
+      out[i, j] <- cell
+    }
+  }
 
   x@data_body <- out
 
