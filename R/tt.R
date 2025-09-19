@@ -139,7 +139,8 @@ tt.default <- function(
     stop(msg, call. = FALSE)
   }
   if (sum(width) > 1) {
-    width <- width / sum(width)
+    # handle remainders gracefully to avoid sum > 100% after rounding
+    width <- percent_sum_100(width) / 100
   }
 
   assert_numeric(height, lower = 0, len = 1, null.ok = TRUE)

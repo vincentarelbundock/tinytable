@@ -140,3 +140,25 @@ rbind_nocol <- function(...) {
 `%||%` <- function(value, fallback) {
   if (is.null(value)) fallback else value
 }
+
+
+percent_sum_100 <- function(x, digits = 0) {
+  stopifnot(is.numeric(x), all(is.finite(x)), all(x >= 0))
+  s <- sum(x)
+  if (s <= 0) stop("sum(x) must be > 0")
+  p <- x / s
+
+  units <- 100L * 10^digits
+  scaled <- p * units
+  base <- floor(scaled)
+  rem <- scaled - base
+
+  leftover <- units - sum(base) # how many 1/10^digits to distribute
+  if (leftover != 0) {
+    ix <- order(rem, decreasing = TRUE, method = "radix")
+    base[ix[seq_len(leftover)]] <- base[ix[seq_len(leftover)]] + 1L
+  }
+
+  out <- base / 10^digits
+  return(out)
+}
