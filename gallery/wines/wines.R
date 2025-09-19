@@ -85,7 +85,7 @@ slugify <- function(x) {
   return(x)
 }
 
-side_by_side_svg <- function(file_paths, height, margin = "1px") {
+side_by_side_images <- function(file_paths, height, margin = "1px") {
   if (length(file_paths) == 0 || all(is.na(file_paths))) {
     return("")
   }
@@ -127,7 +127,7 @@ draw_grapes <- function(grapes, height = 60, margin = "1px") {
 
   # get image paths and return HTML string
   image_paths <- sapply(parts, get_grape_image, USE.NAMES = FALSE)
-  side_by_side_svg(image_paths, height, margin)
+  side_by_side_images(image_paths, height, margin)
 }
 df$grapes <- sapply(df$grape_variety, draw_grapes)
 
@@ -174,7 +174,7 @@ draw_pairings <- function(pairing, icon_height = 40, margin = "2px") {
 
   # drop any NA results and return HTML string
   icons <- icons[!is.na(icons)]
-  side_by_side_svg(icons, icon_height, margin)
+  side_by_side_images(icons, icon_height, margin)
 }
 df$pairings <- sapply(df$food_pairing, draw_pairings)
 
