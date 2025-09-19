@@ -58,6 +58,7 @@ images will be inserted in all columns.}
 \itemize{
 \item Functions that return \code{ggplot2} objects.
 \item Functions that return another function which generates a base \code{R} plot, ex: \code{function(x) {function() hist(x)}}
+\item Note: When using custom ggplot2 functions that return plots with text elements, the text size will normally need to be adjusted because the plot is inserted as a very small image in the table. Text sizes of 1 or smaller often work well (e.g., \code{theme(text = element_text(size = 1))}).
 }
 \item See the tutorial on the \code{tinytable} website for more information.
 }}

@@ -22,6 +22,7 @@
 #' - Custom functions:
 #'   - Functions that return `ggplot2` objects.
 #'   - Functions that return another function which generates a base `R` plot, ex: `function(x) {function() hist(x)}`
+#'   - Note: When using custom ggplot2 functions that return plots with text elements, the text size will normally need to be adjusted because the plot is inserted as a very small image in the table. Text sizes of 1 or smaller often work well (e.g., `theme(text = element_text(size = 1))`).
 #' - See the tutorial on the `tinytable` website for more information.
 #' @param data a list of data frames or vectors to be used by the plotting functions in `fun`.
 #' @param images Character vector, the paths to the images to be inserted. Paths are relative to the main table file or Quarto (Rmarkdown) document.
@@ -232,7 +233,8 @@ plot_tt_lazy <- function(
             filename = fn_full,
             width = 1,
             height = asp,
-            units = "in"
+            units = "in",
+            dpi = 1200,
           )
         )
 
