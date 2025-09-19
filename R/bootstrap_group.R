@@ -120,11 +120,23 @@ bootstrap_groupj_html <- function(x, j_list, ihead) {
 
   # Generate HTML for each group
   jstring <- lapply(seq_along(names(j_combined)), function(k) {
+    colspan_val <- max(j_combined[[k]]) - min(j_combined[[k]]) + 1
+
+    # Calculate width style if x@width has multiple values (individual column widths)
+    width_style <- ""
+    if (length(x@width) > 1 && colspan_val > 1) {
+      # Sum the widths of the columns this header spans
+      spanned_cols <- j_combined[[k]]
+      total_width <- sum(x@width[spanned_cols]) / sum(x@width) * 100
+      width_style <- sprintf(' style="width: %s%%;"', round(total_width, 2))
+    }
+
     sprintf(
-      '<th scope="col" align="center" colspan=%s data-row="%d" data-col="%d">%s</th>',
-      max(j_combined[[k]]) - min(j_combined[[k]]) + 1,
+      '<th scope="col" align="center" colspan=%s data-row="%d" data-col="%d"%s>%s</th>',
+      colspan_val,
       ihead,
       k - 1, # 0-based indexing for data-col
+      width_style,
       names(j_combined)[k]
     )
   })

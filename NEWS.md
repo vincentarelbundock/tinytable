@@ -39,6 +39,7 @@ Bugs:
 * Selective formatting with `format_tt(i = "colnames")` is no longer applied twice. Issue #551.
 * `color` ignored in matrix indexing.
 * Fixed bug in non-standard evaluation with the `i` condition matches nothing. Thanks to @RJDan for report #564.
+* `group_tt(j = )` respects column widths in bootstrap HTML output.
 
 ## 0.13.0
 
