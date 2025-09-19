@@ -46,9 +46,19 @@ images will be inserted in all columns.}
 
 \item{fun}{String or function to generate inline plots.
 \itemize{
-\item String: "histogram", "density", "bar", "line"
+\item Built-in plot types (strings):
+\itemize{
+\item \code{"histogram"}: Creates histograms from numeric vectors. Accepts \code{color} argument.
+\item \code{"density"}: Creates density plots from numeric vectors. Accepts \code{color} argument.
+\item \code{"bar"}: Creates horizontal bar charts from single numeric values. Accepts \code{color} and \code{xlim} arguments.
+\item \code{"barpct"}: Creates horizontal percentage bar charts from single numeric values between 0 and 1. Accepts \code{color} and \code{background} arguments.
+\item \code{"line"}: Creates line plots from data frames with \code{x} and \code{y} columns. Accepts \code{color} and \code{xlim} arguments.
+}
+\item Custom functions:
+\itemize{
 \item Functions that return \code{ggplot2} objects.
 \item Functions that return another function which generates a base \code{R} plot, ex: \code{function(x) {function() hist(x)}}
+}
 \item See the tutorial on the \code{tinytable} website for more information.
 }}
 
@@ -77,4 +87,42 @@ tinytable objects. This function can handle both local and web-based images.
 }
 \details{
 The \code{plot_tt()} can insert images and inline plots into tables.
+}
+\examples{
+\dontrun{
+# Built-in plot types
+plot_data <- list(mtcars$mpg, mtcars$hp, mtcars$qsec)
+
+dat <- data.frame(
+  Variables = c("mpg", "hp", "qsec"),
+  Histogram = "",
+  Density = "",
+  Bar = "",
+  BarPct = "",
+  Line = ""
+)
+
+# Random data for sparklines
+lines <- lapply(1:3, \(x) data.frame(x = 1:10, y = rnorm(10)))
+
+# Percentage data (values between 0 and 1)
+pct_data <- list(0.65, 0.82, 0.41)
+
+tt(dat) |>
+  plot_tt(j = 2, fun = "histogram", data = plot_data) |>
+  plot_tt(j = 3, fun = "density", data = plot_data, color = "darkgreen") |>
+  plot_tt(j = 4, fun = "bar", data = list(2, 3, 6), color = "orange") |>
+  plot_tt(j = 5, fun = "barpct", data = pct_data, color = "steelblue") |>
+  plot_tt(j = 6, fun = "line", data = lines, color = "blue") |>
+  style_tt(j = 2:6, align = "c")
+
+# Custom function example (must have ... argument)
+custom_hist <- function(d, ...) {
+  function() hist(d, axes = FALSE, ann = FALSE, col = "lightblue")
+}
+
+tt(data.frame(Variables = "mpg", Histogram = "")) |>
+  plot_tt(j = 2, fun = custom_hist, data = list(mtcars$mpg))
+}
+
 }

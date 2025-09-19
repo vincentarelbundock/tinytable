@@ -13,9 +13,15 @@
 #' @param color string Name of color to use for inline plots (passed to the `col` argument base `graphics` plots in `R`).
 #' @param xlim Numeric vector of length 2.
 #' @param fun  String or function to generate inline plots.
-#' - String: "histogram", "density", "bar", "line"
-#' - Functions that return `ggplot2` objects.
-#' - Functions that return another function which generates a base `R` plot, ex: `function(x) {function() hist(x)}`
+#' - Built-in plot types (strings):
+#'   - `"histogram"`: Creates histograms from numeric vectors. Accepts `color` argument.
+#'   - `"density"`: Creates density plots from numeric vectors. Accepts `color` argument.
+#'   - `"bar"`: Creates horizontal bar charts from single numeric values. Accepts `color` and `xlim` arguments.
+#'   - `"barpct"`: Creates horizontal percentage bar charts from single numeric values between 0 and 1. Accepts `color` and `background` arguments.
+#'   - `"line"`: Creates line plots from data frames with `x` and `y` columns. Accepts `color` and `xlim` arguments.
+#' - Custom functions:
+#'   - Functions that return `ggplot2` objects.
+#'   - Functions that return another function which generates a base `R` plot, ex: `function(x) {function() hist(x)}`
 #' - See the tutorial on the `tinytable` website for more information.
 #' @param data a list of data frames or vectors to be used by the plotting functions in `fun`.
 #' @param images Character vector, the paths to the images to be inserted. Paths are relative to the main table file or Quarto (Rmarkdown) document.
@@ -25,6 +31,44 @@
 #' @return A modified tinytable object with images or plots inserted.
 #'
 #' @details The `plot_tt()` can insert images and inline plots into tables.
+#'
+#' @examples
+#' \dontrun{
+#' # Built-in plot types
+#' plot_data <- list(mtcars$mpg, mtcars$hp, mtcars$qsec)
+#'
+#' dat <- data.frame(
+#'   Variables = c("mpg", "hp", "qsec"),
+#'   Histogram = "",
+#'   Density = "",
+#'   Bar = "",
+#'   BarPct = "",
+#'   Line = ""
+#' )
+#'
+#' # Random data for sparklines
+#' lines <- lapply(1:3, \(x) data.frame(x = 1:10, y = rnorm(10)))
+#'
+#' # Percentage data (values between 0 and 1)
+#' pct_data <- list(0.65, 0.82, 0.41)
+#'
+#' tt(dat) |>
+#'   plot_tt(j = 2, fun = "histogram", data = plot_data) |>
+#'   plot_tt(j = 3, fun = "density", data = plot_data, color = "darkgreen") |>
+#'   plot_tt(j = 4, fun = "bar", data = list(2, 3, 6), color = "orange") |>
+#'   plot_tt(j = 5, fun = "barpct", data = pct_data, color = "steelblue") |>
+#'   plot_tt(j = 6, fun = "line", data = lines, color = "blue") |>
+#'   style_tt(j = 2:6, align = "c")
+#'
+#' # Custom function example (must have ... argument)
+#' custom_hist <- function(d, ...) {
+#'   function() hist(d, axes = FALSE, ann = FALSE, col = "lightblue")
+#' }
+#'
+#' tt(data.frame(Variables = "mpg", Histogram = "")) |>
+#'   plot_tt(j = 2, fun = custom_hist, data = list(mtcars$mpg))
+#' }
+#'
 #' @export
 plot_tt <- function(
     x,
@@ -77,7 +121,7 @@ plot_tt <- function(
   }
 
   if (is.character(fun)) {
-    assert_choice(fun, c("histogram", "density", "bar", "line"))
+    assert_choice(fun, c("histogram", "density", "bar", "barpct", "line"))
   } else {
     assert_function(fun, null.ok = TRUE)
   }
@@ -97,6 +141,17 @@ plot_tt <- function(
       xlim <- c(0, max(unlist(data)))
     }
     fun <- rep(list(tiny_bar), length(data))
+  } else if (identical(fun, "barpct")) {
+    for (idx in seq_along(data)) {
+      assert_numeric(data[[idx]], len = 1, name = "data[[1]]")
+      if (!all(data[[idx]] >= 0 & data[[idx]] <= 1, na.rm = TRUE)) {
+        stop("Data for 'barpct' must be between 0 and 1 (percentages).", call. = FALSE)
+      }
+    }
+    if (is.null(xlim)) {
+      xlim <- c(0, 1)
+    }
+    fun <- rep(list(tiny_barpct), length(data))
   } else {
     fun <- rep(list(fun), length(data))
   }
@@ -212,9 +267,9 @@ plot_tt_lazy <- function(
       grepl("^http", trimws(images)),
       '<img src="%s" style="height: %sem;">',
       ifelse(
-        grepl("^/", trimws(images)) | grepl("^[A-Za-z]:", trimws(images)),  # absolute paths (Unix/Windows)
+        grepl("^/", trimws(images)) | grepl("^[A-Za-z]:", trimws(images)), # absolute paths (Unix/Windows)
         '<img src="%s" style="height: %sem;">',
-        '<img src="./%s" style="height: %sem;">'  # relative paths
+        '<img src="./%s" style="height: %sem;">' # relative paths
       )
     )
     cell <- sprintf(cell, images, height)
@@ -297,6 +352,34 @@ tiny_density <- function(d, color = "black", ...) {
     d <- stats::density(stats::na.omit(d))
     graphics::plot(d, axes = FALSE, ann = FALSE, col = color)
     graphics::polygon(d, col = color)
+  }
+}
+
+tiny_barpct <- function(
+    d,
+    color = "black",
+    background = "lightgrey",
+    xlim = c(0, 1),
+    ...) {
+  function() {
+    stopifnot(is.numeric(d), all(d >= 0 & d <= 1, na.rm = TRUE))
+
+    color <- standardize_colors(color)
+    bg_col <- standardize_colors(background)
+
+    comp <- 1 - d
+    mat <- rbind(d, comp)
+
+    graphics::barplot(
+      mat,
+      horiz  = TRUE,
+      col    = c(color, bg_col),
+      xlim   = xlim,
+      space  = 0,
+      beside = FALSE,
+      axes   = FALSE,
+      ...
+    )
   }
 }
 

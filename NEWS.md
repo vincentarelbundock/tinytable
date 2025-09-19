@@ -31,6 +31,7 @@ New:
 * A global option can be used to choose the temporary directofy where HTML files are saved for preview: `options(tinytable_tempdir = "/home/username/tempdir")`
 * Tabulator interactive tables support images with `plot_tt()`.
 * `plot_tt()` can add images to replace column names. Issue #566.
+* `plot_tt(fun = "barpct", color = "red", background = "blue")` draws percentage bars with two colors for p and 1-p.
 
 Bugs:
 
