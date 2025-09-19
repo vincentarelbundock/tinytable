@@ -9,6 +9,8 @@
 #' @param j Integer vector, the column indices where images are to be inserted. If `NULL`,
 #'    images will be inserted in all columns.
 #' @param height Numeric, the height of the images in the table in em units.
+#' @param height_plot Numeric, the height of generated plot images in pixels (default: 400).
+#' @param width_plot Numeric, the width of generated plot images in pixels (default: 1200).
 #' @param color string Name of color to use for inline plots (passed to the `col` argument base `graphics` plots in `R`).
 #' @param xlim Numeric vector of length 2.
 #' @param fun  String or function to generate inline plots.
@@ -204,7 +206,7 @@ plot_tt_lazy <- function(
       path_full <- tempdir()
       assets <- tempdir()
     } else {
-      path_full <- file.path(x@output_dir, assets)
+      path_full <- normalizePath(file.path(x@output_dir, assets), mustWork = FALSE)
     }
 
     if (!dir.exists(path_full)) {
@@ -213,8 +215,14 @@ plot_tt_lazy <- function(
     for (idx in seq_along(data)) {
       fn <- paste0(get_id(), ".png")
       fn_full <- file.path(path_full, fn)
-      fn <- file.path(assets, fn)
-      images[idx] <- fn
+      if (isTRUE(x@output %in% c("html", "bootstrap")) && isTRUE(x@html_portable)) {
+        # For portable HTML, store the full path for base64 encoding
+        images[idx] <- fn_full
+      } else {
+        # For regular HTML/save_tt/print, store the relative path from assets directory
+        fn <- file.path(assets, fn)
+        images[idx] <- fn
+      }
 
       plot_fun <- fun[[idx]]
       if (!"..." %in% names(formals(plot_fun))) {
@@ -265,16 +273,17 @@ plot_tt_lazy <- function(
     images[!http] <- encode(images[!http])
     cell <- sprintf('<img src="%s" style="height: %sem;">', images, height)
   } else if (isTRUE(x@output %in% c("html", "bootstrap", "tabulator"))) {
-    cell <- ifelse(
-      grepl("^http", trimws(images)),
-      '<img src="%s" style="height: %sem;">',
-      ifelse(
-        grepl("^/", trimws(images)) | grepl("^[A-Za-z]:", trimws(images)), # absolute paths (Unix/Windows)
-        '<img src="%s" style="height: %sem;">',
-        '<img src="./%s" style="height: %sem;">' # relative paths
-      )
-    )
-    cell <- sprintf(cell, images, height)
+    # Convert relative paths to absolute paths for save_tt/print
+    http <- grepl("^http", trimws(images))
+    for (img_idx in seq_along(images)) {
+      if (!http[img_idx]) {
+        # Convert relative paths to absolute paths
+        if (!grepl("^/", trimws(images[img_idx])) && !grepl("^[A-Za-z]:", trimws(images[img_idx]))) {
+          images[img_idx] <- file.path(getwd(), images[img_idx])
+        }
+      }
+    }
+    cell <- sprintf('<img src="%s" style="height: %sem;">', images, height)
   } else if (isTRUE(x@output == "markdown")) {
     cell <- "![](%s){ height=%s }"
     cell <- sprintf(cell, images, height * 16)

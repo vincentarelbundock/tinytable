@@ -1,6 +1,7 @@
 
 
 <p align="center">
+
 <img src="man/figures/gallery/tinytable_gallery.gif" height = "250" class = "center">
 <br> <!-- badges: start -->
 <a href = "https://github.com/vincentarelbundock/tinytable/blob/main/LICENSE.md" target = "_blank"><img src="https://img.shields.io/badge/license-GPLv3-blue"></a>
@@ -12,14 +13,14 @@
 ## What?
 
 `tinytable` is a small but powerful `R` package to draw beautiful tables
-in a variety of formats: HTML, LaTeX, Word[1], PDF, PNG, Markdown, and
+in a variety of formats: HTML, LaTeX, Word[^1], PDF, PNG, Markdown, and
 Typst. The user interface is minimalist and easy to learn, while giving
 users access to powerful frameworks to create endlessly customizable
 tables.
 
 <https://vincentarelbundock.github.io/tinytable/>
 
-> **Note**
+> [!NOTE]
 >
 > The documentation on this website uses the latest development version
 > of `tinytable`. This version can normally be installed from
@@ -49,25 +50,24 @@ ecosystem. Why release a new one? As [the maintainer of
 `modelsummary`](https://modelsummary.com), I needed a table-drawing
 package which was:
 
--   *Simple*: Streamlined, consistent, and uncluttered user interface,
-    with few functions to learn.
--   *Flexible*: Expressive frameworks to customize tables in HTML and
-    LaTeX formats.[2]
--   *Zero-dependency*: Avoid importing any other `R` package.[3]
--   *Concise*: Draw beautiful tables without typing a lot of code.
--   *Safe*: User inputs are checked thoroughly, and informative errors
-    are returned early.
--   *Maintainable*: A small code base which does not rely on too many
-    complex regular expressions.
--   *Readable*: HTML and LaTeX code should be human-readable and
-    editable.
--   *Free*: This package will always be free. Tiny tables for a tiny
-    price!
+- *Simple*: Streamlined, consistent, and uncluttered user interface,
+  with few functions to learn.
+- *Flexible*: Expressive frameworks to customize tables in HTML and
+  LaTeX formats.[^2]
+- *Zero-dependency*: Avoid importing any other `R` package.[^3]
+- *Concise*: Draw beautiful tables without typing a lot of code.
+- *Safe*: User inputs are checked thoroughly, and informative errors are
+  returned early.
+- *Maintainable*: A small code base which does not rely on too many
+  complex regular expressions.
+- *Readable*: HTML and LaTeX code should be human-readable and editable.
+- *Free*: This package will always be free. Tiny tables for a tiny
+  price!
 
 To achieve these goals, the design philosophy of `tinytable` rests on
 three pillars:
 
-1.  *Data is separate from style.* The code that this package creates
+1)  *Data is separate from style.* The code that this package creates
     keeps the content of a table separate from the style sheet that
     applies to its cells. This is in contrast to other `R` packages that
     modify the actual text in each cell to style it. Keeping data and
@@ -76,13 +76,13 @@ three pillars:
     developers to keep a simpler code base, with minimal use of messy
     regular expressions.
 
-2.  *Flexibility.* Users’ needs are extremely varied, and a
+2)  *Flexibility.* Users’ needs are extremely varied, and a
     table-drawing package must be flexible enough to accomodate
     different ideas. To achieve this, `tinytable` builds on
     battle-tested and versatile frameworks like `Bootstrap` for HTML and
     `tabularray` for LaTeX.
 
-3.  Lightweight. Some of the most popular table-drawing packages in the
+3)  Lightweight. Some of the most popular table-drawing packages in the
     `R` ecosystem are very heavy: A single `library()` call can
     sometimes load upwards of 65 `R` packages. In contrast, `tinytable`
     imports zero 3rd party `R` package by default.
@@ -138,32 +138,32 @@ tt(x,
 The `tinytable` 0.13.0.17 tutorial will take you much further. It is
 available in two formats:
 
--   [Tutorial
-    (PDF)](https://vincentarelbundock.github.io/tinytable/vignettes/tinytable_tutorial.pdf)
--   Tutorial (HTML):
-    -   [Tiny
-        tables](https://vincentarelbundock.github.io/tinytable/vignettes/tinytable.html)
-    -   [Format](https://vincentarelbundock.github.io/tinytable/vignettes/format.html)
-    -   [Style](https://vincentarelbundock.github.io/tinytable/vignettes/style.html)
-    -   [Group
-        labels](https://vincentarelbundock.github.io/tinytable/vignettes/group.html)
-    -   [Plots and
-        images](https://vincentarelbundock.github.io/tinytable/vignettes/plot.html)
-    -   [Themes](https://vincentarelbundock.github.io/tinytable/vignettes/theme.html)
-    -   [Notebooks (Quarto, Rmarkdown, Bookdown,
-        etc.)](https://vincentarelbundock.github.io/tinytable/vignettes/notebooks.html)
-    -   [Customization](https://vincentarelbundock.github.io/tinytable/vignettes/custom.html)
-    -   [Tips and
-        trips](https://vincentarelbundock.github.io/tinytable/vignettes/tips.html)
-    -   [Alternatives](https://vincentarelbundock.github.io/tinytable/vignettes/alternatives.html)
+- [Tutorial
+  (PDF)](https://vincentarelbundock.github.io/tinytable/vignettes/tinytable_tutorial.pdf)
+- Tutorial (HTML):
+  - [Tiny
+    tables](https://vincentarelbundock.github.io/tinytable/vignettes/tinytable.html)
+  - [Format](https://vincentarelbundock.github.io/tinytable/vignettes/format.html)
+  - [Style](https://vincentarelbundock.github.io/tinytable/vignettes/style.html)
+  - [Group
+    labels](https://vincentarelbundock.github.io/tinytable/vignettes/group.html)
+  - [Plots and
+    images](https://vincentarelbundock.github.io/tinytable/vignettes/plot.html)
+  - [Themes](https://vincentarelbundock.github.io/tinytable/vignettes/theme.html)
+  - [Notebooks (Quarto, Rmarkdown, Bookdown,
+    etc.)](https://vincentarelbundock.github.io/tinytable/vignettes/notebooks.html)
+  - [Customization](https://vincentarelbundock.github.io/tinytable/vignettes/custom.html)
+  - [Tips and
+    trips](https://vincentarelbundock.github.io/tinytable/vignettes/tips.html)
+  - [Alternatives](https://vincentarelbundock.github.io/tinytable/vignettes/alternatives.html)
 
-[1] Styling options in Word are somewhat limited. See the FAQ page and
-the `style_tt()` documentation for details.
+[^1]: Styling options in Word are somewhat limited. See the FAQ page and
+    the `style_tt()` documentation for details.
 
-[2] Other formats like Markdown and Typst are also available, but less
-flexible.
+[^2]: Other formats like Markdown and Typst are also available, but less
+    flexible.
 
-[3] Some extra packages can be imported to access specific
-functionality, such as integration with Quarto, inserting `ggplot2`
-objects as inline plots, and saving tables to PNG images or PDF
-documents.
+[^3]: Some extra packages can be imported to access specific
+    functionality, such as integration with Quarto, inserting `ggplot2`
+    objects as inline plots, and saving tables to PNG images or PDF
+    documents.

@@ -42,6 +42,7 @@ Bugs:
 * `color` ignored in matrix indexing.
 * Fixed bug in non-standard evaluation with the `i` condition matches nothing. Thanks to @RJDan for report #564.
 * `group_tt(j = )` respects column widths in bootstrap HTML output.
+* Better path handling in `plot_tt()`
 
 ## 0.13.0
 

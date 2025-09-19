@@ -73,6 +73,10 @@ images will be inserted in all columns.}
 
 \item{height}{Numeric, the height of the images in the table in em units.}
 
+\item{height_plot}{Numeric, the height of generated plot images in pixels (default: 400).}
+
+\item{width_plot}{Numeric, the width of generated plot images in pixels (default: 1200).}
+
 \item{images}{Character vector, the paths to the images to be inserted. Paths are relative to the main table file or Quarto (Rmarkdown) document.}
 
 \item{assets}{Path to the directory where generated assets are stored. This path is relative to the location where a table is saved.}
