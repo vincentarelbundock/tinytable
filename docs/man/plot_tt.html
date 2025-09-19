@@ -531,7 +531,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   color = "black",
   xlim = NULL,
   height = 1,
-  asp = 1/3,
+  height_plot = 400,
+  width_plot = 1200,
   images = NULL,
   assets = "tinytable_assets",
   ...
@@ -546,7 +547,8 @@ tt_plot(
   color = "black",
   xlim = NULL,
   height = 1,
-  asp = 1/3,
+  height_plot = 400,
+  width_plot = 1200,
   images = NULL,
   assets = "tinytable_assets",
   ...
@@ -616,6 +618,9 @@ Integer vector, the column indices where images are to be inserted. If <code>NUL
 <li>
 <p>Functions that return another function which generates a base <code>R</code> plot, ex: <code>function(x) {function() hist(x)}</code></p>
 </li>
+<li>
+<p>Note: When using custom ggplot2 functions that return plots with text elements, the text size will normally need to be adjusted because the plot is inserted as a very small image in the table. Text sizes of 1 or smaller often work well (e.g., <code>theme(text = element_text(size = 1))</code>).</p>
+</li>
 </ul>
 </li>
 <li>
@@ -654,14 +659,6 @@ Numeric vector of length 2.
 </td>
 <td>
 Numeric, the height of the images in the table in em units.
-</td>
-</tr>
-<tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
-<code id="asp">asp</code>
-</td>
-<td>
-Numeric, aspect ratio of the plots (height / width).
 </td>
 </tr>
 <tr>

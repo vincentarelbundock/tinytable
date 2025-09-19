@@ -6,6 +6,7 @@ Breaking change:
 
 * `theme_void()` calls `strip_tt()` to drop every change made to this point, so the order of operations matter.
 * `"html_portable"` is no longer a valid `output` format in `save_tt()` or `print()`. Use `theme_html(portable = TRUE)` instead.
+* `plot_tt()` loses its `asp` argument. Use `width_plot` and `height_plot` instead.
 
 Deprecated global options:
 
@@ -32,6 +33,7 @@ New:
 * Tabulator interactive tables support images with `plot_tt()`.
 * `plot_tt()` can add images to replace column names. Issue #566.
 * `plot_tt(fun = "barpct", color = "red", background = "blue")` draws percentage bars with two colors for p and 1-p.
+* `plot_tt()` gets a `height_plot` argument to control the height of plots in px units.
 
 Bugs:
 

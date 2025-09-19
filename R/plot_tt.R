@@ -9,7 +9,6 @@
 #' @param j Integer vector, the column indices where images are to be inserted. If `NULL`,
 #'    images will be inserted in all columns.
 #' @param height Numeric, the height of the images in the table in em units.
-#' @param asp Numeric, aspect ratio of the plots (height / width).
 #' @param color string Name of color to use for inline plots (passed to the `col` argument base `graphics` plots in `R`).
 #' @param xlim Numeric vector of length 2.
 #' @param fun  String or function to generate inline plots.
@@ -80,7 +79,8 @@ plot_tt <- function(
     color = "black",
     xlim = NULL,
     height = 1,
-    asp = 1 / 3,
+    height_plot = 400,
+    width_plot = 1200,
     images = NULL,
     assets = "tinytable_assets",
     ...) {
@@ -91,7 +91,6 @@ plot_tt <- function(
   jval <- sanitize_j(j, x)
   ival <- sanitize_i(i, x, calling_function = "plot_tt")
   assert_numeric(height, len = 1, lower = 0)
-  assert_numeric(asp, len = 1, lower = 0, upper = 1)
   assert_class(x, "tinytable")
 
   # Calculate actual length considering NULL i values
@@ -163,12 +162,13 @@ plot_tt <- function(
     x = x,
     i = ival,
     j = jval,
-    asp = asp,
     data = data,
     fun = fun,
     color = color,
     xlim = xlim,
     height = height,
+    height_plot = height_plot,
+    width_plot = width_plot,
     images = images,
     assets = assets
   )
@@ -185,7 +185,8 @@ plot_tt_lazy <- function(
     i = NULL,
     j = NULL,
     height = 1,
-    asp = 1 / 3,
+    height_plot = 400,
+    width_plot = 1200,
     fun = NULL,
     color = NULL,
     data = NULL,
@@ -231,16 +232,15 @@ plot_tt_lazy <- function(
           ggplot2::ggsave(
             p,
             filename = fn_full,
-            width = 1,
-            height = asp,
-            units = "in",
-            dpi = 1200,
+            width = width_plot,
+            height = height_plot,
+            units = "px"
           )
         )
 
         # base R
       } else if (is.function(p)) {
-        grDevices::png(fn_full, width = 1000, height = 1000 * asp)
+        grDevices::png(fn_full, width = width_plot, height = height_plot)
         op <- graphics::par()
         graphics::par(mar = c(0, 0, 0, 0))
         p()

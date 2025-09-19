@@ -14,7 +14,8 @@ plot_tt(
   color = "black",
   xlim = NULL,
   height = 1,
-  asp = 1/3,
+  height_plot = 400,
+  width_plot = 1200,
   images = NULL,
   assets = "tinytable_assets",
   ...
@@ -29,7 +30,8 @@ tt_plot(
   color = "black",
   xlim = NULL,
   height = 1,
-  asp = 1/3,
+  height_plot = 400,
+  width_plot = 1200,
   images = NULL,
   assets = "tinytable_assets",
   ...
@@ -70,8 +72,6 @@ images will be inserted in all columns.}
 \item{xlim}{Numeric vector of length 2.}
 
 \item{height}{Numeric, the height of the images in the table in em units.}
-
-\item{asp}{Numeric, aspect ratio of the plots (height / width).}
 
 \item{images}{Character vector, the paths to the images to be inserted. Paths are relative to the main table file or Quarto (Rmarkdown) document.}
 
