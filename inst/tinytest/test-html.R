@@ -235,6 +235,27 @@ tab <- tt(mtcars[1:9, 1:8]) |>
 expect_snapshot_print(print_html(tab), "html-issue355b.html")
 
 
+
+# Issue #575
+tab <- head(iris) |>
+  tt() |>
+  theme_empty() |>
+  group_tt(j = list("Hello" = 1:2, "Cruel" = 3, "World" = 4:5)) |>
+  group_tt(j = list("Foo" = 1, "Bar" = 2:5)) |>
+  style_tt(align = "c") |>
+  style_tt(i = 2, j = 2, colspan = 3) |>
+  style_tt(i = 2, j = 2, line = "b", line_color = "green") |>
+  style_tt(i = 2, j = 5, line = "b", line_color = "orange") |>
+  style_tt(i = -1, j = 1:2, line = "b", line_color = "orange") |>
+  style_tt(i = -2, j = 3, line = "b", line_color = "green") |>
+  style_tt(i = -1, j = 4:5, line = "b", line_color = "blue") |>
+  style_tt(i = 0, line = "b", line_color = "pink") |>
+  style_tt(i = 6, line = "b", line_color = "pink")
+expect_snapshot_print(print_html(tab), "html-issue575.html")
+
+
+
+
 ## TODO: reinstate portable test, but there's a snapshot challenge
 # # Issue #340: plot_tt should be able to create self-contained HTML
 # if (Sys.info()["user"] == "vincent") {

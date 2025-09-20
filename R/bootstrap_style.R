@@ -1,3 +1,77 @@
+# Helper function to adjust column indices based on column grouping only
+bootstrap_adjust_column_indices <- function(x, user_j, user_i) {
+  # Only adjust for column groups, not user-defined colspans
+  # User-defined colspans are handled by JavaScript after HTML generation
+  if (nrow(x@group_data_j) == 0) {
+    return(user_j)
+  }
+
+  adjusted_j <- user_j
+
+  # Handle each row separately since column groups affect data-col numbering per row
+  for (unique_i in unique(user_i)) {
+    row_mask <- user_i == unique_i
+    if (!any(row_mask)) next
+
+    # Only adjust for header rows affected by column grouping
+    if (unique_i < 0) {
+      col_mapping <- bootstrap_get_datacol_mapping(x, unique_i)
+
+      # Apply mapping to user indices for this row
+      for (idx in which(row_mask)) {
+        orig_col <- user_j[idx]
+        if (orig_col >= 1 && orig_col <= length(col_mapping)) {
+          adjusted_j[idx] <- col_mapping[orig_col]
+        }
+      }
+    }
+    # For non-header rows (unique_i >= 0), no adjustment needed
+    # User-defined colspans don't change the initial data-col values
+  }
+
+  return(adjusted_j)
+}
+
+# Get mapping from user column index to HTML data-col value for header rows with column groups
+bootstrap_get_datacol_mapping <- function(x, target_i) {
+  # Initialize with 1:1 mapping
+  col_mapping <- seq_len(x@ncol)
+
+  # Only handle column groups for header rows
+  if (nrow(x@group_data_j) > 0 && target_i < 0) {
+    # Group rows are processed in reverse order, so map target_i to correct row
+    # target_i = -1 corresponds to the first group (nrow), target_i = -2 to second group (nrow-1), etc.
+    group_row_idx <- nrow(x@group_data_j) - (abs(target_i) - 1)
+    if (group_row_idx >= 1 && group_row_idx <= nrow(x@group_data_j)) {
+      groupj <- as.character(x@group_data_j[group_row_idx, ])
+      j_list <- bootstrap_groupj_span(groupj)
+
+      if (length(j_list) > 0) {
+        # Recreate the j_combined logic from bootstrap_groupj_html
+        miss <- as.list(setdiff(seq_len(x@ncol), unlist(j_list)))
+        miss <- stats::setNames(miss, rep(" ", length(miss)))
+        j_combined <- c(j_list, miss)
+
+        # Sort by column position
+        max_col <- sapply(j_combined, max)
+        idx <- order(max_col)
+        j_combined <- j_combined[idx]
+
+        # Create mapping: all columns in a span map to the same data-col
+        for (k in seq_along(j_combined)) {
+          original_cols <- j_combined[[k]]
+          # All columns in this span map to the same data-col position (k)
+          for (orig_col in original_cols) {
+            col_mapping[orig_col] <- k
+          }
+        }
+      }
+    }
+  }
+
+  return(col_mapping)
+}
+
 #' Internal styling function
 #'
 #' @inheritParams style_tt
@@ -167,6 +241,10 @@ setMethod(
     # User row indices should match HTML data-row values directly
     # HTML generation already handles header positioning
     rec$i <- rec$i
+
+    # Adjust column indices when any kind of colspan is present
+    # Both column groups and user-defined colspans change data-col values in HTML
+    rec$j <- bootstrap_adjust_column_indices(x, rec$j, rec$i)
     rec$j <- rec$j - 1
 
     # spans: before styles because we return(x) if there is no style
@@ -176,11 +254,18 @@ setMethod(
       if (rowspan > 1 || colspan > 1) {
         id <- get_id(stem = "spanCell_")
         listener <- "      window.addEventListener('load', function () { %s(%s, %s, %s, %s) })"
+        # For user-defined colspans, don't adjust the j index since they don't change initial data-col values
+        # Only column groups in headers need adjustment
+        if (sty$i[row] < 0) {
+          adjusted_j <- bootstrap_adjust_column_indices(x, sty$j[row], sty$i[row])
+        } else {
+          adjusted_j <- sty$j[row]
+        }
         listener <- sprintf(
           listener,
           id,
           sty$i[row],
-          sty$j[row] - 1,
+          adjusted_j - 1,
           rowspan,
           colspan
         )
