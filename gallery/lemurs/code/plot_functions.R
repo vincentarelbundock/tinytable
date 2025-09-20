@@ -50,7 +50,7 @@ plot_line <- function(select_taxon, df, ...) {
             colour = sex,
             group = sex)) +
         # draw semi-transparent line with points on top
-        geom_line(size = 1.2, alpha = .5) +
+        geom_line(linewidth = 1.2, alpha = .5) +
         geom_point(size = 2, alpha = .5) +
         # labels
         labs(x = "", y = "Weight (g)") +

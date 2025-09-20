@@ -1,0 +1,286 @@
+<!-- preamble start -->
+<!DOCTYPE html> 
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytable_eb937nfhfeyngq48nmkq</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body>
+<!-- preamble end -->
+
+    <script>
+
+      function styleCell_eb937nfhfeyngq48nmkq(i, j, css_id) {
+          var table = document.getElementById("tinytable_eb937nfhfeyngq48nmkq");
+          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+          if (cell) {
+              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
+              cell.classList.add(css_id);
+          } else {
+              console.warn(`Cell at (${i}, ${j}) not found.`);
+          }
+      }
+      function spanCell_eb937nfhfeyngq48nmkq(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_eb937nfhfeyngq48nmkq");
+        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
+        if (!targetCell) {
+          console.warn(`Cell at (${i}, ${j}) not found.`);
+        }
+
+        // Get all cells that need to be removed
+        const cellsToRemove = [];
+        for (let r = 0; r < rowspan; r++) {
+          for (let c = 0; c < colspan; c++) {
+            if (r === 0 && c === 0) continue; // Skip the target cell
+            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
+            if (cell) {
+              cellsToRemove.push(cell);
+            }
+          }
+        }
+
+        // Remove all cells
+        cellsToRemove.forEach(cell => cell.remove());
+
+        // Set rowspan and colspan of the target cell if it exists
+        if (targetCell) {
+          targetCell.rowSpan = rowspan;
+          targetCell.colSpan = colspan;
+        }
+      }
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '27', j: 3 },  ], css_id: 'tinytable_css_icahgno8650nzmm2u4hi',}, 
+          { positions: [ { i: '14', j: 3 }, { i: '2', j: 3 }, { i: '16', j: 3 }, { i: '4', j: 3 }, { i: '18', j: 3 }, { i: '6', j: 3 }, { i: '20', j: 3 }, { i: '8', j: 3 }, { i: '22', j: 3 }, { i: '10', j: 3 }, { i: '24', j: 3 }, { i: '12', j: 3 }, { i: '26', j: 3 },  ], css_id: 'tinytable_css_pz4c44wkqsjic4d8afen',}, 
+          { positions: [ { i: '1', j: 3 }, { i: '15', j: 3 }, { i: '3', j: 3 }, { i: '17', j: 3 }, { i: '5', j: 3 }, { i: '19', j: 3 }, { i: '7', j: 3 }, { i: '21', j: 3 }, { i: '9', j: 3 }, { i: '23', j: 3 }, { i: '11', j: 3 }, { i: '25', j: 3 }, { i: '13', j: 3 },  ], css_id: 'tinytable_css_b1nwn491ovamtdsbuymv',}, 
+          { positions: [ { i: '0', j: 3 },  ], css_id: 'tinytable_css_igwf56p9hpo6ivsbfjon',}, 
+          { positions: [ { i: '27', j: 2 },  ], css_id: 'tinytable_css_tjcs8cr5juvre5tb4uwx',}, 
+          { positions: [ { i: '14', j: 2 }, { i: '2', j: 2 }, { i: '16', j: 2 }, { i: '4', j: 2 }, { i: '18', j: 2 }, { i: '6', j: 2 }, { i: '20', j: 2 }, { i: '8', j: 2 }, { i: '22', j: 2 }, { i: '10', j: 2 }, { i: '24', j: 2 }, { i: '12', j: 2 }, { i: '26', j: 2 },  ], css_id: 'tinytable_css_1dut32ngs2g9tiryfzxb',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '15', j: 2 }, { i: '3', j: 2 }, { i: '17', j: 2 }, { i: '5', j: 2 }, { i: '19', j: 2 }, { i: '7', j: 2 }, { i: '21', j: 2 }, { i: '9', j: 2 }, { i: '23', j: 2 }, { i: '11', j: 2 }, { i: '25', j: 2 }, { i: '13', j: 2 },  ], css_id: 'tinytable_css_p8u9qrbzu5xtexerrykq',}, 
+          { positions: [ { i: '27', j: 1 },  ], css_id: 'tinytable_css_f9cyt9b9idkimc6c7xai',}, 
+          { positions: [ { i: '14', j: 1 }, { i: '16', j: 1 }, { i: '4', j: 1 }, { i: '18', j: 1 }, { i: '6', j: 1 }, { i: '20', j: 1 }, { i: '8', j: 1 }, { i: '22', j: 1 }, { i: '10', j: 1 }, { i: '24', j: 1 }, { i: '12', j: 1 }, { i: '26', j: 1 }, { i: '2', j: 1 },  ], css_id: 'tinytable_css_i6zowxtz8t0u9bptdfhf',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '3', j: 1 }, { i: '17', j: 1 }, { i: '5', j: 1 }, { i: '19', j: 1 }, { i: '7', j: 1 }, { i: '21', j: 1 }, { i: '9', j: 1 }, { i: '23', j: 1 }, { i: '11', j: 1 }, { i: '25', j: 1 }, { i: '13', j: 1 }, { i: '15', j: 1 },  ], css_id: 'tinytable_css_ndj5ohcau873cn0nveue',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 },  ], css_id: 'tinytable_css_dv9jrkyniaal1a2oycrd',}, 
+          { positions: [ { i: '27', j: 0 },  ], css_id: 'tinytable_css_09wjhvkbogfrswgfymn3',}, 
+          { positions: [ { i: '14', j: 0 }, { i: '2', j: 0 }, { i: '16', j: 0 }, { i: '4', j: 0 }, { i: '18', j: 0 }, { i: '6', j: 0 }, { i: '20', j: 0 }, { i: '8', j: 0 }, { i: '22', j: 0 }, { i: '10', j: 0 }, { i: '24', j: 0 }, { i: '12', j: 0 }, { i: '26', j: 0 },  ], css_id: 'tinytable_css_shbyco5ecym44lfz0gmg',}, 
+          { positions: [ { i: '1', j: 0 }, { i: '15', j: 0 }, { i: '3', j: 0 }, { i: '17', j: 0 }, { i: '5', j: 0 }, { i: '19', j: 0 }, { i: '7', j: 0 }, { i: '21', j: 0 }, { i: '9', j: 0 }, { i: '23', j: 0 }, { i: '11', j: 0 }, { i: '25', j: 0 }, { i: '13', j: 0 },  ], css_id: 'tinytable_css_jcznngvq66o5niz55eaa',}, 
+          { positions: [ { i: '0', j: 0 },  ], css_id: 'tinytable_css_xdu5drn042bc2f2bzwia',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  styleCell_eb937nfhfeyngq48nmkq(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <style>
+      /* tinytable css entries after */
+      .table td.tinytable_css_icahgno8650nzmm2u4hi, .table th.tinytable_css_icahgno8650nzmm2u4hi { background-color: #ededed; vertical-align: middle; text-align: center; border-bottom: solid #d3d8dc 0.1em; width: 33%; }
+      .table td.tinytable_css_pz4c44wkqsjic4d8afen, .table th.tinytable_css_pz4c44wkqsjic4d8afen { vertical-align: middle; text-align: center; width: 33%; }
+      .table td.tinytable_css_b1nwn491ovamtdsbuymv, .table th.tinytable_css_b1nwn491ovamtdsbuymv { background-color: #ededed; vertical-align: middle; text-align: center; width: 33%; }
+      .table td.tinytable_css_igwf56p9hpo6ivsbfjon, .table th.tinytable_css_igwf56p9hpo6ivsbfjon { vertical-align: top; border-bottom: solid #d3d8dc 0.1em; width: 33%; }
+      .table td.tinytable_css_tjcs8cr5juvre5tb4uwx, .table th.tinytable_css_tjcs8cr5juvre5tb4uwx { background-color: #ededed; vertical-align: middle; text-align: center; border-bottom: solid #d3d8dc 0.1em; width: 28%; }
+      .table td.tinytable_css_1dut32ngs2g9tiryfzxb, .table th.tinytable_css_1dut32ngs2g9tiryfzxb { vertical-align: middle; text-align: center; width: 28%; }
+      .table td.tinytable_css_p8u9qrbzu5xtexerrykq, .table th.tinytable_css_p8u9qrbzu5xtexerrykq { background-color: #ededed; vertical-align: middle; text-align: center; width: 28%; }
+      .table td.tinytable_css_f9cyt9b9idkimc6c7xai, .table th.tinytable_css_f9cyt9b9idkimc6c7xai { background-color: #ededed; border-bottom: solid #d3d8dc 0.1em; width: 28%; }
+      .table td.tinytable_css_i6zowxtz8t0u9bptdfhf, .table th.tinytable_css_i6zowxtz8t0u9bptdfhf { width: 28%; }
+      .table td.tinytable_css_ndj5ohcau873cn0nveue, .table th.tinytable_css_ndj5ohcau873cn0nveue { background-color: #ededed; width: 28%; }
+      .table td.tinytable_css_dv9jrkyniaal1a2oycrd, .table th.tinytable_css_dv9jrkyniaal1a2oycrd { vertical-align: top; border-bottom: solid #d3d8dc 0.1em; width: 28%; }
+      .table td.tinytable_css_09wjhvkbogfrswgfymn3, .table th.tinytable_css_09wjhvkbogfrswgfymn3 { background-color: #ededed; vertical-align: middle; border-bottom: solid #d3d8dc 0.1em; width: 11%; }
+      .table td.tinytable_css_shbyco5ecym44lfz0gmg, .table th.tinytable_css_shbyco5ecym44lfz0gmg { vertical-align: middle; width: 11%; }
+      .table td.tinytable_css_jcznngvq66o5niz55eaa, .table th.tinytable_css_jcznngvq66o5niz55eaa { background-color: #ededed; vertical-align: middle; width: 11%; }
+      .table td.tinytable_css_xdu5drn042bc2f2bzwia, .table th.tinytable_css_xdu5drn042bc2f2bzwia { vertical-align: middle; vertical-align: top; border-bottom: solid #d3d8dc 0.1em; width: 11%; }
+    </style>
+    <div class="container">
+      <table class="table table-striped" id="tinytable_eb937nfhfeyngq48nmkq" style="table-layout: fixed; width: 100% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
+        <thead>
+        
+              <tr>
+                <th scope="col" data-row="0" data-col="0"></th>
+                <th scope="col" data-row="0" data-col="1"></th>
+                <th scope="col" data-row="0" data-col="2">How many <span style='color:#8a8d8f'>male</span> and <span style='color:#a1b70d'>female</span> lemurs are housed at Duke Lemur Center?<br><small><i>Darker shade indicates current residents.</i></small></th>
+                <th scope="col" data-row="0" data-col="3">How do <span style='color:#8a8d8f'>male</span> and <span style='color:#a1b70d'>female</span> lemurs grow as they age?<br><small><i>Average across male and female lemurs.</i></small></th>
+              </tr>
+        </thead>
+        <tfoot><tr><td colspan='4'>*Table adapted from an original table created by N. Rennie for the 2022 Posit Table Contest in November 2022.</td></tr>
+<tr><td colspan='4'>** Images used are licensed under Creative Commons licences. See <a style="color:#a1b70d" href="https://github.com/nrennie/2022-table-contest">github.com/nrennie/2022-table-contest</a> for details.</td></tr>
+<tr><td colspan='4'>*** Data originally from <a style="color:#a1b70d" href="https://lemur.duke.edu/">lemur.duke.edu</a> and can be accessed on GitHub at <a style="color:#a1b70d" href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-08-24">github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-08-24</a>.</td></tr></tfoot>
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/LCAT.png" style="height: 7em;"></td>
+                  <td data-row="1" data-col="1"><p align='left'><b>Ring-tailed lemur</b><br><i>Lemur catta</i><br><small>Ring-tailed lemurs are the most intensely studied of all the lemurs. They’re also the most easily recognizable species of lemur, and the most common primates in human care.  </small><p></td>
+                  <td data-row="1" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idcbbggftqf0v23tdj7zsz.png" style="height: 5em;"></td>
+                  <td data-row="1" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idutttu4998cxaktm45mu0.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/MMUR.png" style="height: 7em;"></td>
+                  <td data-row="2" data-col="1"><p align='left'><b>Gray mouse lemur</b><br><i>Mircocebus murinus</i><br><small>Since they are so small and require fewer resources than other lemurs, mouse lemurs have adapted well to disturbed forests in Madagascar and are one of the most widespread and abundant lemur species. </small><p></td>
+                  <td data-row="2" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idgmr587hx2xsx8q54r2pw.png" style="height: 5em;"></td>
+                  <td data-row="2" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idjoobu2fig1alw29y5a36.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/CMED.png" style="height: 7em;"></td>
+                  <td data-row="3" data-col="1"><p align='left'><b>Fat-tailed dwarf lemur</b><br><i>Cheirogaleus medius</i><br><small>The fat-tailed dwarf lemur is the only primate in the world known to hibernate for an extended period of time. Hibernation can last up to seven months and heart rate can drop from about 180 bpm to as low as 8.</small><p></td>
+                  <td data-row="3" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idmhfokp0ycagibyldmwm0.png" style="height: 5em;"></td>
+                  <td data-row="3" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idbxt9px2cwn0ohyq5e5j4.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/EUL.png" style="height: 7em;"></td>
+                  <td data-row="4" data-col="1"><p align='left'><b>Eulemur hybrid</b><br><i>Eulemur</i><br><small>Eulemur hybrid lemurs (brown lemur hybrids) are hybrids from different species of brown lemurs. At Berenty Reserve in Madagascar, the collared brown lemurs have been hybridized with the red lemur.</small><p></td>
+                  <td data-row="4" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idpxine42hqdb6544k7d2n.png" style="height: 5em;"></td>
+                  <td data-row="4" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/ids2uz9pjmd5s6431klyq1.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/VVV.png" style="height: 7em;"></td>
+                  <td data-row="5" data-col="1"><p align='left'><b>Black-and-white ruffed lemur</b><br><i>Varecia variegata variegata</i><br><small>Female ruffed lemurs give birth to litters of infants. Unlike other lemurs whose infants cling to their bellies or backs, ruffed lemurs “park” their infants in nests while foraging.</small><p></td>
+                  <td data-row="5" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idhp5741xwbcsq4kuqrkdi.png" style="height: 5em;"></td>
+                  <td data-row="5" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idzzltdl7kakzajvqwhpvu.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/PCOQ.png" style="height: 7em;"></td>
+                  <td data-row="6" data-col="1"><p align='left'><b>Coquerel's sifaka</b><br><i>Propithecus coquereli</i><br><small>The sifaka of Madagascar are distinguished from other lemurs by their vertical clinging and leaping mode of locomotion: these animals maintain a distinctly vertical posture.</small><p></td>
+                  <td data-row="6" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idkrozlnk8tskxi4nry7e8.png" style="height: 5em;"></td>
+                  <td data-row="6" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/id9yxdaij866370sz1xk9z.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/VRUB.png" style="height: 7em;"></td>
+                  <td data-row="7" data-col="1"><p align='left'><b>Red ruffed lemur</b><br><i>Varecia rubra</i><br><small>Weighing up to nine pounds, red-ruffed lemurs are among the largest living lemurs and the largest pollinators in the world: as they feed, pollen sticks to the ruffs of fur around their faces and gets transported from tree to tree.</small><p></td>
+                  <td data-row="7" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idr33dbzc1qu7zba17utnd.png" style="height: 5em;"></td>
+                  <td data-row="7" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idn4egbzfli78bj5c59ypf.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/OGG.png" style="height: 7em;"></td>
+                  <td data-row="8" data-col="1"><p align='left'><b>Northern greater galago</b><br><i>Otolemur garnettii garnettii</i><br><small>The northern greater galago is also known as Garnett's greater galago due to its large body size relative to other galagos. During the day, they sleep alone in trees and emerge at night.</small><p></td>
+                  <td data-row="8" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/id0jk88oxlwcqe6kwhqxlz.png" style="height: 5em;"></td>
+                  <td data-row="8" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idyvqelof6gzvr04u3d7b2.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/ERUF.png" style="height: 7em;"></td>
+                  <td data-row="9" data-col="1"><p align='left'><b>Red-fronted brown lemur</b><br><i>Eulemur rufus</i><br><small>Red-fronted lemurs are one of the few lemur species that are not female dominant. As the group moves through the forest, they stay together by way of a regular series of grunts and contact calls.</small><p></td>
+                  <td data-row="9" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idx20fj7recqmgmip6370v.png" style="height: 5em;"></td>
+                  <td data-row="9" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/iddxl49aomvuyfqbw3sgb7.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/EMON.png" style="height: 7em;"></td>
+                  <td data-row="10" data-col="1"><p align='left'><b>Mongoose lemur</b><br><i>Eulemur mongoz</i><br><small>Mongoose lemurs live in the dry, deciduous forest of Madagascar which means they have to be flexible enough to contend with 6 month periods of limited to no rainfall. </small><p></td>
+                  <td data-row="10" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/id1ktht5u2so27wccu2yes.png" style="height: 5em;"></td>
+                  <td data-row="10" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/id5g1cr9br9nw2o3ywdoo2.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/EFLA.png" style="height: 7em;"></td>
+                  <td data-row="11" data-col="1"><p align='left'><b>Blue-eyed black lemur</b><br><i>Eulemur flavifrons</i><br><small>Blue-eyed black lemurs are among the most threatened primates in the world. The International Union for the Conservation of Nature (IUCN) recently elevated their status to critically endangered.</small><p></td>
+                  <td data-row="11" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/id15czm4i1ters95e1djfq.png" style="height: 5em;"></td>
+                  <td data-row="11" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/id58wkcu73ewdqtjmcmqzp.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="12" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/EMAC.png" style="height: 7em;"></td>
+                  <td data-row="12" data-col="1"><p align='left'><b>Black lemur</b><br><i>Eulemur macaco</i><br><small>Black lemurs are distinguished from blue-eyed black lemurs by their brown or orange eyes, and ear tufts. Like their blue-eyed relatives, black lemurs live in northwest Madagascar.</small><p></td>
+                  <td data-row="12" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/id714wbicqwktoiqpgrll7.png" style="height: 5em;"></td>
+                  <td data-row="12" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idr8dwm10qmld2bp217i0t.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="13" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/MZAZ.png" style="height: 7em;"></td>
+                  <td data-row="13" data-col="1"><p align='left'><b>Northern giant mouse lemur</b><br><i>Mirza coquereli</i><br><small>Northern giant mouse lemurs small lemurs with long, bushy tails and relatively small ears. Until 2005, both populations of giant mouse lemurs were believed to belong to one species.</small><p></td>
+                  <td data-row="13" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/id70thsct36sdi5x4iuzrq.png" style="height: 5em;"></td>
+                  <td data-row="13" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idbrmac5j5netgg0f2n6qr.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="14" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/NCOU.png" style="height: 7em;"></td>
+                  <td data-row="14" data-col="1"><p align='left'><b>Slow loris</b><br><i>Nycticebus coucang</i><br><small>Lorises generally sleep curled up in a ball, with their heads tucked up under their arms. When they move, they do so with slow deliberate hand-over-hand movements.</small><p></td>
+                  <td data-row="14" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idbwfjw7sbsedkhk0bso9z.png" style="height: 5em;"></td>
+                  <td data-row="14" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idj3rsp12023g32sxzer24.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="15" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/ECOR.png" style="height: 7em;"></td>
+                  <td data-row="15" data-col="1"><p align='left'><b>Crowned lemur</b><br><i>Eulemur coronatus</i><br><small>Crowned lemurs are named for the triangular, crown-like patch of fur on their foreheads.  Until recently, crowned lemurs were thought to be a sub-species of the mongoose lemur.</small><p></td>
+                  <td data-row="15" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idi04b1mpmg10iz6nl8hjh.png" style="height: 5em;"></td>
+                  <td data-row="15" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/iddbg8smzr40l7hr3ope6l.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="16" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/ECOL.png" style="height: 7em;"></td>
+                  <td data-row="16" data-col="1"><p align='left'><b>Collared brown lemur</b><br><i>Eulemur collaris</i><br><small>Red-collared brown lemurs, also called collared lemurs, are found in coastal forests in southeastern Madagascar. Unlike most species of lemur which are female dominant, collared lemurs are co-dominant.</small><p></td>
+                  <td data-row="16" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idccal964ib63qbxy96aqw.png" style="height: 5em;"></td>
+                  <td data-row="16" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idhmoxfjzt8j9lnvvhyg4s.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="17" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/NPYG.png" style="height: 7em;"></td>
+                  <td data-row="17" data-col="1"><p align='left'><b>Pygmy slow loris</b><br><i>Nycticebus pygmaeus</i><br><small>Lorises have a tail either very short or completely absent, and their heads and eyes are round, with small ears which are almost completely hidden by fur. </small><p></td>
+                  <td data-row="17" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/id1xq4bha13mdidfk7euc0.png" style="height: 5em;"></td>
+                  <td data-row="17" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/ido1eq4ju7tcw10kq19za4.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="18" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/HGG.png" style="height: 7em;"></td>
+                  <td data-row="18" data-col="1"><p align='left'><b>Eastern lesser bamboo lemur</b><br><i>Hapalemur griseus griseus</i><br><small>Eastern lesser bamboo lemurs appear to have greater manual dexterity and superior hand-eye coordination than other lemurs. More than likely this is due to their preference for small but tasty bamboo shoots. </small><p></td>
+                  <td data-row="18" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idjyntokcmh24m917rkht0.png" style="height: 5em;"></td>
+                  <td data-row="18" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idqvx4b5fjhowerm69vznb.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="19" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/GMOH.png" style="height: 7em;"></td>
+                  <td data-row="19" data-col="1"><p align='left'><b>Mohol bushbaby</b><br><i>Galago moholi</i><br><small>Bush babies, or galagos, are small, nocturnal primates which range in size from cat-sized to mouse-sized. They are found in the forests and woodlands of Africa south of the Sahara.</small><p></td>
+                  <td data-row="19" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idfx0krxcjqfdywhud4yg9.png" style="height: 5em;"></td>
+                  <td data-row="19" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/id42keezn50ui8fbj6kf8r.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="20" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/LTAR.png" style="height: 7em;"></td>
+                  <td data-row="20" data-col="1"><p align='left'><b>Slender loris</b><br><i>Loris tardigradus</i><br><small>All lorises have extremely strong fingers and toes, and they are capable of maintaining a powerful grip with either hands or feet for astonishingly long periods of time.</small><p></td>
+                  <td data-row="20" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idlgmaoxzeyqqpppxargnr.png" style="height: 5em;"></td>
+                  <td data-row="20" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idi0jk02moha8x0ojgonoe.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="21" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/EFUL.png" style="height: 7em;"></td>
+                  <td data-row="21" data-col="1"><p align='left'><b>Common brown lemur</b><br><i>Eulemur fulvus</i><br><small>Until 2001, five additional currently recognized species of lemur were considered subspecies of common brown lemurs. Male and female common brown lemurs have very similar markings.</small><p></td>
+                  <td data-row="21" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idm6w3fmfxf6wxwz4vw6n9.png" style="height: 5em;"></td>
+                  <td data-row="21" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idltr2i6hmno5nfwzi8lil.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="22" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/DMAD.png" style="height: 7em;"></td>
+                  <td data-row="22" data-col="1"><p align='left'><b>Aye-aye</b><br><i>Daubentonia madagascariensis</i><br><small>Due to its bizarre appearance and unusual feeding habits, the aye-aye is considered by many to be the strangest primate in the world. It is the world’s largest nocturnal primate.  </small><p></td>
+                  <td data-row="22" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idqyrlzjh3s6u6307vvgfl.png" style="height: 5em;"></td>
+                  <td data-row="22" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idnldygvxu2jrtztb5g9gi.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="23" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/VAR.png" style="height: 7em;"></td>
+                  <td data-row="23" data-col="1"><p align='left'><b>Varecia hybrid</b><br><i>Varecia</i><br><small>Varecia hybrids (hybrid ruffed lemurs) are characterised by their ruffed collar. Ruffed lemurs both in captivity and in the wild have demonstrated a variety of social structures from pairs to large groups.</small><p></td>
+                  <td data-row="23" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idxezrfrk7cqxkpdiwmwwb.png" style="height: 5em;"></td>
+                  <td data-row="23" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/id773m55scfc1jvmp9qozd.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="24" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/ERUB.png" style="height: 7em;"></td>
+                  <td data-row="24" data-col="1"><p align='left'><b>Red-bellied lemur</b><br><i>Eulemur rubriventer</i><br><small>Male red-bellied lemurs have a red-brown fur color and white tear-drop shapes around their eyes while females have red-brown fur on the back and sides with white fur on the undersides and little white around the eyes.</small><p></td>
+                  <td data-row="24" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/id3ym1k0trxqfod3th57ld.png" style="height: 5em;"></td>
+                  <td data-row="24" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idd5u797rlanjuskiff04t.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="25" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/ESAN.png" style="height: 7em;"></td>
+                  <td data-row="25" data-col="1"><p align='left'><b>Sanford's brown lemur</b><br><i>Eulemur sanfordi</i><br><small>Sanford’s brown lemurs are named after Leonard Cutler Sanford, a trustee of the American Museum of Natural History. They are considered to be endangered, and among the rarest of the brown lemurs.</small><p></td>
+                  <td data-row="25" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idg848g84bgjtmr7s9q357.png" style="height: 5em;"></td>
+                  <td data-row="25" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/id3c1u7yrhf16h8nobrxtr.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="26" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/PPOT.png" style="height: 7em;"></td>
+                  <td data-row="26" data-col="1"><p align='left'><b>Potto</b><br><i>Perodicticus potto</i><br><small>In some parts of Africa, pottos are called softly-softlys. Variation among pottos is significant, prompting speculation that there may be more than one species.</small><p></td>
+                  <td data-row="26" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/id1fkxuv36c4jjbs1jx4ru.png" style="height: 5em;"></td>
+                  <td data-row="26" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/id3xgtvl4vk9qj1yq5p2l9.png" style="height: 9em;"></td>
+                </tr>
+                <tr>
+                  <td data-row="27" data-col="0"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/images/EALB.png" style="height: 7em;"></td>
+                  <td data-row="27" data-col="1"><p align='left'><b>White-fronted brown lemur</b><br><i>Eulemur albifrons</i><br><small>White-fronted brown lemurs are found only in north-eastern Madagascar. They inhabit three national parks and two special reserves. They were formerly recognised as a subspecies of the common brown lemur.</small><p></td>
+                  <td data-row="27" data-col="2"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idr1flclcsxwyv7p7ixbvb.png" style="height: 5em;"></td>
+                  <td data-row="27" data-col="3"><img src="/Users/vincent/repos/tinytable/gallery/lemurs/tinytable_assets/idpa9ruu1coj2nohqx64zc.png" style="height: 9em;"></td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- postamble start -->
+  </body>
+
+</html>
+<!-- postamble end -->
+<!-- hack to avoid NA insertion in last line -->

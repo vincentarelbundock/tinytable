@@ -13,16 +13,18 @@ footnotes <- c(
   '*** Data originally from <a style="color:#a1b70d" href="https://lemur.duke.edu/">lemur.duke.edu</a> and can be accessed on GitHub at <a style="color:#a1b70d" href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-08-24">github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-08-24</a>.')
 
 # Get image URLs ----
+all_images <- file.path("images", list.files("images"))
+
 all_images <- tibble::tibble(taxon = lem_nums$taxon) %>%
   mutate(img_html = glue::glue("<img src='https://raw.githubusercontent.com/nrennie/2022-table-contest/main/images/{taxon}.png' style='height:100px;'>"))
 
+
 # Table setup ----
-lem_table <- lem_nums %>%
-  left_join(all_images, by = "taxon") %>%
-  mutate(
-    bars = NA,
-    lines = NA) %>%
-  select(c(img_html, species, bars, lines))
+lem_table <- data.frame(
+  img_html = paste0("images/", lem_nums$taxon, ".png"),
+  species = lem_nums$species,
+  bars = NA,
+  lines = NA)
 
 # Create tinytable -----
 header3 <- "How many <span style='color:#8a8d8f'>male</span> and <span style='color:#a1b70d'>female</span> lemurs are housed at Duke Lemur Center?<br><small><i>Darker shade indicates current residents.</i></small>"
@@ -30,10 +32,11 @@ header4 <- "How do <span style='color:#8a8d8f'>male</span> and <span style='colo
 lem_table <- setNames(lem_table, c("", "", header3, header4))
 
 
-tt(lem_table,
+tab <- tt(lem_table,
   theme = "striped",
-  width = c(1, 3, 3, 3.5),
+  width = c(1.2, 3, 3, 3.5),
   notes = footnotes) |>
+  plot_tt(j = 1, images = lem_table[[1]], height = 7) |>
   plot_tt(
     j = 3, fun = plot_bar,
     data = as.list(lem_nums$taxon),
@@ -48,6 +51,9 @@ tt(lem_table,
     height = 9,
     height_plot = 500,
     width_plot = 800) |>
+  style_tt(j = 1, alignv = "m") |>
   style_tt(i = 1:nrow(lem_table), j = 3:4, align = "c", alignv = "m") |>
-  style_tt(i = "colnames", alignv = "t") |>
-  print("html")
+  style_tt(i = "colnames", alignv = "t")
+
+save_tt(tab, "lemurs.html", overwrite = TRUE)
+# print(tab, "html")
