@@ -1,7 +1,7 @@
 library(tidyverse)
 library(tinytable)
-source("code/clean_data.R")
-source("code/plot_functions.R")
+source("data.R")
+source("plot.R")
 
 # Caption ----
 cap <- "<h3>The Lemurs at Duke University Center</h1>Lemurs are a unique group of primates native to Madagascar, an island off the coast of east Africa. Although they are related to monkeys and apes, lemurs make up a separate branch of the primate family tree and are classified as a superfamily, made up of five individual lemur families and more than 100 different species. Founded in 1966 on the campus of Duke University in Durham, NC, the Duke Lemur Center is a world leader in the study, care, and protection of lemurs—Earth’s most threatened group of mammals. The Duke Lemur Center houses the world’s largest and most diverse population of lemurs outside their native Madagascar."

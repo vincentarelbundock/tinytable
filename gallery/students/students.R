@@ -12,7 +12,7 @@ fmt_n <- scales::label_number(accuracy = 1, big.mark = ",", decimal_mark = ".")
 fmt_pc <- scales::label_percent()
 
 
-# stack number and pertanage in a single cell
+# stack number and percentage in a single cell
 n_above_pct <- function(num, den) {
   prefix <- "<span style='line-height:21px'>"
   pct <- ifelse(!is.na(num) & !is.na(den) & den > 0, num / den, NA_real_)
