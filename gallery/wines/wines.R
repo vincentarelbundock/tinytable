@@ -52,7 +52,7 @@ tab <- tt(tbl,
   caption = "<span style='font-style: italic; font-size: 1.5em;'>Exceptional Wines</span><br>Great wines improve with age. Let's dive into some of the most extraordinary cuvées in the world. Those whose grapes possess ethereal aromas and pure minerality that give focus and energy. Those demonstrating great character, balance with good acidity and plush tannins.",
   notes = "Adapted from [a beautiful table by Abdoul Madjid.](https://github.com/AbdoulMa/RStudio-Table-Contest-2021)",
   width = c(1, 4, 5, 3, 5, 6, 3, 2, 2)) |>
-  theme_void() |>
+  theme_empty() |>
   theme_html(class = "table table-hover table-responsive-sm caption-top") |>
   format_tt(j = 8, fn = scales::label_currency()) |>
   format_tt(j = 9, fn = scales::label_percent(scale = 1)) |>

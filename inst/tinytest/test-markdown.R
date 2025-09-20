@@ -133,17 +133,17 @@ tab <- tt(x) |>
   style_tt(4, 2, colspan = 2)
 expect_snapshot_print(tab, label = "markdown-colspan_multiple")
 
-# Test theme_void() followed by theme_markdown() - should restore grid lines
+# Test theme_empty() followed by theme_markdown() - should restore grid lines
 options(tinytable_print_output = "markdown")
 tab <- tt(head(iris)[1:3, 1:3]) |>
-  theme_void() |>
+  theme_empty() |>
   theme_markdown(vline = TRUE, hline = TRUE)
-expect_snapshot_print(tab, label = "markdown-theme_void_restore_grid")
+expect_snapshot_print(tab, label = "markdown-theme_empty_restore_grid")
 
-# Test theme_void() alone - should have no grid lines
+# Test theme_empty() alone - should have no grid lines
 tab <- tt(head(iris)[1:3, 1:3]) |>
-  theme_void()
-expect_snapshot_print(tab, label = "markdown-theme_void_no_grid")
+  theme_empty()
+expect_snapshot_print(tab, label = "markdown-theme_empty_no_grid")
 
 # Test theme_markdown grid options - hline only
 tab <- tt(head(iris)[1:3, 1:3]) |>
@@ -160,11 +160,11 @@ tab <- tt(head(iris)[1:3, 1:3]) |>
   theme_markdown(hline_header = FALSE)
 expect_snapshot_print(tab, label = "markdown-no_header_line")
 
-# Test theme_void() then selective restoration
+# Test theme_empty() then selective restoration
 tab <- tt(head(iris)[1:3, 1:3]) |>
-  theme_void() |>
+  theme_empty() |>
   theme_markdown(hline = TRUE, vline = FALSE)
-expect_snapshot_print(tab, label = "markdown-theme_void_hline_only")
+expect_snapshot_print(tab, label = "markdown-theme_empty_hline_only")
 
 # restore
 options(tinytable_print_output = NULL)

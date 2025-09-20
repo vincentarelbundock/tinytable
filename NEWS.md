@@ -2,11 +2,12 @@
 
 ## Development
 
-Breaking change:
+Breaking changes:
 
 * `theme_void()` calls `strip_tt()` to drop every change made to this point, so the order of operations matter.
 * `"html_portable"` is no longer a valid `output` format in `save_tt()` or `print()`. Use `theme_html(portable = TRUE)` instead.
 * `plot_tt()` deprecates the `asp` argument. Use `width_plot` and `height_plot` instead.
+* `theme_void()` becomes `theme_empty()` to avoid conflict with `ggplot2::theme_void()`.
 
 Deprecated global options:
 
@@ -39,6 +40,7 @@ New arguments:
 
 New miscellaneous features:
 
+* New Gallery vignette with advanced examples: https://vincentarelbundock.github.io/tinytable/vignettes/gallery.html
 * Non-standard evaluation is supported for `i` and `j` arguments in `style_tt()`, `format_tt()`, and `plot_tt()`.
 * `tt()` is now a generic function, allowing special table-drawing methods for specific classes of objects. `tinytable` provides methods for `data.frame`, `data.table`, and `tbl_df`. See the "Custom" vignette for examples.
 * `subset(x, select = c(x, y))` can now be used to select columns.

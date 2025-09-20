@@ -6,7 +6,7 @@
 #' @export
 theme_grid <- function(x, ...) {
   # now
-  x <- theme_void(x)
+  x <- theme_empty(x)
 
   # prepare: before table is drawn
   fn <- function(x) theme_latex(x, inner = "hlines, vlines,")

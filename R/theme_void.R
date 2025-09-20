@@ -3,7 +3,7 @@
 #' This function calls `strip_tt()` to remove all the styles, groups, and formatting applied to a `tinytable` object. It returns a nearly blank table, with only the cell information. Warning: since this function strips the `tinytable` object, the order in which it is called in a pipeline matters.
 #' @inheritParams theme_default
 #' @export
-theme_void <- function(x, ...) {
+theme_empty <- function(x, ...) {
   # strip everything done up to this point
   strip <- names(formals(strip_tt))
   strip <- stats::setNames(c(list(x), rep(list(TRUE), length(strip) - 1)), strip)

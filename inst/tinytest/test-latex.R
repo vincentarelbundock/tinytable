@@ -35,7 +35,7 @@ expect_snapshot_print(
 
 expect_snapshot_print(
   tt(x, theme = "void"),
-  label = "latex-theme_void.tex"
+  label = "latex-theme_empty.tex"
 )
 
 # Styles
