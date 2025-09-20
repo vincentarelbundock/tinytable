@@ -19,6 +19,7 @@ smallcaps <- function(text, color = "black") {
 }
 
 
+
 # single helper to calculate percentage and return formatted HTML cell
 cellify <- function(num, den) {
   prefix <- "<span style='line-height:21px'>"

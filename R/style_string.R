@@ -1,4 +1,24 @@
 style_string_html <- function(n, styles) {
+  # Collect CSS properties that can be combined into a single span
+  css_props <- c()
+
+  if (isTRUE(styles[["smallcap"]])) {
+    css_props <- c(css_props, "font-variant: small-caps")
+  }
+  if (!is.null(styles[["color"]])) {
+    css_props <- c(css_props, paste0("color:", styles[["color"]]))
+  }
+  if (!is.null(styles[["fontsize"]])) {
+    css_props <- c(css_props, paste0("font-size:", styles[["fontsize"]], "em"))
+  }
+
+  # Apply CSS properties as a single span if any exist
+  if (length(css_props) > 0) {
+    css_style <- paste(css_props, collapse = "; ")
+    n <- sprintf("<span style='%s'>%s</span>", css_style, n)
+  }
+
+  # Apply HTML tags that cannot be combined with CSS
   if (isTRUE(styles[["italic"]])) {
     n <- sprintf("<i>%s</i>", n)
   }
@@ -13,19 +33,6 @@ style_string_html <- function(n, styles) {
   }
   if (isTRUE(styles[["monospace"]])) {
     n <- sprintf("<code>%s</code>", n)
-  }
-  if (isTRUE(styles[["smallcap"]])) {
-    n <- sprintf("<span style='font-variant: small-caps'>%s</span>", n)
-  }
-  if (!is.null(styles[["color"]])) {
-    n <- sprintf("<span style='color:%s'>%s</span>", styles[["color"]], n)
-  }
-  if (!is.null(styles[["fontsize"]])) {
-    n <- sprintf(
-      "<span style='font-size:%sem'>%s</span>",
-      styles[["fontsize"]],
-      n
-    )
   }
   n
 }
