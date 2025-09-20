@@ -198,6 +198,18 @@ plot_tt_lazy <- function(
     ...) {
   out <- x@data_body
 
+  # Normalize user-provided image paths to full paths
+  if (!is.null(images)) {
+    for (img_idx in seq_along(images)) {
+      if (!grepl("^http", trimws(images[img_idx]))) {
+        # Convert relative paths to absolute paths using current working directory
+        if (!grepl("^/", trimws(images[img_idx])) && !grepl("^[A-Za-z]:", trimws(images[img_idx]))) {
+          images[img_idx] <- normalizePath(images[img_idx], mustWork = FALSE)
+        }
+      }
+    }
+  }
+
   if (!is.null(data)) {
     assert_dependency("ggplot2")
     images <- NULL
@@ -214,14 +226,13 @@ plot_tt_lazy <- function(
     }
     for (idx in seq_along(data)) {
       fn <- paste0(get_id(), ".png")
-      fn_full <- file.path(path_full, fn)
+      fn_full <- normalizePath(file.path(path_full, fn), mustWork = FALSE)
       if (isTRUE(x@output %in% c("html", "bootstrap")) && isTRUE(x@html_portable)) {
         # For portable HTML, store the full path for base64 encoding
         images[idx] <- fn_full
       } else {
-        # For regular HTML/save_tt/print, store the relative path from assets directory
-        fn <- file.path(assets, fn)
-        images[idx] <- fn
+        # For regular HTML/save_tt/print, store the full path for proper file access
+        images[idx] <- fn_full
       }
 
       plot_fun <- fun[[idx]]
@@ -279,7 +290,8 @@ plot_tt_lazy <- function(
       if (!http[img_idx]) {
         # Convert relative paths to absolute paths
         if (!grepl("^/", trimws(images[img_idx])) && !grepl("^[A-Za-z]:", trimws(images[img_idx]))) {
-          images[img_idx] <- file.path(x@output_dir, images[img_idx])
+          images[img_idx] <- normalizePath(file.path(x@output_dir, images[img_idx]),
+            mustWork = FALSE)
         }
       }
     }
