@@ -40,6 +40,34 @@ format_vector_math <- function(vec, math = FALSE, ...) {
   sprintf("$%s$", vec)
 }
 
+format_vector_linebreak <- function(vec, linebreak = NULL, output = NULL, ...) {
+  if (is.null(linebreak)) {
+    return(NULL)
+  }
+
+  # Determine the appropriate line break sequence based on output format
+  if (is.null(output) || output == "markdown") {
+    return(NULL) # No line break replacement for markdown
+  }
+
+  if (output %in% c("html", "bootstrap", "tabulator")) {
+    lb <- "<br>"
+  } else if (output %in% c("latex", "pdf")) {
+    lb <- "\\\\"
+    # tabularray wrapper for line breaks
+    if (any(grepl(linebreak, vec, fixed = TRUE))) {
+      vec <- sprintf("{%s}", vec)
+    }
+  } else if (output == "typst") {
+    # needs a space in typst
+    lb <- " \\ "
+  } else {
+    return(NULL) # Unknown output format
+  }
+
+  gsub(linebreak, lb, vec, fixed = TRUE)
+}
+
 format_vector_quarto <- function(i, col, x, ...) {
   out <- x@data_body
   if (isTRUE(x@output %in% c("html", "bootstrap", "tabulator"))) {

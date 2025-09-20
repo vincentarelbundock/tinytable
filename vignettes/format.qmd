@@ -221,6 +221,23 @@ When applied to a `tt()` table, `format_tt()` will determine the type of escapin
 format_tt("_ Dollars $", escape = "latex")
 ```
 
+## Line breaks
+
+LaTeX, Typst, and HTML use different character sequences to indicate line breaks. We can create a single table that works in all three formats by using the `linebreak` argument of `format_tt()`. The idea is to choose one specific character sequence to represent line breaks, and to supply it to the `linebreak` argument.
+
+In this example, we use `<br>` to represent line breaks in our data. This is the standard approach in HTML, and we rely on `format_tt()` substitute it to an appropriate string in other formats:
+
+```{r}
+d <- data.frame(Text = "First line<br>Second line")
+tt(d, width = .4) |> format_tt(linebreak = "<br>")
+```
+
+The `linebreak` argument automatically converts your specified string to:
+- HTML: `<br>`
+- LaTeX: `\\`
+- Typst: ` \ `
+- Markdown: No conversion (preserves original string)
+
 ::: {.content-visible when-format="typst"}
 ## Markdown 
 LaTeX and HTML only

@@ -305,3 +305,12 @@ tab1 <- tt(dat1) |>
   group_tt(i = list("First Group" = 2, "Second Group" = 4)) |>
   format_tt(j = 1, sprintf = "((%s))")
 expect_snapshot_print(tab1, label = "format_tt-group_tt_02.md")
+
+
+# Line breaks using linebreak argument
+d <- data.frame(Text = "First line<br>Second line")
+tab <- tt(d) |> format_tt(linebreak = "<br>")
+t <- expect_table(tab, formats = c("html", "latex", "typst"))
+expect_true(grepl("First line<br>Second line", t[["html"]]))
+expect_true(grepl("First line\\\\Second line", t[["latex"]], fixed = TRUE))
+expect_true(grepl("First line \\ Second line", t[["typst"]], fixed = TRUE))

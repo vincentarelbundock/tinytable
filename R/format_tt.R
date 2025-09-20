@@ -32,6 +32,7 @@
 #' @param fn Function for custom formatting. Accepts a vector and returns a character vector of the same length.
 #' @param quarto Logical. Enable Quarto data processing and wrap cell content in a `data-qmd` span (HTML) or `\QuartoMarkdownBase64{}` macro (LaTeX). See warnings in the Global Options section below.
 #' @param sprintf String passed to the `?sprintf` function to format numbers or interpolate strings with a user-defined pattern (similar to the `glue` package, but using Base R).
+#' @param linebreak NULL or a single string. If it is a string, replaces that string with appropriate line break sequences depending on the output format (HTML: `<br>`, LaTeX: `\\\\`, Typst: `\\ `). Markdown output is excluded from line break replacement.
 #' @inheritParams tt
 #' @inheritParams style_tt
 #' @template global_options
@@ -68,6 +69,10 @@
 #'
 #' x <- tt(data.frame(Text = c("_italicized text_", "__bold text__")))
 #' format_tt(x, markdown = TRUE)
+#'
+#' # Line breaks using linebreak argument
+#' d <- data.frame(Text = "First line<br>Second line")
+#' tt(d) |> format_tt(linebreak = "<br>")
 #'
 #' # Non-standard evaluation (NSE)
 #' dat <- data.frame(
@@ -110,7 +115,8 @@ format_tt <- function(
   markdown = get_option("tinytable_format_markdown", default = FALSE),
   quarto = get_option("tinytable_format_quarto", default = FALSE),
   fn = get_option("tinytable_format_fn", default = NULL),
-  sprintf = get_option("tinytable_format_sprintf", default = NULL)
+  sprintf = get_option("tinytable_format_sprintf", default = NULL),
+  linebreak = get_option("tinytable_format_linebreak", default = NULL)
 ) {
   assert_integerish(digits, len = 1, null.ok = TRUE)
   assert_choice(
@@ -128,6 +134,7 @@ format_tt <- function(
   assert_flag(quarto)
   assert_function(fn, null.ok = TRUE)
   assert_string(sprintf, null.ok = TRUE)
+  assert_string(linebreak, null.ok = TRUE)
   replace <- sanitize_replace(replace)
   sanity_num_mark(digits, num_mark_big, num_mark_dec)
 
@@ -157,7 +164,8 @@ format_tt <- function(
       escape = escape,
       markdown = markdown,
       quarto = quarto,
-      other = other
+      other = other,
+      linebreak = linebreak
     )
     out@lazy_format <- c(out@lazy_format, list(cal))
   } else {
@@ -180,7 +188,8 @@ format_tt <- function(
       other = other,
       escape = escape,
       quarto = quarto,
-      markdown = markdown
+      markdown = markdown,
+      linebreak = linebreak
     )
   }
 
@@ -207,7 +216,8 @@ format_tt_lazy <- function(
   escape,
   markdown,
   quarto,
-  other
+  other,
+  linebreak
 ) {
   if (inherits(x, "tbl_df")) {
     assert_dependency("tibble")
@@ -359,6 +369,25 @@ format_tt_lazy <- function(
       components = components,
       original_data = FALSE,
       math = math
+    )
+  }
+
+  # linebreak before replace and escape
+  if (!is.null(linebreak)) {
+    if (inherits(x, "tinytable")) {
+      output_format <- x@output
+    } else {
+      output_format <- NULL
+    }
+    x <- apply_format(
+      x = x,
+      i = i,
+      j = j,
+      format_fn = format_vector_linebreak,
+      components = components,
+      original_data = FALSE,
+      linebreak = linebreak,
+      output = output_format
     )
   }
 

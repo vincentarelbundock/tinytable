@@ -26,6 +26,7 @@ New:
 * `tt()` is now a generic function, allowing special table-drawing methods for specific classes of objects. `tinytable` provides methods for `data.frame`, `data.table`, and `tbl_df`. See the "Custom" vignette for examples.
 * `tt(x, colnames = "label")` renames column names using the `attr(df$x, "label")` attribute, when available, falling back to column names otherwise.
 * Non-standard evaluation is supported for `i` and `j` arguments in `style_tt()`, `format_tt()`, and `plot_tt()`.
+* `format_tt(linebreak)` can substitute a user-specified string to a line break in HTML, LaTeX, and Typst output.
 * `subset(x, select = c(x, y))` can now be used to select columns.
 * `theme_markdown(tab, ansi=TRUE)` enables support for `style_tt()` colors, backgrounds, and text styles in Markdown output. 
 * `theme_markdown(tab, vline=FALSE, hline=FALSE)` suppresses lines.

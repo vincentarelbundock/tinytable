@@ -25,7 +25,8 @@ format_tt(
   markdown = get_option("tinytable_format_markdown", default = FALSE),
   quarto = get_option("tinytable_format_quarto", default = FALSE),
   fn = get_option("tinytable_format_fn", default = NULL),
-  sprintf = get_option("tinytable_format_sprintf", default = NULL)
+  sprintf = get_option("tinytable_format_sprintf", default = NULL),
+  linebreak = get_option("tinytable_format_linebreak", default = NULL)
 )
 
 tt_format(
@@ -48,7 +49,8 @@ tt_format(
   markdown = get_option("tinytable_format_markdown", default = FALSE),
   quarto = get_option("tinytable_format_quarto", default = FALSE),
   fn = get_option("tinytable_format_fn", default = NULL),
-  sprintf = get_option("tinytable_format_sprintf", default = NULL)
+  sprintf = get_option("tinytable_format_sprintf", default = NULL),
+  linebreak = get_option("tinytable_format_linebreak", default = NULL)
 )
 }
 \arguments{
@@ -112,6 +114,8 @@ tt_format(
 \item{fn}{Function for custom formatting. Accepts a vector and returns a character vector of the same length.}
 
 \item{sprintf}{String passed to the \code{?sprintf} function to format numbers or interpolate strings with a user-defined pattern (similar to the \code{glue} package, but using Base R).}
+
+\item{linebreak}{NULL or a single string. If it is a string, replaces that string with appropriate line break sequences depending on the output format (HTML: \verb{<br>}, LaTeX: \verb{\\\\\\\\}, Typst: \verb{\\\\ }). Markdown output is excluded from line break replacement.}
 }
 \value{
 A data frame with formatted columns.
@@ -201,6 +205,10 @@ format_tt(y, digits = 3, num_mark_big = " ")
 
 x <- tt(data.frame(Text = c("_italicized text_", "__bold text__")))
 format_tt(x, markdown = TRUE)
+
+# Line breaks using linebreak argument
+d <- data.frame(Text = "First line<br>Second line")
+tt(d) |> format_tt(linebreak = "<br>")
 
 # Non-standard evaluation (NSE)
 dat <- data.frame(
