@@ -149,3 +149,4 @@ tab <- tt(tabla_final,
   style_tt(i = 1:nrow(tabla_final), j = 11, color = pd$fg, background = pd$bg, bold = TRUE)
 
 save_tt(tab, "students.html")
+# print(tab, "html")

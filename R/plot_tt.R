@@ -198,15 +198,20 @@ plot_tt_lazy <- function(
     ...) {
   out <- x@data_body
 
+
+  is_html <- isTRUE(x@output %in% c("html", "bootstrap", "tabulator"))
+  is_quarto <- isTRUE(check_dependency("knitr")) && !is.null(knitr::pandoc_to())
+
+  # paths are tricky in Quarto HTML (website vs single file)
+  is_portable <- is_html && (isTRUE(x@html_portable) || is_quarto)
+  if (is_portable) assert_dependency("base64enc")
+
   # Normalize user-provided image paths to full paths
   if (!is.null(images)) {
-    for (img_idx in seq_along(images)) {
-      if (!grepl("^http", trimws(images[img_idx]))) {
-        # Convert relative paths to absolute paths using current working directory
-        if (!grepl("^/", trimws(images[img_idx])) && !grepl("^[A-Za-z]:", trimws(images[img_idx]))) {
-          images[img_idx] <- normalizePath(images[img_idx], mustWork = FALSE)
-        }
-      }
+    # quarto requires relative links or url
+    # print("html") must be run from a tempdir on linux, so we need absolute paths
+    if (!is_quarto) {
+      images <- normalizePath(images, mustWork = FALSE)
     }
   }
 
@@ -214,20 +219,23 @@ plot_tt_lazy <- function(
     assert_dependency("ggplot2")
     images <- NULL
 
-    if (isTRUE(x@output %in% c("html", "bootstrap")) && isTRUE(x@html_portable)) {
-      path_full <- tempdir()
-      assets <- tempdir()
+    # path_assets directory stores dynamically generated plots
+    if (is_portable) {
+      path_assets <- tempdir()
+      # quarto requires relative paths from the project folder
+    } else if (is_quarto) {
+      path_assets <- assets
     } else {
-      path_full <- normalizePath(file.path(x@output_dir, assets), mustWork = FALSE)
+      path_assets <- file.path(x@output_dir, assets)
+    }
+    if (!dir.exists(path_assets)) {
+      dir.create(path_assets)
     }
 
-    if (!dir.exists(path_full)) {
-      dir.create(path_full)
-    }
     for (idx in seq_along(data)) {
       fn <- paste0(get_id(), ".png")
-      fn_full <- normalizePath(file.path(path_full, fn), mustWork = FALSE)
-      if (isTRUE(x@output %in% c("html", "bootstrap")) && isTRUE(x@html_portable)) {
+      fn_full <- file.path(path_assets, fn)
+      if (is_portable) {
         # For portable HTML, store the full path for base64 encoding
         images[idx] <- fn_full
       } else {
@@ -277,21 +285,18 @@ plot_tt_lazy <- function(
   if (isTRUE(x@output == "latex")) {
     cell <- "\\includegraphics[height=%sem]{%s}"
     cell <- sprintf(cell, height, images)
-  } else if (isTRUE(x@output %in% c("html", "bootstrap", "tabulator")) && isTRUE(x@html_portable)) {
-    assert_dependency("base64enc")
-
+  } else if (is_portable) {
     http <- grepl("^http", trimws(images))
     images[!http] <- encode(images[!http])
     cell <- sprintf('<img src="%s" style="height: %sem;">', images, height)
-  } else if (isTRUE(x@output %in% c("html", "bootstrap", "tabulator"))) {
+  } else if (is_html) {
     # Convert relative paths to absolute paths for save_tt/print
     http <- grepl("^http", trimws(images))
     for (img_idx in seq_along(images)) {
       if (!http[img_idx]) {
         # Convert relative paths to absolute paths
         if (!grepl("^/", trimws(images[img_idx])) && !grepl("^[A-Za-z]:", trimws(images[img_idx]))) {
-          images[img_idx] <- normalizePath(file.path(x@output_dir, images[img_idx]),
-            mustWork = FALSE)
+          images[img_idx] <- file.path(x@output_dir, images[img_idx])
         }
       }
     }

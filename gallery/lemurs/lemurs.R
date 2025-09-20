@@ -8,20 +8,15 @@ cap <- "<h3>The Lemurs at Duke University Center</h1>Lemurs are a unique group o
 
 # Footnotes ----
 footnotes <- c(
-  "*Table adapted from an original table created by N. Rennie for the 2022 Posit Table Contest in November 2022.",
-  '** Images used are licensed under Creative Commons licences. See <a style="color:#a1b70d" href="https://github.com/nrennie/2022-table-contest">github.com/nrennie/2022-table-contest</a> for details.',
-  '*** Data originally from <a style="color:#a1b70d" href="https://lemur.duke.edu/">lemur.duke.edu</a> and can be accessed on GitHub at <a style="color:#a1b70d" href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-08-24">github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-08-24</a>.')
-
-# Get image URLs ----
-all_images <- file.path("images", list.files("images"))
-
-all_images <- tibble::tibble(taxon = lem_nums$taxon) %>%
-  mutate(img_html = glue::glue("<img src='https://raw.githubusercontent.com/nrennie/2022-table-contest/main/images/{taxon}.png' style='height:100px;'>"))
+  "*" = "Table adapted from an original table created by N. Rennie for the 2022 Posit Table Contest in November 2022.",
+  "**" = 'Images used are licensed under Creative Commons licences. See <a style="color:#a1b70d" href="https://github.com/nrennie/2022-table-contest">github.com/nrennie/2022-table-contest</a> for details.',
+  "***" = 'Data originally from <a style="color:#a1b70d" href="https://lemur.duke.edu/">lemur.duke.edu</a> and can be accessed on GitHub at <a style="color:#a1b70d" href="https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-08-24">github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-08-24</a>.')
 
 
 # Table setup ----
+# stubs for plot_tt()
 lem_table <- data.frame(
-  img_html = paste0("images/", lem_nums$taxon, ".png"),
+  img_html = NA,
   species = lem_nums$species,
   bars = NA,
   lines = NA)
@@ -42,7 +37,10 @@ tab <- tt(lem_table,
   theme_striped() |>
   theme_html(class = "table caption-top") |> # bootstrap class
   # lemur images
-  plot_tt(j = 1, images = lem_table[[1]], height = 7) |>
+  plot_tt(
+    j = 1,
+    images = paste0("images/", lem_nums$taxon, ".png"),
+    height = 7) |>
   # bar plots
   plot_tt(
     j = 3, fun = plot_bar,

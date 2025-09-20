@@ -164,7 +164,7 @@ tab <- data.frame(
 # custom ggplot2 function to create inline plot
 f <- function(d, ...) {
   ggplot(d, aes(x = flipper_length_mm, y = body_mass_g, color = sex)) +
-    geom_point(size = .2) +
+    geom_point(size = 2) +
     scale_x_continuous(expand = c(0, 0)) +
     scale_y_continuous(expand = c(0, 0)) +
     scale_color_manual(values = c("#E69F00", "#56B4E9")) +
@@ -177,6 +177,7 @@ tt(tab) |>
   plot_tt(j = 2, fun = "histogram", data = body, height = 2) |>
   plot_tt(j = 3, fun = "density", data = flip, height = 2) |>
   plot_tt(j = 4, fun = f, data = dat, height = 2) |>
+  style_tt(alignv = "m") |>
   style_tt(j = 2:4, align = "c")
 ```
 

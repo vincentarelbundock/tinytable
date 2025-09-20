@@ -540,7 +540,7 @@ window.Quarto = {
 <ul>
 <li><code>theme_void()</code> calls <code>strip_tt()</code> to drop every change made to this point, so the order of operations matter.</li>
 <li><code>"html_portable"</code> is no longer a valid <code>output</code> format in <code>save_tt()</code> or <code>print()</code>. Use <code>theme_html(portable = TRUE)</code> instead.</li>
-<li><code>plot_tt()</code> loses its <code>asp</code> argument. Use <code>width_plot</code> and <code>height_plot</code> instead.</li>
+<li><code>plot_tt()</code> deprecates the <code>asp</code> argument. Use <code>width_plot</code> and <code>height_plot</code> instead.</li>
 </ul>
 <p>Deprecated global options:</p>
 <ul>
@@ -565,20 +565,31 @@ window.Quarto = {
 <li>No alternative.</li>
 </ul></li>
 </ul>
-<p>New:</p>
+<p>New functions:</p>
 <ul>
-<li><code>tt()</code> is now a generic function, allowing special table-drawing methods for specific classes of objects. <code>tinytable</code> provides methods for <code>data.frame</code>, <code>data.table</code>, and <code>tbl_df</code>. See the “Custom” vignette for examples.</li>
+<li><code>format_vector()</code> is similar to <code>format_tt()</code> but accepts and returns vectors.</li>
+<li><code>style_vector()</code> is similar to <code>style_tt()</code> but accepts and returns vectors.</li>
+<li><code>plot_vector()</code> is similar to <code>plot_tt()</code> but it returns a character vector of links to plots or images, with appropriate markup and styling, like <code>href</code> for HTML output or <code>\includegraphics{}</code> for LaTeX.</li>
+</ul>
+<p>New arguments:</p>
+<ul>
+<li><code>style_tt(smallcap = TRUE)</code> to style text in small capitals. In HTML, LaTeX, and Typst, it uses proper small caps formatting. In Markdown, it converts text to uppercase.</li>
 <li><code>tt(x, colnames = "label")</code> renames column names using the <code>attr(df$x, "label")</code> attribute, when available, falling back to column names otherwise.</li>
+<li><code>format_tt(linebreak = "&lt;br&gt;")</code> can substitute a user-specified string to an appropriate character sequence to generate line breaks in the <code>output</code> of the <code>tinytable</code> (ex: <code>\\</code> for LaTeX, <code>&lt;br&gt;</code> for HTML, etc.)</li>
+<li><code>theme_markdown(ansi=TRUE)</code> enables support for <code>style_tt()</code> colors, backgrounds, and text styles in Markdown output.</li>
+<li><code>theme_markdown(vline=FALSE, hline=FALSE)</code> suppresses lines.</li>
+<li><code>plot_tt(height_plot, width_plot)</code> control the size (in pixels) of the plotting device canvas. This allows users to control the resolution of the original plot, as well as the relative size of elements.</li>
+<li><code>plot_tt(fun = "barpct", color = "red", background = "blue")</code> draws percentage bars with two colors for p and 1-p.</li>
+</ul>
+<p>New miscellaneous features:</p>
+<ul>
 <li>Non-standard evaluation is supported for <code>i</code> and <code>j</code> arguments in <code>style_tt()</code>, <code>format_tt()</code>, and <code>plot_tt()</code>.</li>
-<li><code>format_tt(linebreak)</code> can substitute a user-specified string to a line break in HTML, LaTeX, and Typst output.</li>
+<li><code>tt()</code> is now a generic function, allowing special table-drawing methods for specific classes of objects. <code>tinytable</code> provides methods for <code>data.frame</code>, <code>data.table</code>, and <code>tbl_df</code>. See the “Custom” vignette for examples.</li>
 <li><code>subset(x, select = c(x, y))</code> can now be used to select columns.</li>
-<li><code>theme_markdown(tab, ansi=TRUE)</code> enables support for <code>style_tt()</code> colors, backgrounds, and text styles in Markdown output.</li>
-<li><code>theme_markdown(tab, vline=FALSE, hline=FALSE)</code> suppresses lines.</li>
 <li>A global option can be used to choose the temporary directofy where HTML files are saved for preview: <code>options(tinytable_tempdir = "/home/username/tempdir")</code></li>
 <li>Tabulator interactive tables support images with <code>plot_tt()</code>.</li>
 <li><code>plot_tt()</code> can add images to replace column names. Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/566">#566</a>.</li>
-<li><code>plot_tt(fun = "barpct", color = "red", background = "blue")</code> draws percentage bars with two colors for p and 1-p.</li>
-<li><code>plot_tt()</code> gets a <code>height_plot</code> argument to control the height of plots in px units.</li>
+<li>Improved path handling in <code>plot_tt()</code></li>
 </ul>
 <p>Bugs:</p>
 <ul>
