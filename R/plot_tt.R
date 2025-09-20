@@ -279,7 +279,7 @@ plot_tt_lazy <- function(
       if (!http[img_idx]) {
         # Convert relative paths to absolute paths
         if (!grepl("^/", trimws(images[img_idx])) && !grepl("^[A-Za-z]:", trimws(images[img_idx]))) {
-          images[img_idx] <- file.path(getwd(), images[img_idx])
+          images[img_idx] <- file.path(x@output_dir, images[img_idx])
         }
       }
     }
