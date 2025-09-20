@@ -23,6 +23,8 @@ Deprecated global options:
 
 New:
 
+* `format_vector()` function to format character, numeric, and factor vectors outside of a table context. See `?format_vector` for details.
+* `style_vector()` function to style character, numeric, and factor vectors outside of a table context. See `?style_vector` for details.
 * `tt()` is now a generic function, allowing special table-drawing methods for specific classes of objects. `tinytable` provides methods for `data.frame`, `data.table`, and `tbl_df`. See the "Custom" vignette for examples.
 * `tt(x, colnames = "label")` renames column names using the `attr(df$x, "label")` attribute, when available, falling back to column names otherwise.
 * Non-standard evaluation is supported for `i` and `j` arguments in `style_tt()`, `format_tt()`, and `plot_tt()`.

@@ -688,6 +688,17 @@ check_atomic_vector <- function(
   return(out)
 }
 
+assert_atomic_vector <- function(x, 
+                                 null.ok = FALSE, 
+                                 name = as.character(substitute(x))) {
+  flag <- check_atomic_vector(x, null.ok = null.ok, name = name)
+  if (!isTRUE(flag)) {
+    stop(flag, call. = FALSE)
+  } else {
+    return(invisible(TRUE))
+  }
+}
+
 assert_class <- function(x, classname) {
   if (!inherits(x, classname)) {
     msg <- sprintf("`x` must be of class `%s`.", classname)

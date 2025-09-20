@@ -1,99 +1,76 @@
-format_vector_sprintf <- function(vec, sprintf_pattern = NULL, ...) {
-  if (is.null(sprintf_pattern)) {
-    return(NULL)
-  }
-  base::sprintf(sprintf_pattern, vec)
-}
+#' Format a Vector
+#'
+#' @details
+#' This function formats a vector by passing it to `format_tt()`. All formatting arguments must be of length 1 or `length(x)`.
+#'
+#' @param x A vector to be formatted.
+#' @param output Output format. One of "html", "latex", "typst", "markdown", etc.
+#' @inheritParams format_tt
+#' @return A character vector with formatted values.
+#' @export
+#' @examples
+#' # Format numeric vector
+#' format_vector(c(1234.567, 9876.543), digits = 2, num_mark_big = ",")
+#'
+#' # Format dates
+#' dates <- as.Date(c("2023-01-01", "2023-12-31"))
+#' format_vector(dates, date = "%B %d, %Y")
+#'
+#' # Format logical values
+#' format_vector(c(TRUE, FALSE, TRUE), bool = function(x) ifelse(x, "Yes", "No"))
+format_vector <- function(
+    x,
+    output = "html",
+    digits = NULL,
+    num_fmt = "significant",
+    num_zero = FALSE,
+    num_suffix = FALSE,
+    num_mark_big = "",
+    num_mark_dec = getOption("OutDec", default = "."),
+    date = NULL,
+    bool = NULL,
+    math = FALSE,
+    other = NULL,
+    replace = FALSE,
+    escape = FALSE,
+    markdown = FALSE,
+    quarto = FALSE,
+    fn = NULL,
+    sprintf = NULL,
+    linebreak = NULL) {
+  assert_atomic_vector(x)
 
-format_vector_logical <- function(vec, bool_fn = NULL, ...) {
-  if (!is.logical(vec) || is.null(bool_fn)) {
-    return(NULL)
-  }
-  bool_fn(vec)
-}
+  # Convert vector to data frame and then to tinytable
+  df <- data.frame(x = x, stringsAsFactors = FALSE)
+  tt_obj <- tt(df, output = output)
 
-format_vector_date <- function(vec, date_format = NULL, ...) {
-  if (!inherits(vec, "Date") || is.null(date_format)) {
-    return(NULL)
-  }
-  format(vec, date_format)
-}
+  # Apply formatting (specify j = 1 to target the single column)
+  result <- format_tt(
+    tt_obj,
+    j = 1,
+    digits = digits,
+    num_fmt = num_fmt,
+    num_zero = num_zero,
+    num_suffix = num_suffix,
+    num_mark_big = num_mark_big,
+    num_mark_dec = num_mark_dec,
+    date = date,
+    bool = bool,
+    math = math,
+    other = other,
+    replace = replace,
+    escape = escape,
+    markdown = markdown,
+    quarto = quarto,
+    fn = fn,
+    sprintf = sprintf,
+    linebreak = linebreak
+  )
 
-format_vector_other <- function(vec, other_fn = NULL, ...) {
-  if (!is.function(other_fn)) {
-    return(NULL)
-  }
-  other_fn(vec)
-}
+  # Build the table to trigger rendering (including markdown)
+  built_result <- build_tt(result, output = output)
 
-format_vector_custom <- function(vec, fn = NULL, ...) {
-  if (!is.function(fn)) {
-    return(NULL)
-  }
-  fn(vec)
-}
-
-format_vector_math <- function(vec, math = FALSE, ...) {
-  if (!isTRUE(math)) {
-    return(NULL)
-  }
-  sprintf("$%s$", vec)
-}
-
-format_vector_linebreak <- function(vec, linebreak = NULL, output = NULL, ...) {
-  if (is.null(linebreak)) {
-    return(NULL)
-  }
-
-  # Determine the appropriate line break sequence based on output format
-  if (is.null(output) || output == "markdown") {
-    return(NULL) # No line break replacement for markdown
-  }
-
-  if (output %in% c("html", "bootstrap", "tabulator")) {
-    lb <- "<br>"
-  } else if (output %in% c("latex", "pdf")) {
-    lb <- "\\\\"
-    # tabularray wrapper for line breaks
-    if (any(grepl(linebreak, vec, fixed = TRUE))) {
-      vec <- sprintf("{%s}", vec)
-    }
-  } else if (output == "typst") {
-    # needs a space in typst
-    lb <- " \\ "
-  } else {
-    return(NULL) # Unknown output format
-  }
-
-  gsub(linebreak, lb, vec, fixed = TRUE)
-}
-
-format_vector_quarto <- function(i, col, x, ...) {
-  out <- x@data_body
-  if (isTRUE(x@output %in% c("html", "bootstrap", "tabulator"))) {
-    fun <- function(z) {
-      z@table_string <- sub(
-        "data-quarto-disable-processing='true'",
-        "data-quarto-disable-processing='false'",
-        z@table_string,
-        fixed = TRUE
-      )
-      return(z)
-    }
-    x <- style_tt(x, finalize = fun)
-    out[i, col] <- sprintf(
-      '<span data-qmd="%s"></span>',
-      out[i, col, drop = TRUE]
-    )
-  } else if (isTRUE(x@output == "latex")) {
-    assert_dependency("base64enc")
-    tmp <- sapply(
-      out[i, col, drop = TRUE],
-      function(z) base64enc::base64encode(charToRaw(z))
-    )
-    out[i, col] <- sprintf("\\QuartoMarkdownBase64{%s}", tmp)
-  }
-
-  x@data_body <- out
-  return(x)
+  # Extract the formatted vector values from the built table
+  formatted_data <- built_result@data_body$x
+  return(formatted_data)
 }
