@@ -34,7 +34,7 @@ bootstrap_adjust_column_indices <- function(x, user_j, user_i) {
 
 # Get mapping from user column index to HTML data-col value for header rows with column groups
 bootstrap_get_datacol_mapping <- function(x, target_i) {
-  # Initialize with 1:1 mapping
+  # Initialize with 1:1 mapping (1-based, will be converted to 0-based later)
   col_mapping <- seq_len(x@ncol)
 
   # Only handle column groups for header rows
@@ -57,10 +57,12 @@ bootstrap_get_datacol_mapping <- function(x, target_i) {
         idx <- order(max_col)
         j_combined <- j_combined[idx]
 
-        # Create mapping: all columns in a span map to the same data-col
+        # Create mapping: each user column maps to its HTML data-col position
+        # The HTML data-col position corresponds to the index in j_combined (k-1 for 0-based)
         for (k in seq_along(j_combined)) {
           original_cols <- j_combined[[k]]
           # All columns in this span map to the same data-col position (k)
+          # Since we return 1-based and later subtract 1, we use k here
           for (orig_col in original_cols) {
             col_mapping[orig_col] <- k
           }

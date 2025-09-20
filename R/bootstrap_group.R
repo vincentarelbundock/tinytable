@@ -59,8 +59,7 @@ bootstrap_groupj <- function(x, j, ihead, ...) {
     # Insert all group rows into the table
     x <- bootstrap_groupj_insert(x, all_groupj_rows)
 
-    # Apply styling to all groups
-    x <- bootstrap_groupj_style(x, all_styling_tasks)
+    # Note: Group line styling is now handled in group_tt() via style_tt() calls
   }
 
   return(x)
