@@ -80,6 +80,9 @@ setMethod(
       if (isTRUE(sty[row, "monospace"])) {
         css[idx] <- paste(css[idx], "font-family: monospace;")
       }
+      if (isTRUE(sty[row, "smallcap"])) {
+        css[idx] <- paste(css[idx], "font-variant: small-caps;")
+      }
       if (!is.na(sty[row, "color"])) {
         color_val <- standardize_colors(sty[row, "color"], format = "hex")
         css[idx] <- paste(css[idx], paste0("color: ", color_val, ";"))

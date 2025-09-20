@@ -13,6 +13,7 @@ apply_notes_caption_styling <- function(
   bold = FALSE,
   italic = FALSE,
   monospace = FALSE,
+  smallcap = FALSE,
   strikeout = FALSE,
   underline = FALSE
 ) {
@@ -22,6 +23,7 @@ apply_notes_caption_styling <- function(
     bold = bold,
     italic = italic,
     monospace = monospace,
+    smallcap = smallcap,
     strikeout = strikeout,
     underline = underline
   )
@@ -192,6 +194,7 @@ merge_with_existing_styles <- function(x, settings) {
 #' @param bold Logical; if `TRUE`, text is styled in bold.
 #' @param italic Logical; if `TRUE`, text is styled in italic.
 #' @param monospace Logical; if `TRUE`, text is styled in monospace font.
+#' @param smallcap Logical; if `TRUE`, text is styled in small caps. In Markdown output format, text is converted to uppercase.
 #' @param underline Logical; if `TRUE`, text is underlined.
 #' @param strikeout Logical; if `TRUE`, text has a strike through line.
 #' @param color Text color. There are several ways to specify colors, depending on the output format.
@@ -324,6 +327,7 @@ style_tt <- function(
   bold = FALSE,
   italic = FALSE,
   monospace = FALSE,
+  smallcap = FALSE,
   underline = FALSE,
   strikeout = FALSE,
   color = NULL,
@@ -385,6 +389,7 @@ style_tt <- function(
       bold,
       italic,
       monospace,
+      smallcap,
       strikeout,
       underline
     ))
@@ -398,6 +403,7 @@ style_tt <- function(
     bold = bold,
     italic = italic,
     monospace = monospace,
+    smallcap = smallcap,
     underline = underline,
     strikeout = strikeout,
     color = color,
@@ -443,6 +449,7 @@ style_tt <- function(
     settings[["bold"]] <- bold
     settings[["italic"]] <- italic
     settings[["monospace"]] <- monospace
+    settings[["smallcap"]] <- smallcap
     settings[["strikeout"]] <- strikeout
     settings[["underline"]] <- underline
     settings[["indent"]] <- if (is.null(indent)) NA else as.vector(indent)
@@ -478,6 +485,7 @@ assert_style_tt <- function(
   bold,
   italic,
   monospace,
+  smallcap,
   underline,
   strikeout,
   color,
@@ -517,6 +525,7 @@ assert_style_tt <- function(
   assert_logical(bold)
   assert_logical(italic)
   assert_logical(monospace)
+  assert_logical(smallcap)
   assert_logical(underline)
   assert_logical(strikeout)
   assert_string(line, null.ok = TRUE)
@@ -548,6 +557,7 @@ assert_style_tt <- function(
     assert_length(bold, len = 1)
     assert_length(italic, len = 1)
     assert_length(monospace, len = 1)
+    assert_length(smallcap, len = 1)
     assert_length(underline, len = 1)
     assert_length(strikeout, len = 1)
 
@@ -559,6 +569,7 @@ assert_style_tt <- function(
     assert_length(bold, len = c(1, length(ival)))
     assert_length(italic, len = c(1, length(ival)))
     assert_length(monospace, len = c(1, length(ival)))
+    assert_length(smallcap, len = c(1, length(ival)))
     assert_length(underline, len = c(1, length(ival)))
     assert_length(strikeout, len = c(1, length(ival)))
 
@@ -570,6 +581,7 @@ assert_style_tt <- function(
     assert_length(bold, len = c(1, length(jval)))
     assert_length(italic, len = c(1, length(jval)))
     assert_length(monospace, len = c(1, length(jval)))
+    assert_length(smallcap, len = c(1, length(jval)))
     assert_length(underline, len = c(1, length(jval)))
     assert_length(strikeout, len = c(1, length(jval)))
 
@@ -593,6 +605,7 @@ assert_style_tt <- function(
     assert_length(bold, len = c(1, length(ival) * length(jval)))
     assert_length(italic, len = c(1, length(ival) * length(jval)))
     assert_length(monospace, len = c(1, length(ival) * length(jval)))
+    assert_length(smallcap, len = c(1, length(ival) * length(jval)))
     assert_length(underline, len = c(1, length(ival) * length(jval)))
     assert_length(strikeout, len = c(1, length(ival) * length(jval)))
   }

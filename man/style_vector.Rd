@@ -10,6 +10,7 @@ style_vector(
   bold = FALSE,
   italic = FALSE,
   monospace = FALSE,
+  smallcap = FALSE,
   underline = FALSE,
   strikeout = FALSE,
   color = NULL,
@@ -27,6 +28,8 @@ style_vector(
 \item{italic}{Logical; if \code{TRUE}, text is styled in italic. Must be of length 1 or \code{length(x)}.}
 
 \item{monospace}{Logical; if \code{TRUE}, text is styled in monospace font. Must be of length 1 or \code{length(x)}.}
+
+\item{smallcap}{Logical; if \code{TRUE}, text is styled in small caps. In Markdown output format, text is converted to uppercase. Must be of length 1 or \code{length(x)}.}
 
 \item{underline}{Logical; if \code{TRUE}, text is underlined. Must be of length 1 or \code{length(x)}.}
 

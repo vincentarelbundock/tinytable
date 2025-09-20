@@ -29,6 +29,9 @@ style_text <- function(sty_row) {
   if (isTRUE(sty_row$monospace)) {
     font <- paste0(font, "\\ttfamily")
   }
+  if (isTRUE(sty_row$smallcap)) {
+    font <- paste0(font, "\\scshape")
+  }
   
   # Keep underline and strikeout as cmd since they need special macros
   if (isTRUE(sty_row$underline)) {

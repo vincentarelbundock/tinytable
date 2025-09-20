@@ -6,7 +6,7 @@ Breaking change:
 
 * `theme_void()` calls `strip_tt()` to drop every change made to this point, so the order of operations matter.
 * `"html_portable"` is no longer a valid `output` format in `save_tt()` or `print()`. Use `theme_html(portable = TRUE)` instead.
-* `plot_tt()` loses its `asp` argument. Use `width_plot` and `height_plot` instead.
+* `plot_tt()` deprecates the `asp` argument. Use `width_plot` and `height_plot` instead.
 
 Deprecated global options:
 
@@ -21,23 +21,30 @@ Deprecated global options:
 * `tinytable_quarto_figure`
   - No alternative.
 
-New:
+New functions:
 
-* `format_vector()` function to format character, numeric, and factor vectors outside of a table context. See `?format_vector` for details.
-* `style_vector()` function to style character, numeric, and factor vectors outside of a table context. See `?style_vector` for details.
-* `plot_vector()` function accepts the same function as `plot_tt()` and returns a vector of links to images in the specified format (HTML, LaTeX, etc.). See `?plot_vector` for details.
-* `tt()` is now a generic function, allowing special table-drawing methods for specific classes of objects. `tinytable` provides methods for `data.frame`, `data.table`, and `tbl_df`. See the "Custom" vignette for examples.
+* `format_vector()` is similar to `format_tt()` but accepts and returns vectors.
+* `style_vector()` is similar to `style_tt()` but accepts and returns vectors.
+* `plot_vector()` is similar to `plot_tt()` but it returns a character vector of links to plots or images, with appropriate markup and styling, like `href` for HTML output or `\includegraphics{}` for LaTeX.
+
+New arguments:
+
+* `style_tt(smallcap = TRUE)` to style text in small capitals. In HTML, LaTeX, and Typst, it uses proper small caps formatting. In Markdown, it converts text to uppercase.
 * `tt(x, colnames = "label")` renames column names using the `attr(df$x, "label")` attribute, when available, falling back to column names otherwise.
+* `format_tt(linebreak = "<br>")` can substitute a user-specified string to an appropriate character sequence to generate line breaks in the `output` of the `tinytable` (ex: `\\` for LaTeX, `<br>` for HTML, etc.)
+* `theme_markdown(ansi=TRUE)` enables support for `style_tt()` colors, backgrounds, and text styles in Markdown output. 
+* `theme_markdown(vline=FALSE, hline=FALSE)` suppresses lines.
+* `plot_tt(height_plot, width_plot)` control the size (in pixels) of the plotting device canvas. This allows users to control the resolution of the original plot, as well as the relative size of elements.
+* `plot_tt(fun = "barpct", color = "red", background = "blue")` draws percentage bars with two colors for p and 1-p.
+
+New miscellaneous features:
+
 * Non-standard evaluation is supported for `i` and `j` arguments in `style_tt()`, `format_tt()`, and `plot_tt()`.
-* `format_tt(linebreak)` can substitute a user-specified string to a line break in HTML, LaTeX, and Typst output.
+* `tt()` is now a generic function, allowing special table-drawing methods for specific classes of objects. `tinytable` provides methods for `data.frame`, `data.table`, and `tbl_df`. See the "Custom" vignette for examples.
 * `subset(x, select = c(x, y))` can now be used to select columns.
-* `theme_markdown(tab, ansi=TRUE)` enables support for `style_tt()` colors, backgrounds, and text styles in Markdown output. 
-* `theme_markdown(tab, vline=FALSE, hline=FALSE)` suppresses lines.
 * A global option can be used to choose the temporary directofy where HTML files are saved for preview: `options(tinytable_tempdir = "/home/username/tempdir")`
 * Tabulator interactive tables support images with `plot_tt()`.
 * `plot_tt()` can add images to replace column names. Issue #566.
-* `plot_tt(fun = "barpct", color = "red", background = "blue")` draws percentage bars with two colors for p and 1-p.
-* `plot_tt()` gets a `height_plot` argument to control the height of plots in px units.
 
 Bugs:
 

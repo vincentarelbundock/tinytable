@@ -8,6 +8,7 @@
 #' @param bold Logical; if `TRUE`, text is styled in bold. Must be of length 1 or `length(x)`.
 #' @param italic Logical; if `TRUE`, text is styled in italic. Must be of length 1 or `length(x)`.
 #' @param monospace Logical; if `TRUE`, text is styled in monospace font. Must be of length 1 or `length(x)`.
+#' @param smallcap Logical; if `TRUE`, text is styled in small caps. In Markdown output format, text is converted to uppercase. Must be of length 1 or `length(x)`.
 #' @param underline Logical; if `TRUE`, text is underlined. Must be of length 1 or `length(x)`.
 #' @param strikeout Logical; if `TRUE`, text has a strike through line. Must be of length 1 or `length(x)`.
 #' @param color Text color. Must be of length 1 or `length(x)`. There are several ways to specify colors:
@@ -43,6 +44,7 @@ style_vector <- function(
     bold = FALSE,
     italic = FALSE,
     monospace = FALSE,
+    smallcap = FALSE,
     underline = FALSE,
     strikeout = FALSE,
     color = NULL,
@@ -63,6 +65,7 @@ style_vector <- function(
   assert_length(bold, len = c(1, n), name = "bold")
   assert_length(italic, len = c(1, n), name = "italic")
   assert_length(monospace, len = c(1, n), name = "monospace")
+  assert_length(smallcap, len = c(1, n), name = "smallcap")
   assert_length(underline, len = c(1, n), name = "underline")
   assert_length(strikeout, len = c(1, n), name = "strikeout")
   assert_length(color, len = c(1, n), null.ok = TRUE, name = "color")
@@ -73,6 +76,7 @@ style_vector <- function(
   assert_logical(bold, name = "bold")
   assert_logical(italic, name = "italic")
   assert_logical(monospace, name = "monospace")
+  assert_logical(smallcap, name = "smallcap")
   assert_logical(underline, name = "underline")
   assert_logical(strikeout, name = "strikeout")
   assert_character(color, null.ok = TRUE, name = "color")
@@ -88,6 +92,7 @@ style_vector <- function(
   bold <- rep_len(bold, n)
   italic <- rep_len(italic, n)
   monospace <- rep_len(monospace, n)
+  smallcap <- rep_len(smallcap, n)
   underline <- rep_len(underline, n)
   strikeout <- rep_len(strikeout, n)
 
@@ -106,6 +111,7 @@ style_vector <- function(
     bold = bold,
     italic = italic,
     monospace = monospace,
+    smallcap = smallcap,
     underline = underline,
     strikeout = strikeout,
     color = if (is.null(color)) rep(NA_character_, n) else color,
@@ -134,6 +140,7 @@ style_vector <- function(
     current_style$bold <- isTRUE(current_style$bold)
     current_style$italic <- isTRUE(current_style$italic)
     current_style$monospace <- isTRUE(current_style$monospace)
+    current_style$smallcap <- isTRUE(current_style$smallcap)
     current_style$underline <- isTRUE(current_style$underline)
     current_style$strikeout <- isTRUE(current_style$strikeout)
 

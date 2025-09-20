@@ -36,6 +36,7 @@
     if ("bold" in style) { tmp = strong(tmp) }
     if ("mono" in style) { tmp = math.mono(tmp) }
     if ("strikeout" in style) { tmp = strike(tmp) }
+    if ("smallcaps" in style) { tmp = smallcaps(tmp) }
     tmp
   }
 

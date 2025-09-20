@@ -1,6 +1,6 @@
 #show figure: set block(breakable: true)
 #figure( // start preamble figure
-  
+  caption: smallcaps([Motor Trend Car Road Tests]),
   kind: "tinytable",
   supplement: "Table", // end preamble figure
 
@@ -8,10 +8,12 @@ block[ // start block
 
   #let style-dict = (
     // tinytable style-dict after
+    "0_0": 0, "0_1": 0, "0_2": 0, "0_3": 0, "0_4": 0, "1_4": 0, "2_4": 0, "3_4": 0
   )
 
   #let style-array = ( 
     // tinytable cell style after
+    (smallcaps: true,),
   )
 
   // Helper function to get cell style
@@ -21,7 +23,7 @@ block[ // start block
   }
 
   // tinytable align-default-array before
-  #let align-default-array = ( left, left, left, left, left, left, left, left, ) // tinytable align-default-array here
+  #let align-default-array = ( left, left, left, left, left, ) // tinytable align-default-array here
   #show table.cell: it => {
     if style-array.len() == 0 { return it }
     
@@ -44,7 +46,7 @@ block[ // start block
   #align(center, [
 
   #table( // tinytable table start
-    columns: (auto, auto, auto, auto, auto, auto, auto, auto),
+    columns: (auto, auto, auto, auto, auto),
     stroke: none,
     rows: auto,
     align: (x, y) => {
@@ -55,33 +57,34 @@ block[ // start block
       let style = get-style(x, y)
       if style != none and "background" in style { style.background }
     },
- table.hline(y: 1, start: 0, end: 8, stroke: 0.05em + black),
- table.hline(y: 13, start: 0, end: 8, stroke: 0.1em + black),
- table.hline(y: 0, start: 0, end: 8, stroke: 0.1em + black),
+ table.hline(y: 1, start: 0, end: 5, stroke: 0.05em + black),
+ table.hline(y: 7, start: 0, end: 5, stroke: 0.1em + black),
+ table.hline(y: 0, start: 0, end: 5, stroke: 0.1em + black),
     // tinytable lines before
 
     // tinytable header start
     table.header(
       repeat: true,
-[mpg], [cyl], [disp], [hp], [drat], [wt], [qsec], [vs],
+[Sepal.Length], [Sepal.Width], [Petal.Length], [Petal.Width], [Species],
     ),
     // tinytable header end
 
     // tinytable cell content after
-[21.0], [6], [160.0], [110], [3.90], [2.620], [16.46], [0],
-[21.0], [6], [160.0], [110], [3.90], [2.875], [17.02], [0],
-table.cell(colspan: 8)[I like (fake) hamburgers],
-[22.8], [4], [108.0], [93], [3.85], [2.320], [18.61], [1],
-table.cell(colspan: 8)[She prefers halloumi],
-[21.4], [6], [258.0], [110], [3.08], [3.215], [19.44], [1],
-[18.7], [8], [360.0], [175], [3.15], [3.440], [17.02], [0],
-[18.1], [6], [225.0], [105], [2.76], [3.460], [20.22], [1],
-table.cell(colspan: 8)[They love tofu],
-[14.3], [8], [360.0], [245], [3.21], [3.570], [15.84], [0],
-[24.4], [4], [146.7], [62], [3.69], [3.190], [20.00], [1],
-[22.8], [4], [140.8], [95], [3.92], [3.150], [22.90], [1],
+[5.1], [3.5], [1.4], [0.2], [setosa],
+[4.9], [3.0], [1.4], [0.2], [setosa],
+[4.7], [3.2], [1.3], [0.2], [setosa],
+[4.6], [3.1], [1.5], [0.2], [setosa],
+[5.0], [3.6], [1.4], [0.2], [setosa],
+[5.4], [3.9], [1.7], [0.4], [setosa],
 
     // tinytable footer after
+
+    table.footer(
+      repeat: false,
+      // tinytable notes after
+    table.cell(align: left, colspan: 5, smallcaps([Source: Henderson and Velleman (1981)])),
+    ),
+    
 
   ) // end table
 

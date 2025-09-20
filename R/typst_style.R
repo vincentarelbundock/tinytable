@@ -123,6 +123,9 @@ typst_process_styles <- function(sty, rec) {
     if (isTRUE(sty[row, "monospace"])) {
       css[idx] <- typst_insert_field(css[idx], "monospace", "true")
     }
+    if (isTRUE(sty[row, "smallcap"])) {
+      css[idx] <- typst_insert_field(css[idx], "smallcaps", "true")
+    }
 
     # Combine horizontal and vertical alignment
     align_h <- sty[row, "align"]

@@ -20,6 +20,7 @@ prepare_grid_style <- function(x) {
     "italic",
     "strikeout",
     "underline",
+    "smallcap",
     "indent",
     "color",
     "background",
@@ -119,6 +120,11 @@ style_grid_group <- function(x) {
                 } else {
                   FALSE
                 },
+                smallcap = if (!is.na(group_styles[style_idx, "smallcap"])) {
+                  group_styles[style_idx, "smallcap"]
+                } else {
+                  FALSE
+                },
                 color = if (!is.na(group_styles[style_idx, "color"])) {
                   group_styles[style_idx, "color"]
                 } else {
@@ -181,6 +187,11 @@ style_grid_group <- function(x) {
                 } else {
                   FALSE
                 },
+                smallcap = if (!is.na(group_styles[style_idx, "smallcap"])) {
+                  group_styles[style_idx, "smallcap"]
+                } else {
+                  FALSE
+                },
                 color = if (!is.na(group_styles[style_idx, "color"])) {
                   group_styles[style_idx, "color"]
                 } else {
@@ -238,6 +249,7 @@ style_grid_body <- function(x) {
       italic = isTRUE(sty[idx, "italic"]),
       strikeout = isTRUE(sty[idx, "strikeout"]),
       underline = isTRUE(sty[idx, "underline"]),
+      smallcap = isTRUE(sty[idx, "smallcap"]),
       color = if (!is.na(sty[idx, "color"])) sty[idx, "color"] else NULL,
       indent = if (!is.na(sty[idx, "indent"])) sty[idx, "indent"] else NULL
     )

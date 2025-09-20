@@ -14,6 +14,9 @@ style_string_html <- function(n, styles) {
   if (isTRUE(styles[["monospace"]])) {
     n <- sprintf("<code>%s</code>", n)
   }
+  if (isTRUE(styles[["smallcap"]])) {
+    n <- sprintf("<span style='font-variant: small-caps'>%s</span>", n)
+  }
   if (!is.null(styles[["color"]])) {
     n <- sprintf("<span style='color:%s'>%s</span>", styles[["color"]], n)
   }
@@ -42,6 +45,9 @@ style_string_latex <- function(n, styles) {
   }
   if (isTRUE(styles[["monospace"]])) {
     n <- sprintf("\\texttt{%s}", n)
+  }
+  if (isTRUE(styles[["smallcap"]])) {
+    n <- sprintf("\\textsc{%s}", n)
   }
   if (!is.null(styles[["color"]])) {
     n <- sprintf("\\textcolor{%s}{%s}", styles[["color"]], n)
@@ -83,6 +89,15 @@ style_string_typst <- function(n, styles) {
     col <- sprintf("fill: %s", col)
     sty <- c(sty, col)
   }
+  if (isTRUE(styles[["smallcap"]])) {
+    if (length(sty) > 0) {
+      template <- paste0("smallcaps(text(", paste(sty, collapse = ", "), ", [%s]))")
+    } else {
+      template <- "smallcaps([%s])"
+    }
+    out <- sprintf(template, n)
+    return(out)
+  }
   template <- paste0("text(", paste(sty, collapse = ", "), ", [%s])")
   out <- sprintf(template, n)
   out <- sub("text(, ", "text(", out, fixed = TRUE)
@@ -120,6 +135,9 @@ style_string_markdown <- function(n, styles) {
   if (isTRUE(styles[["strikeout"]])) {
     out <- sprintf("~~%s~~", out)
   }
+  if (isTRUE(styles[["smallcap"]])) {
+    out <- toupper(out)
+  }
   if (!is.null(styles[["indent"]]) && !is.na(styles[["indent"]])) {
     out <- sprintf("%s%s", strrep(" ", styles[["indent"]]), out)
   }
@@ -139,6 +157,9 @@ style_string_ansi <- function(n, styles) {
   }
   if (isTRUE(styles[["strikeout"]])) {
     out <- sprintf("\033[9m%s\033[29m", out)
+  }
+  if (isTRUE(styles[["smallcap"]])) {
+    out <- toupper(out)
   }
   if (!is.null(styles[["color"]]) && !is.na(styles[["color"]])) {
     ansi_color_code <- standardize_colors(styles[["color"]], format = "ansi")
@@ -174,7 +195,10 @@ style_notes <- function(x) {
   fun <- switch(x@output,
     "typst" = style_string_typst,
     "html" = style_string_html,
+    "bootstrap" = style_string_html,
+    "tabulator" = style_string_html,
     "latex" = style_string_latex,
+    "tabularray" = style_string_latex,
     "markdown" = style_string_markdown,
     "gfm" = style_string_markdown,
     function(k, ...) identity(k)
@@ -197,7 +221,10 @@ style_caption <- function(x) {
   fun <- switch(x@output,
     "typst" = style_string_typst,
     "html" = style_string_html,
+    "bootstrap" = style_string_html,
+    "tabulator" = style_string_html,
     "latex" = style_string_latex,
+    "tabularray" = style_string_latex,
     "markdown" = style_string_markdown,
     "gfm" = style_string_markdown,
     function(k, ...) identity(k)

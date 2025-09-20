@@ -12,6 +12,7 @@ style_tt(
   bold = FALSE,
   italic = FALSE,
   monospace = FALSE,
+  smallcap = FALSE,
   underline = FALSE,
   strikeout = FALSE,
   color = NULL,
@@ -36,6 +37,7 @@ tt_style(
   bold = FALSE,
   italic = FALSE,
   monospace = FALSE,
+  smallcap = FALSE,
   underline = FALSE,
   strikeout = FALSE,
   color = NULL,
@@ -77,6 +79,8 @@ tt_style(
 \item{italic}{Logical; if \code{TRUE}, text is styled in italic.}
 
 \item{monospace}{Logical; if \code{TRUE}, text is styled in monospace font.}
+
+\item{smallcap}{Logical; if \code{TRUE}, text is styled in small caps. In Markdown output format, text is converted to uppercase.}
 
 \item{underline}{Logical; if \code{TRUE}, text is underlined.}
 
