@@ -79,11 +79,11 @@ border_parse <- function(x) {
 #' @keywords internal
 #' @noRd
 pseudo_vars_init <- function() {
-  c("--border-left" = "0", "--border-right" = "0", "--border-top" = "0",
-    "--border-bottom" = "0", "--trim-left" = "0", "--trim-right" = "0",
-    "--trim-top" = "0", "--trim-bottom" = "0", "--line-width-left" = "0.1em",
-    "--line-width-right" = "0.1em", "--line-width-top" = "0.1em",
-    "--line-width-bottom" = "0.1em")
+  c("--border-left" = "0", "--border-right" = "0", "--border-top" = "0", "--border-bottom" = "0",
+    "--line-width-left" = "0.1em", "--line-width-right" = "0.1em", "--line-width-top" = "0.1em",
+    "--line-width-bottom" = "0.1em", "--trim-top-left" = "0%", "--trim-top-right" = "0%",
+    "--trim-bottom-left" = "0%", "--trim-bottom-right" = "0%", "--trim-left-top" = "0%",
+    "--trim-left-bottom" = "0%", "--trim-right-top" = "0%", "--trim-right-bottom" = "0%")
 }
 
 #' Generate pseudo-element CSS template
@@ -91,16 +91,16 @@ pseudo_vars_init <- function() {
 #' @noRd
 pseudo_css_templates <- function(id, base_rule) {
   paste0(
-    "      .table td.", id, ", .table th.", id, " { ", base_rule, " }\n",
-    "      .table td.", id, "::before, .table th.", id, "::before { content: ''; position: absolute; ",
-      "top: var(--trim-top, 0); left: var(--trim-left, 0); right: var(--trim-right, 0); bottom: var(--trim-bottom, 0); ",
+    "      .tinytable td.", id, ", .tinytable th.", id, " { ", base_rule, " }\n",
+    "      .tinytable td.", id, "::before, .tinytable th.", id, "::before { content: ''; position: absolute; ",
+      "top: var(--trim-top-left, var(--trim-top-right, 0)); left: var(--trim-left-top, 0); right: var(--trim-right-top, 0); bottom: 0; ",
       "pointer-events: none; z-index: 1; ",
       "border-left: calc(var(--border-left) * var(--line-width-left, var(--line-width, 0.1em))) solid var(--line-color-left, var(--line-color, black)); ",
       "border-right: calc(var(--border-right) * var(--line-width-right, var(--line-width, 0.1em))) solid var(--line-color-right, var(--line-color, black)); ",
       "border-top: calc(var(--border-top) * var(--line-width-top, var(--line-width, 0.1em))) solid var(--line-color-top, var(--line-color, black)); ",
     "}\n",
-    "      .table td.", id, "::after, .table th.", id, "::after { content: ''; position: absolute; ",
-      "left: var(--trim-left, 0); right: var(--trim-right, 0); bottom: var(--trim-bottom, 0); ",
+    "      .tinytable td.", id, "::after, .tinytable th.", id, "::after { content: ''; position: absolute; ",
+      "left: var(--trim-bottom-left, 0); right: var(--trim-bottom-right, 0); bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0)); ",
       "height: calc(var(--border-bottom) * var(--line-width-bottom, var(--line-width, 0.1em))); ",
       "background: var(--line-color-bottom, var(--line-color, black)); pointer-events: none; z-index: 2; }"
   )
@@ -169,9 +169,10 @@ bootstrap_convert_to_pseudo_elements <- function(css_rule) {
   # Remove all border-related keys from regular CSS
   border_keys <- c("border", "border-left", "border-right", "border-top", "border-bottom",
                   "--border-left", "--border-right", "--border-top", "--border-bottom",
-                  "--line-color", "--line-width", "--trim-left", "--trim-right",
-                  "--trim-top", "--trim-bottom", "--line-width-left", "--line-width-right",
-                  "--line-width-top", "--line-width-bottom")
+                  "--line-color", "--line-width", "--line-width-left", "--line-width-right",
+                  "--line-width-top", "--line-width-bottom", "--trim-top-left", "--trim-top-right",
+                  "--trim-bottom-left", "--trim-bottom-right", "--trim-left-top", "--trim-left-bottom",
+                  "--trim-right-top", "--trim-right-bottom")
   non_border <- parse[!names(parse) %in% border_keys]
 
   # Add position: relative if missing
@@ -257,7 +258,8 @@ bootstrap_consolidate_css_vars <- function(rec) {
       m <- character()
       border_flags <- c("--border-left", "--border-right", "--border-top", "--border-bottom")
       color_flags <- c("--line-color-left", "--line-color-right", "--line-color-top", "--line-color-bottom")
-      trim_flags <- c("--trim-left", "--trim-right", "--trim-top", "--trim-bottom")
+      trim_flags <- c("--trim-top-left", "--trim-top-right", "--trim-bottom-left", "--trim-bottom-right",
+                      "--trim-left-top", "--trim-left-bottom", "--trim-right-top", "--trim-right-bottom")
 
       for (map in maps) {
         for (key in names(map)) {
@@ -551,6 +553,41 @@ setMethod(
       top <- grepl("t", line)
       bottom <- grepl("b", line)
 
+      # Set side-dependent trimming variables based on border presence and trim specification
+      line_trim <- if ("line_trim" %in% names(sty)) sty$line_trim[row] else NA
+
+
+      # Apply border-directional trimming based on trim specification and active borders
+      # Only set trim values when line_trim is explicitly specified AND the border is active
+      if (!is.na(line_trim)) {
+        # Top border trimming
+        trim_top_left <- if (grepl("l", line_trim) && top) "3%" else "0%"
+        trim_top_right <- if (grepl("r", line_trim) && top) "3%" else "0%"
+
+        # Bottom border trimming
+        trim_bottom_left <- if (grepl("l", line_trim) && bottom) "3%" else "0%"
+        trim_bottom_right <- if (grepl("r", line_trim) && bottom) "3%" else "0%"
+
+        # Left border trimming
+        trim_left_top <- if (grepl("t", line_trim) && left) "3%" else "0%"
+        trim_left_bottom <- if (grepl("b", line_trim) && left) "3%" else "0%"
+
+        # Right border trimming
+        trim_right_top <- if (grepl("t", line_trim) && right) "3%" else "0%"
+        trim_right_bottom <- if (grepl("b", line_trim) && right) "3%" else "0%"
+      } else {
+        # When line_trim is NA, don't set trim values (let consolidation handle it)
+        trim_top_left <- NA
+        trim_top_right <- NA
+        trim_bottom_left <- NA
+        trim_bottom_right <- NA
+        trim_left_top <- NA
+        trim_left_bottom <- NA
+        trim_right_top <- NA
+        trim_right_bottom <- NA
+      }
+
+
       if (any(c(left, right, top, bottom))) {
         # Use pseudo-elements for all borders - store border info in CSS variables
         lin <- paste(lin, "position: relative;")
@@ -575,22 +612,15 @@ setMethod(
           lin <- paste(lin, sprintf("--line-width-bottom: %s;", line_width_em))
         }
 
-        # Set side-dependent trimming variables
-        line_trim <- if ("line_trim" %in% names(sty)) sty$line_trim[row] else NA
-        if (!is.na(line_trim)) {
-          # Apply trimming based on trim specification (regardless of which borders are active)
-          left_trim <- if (grepl("l", line_trim)) "3%" else "0%"
-          right_trim <- if (grepl("r", line_trim)) "3%" else "0%"
-          top_trim <- if (grepl("t", line_trim)) "3%" else "0%"
-          bottom_trim <- if (grepl("b", line_trim)) "3%" else "0%"
-
-          lin <- paste(lin, sprintf("--trim-left: %s;", left_trim))
-          lin <- paste(lin, sprintf("--trim-right: %s;", right_trim))
-          lin <- paste(lin, sprintf("--trim-top: %s;", top_trim))
-          lin <- paste(lin, sprintf("--trim-bottom: %s;", bottom_trim))
-        } else {
-          lin <- paste(lin, "--trim-left: 0%; --trim-right: 0%; --trim-top: 0%; --trim-bottom: 0%;")
-        }
+        # Apply the directional trimming variables (only when explicitly specified)
+        if (!is.na(trim_top_left)) lin <- paste(lin, sprintf("--trim-top-left: %s;", trim_top_left))
+        if (!is.na(trim_top_right)) lin <- paste(lin, sprintf("--trim-top-right: %s;", trim_top_right))
+        if (!is.na(trim_bottom_left)) lin <- paste(lin, sprintf("--trim-bottom-left: %s;", trim_bottom_left))
+        if (!is.na(trim_bottom_right)) lin <- paste(lin, sprintf("--trim-bottom-right: %s;", trim_bottom_right))
+        if (!is.na(trim_left_top)) lin <- paste(lin, sprintf("--trim-left-top: %s;", trim_left_top))
+        if (!is.na(trim_left_bottom)) lin <- paste(lin, sprintf("--trim-left-bottom: %s;", trim_left_bottom))
+        if (!is.na(trim_right_top)) lin <- paste(lin, sprintf("--trim-right-top: %s;", trim_right_top))
+        if (!is.na(trim_right_bottom)) lin <- paste(lin, sprintf("--trim-right-bottom: %s;", trim_right_bottom))
 
         # Store which borders are active
         lin <- paste(lin, sprintf("--border-left: %s;", if (left) "1" else "0"))
@@ -694,7 +724,7 @@ setMethod(
         } else {
           # Regular CSS rule without pseudo-elements
           entry <- sprintf(
-            "      .table td.%s, .table th.%s { %s }",
+            "      .tinytable td.%s, .tinytable th.%s { %s }",
             id_css, id_css, css_rule
           )
         }

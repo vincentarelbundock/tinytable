@@ -186,7 +186,7 @@ add_group_line_styling_simple <- function(x, j) {
           i = table_row_i,
           j = group_cols,
           line = "b",
-          line_width = 0.04,
+          line_width = 0.05,
           line_color = "black",
           line_trim = "lr"
         )
