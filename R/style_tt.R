@@ -449,7 +449,6 @@ style_tt <- function(
     settings[["line"]] <- if (is.null(line)) NA else line
     settings[["line_color"]] <- if (is.null(line)) NA else line_color
     settings[["line_width"]] <- if (is.null(line)) NA else line_width
-    settings[["line_trim"]] <- if (is.null(line)) NA else line_trim
     settings[["bold"]] <- bold
     settings[["italic"]] <- italic
     settings[["monospace"]] <- monospace
@@ -464,6 +463,34 @@ style_tt <- function(
     } else {
       NA
     }
+
+    if (!is.null(line_trim)) {
+      split_consecutive <- function(x) {
+        x <- sort(unique(x))  # optional: ensure sorted & unique
+        groups <- cumsum(c(1, diff(x) != 1))
+        split(x, groups)
+      }
+      idx <- split_consecutive(settings$j)
+      left <- grepl("l", line_trim)
+      right <- grepl("r", line_trim)
+      for (d in idx) {
+        if (length(d) == 1) {
+          settings[["line_trim"]][settings$j == d] <- line_trim
+        } else {
+          if (left) {
+            settings[["line_trim"]][settings$j == min(d)] <- "l"
+          }
+          if (right) {
+            settings[["line_trim"]][settings$j == max(d)] <- "r"
+          }
+        }
+      }
+      ends <- unlist(lapply(idx, range))
+      settings[["line_trim"]][!settings$j %in% ends] <- NA
+    } else {
+      settings[["line_trim"]] <- NA
+    }
+
   }
 
   if (!is.matrix(i) || !is.logical(i)) {

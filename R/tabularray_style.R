@@ -554,17 +554,17 @@ setMethod(
     )
     rec$lin <- ifelse(
       !is.na(rec$line_trim) & rec$line_trim == "l",
-      paste0(rec$lin, ", l=-0.8"),
+      paste0(rec$lin, ", l=-0.5"),
       rec$lin
     )
     rec$lin <- ifelse(
       !is.na(rec$line_trim) & rec$line_trim == "r",
-      paste0(rec$lin, ", r=-0.8"),
+      paste0(rec$lin, ", r=-0.5"),
       rec$lin
     )
     rec$lin <- ifelse(
       !is.na(rec$line_trim) & rec$line_trim == "lr",
-      paste0(rec$lin, ", lr=-0.8"),
+      paste0(rec$lin, ", lr=-0.5"),
       rec$lin
     )
     rec$lin[is.na(rec$line)] <- NA
