@@ -1,21 +1,19 @@
 setMethod(
   f = "finalize",
-  signature = "tinytable_bootstrap",
+  signature = "tinytable_html",
   definition = function(x, ...) {
     # class
-    cl <- x@bootstrap_class
-    if (is.null(cl) || length(cl) == 0) {
-      cl <- "table table-borderless"
-    }
+    cl <- x@html_class
+
     out <- sub(
-      "$tinytable_BOOTSTRAP_CLASS",
+      "$tinytable_HTML_CLASS",
       cl,
       x@table_string,
       fixed = TRUE
     )
 
     if (isTRUE(getOption("knitr.in.progress"))) {
-      # Rmarkdown and Quarto load their own bootstrap, which we probably don't want to override
+      # Rmarkdown and Quarto load their own html, which we probably don't want to override
       out <- lines_drop(
         out,
         "jsdelivr.*bootstrap",
@@ -44,7 +42,7 @@ setMethod(
     css_template <- "    .table td.%s, .table th.%s { %s }"
 
     css <- unique(stats::na.omit(x@css))
-    css <- css[which(css$bootstrap != ""), ]
+    css <- css[which(css$html != ""), ]
 
     if (nrow(css) > 0) {
       css_rules <- css
@@ -56,10 +54,10 @@ setMethod(
       css_rules <- lapply(
         css_rules,
         function(z) {
-          transform(z, bootstrap = paste(bootstrap, collapse = " "))[1, ]
+          transform(z, html = paste(html, collapse = " "))[1, ]
         })
       css_rules <- do.call(rbind, css_rules)
-      id <- unique(css_rules[, "bootstrap", drop = FALSE])
+      id <- unique(css_rules[, "html", drop = FALSE])
       id$id <- sapply(
         seq_len(nrow(id)),
         function(z) sprintf("tinytable_css_%s", get_id())
@@ -75,17 +73,17 @@ setMethod(
           css_rules$j[[ii]],
           css_rules$id[[ii]]
         )
-        out <- bootstrap_setting(out, listener, component = "cell")
+        out <- html_setting(out, listener, component = "cell")
       }
-      css_rules_unique <- unique(css_rules[, c("bootstrap", "id")])
+      css_rules_unique <- unique(css_rules[, c("html", "id")])
       for (ii in seq_len(nrow(css_rules_unique))) {
         css_rule <- sprintf(
           css_template,
           css_rules_unique$id[[ii]],
           css_rules_unique$id[[ii]],
-          css_rules_unique$bootstrap[[ii]]
+          css_rules_unique$html[[ii]]
         )
-        out <- bootstrap_setting(out, css_rule, component = "css")
+        out <- html_setting(out, css_rule, component = "css")
       }
     }
 

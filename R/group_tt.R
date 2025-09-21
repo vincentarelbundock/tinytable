@@ -155,8 +155,8 @@ add_group_line_styling_simple <- function(x, j) {
 
   # Clear existing styling for all header rows since the row positions will shift
   if (nrow(x@style) > 0) {
-    existing_header_mask <- x@style$i < 0
-    if (any(existing_header_mask)) {
+    existing_header_mask <- x@style$i < 0 & !is.na(x@style$i)
+    if (any(existing_header_mask, na.rm = TRUE)) {
       x@style <- x@style[!existing_header_mask, ]
     }
   }

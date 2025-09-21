@@ -184,9 +184,9 @@ theme_html_tabulator <- function(
     opts <- tabulator_options
   }
 
-  # Only apply to tabulator output
+  # Only apply to tabulator engine with html output
   tabulator_theme_fn <- function(table) {
-    if (!isTRUE(table@output == "tabulator")) {
+    if (!isTRUE(table@output == "html" && table@html_engine == "tabulator")) {
       return(table)
     }
 
@@ -212,7 +212,7 @@ theme_html_tabulator <- function(
 
     return(table)
   }
-  x <- build_prepare(x, tabulator_theme_fn, output = "tabulator")
+  x <- build_prepare(x, tabulator_theme_fn, output = "html")
 
   return(x)
 }

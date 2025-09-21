@@ -114,7 +114,7 @@ header_col_mapping_cache <- function(x) {
   if (nrow(x@group_data_j) > 0) {
     for (group_row_idx in seq_len(nrow(x@group_data_j))) {
       target_i <- -(nrow(x@group_data_j) - group_row_idx + 1)
-      cache[[as.character(target_i)]] <- bootstrap_get_datacol_mapping(x, target_i)
+      cache[[as.character(target_i)]] <- html_get_datacol_mapping(x, target_i)
     }
   }
   cache
@@ -124,7 +124,7 @@ header_col_mapping_cache <- function(x) {
 # Refactored Functions
 # =============================================================================
 
-bootstrap_convert_to_pseudo_elements <- function(css_rule) {
+html_convert_to_pseudo_elements <- function(css_rule) {
   parse <- css_parse(css_rule)
   vars <- pseudo_vars_init()
 
@@ -188,7 +188,7 @@ bootstrap_convert_to_pseudo_elements <- function(css_rule) {
   css_render(all_css)
 }
 
-bootstrap_clean_css_rule <- function(css_rule) {
+html_clean_css_rule <- function(css_rule) {
   # Parse the (potentially concatenated) CSS rule
   m <- css_parse(css_rule)
 
@@ -237,7 +237,7 @@ bootstrap_clean_css_rule <- function(css_rule) {
   css_render(m)
 }
 
-bootstrap_consolidate_css_vars <- function(rec) {
+html_consolidate_css_vars <- function(rec) {
   # Group by cell position (i, j)
   cell_groups <- split(rec, paste(rec$i, rec$j))
 
@@ -246,12 +246,12 @@ bootstrap_consolidate_css_vars <- function(rec) {
   for (group in cell_groups) {
     if (nrow(group) == 1) {
       # Single rule - clean it in case it has concatenated CSS
-      group$css_arguments <- bootstrap_clean_css_rule(group$css_arguments)
+      group$css_arguments <- html_clean_css_rule(group$css_arguments)
       consolidated_rec <- rbind(consolidated_rec, group)
     } else {
       # Multiple rules for the same cell - consolidate
       # First clean each CSS string to handle concatenated CSS properly
-      cleaned_css <- lapply(group$css_arguments, bootstrap_clean_css_rule)
+      cleaned_css <- lapply(group$css_arguments, html_clean_css_rule)
       maps <- lapply(cleaned_css, css_parse)
 
       # Smart consolidation that handles column mapping issues
@@ -316,7 +316,7 @@ bootstrap_consolidate_css_vars <- function(rec) {
 }
 
 # Helper function to adjust column indices using cached mappings
-bootstrap_adjust_column_indices_cached <- function(user_j, user_i, mapping_cache) {
+html_adjust_column_indices_cached <- function(user_j, user_i, mapping_cache) {
   if (length(mapping_cache) == 0) {
     return(user_j)
   }
@@ -347,13 +347,13 @@ bootstrap_adjust_column_indices_cached <- function(user_j, user_i, mapping_cache
 }
 
 # Legacy function for backward compatibility
-bootstrap_adjust_column_indices <- function(x, user_j, user_i) {
+html_adjust_column_indices <- function(x, user_j, user_i) {
   cache <- header_col_mapping_cache(x)
-  bootstrap_adjust_column_indices_cached(user_j, user_i, cache)
+  html_adjust_column_indices_cached(user_j, user_i, cache)
 }
 
 # Get mapping from user column index to HTML data-col value for header rows with column groups
-bootstrap_get_datacol_mapping <- function(x, target_i) {
+html_get_datacol_mapping <- function(x, target_i) {
   # Initialize with 1:1 mapping (1-based, will be converted to 0-based later)
   col_mapping <- seq_len(x@ncol)
 
@@ -364,10 +364,10 @@ bootstrap_get_datacol_mapping <- function(x, target_i) {
     group_row_idx <- nrow(x@group_data_j) - (abs(target_i) - 1)
     if (group_row_idx >= 1 && group_row_idx <= nrow(x@group_data_j)) {
       groupj <- as.character(x@group_data_j[group_row_idx, ])
-      j_list <- bootstrap_groupj_span(groupj)
+      j_list <- html_groupj_span(groupj)
 
       if (length(j_list) > 0) {
-        # Recreate the j_combined logic from bootstrap_groupj_html
+        # Recreate the j_combined logic from html_groupj_html
         miss <- as.list(setdiff(seq_len(x@ncol), unlist(j_list)))
         miss <- stats::setNames(miss, rep(" ", length(miss)))
         j_combined <- c(j_list, miss)
@@ -401,7 +401,7 @@ bootstrap_get_datacol_mapping <- function(x, target_i) {
 #' @noRd
 setMethod(
   f = "style_eval",
-  signature = "tinytable_bootstrap",
+  signature = "tinytable_html",
   definition = function(
     x,
     i = NULL,
@@ -424,10 +424,10 @@ setMethod(
     indent = 0,
     ...
   ) {
-    if (length(x@bootstrap_css_rule) == 1) {
-      x@table_string <- bootstrap_setting(
+    if (length(x@html_css_rule) == 1) {
+      x@table_string <- html_setting(
         x@table_string,
-        x@bootstrap_css_rule,
+        x@html_css_rule,
         component = "css"
       )
     }
@@ -455,13 +455,13 @@ setMethod(
     # Adjust column indices when any kind of colspan is present
     # Both column groups and user-defined colspans change data-col values in HTML
     # This must happen BEFORE the CSS generation loop so that rec$j matches adjusted sty$j
-    rec$j <- bootstrap_adjust_column_indices_cached(rec$j, rec$i, mapping_cache)
+    rec$j <- html_adjust_column_indices_cached(rec$j, rec$i, mapping_cache)
     rec$j <- rec$j - 1
 
     # Also adjust column indices in style entries to match the adjusted rec$j values
     for (row in seq_len(nrow(sty))) {
       if (!is.na(sty$j[row])) {
-        adjusted_j <- bootstrap_adjust_column_indices_cached(sty$j[row], sty$i[row], mapping_cache)
+        adjusted_j <- html_adjust_column_indices_cached(sty$j[row], sty$i[row], mapping_cache)
         sty$j[row] <- adjusted_j - 1
       }
     }
@@ -534,8 +534,8 @@ setMethod(
           paste0("padding-left: ", sty[row, "indent"], "em;")
         )
       }
-      if (!is.na(sty[row, "bootstrap_css"])) {
-        css[idx] <- paste(css[idx], sty[row, "bootstrap_css"])
+      if (!is.na(sty[row, "html_css"])) {
+        css[idx] <- paste(css[idx], sty[row, "html_css"])
       }
 
       lin <- ""
@@ -659,7 +659,7 @@ setMethod(
           "tinytable span after",
           "after"
         )
-        # x@table_string <- bootstrap_setting(x@table_string, listener, component = "cell")
+        # x@table_string <- html_setting(x@table_string, listener, component = "cell")
       }
     }
 
@@ -670,7 +670,7 @@ setMethod(
     }
 
     # Consolidate CSS variables for cells with multiple border declarations
-    rec <- bootstrap_consolidate_css_vars(rec)
+    rec <- html_consolidate_css_vars(rec)
 
     # Unique CSS arguments assigned by arrays
     css_table <- unique(rec[, c("css_arguments"), drop = FALSE])
@@ -717,7 +717,7 @@ setMethod(
 
         if (has_border) {
           # Convert any regular border declarations to CSS variables and pseudo-elements
-          css_rule <- bootstrap_convert_to_pseudo_elements(css_rule)
+          css_rule <- html_convert_to_pseudo_elements(css_rule)
 
           # Generate CSS using template
           entry <- pseudo_css_templates(id_css, css_rule)

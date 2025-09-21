@@ -1,9 +1,9 @@
 setMethod(
   f = "build_eval",
-  signature = "tinytable_bootstrap",
+  signature = "tinytable_html",
   definition = function(x, ...) {
     template <- readLines(
-      system.file("templates/bootstrap.html", package = "tinytable")
+      system.file("templates/html.html", package = "tinytable")
     )
 
     mathjax <- get_option("tinytable_html_mathjax", default = FALSE)
@@ -30,17 +30,27 @@ setMethod(
       )
     }
 
+    if (identical(x@html_engine, "bootstrap")) {
+      template <- sub(
+        "$tinytable_BOOTSTRAP_CDN",
+        '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">',
+        template,
+        fixed = TRUE)
+    } else {
+      template <- sub("$tinytable_BOOTSTRAP_CDN", "", template, fixed = TRUE)
+    }
+
     # caption
     if (length(x@caption) != 1) {
       template <- sub(
-        "$tinytable_BOOTSTRAP_CAPTION",
+        "$tinytable_HTML_CAPTION",
         "",
         template,
         fixed = TRUE
       )
     } else {
       template <- sub(
-        "$tinytable_BOOTSTRAP_CAPTION",
+        "$tinytable_HTML_CAPTION",
         sprintf("<caption>%s</caption>", x@caption),
         template,
         fixed = TRUE
@@ -50,7 +60,7 @@ setMethod(
     # note
     if (length(x@notes) == 0) {
       template <- sub(
-        "$tinytable_BOOTSTRAP_NOTE",
+        "$tinytable_HTML_NOTE",
         "",
         template,
         fixed = TRUE
@@ -87,7 +97,7 @@ setMethod(
       notes <- paste(notes_tmp, collapse = "\n")
       notes <- paste0("<tfoot>", notes, "</tfoot>")
       template <- sub(
-        "$tinytable_BOOTSTRAP_NOTE",
+        "$tinytable_HTML_NOTE",
         notes,
         template,
         fixed = TRUE
@@ -145,7 +155,7 @@ setMethod(
     )
 
     # header
-    idx <- grep("$tinytable_BOOTSTRAP_HEADER", template, fixed = TRUE)
+    idx <- grep("$tinytable_HTML_HEADER", template, fixed = TRUE)
 
     if (length(colnames(x)) > 0) {
       # Generate all header cells at once
@@ -198,7 +208,7 @@ setMethod(
 
     body <- unlist(rows)
 
-    idx <- grep("$tinytable_BOOTSTRAP_BODY", template, fixed = TRUE)
+    idx <- grep("$tinytable_HTML_BODY", template, fixed = TRUE)
     template <- c(
       template[1:(idx - 1)],
       paste(strrep(" ", 13), body),
@@ -213,11 +223,11 @@ setMethod(
     if (length(x@width) > 1) {
       for (j in seq_len(ncol(x))) {
         css <- sprintf("width: %s%%;", x@width[j] / sum(x@width) * 100)
-        x <- theme_html(x, engine = "bootstrap", j = j, css = css)
+        x <- theme_html(x, engine = "tinytable", j = j, css = css)
       }
     }
 
-    if (length(x@bootstrap_class) == 0) {
+    if (length(x@html_class) == 0) {
       if (
         length(x@theme) == 0 ||
           is.null(x@theme[[1]]) ||
@@ -229,10 +239,9 @@ setMethod(
     }
 
     return(x)
-  }
-)
+  })
 
-bootstrap_setting <- function(x, new, component = "row") {
+html_setting <- function(x, new, component = "row") {
   att <- attributes(x)
   out <- strsplit(x, "\n")[[1]]
   if (component == "row") {

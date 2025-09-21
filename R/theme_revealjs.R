@@ -95,6 +95,6 @@ theme_revealjs <- function(
   } else if (css == "dark") {
     css <- sprintf(css_dark, fontsize, fontsize_caption)
   }
-  x <- theme_html(x, engine = "bootstrap", css_rule = css)
+  x <- theme_html(x, engine = "tinytable", css_rule = css)
   return(x)
 }

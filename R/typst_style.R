@@ -370,8 +370,6 @@ setMethod(
     rec$i <- rec$i + x@nhead - 1
     rec$j <- rec$j - 1
 
-    # TODO: spans before styles, as in bootstrap
-
     # Generate style-dict and style-array for optimized lookup
     x <- typst_apply_styles(x, rec)
 

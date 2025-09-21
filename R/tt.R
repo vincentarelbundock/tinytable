@@ -208,7 +208,7 @@ tt.default <- function(
       inner = sprintf("rowsep={%sem}", height / 2)
     )
 
-    # Bootstrap/HTML: use CSS padding for row height
+    # HTML: use CSS padding for row height
     out <- theme_html(
       out,
       css = sprintf(

@@ -27,9 +27,10 @@ strip_tt(
   rowspan = FALSE,
   indent = FALSE,
   line = FALSE,
-  bootstrap_class = FALSE,
-  bootstrap_css = FALSE,
-  bootstrap_css_rule = FALSE,
+  html_class = FALSE,
+  html_css = FALSE,
+  html_css_rule = FALSE,
+  html_engine = FALSE,
   tabularray_inner = FALSE,
   tabularray_outer = FALSE,
   width = FALSE
@@ -57,9 +58,10 @@ tt_strip(
   rowspan = FALSE,
   indent = FALSE,
   line = FALSE,
-  bootstrap_class = FALSE,
-  bootstrap_css = FALSE,
-  bootstrap_css_rule = FALSE,
+  html_class = FALSE,
+  html_css = FALSE,
+  html_css_rule = FALSE,
+  html_engine = FALSE,
   tabularray_inner = FALSE,
   tabularray_outer = FALSE,
   width = FALSE
@@ -108,11 +110,11 @@ tt_strip(
 
 \item{line}{\code{TRUE} reverts the effect of the \code{line} argument from \code{style_tt()}.}
 
-\item{bootstrap_class}{\code{TRUE} reverts the effect of the \code{bootstrap_class} argument from \code{style_tt()}.}
+\item{html_class}{\code{TRUE} reverts the effect of the \code{html_class} argument from \code{style_tt()}.}
 
-\item{bootstrap_css}{\code{TRUE} reverts the effect of the \code{bootstrap_css} argument from \code{style_tt()}.}
+\item{html_css}{\code{TRUE} reverts the effect of the \code{html_css} argument from \code{style_tt()}.}
 
-\item{bootstrap_css_rule}{\code{TRUE} reverts the effect of the \code{bootstrap_css_rule} argument from \code{style_tt()}.}
+\item{html_css_rule}{\code{TRUE} reverts the effect of the \code{html_css_rule} argument from \code{style_tt()}.}
 
 \item{tabularray_inner}{\code{TRUE} reverts the effect of the \code{inner} argument from \code{theme_latex()}.}
 

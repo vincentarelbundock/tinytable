@@ -16,8 +16,8 @@ setClass(
   slots = representation(
     ansi = "logical",
     body = "character",
-    bootstrap_class = "character",
-    bootstrap_css_rule = "character",
+    html_class = "character",
+    html_css_rule = "character",
     caption = "NULLorCharacter",
     css = "data.frame",
     data = "data.frame",
@@ -78,7 +78,6 @@ setMethod(
   function(.Object,
            data = data.frame(),
            caption = NULL,
-           bootstrap_class = "tinytable",
            notes = NULL,
            theme = list("default"),
            data_body = data.frame(),
@@ -121,37 +120,38 @@ setMethod(
 
     # empty
     .Object@ansi <- FALSE
+    .Object@css <- data.frame(i = NA, j = NA, html = NA, id = NA)
     .Object@grid_hline <- TRUE
     .Object@grid_hline_header <- TRUE
     .Object@grid_vline <- TRUE
     .Object@group_data_i <- data.frame()
     .Object@group_data_j <- data.frame()
-    .Object@index_body <- numeric(0)
     .Object@group_index_i <- numeric(0)
-    .Object@id <- get_id("tinytable_")
-    .Object@output <- "tinytable"
-    .Object@output_dir <- getwd()
-    .Object@css <- data.frame(i = NA, j = NA, bootstrap = NA, id = NA)
+    .Object@html_class <- "tinytable"
+    .Object@html_engine <- "tinytable"
     .Object@html_portable <- FALSE
-    .Object@html_engine <- "bootstrap"
-    .Object@latex_preamble <- TRUE
+    .Object@id <- get_id("tinytable_")
+    .Object@index_body <- numeric(0)
     .Object@latex_engine <- "xelatex"
-    .Object@style <- data.frame()
-    .Object@tabulator_stylesheet <- ""
-    .Object@tabulator_options <- ""
-    .Object@tabulator_column_formatters <- list()
-    .Object@tabulator_column_styles <- list()
-    .Object@tabulator_search <- NULL
-    .Object@tabulator_format_bool <- FALSE
-    .Object@tabulator_css_rule <- ""
-    .Object@tabulator_columns <- list()
-    .Object@tabularray_inner <- character()
-    .Object@tabularray_outer <- character()
+    .Object@latex_preamble <- TRUE
     .Object@lazy_finalize <- list()
     .Object@lazy_format <- list()
     .Object@lazy_plot <- list()
     .Object@lazy_prepare <- list()
     .Object@lazy_subset <- NULL
+    .Object@output <- "tinytable"
+    .Object@output_dir <- getwd()
+    .Object@style <- data.frame()
+    .Object@tabularray_inner <- character()
+    .Object@tabularray_outer <- character()
+    .Object@tabulator_column_formatters <- list()
+    .Object@tabulator_column_styles <- list()
+    .Object@tabulator_columns <- list()
+    .Object@tabulator_css_rule <- ""
+    .Object@tabulator_format_bool <- FALSE
+    .Object@tabulator_options <- ""
+    .Object@tabulator_search <- NULL
+    .Object@tabulator_stylesheet <- ""
 
     return(.Object)
   })
@@ -251,7 +251,7 @@ setMethod("as.character", "tinytable", function(x) {
 })
 
 setClass("tinytable_tabularray", contains = "tinytable")
-setClass("tinytable_bootstrap", contains = "tinytable")
+setClass("tinytable_html", contains = "tinytable")
 setClass("tinytable_typst", contains = "tinytable")
 setClass("tinytable_grid", contains = "tinytable")
 setClass("tinytable_dataframe", contains = "tinytable")

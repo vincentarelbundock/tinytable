@@ -101,7 +101,6 @@ Note: Your document will fail to compile to PDF in Quarto if you enable caching 
 \\usepackage\{graphicx\}
 \\usepackage\{rotating\}
 \\usepackage[normalem]\{ulem\}
-\\UseTblrLibrary\{booktabs\}
 \\UseTblrLibrary\{siunitx\}
 \newcommand{\tinytableTabularrayUnderline}[1]\{\\underline\{#1\}\}
 \newcommand{\tinytableTabularrayStrikeout}[1]\{\\sout\{#1\}\}

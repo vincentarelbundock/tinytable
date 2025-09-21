@@ -128,6 +128,9 @@ sanitize_j <- function(j, x, skip_tabulator_types = FALSE) {
 }
 
 sanitize_output <- function(x, output) {
+  if (is.null(x)) {
+    stop("'x' cannot be NULL", call. = FALSE)
+  }
   if (is.null(output)) {
     return(x)
   }
@@ -141,9 +144,7 @@ sanitize_output <- function(x, output) {
       "html",
       "typst",
       "dataframe",
-      "gfm",
-      "tabulator",
-      "bootstrap"
+      "gfm"
     )
   )
   
@@ -157,10 +158,8 @@ infer_output <- function(x) {
   # If output is already set to a specific format, respect it
   if (!is.null(output) && !isTRUE(output == "tinytable")) {
     if (output == "html") {
-      # When user explicitly asks for "html", use the object's engine setting
-      html_framework <- x@html_engine
-      assert_choice(html_framework, choice = c("tabulator", "bootstrap"))
-      return(if (html_framework == "tabulator") "tabulator" else "bootstrap")
+      # When user explicitly asks for "html", return "html" (engine is stored in @html_engine)
+      return("html")
     } else {
       # For all other specific formats, use them as-is
       return(output)
@@ -205,8 +204,7 @@ infer_output <- function(x) {
       out <- "latex"
     } else if (isTRUE(knitr::pandoc_to() %in% c("html", "revealjs"))) {
       # Check HTML engine preference from object slot
-      html_framework <- x@html_engine
-      out <- if (html_framework == "tabulator") "tabulator" else "bootstrap"
+      out <- x@html_engine
     } else if (isTRUE(knitr::pandoc_to() == "typst")) {
       out <- "typst"
       if (isTRUE(check_dependency("quarto"))) {

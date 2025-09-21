@@ -409,16 +409,16 @@ style_tt <- function(
       call. = FALSE
     )
   }
-  if ("bootstrap_class" %in% ...names()) {
-    x <- theme_html(x, class = ...get("bootstrap_class"))
+  if ("html_class" %in% ...names()) {
+    x <- theme_html(x, class = ...get("html_class"))
     warning(
-      "The `bootstrap_class` argument is deprecated. Use `theme_html(x, class = ...)` instead.",
+      "The `html_class` argument is deprecated. Use `theme_html(x, class = ...)` instead.",
       call. = FALSE
     )
   }
-  if ("bootstrap_css_rule" %in% ...names()) {
-    x <- theme_html(x, css_rule = ...get("bootstrap_css_rule"))
-    warning("The `bootstrap_css_rule` argument is deprecated. Use `theme_html(x, css_rule = ...)` instead.",
+  if ("html_css_rule" %in% ...names()) {
+    x <- theme_html(x, css_rule = ...get("html_css_rule"))
+    warning("The `html_css_rule` argument is deprecated. Use `theme_html(x, css_rule = ...)` instead.",
       call. = FALSE
     )
   }
@@ -428,7 +428,7 @@ style_tt <- function(
   list2env(tmp, environment())
 
   # this must be handled here rather than theme_html() because it is a cell-level issue
-  bootstrap_css <- ...get("bootstrap_css")
+  html_css <- ...get("html_css")
 
   # Handle special cases first (before validation)
   if (isTRUE(i %in% c("notes", "caption"))) {
@@ -469,7 +469,7 @@ style_tt <- function(
     line_color = line_color,
     line_width = line_width,
     line_trim = line_trim,
-    bootstrap_css = bootstrap_css,
+    html_css = html_css,
     finalize = finalize,
     ...
   )
@@ -507,8 +507,8 @@ style_tt <- function(
     settings[["indent"]] <- if (is.null(indent)) NA else as.vector(indent)
     settings[["colspan"]] <- if (is.null(colspan)) NA else colspan
     settings[["rowspan"]] <- if (is.null(rowspan)) NA else rowspan
-    settings[["bootstrap_css"]] <- if (!is.null(bootstrap_css)) {
-      bootstrap_css
+    settings[["html_css"]] <- if (!is.null(html_css)) {
+      html_css
     } else {
       NA
     }
@@ -622,8 +622,8 @@ assert_style_tt <- function(
   }
 
   # must be handled here rather than theme_html() because it is a cell-level issue
-  bootstrap_css <- ...get("bootstrap_css")
-  assert_character(bootstrap_css, null.ok = TRUE)
+  html_css <- ...get("html_css")
+  assert_character(html_css, null.ok = TRUE)
 
   if (is.character(line)) {
     line <- strsplit(line, split = "")[[1]]

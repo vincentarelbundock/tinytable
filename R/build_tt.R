@@ -60,14 +60,19 @@ build_tt <- function(x, output = NULL) {
   output <- infer_output(x)
 
   x <- switch(output,
-    html = swap_class(x, "tinytable_bootstrap"),
-    bootstrap = swap_class(x, "tinytable_bootstrap"),
+    html = {
+      if (identical(x@html_engine, "tabulator")) {
+        swap_class(x, "tinytable_tabulator")
+      } else {
+        swap_class(x, "tinytable_html")
+      }
+    },
     latex = swap_class(x, "tinytable_tabularray"),
     markdown = swap_class(x, "tinytable_grid"),
     gfm = swap_class(x, "tinytable_grid"),
     typst = swap_class(x, "tinytable_typst"),
     dataframe = swap_class(x, "tinytable_dataframe"),
-    tabulator = swap_class(x, "tinytable_tabulator"),
+    stop("Unsupported output format: '", output, "'. Supported formats are: html, latex, markdown, gfm, typst, dataframe", call. = FALSE)
   )
 
   x@output <- output

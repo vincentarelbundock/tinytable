@@ -8,10 +8,12 @@ block[ // start block
 
   #let style-dict = (
     // tinytable style-dict after
+    "2_0": 0, "1_0": 0, "0_0": 0, "2_1": 0, "1_1": 0, "0_1": 0, "2_2": 0, "1_2": 0, "0_2": 0, "2_3": 0, "1_3": 0, "0_3": 0, "2_4": 0, "1_4": 0, "0_4": 0
   )
 
   #let style-array = ( 
     // tinytable cell style after
+    (align: center,),
   )
 
   // Helper function to get cell style
@@ -56,6 +58,9 @@ block[ // start block
       let style = get-style(x, y)
       if style != none and "background" in style { style.background }
     },
+ table.hline(y: 1, start: 0, end: 4, stroke: 0.05em + black),
+ table.hline(y: 2, start: 0, end: 5, stroke: 0.05em + black),
+ table.hline(y: 3, start: 1, end: 5, stroke: 0.05em + black),
  table.hline(y: 4, start: 0, end: 5, stroke: 0.05em + black),
  table.hline(y: 7, start: 0, end: 5, stroke: 0.1em + black),
  table.hline(y: 0, start: 0, end: 5, stroke: 0.1em + black),

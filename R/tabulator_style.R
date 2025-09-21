@@ -107,8 +107,8 @@ setMethod(
         if ("colspan" %in% names(style_row) && !is.na(style_row$colspan)) unsupported_styles <- c(unsupported_styles, "colspan")
         if ("rowspan" %in% names(style_row) && !is.na(style_row$rowspan)) unsupported_styles <- c(unsupported_styles, "rowspan")
         if ("indent" %in% names(style_row) && !is.na(style_row$indent)) unsupported_styles <- c(unsupported_styles, "indent")
-        if ("bootstrap_class" %in% names(style_row) && !is.na(style_row$bootstrap_class)) unsupported_styles <- c(unsupported_styles, "bootstrap_class")
-        if ("bootstrap_css" %in% names(style_row) && !is.na(style_row$bootstrap_css)) unsupported_styles <- c(unsupported_styles, "bootstrap_css")
+        if ("html_class" %in% names(style_row) && !is.na(style_row$html_class)) unsupported_styles <- c(unsupported_styles, "html_class")
+        if ("html_css" %in% names(style_row) && !is.na(style_row$html_css)) unsupported_styles <- c(unsupported_styles, "html_css")
       }
 
       unsupported_styles <- unique(unsupported_styles)

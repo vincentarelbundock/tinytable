@@ -6,7 +6,7 @@
 \usage{
 theme_html(
   x,
-  engine = get_option("tinytable_html_engine", default = "bootstrap"),
+  engine = get_option("tinytable_html_engine", default = NULL),
   i = NULL,
   j = NULL,
   class = get_option("tinytable_html_class"),
@@ -27,13 +27,13 @@ theme_html(
 \arguments{
 \item{x}{A \code{tinytable} object.}
 
-\item{engine}{Character string specifying the HTML engine: "bootstrap", "raw", or "tabulator".}
+\item{engine}{Character string specifying the HTML engine: "tinytable", "bootstrap", or "tabulator".}
 
 \item{i}{Row indices.}
 
 \item{j}{Column indices.}
 
-\item{class}{String. Bootstrap table class.}
+\item{class}{String. HTML table class.}
 
 \item{css}{Character vector. CSS style declarations.}
 

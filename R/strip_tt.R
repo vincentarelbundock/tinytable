@@ -22,9 +22,9 @@
 #' @param rowspan `TRUE` reverts the effect of the `rowspan` argument from `style_tt()`.
 #' @param indent `TRUE` reverts the effect of the `indent` argument from `style_tt()`.
 #' @param line `TRUE` reverts the effect of the `line` argument from `style_tt()`.
-#' @param bootstrap_class `TRUE` reverts the effect of the `bootstrap_class` argument from `style_tt()`.
-#' @param bootstrap_css `TRUE` reverts the effect of the `bootstrap_css` argument from `style_tt()`.
-#' @param bootstrap_css_rule `TRUE` reverts the effect of the `bootstrap_css_rule` argument from `style_tt()`.
+#' @param html_class `TRUE` reverts the effect of the `html_class` argument from `style_tt()`.
+#' @param html_css `TRUE` reverts the effect of the `html_css` argument from `style_tt()`.
+#' @param html_css_rule `TRUE` reverts the effect of the `html_css_rule` argument from `style_tt()`.
 #' @param tabularray_inner `TRUE` reverts the effect of the `inner` argument from `theme_latex()`.
 #' @param tabularray_outer `TRUE` reverts the effect of the `outer` argument from `theme_latex()`.
 #' @return An object of class `tt` representing the table with stripped styling.
@@ -51,9 +51,10 @@ strip_tt <- function(
     rowspan = FALSE,
     indent = FALSE,
     line = FALSE,
-    bootstrap_class = FALSE,
-    bootstrap_css = FALSE,
-    bootstrap_css_rule = FALSE,
+    html_class = FALSE,
+    html_css = FALSE,
+    html_css_rule = FALSE,
+    html_engine = FALSE,
     tabularray_inner = FALSE,
     tabularray_outer = FALSE,
     width = FALSE) {
@@ -93,11 +94,14 @@ strip_tt <- function(
   }
 
   # Reset class-level styling
-  if (bootstrap_class) {
-    out@bootstrap_class <- character()
+  if (html_class) {
+    out@html_class <- "tinytable"
   }
-  if (bootstrap_css_rule) {
-    out@bootstrap_css_rule <- character()
+  if (html_engine) {
+    out@html_engine <- "tinytable"
+  }
+  if (html_css_rule) {
+    out@html_css_rule <- character()
   }
 
   # Reset individual style elements
@@ -146,8 +150,8 @@ strip_tt <- function(
       out@style$line_color <- NA
       out@style$line_width <- NA
     }
-    if (bootstrap_css) {
-      out@style$bootstrap_css <- NA
+    if (html_css) {
+      out@style$html_css <- NA
     }
     if (tabularray_inner) {
       out@tabularray_inner <- NA

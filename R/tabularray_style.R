@@ -122,9 +122,6 @@ style_spans <- function(span, sty_row) {
   return(span)
 }
 
-#' Style lines for tabularray
-#' @keywords internal
-#' @noRd
 # style_lines function removed - line processing now handled directly in tabularray_hlines
 
 #' Clean style strings
@@ -302,12 +299,15 @@ tabularray_cells <- function(x, rec) {
 tabularray_hlines <- function(x, rec) {
   # Process horizontal lines directly from styling data to allow duplicates
   sty <- x@style
+  if (nrow(sty) == 0 || !("line" %in% colnames(sty))) {
+    return(x)
+  }
   sty$i <- sty$i + x@nhead
 
   # Get all line entries
   line_entries <- sty[!is.na(sty$line) & grepl("b|t", sty$line), ]
 
-  if (nrow(line_entries) == 0) {
+  if (!is.data.frame(line_entries) || nrow(line_entries) == 0) {
     return(x)
   }
 
@@ -390,12 +390,15 @@ tabularray_hlines <- function(x, rec) {
 tabularray_vlines <- function(x, rec) {
   # Process vertical lines directly from styling data to allow duplicates
   sty <- x@style
+  if (nrow(sty) == 0 || !("line" %in% colnames(sty))) {
+    return(x)
+  }
   sty$i <- sty$i + x@nhead
 
   # Get all vertical line entries
   line_entries <- sty[!is.na(sty$line) & grepl("l|r", sty$line), ]
 
-  if (nrow(line_entries) == 0) {
+  if (!is.data.frame(line_entries) || nrow(line_entries) == 0) {
     return(x)
   }
 

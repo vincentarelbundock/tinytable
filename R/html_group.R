@@ -3,16 +3,16 @@
 #' @keywords internal
 setMethod(
   f = "group_eval_j",
-  signature = "tinytable_bootstrap",
-  definition = function(x, i = NULL, j = NULL, ...) {
+  signature = "tinytable_html",
+  definition = function(x, i = NULL, j = NULL, ihead = NULL, ...) {
     # Only handle column grouping - row insertions now use matrix insertion
     if (!is.null(j)) {
-      x <- bootstrap_groupj(x, j = j, ...)
+      x <- html_groupj(x, j = j, ihead = ihead, ...)
     }
     return(x)
   })
 
-bootstrap_groupj <- function(x, j, ihead, ...) {
+html_groupj <- function(x, j, ihead, ...) {
   # Check if there are any column groups to process
   if (nrow(x@group_data_j) == 0) {
     return(x)
@@ -29,11 +29,11 @@ bootstrap_groupj <- function(x, j, ihead, ...) {
     current_ihead <- ihead - (nrow(x@group_data_j) - groupj_idx)
 
     # Convert group row to column spans
-    j_list <- bootstrap_groupj_span(groupj)
+    j_list <- html_groupj_span(groupj)
 
     if (length(j_list) > 0) {
       # Create HTML for this group row
-      group_html <- bootstrap_groupj_html(x, j_list, current_ihead)
+      group_html <- html_groupj_html(x, j_list, current_ihead)
       all_groupj_rows[[groupj_idx]] <- group_html
 
       # Store styling tasks for later application (maintain original order)
@@ -55,7 +55,7 @@ bootstrap_groupj <- function(x, j, ihead, ...) {
   }
 
   if (length(all_groupj_rows) > 0) {
-    x <- bootstrap_groupj_insert(x, all_groupj_rows)
+    x <- html_groupj_insert(x, all_groupj_rows)
   }
 
   return(x)
@@ -63,7 +63,7 @@ bootstrap_groupj <- function(x, j, ihead, ...) {
 
 
 # Helper function to parse a group row into column spans
-bootstrap_groupj_span <- function(groupj) {
+html_groupj_span <- function(groupj) {
   j_list <- list()
   i <- 1
 
@@ -102,7 +102,7 @@ bootstrap_groupj_span <- function(groupj) {
 }
 
 # Helper function to create HTML for a group row
-bootstrap_groupj_html <- function(x, j_list, ihead) {
+html_groupj_html <- function(x, j_list, ihead) {
   # Add missing columns as empty groups
   miss <- as.list(setdiff(seq_len(ncol(x)), unlist(j_list)))
   miss <- stats::setNames(miss, rep(" ", length(miss)))
@@ -141,7 +141,7 @@ bootstrap_groupj_html <- function(x, j_list, ihead) {
 }
 
 # Helper function to insert group rows into the table
-bootstrap_groupj_insert <- function(x, groupj_rows) {
+html_groupj_insert <- function(x, groupj_rows) {
   out <- strsplit(x@table_string, "\\n")[[1]]
 
   all_jstrings <- paste(groupj_rows, collapse = "\n")

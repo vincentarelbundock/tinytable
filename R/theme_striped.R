@@ -6,7 +6,7 @@
 #' @export
 theme_striped <- function(x, ...) {
   # now: all formats
-  x <- theme_html(x, engine = "bootstrap", class = "table table-striped")
+  x <- theme_html(x, engine = "tinytable", class = "table table-striped")
   x <- theme_latex(x, inner = "row{even}={bg=black!5!white}")
   x <- style_tt(
     x,
