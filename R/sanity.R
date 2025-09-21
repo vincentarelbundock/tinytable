@@ -195,7 +195,6 @@ infer_output <- function(x) {
             "\\usepackage[normalem]{ulem}",
             "\\usepackage{graphicx}",
             "\\usepackage{rotating}",
-            "\\UseTblrLibrary{booktabs}",
             "\\UseTblrLibrary{siunitx}",
             "\\NewTableCommand{\\tinytableDefineColor}[3]{\\definecolor{#1}{#2}{#3}}",
             "\\newcommand{\\tinytableTabularrayUnderline}[1]{\\underline{#1}}",

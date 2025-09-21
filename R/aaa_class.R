@@ -78,6 +78,7 @@ setMethod(
   function(.Object,
            data = data.frame(),
            caption = NULL,
+           bootstrap_class = "tinytable",
            notes = NULL,
            theme = list("default"),
            data_body = data.frame(),

@@ -125,48 +125,7 @@ style_spans <- function(span, sty_row) {
 #' Style lines for tabularray
 #' @keywords internal
 #' @noRd
-style_lines <- function(rec, sty_row, x) {
-  # Handle NA values for i and j (apply to all rows/columns)
-  idx_i <- sty_row$i
-  if (is.na(idx_i)) {
-    idx_i <- unique(rec$i)
-  }
-  idx_j <- sty_row$j
-  if (is.na(idx_j)) {
-    idx_j <- unique(rec$j)
-  }
-
-  # Create index for matching cells
-  idx <- rec$i %in% idx_i & rec$j %in% idx_j
-
-  # Line type
-  if (!is.na(sty_row$line)) {
-    rec$line[idx] <- sty_row$line
-  }
-
-  # Line color
-  lcol <- sty_row$line_color
-  if (!is.na(lcol)) {
-    lcol <- standardize_colors(lcol, format = "tabularray")
-    x <- define_color_preamble(x, lcol)
-    if (grepl("^#", lcol)) {
-      lcol <- sub("^#", "c", lcol)
-    }
-    rec$line_color[idx] <- lcol
-  }
-
-  # Line width
-  if (!is.na(sty_row$line_width)) {
-    rec$line_width[idx] <- sty_row$line_width
-  }
-
-  # Line trim
-  if ("line_trim" %in% names(sty_row) && !is.na(sty_row$line_trim)) {
-    rec$line_trim[idx] <- sty_row$line_trim
-  }
-
-  return(list(rec = rec, x = x))
-}
+# style_lines function removed - line processing now handled directly in tabularray_hlines
 
 #' Clean style strings
 #' @keywords internal
@@ -175,7 +134,22 @@ clean_style_strings <- function(k) {
   k <- gsub("\\s*", "", k)
   k <- gsub(",+", ",", k)
   k <- gsub("^,", "", k, perl = TRUE)
-  k <- gsub(",", ", ", k)
+
+  # Remove duplicates from each style string
+  k <- sapply(k, function(style_string) {
+    if (is.na(style_string) || trimws(style_string) == "") {
+      return(style_string)
+    }
+
+    # Split by comma and remove duplicates
+    parts <- trimws(strsplit(style_string, ",")[[1]])
+    parts <- parts[parts != ""]  # Remove empty parts
+    unique_parts <- unique(parts)
+
+    # Rejoin with proper spacing
+    paste(unique_parts, collapse = ", ")
+  }, USE.NAMES = FALSE)
+
   k <- trimws(k)
   return(k)
 }
@@ -326,25 +300,78 @@ tabularray_cells <- function(x, rec) {
 #' @keywords internal
 #' @noRd
 tabularray_hlines <- function(x, rec) {
-  # Horizontal lines
-  horizontal <- rec[
-    grepl("b|t", rec$line),
-    c("i", "j", "lin", "line"),
-    drop = FALSE
-  ]
-  horizontal_bottom <- horizontal[grepl("b", horizontal$line), , drop = FALSE]
-  horizontal_bottom$i <- horizontal_bottom$i + 1
-  horizontal <- rbind(
-    horizontal[grepl("t", horizontal$line), , drop = FALSE],
-    horizontal_bottom
-  )
+  # Process horizontal lines directly from styling data to allow duplicates
+  sty <- x@style
+  sty$i <- sty$i + x@nhead
+
+  # Get all line entries
+  line_entries <- sty[!is.na(sty$line) & grepl("b|t", sty$line), ]
+
+  if (nrow(line_entries) == 0) {
+    return(x)
+  }
+
+  # Create line specifications for each entry
+  horizontal_specs <- lapply(seq_len(nrow(line_entries)), function(idx) {
+    entry <- line_entries[idx, ]
+
+    # Create line specification with trimming
+    line_spec <- sprintf("solid, %s, %sem",
+                        standardize_colors(entry$line_color, format = "tabularray"),
+                        entry$line_width)
+
+    # Add trimming if specified
+    if (!is.na(entry$line_trim)) {
+      if (grepl("l", entry$line_trim)) {
+        line_spec <- paste0(line_spec, ", l=-0.5")
+      }
+      if (grepl("r", entry$line_trim)) {
+        line_spec <- paste0(line_spec, ", r=-0.5")
+      }
+    }
+
+    # Adjust row index based on line type
+    row_idx <- entry$i
+    if (grepl("b", entry$line)) {
+      row_idx <- row_idx + 1
+    }
+
+    # Get column range - use all columns if j is NA
+    if (is.na(entry$j)) {
+      cols <- seq_len(x@ncol)
+    } else {
+      cols <- entry$j
+    }
+
+    return(data.frame(
+      i = row_idx,
+      j = cols,
+      lin = line_spec,
+      line = entry$line,
+      stringsAsFactors = FALSE
+    ))
+  })
+
+  # Combine all specifications
+  if (length(horizontal_specs) > 0) {
+    horizontal <- do.call(rbind, horizontal_specs)
+  } else {
+    horizontal <- data.frame(i = integer(0), j = integer(0), lin = character(0), line = character(0))
+  }
 
   spec <- by(horizontal, list(horizontal$i, horizontal$lin), function(k) {
     ival <- latex_range_string(k$i)
     jval <- latex_range_string(k$j)
-    sprintf("hline{%s}={%s}{%s}", ival, jval, k$lin[1])
+    lin_val <- k$lin[1]
+    # Skip invalid line specifications
+    if (is.na(lin_val) || lin_val == "" || ival == "" || jval == "") {
+      return(NULL)
+    }
+    sprintf("hline{%s}={%s}{%s}", ival, jval, lin_val)
   })
   spec <- unique(as.vector(unlist(spec)))
+  # Remove any NULL or NA entries
+  spec <- spec[!is.na(spec) & spec != "NULL"]
 
   for (s in spec) {
     x@table_string <- insert_tabularray_content(
@@ -361,32 +388,83 @@ tabularray_hlines <- function(x, rec) {
 #' @keywords internal
 #' @noRd
 tabularray_vlines <- function(x, rec) {
-  # Vertical lines
-  vertical <- rec[
-    grepl("l|r", rec$line),
-    c("i", "j", "lin", "line"),
-    drop = FALSE
-  ]
-  vertical_right <- vertical[grepl("r", vertical$line), , drop = FALSE]
-  vertical_right$j <- vertical_right$j + 1
-  vertical <- rbind(
-    vertical[grepl("l", vertical$line), , drop = FALSE],
-    vertical_right
-  )
+  # Process vertical lines directly from styling data to allow duplicates
+  sty <- x@style
+  sty$i <- sty$i + x@nhead
 
-  spec <- by(vertical, list(vertical$lin), function(k) {
-    ival <- latex_range_string(k$i)
-    jval <- latex_range_string(k$j)
-    sprintf("vline{%s}={%s}{%s}", jval, ival, k$lin[1])
+  # Get all vertical line entries
+  line_entries <- sty[!is.na(sty$line) & grepl("l|r", sty$line), ]
+
+  if (nrow(line_entries) == 0) {
+    return(x)
+  }
+
+  # Create line specifications for each entry
+  vertical_specs <- lapply(seq_len(nrow(line_entries)), function(idx) {
+    entry <- line_entries[idx, ]
+
+    # Create line specification with trimming
+    line_spec <- sprintf("solid, %s, %sem",
+                        standardize_colors(entry$line_color, format = "tabularray"),
+                        entry$line_width)
+
+    # Add trimming if specified
+    if (!is.na(entry$line_trim)) {
+      if (grepl("l", entry$line_trim)) {
+        line_spec <- paste0(line_spec, ", l=-0.5")
+      }
+      if (grepl("r", entry$line_trim)) {
+        line_spec <- paste0(line_spec, ", r=-0.5")
+      }
+    }
+
+    # Adjust column index based on line type
+    col_idx <- entry$j
+    if (grepl("r", entry$line)) {
+      col_idx <- col_idx + 1
+    }
+
+    # Get row range - use all rows if i is NA
+    if (is.na(entry$i)) {
+      rows <- seq_len(x@nrow + x@nhead)
+    } else {
+      rows <- entry$i
+    }
+
+    return(data.frame(
+      i = rows,
+      j = col_idx,
+      lin = line_spec,
+      line = entry$line,
+      stringsAsFactors = FALSE
+    ))
   })
-  spec <- unique(as.vector(unlist(spec)))
 
-  for (s in spec) {
-    x@table_string <- insert_tabularray_content(
-      x@table_string,
-      content = s,
-      type = "inner"
-    )
+  # Combine all specifications
+  if (length(vertical_specs) > 0) {
+    vertical <- do.call(rbind, vertical_specs)
+
+    spec <- by(vertical, list(vertical$lin), function(k) {
+      ival <- latex_range_string(k$i)
+      jval <- latex_range_string(k$j)
+      lin_val <- k$lin[1]
+      # Skip invalid line specifications
+      if (is.na(lin_val) || lin_val == "" || ival == "" || jval == "") {
+        return(NULL)
+      }
+      sprintf("vline{%s}={%s}{%s}", jval, ival, lin_val)
+    })
+    spec <- unique(as.vector(unlist(spec)))
+    # Remove any NULL or NA entries
+    spec <- spec[!is.na(spec) & spec != "NULL"]
+
+    for (s in spec) {
+      x@table_string <- insert_tabularray_content(
+        x@table_string,
+        content = s,
+        type = "inner"
+      )
+    }
   }
 
   return(x)
@@ -449,14 +527,10 @@ setMethod(
     sty$i <- sty$i + x@nhead
     sty <- map_alignv_values(sty)
 
-    # Create record grid
+    # Create record grid (line fields removed - handled separately)
     rec <- expand.grid(
       i = c(seq_len(x@nrow + x@nhead)),
-      j = seq_len(x@ncol),
-      line = NA,
-      line_color = NA,
-      line_width = NA,
-      line_trim = NA
+      j = seq_len(x@ncol)
     )
 
     set <- span <- rep("", nrow(rec))
@@ -508,10 +582,7 @@ setMethod(
       # Style spans
       span[idx] <- style_spans(span[idx], sty[row, ])
 
-      # Style lines
-      line_result <- style_lines(rec, sty[row, ], x)
-      rec <- line_result$rec
-      x <- line_result$x
+      # Skip line processing here - handled directly in tabularray_hlines
     }
 
     # Clean style strings
@@ -540,34 +611,7 @@ setMethod(
     x <- tabularray_rows(x, rec)
     x <- tabularray_cells(x, rec)
 
-    # Prepare line specifications
-    rec$lin <- "solid"
-    rec$lin <- ifelse(
-      !is.na(rec$line_color),
-      paste0(rec$lin, ", ", rec$line_color),
-      rec$lin
-    )
-    rec$lin <- ifelse(
-      !is.na(rec$line_width),
-      paste0(rec$lin, sprintf(", %sem", rec$line_width)),
-      rec$lin
-    )
-    rec$lin <- ifelse(
-      !is.na(rec$line_trim) & rec$line_trim == "l",
-      paste0(rec$lin, ", l=-0.5"),
-      rec$lin
-    )
-    rec$lin <- ifelse(
-      !is.na(rec$line_trim) & rec$line_trim == "r",
-      paste0(rec$lin, ", r=-0.5"),
-      rec$lin
-    )
-    rec$lin <- ifelse(
-      !is.na(rec$line_trim) & rec$line_trim == "lr",
-      paste0(rec$lin, ", lr=-0.5"),
-      rec$lin
-    )
-    rec$lin[is.na(rec$line)] <- NA
+    # Line processing now handled directly in tabularray_hlines
 
     # Generate line specifications
     x <- tabularray_hlines(x, rec)

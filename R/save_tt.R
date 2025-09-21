@@ -166,7 +166,6 @@ latex_standalone <- "
 \\usepackage{float}
 \\usepackage[normalem]{ulem}
 \\usepackage[x11names, svgnames]{xcolor}
-\\UseTblrLibrary{booktabs}
 \\UseTblrLibrary{siunitx}
 \\newcommand{\\tinytableTabularrayUnderline}[1]{\\underline{#1}}
 \\newcommand{\\tinytableTabularrayStrikeout}[1]{\\sout{#1}}

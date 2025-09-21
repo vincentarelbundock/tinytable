@@ -9,11 +9,6 @@ theme_default <- function(x, ...) {
   x <- theme_latex(x, placement = get_option("tinytable_latex_placement", default = NULL))
   x <- theme_typst(x, align_figure = get_option("tinytable_typst_align_figure", "c"))
 
-  # Only set bootstrap_class if it's not already set
-  if (length(x@bootstrap_class) == 0) {
-    x@bootstrap_class <- "tinytable"
-  }
-
   fn <- function(x) {
     col <- "black"
     # top
@@ -44,6 +39,6 @@ theme_default <- function(x, ...) {
     )
   }
 
-  x <- build_prepare(x, fn, output = c("html", "bootstrap", "typst"))
+  x <- build_prepare(x, fn, output = c("html", "bootstrap", "typst", "latex"))
   return(x)
 }

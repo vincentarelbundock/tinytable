@@ -181,6 +181,22 @@ add_group_line_styling_simple <- function(x, j) {
 
       # Only add lines for non-empty group names
       if (!is.null(group_name) && trimws(group_name) != "") {
+        # Determine trimming based on column positions
+        trim_left <- min(group_cols) > 1
+        trim_right <- max(group_cols) < ncol(x)
+
+        # Build trim specification
+        line_trim_spec <- ""
+        if (trim_left && trim_right) {
+          line_trim_spec <- "lr"
+        } else if (trim_left) {
+          line_trim_spec <- "l"
+        } else if (trim_right) {
+          line_trim_spec <- "r"
+        } else {
+          line_trim_spec <- NULL  # No trimming
+        }
+
         x <- style_tt(
           x,
           i = table_row_i,
@@ -188,7 +204,7 @@ add_group_line_styling_simple <- function(x, j) {
           line = "b",
           line_width = 0.05,
           line_color = "black",
-          line_trim = "lr"
+          line_trim = line_trim_spec
         )
       }
     }
