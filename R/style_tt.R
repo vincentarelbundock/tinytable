@@ -221,6 +221,7 @@ merge_with_existing_styles <- function(x, settings) {
 #' + Can be combined such as: "lbt" to draw borders at the left, bottom, and top.
 #' @param line_color Color of the line. See the `color` argument for details.
 #' @param line_width Width of the line in em units (default: 0.1).
+#' @param line_trim String specifying line trimming. Acceptable values: "l" (left), "r" (right), "lr" (both sides). When specified, shortens the lines by 0.8pt on the specified side(s). Default: NULL (no trimming).
 #' @param finalize A function applied to the table object at the very end of table-building, for post-processing. For example, the function could use regular expressions to add LaTeX commands to the text version of the table hosted in `x@table_string`, or it could programmatically change the caption in `x@caption`.
 #' @param ... extra arguments are ignored
 #' @return An object of class `tt` representing the table.
@@ -341,6 +342,7 @@ style_tt <- function(
   line = NULL,
   line_color = "black",
   line_width = 0.1,
+  line_trim = NULL,
   finalize = NULL,
   ...
 ) {
@@ -417,6 +419,7 @@ style_tt <- function(
     line = line,
     line_color = line_color,
     line_width = line_width,
+    line_trim = line_trim,
     bootstrap_css = bootstrap_css,
     finalize = finalize,
     ...
@@ -446,6 +449,7 @@ style_tt <- function(
     settings[["line"]] <- if (is.null(line)) NA else line
     settings[["line_color"]] <- if (is.null(line)) NA else line_color
     settings[["line_width"]] <- if (is.null(line)) NA else line_width
+    settings[["line_trim"]] <- if (is.null(line)) NA else line_trim
     settings[["bold"]] <- bold
     settings[["italic"]] <- italic
     settings[["monospace"]] <- monospace
@@ -499,6 +503,7 @@ assert_style_tt <- function(
   line,
   line_color,
   line_width,
+  line_trim,
   tabularray_inner,
   tabularray_outer,
   finalize = NULL,
@@ -531,6 +536,7 @@ assert_style_tt <- function(
   assert_string(line, null.ok = TRUE)
   assert_string(line_color, null.ok = FALSE) # black default
   assert_numeric(line_width, len = 1, lower = 0, null.ok = FALSE) # 0.1 default
+  assert_choice(line_trim, c("l", "r", "lr"), null.ok = TRUE)
 
   # must be handled here rather than theme_html() because it is a cell-level issue
   bootstrap_css <- ...get("bootstrap_css")

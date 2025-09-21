@@ -160,6 +160,11 @@ style_lines <- function(rec, sty_row, x) {
     rec$line_width[idx] <- sty_row$line_width
   }
 
+  # Line trim
+  if ("line_trim" %in% names(sty_row) && !is.na(sty_row$line_trim)) {
+    rec$line_trim[idx] <- sty_row$line_trim
+  }
+
   return(list(rec = rec, x = x))
 }
 
@@ -316,6 +321,7 @@ tabularray_cells <- function(x, rec) {
   return(x)
 }
 
+
 #' Generate tabularray horizontal line specifications
 #' @keywords internal
 #' @noRd
@@ -449,7 +455,8 @@ setMethod(
       j = seq_len(x@ncol),
       line = NA,
       line_color = NA,
-      line_width = NA
+      line_width = NA,
+      line_trim = NA
     )
 
     set <- span <- rep("", nrow(rec))
@@ -534,15 +541,30 @@ setMethod(
     x <- tabularray_cells(x, rec)
 
     # Prepare line specifications
-    rec$lin <- "solid, "
+    rec$lin <- "solid"
     rec$lin <- ifelse(
       !is.na(rec$line_color),
-      paste0(rec$lin, rec$line_color),
+      paste0(rec$lin, ", ", rec$line_color),
       rec$lin
     )
     rec$lin <- ifelse(
       !is.na(rec$line_width),
       paste0(rec$lin, sprintf(", %sem", rec$line_width)),
+      rec$lin
+    )
+    rec$lin <- ifelse(
+      !is.na(rec$line_trim) & rec$line_trim == "l",
+      paste0(rec$lin, ", l=-0.8"),
+      rec$lin
+    )
+    rec$lin <- ifelse(
+      !is.na(rec$line_trim) & rec$line_trim == "r",
+      paste0(rec$lin, ", r=-0.8"),
+      rec$lin
+    )
+    rec$lin <- ifelse(
+      !is.na(rec$line_trim) & rec$line_trim == "lr",
+      paste0(rec$lin, ", lr=-0.8"),
       rec$lin
     )
     rec$lin[is.na(rec$line)] <- NA

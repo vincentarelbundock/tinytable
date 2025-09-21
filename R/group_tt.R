@@ -189,7 +189,8 @@ add_group_line_styling_simple <- function(x, j) {
           # line_width = 0.05,
           line_width = .5,
           # line_color = "#d3d8dc"
-          line_color = "orange"
+          line_color = "orange",
+          line_trim = "lr"
         )
       }
     }
