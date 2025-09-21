@@ -333,7 +333,7 @@ tabularray_hlines <- function(x, rec) {
     horizontal_bottom
   )
 
-  spec <- by(horizontal, list(horizontal$lin), function(k) {
+  spec <- by(horizontal, list(horizontal$i, horizontal$lin), function(k) {
     ival <- latex_range_string(k$i)
     jval <- latex_range_string(k$j)
     sprintf("hline{%s}={%s}{%s}", ival, jval, k$lin[1])

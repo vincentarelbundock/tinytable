@@ -10,8 +10,7 @@ setMethod(
       x <- bootstrap_groupj(x, j = j, ...)
     }
     return(x)
-  }
-)
+  })
 
 bootstrap_groupj <- function(x, j, ihead, ...) {
   # Check if there are any column groups to process
@@ -56,10 +55,7 @@ bootstrap_groupj <- function(x, j, ihead, ...) {
   }
 
   if (length(all_groupj_rows) > 0) {
-    # Insert all group rows into the table
     x <- bootstrap_groupj_insert(x, all_groupj_rows)
-
-    # Note: Group line styling is now handled in group_tt() via style_tt() calls
   }
 
   return(x)

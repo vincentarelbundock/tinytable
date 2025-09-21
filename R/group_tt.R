@@ -17,7 +17,7 @@ handle_deprecated_args <- function(...) {
 #' Process matrix insertion for row grouping
 #' @keywords internal
 #' @noRd
-process_matrix_insertion <- function(x, i, j) {
+progress_group_matrix <- function(x, i, j) {
   k <- group_tt_ij_k(x, i, j)
   converted_from_list <- k[[3]]
 
@@ -60,7 +60,7 @@ process_matrix_insertion <- function(x, i, j) {
 #' Process row grouping with list input
 #' @keywords internal
 #' @noRd
-process_row_grouping <- function(x, i, j) {
+process_group_i <- function(x, i, j) {
   # Convert list to matrix insertion format for row grouping
   k <- group_tt_ij_k(x, i, NULL) # Pass NULL for j to trigger list conversion
   converted_from_list <- k[[3]]
@@ -100,7 +100,7 @@ process_row_grouping <- function(x, i, j) {
 #' Process column grouping
 #' @keywords internal
 #' @noRd
-process_column_grouping <- function(x, j) {
+process_group_j <- function(x, j) {
   j <- sanitize_group_index(j, hi = ncol(x), orientation = "column")
   x@nhead <- x@nhead + 1
 
@@ -186,8 +186,10 @@ add_group_line_styling_simple <- function(x, j) {
           i = table_row_i,
           j = group_cols,
           line = "b",
-          line_width = 0.05,
-          line_color = "#d3d8dc"
+          # line_width = 0.05,
+          line_width = .5,
+          # line_color = "#d3d8dc"
+          line_color = "orange"
         )
       }
     }
@@ -249,7 +251,7 @@ process_delimiter_grouping <- function(x, j) {
     # Apply multiple levels of grouping if they exist (in reverse order)
     if (length(j_delim$groupnames) > 0) {
       for (level_groups in rev(j_delim$groupnames)) {
-        x <- process_column_grouping(x, level_groups)
+        x <- process_group_j(x, level_groups)
       }
     }
     j <- NULL # Set to NULL since we've already applied the groupings
@@ -363,7 +365,10 @@ group_tt <- function(
   }
 
   # non-standard evaluation before anything else
-  tmp <- nse_i_j(x, i_expr = substitute(i), j_expr = substitute(j), pf = parent.frame())
+  tmp <- nse_i_j(x,
+    i_expr = substitute(i),
+    j_expr = substitute(j),
+    pf = parent.frame())
   i <- tmp$i
 
   if (is.null(i) && is.null(j)) {
@@ -375,16 +380,14 @@ group_tt <- function(
   }
 
   # matrix insertion case
-  if (
-    (isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) ||
-      (is.list(i) && is.null(j))
-  ) {
-    return(process_matrix_insertion(x, i, j))
+  if ((isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) ||
+    (is.list(i) && is.null(j))) {
+    return(progress_group_matrix(x, i, j))
   }
 
   # row grouping when i is a list (but j is also provided)
   if (is.list(i) && !is.null(j)) {
-    x <- process_row_grouping(x, i, j)
+    x <- process_group_i(x, i, j)
   }
 
   # delimiter-based column grouping
@@ -396,8 +399,7 @@ group_tt <- function(
 
   # column grouping
   if (!is.null(j)) {
-    x <- process_column_grouping(x, j)
-    # Add automatic styling for the new group row using the user-provided columns
+    x <- process_group_j(x, j)
     x <- add_group_line_styling_simple(x, j)
   }
 

@@ -8,8 +8,7 @@ setMethod(
     # Only handle column grouping - row insertions now use matrix insertion
     x <- group_tabularray_col(x, j, ...)
     return(x)
-  }
-)
+  })
 
 group_tabularray_col <- function(x, j, ihead, ...) {
   # Process column groups from @group_data_j

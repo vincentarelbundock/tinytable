@@ -9,8 +9,7 @@ insert_tabularray_content <- function(x, content = NULL, type = "body") {
     out <- x
 
     out <- strsplit(out, "\n")[[1]]
-    comment <- switch(
-        type,
+    comment <- switch(type,
         "body" = "% tabularray inner close",
         "outer" = "% tabularray outer close",
         "inner" = "% tabularray inner close"
@@ -163,10 +162,11 @@ build_tabularray_header <- function(group_row, ncols) {
 
     for (span in spans) {
         header[span$start] <- span$label
-        cmidrules <- c(
-            cmidrules,
-            sprintf("\\cmidrule[lr]{%s-%s}", span$start, span$end)
-        )
+        cmidrules <- NULL
+        # cmidrules <- c(
+        #     cmidrules,
+        #     sprintf("\\cmidrule[lr]{%s-%s}", span$start, span$end)
+        # )
     }
 
     header_line <- paste(header, collapse = " & ")

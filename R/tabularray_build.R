@@ -47,7 +47,8 @@ setMethod(
         # %% are important to distinguish between potentially redundant data rows
         header[length(header)] <- paste(
           header[length(header)],
-          "\\midrule %% TinyTableHeader"
+          ""
+          # "\\midrule %% TinyTableHeader"
         )
       }
     }
@@ -126,5 +127,4 @@ setMethod(
     x@body <- body
 
     return(x)
-  }
-)
+  })
