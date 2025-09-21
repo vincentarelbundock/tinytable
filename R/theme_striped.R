@@ -20,14 +20,14 @@ theme_striped <- function(x, ...) {
       i = nrow(x),
       line = "b",
       line_color = "#d3d8dc",
-      line_width = 0.1
+      line_width = 0.08
     )
     x <- style_tt(
       x,
       i = 0,
       line = "bt",
       line_color = "#d3d8dc",
-      line_width = 0.1
+      line_width = 0.08
     )
     return(x)
   }

@@ -15,7 +15,8 @@ theme_default <- function(x, ...) {
   }
 
   fn <- function(x) {
-    col <- if (x@output == "typst") "black" else "#d3d8dc"
+    col <- "black"
+    # col <- if (x@output == "typst") "black" else "#d3d8dc"
 
     # top border
     if (x@output %in% c("html", "bootstrap") && length(x@names) == 0) {
@@ -25,7 +26,7 @@ theme_default <- function(x, ...) {
         i = 1,
         line = "t",
         line_color = col,
-        line_width = 0.1
+        line_width = 0.08
       )
     } else {
       # For other cases, use the standard header position
@@ -34,7 +35,7 @@ theme_default <- function(x, ...) {
         i = -x@nhead + 1,
         line = "t",
         line_color = col,
-        line_width = 0.1
+        line_width = 0.08
       )
     }
     # mid
@@ -44,7 +45,7 @@ theme_default <- function(x, ...) {
         i = 0,
         line = "b",
         line_color = col,
-        line_width = 0.05
+        line_width = 0.04
       )
     }
     # bottom
@@ -53,7 +54,7 @@ theme_default <- function(x, ...) {
       i = nrow(x),
       line = "b",
       line_color = col,
-      line_width = 0.1
+      line_width = 0.08
     )
   }
 

@@ -1,8 +1,321 @@
-# Helper function to adjust column indices based on column grouping only
-bootstrap_adjust_column_indices <- function(x, user_j, user_i) {
-  # Only adjust for column groups, not user-defined colspans
-  # User-defined colspans are handled by JavaScript after HTML generation
-  if (nrow(x@group_data_j) == 0) {
+
+# =============================================================================
+# CSS Utility Layer
+# =============================================================================
+
+#' Parse CSS rule into named character vector
+#' @keywords internal
+#' @noRd
+css_parse <- function(rule) {
+  if (is.null(rule) || !nzchar(trimws(rule))) return(character())
+  parts <- strsplit(rule, ";", fixed = TRUE)[[1]]
+  parts <- trimws(parts)
+  parts <- parts[nzchar(parts)]
+  out <- character()
+  for (p in parts) {
+    kv <- strsplit(p, ":", fixed = TRUE)[[1]]
+    if (length(kv) >= 2) {
+      k <- trimws(kv[1])
+      v <- trimws(paste(kv[-1], collapse = ":"))
+      out[k] <- v
+    }
+  }
+  out
+}
+
+#' Render named character vector back to CSS rule
+#' @keywords internal
+#' @noRd
+css_render <- function(x) {
+  if (!length(x)) return("")
+  paste0(names(x), ": ", unname(x), collapse = "; ")
+}
+
+#' Pick first matching key from CSS map with default
+#' @keywords internal
+#' @noRd
+css_pick <- function(named_chr, keys, default = NULL) {
+  for (key in keys) {
+    if (key %in% names(named_chr)) {
+      return(named_chr[[key]])
+    }
+  }
+  default
+}
+
+#' Merge flag values (take max across duplicates)
+#' @keywords internal
+#' @noRd
+css_merge_flags <- function(named_chr, flag_keys) {
+  for (flag_key in flag_keys) {
+    matching_keys <- names(named_chr)[names(named_chr) == flag_key]
+    if (length(matching_keys) > 1) {
+      values <- as.numeric(named_chr[matching_keys])
+      named_chr[[flag_key]] <- as.character(max(values, na.rm = TRUE))
+      # Remove duplicates
+      named_chr <- named_chr[!names(named_chr) %in% matching_keys[-1]]
+    }
+  }
+  named_chr
+}
+
+#' Parse border declaration into components
+#' @keywords internal
+#' @noRd
+border_parse <- function(x) {
+  if (is.na(x) || !nzchar(x)) return(list(style = NA, width = NA, color = NA))
+  toks <- strsplit(trimws(x), "\\s+")[[1]]
+  styles <- c("none", "hidden", "dotted", "dashed", "solid", "double",
+             "groove", "ridge", "inset", "outset")
+  style <- toks[toks %in% styles][1]
+  width <- toks[grepl("^(\\d+(\\.\\d+)?)(px|em|rem|pt|%)$", toks)][1]
+  color <- setdiff(toks, c(style, width))[1]  # crude but works with named color/hex
+  list(style = if (is.na(style)) NA else style,
+       width = if (is.na(width)) NA else width,
+       color = if (is.na(color)) NA else color)
+}
+
+#' Initialize default pseudo-element CSS variables
+#' @keywords internal
+#' @noRd
+pseudo_vars_init <- function() {
+  c("--border-left" = "0", "--border-right" = "0", "--border-top" = "0",
+    "--border-bottom" = "0", "--trim-left" = "0", "--trim-right" = "0",
+    "--trim-top" = "0", "--trim-bottom" = "0", "--line-width-left" = "0.1em",
+    "--line-width-right" = "0.1em", "--line-width-top" = "0.1em",
+    "--line-width-bottom" = "0.1em")
+}
+
+#' Generate pseudo-element CSS template
+#' @keywords internal
+#' @noRd
+pseudo_css_templates <- function(id, base_rule) {
+  paste0(
+    "      .table td.", id, ", .table th.", id, " { ", base_rule, " }\n",
+    "      .table td.", id, "::before, .table th.", id, "::before { content: ''; position: absolute; ",
+      "top: var(--trim-top, 0); left: var(--trim-left, 0); right: var(--trim-right, 0); bottom: var(--trim-bottom, 0); ",
+      "pointer-events: none; z-index: 1; ",
+      "border-left: calc(var(--border-left) * var(--line-width-left, var(--line-width, 0.1em))) solid var(--line-color-left, var(--line-color, black)); ",
+      "border-right: calc(var(--border-right) * var(--line-width-right, var(--line-width, 0.1em))) solid var(--line-color-right, var(--line-color, black)); ",
+      "border-top: calc(var(--border-top) * var(--line-width-top, var(--line-width, 0.1em))) solid var(--line-color-top, var(--line-color, black)); ",
+    "}\n",
+    "      .table td.", id, "::after, .table th.", id, "::after { content: ''; position: absolute; ",
+      "left: var(--trim-left, 0); right: var(--trim-right, 0); bottom: var(--trim-bottom, 0); ",
+      "height: calc(var(--border-bottom) * var(--line-width-bottom, var(--line-width, 0.1em))); ",
+      "background: var(--line-color-bottom, var(--line-color, black)); pointer-events: none; z-index: 2; }"
+  )
+}
+
+#' Build and cache header column mappings
+#' @keywords internal
+#' @noRd
+header_col_mapping_cache <- function(x) {
+  cache <- list()
+  if (nrow(x@group_data_j) > 0) {
+    for (group_row_idx in seq_len(nrow(x@group_data_j))) {
+      target_i <- -(nrow(x@group_data_j) - group_row_idx + 1)
+      cache[[as.character(target_i)]] <- bootstrap_get_datacol_mapping(x, target_i)
+    }
+  }
+  cache
+}
+
+# =============================================================================
+# Refactored Functions
+# =============================================================================
+
+bootstrap_convert_to_pseudo_elements <- function(css_rule) {
+  parse <- css_parse(css_rule)
+  vars <- pseudo_vars_init()
+
+  # Default values
+  line_color <- "black"
+  line_width <- "0.1em"
+
+  # Process border declarations
+  for (key in names(parse)) {
+    val <- parse[[key]]
+
+    if (key == "border" && grepl("solid", val)) {
+      # All borders
+      vars[["--border-left"]] <- "1"
+      vars[["--border-right"]] <- "1"
+      vars[["--border-top"]] <- "1"
+      vars[["--border-bottom"]] <- "1"
+      border_parts <- border_parse(val)
+      if (!is.na(border_parts$color)) line_color <- border_parts$color
+      if (!is.na(border_parts$width)) line_width <- border_parts$width
+    } else if (key %in% c("border-left", "border-right", "border-top", "border-bottom") && grepl("solid", val)) {
+      # Individual sides
+      side_var <- paste0("--", key)
+      vars[[side_var]] <- "1"
+      border_parts <- border_parse(val)
+      if (!is.na(border_parts$color)) line_color <- border_parts$color
+      if (!is.na(border_parts$width)) line_width <- border_parts$width
+    }
+  }
+
+  # Allow user overrides from existing CSS variables
+  for (var_name in names(vars)) {
+    if (var_name %in% names(parse)) {
+      vars[[var_name]] <- parse[[var_name]]
+    }
+  }
+
+  # Extract line properties with user overrides
+  line_color <- css_pick(parse, "--line-color", line_color)
+  line_width <- css_pick(parse, "--line-width", line_width)
+
+  # Remove all border-related keys from regular CSS
+  border_keys <- c("border", "border-left", "border-right", "border-top", "border-bottom",
+                  "--border-left", "--border-right", "--border-top", "--border-bottom",
+                  "--line-color", "--line-width", "--trim-left", "--trim-right",
+                  "--trim-top", "--trim-bottom", "--line-width-left", "--line-width-right",
+                  "--line-width-top", "--line-width-bottom")
+  non_border <- parse[!names(parse) %in% border_keys]
+
+  # Add position: relative if missing
+  if (!"position" %in% names(non_border)) {
+    non_border[["position"]] <- "relative"
+  }
+
+  # Combine everything
+  all_css <- c(non_border,
+               c("--line-color" = line_color, "--line-width" = line_width),
+               vars)
+
+  css_render(all_css)
+}
+
+bootstrap_clean_css_rule <- function(css_rule) {
+  # Parse the (potentially concatenated) CSS rule
+  m <- css_parse(css_rule)
+
+  # For border flags, we need to OR them together by taking max values
+  # This handles the case where concatenated CSS has overwritten border values
+  # We need to reconstruct the intended borders from all the CSS parts
+
+  # Split the original CSS by semicolon and look for all border values
+  parts <- strsplit(css_rule, ";", fixed = TRUE)[[1]]
+  parts <- trimws(parts[nzchar(parts)])
+
+  border_flags <- c("--border-left", "--border-right", "--border-top", "--border-bottom")
+  color_flags <- c("--line-color-left", "--line-color-right", "--line-color-top", "--line-color-bottom")
+
+  # Extract all border flag values and take maximum
+  for (flag in border_flags) {
+    flag_parts <- parts[grepl(paste0("^", flag, ":"), parts)]
+    if (length(flag_parts) > 0) {
+      values <- sapply(flag_parts, function(p) {
+        val <- trimws(strsplit(p, ":", fixed = TRUE)[[1]][2])
+        as.numeric(val)
+      })
+      m[[flag]] <- as.character(max(values, na.rm = TRUE))
+    }
+  }
+
+  # For color flags, prioritize non-black colors
+  for (flag in color_flags) {
+    flag_parts <- parts[grepl(paste0("^", flag, ":"), parts)]
+    if (length(flag_parts) > 0) {
+      # Extract all color values for this flag
+      color_values <- sapply(flag_parts, function(p) {
+        trimws(strsplit(p, ":", fixed = TRUE)[[1]][2])
+      })
+
+      # Prioritize first non-black color, otherwise use last color
+      non_black_colors <- color_values[color_values != "black"]
+      if (length(non_black_colors) > 0) {
+        m[[flag]] <- non_black_colors[1]
+      } else {
+        m[[flag]] <- color_values[length(color_values)]
+      }
+    }
+  }
+
+  css_render(m)
+}
+
+bootstrap_consolidate_css_vars <- function(rec) {
+  # Group by cell position (i, j)
+  cell_groups <- split(rec, paste(rec$i, rec$j))
+
+
+  consolidated_rec <- data.frame()
+  for (group in cell_groups) {
+    if (nrow(group) == 1) {
+      # Single rule - clean it in case it has concatenated CSS
+      group$css_arguments <- bootstrap_clean_css_rule(group$css_arguments)
+      consolidated_rec <- rbind(consolidated_rec, group)
+    } else {
+      # Multiple rules for the same cell - consolidate
+      # First clean each CSS string to handle concatenated CSS properly
+      cleaned_css <- lapply(group$css_arguments, bootstrap_clean_css_rule)
+      maps <- lapply(cleaned_css, css_parse)
+
+      # Smart consolidation that handles column mapping issues
+      m <- character()
+      border_flags <- c("--border-left", "--border-right", "--border-top", "--border-bottom")
+      color_flags <- c("--line-color-left", "--line-color-right", "--line-color-top", "--line-color-bottom")
+      trim_flags <- c("--trim-left", "--trim-right", "--trim-top", "--trim-bottom")
+
+      for (map in maps) {
+        for (key in names(map)) {
+          if (key %in% border_flags) {
+            # For border flags, take maximum (OR logic)
+            if (key %in% names(m)) {
+              m[[key]] <- as.character(max(as.numeric(m[[key]]), as.numeric(map[[key]]), na.rm = TRUE))
+            } else {
+              m[[key]] <- map[[key]]
+            }
+          } else if (key %in% color_flags) {
+            # For directional color flags, prioritize non-black colors
+            if (key %in% names(m)) {
+              current_color <- m[[key]]
+              new_color <- map[[key]]
+              # If current is black and new is not, use new
+              # If current is not black, keep current (first non-black wins)
+              if (current_color == "black" && new_color != "black") {
+                m[[key]] <- new_color
+              }
+            } else {
+              m[[key]] <- map[[key]]
+            }
+          } else if (key %in% trim_flags) {
+            # For trim flags, take maximum (if any border needs trimming)
+            if (key %in% names(m)) {
+              # Convert percentage strings to numeric, take max, convert back
+              current_val <- as.numeric(gsub("%", "", m[[key]]))
+              new_val <- as.numeric(gsub("%", "", map[[key]]))
+              max_val <- max(current_val, new_val, na.rm = TRUE)
+              m[[key]] <- paste0(max_val, "%")
+            } else {
+              m[[key]] <- map[[key]]
+            }
+          } else {
+            # For non-border properties, last-write-wins
+            m[[key]] <- map[[key]]
+          }
+        }
+      }
+
+      # No need for css_merge_flags since we handled border flags above
+
+      final_css <- css_render(m)
+
+      # Create consolidated row (use first row as template)
+      new_row <- group[1, ]
+      new_row$css_arguments <- final_css
+      consolidated_rec <- rbind(consolidated_rec, new_row)
+    }
+  }
+
+  return(consolidated_rec)
+}
+
+# Helper function to adjust column indices using cached mappings
+bootstrap_adjust_column_indices_cached <- function(user_j, user_i, mapping_cache) {
+  if (length(mapping_cache) == 0) {
     return(user_j)
   }
 
@@ -11,25 +324,30 @@ bootstrap_adjust_column_indices <- function(x, user_j, user_i) {
   # Handle each row separately since column groups affect data-col numbering per row
   for (unique_i in unique(user_i)) {
     row_mask <- user_i == unique_i
-    if (!any(row_mask)) next
+    if (is.na(unique_i) || !any(row_mask, na.rm = TRUE)) next
 
     # Only adjust for header rows affected by column grouping
     if (unique_i < 0) {
-      col_mapping <- bootstrap_get_datacol_mapping(x, unique_i)
+      cache_key <- as.character(unique_i)
+      if (cache_key %in% names(mapping_cache)) {
+        col_mapping <- mapping_cache[[cache_key]]
 
-      # Apply mapping to user indices for this row
-      for (idx in which(row_mask)) {
-        orig_col <- user_j[idx]
-        if (orig_col >= 1 && orig_col <= length(col_mapping)) {
-          adjusted_j[idx] <- col_mapping[orig_col]
-        }
+        # Vectorized mapping application
+        orig_cols <- user_j[row_mask]
+        valid_mask <- orig_cols >= 1 & orig_cols <= length(col_mapping)
+        adjusted_j[row_mask][valid_mask] <- col_mapping[orig_cols[valid_mask]]
       }
     }
     # For non-header rows (unique_i >= 0), no adjustment needed
-    # User-defined colspans don't change the initial data-col values
   }
 
   return(adjusted_j)
+}
+
+# Legacy function for backward compatibility
+bootstrap_adjust_column_indices <- function(x, user_j, user_i) {
+  cache <- header_col_mapping_cache(x)
+  bootstrap_adjust_column_indices_cached(user_j, user_i, cache)
 }
 
 # Get mapping from user column index to HTML data-col value for header rows with column groups
@@ -129,6 +447,23 @@ setMethod(
     )
     css <- rep("", nrow(rec))
 
+    # Precompute and cache column mappings
+    mapping_cache <- header_col_mapping_cache(x)
+
+    # Adjust column indices when any kind of colspan is present
+    # Both column groups and user-defined colspans change data-col values in HTML
+    # This must happen BEFORE the CSS generation loop so that rec$j matches adjusted sty$j
+    rec$j <- bootstrap_adjust_column_indices_cached(rec$j, rec$i, mapping_cache)
+    rec$j <- rec$j - 1
+
+    # Also adjust column indices in style entries to match the adjusted rec$j values
+    for (row in seq_len(nrow(sty))) {
+      if (!is.na(sty$j[row])) {
+        adjusted_j <- bootstrap_adjust_column_indices_cached(sty$j[row], sty$i[row], mapping_cache)
+        sty$j[row] <- adjusted_j - 1
+      }
+    }
+
     for (row in seq_len(nrow(sty))) {
       # index: sty vs rec
       idx_i <- sty$i[row]
@@ -215,25 +550,53 @@ setMethod(
       right <- grepl("r", line)
       top <- grepl("t", line)
       bottom <- grepl("b", line)
-      if (all(c(left, right, top, bottom))) {
-        template <- "border: solid %s %sem;"
-      } else if (any(c(left, right, top, bottom))) {
-        template <- "border: solid %s %sem;"
+
+      if (any(c(left, right, top, bottom))) {
+        # Use pseudo-elements for all borders - store border info in CSS variables
+        lin <- paste(lin, "position: relative;")
+        lin <- paste(lin, sprintf("--line-width: %s;", paste0(line_width, "em")))
+
+        # Set color and width variables for each active border direction
+        line_width_em <- paste0(line_width, "em")
         if (left) {
-          template <- "border-left: solid %s %sem;"
+          lin <- paste(lin, sprintf("--line-color-left: %s;", line_color))
+          lin <- paste(lin, sprintf("--line-width-left: %s;", line_width_em))
         }
         if (right) {
-          template <- "border-right: solid %s %sem;"
+          lin <- paste(lin, sprintf("--line-color-right: %s;", line_color))
+          lin <- paste(lin, sprintf("--line-width-right: %s;", line_width_em))
         }
         if (top) {
-          template <- "border-top: solid %s %sem;"
+          lin <- paste(lin, sprintf("--line-color-top: %s;", line_color))
+          lin <- paste(lin, sprintf("--line-width-top: %s;", line_width_em))
         }
-        if (bottom) template <- "border-bottom: solid %s %sem;"
-      } else {
-        template <- ""
-      }
-      if (template != "") {
-        lin <- paste(lin, sprintf(template, line_color, line_width))
+        if (bottom) {
+          lin <- paste(lin, sprintf("--line-color-bottom: %s;", line_color))
+          lin <- paste(lin, sprintf("--line-width-bottom: %s;", line_width_em))
+        }
+
+        # Set side-dependent trimming variables
+        line_trim <- if ("line_trim" %in% names(sty)) sty$line_trim[row] else NA
+        if (!is.na(line_trim)) {
+          # Apply trimming based on trim specification (regardless of which borders are active)
+          left_trim <- if (grepl("l", line_trim)) "3%" else "0%"
+          right_trim <- if (grepl("r", line_trim)) "3%" else "0%"
+          top_trim <- if (grepl("t", line_trim)) "3%" else "0%"
+          bottom_trim <- if (grepl("b", line_trim)) "3%" else "0%"
+
+          lin <- paste(lin, sprintf("--trim-left: %s;", left_trim))
+          lin <- paste(lin, sprintf("--trim-right: %s;", right_trim))
+          lin <- paste(lin, sprintf("--trim-top: %s;", top_trim))
+          lin <- paste(lin, sprintf("--trim-bottom: %s;", bottom_trim))
+        } else {
+          lin <- paste(lin, "--trim-left: 0%; --trim-right: 0%; --trim-top: 0%; --trim-bottom: 0%;")
+        }
+
+        # Store which borders are active
+        lin <- paste(lin, sprintf("--border-left: %s;", if (left) "1" else "0"))
+        lin <- paste(lin, sprintf("--border-right: %s;", if (right) "1" else "0"))
+        lin <- paste(lin, sprintf("--border-top: %s;", if (top) "1" else "0"))
+        lin <- paste(lin, sprintf("--border-bottom: %s;", if (bottom) "1" else "0"))
       }
       css[idx] <- paste(css[idx], lin)
     }
@@ -244,11 +607,6 @@ setMethod(
     # HTML generation already handles header positioning
     rec$i <- rec$i
 
-    # Adjust column indices when any kind of colspan is present
-    # Both column groups and user-defined colspans change data-col values in HTML
-    rec$j <- bootstrap_adjust_column_indices(x, rec$j, rec$i)
-    rec$j <- rec$j - 1
-
     # spans: before styles because we return(x) if there is no style
     for (row in seq_len(nrow(sty))) {
       rowspan <- if (!is.na(sty$rowspan[row])) sty$rowspan[row] else 1
@@ -256,18 +614,12 @@ setMethod(
       if (rowspan > 1 || colspan > 1) {
         id <- get_id(stem = "spanCell_")
         listener <- "      window.addEventListener('load', function () { %s(%s, %s, %s, %s) })"
-        # For user-defined colspans, don't adjust the j index since they don't change initial data-col values
-        # Only column groups in headers need adjustment
-        if (sty$i[row] < 0) {
-          adjusted_j <- bootstrap_adjust_column_indices(x, sty$j[row], sty$i[row])
-        } else {
-          adjusted_j <- sty$j[row]
-        }
+        # Column indices have already been adjusted above, so use sty$j directly
         listener <- sprintf(
           listener,
           id,
           sty$i[row],
-          adjusted_j - 1,
+          sty$j[row],
           rowspan,
           colspan
         )
@@ -287,7 +639,10 @@ setMethod(
       return(x)
     }
 
-    # Unique CSS arguments assigne by arrays
+    # Consolidate CSS variables for cells with multiple border declarations
+    rec <- bootstrap_consolidate_css_vars(rec)
+
+    # Unique CSS arguments assigned by arrays
     css_table <- unique(rec[, c("css_arguments"), drop = FALSE])
     css_table$id_css <- sapply(
       seq_len(nrow(css_table)),
@@ -323,12 +678,26 @@ setMethod(
           "tinytable style arrays after",
           "after"
         )
-        entry <- sprintf(
-          "      .table td.%s, .table th.%s { %s }",
-          id_css,
-          id_css,
-          idx[[i]]$css_arguments[1]
-        )
+        css_rule <- idx[[i]]$css_arguments[1]
+
+        # Check if this CSS rule has any borders using parsed map
+        m <- css_parse(css_rule)
+        has_border <- any(names(m) %in% c("--border-left", "--border-right", "--border-top", "--border-bottom")) ||
+                     any(startsWith(names(m), "border"))
+
+        if (has_border) {
+          # Convert any regular border declarations to CSS variables and pseudo-elements
+          css_rule <- bootstrap_convert_to_pseudo_elements(css_rule)
+
+          # Generate CSS using template
+          entry <- pseudo_css_templates(id_css, css_rule)
+        } else {
+          # Regular CSS rule without pseudo-elements
+          entry <- sprintf(
+            "      .table td.%s, .table th.%s { %s }",
+            id_css, id_css, css_rule
+          )
+        }
         x@table_string <- lines_insert(
           x@table_string,
           entry,
@@ -337,6 +706,7 @@ setMethod(
         )
       }
     }
+
 
     return(x)
   }

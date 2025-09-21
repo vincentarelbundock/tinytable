@@ -144,6 +144,55 @@ remove_empty_settings <- function(settings) {
   return(settings)
 }
 
+#' Remove duplicates from style data frame while preserving line-related entries
+#' @keywords internal
+#' @noRd
+style_unique_preserve_lines <- function(df) {
+  if (nrow(df) == 0) return(df)
+
+  # Line-related columns that can have multiple entries for the same i,j
+  line_cols <- c("line", "line_color", "line_width", "line_trim")
+
+  # Separate line entries from non-line entries
+  line_mask <- !is.na(df$line) & df$line != ""
+  line_entries <- df[line_mask, , drop = FALSE]
+  non_line_entries <- df[!line_mask, , drop = FALSE]
+
+  # Remove duplicates from non-line entries (standard unique behavior)
+  if (nrow(non_line_entries) > 0) {
+    non_line_entries <- unique(non_line_entries)
+  }
+
+  # For line entries, only remove duplicates that have identical line-related properties
+  # This allows multiple different line styles (e.g., top and bottom) for the same cell
+  if (nrow(line_entries) > 0) {
+    # Create a key for each line entry based on position and line properties
+    line_entries$dedup_key <- paste(
+      line_entries$i,
+      line_entries$j,
+      line_entries$line,
+      line_entries$line_color,
+      line_entries$line_width,
+      line_entries$line_trim,
+      sep = "|"
+    )
+
+    # Remove true duplicates (same position, same line properties)
+    line_entries <- line_entries[!duplicated(line_entries$dedup_key), ]
+    line_entries$dedup_key <- NULL  # Remove helper column
+  }
+
+  # Combine and return
+  result <- rbind(non_line_entries, line_entries)
+
+  # Sort by i, j for consistency (optional)
+  if (nrow(result) > 0) {
+    result <- result[order(result$i, result$j), ]
+  }
+
+  return(result)
+}
+
 #' Merge settings with existing styles
 #' @keywords internal
 #' @noRd
@@ -163,7 +212,7 @@ merge_with_existing_styles <- function(x, settings) {
       b$tabularray <- ""
     }
     settings <- rbind(a, b[, colnames(a)])
-    x@style <- unique(settings)
+    x@style <- style_unique_preserve_lines(settings)
   } else {
     x@style <- rbind(x@style, settings)
   }
@@ -564,6 +613,13 @@ assert_style_tt <- function(
   assert_string(line_color, null.ok = FALSE) # black default
   assert_numeric(line_width, len = 1, lower = 0, null.ok = FALSE) # 0.1 default
   assert_choice(line_trim, c("l", "r", "lr"), null.ok = TRUE)
+
+  # Validate that line_trim is only used with bottom lines
+  if (!is.null(line_trim) && !is.null(line)) {
+    if (!identical("b", line)) {
+      stop("line_trim can only be used with bottom lines (line must contain 'b').", call. = FALSE)
+    }
+  }
 
   # must be handled here rather than theme_html() because it is a cell-level issue
   bootstrap_css <- ...get("bootstrap_css")

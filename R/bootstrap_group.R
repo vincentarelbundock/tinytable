@@ -152,28 +152,3 @@ bootstrap_groupj_insert <- function(x, groupj_rows) {
   x@table_string <- out
   x
 }
-
-# Helper function to apply styling to all groups
-bootstrap_groupj_style <- function(x, styling_tasks) {
-  # Apply styling in the same order as the original code
-  for (task in styling_tasks) {
-    x <- style_tt(x, i = task$ihead, align = "c")
-
-    # Add midrule on numbered spans (not full columns of body)
-    jnames <- names(task$j_combined)
-    jnames <- seq_along(jnames)[trimws(jnames) != ""]
-
-    if (length(jnames) > 0) {
-      x <- style_tt(
-        x,
-        i = task$ihead,
-        j = jnames,
-        line = "b",
-        line_width = 0.05,
-        line_color = "#d3d8dc"
-      )
-    }
-  }
-
-  x
-}
