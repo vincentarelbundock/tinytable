@@ -34,9 +34,9 @@ theme_html <- function(
     engine = get_option("tinytable_html_engine", default = NULL),
     i = NULL,
     j = NULL,
-    class = get_option("tinytable_html_class"),
-    css = get_option("tinytable_html_css"),
-    css_rule = get_option("tinytable_html_css_rule"),
+    class = get_option("tinytable_html_class", default = NULL),
+    css = get_option("tinytable_html_css", default = NULL),
+    css_rule = get_option("tinytable_html_css_rule", default = NULL),
     portable = get_option("tinytable_html_portable"),
     tabulator_columns = get_option("tinytable_html_tabulator_columns"),
     tabulator_css_rule = get_option("tinytable_html_tabulator_css_rule"),
@@ -57,6 +57,11 @@ theme_html <- function(
     if (engine == "bootstrap" && is.null(class) && identical(x@html_class, "tinytable")) {
       x@html_class <- "table"
     }
+  }
+
+  if (!is.null(css_rule)) {
+    assert_string(css_rule)
+    x@html_css_rule <- css_rule
   }
 
   if (!is.null(class)) {

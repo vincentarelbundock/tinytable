@@ -27,39 +27,62 @@ x <- mtcars[1:4, 1:5]
 The HTML customization options described in this section are not available for LaTeX (or PDF) documents. Please refer to the web documentation to read this part of the tutorial.
 :::
 
-### Bootstrap classes
+### Bootstrap
 
-::: {.content-visible when-format="html"}
-The Bootstrap framework provides a number of built-in themes to style tables, using "classes." To use them, we call `theme_html()` with the `class` argument. A list of available Bootstrap classes can be found here: <https://getbootstrap.com/docs/5.3/content/tables/>
+:::: {.content-visible when-format="html"}
+The Bootstrap framework provides a number of built-in themes to style tables, using "classes." To use them, call `theme_html()` to set `engine="bootstrap"`, and then use the `class` argument. A list of available Bootstrap classes can be found here: <https://getbootstrap.com/docs/5.3/content/tables/>
+
+For these examples we set a global option that calls `theme_empty()` in order to remove the top, mid, and bottom rules of the table. This is optional, but helps illustrate the basic Bootstrap styling. We also override some default CSS rules set by `tinytable`, using the `css_rule` argument.
+
+```{r, eval = knitr::is_html_output()}
+options(tinytable_tt_theme = theme_empty)
+
+tt(x) |> theme_html(engine = "bootstrap", class = "table", css_rule = "")
+```
 
 To produce a more condensed or "small" table, we use the `table-sm` class:
 
 ```{r, eval = knitr::is_html_output()}
-tt(x) |> theme_html(class = "table table-sm")
+tt(x) |> theme_html(engine = "bootstrap", class = "table table-sm", css_rule = "")
 ```
 
 To produce a "bordered" table, we use the `table-bordered` class:
 
 
 ```{r, eval = knitr::is_html_output()}
-tt(x) |> theme_html(class = "table table-bordered")
+tt(x) |> theme_html(
+  engine = "bootstrap", 
+  class = "table table-bordered", 
+  css_rule = "")
 ```
 
 We can also combine several Bootstrap classes. Here, we get a table with the "hover" feature:
 
 ```{r, eval = knitr::is_html_output()}
-tt(x) |> theme_html(class = "table table-hover")
+tt(x) |> theme_html(
+  engine = "bootstrap", 
+  class = "table table-hover",
+  css_rule = "")
 ```
-
 
 By default, Bootstrap 5 places captions at the bottom of the table. This can be changed by using a different class:
 
 ```{r}
 tt(head(iris), caption = "A caption on top") |>
-  theme_html(class = "table caption-top")
+  theme_html(
+    engine = "bootstrap", 
+    class = "table caption-top",
+    css_rule = "")
 ```
 
+::: {.callout-warning}
+Quarto ships with its own set of Bootstrap CSS rules, which may sometimes interfere with `tinytable` styles. It is somewhat "safer" to work with the default and more vanilla `tinytable` class rather than set `engine = "bootstrap"`. 
 :::
+
+```{r}
+options(tinytable_tt_theme = NULL)
+```
+::::
 
 
 ### CSS declarations

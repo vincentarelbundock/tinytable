@@ -4,11 +4,21 @@ setMethod(
   definition = function(x, ...) {
     # class
     cl <- x@html_class
+    if (!grepl("\\btinytable\\b", cl)) {
+      cl <- paste("tinytable", cl)
+    }
 
     out <- sub(
       "$tinytable_HTML_CLASS",
       cl,
       x@table_string,
+      fixed = TRUE
+    )
+
+    out <- sub(
+      "$tinytable_CSS_RULE",
+      x@html_css_rule,
+      out,
       fixed = TRUE
     )
 
