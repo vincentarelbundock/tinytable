@@ -138,12 +138,11 @@ sanitize_output <- function(x, output) {
   assert_choice(
     output,
     choice = c(
-      "tinytable",
-      "markdown",
       "latex",
       "html",
       "typst",
       "dataframe",
+      "markdown",
       "gfm"
     )
   )
@@ -156,14 +155,8 @@ infer_output <- function(x) {
   output <- x@output
   
   # If output is already set to a specific format, respect it
-  if (!is.null(output) && !isTRUE(output == "tinytable")) {
-    if (output == "html") {
-      # When user explicitly asks for "html", return "html" (engine is stored in @html_engine)
-      return("html")
-    } else {
-      # For all other specific formats, use them as-is
-      return(output)
-    }
+  if (!is.null(output) && !identical(output, "tinytable")) {
+    return(output)
   } else {
     # Only do inference when output is NULL or "tinytable"
     has_viewer <- interactive() && !is.null(getOption("viewer"))
@@ -185,6 +178,7 @@ infer_output <- function(x) {
   }
 
   if (isTRUE(check_dependency("knitr"))) {
+
     if (isTRUE(knitr::pandoc_to() %in% c("latex", "beamer"))) {
       if (isTRUE(x@latex_preamble)) {
         usepackage_latex("float")
@@ -203,8 +197,7 @@ infer_output <- function(x) {
       }
       out <- "latex"
     } else if (isTRUE(knitr::pandoc_to() %in% c("html", "revealjs"))) {
-      # Check HTML engine preference from object slot
-      out <- x@html_engine
+      out <- "html"
     } else if (isTRUE(knitr::pandoc_to() == "typst")) {
       out <- "typst"
       if (isTRUE(check_dependency("quarto"))) {
@@ -213,8 +206,7 @@ infer_output <- function(x) {
           stop(msg, call. = FALSE)
         }
       }
-    } else if (isTRUE(knitr::pandoc_to() == "docx")) {
-      out <- "markdown"
+    # docx, markdown variants, and unknown formats
     } else {
       out <- "markdown"
     }

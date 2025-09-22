@@ -311,14 +311,22 @@ tabularray_hlines <- function(x, rec) {
     return(x)
   }
 
+  # Define color preambles for all line colors
+  for (i in seq_len(nrow(line_entries))) {
+    line_color <- standardize_colors(line_entries$line_color[i], format = "tabularray")
+    x <- define_color_preamble(x, line_color)
+  }
+
   # Create line specifications for each entry
   horizontal_specs <- lapply(seq_len(nrow(line_entries)), function(idx) {
     entry <- line_entries[idx, ]
 
     # Create line specification with trimming
-    line_spec <- sprintf("solid, %s, %sem",
-                        standardize_colors(entry$line_color, format = "tabularray"),
-                        entry$line_width)
+    line_color <- standardize_colors(entry$line_color, format = "tabularray")
+    if (grepl("^#", line_color)) {
+      line_color <- sub("^#", "c", line_color)
+    }
+    line_spec <- sprintf("solid, %s, %sem", line_color, entry$line_width)
 
     # Add trimming if specified
     if (!is.na(entry$line_trim)) {
@@ -402,14 +410,22 @@ tabularray_vlines <- function(x, rec) {
     return(x)
   }
 
+  # Define color preambles for all line colors
+  for (i in seq_len(nrow(line_entries))) {
+    line_color <- standardize_colors(line_entries$line_color[i], format = "tabularray")
+    x <- define_color_preamble(x, line_color)
+  }
+
   # Create line specifications for each entry
   vertical_specs <- lapply(seq_len(nrow(line_entries)), function(idx) {
     entry <- line_entries[idx, ]
 
     # Create line specification with trimming
-    line_spec <- sprintf("solid, %s, %sem",
-                        standardize_colors(entry$line_color, format = "tabularray"),
-                        entry$line_width)
+    line_color <- standardize_colors(entry$line_color, format = "tabularray")
+    if (grepl("^#", line_color)) {
+      line_color <- sub("^#", "c", line_color)
+    }
+    line_spec <- sprintf("solid, %s, %sem", line_color, entry$line_width)
 
     # Add trimming if specified
     if (!is.na(entry$line_trim)) {

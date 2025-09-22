@@ -108,6 +108,9 @@ setMethod(
       position: relative;
       padding: 0.5rem;
     }
+    .tinytable th {
+      text-align: left;
+    }
     "
     .Object@html_css_rule <- css_rule
 
