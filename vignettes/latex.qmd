@@ -1,18 +1,4 @@
-# Customization
-
-```{=html}
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-<script>
-MathJax = {
-  tex: {
-    inlineMath: [['$', '$'], ['\\(', '\\)']]
-  },
-  svg: {
-    fontCache: 'global'
-  }
-};
-</script>
-```
+# LaTeX / PDF customization {#sec-tabularray}
 
 ```{r}
 library(tinytable)
@@ -21,166 +7,8 @@ options(tinytable_latex_placement = "H")
 x <- mtcars[1:4, 1:5]
 ```
 
-## HTML
+## Preamble
 
-::: {.content-visible when-format="pdf"}
-The HTML customization options described in this section are not available for LaTeX (or PDF) documents. Please refer to the web documentation to read this part of the tutorial.
-:::
-
-### Bootstrap
-
-:::: {.content-visible when-format="html"}
-The Bootstrap framework provides a number of built-in themes to style tables, using "classes." To use them, call `theme_html()` to set `engine="bootstrap"`, and then use the `class` argument. A list of available Bootstrap classes can be found here: <https://getbootstrap.com/docs/5.3/content/tables/>
-
-For these examples we set a global option that calls `theme_empty()` in order to remove the top, mid, and bottom rules of the table. This is optional, but helps illustrate the basic Bootstrap styling. We also override some default CSS rules set by `tinytable`, using the `css_rule` argument.
-
-```{r, eval = knitr::is_html_output()}
-options(tinytable_tt_theme = theme_empty)
-
-tt(x) |> theme_html(engine = "bootstrap", class = "table", css_rule = "")
-```
-
-To produce a more condensed or "small" table, we use the `table-sm` class:
-
-```{r, eval = knitr::is_html_output()}
-tt(x) |> theme_html(engine = "bootstrap", class = "table table-sm", css_rule = "")
-```
-
-To produce a "bordered" table, we use the `table-bordered` class:
-
-
-```{r, eval = knitr::is_html_output()}
-tt(x) |> theme_html(
-  engine = "bootstrap", 
-  class = "table table-bordered", 
-  css_rule = "")
-```
-
-We can also combine several Bootstrap classes. Here, we get a table with the "hover" feature:
-
-```{r, eval = knitr::is_html_output()}
-tt(x) |> theme_html(
-  engine = "bootstrap", 
-  class = "table table-hover",
-  css_rule = "")
-```
-
-By default, Bootstrap 5 places captions at the bottom of the table. This can be changed by using a different class:
-
-```{r}
-tt(head(iris), caption = "A caption on top") |>
-  theme_html(
-    engine = "bootstrap", 
-    class = "table caption-top",
-    css_rule = "")
-```
-
-::: {.callout-warning}
-Quarto ships with its own set of Bootstrap CSS rules, which may sometimes interfere with `tinytable` styles. It is somewhat "safer" to work with the default and more vanilla `tinytable` class rather than set `engine = "bootstrap"`. 
-:::
-
-```{r}
-options(tinytable_tt_theme = NULL)
-```
-::::
-
-
-### CSS declarations
-
-::: {.content-visible when-format="html"}
-The `style_tt()` function allows us to declare CSS properties and values for individual cells, columns, or rows of a table. For example, if we want to make the first column bold, we could do:
-
-```{r}
-tt(x) |>
-  theme_html(j = 1, css = "font-weight: bold; color: red;")
-```
-:::
-
-### CSS rules
-
-::: {.content-visible when-format="html"}
-For more extensive customization, we can use complete CSS rules. In this example, we define several rules that apply to a new class called `mytable`. Then, we use the `theme` argument of the `tt()` function to ensure that our tiny table is of class `mytable`. Finally, we call `style_bootstrap()` to apply the rules with the `bootstrap_css_rule` argument.
-
-```{r, eval = knitr::is_html_output()}
-css_rule <- "
-.mytable {
-  background: linear-gradient(45deg, #EA8D8D, #A890FE);
-  width: 600px;
-  border-collapse: collapse;
-  overflow: hidden;
-  box-shadow: 0 0 20px rgba(0,0,0,0.1);
-}
-
-.mytable th,
-.mytable td {
-  padding: 5px;
-  background-color: rgba(255,255,255,0.2);
-  color: #fff;
-}
-
-.mytable tbody tr:hover {
-  background-color: rgba(255,255,255,0.3);
-}
-
-.mytable tbody td:hover:before {
-  content: '';
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: -9999px;
-  bottom: -9999px;
-  background-color: rgba(255,255,255,0.2);
-  z-index: -1;
-}
-"
-
-tt(x, width = 2 / 3) |>
-  style_tt(
-    j = 1:5,
-    align = "ccccc") |>
-  theme_html(
-    class = "mytable", 
-    css_rule = css_rule)
-```
-
-
-And here's another example:
-
-
-```{r}
-css <- "
-.squirreltable {
-  background-size: cover;
-  background-position: center;
-  background-image: url('https://user-images.githubusercontent.com/987057/82732352-b9aabf00-9cda-11ea-92a6-26750cf097d0.png');
-  --bs-table-bg: transparent;
-}
-"
-
-tt(mtcars[1:10, 1:8]) |>
-  theme_html(
-    css_rule = css,
-    class = "table table-borderless squirreltable")
-```
-:::
-
-And yet another one. Some Rmarkdown documents like `bookdown` use older versions of Bootstrap that do not have a `caption-top` class. We can recreate that functionality with CSS rules and classes. For example,
-
-```r
-rule <- ".bottomcaption {caption-side: bottom;}"
-tt(head(iris), caption = "Hello world") |>
-  theme_html(class = "table bottomcaption", css_rule = rule)
-```
-
-## LaTeX / PDF {#sec-tabularray}
-
-::: {.content-visible when-format="html"}
-The LaTeX / PDF customization options described in this section are not available for HTML documents. Please refer to the PDF documentation hosted on the website to read this part of the tutorial.
-:::
-
-### Preamble
-
-::: {.content-visible when-format="pdf"}
 _Warning_: Some of the features of this package may require a recent version of the `tabularray` package. Please update your local LaTeX distribution before using `tinytable`.
 
 In Rmarkdown and Quarto documents, `tinytable` will automatically populate your LaTeX preamble with the necessary packages and commands. When creating your own LaTeX documents, you should insert these commands in the preamble:
@@ -195,11 +23,9 @@ In Rmarkdown and Quarto documents, `tinytable` will automatically populate your 
 \newcommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}
 \newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
 ```
-:::
 
-### Introduction to `tabularray`
+## Introduction to `tabularray`
 
-::: {.content-visible when-format="pdf"}
 `tabularray` offers a robust solution for creating and managing tables in LaTeX, standing out for its flexibility and ease of use. It excels in handling complex table layouts and offers enhanced functionality compared to traditional LaTeX table environments. This package is particularly useful for users requiring advanced table features, such as complex cell formatting, color management, and versatile table structures.
 
 A key feature of Tabularray is its separation of style from content. This approach allows users to define the look and feel of their tables (such as color, borders, and text alignment) independently from the actual data within the table. This separation simplifies the process of formatting tables and enhances the clarity and maintainability of LaTeX code. The `tabularray` documentation is fantastic. It will teach you how to customize virtually every aspect of your tables: <https://ctan.org/pkg/tabularray?lang=en>
@@ -232,7 +58,7 @@ mpg & cyl & disp & hp \\
 \end{tblr}
 \end{table}
 ```
-   
+
 The Inner block, enclosed in `{}`, defines specific styles like column formats (`column{1-4}={halign=c}`), horizontal and vertical line colors (`hlines={fg=white}`, `vlines={fg=white}`), and cell colorations (`cell{1,6}{odd}={bg=teal7}`, etc.). The last line of the inner block also species that the second cell of row 2 (`cell{2}{2}`) should span 4 rows and 2 columns (`{r=4,c=3}`), be centered (`halign=c`), and with a background color with the 7th luminance level of the azure color (`bg=azure7`).
 
 We can create this code easily by passing a string to the `inner` argument of the `theme_latex()` function:
@@ -254,13 +80,8 @@ mtcars[1:5, 1:4] |>
   theme_latex(inner = inner)
 ```
 
+## `tabularray` keys
 
-:::
-
-
-### `tabularray`  keys
-
-::: {.content-visible when-format="pdf"}
 Inner specifications:
 
 | Key       | Description and Values                                    | Initial Value |
@@ -370,62 +191,3 @@ vlines:
 | `fg`       | rule color name                                               | None          |
 | `abovepos` | crossing or trimming position at the above side               | `0`           |
 | `belowpos` | crossing or trimming position at the below side               | `0`           |
-
-:::
-
-
-## Methods to support non-data frame objects
-
-The `tt()` function is a "generic" that can dispatch an object to an appropriate method based on the class of that object. The `tinytable` supplies methods for `data.frame`, `data.table`, and `tibble`. But users can define new method to automatically create tables for whatever object they like.
-
-For example, let's say we fit a linear regression model (class `lm`) and extract the results using the `tidy()` function from the `broom` package. We can create a table from the results as follows:
-
-```{r}
-library(broom)
-library(tinytable)
-mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
-results <- tidy(mod)
-tt(results)
-```
-
-Alternatively, we can create an S3 method for the `lm` class, and then pass any model we fit to that class to automatically obtain a nice table.
-
-```{r}
-tt.lm <- function(x, ...) {
-  results <- broom::tidy(x)
-  out <- tt(results, ...)
-  out <- format_tt(out, j = "p.value", escape = TRUE,
-    fn = \(p) format.pval(p, digits = 1))
-  return(out)
-}
-
-lm(mpg ~ hp, data = mtcars) |> tt(digits = 1)
-
-lm(mpg ~ hp + factor(cyl), data = mtcars) |> tt(digits = 1)
-```
-
-## Shiny
-
-`tinytable` is a great complement to Shiny for displaying HTML tables in a web app. The styling in a `tinytable` is applied by JavaScript functions and CSS. Thus, to ensure that this styling is preserved in a Shiny app, one strategy is to bake the entire page, save it in a temporary file, and load it using the `includeHTML` function from the `shiny` package. This approach is illustrated in this minimal example:
-
-
-```{r, eval = FALSE}
-library("shiny")
-library("tinytable")
-
-fn <- paste(tempfile(), ".html")
-tab <- tt(mtcars[1:5, 1:4]) |>
-  style_tt(i = 0:5, color = "orange", background = "black") |>
-  save_tt(fn)
-
-shinyApp(
-  ui = fluidPage(
-    fluidRow(column(
-      12, h1("This is test of tinytable"),
-      shiny::includeHTML(fn)
-    ))
-  ),
-  server = function(input, output) {
-  }
-)
-```

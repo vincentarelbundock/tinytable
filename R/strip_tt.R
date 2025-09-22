@@ -114,6 +114,13 @@ strip_tt <- function(
       position: relative;
       padding: 0.5rem;
     }
+    .tinytable th {
+      text-align: left;
+      vertical-align: top;
+    }
+    .tinytable td {
+      vertical-align: top;
+    }
     "
   }
 

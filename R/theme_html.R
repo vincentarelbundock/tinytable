@@ -76,6 +76,13 @@ theme_html <- function(
     x@html_portable <- portable
   }
 
+  # Handle css parameter for table-wide styling
+  if (!is.null(css) && is.null(i) && is.null(j)) {
+    # Add CSS rule to existing html_css_rule instead of using style_tt
+    css_rule_addition <- sprintf("\n    .tinytable th,\n    .tinytable td {\n      %s\n    }", css)
+    x@html_css_rule <- paste0(x@html_css_rule, css_rule_addition)
+  }
+
   x <- theme_html_tabulator(
     x,
     tabulator_stylesheet = tabulator_stylesheet,

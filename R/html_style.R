@@ -424,13 +424,8 @@ setMethod(
     indent = 0,
     ...
   ) {
-    if (length(x@html_css_rule) == 1) {
-      x@table_string <- html_setting(
-        x@table_string,
-        x@html_css_rule,
-        component = "css"
-      )
-    }
+    # CSS rule will be handled by finalize() via template substitution
+    # Removed duplicate html_setting call that was causing CSS duplication
 
     sty <- x@style
 

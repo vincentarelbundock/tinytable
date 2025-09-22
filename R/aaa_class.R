@@ -94,25 +94,7 @@ setMethod(
     .Object@width <- width
     .Object@notes <- notes
     .Object@height <- height
-
-    css_rule <- "
-    .tinytable {
-      margin-bottom: .5em;
-      margin-top: .5em;
-      border-collapse: collapse;
-      width: 100%;
-    }
-    .tinytable th,
-    .tinytable td {
-      font-weight: normal;
-      position: relative;
-      padding: 0.5rem;
-    }
-    .tinytable th {
-      text-align: left;
-    }
-    "
-    .Object@html_css_rule <- css_rule
+    .Object@html_css_rule <- get_css()
 
     # dynamic
     .Object@nrow <- nrow(.Object@data)
