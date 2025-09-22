@@ -153,8 +153,8 @@ window.Quarto = {
  <span class="dropdown-text">Themes</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="./vignettes/custom.html">
- <span class="dropdown-text">Customization</span></a>
+    <a class="dropdown-item" href="./vignettes/html.html">
+ <span class="dropdown-text">HTML customization</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="./vignettes/notebooks.html">
@@ -176,7 +176,7 @@ window.Quarto = {
   </li>
   <li class="nav-item">
     <a class="nav-link active" href="./vignettes/tinytable_tutorial.pdf" aria-current="page"> 
-<span class="menu-text">Tutorial (PDF)</span></a>
+<span class="menu-text">Tutorial (LaTeX)</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="./vignettes/tinytable_tutorial_typst.pdf"> 
@@ -218,7 +218,7 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
- <span class="menu-text">Tutorial</span></a>
+ <span class="menu-text">Tutorial (HTML)</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -262,8 +262,8 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./vignettes/custom.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Customization</span></a>
+  <a href="./vignettes/html.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">HTML</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -301,7 +301,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./vignettes/tinytable_tutorial.pdf" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Tutorial (PDF)</span></a>
+ <span class="menu-text">Tutorial (LaTeX)</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -425,8 +425,8 @@ window.Quarto = {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./man/theme_void.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><code>theme_void</code></span></a>
+  <a href="./man/theme_empty.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_empty</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -536,11 +536,12 @@ window.Quarto = {
 <h1>News</h1>
 <section id="development" class="level2">
 <h2 class="anchored" data-anchor-id="development">Development</h2>
-<p>Breaking change:</p>
+<p>Breaking changes:</p>
 <ul>
 <li><code>theme_void()</code> calls <code>strip_tt()</code> to drop every change made to this point, so the order of operations matter.</li>
 <li><code>"html_portable"</code> is no longer a valid <code>output</code> format in <code>save_tt()</code> or <code>print()</code>. Use <code>theme_html(portable = TRUE)</code> instead.</li>
 <li><code>plot_tt()</code> deprecates the <code>asp</code> argument. Use <code>width_plot</code> and <code>height_plot</code> instead.</li>
+<li><code>theme_void()</code> becomes <code>theme_empty()</code> to avoid conflict with <code>ggplot2::theme_void()</code>.</li>
 </ul>
 <p>Deprecated global options:</p>
 <ul>
@@ -583,6 +584,7 @@ window.Quarto = {
 </ul>
 <p>New miscellaneous features:</p>
 <ul>
+<li>New Gallery vignette with advanced examples: https://vincentarelbundock.github.io/tinytable/vignettes/gallery.html</li>
 <li>Non-standard evaluation is supported for <code>i</code> and <code>j</code> arguments in <code>style_tt()</code>, <code>format_tt()</code>, and <code>plot_tt()</code>.</li>
 <li><code>tt()</code> is now a generic function, allowing special table-drawing methods for specific classes of objects. <code>tinytable</code> provides methods for <code>data.frame</code>, <code>data.table</code>, and <code>tbl_df</code>. See the “Custom” vignette for examples.</li>
 <li><code>subset(x, select = c(x, y))</code> can now be used to select columns.</li>
