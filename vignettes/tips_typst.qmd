@@ -1,0 +1,71 @@
+## Typst
+
+### Quarto
+
+By default `tinytable` uses Quarto's own figure handling to set captions and figure blocks. This allows cross-references to work. For this to work well, users should specify _both_ the table label and the table caption explicitly using chunk options. Note that the label must imperatively start with `tbl-`:
+
+```r
+#| label: tbl-example
+#| tbl-cap: This is an example table
+library(tinytable)
+tt(head(iris))
+```
+
+The rendered version gives us @tbl-example.
+
+```{r}
+#| label: tbl-example
+#| tbl-cap: This is an example table
+library(tinytable)
+tt(head(iris))
+```
+
+### Multi-page long tables
+
+The Typst tables created by `tinytable` are automatically broken across pages with repeated headers. However, in Quarto documents, the Quarto software wraps tables in an non-breakable `#figure` environment. This can break the display of long tables. One solution is to use a raw Typst code block to set Figures to be breakable:
+
+````{verbatim}
+---
+format: typst
+---
+
+```{=typst}
+#show figure: set block(breakable: true)
+```
+
+```{r}
+#| tbl-cap: "blah blah blah"
+#| label: tbl-blah
+library(tinytable)
+tt(head(iris, 50))
+```
+````
+
+### `kind`
+
+By default, `tinytable` adds `kind:"tinytable"` to all tables produced by the package. This can easily be modified using the `finalize` argument of the `style_tt()` function, and it can be applied automatically to all tables by setting a default theme. For example,
+
+```r
+theme_fancy <- function(x, ...) {
+  fancytable <- function(x) {
+    if (x@output == "typst") {
+    x@table_string <- sub(
+        'kind: "tinytable"', 
+        'kind: "fancytable"', 
+        x@table_string, fixed = TRUE)
+    }
+    return(x)
+  }
+  x |> style_tt(finalize = fancytable)
+}
+options(tinytable_tt_theme = theme_fancy)
+
+tt(head(iris)) |> print("typst")
+```
+
+## `rowspan` and `colspan`
+
+If a table has cells that span across the full table (`colspan` equal to `nrow(tab)`), the `rowspan` argument can collapse multiple rows into a single cell. See this forum post for explanation why:
+
+[https://forum.typst.app/t/why-is-a-rowspan-cell-with-colspan-equal-to-number-of-columns-seemingly-only-spanning-one-row/5047](https://forum.typst.app/t/why-is-a-rowspan-cell-with-colspan-equal-to-number-of-columns-seemingly-only-spanning-one-row/5047)
+

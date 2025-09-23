@@ -1,0 +1,257 @@
+## LaTeX
+
+### Preamble
+
+`tinytable` uses the `tabularray` package from your LaTeX distribution to draw tables. `tabularray`, in turn, provides special `tblr`, `talltblr`, and `longtblr` environments to display tabular data.
+
+When rendering a document from Quarto or Rmarkdown directly to PDF, `tinytable` will populate the LaTeX preamble automatically with all the required packages (except when code chunks are cached). For standalone LaTeX documents, these commands should be inserted in the preamble manually:
+
+```latex
+\usepackage{tabularray}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\UseTblrLibrary{siunitx}
+\newcommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}
+\newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
+\NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
+```
+
+### `setspace`
+
+Some users have encountered unexpected spacing behavior when generating tables that are *not* wrapped in a `\begin{table}` environment (ex: `multipage` or raw `tblr`).
+
+One issue stems from the fact that the `\begin{table}` environment resets any spacing commands in the preamble or body by default, such as:
+
+```tex
+\usepackage{setspace}
+\doublespacing
+```
+
+This means that when using `theme_latex(environment="tabular")` ---which does not wrap the table in a `table` environment--- the spacing is *not* reset, and tables are double spaced. This is not a bug, since double-spacing is in fact what the user requested. Nevertheless, the behavior can seem surprising for those used to the automagical `table` environment spacing reset.
+
+One workaround is to add the following to the document preamble when using multipage/longtblr:
+
+```tex
+\usepackage{etoolbox}
+\AtBeginEnvironment{longtblr}{\begin{singlespacing}}
+\AtEndEnvironment{longtblr}{\end{singlespacing}}
+```
+
+Example Quarto doc:
+
+  
+````md
+---
+title: longtblr and setspacing
+format:
+  pdf:
+    include-in-header:
+      - text: |
+         % Tinytable preamble
+         \usepackage{tabularray}
+         \usepackage{float}
+         \usepackage{graphicx}
+         \usepackage{codehigh}
+         \usepackage[normalem]{ulem}
+         \UseTblrLibrary{booktabs}
+         \newcommand{\tinytableTabularrayUnderline}[1]{\underline
+         {#1}}
+         \newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
+         \NewTableCommand{\tinytableDefineColor}[3]{\definecolor{
+         #1}{#2}{#3}}
+         % Spacing Commands
+         \usepackage{setspace}
+         \doublespacing
+         % Fix Spacing in longtblr
+         \usepackage{etoolbox}
+         \AtBeginEnvironment{longtblr}{\begin{singlespacing}}
+         \AtEndEnvironment{longtblr}{\end{singlespacing}}
+---
+
+```{=latex}
+\begin{longtblr}[         %% tabularray outer open
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+colspec={Q[]Q[]Q[]Q[]},
+}                     %% tabularray inner close
+\toprule
+foo & bar & baz \\
+foo & bar & baz \\
+foo & bar & baz \\
+\bottomrule
+\end{longtblr}
+```
+````
+
+### Multi-line cells with `minipage`
+
+In some contexts, users may want create cells with LaTeX or markdown code that spans multiple lines. This usually works well for HTML tables. But sometimes, in LaTeX, multi-line content with special environments must be wrapped in a `minipage` environment.
+
+In the example that follows, we create a Markdown list using asterisks. Then, we call `litedown::mark()` to render that list as bullet points (an `itemize` environment in LaTeX). Finally, we define a custom function called `minipagify` to wrap the bullet point in a `minipage` environment.
+
+```{r}
+library(tinytable)
+library(litedown)
+
+dat <- data.frame(
+  A = c("Blah *blah* blah", "- Thing 1\n- Thing 2"),
+  B = c("6%", "$5.29")
+)
+
+# wrap in a minipage environment
+minipagify <- function(x) {
+  sprintf(
+    "\\minipage{\\textwidth}%s\\endminipage",
+    sapply(x, litedown::mark, "latex")
+  )
+}
+
+# only in LaTeX
+is_latex <- identical(knitr::pandoc_to(), "latex")
+is_html <- identical(knitr::pandoc_to(), "html")
+
+
+tab <- tt(dat, width = c(0.3, 0.2)) |>
+  style_tt(j = 2, align = "c") |>
+  format_tt(j = 2, escape = TRUE) |>
+  format_tt(j = 1, fn = if (is_latex) minipagify else identity) |>
+  format_tt(j = 1, fn = if (is_html) litedown::mark else identity)
+
+tab
+```
+
+### Global styles
+
+`tabularray` allows very powerful styling and themeing options. See [the reference manual](https://ctan.org/pkg/tabularray) for more information.
+
+For example, you can change the size of footnotes in all tables of a document with:
+
+````{verbatim}
+---
+format: 
+    pdf:
+        keep-tex: true
+        header-includes: |
+            \SetTblrStyle{foot}{font=\LARGE}
+---
+
+```{r}
+library(tinytable)
+library(magrittr)
+tt(head(iris), notes = "Blah blah")
+```
+````
+
+
+### Beamer
+
+Due to [a bug in the upstream package `rmarkdown`](https://github.com/rstudio/rmarkdown/issues/2478), Quarto or Rmarkdown presentations compiled to Beamer cannot include adequate package loading commands in the preamble automatically. This bug prevents `tinytable::usepackage_latex()` from modifying the preamble. Here's a workaround.
+
+Save this LaTeX code as `preamble.tex`:
+
+```latex
+\RequirePackage{tabularray}
+\RequirePackage{booktabs}
+\RequirePackage{float}
+\usepackage[normalem]{ulem}
+\usepackage{graphicx}
+\UseTblrLibrary{booktabs}
+\UseTblrLibrary{siunitx}
+\NewTableCommand{\tinytableDefineColor}[3]{\definecolor{#1}{#2}{#3}}
+\newcommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}
+\newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
+```
+
+Then, load `preamble.tex` in your YAML header:
+
+````yaml
+---
+output: 
+  beamer_presentation:
+    includes:
+      in_header: preamble.tex
+---
+````
+
+With these changes, the table should appear with colors as expected.
+
+### Label and caption position
+
+In LaTeX, we can use `tabularray` options in the preamble or the table to change the location of the label and caption. The example below shows a Quarto document with caption at the bottom.
+
+````{verbatim}
+---
+output: 
+    pdf_document:
+header-includes:
+  - \usepackage{tabularray}
+ ---
+
+```{=latex}
+\DefTblrTemplate{firsthead,middlehead,lasthead}{default}{}
+\DefTblrTemplate{firstfoot,middlefoot}{default}{}
+\DefTblrTemplate{lastfoot}{default}% 
+{
+  \UseTblrTemplate{caption}{default}
+}
+```
+
+```{r, echo=FALSE}
+library(modelsummary)
+library(tinytable)
+mod <- list()
+mod[['One variable']] <- lm(mpg ~ hp, mtcars)
+mod[['Two variables']] <- lm(mpg ~ hp + drat, mtcars)
+
+modelsummary(mod,
+             title = "Regression Models")|>
+  theme_latex(outer = "label={tblr:test}")
+```
+
+Table \ref{tblr:test}
+````
+
+
+## `theme_latex()`
+
+The `theme_latex()` function includes resize functionality to adjust the size of tables in LaTeX outputs, making them fit within a specified width of the page. This is useful for large tables that need to be scaled down to fit the document layout. This table will be scaled to 90% of the available line width, ensuring it fits nicely within the document.
+
+```{r}
+tmp <- cbind(mtcars, mtcars)[1:10, ]
+
+tt(tmp) |> theme_latex(resize_width = .9, resize_direction = "down")
+```
+
+### Placement
+
+The `theme_latex()` function includes placement control over the positioning of the table in LaTeX documents, using floating parameters like `H` (from the `float` LaTeX package) to specify where the table should appear.
+
+```{r placement-theme}
+options(tinytable_latex_placement = NULL)
+x <- head(mtcars)
+tt(x) |>
+  theme_latex(placement = "H") |>
+  print(output = "latex")
+```
+
+### Rotate
+
+```{r}
+tt(head(iris), caption = "Rotated table.") |>
+  theme_rotate(angle = 45)
+```
+
+### Multipage
+
+The `multipage` theme is designed for LaTeX documents to allow long tables to continue across multiple pages. This theme ensures that tables are not truncated and that all data is presented clearly.
+
+```{r}
+tmp <- rbind(mtcars, mtcars)[, 1:6]
+
+cap <- "A long 80\\% width table with repeating headers."
+
+tt(tmp, width = .8, caption = cap) |>
+  theme_latex(multipage = TRUE, rowhead = 1)
+```
