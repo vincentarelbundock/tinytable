@@ -431,17 +431,3 @@ tt(data, caption = "Three friends.") |>
 
 ![ANSI Terminal Output](figures/ansi_example.png)
 
-## Word
-
-Word tables have limited styling support. The only supported arguments are: `bold`, `italic`, and `strikeout`. These limitations are due to the fact that we create Word documents by converting a markdown table to .docx via the Pandoc software, which requires going through a text-only intermediate format.
-
-Here's a basic example styling the group headers directly using markdown syntax:
-
-```{r}
-mtcars[1:4, 1:4] |>
-  tt() |>
-  group_tt(i = list("*Hello*" = 1, "__World__" = 3)) |>
-  print("markdown")
-```
-
-

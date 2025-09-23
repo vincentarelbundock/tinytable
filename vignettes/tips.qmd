@@ -319,39 +319,6 @@ These arguments are already implemented in the form of "pseudo-spans", meaning t
 One alternative would be to remove line segments in finalize_grid(). I tried this but it is tricky and the results were brittle, so I rolled it back. I'm open to considering a PR if someone wants to contribute code, but please discuss the feature design in an issue with me before working on this.
 
 
-
-## Word (`.docx`)
-
-Word document documents are created in two steps:
-
-1. Generates a markdown table.
-2. Call the external [Pandoc software](https://pandoc.org/) to convert the markdown table to a Word document.
-
-This workflow limits the range of styling options available in Word. Indeed, many arguments in the `style_tt()` function do not have formal markdown notation to represent them, and are thus not available. For example, while `italic`, `bold`, and `strikeout`, are supported, `color` and `background` are not.
-
-Note that other `tinytable` functions such as `group_tt()` and `format_tt()` and `plot_tt()` should work as expected in Word.
-
-Users who want full styling capabilities in Word can save tables as image files and insert them in their documents. Here is an example Quarto notebook illustrating this workflow.
-
-````{verbatim}
----
-format: docx
----
-
-```{r}
-#| out-width: "50%"
-library(tinytable)
-
-options(tinytable_save_overwrite = TRUE)
-
-tt(mtcars[1:10, 1:5]) |>
-  style_tt(j = 2:3, background = "black", color = "white") |>
-  save_tt("table_01.png")
-
-knitr::include_graphics("table_01.png")
-```
-````
-
 ## Removing elements with `strip_tt()`
 
 In some cases, it is useful to remove elements of an existing `tinytable` object. For example, packages like `modelsummary` often return tables with default styling—such as borders and lines in specific position. If the user adds group labels manually, the original lines and borders will be misaligned. 
