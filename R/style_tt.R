@@ -495,19 +495,6 @@ style_tt <- function(
     }
     settings[["fontsize"]] <- if (is.null(fontsize)) NA else as.vector(fontsize)
     settings[["alignv"]] <- if (is.null(alignv)) NA else alignv
-    # Expand compound line directions like "tblr" into separate entries
-    if (!is.null(line) && nchar(line) > 1) {
-      line_chars <- strsplit(line, "")[[1]]
-      # Create multiple rows for each line direction
-      expanded_settings <- do.call(rbind, lapply(line_chars, function(direction) {
-        new_settings <- settings
-        new_settings[["line"]] <- direction
-        new_settings
-      }))
-      settings <- expanded_settings
-    } else {
-      settings[["line"]] <- if (is.null(line)) NA else line
-    }
     settings[["line_color"]] <- if (is.null(line)) NA else line_color
     settings[["line_width"]] <- if (is.null(line)) NA else line_width
     settings[["bold"]] <- bold
@@ -523,6 +510,20 @@ style_tt <- function(
       html_css
     } else {
       NA
+    }
+
+    # Expand compound line directions like "tblr" into separate entries
+    if (!is.null(line) && nchar(line) > 1) {
+      line_chars <- strsplit(line, "")[[1]]
+      # Create multiple rows for each line direction
+      expanded_settings <- do.call(rbind, lapply(line_chars, function(direction) {
+        new_settings <- settings
+        new_settings[["line"]] <- direction
+        new_settings
+      }))
+      settings <- expanded_settings
+    } else {
+      settings[["line"]] <- if (is.null(line)) NA else line
     }
 
     if (!is.null(line_trim)) {

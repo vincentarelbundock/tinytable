@@ -43,6 +43,8 @@ theme_tt <- function(x, theme, ...) {
     x <- theme_revealjs(x, ...)
   } else if (identical(theme, "striped")) {
     x <- theme_striped(x)
+  } else if (identical(theme, "empty")) {
+    x <- theme_empty(x)
   } else if (identical(theme, "void")) {
     x <- theme_empty(x)
   } else if (identical(theme, "rotate")) {
