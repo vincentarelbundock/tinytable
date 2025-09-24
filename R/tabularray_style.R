@@ -338,10 +338,16 @@ tabularray_hlines <- function(x, rec) {
       }
     }
 
+    # Get row range - use all rows if i is NA
+    if (is.na(entry$i)) {
+      rows <- seq_len(x@nrow + x@nhead)
+    } else {
+      rows <- entry$i
+    }
+
     # Adjust row index based on line type
-    row_idx <- entry$i
     if (grepl("b", entry$line)) {
-      row_idx <- row_idx + 1
+      rows <- rows + 1
     }
 
     # Get column range - use all columns if j is NA
@@ -352,7 +358,7 @@ tabularray_hlines <- function(x, rec) {
     }
 
     return(data.frame(
-      i = row_idx,
+      i = rows,
       j = cols,
       lin = line_spec,
       line = entry$line,
