@@ -31,32 +31,17 @@ css_render <- function(x) {
   paste0(names(x), ": ", unname(x), collapse = "; ")
 }
 
-#' Pick first matching key from CSS map with default
+#' Pick last matching key from CSS map with default
 #' @keywords internal
 #' @noRd
 css_pick <- function(named_chr, keys, default = NULL) {
+  result <- default
   for (key in keys) {
     if (key %in% names(named_chr)) {
-      return(named_chr[[key]])
+      result <- named_chr[[key]]
     }
   }
-  default
-}
-
-#' Merge flag values (take max across duplicates)
-#' @keywords internal
-#' @noRd
-css_merge_flags <- function(named_chr, flag_keys) {
-  for (flag_key in flag_keys) {
-    matching_keys <- names(named_chr)[names(named_chr) == flag_key]
-    if (length(matching_keys) > 1) {
-      values <- as.numeric(named_chr[matching_keys])
-      named_chr[[flag_key]] <- as.character(max(values, na.rm = TRUE))
-      # Remove duplicates
-      named_chr <- named_chr[!names(named_chr) %in% matching_keys[-1]]
-    }
-  }
-  named_chr
+  result
 }
 
 #' Parse border declaration into components
@@ -114,27 +99,61 @@ header_col_mapping_cache <- function(x) {
   if (nrow(x@group_data_j) > 0) {
     for (group_row_idx in seq_len(nrow(x@group_data_j))) {
       target_i <- -(nrow(x@group_data_j) - group_row_idx + 1)
-      cache[[as.character(target_i)]] <- html_get_datacol_mapping(x, target_i)
+
+      # Get mapping from user column index to HTML data-col value for this header row
+      # Initialize with 1:1 mapping (1-based, will be converted to 0-based later)
+      col_mapping <- seq_len(x@ncol)
+
+      # Only handle column groups for header rows
+      if (target_i < 0) {
+        # Group rows are processed in reverse order, so map target_i to correct row
+        # target_i = -1 corresponds to the first group (nrow), target_i = -2 to second group (nrow-1), etc.
+        if (group_row_idx >= 1 && group_row_idx <= nrow(x@group_data_j)) {
+          groupj <- as.character(x@group_data_j[group_row_idx, ])
+          j_list <- html_groupj_span(groupj)
+
+          if (length(j_list) > 0) {
+            # Recreate the j_combined logic from html_groupj_html
+            miss <- as.list(setdiff(seq_len(x@ncol), unlist(j_list)))
+            miss <- stats::setNames(miss, rep(" ", length(miss)))
+            j_combined <- c(j_list, miss)
+
+            # Sort by column position
+            max_col <- sapply(j_combined, max)
+            idx <- order(max_col)
+            j_combined <- j_combined[idx]
+
+            # Create mapping: each user column maps to its HTML data-col position
+            # The HTML data-col position corresponds to the index in j_combined (k-1 for 0-based)
+            for (k in seq_along(j_combined)) {
+              original_cols <- j_combined[[k]]
+              # All columns in this span map to the same data-col position (k)
+              # Since we return 1-based and later subtract 1, we use k here
+              for (orig_col in original_cols) {
+                col_mapping[orig_col] <- k
+              }
+            }
+          }
+        }
+      }
+
+      cache[[as.character(target_i)]] <- col_mapping
     }
   }
   cache
 }
 
-# =============================================================================
-# Refactored Functions
-# =============================================================================
-
-html_convert_to_pseudo_elements <- function(css_rule) {
-  parse <- css_parse(css_rule)
+# Convert CSS map directly to pseudo-element format (no parsing required)
+convert_map_to_pseudo_elements <- function(css_map) {
   vars <- pseudo_vars_init()
 
   # Default values
   line_color <- "black"
   line_width <- "0.1em"
 
-  # Process border declarations
-  for (key in names(parse)) {
-    val <- parse[[key]]
+  # Process border declarations from map
+  for (key in names(css_map)) {
+    val <- css_map[[key]]
 
     if (key == "border" && grepl("solid", val)) {
       # All borders
@@ -155,16 +174,16 @@ html_convert_to_pseudo_elements <- function(css_rule) {
     }
   }
 
-  # Allow user overrides from existing CSS variables
+  # Allow user overrides from existing CSS variables in map
   for (var_name in names(vars)) {
-    if (var_name %in% names(parse)) {
-      vars[[var_name]] <- parse[[var_name]]
+    if (var_name %in% names(css_map)) {
+      vars[[var_name]] <- css_map[[var_name]]
     }
   }
 
   # Extract line properties with user overrides
-  line_color <- css_pick(parse, "--line-color", line_color)
-  line_width <- css_pick(parse, "--line-width", line_width)
+  line_color <- css_pick(css_map, "--line-color", line_color)
+  line_width <- css_pick(css_map, "--line-width", line_width)
 
   # Remove all border-related keys from regular CSS
   border_keys <- c("border", "border-left", "border-right", "border-top", "border-bottom",
@@ -173,7 +192,7 @@ html_convert_to_pseudo_elements <- function(css_rule) {
                   "--line-width-top", "--line-width-bottom", "--trim-top-left", "--trim-top-right",
                   "--trim-bottom-left", "--trim-bottom-right", "--trim-left-top", "--trim-left-bottom",
                   "--trim-right-top", "--trim-right-bottom")
-  non_border <- parse[!names(parse) %in% border_keys]
+  non_border <- css_map[!names(css_map) %in% border_keys]
 
   # Add position: relative if missing
   if (!"position" %in% names(non_border)) {
@@ -185,77 +204,28 @@ html_convert_to_pseudo_elements <- function(css_rule) {
                c("--line-color" = line_color, "--line-width" = line_width),
                vars)
 
-  css_render(all_css)
+  all_css
 }
 
-html_clean_css_rule <- function(css_rule) {
-  # Parse the (potentially concatenated) CSS rule
-  m <- css_parse(css_rule)
 
-  # For border flags, we need to OR them together by taking max values
-  # This handles the case where concatenated CSS has overwritten border values
-  # We need to reconstruct the intended borders from all the CSS parts
-
-  # Split the original CSS by semicolon and look for all border values
-  parts <- strsplit(css_rule, ";", fixed = TRUE)[[1]]
-  parts <- trimws(parts[nzchar(parts)])
-
-  border_flags <- c("--border-left", "--border-right", "--border-top", "--border-bottom")
-  color_flags <- c("--line-color-left", "--line-color-right", "--line-color-top", "--line-color-bottom")
-
-  # Extract all border flag values and take maximum
-  for (flag in border_flags) {
-    flag_parts <- parts[grepl(paste0("^", flag, ":"), parts)]
-    if (length(flag_parts) > 0) {
-      values <- sapply(flag_parts, function(p) {
-        val <- trimws(strsplit(p, ":", fixed = TRUE)[[1]][2])
-        as.numeric(val)
-      })
-      m[[flag]] <- as.character(max(values, na.rm = TRUE))
-    }
-  }
-
-  # For color flags, prioritize non-black colors
-  for (flag in color_flags) {
-    flag_parts <- parts[grepl(paste0("^", flag, ":"), parts)]
-    if (length(flag_parts) > 0) {
-      # Extract all color values for this flag
-      color_values <- sapply(flag_parts, function(p) {
-        trimws(strsplit(p, ":", fixed = TRUE)[[1]][2])
-      })
-
-      # Prioritize first non-black color, otherwise use last color
-      non_black_colors <- color_values[color_values != "black"]
-      if (length(non_black_colors) > 0) {
-        m[[flag]] <- non_black_colors[1]
-      } else {
-        m[[flag]] <- color_values[length(color_values)]
-      }
-    }
-  }
-
-  css_render(m)
-}
-
-html_consolidate_css_vars <- function(rec) {
+# Map-based consolidation that works directly with CSS maps
+consolidate_css_maps <- function(rec_with_maps) {
   # Group by cell position (i, j)
-  cell_groups <- split(rec, paste(rec$i, rec$j))
+  cell_groups <- split(rec_with_maps, paste(rec_with_maps$i, rec_with_maps$j, sep = "_"))
 
+  consolidated_list <- list()
+  idx <- 1
 
-  consolidated_rec <- data.frame()
   for (group in cell_groups) {
     if (nrow(group) == 1) {
-      # Single rule - clean it in case it has concatenated CSS
-      group$css_arguments <- html_clean_css_rule(group$css_arguments)
-      consolidated_rec <- rbind(consolidated_rec, group)
+      # Single rule - keep as is
+      consolidated_list[[idx]] <- group
     } else {
-      # Multiple rules for the same cell - consolidate
-      # First clean each CSS string to handle concatenated CSS properly
-      cleaned_css <- lapply(group$css_arguments, html_clean_css_rule)
-      maps <- lapply(cleaned_css, css_parse)
+      # Multiple rules for the same cell - consolidate maps directly
+      maps <- group$css_map
 
-      # Smart consolidation that handles column mapping issues
-      m <- character()
+      # Smart consolidation resolver working directly with maps
+      combined_map <- character()
       border_flags <- c("--border-left", "--border-right", "--border-top", "--border-bottom")
       color_flags <- c("--line-color-left", "--line-color-right", "--line-color-top", "--line-color-bottom")
       trim_flags <- c("--trim-top-left", "--trim-top-right", "--trim-bottom-left", "--trim-bottom-right",
@@ -264,59 +234,58 @@ html_consolidate_css_vars <- function(rec) {
       for (map in maps) {
         for (key in names(map)) {
           if (key %in% border_flags) {
-            # For border flags, take maximum (OR logic)
-            if (key %in% names(m)) {
-              m[[key]] <- as.character(max(as.numeric(m[[key]]), as.numeric(map[[key]]), na.rm = TRUE))
+            # Numeric max for border flags
+            if (key %in% names(combined_map)) {
+              combined_map[[key]] <- as.character(max(as.numeric(combined_map[[key]]), as.numeric(map[[key]]), na.rm = TRUE))
             } else {
-              m[[key]] <- map[[key]]
+              combined_map[[key]] <- map[[key]]
             }
           } else if (key %in% color_flags) {
-            # For directional color flags, prioritize non-black colors
-            if (key %in% names(m)) {
-              current_color <- m[[key]]
+            # Keep first non-black, else last
+            if (key %in% names(combined_map)) {
+              current_color <- combined_map[[key]]
               new_color <- map[[key]]
-              # If current is black and new is not, use new
-              # If current is not black, keep current (first non-black wins)
               if (current_color == "black" && new_color != "black") {
-                m[[key]] <- new_color
+                combined_map[[key]] <- new_color
               }
             } else {
-              m[[key]] <- map[[key]]
+              combined_map[[key]] <- map[[key]]
             }
           } else if (key %in% trim_flags) {
-            # For trim flags, take maximum (if any border needs trimming)
-            if (key %in% names(m)) {
-              # Convert percentage strings to numeric, take max, convert back
-              current_val <- as.numeric(gsub("%", "", m[[key]]))
+            # Numeric max on percentage values
+            if (key %in% names(combined_map)) {
+              current_val <- as.numeric(gsub("%", "", combined_map[[key]]))
               new_val <- as.numeric(gsub("%", "", map[[key]]))
               max_val <- max(current_val, new_val, na.rm = TRUE)
-              m[[key]] <- paste0(max_val, "%")
+              combined_map[[key]] <- paste0(max_val, "%")
             } else {
-              m[[key]] <- map[[key]]
+              combined_map[[key]] <- map[[key]]
             }
           } else {
-            # For non-border properties, last-write-wins
-            m[[key]] <- map[[key]]
+            # Last write wins for regular properties
+            combined_map[[key]] <- map[[key]]
           }
         }
       }
 
-      # No need for css_merge_flags since we handled border flags above
-
-      final_css <- css_render(m)
-
-      # Create consolidated row (use first row as template)
+      # Create consolidated row using first row as template
       new_row <- group[1, ]
-      new_row$css_arguments <- final_css
-      consolidated_rec <- rbind(consolidated_rec, new_row)
+      new_row$css_map <- list(combined_map)
+      consolidated_list[[idx]] <- new_row
     }
+    idx <- idx + 1
   }
 
-  return(consolidated_rec)
+  # Rebuild with do.call to avoid repeated rbind
+  if (length(consolidated_list) == 0) {
+    return(data.frame())
+  }
+  do.call(rbind, consolidated_list)
 }
 
+
 # Helper function to adjust column indices using cached mappings
-html_adjust_column_indices_cached <- function(user_j, user_i, mapping_cache) {
+html_adjust_column_indices <- function(user_j, user_i, mapping_cache) {
   if (length(mapping_cache) == 0) {
     return(user_j)
   }
@@ -346,53 +315,6 @@ html_adjust_column_indices_cached <- function(user_j, user_i, mapping_cache) {
   return(adjusted_j)
 }
 
-# Legacy function for backward compatibility
-html_adjust_column_indices <- function(x, user_j, user_i) {
-  cache <- header_col_mapping_cache(x)
-  html_adjust_column_indices_cached(user_j, user_i, cache)
-}
-
-# Get mapping from user column index to HTML data-col value for header rows with column groups
-html_get_datacol_mapping <- function(x, target_i) {
-  # Initialize with 1:1 mapping (1-based, will be converted to 0-based later)
-  col_mapping <- seq_len(x@ncol)
-
-  # Only handle column groups for header rows
-  if (nrow(x@group_data_j) > 0 && target_i < 0) {
-    # Group rows are processed in reverse order, so map target_i to correct row
-    # target_i = -1 corresponds to the first group (nrow), target_i = -2 to second group (nrow-1), etc.
-    group_row_idx <- nrow(x@group_data_j) - (abs(target_i) - 1)
-    if (group_row_idx >= 1 && group_row_idx <= nrow(x@group_data_j)) {
-      groupj <- as.character(x@group_data_j[group_row_idx, ])
-      j_list <- html_groupj_span(groupj)
-
-      if (length(j_list) > 0) {
-        # Recreate the j_combined logic from html_groupj_html
-        miss <- as.list(setdiff(seq_len(x@ncol), unlist(j_list)))
-        miss <- stats::setNames(miss, rep(" ", length(miss)))
-        j_combined <- c(j_list, miss)
-
-        # Sort by column position
-        max_col <- sapply(j_combined, max)
-        idx <- order(max_col)
-        j_combined <- j_combined[idx]
-
-        # Create mapping: each user column maps to its HTML data-col position
-        # The HTML data-col position corresponds to the index in j_combined (k-1 for 0-based)
-        for (k in seq_along(j_combined)) {
-          original_cols <- j_combined[[k]]
-          # All columns in this span map to the same data-col position (k)
-          # Since we return 1-based and later subtract 1, we use k here
-          for (orig_col in original_cols) {
-            col_mapping[orig_col] <- k
-          }
-        }
-      }
-    }
-  }
-
-  return(col_mapping)
-}
 
 #' Internal styling function
 #'
@@ -442,7 +364,9 @@ setMethod(
       i = c(-(seq_len(x@nhead) - 1), seq_len(x@nrow)),
       j = seq_len(x@ncol)
     )
-    css <- rep("", nrow(rec))
+    # Use named character vectors to store CSS properties for each cell
+    css_maps <- vector("list", nrow(rec))
+    for (i in seq_along(css_maps)) css_maps[[i]] <- character()
 
     # Precompute and cache column mappings
     mapping_cache <- header_col_mapping_cache(x)
@@ -450,13 +374,13 @@ setMethod(
     # Adjust column indices when any kind of colspan is present
     # Both column groups and user-defined colspans change data-col values in HTML
     # This must happen BEFORE the CSS generation loop so that rec$j matches adjusted sty$j
-    rec$j <- html_adjust_column_indices_cached(rec$j, rec$i, mapping_cache)
+    rec$j <- html_adjust_column_indices(rec$j, rec$i, mapping_cache)
     rec$j <- rec$j - 1
 
     # Also adjust column indices in style entries to match the adjusted rec$j values
     for (row in seq_len(nrow(sty))) {
       if (!is.na(sty$j[row])) {
-        adjusted_j <- html_adjust_column_indices_cached(sty$j[row], sty$i[row], mapping_cache)
+        adjusted_j <- html_adjust_column_indices(sty$j[row], sty$i[row], mapping_cache)
         sty$j[row] <- adjusted_j - 1
       }
     }
@@ -473,67 +397,56 @@ setMethod(
       }
       idx <- rec$i == idx_i & rec$j == idx_j
 
+      # Directly assign CSS properties to named character vectors
       if (isTRUE(sty[row, "bold"])) {
-        css[idx] <- paste(css[idx], "font-weight: bold;")
+        for (cell_idx in which(idx)) css_maps[[cell_idx]][["font-weight"]] <- "bold"
       }
       if (isTRUE(sty[row, "italic"])) {
-        css[idx] <- paste(css[idx], "font-style: italic;")
+        for (cell_idx in which(idx)) css_maps[[cell_idx]][["font-style"]] <- "italic"
       }
       if (isTRUE(sty[row, "underline"])) {
-        css[idx] <- paste(css[idx], "text-decoration: underline;")
+        for (cell_idx in which(idx)) css_maps[[cell_idx]][["text-decoration"]] <- "underline"
       }
       if (isTRUE(sty[row, "strikeout"])) {
-        css[idx] <- paste(css[idx], "text-decoration: line-through;")
+        for (cell_idx in which(idx)) css_maps[[cell_idx]][["text-decoration"]] <- "line-through"
       }
       if (isTRUE(sty[row, "monospace"])) {
-        css[idx] <- paste(css[idx], "font-family: monospace;")
+        for (cell_idx in which(idx)) css_maps[[cell_idx]][["font-family"]] <- "monospace"
       }
       if (isTRUE(sty[row, "smallcap"])) {
-        css[idx] <- paste(css[idx], "font-variant: small-caps;")
+        for (cell_idx in which(idx)) css_maps[[cell_idx]][["font-variant"]] <- "small-caps"
       }
       if (!is.na(sty[row, "color"])) {
         color_val <- standardize_colors(sty[row, "color"], format = "hex")
-        css[idx] <- paste(css[idx], paste0("color: ", color_val, ";"))
+        for (cell_idx in which(idx)) css_maps[[cell_idx]][["color"]] <- color_val
       }
       if (!is.na(sty[row, "background"])) {
-        background_val <- standardize_colors(
-          sty[row, "background"],
-          format = "hex"
-        )
-        css[idx] <- paste(
-          css[idx],
-          paste0("background-color: ", background_val, ";")
-        )
+        background_val <- standardize_colors(sty[row, "background"], format = "hex")
+        for (cell_idx in which(idx)) css_maps[[cell_idx]][["background-color"]] <- background_val
       }
       if (!is.na(sty[row, "fontsize"])) {
-        css[idx] <- paste(
-          css[idx],
-          paste0("font-size: ", sty[row, "fontsize"], "em;")
-        )
+        for (cell_idx in which(idx)) css_maps[[cell_idx]][["font-size"]] <- paste0(sty[row, "fontsize"], "em")
       }
       if (!is.na(sty[row, "alignv"])) {
-        css[idx] <- paste(
-          css[idx],
-          paste0("vertical-align: ", sty[row, "alignv"], ";")
-        )
+        for (cell_idx in which(idx)) css_maps[[cell_idx]][["vertical-align"]] <- sty[row, "alignv"]
       }
       if (!is.na(sty[row, "align"])) {
-        css[idx] <- paste(
-          css[idx],
-          paste0("text-align: ", sty[row, "align"], ";")
-        )
+        for (cell_idx in which(idx)) css_maps[[cell_idx]][["text-align"]] <- sty[row, "align"]
       }
       if (!is.na(sty[row, "indent"])) {
-        css[idx] <- paste(
-          css[idx],
-          paste0("padding-left: ", sty[row, "indent"], "em;")
-        )
+        for (cell_idx in which(idx)) css_maps[[cell_idx]][["padding-left"]] <- paste0(sty[row, "indent"], "em")
       }
       if (!is.na(sty[row, "html_css"])) {
-        css[idx] <- paste(css[idx], sty[row, "html_css"])
+        # Parse custom CSS and add to maps (only parse when necessary)
+        custom_css <- css_parse(sty[row, "html_css"])
+        for (cell_idx in which(idx)) {
+          for (prop_name in names(custom_css)) {
+            css_maps[[cell_idx]][[prop_name]] <- custom_css[[prop_name]]
+          }
+        }
       }
 
-      lin <- ""
+      # Process border properties
       line <- sty$line[row]
       line_width <- sty$line_width[row]
       line_color <- sty$line_color[row]
@@ -584,53 +497,51 @@ setMethod(
 
 
       if (any(c(left, right, top, bottom))) {
-        # Use pseudo-elements for all borders - store border info in CSS variables
-        lin <- paste(lin, "position: relative;")
-        lin <- paste(lin, sprintf("--line-width: %s;", paste0(line_width, "em")))
-
-        # Set color and width variables for each active border direction
+        # Directly assign border CSS properties to named character vectors
         line_width_em <- paste0(line_width, "em")
-        if (left) {
-          lin <- paste(lin, sprintf("--line-color-left: %s;", line_color))
-          lin <- paste(lin, sprintf("--line-width-left: %s;", line_width_em))
-        }
-        if (right) {
-          lin <- paste(lin, sprintf("--line-color-right: %s;", line_color))
-          lin <- paste(lin, sprintf("--line-width-right: %s;", line_width_em))
-        }
-        if (top) {
-          lin <- paste(lin, sprintf("--line-color-top: %s;", line_color))
-          lin <- paste(lin, sprintf("--line-width-top: %s;", line_width_em))
-        }
-        if (bottom) {
-          lin <- paste(lin, sprintf("--line-color-bottom: %s;", line_color))
-          lin <- paste(lin, sprintf("--line-width-bottom: %s;", line_width_em))
-        }
 
-        # Apply the directional trimming variables (only when explicitly specified)
-        if (!is.na(trim_top_left)) lin <- paste(lin, sprintf("--trim-top-left: %s;", trim_top_left))
-        if (!is.na(trim_top_right)) lin <- paste(lin, sprintf("--trim-top-right: %s;", trim_top_right))
-        if (!is.na(trim_bottom_left)) lin <- paste(lin, sprintf("--trim-bottom-left: %s;", trim_bottom_left))
-        if (!is.na(trim_bottom_right)) lin <- paste(lin, sprintf("--trim-bottom-right: %s;", trim_bottom_right))
-        if (!is.na(trim_left_top)) lin <- paste(lin, sprintf("--trim-left-top: %s;", trim_left_top))
-        if (!is.na(trim_left_bottom)) lin <- paste(lin, sprintf("--trim-left-bottom: %s;", trim_left_bottom))
-        if (!is.na(trim_right_top)) lin <- paste(lin, sprintf("--trim-right-top: %s;", trim_right_top))
-        if (!is.na(trim_right_bottom)) lin <- paste(lin, sprintf("--trim-right-bottom: %s;", trim_right_bottom))
+        for (cell_idx in which(idx)) {
+          css_maps[[cell_idx]][["position"]] <- "relative"
+          css_maps[[cell_idx]][["--line-width"]] <- line_width_em
 
-        # Store which borders are active
-        lin <- paste(lin, sprintf("--border-left: %s;", if (left) "1" else "0"))
-        lin <- paste(lin, sprintf("--border-right: %s;", if (right) "1" else "0"))
-        lin <- paste(lin, sprintf("--border-top: %s;", if (top) "1" else "0"))
-        lin <- paste(lin, sprintf("--border-bottom: %s;", if (bottom) "1" else "0"))
+          # Only set border values for the specific directions that have line styling
+          # This avoids overriding theme borders for directions not explicitly styled
+          if (left) {
+            css_maps[[cell_idx]][["--line-color-left"]] <- line_color
+            css_maps[[cell_idx]][["--line-width-left"]] <- line_width_em
+            css_maps[[cell_idx]][["--border-left"]] <- "1"
+          }
+
+          if (right) {
+            css_maps[[cell_idx]][["--line-color-right"]] <- line_color
+            css_maps[[cell_idx]][["--line-width-right"]] <- line_width_em
+            css_maps[[cell_idx]][["--border-right"]] <- "1"
+          }
+
+          if (top) {
+            css_maps[[cell_idx]][["--line-color-top"]] <- line_color
+            css_maps[[cell_idx]][["--line-width-top"]] <- line_width_em
+            css_maps[[cell_idx]][["--border-top"]] <- "1"
+          }
+
+          if (bottom) {
+            css_maps[[cell_idx]][["--line-color-bottom"]] <- line_color
+            css_maps[[cell_idx]][["--line-width-bottom"]] <- line_width_em
+            css_maps[[cell_idx]][["--border-bottom"]] <- "1"
+          }
+
+          # Apply the directional trimming variables (only when explicitly specified)
+          if (!is.na(trim_top_left)) css_maps[[cell_idx]][["--trim-top-left"]] <- trim_top_left
+          if (!is.na(trim_top_right)) css_maps[[cell_idx]][["--trim-top-right"]] <- trim_top_right
+          if (!is.na(trim_bottom_left)) css_maps[[cell_idx]][["--trim-bottom-left"]] <- trim_bottom_left
+          if (!is.na(trim_bottom_right)) css_maps[[cell_idx]][["--trim-bottom-right"]] <- trim_bottom_right
+          if (!is.na(trim_left_top)) css_maps[[cell_idx]][["--trim-left-top"]] <- trim_left_top
+          if (!is.na(trim_left_bottom)) css_maps[[cell_idx]][["--trim-left-bottom"]] <- trim_left_bottom
+          if (!is.na(trim_right_top)) css_maps[[cell_idx]][["--trim-right-top"]] <- trim_right_top
+          if (!is.na(trim_right_bottom)) css_maps[[cell_idx]][["--trim-right-bottom"]] <- trim_right_bottom
+        }
       }
-      css[idx] <- paste(css[idx], lin)
     }
-
-    css <- gsub(" +", " ", trimws(css))
-
-    # User row indices should match HTML data-row values directly
-    # HTML generation already handles header positioning
-    rec$i <- rec$i
 
     # spans: before styles because we return(x) if there is no style
     for (row in seq_len(nrow(sty))) {
@@ -660,6 +571,7 @@ setMethod(
 
     # Transfer borders from cells that will be removed by rowspans
     # This handles theme-generated borders like from theme_grid()
+    max_table_row <- max(rec$i)
     for (row in seq_len(nrow(sty))) {
       rowspan <- if (!is.na(sty$rowspan[row])) sty$rowspan[row] else 1
       if (rowspan > 1) {
@@ -668,107 +580,128 @@ setMethod(
 
         # Check if this rowspan affects the last row (which would have the bottom table border)
         max_affected_row <- span_i + rowspan - 1
-        max_table_row <- max(rec$i)
 
         if (max_affected_row >= max_table_row) {
           # This rowspan affects the bottom of the table, so we need to ensure the spanning cell has a bottom border
-
-          # Find or create styling for the spanning cell
-          span_idx <- which(rec$i == span_i & rec$j == span_j)
-          if (length(span_idx) > 0) {
-            # Add/modify bottom border for spanning cell
-            span_css <- css[span_idx[1]]
-            if (grepl("--border-bottom:", span_css)) {
-              # Replace existing border-bottom with 1
-              css[span_idx[1]] <- gsub("--border-bottom:\\s*\\d+", "--border-bottom: 1", span_css)
-            } else {
-              # Add bottom border
-              css[span_idx[1]] <- paste(span_css, "--border-bottom: 1;")
-            }
+          # Find the corresponding cell in our CSS maps
+          cell_idx <- which(rec$i == span_i & rec$j == span_j)
+          if (length(cell_idx) > 0) {
+            # Add bottom border to the CSS map
+            css_maps[[cell_idx[1]]][["--border-bottom"]] <- "1"
           } else {
-            # Create new styling entry for the spanning cell
-            new_idx <- nrow(rec) + 1
-            rec[new_idx, ] <- rec[rec$i == span_i & rec$j == 1, ][1, ]  # Copy from adjacent cell
-            rec$i[new_idx] <- span_i
-            rec$j[new_idx] <- span_j
-            css[new_idx] <- "border-bottom: 1px solid black;"
+            # Create new CSS map for this cell
+            new_cell_idx <- length(css_maps) + 1
+            css_maps[[new_cell_idx]] <- c("--border-bottom" = "1", "border-bottom" = "1px solid black")
+
+            # Extend rec to include this new cell
+            new_rec_row <- data.frame(i = span_i, j = span_j)
+            rec <- rbind(rec, new_rec_row)
           }
         }
       }
     }
 
-    rec$css_arguments <- css
-    rec <- rec[rec$css_arguments != "", , drop = FALSE]
-    if (nrow(rec) == 0) {
+    # Create records with maps instead of strings
+    rec_with_maps <- data.frame(
+      i = rec$i,
+      j = rec$j,
+      stringsAsFactors = FALSE
+    )
+    rec_with_maps$css_map <- css_maps
+
+    # Filter out empty CSS maps
+    has_css <- sapply(css_maps, function(m) length(m) > 0)
+    rec_with_maps <- rec_with_maps[has_css, , drop = FALSE]
+
+    if (nrow(rec_with_maps) == 0) {
       return(x)
     }
 
-    # Consolidate CSS variables for cells with multiple border declarations
-    rec <- html_consolidate_css_vars(rec)
+    # Consolidate CSS maps for cells with multiple declarations
+    rec_with_maps <- consolidate_css_maps(rec_with_maps)
 
-    # Unique CSS arguments assigned by arrays
-    css_table <- unique(rec[, c("css_arguments"), drop = FALSE])
-    css_table$id_css <- sapply(
-      seq_len(nrow(css_table)),
-      function(i) get_id(stem = "tinytable_css_")
+    # Process CSS maps directly - render only once and avoid parsing
+    css_map_to_string <- function(css_map) {
+      if (length(css_map) == 0) return("")
+      css_render(css_map)
+    }
+
+    # Create unique CSS map combinations and assign IDs
+    css_strings <- sapply(rec_with_maps$css_map, css_map_to_string)
+    css_unique <- unique(css_strings)
+    css_unique <- css_unique[nzchar(css_unique)]
+
+    if (length(css_unique) == 0) {
+      return(x)
+    }
+
+    # Create CSS table with unique rules
+    css_table <- data.frame(
+      css_rule = css_unique,
+      id_css = sapply(seq_along(css_unique), function(i) get_id(stem = "tinytable_css_")),
+      stringsAsFactors = FALSE
     )
-    idx <- merge(
-      rec[, c("i", "j", "css_arguments")],
-      css_table,
-      all.x = TRUE,
-      sort = FALSE
-    )
-    # factor is important otherwise we split by a random value and the order can break snapshots
-    idx$split_idx <- factor(idx$id_css, levels = unique(idx$id_css))
-    if (nrow(idx) > 0) {
-      idx <- split(idx, idx$split_idx)
-      for (i in seq_along(idx)) {
-        id_css <- idx[[i]]$id_css[1]
-        arr <- sprintf("{ i: '%s', j: %s }, ", idx[[i]]$i, idx[[i]]$j)
-        arr <- c(
-          "          {",
-          " positions: [ ",
-          arr,
-          " ],",
-          " css_id: '",
-          id_css,
-          "',",
-          "}, "
-        )
-        arr <- paste(arr, collapse = "")
-        x@table_string <- lines_insert(
-          x@table_string,
-          arr,
-          "tinytable style arrays after",
-          "after"
-        )
-        css_rule <- idx[[i]]$css_arguments[1]
 
-        # Check if this CSS rule has any borders using parsed map
-        m <- css_parse(css_rule)
-        has_border <- any(names(m) %in% c("--border-left", "--border-right", "--border-top", "--border-bottom")) ||
-                     any(startsWith(names(m), "border"))
+    # Map each cell to its CSS ID
+    rec_with_ids <- rec_with_maps
+    rec_with_ids$css_rule <- css_strings
+    rec_with_ids <- merge(rec_with_ids, css_table, by = "css_rule", all.x = TRUE, sort = FALSE)
 
-        if (has_border) {
-          # Convert any regular border declarations to CSS variables and pseudo-elements
-          css_rule <- html_convert_to_pseudo_elements(css_rule)
+    # Group by CSS ID for output generation
+    idx <- split(rec_with_ids, rec_with_ids$id_css)
 
-          # Generate CSS using template
-          entry <- pseudo_css_templates(id_css, css_rule)
-        } else {
-          # Regular CSS rule without pseudo-elements
-          entry <- sprintf(
-            "      .tinytable td.%s, .tinytable th.%s { %s }",
-            id_css, id_css, css_rule
-          )
-        }
-        x@table_string <- lines_insert(
-          x@table_string,
-          entry,
-          "tinytable css entries after",
-          "after"
+    for (group in idx) {
+      id_css <- group$id_css[1]
+      css_rule <- group$css_rule[1]
+
+      if (!nzchar(css_rule)) next
+
+      # Generate position arrays
+      arr <- sprintf("{ i: '%s', j: %s }, ", group$i, group$j)
+      arr <- c(
+        "          {",
+        " positions: [ ",
+        arr,
+        " ],",
+        " css_id: '",
+        id_css,
+        "',",
+        "}, "
+      )
+      arr <- paste(arr, collapse = "")
+      x@table_string <- lines_insert(
+        x@table_string,
+        arr,
+        "tinytable style arrays after",
+        "after"
+      )
+
+      # Check if this CSS rule has any borders - work with map directly
+      css_map <- group$css_map[[1]]  # All maps in group should be identical
+      has_border <- any(names(css_map) %in% c("--border-left", "--border-right", "--border-top", "--border-bottom")) ||
+                   any(startsWith(names(css_map), "border"))
+
+      if (has_border) {
+        # Work directly with CSS map for pseudo-elements
+        # Convert border properties to pseudo-element format
+        pseudo_map <- convert_map_to_pseudo_elements(css_map)
+        css_rule <- css_render(pseudo_map)
+
+        # Generate CSS using template
+        entry <- pseudo_css_templates(id_css, css_rule)
+      } else {
+        # Regular CSS rule without pseudo-elements
+        entry <- sprintf(
+          "      .tinytable td.%s, .tinytable th.%s { %s }",
+          id_css, id_css, css_rule
         )
       }
+      x@table_string <- lines_insert(
+        x@table_string,
+        entry,
+        "tinytable css entries after",
+        "after"
+      )
     }
 
 
