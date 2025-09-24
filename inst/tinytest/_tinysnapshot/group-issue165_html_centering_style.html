@@ -76,6 +76,84 @@
     </script>
 
     <style>
+    /* Core defaults */
+.tinytable {
+    /* tweak these if you want a “theme” */
+    --tt-border-color: black;
+    --tt-header-border-color: black;
+    --tt-striped-bg: rgba(0, 0, 0, .05);
+    --tt-hover-bg: rgba(0, 0, 0, .075);
+    --tt-caption-color: #6c757d;
+
+    width: 100%;
+    margin: .5rem 0;
+    border-collapse: collapse;
+    background-color: transparent;
+}
+
+.tinytable th,
+.tinytable td {
+    position: relative;
+    padding: .5rem;               /* Bootstrap table cell padding */
+    vertical-align: top;          /* like .table */
+}
+
+.tinytable thead th {
+    text-align: left;
+    vertical-align: bottom;       /* Bootstrap header alignment */
+    font-weight: 400;             /* slightly bolder header */
+    border-bottom: none;
+}
+
+/* Allow group headers to be centered */
+.tinytable thead th[align="center"] {
+    text-align: center;
+}
+
+.tinytable tbody + tbody {
+    border-top: 2px solid var(--tt-border-color);
+}
+
+.tinytable caption {
+    caption-side: bottom;
+    padding: .5rem 0;
+    color: var(--tt-caption-color);
+}
+
+/* Optional variants (add these classes alongside .tinytable) */
+
+/* Smaller padding: <table class="tinytable tinytable-sm"> */
+.tinytable-sm th,
+.tinytable-sm td {
+    padding: .25rem;
+}
+
+/* Bordered table: <table class="tinytable tinytable-bordered"> */
+.tinytable-bordered {
+    border: 1px solid var(--tt-border-color);
+}
+.tinytable-bordered th,
+.tinytable-bordered td {
+    border: 1px solid var(--tt-border-color);
+}
+
+/* Striped rows: <table class="tinytable tinytable-striped"> */
+.tinytable-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--tt-striped-bg);
+}
+
+/* Hover state: <table class="tinytable tinytable-hover"> */
+.tinytable-hover tbody tr:hover {
+    background-color: var(--tt-hover-bg);
+}
+
+/* Responsive wrapper: wrap table in <div class="tinytable-responsive"> */
+.tinytable-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
     /* tinytable css entries after */
       .tinytable td.tinytable_css_nr201nd4h555qbabc930, .tinytable th.tinytable_css_nr201nd4h555qbabc930 { font-style: italic; position: relative; --line-color-bottom: black; --line-color: black; --line-width: 0.1em; --border-left: 0; --border-right: 0; --border-top: 0; --border-bottom: 1; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-width-bottom: 0.1em; --trim-top-left: 0%; --trim-top-right: 0%; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-top: 0%; --trim-left-bottom: 0%; --trim-right-top: 0%; --trim-right-bottom: 0% }
       .tinytable td.tinytable_css_nr201nd4h555qbabc930::before, .tinytable th.tinytable_css_nr201nd4h555qbabc930::before { content: ''; position: absolute; top: var(--trim-top-left, var(--trim-top-right, 0)); left: var(--trim-left-top, 0); right: var(--trim-right-top, 0); bottom: 0; pointer-events: none; z-index: 1; border-left: calc(var(--border-left) * var(--line-width-left, var(--line-width, 0.1em))) solid var(--line-color-left, var(--line-color, black)); border-right: calc(var(--border-right) * var(--line-width-right, var(--line-width, 0.1em))) solid var(--line-color-right, var(--line-color, black)); border-top: calc(var(--border-top) * var(--line-width-top, var(--line-width, 0.1em))) solid var(--line-color-top, var(--line-color, black)); }
@@ -100,18 +178,6 @@
       .tinytable td.tinytable_css_gwf47y2v636qmzys8ggv, .tinytable th.tinytable_css_gwf47y2v636qmzys8ggv { text-align: center; position: relative; --line-color-bottom: black; --line-color-top: black; --line-color: black; --line-width: 0.1em; --border-left: 0; --border-right: 0; --border-top: 1; --border-bottom: 1; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-width-bottom: 0.05em; --trim-top-left: 0%; --trim-top-right: 0%; --trim-bottom-left: 0%; --trim-bottom-right: 3%; --trim-left-top: 0%; --trim-left-bottom: 0%; --trim-right-top: 0%; --trim-right-bottom: 0% }
       .tinytable td.tinytable_css_gwf47y2v636qmzys8ggv::before, .tinytable th.tinytable_css_gwf47y2v636qmzys8ggv::before { content: ''; position: absolute; top: var(--trim-top-left, var(--trim-top-right, 0)); left: var(--trim-left-top, 0); right: var(--trim-right-top, 0); bottom: 0; pointer-events: none; z-index: 1; border-left: calc(var(--border-left) * var(--line-width-left, var(--line-width, 0.1em))) solid var(--line-color-left, var(--line-color, black)); border-right: calc(var(--border-right) * var(--line-width-right, var(--line-width, 0.1em))) solid var(--line-color-right, var(--line-color, black)); border-top: calc(var(--border-top) * var(--line-width-top, var(--line-width, 0.1em))) solid var(--line-color-top, var(--line-color, black)); }
       .tinytable td.tinytable_css_gwf47y2v636qmzys8ggv::after, .tinytable th.tinytable_css_gwf47y2v636qmzys8ggv::after { content: ''; position: absolute; left: var(--trim-bottom-left, 0); right: var(--trim-bottom-right, 0); bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0)); height: calc(var(--border-bottom) * var(--line-width-bottom, var(--line-width, 0.1em))); background: var(--line-color-bottom, var(--line-color, black)); pointer-events: none; z-index: 2; }
-    .tinytable {
-      margin-bottom: .5em;
-      margin-top: .5em;
-      border-collapse: collapse;
-      width: 100%;
-    }
-    .tinytable th,
-    .tinytable td {
-      font-weight: normal;
-      position: relative;
-      padding: 0.5rem; /* similar to Bootstrap default */
-    }
     </style>
     <div class="container">
       <table class="tinytable" id="tinytable_1z85sqvj7lv8g3xzoy7o" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>

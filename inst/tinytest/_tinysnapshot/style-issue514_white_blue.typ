@@ -57,12 +57,19 @@ block[ // start block
       let style = get-style(x, y)
       if style != none and "background" in style { style.background }
     },
- table.hline(y: 0, start: 0, end: 4, stroke: 0.5em + white), table.hline(y: 1, start: 0, end: 4, stroke: 0.5em + white),
- table.hline(y: 1, start: 0, end: 4, stroke: 0.5em + white), table.hline(y: 2, start: 0, end: 4, stroke: 0.5em + white),
- table.vline(x: 0, start: 0, end: 2, stroke: 0.5em + white), table.vline(x: 1, start: 0, end: 2, stroke: 0.5em + white),
- table.vline(x: 1, start: 0, end: 2, stroke: 0.5em + white), table.vline(x: 2, start: 0, end: 2, stroke: 0.5em + white),
- table.vline(x: 2, start: 0, end: 2, stroke: 0.5em + white), table.vline(x: 3, start: 0, end: 2, stroke: 0.5em + white),
- table.vline(x: 3, start: 0, end: 2, stroke: 0.5em + white), table.vline(x: 4, start: 0, end: 2, stroke: 0.5em + white),
+ table.hline(y: 1, start: 0, end: 4, stroke: 0.5em + white),
+ table.hline(y: 2, start: 0, end: 4, stroke: 0.5em + white),
+
+ table.hline(y: 0, start: 0, end: 4, stroke: 0.5em + white),
+ table.hline(y: 1, start: 0, end: 4, stroke: 0.5em + white),
+ table.vline(x: 0, start: 0, end: 2, stroke: 0.5em + white),
+ table.vline(x: 1, start: 0, end: 2, stroke: 0.5em + white),
+ table.vline(x: 2, start: 0, end: 2, stroke: 0.5em + white),
+ table.vline(x: 3, start: 0, end: 2, stroke: 0.5em + white),
+ table.vline(x: 1, start: 0, end: 2, stroke: 0.5em + white),
+ table.vline(x: 2, start: 0, end: 2, stroke: 0.5em + white),
+ table.vline(x: 3, start: 0, end: 2, stroke: 0.5em + white),
+ table.vline(x: 4, start: 0, end: 2, stroke: 0.5em + white),
     // tinytable lines before
 
     // tinytable cell content after

@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_bwgm81ntq9srgpoom9no</title>
+    <title>tinytable_p1dshjvizm4qx0ivbacg</title>
     
   </head>
   <body>
@@ -12,8 +12,8 @@
 
     <script>
 
-      function styleCell_bwgm81ntq9srgpoom9no(i, j, css_id) {
-          var table = document.getElementById("tinytable_bwgm81ntq9srgpoom9no");
+      function styleCell_p1dshjvizm4qx0ivbacg(i, j, css_id) {
+          var table = document.getElementById("tinytable_p1dshjvizm4qx0ivbacg");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -22,8 +22,8 @@
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function spanCell_bwgm81ntq9srgpoom9no(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_bwgm81ntq9srgpoom9no");
+      function spanCell_p1dshjvizm4qx0ivbacg(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_p1dshjvizm4qx0ivbacg");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -54,44 +54,110 @@
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '6', j: 0 },  ], css_id: 'tinytable_css_dzng7upxdf2buytkyx5p',}, 
-          { positions: [ { i: '4', j: 0 },  ], css_id: 'tinytable_css_0csbend7feant291491a',}, 
-          { positions: [ { i: '2', j: 0 },  ], css_id: 'tinytable_css_aejqzt9adwidu99ryhf9',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '1', j: 3 }, { i: '3', j: 3 }, { i: '1', j: 2 }, { i: '3', j: 1 }, { i: '1', j: 4 }, { i: '5', j: 1 }, { i: '3', j: 4 }, { i: '5', j: 3 }, { i: '3', j: 2 }, { i: '5', j: 2 }, { i: '5', j: 4 },  ], css_id: 'tinytable_css_qx0ivbacge4u3duk629e',}, 
-          { positions: [ { i: '1', j: 0 }, { i: '3', j: 0 }, { i: '5', j: 0 },  ], css_id: 'tinytable_css_0nffcl5r5p1dshjvizm4',}, 
+          { positions: [ { i: '6', j: 0 },  ], css_id: 'tinytable_css_5h1pcej8a9ynnzot3m73',}, 
+          { positions: [ { i: '4', j: 0 },  ], css_id: 'tinytable_css_f2buytkyx5p73s8ofwj4',}, 
+          { positions: [ { i: '2', j: 0 },  ], css_id: 'tinytable_css_eant291491adzng7upxd',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '1', j: 3 }, { i: '3', j: 3 }, { i: '1', j: 2 }, { i: '3', j: 1 }, { i: '1', j: 4 }, { i: '5', j: 1 }, { i: '3', j: 4 }, { i: '5', j: 3 }, { i: '3', j: 2 }, { i: '5', j: 2 }, { i: '5', j: 4 },  ], css_id: 'tinytable_css_widu99ryhf90csbend7f',}, 
+          { positions: [ { i: '1', j: 0 }, { i: '3', j: 0 }, { i: '5', j: 0 },  ], css_id: 'tinytable_css_e4u3duk629eaejqzt9ad',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_bwgm81ntq9srgpoom9no(cell.i, cell.j, group.css_id);
+                  styleCell_p1dshjvizm4qx0ivbacg(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
     <style>
+    /* Core defaults */
+.tinytable {
+    /* tweak these if you want a “theme” */
+    --tt-border-color: black;
+    --tt-header-border-color: black;
+    --tt-striped-bg: rgba(0, 0, 0, .05);
+    --tt-hover-bg: rgba(0, 0, 0, .075);
+    --tt-caption-color: #6c757d;
+
+    width: 100%;
+    margin: .5rem 0;
+    border-collapse: collapse;
+    background-color: transparent;
+}
+
+.tinytable th,
+.tinytable td {
+    position: relative;
+    padding: .5rem;               /* Bootstrap table cell padding */
+    vertical-align: top;          /* like .table */
+}
+
+.tinytable thead th {
+    text-align: left;
+    vertical-align: bottom;       /* Bootstrap header alignment */
+    font-weight: 400;             /* slightly bolder header */
+    border-bottom: none;
+}
+
+/* Allow group headers to be centered */
+.tinytable thead th[align="center"] {
+    text-align: center;
+}
+
+.tinytable tbody + tbody {
+    border-top: 2px solid var(--tt-border-color);
+}
+
+.tinytable caption {
+    caption-side: bottom;
+    padding: .5rem 0;
+    color: var(--tt-caption-color);
+}
+
+/* Optional variants (add these classes alongside .tinytable) */
+
+/* Smaller padding: <table class="tinytable tinytable-sm"> */
+.tinytable-sm th,
+.tinytable-sm td {
+    padding: .25rem;
+}
+
+/* Bordered table: <table class="tinytable tinytable-bordered"> */
+.tinytable-bordered {
+    border: 1px solid var(--tt-border-color);
+}
+.tinytable-bordered th,
+.tinytable-bordered td {
+    border: 1px solid var(--tt-border-color);
+}
+
+/* Striped rows: <table class="tinytable tinytable-striped"> */
+.tinytable-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--tt-striped-bg);
+}
+
+/* Hover state: <table class="tinytable tinytable-hover"> */
+.tinytable-hover tbody tr:hover {
+    background-color: var(--tt-hover-bg);
+}
+
+/* Responsive wrapper: wrap table in <div class="tinytable-responsive"> */
+.tinytable-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
     /* tinytable css entries after */
-      .tinytable td.tinytable_css_dzng7upxdf2buytkyx5p, .tinytable th.tinytable_css_dzng7upxdf2buytkyx5p { color: white; background-color: #FDE333 }
-      .tinytable td.tinytable_css_0csbend7feant291491a, .tinytable th.tinytable_css_0csbend7feant291491a { color: white; background-color: #009B95 }
-      .tinytable td.tinytable_css_aejqzt9adwidu99ryhf9, .tinytable th.tinytable_css_aejqzt9adwidu99ryhf9 { color: white; background-color: #4B0055 }
-      .tinytable td.tinytable_css_qx0ivbacge4u3duk629e, .tinytable th.tinytable_css_qx0ivbacge4u3duk629e { background-color: #ededed }
-      .tinytable td.tinytable_css_0nffcl5r5p1dshjvizm4, .tinytable th.tinytable_css_0nffcl5r5p1dshjvizm4 { color: white; background-color: #ededed }
-    .tinytable {
-      margin-bottom: .5em;
-      margin-top: .5em;
-      border-collapse: collapse;
-      width: 100%;
-    }
-    .tinytable th,
-    .tinytable td {
-      font-weight: normal;
-      position: relative;
-      padding: 0.5rem; /* similar to Bootstrap default */
-    }
+      .tinytable td.tinytable_css_5h1pcej8a9ynnzot3m73, .tinytable th.tinytable_css_5h1pcej8a9ynnzot3m73 { color: white; background-color: #FDE333 }
+      .tinytable td.tinytable_css_f2buytkyx5p73s8ofwj4, .tinytable th.tinytable_css_f2buytkyx5p73s8ofwj4 { color: white; background-color: #009B95 }
+      .tinytable td.tinytable_css_eant291491adzng7upxd, .tinytable th.tinytable_css_eant291491adzng7upxd { color: white; background-color: #4B0055 }
+      .tinytable td.tinytable_css_widu99ryhf90csbend7f, .tinytable th.tinytable_css_widu99ryhf90csbend7f { background-color: #ededed }
+      .tinytable td.tinytable_css_e4u3duk629eaejqzt9ad, .tinytable th.tinytable_css_e4u3duk629eaejqzt9ad { color: white; background-color: #ededed }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_bwgm81ntq9srgpoom9no" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
+      <table class="tinytable" id="tinytable_p1dshjvizm4qx0ivbacg" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
         <thead>
           <caption>Colors in first column should apply in both odd and even rows.</caption>
               <tr>

@@ -67,20 +67,86 @@
     </script>
 
     <style>
+    /* Core defaults */
+.tinytable {
+    /* tweak these if you want a “theme” */
+    --tt-border-color: black;
+    --tt-header-border-color: black;
+    --tt-striped-bg: rgba(0, 0, 0, .05);
+    --tt-hover-bg: rgba(0, 0, 0, .075);
+    --tt-caption-color: #6c757d;
+
+    width: 100%;
+    margin: .5rem 0;
+    border-collapse: collapse;
+    background-color: transparent;
+}
+
+.tinytable th,
+.tinytable td {
+    position: relative;
+    padding: .5rem;               /* Bootstrap table cell padding */
+    vertical-align: top;          /* like .table */
+}
+
+.tinytable thead th {
+    text-align: left;
+    vertical-align: bottom;       /* Bootstrap header alignment */
+    font-weight: 400;             /* slightly bolder header */
+    border-bottom: none;
+}
+
+/* Allow group headers to be centered */
+.tinytable thead th[align="center"] {
+    text-align: center;
+}
+
+.tinytable tbody + tbody {
+    border-top: 2px solid var(--tt-border-color);
+}
+
+.tinytable caption {
+    caption-side: bottom;
+    padding: .5rem 0;
+    color: var(--tt-caption-color);
+}
+
+/* Optional variants (add these classes alongside .tinytable) */
+
+/* Smaller padding: <table class="tinytable tinytable-sm"> */
+.tinytable-sm th,
+.tinytable-sm td {
+    padding: .25rem;
+}
+
+/* Bordered table: <table class="tinytable tinytable-bordered"> */
+.tinytable-bordered {
+    border: 1px solid var(--tt-border-color);
+}
+.tinytable-bordered th,
+.tinytable-bordered td {
+    border: 1px solid var(--tt-border-color);
+}
+
+/* Striped rows: <table class="tinytable tinytable-striped"> */
+.tinytable-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--tt-striped-bg);
+}
+
+/* Hover state: <table class="tinytable tinytable-hover"> */
+.tinytable-hover tbody tr:hover {
+    background-color: var(--tt-hover-bg);
+}
+
+/* Responsive wrapper: wrap table in <div class="tinytable-responsive"> */
+.tinytable-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
     /* tinytable css entries after */
       .tinytable td.tinytable_css_0vqkcekaocai1zccugaq, .tinytable th.tinytable_css_0vqkcekaocai1zccugaq { background-color: #ededed }
-    .tinytable {
-      margin-bottom: .5em;
-      margin-top: .5em;
-      border-collapse: collapse;
-      width: 100%;
-    }
-    .tinytable th,
-    .tinytable td {
-      font-weight: normal;
-      position: relative;
-      padding: 0.5rem; /* similar to Bootstrap default */
-    }
     </style>
     <div class="container">
       <table class="tinytable" id="tinytable_t7rmiqdnvseld48nfh5n" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
