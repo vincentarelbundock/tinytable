@@ -658,6 +658,45 @@ setMethod(
       }
     }
 
+    # Transfer borders from cells that will be removed by rowspans
+    # This handles theme-generated borders like from theme_grid()
+    for (row in seq_len(nrow(sty))) {
+      rowspan <- if (!is.na(sty$rowspan[row])) sty$rowspan[row] else 1
+      if (rowspan > 1) {
+        span_i <- sty$i[row]
+        span_j <- sty$j[row]
+
+        # Check if this rowspan affects the last row (which would have the bottom table border)
+        max_affected_row <- span_i + rowspan - 1
+        max_table_row <- max(rec$i)
+
+        if (max_affected_row >= max_table_row) {
+          # This rowspan affects the bottom of the table, so we need to ensure the spanning cell has a bottom border
+
+          # Find or create styling for the spanning cell
+          span_idx <- which(rec$i == span_i & rec$j == span_j)
+          if (length(span_idx) > 0) {
+            # Add/modify bottom border for spanning cell
+            span_css <- css[span_idx[1]]
+            if (grepl("--border-bottom:", span_css)) {
+              # Replace existing border-bottom with 1
+              css[span_idx[1]] <- gsub("--border-bottom:\\s*\\d+", "--border-bottom: 1", span_css)
+            } else {
+              # Add bottom border
+              css[span_idx[1]] <- paste(span_css, "--border-bottom: 1;")
+            }
+          } else {
+            # Create new styling entry for the spanning cell
+            new_idx <- nrow(rec) + 1
+            rec[new_idx, ] <- rec[rec$i == span_i & rec$j == 1, ][1, ]  # Copy from adjacent cell
+            rec$i[new_idx] <- span_i
+            rec$j[new_idx] <- span_j
+            css[new_idx] <- "border-bottom: 1px solid black;"
+          }
+        }
+      }
+    }
+
     rec$css_arguments <- css
     rec <- rec[rec$css_arguments != "", , drop = FALSE]
     if (nrow(rec) == 0) {
