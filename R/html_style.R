@@ -60,35 +60,180 @@ border_parse <- function(x) {
        color = if (is.na(color)) NA else color)
 }
 
-#' Initialize default pseudo-element CSS variables
+#' Centralized CSS configuration object
 #' @keywords internal
 #' @noRd
-pseudo_vars_init <- function() {
-  c("--border-left" = "0", "--border-right" = "0", "--border-top" = "0", "--border-bottom" = "0",
+css_config <- list(
+  # Default CSS variables for pseudo-elements
+  default_vars = c(
+    "--border-left" = "0", "--border-right" = "0", "--border-top" = "0", "--border-bottom" = "0",
     "--line-width-left" = "0.1em", "--line-width-right" = "0.1em", "--line-width-top" = "0.1em",
     "--line-width-bottom" = "0.1em", "--trim-top-left" = "0%", "--trim-top-right" = "0%",
     "--trim-bottom-left" = "0%", "--trim-bottom-right" = "0%", "--trim-left-top" = "0%",
-    "--trim-left-bottom" = "0%", "--trim-right-top" = "0%", "--trim-right-bottom" = "0%")
-}
+    "--trim-left-bottom" = "0%", "--trim-right-top" = "0%", "--trim-right-bottom" = "0%"
+  ),
 
-#' Generate pseudo-element CSS template
-#' @keywords internal
-#' @noRd
-pseudo_css_templates <- function(id, base_rule) {
-  paste0(
-    "      .tinytable td.", id, ", .tinytable th.", id, " { ", base_rule, " }\n",
-    "      .tinytable td.", id, "::before, .tinytable th.", id, "::before { content: ''; position: absolute; ",
-      "top: var(--trim-top-left, var(--trim-top-right, 0)); left: var(--trim-left-top, 0); right: var(--trim-right-top, 0); bottom: 0; ",
+  # CSS property flags for consolidation
+  consolidation_flags = list(
+    border = c("--border-left", "--border-right", "--border-top", "--border-bottom"),
+    color = c("--line-color-left", "--line-color-right", "--line-color-top", "--line-color-bottom"),
+    trim = c("--trim-top-left", "--trim-top-right", "--trim-bottom-left", "--trim-bottom-right",
+             "--trim-left-top", "--trim-left-bottom", "--trim-right-top", "--trim-right-bottom")
+  ),
+
+  # Border property mappings for different directions
+  border_props = list(
+    left = list(border = "--border-left", color = "--line-color-left", width = "--line-width-left"),
+    right = list(border = "--border-right", color = "--line-color-right", width = "--line-width-right"),
+    top = list(border = "--border-top", color = "--line-color-top", width = "--line-width-top"),
+    bottom = list(border = "--border-bottom", color = "--line-color-bottom", width = "--line-width-bottom")
+  ),
+
+  # Trim property mappings for different directions and positions
+  trim_props = list(
+    top = list(left = "--trim-top-left", right = "--trim-top-right"),
+    bottom = list(left = "--trim-bottom-left", right = "--trim-bottom-right"),
+    left = list(top = "--trim-left-top", bottom = "--trim-left-bottom"),
+    right = list(top = "--trim-right-top", bottom = "--trim-right-bottom")
+  ),
+
+  # CSS properties that should be excluded from regular CSS output when using pseudo-elements
+  border_exclusions = c(
+    "border", "border-left", "border-right", "border-top", "border-bottom",
+    "--border-left", "--border-right", "--border-top", "--border-bottom",
+    "--line-color", "--line-width", "--line-width-left", "--line-width-right",
+    "--line-width-top", "--line-width-bottom", "--trim-top-left", "--trim-top-right",
+    "--trim-bottom-left", "--trim-bottom-right", "--trim-left-top", "--trim-left-bottom",
+    "--trim-right-top", "--trim-right-bottom"
+  ),
+
+  # Default values
+  defaults = list(
+    line_color = "black",
+    line_width = "0.1em",
+    trim_percentage = "3%"
+  ),
+
+  # CSS template components
+  templates = list(
+    base_selector = "      .tinytable td.{id}, .tinytable th.{id} { {rule} }",
+
+    before_pseudo = paste0(
+      "      .tinytable td.{id}::before, .tinytable th.{id}::before { ",
+      "content: ''; position: absolute; ",
+      "top: var(--trim-top-left, var(--trim-top-right, 0)); ",
+      "left: var(--trim-left-top, 0); right: var(--trim-right-top, 0); bottom: 0; ",
       "pointer-events: none; z-index: 1; ",
       "border-left: calc(var(--border-left) * var(--line-width-left, var(--line-width, 0.1em))) solid var(--line-color-left, var(--line-color, black)); ",
       "border-right: calc(var(--border-right) * var(--line-width-right, var(--line-width, 0.1em))) solid var(--line-color-right, var(--line-color, black)); ",
-      "border-top: calc(var(--border-top) * var(--line-width-top, var(--line-width, 0.1em))) solid var(--line-color-top, var(--line-color, black)); ",
-    "}\n",
-    "      .tinytable td.", id, "::after, .tinytable th.", id, "::after { content: ''; position: absolute; ",
-      "left: var(--trim-bottom-left, 0); right: var(--trim-bottom-right, 0); bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0)); ",
+      "border-top: calc(var(--border-top) * var(--line-width-top, var(--line-width, 0.1em))) solid var(--line-color-top, var(--line-color, black)); }"
+    ),
+
+    after_pseudo = paste0(
+      "      .tinytable td.{id}::after, .tinytable th.{id}::after { ",
+      "content: ''; position: absolute; ",
+      "left: var(--trim-bottom-left, 0); right: var(--trim-bottom-right, 0); ",
+      "bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0)); ",
       "height: calc(var(--border-bottom) * var(--line-width-bottom, var(--line-width, 0.1em))); ",
-      "background: var(--line-color-bottom, var(--line-color, black)); pointer-events: none; z-index: 2; }"
+      "background: var(--line-color-bottom, var(--line-color, black)); ",
+      "pointer-events: none; z-index: 2; }"
+    )
   )
+)
+
+#' Simple template replacement function
+#' @keywords internal
+#' @noRd
+apply_template <- function(template, replacements) {
+  result <- template
+  for (key in names(replacements)) {
+    pattern <- paste0("\\{", key, "\\}")
+    result <- gsub(pattern, replacements[[key]], result)
+  }
+  result
+}
+
+#' Generate pseudo-element CSS using templates
+#' @keywords internal
+#' @noRd
+generate_pseudo_css <- function(id, base_rule) {
+  replacements <- list(id = id, rule = base_rule)
+
+  base <- apply_template(css_config$templates$base_selector, replacements)
+  before <- apply_template(css_config$templates$before_pseudo, replacements)
+  after <- apply_template(css_config$templates$after_pseudo, replacements)
+
+  paste(base, before, after, sep = "\n")
+}
+
+#' Set border CSS properties using configuration
+#' @keywords internal
+#' @noRd
+set_border_css <- function(css_map, direction, line_color, line_width) {
+  props <- css_config$border_props[[direction]]
+  if (!is.null(props)) {
+    css_map[[props$border]] <- "1"
+    css_map[[props$color]] <- line_color
+    css_map[[props$width]] <- line_width
+  }
+  css_map
+}
+
+#' Set trim CSS properties using configuration
+#' @keywords internal
+#' @noRd
+set_trim_css <- function(css_map, direction, position, line_trim, active_border, trim_pct = css_config$defaults$trim_percentage) {
+  if (!is.na(line_trim) && grepl(substr(position, 1, 1), line_trim) && active_border) {
+    trim_prop <- css_config$trim_props[[direction]][[position]]
+    if (!is.null(trim_prop)) {
+      css_map[[trim_prop]] <- trim_pct
+    }
+  }
+  css_map
+}
+
+#' Generate border CSS map for all active directions
+#' @keywords internal
+#' @noRd
+generate_border_css <- function(line, line_width, line_color, line_trim) {
+  line_color <- if (is.na(line_color)) css_config$defaults$line_color else standardize_colors(line_color, format = "hex")
+  line_width <- if (is.na(line_width)) css_config$defaults$line_width else paste0(line_width, "em")
+
+  # Determine active directions
+  directions <- list(
+    left = grepl("l", line),
+    right = grepl("r", line),
+    top = grepl("t", line),
+    bottom = grepl("b", line)
+  )
+
+  css_map <- character()
+
+  if (any(unlist(directions))) {
+    css_map[["position"]] <- "relative"
+    css_map[["--line-width"]] <- line_width
+
+    # Set border properties for active directions
+    for (dir_name in names(directions)) {
+      if (directions[[dir_name]]) {
+        css_map <- set_border_css(css_map, dir_name, line_color, line_width)
+
+        # Set trim properties for this direction
+        if (!is.na(line_trim)) {
+          trim_pct <- css_config$defaults$trim_percentage
+          if (dir_name %in% c("top", "bottom")) {
+            css_map <- set_trim_css(css_map, dir_name, "left", line_trim, directions$left, trim_pct)
+            css_map <- set_trim_css(css_map, dir_name, "right", line_trim, directions$right, trim_pct)
+          } else {
+            css_map <- set_trim_css(css_map, dir_name, "top", line_trim, directions$top, trim_pct)
+            css_map <- set_trim_css(css_map, dir_name, "bottom", line_trim, directions$bottom, trim_pct)
+          }
+        }
+      }
+    }
+  }
+
+  css_map
 }
 
 #' Build and cache header column mappings
@@ -145,29 +290,30 @@ header_col_mapping_cache <- function(x) {
 
 # Convert CSS map directly to pseudo-element format (no parsing required)
 convert_map_to_pseudo_elements <- function(css_map) {
-  vars <- pseudo_vars_init()
+  vars <- css_config$default_vars
 
   # Default values
-  line_color <- "black"
-  line_width <- "0.1em"
+  line_color <- css_config$defaults$line_color
+  line_width <- css_config$defaults$line_width
 
   # Process border declarations from map
   for (key in names(css_map)) {
     val <- css_map[[key]]
 
     if (key == "border" && grepl("solid", val)) {
-      # All borders
-      vars[["--border-left"]] <- "1"
-      vars[["--border-right"]] <- "1"
-      vars[["--border-top"]] <- "1"
-      vars[["--border-bottom"]] <- "1"
+      # All borders - use config to set all directions
+      for (dir_props in css_config$border_props) {
+        vars[[dir_props$border]] <- "1"
+      }
       border_parts <- border_parse(val)
       if (!is.na(border_parts$color)) line_color <- border_parts$color
       if (!is.na(border_parts$width)) line_width <- border_parts$width
     } else if (key %in% c("border-left", "border-right", "border-top", "border-bottom") && grepl("solid", val)) {
-      # Individual sides
-      side_var <- paste0("--", key)
-      vars[[side_var]] <- "1"
+      # Individual sides - use config to map border names to CSS variables
+      direction <- gsub("border-", "", key)
+      if (direction %in% names(css_config$border_props)) {
+        vars[[css_config$border_props[[direction]]$border]] <- "1"
+      }
       border_parts <- border_parse(val)
       if (!is.na(border_parts$color)) line_color <- border_parts$color
       if (!is.na(border_parts$width)) line_width <- border_parts$width
@@ -185,14 +331,8 @@ convert_map_to_pseudo_elements <- function(css_map) {
   line_color <- css_pick(css_map, "--line-color", line_color)
   line_width <- css_pick(css_map, "--line-width", line_width)
 
-  # Remove all border-related keys from regular CSS
-  border_keys <- c("border", "border-left", "border-right", "border-top", "border-bottom",
-                  "--border-left", "--border-right", "--border-top", "--border-bottom",
-                  "--line-color", "--line-width", "--line-width-left", "--line-width-right",
-                  "--line-width-top", "--line-width-bottom", "--trim-top-left", "--trim-top-right",
-                  "--trim-bottom-left", "--trim-bottom-right", "--trim-left-top", "--trim-left-bottom",
-                  "--trim-right-top", "--trim-right-bottom")
-  non_border <- css_map[!names(css_map) %in% border_keys]
+  # Remove all border-related keys from regular CSS using config
+  non_border <- css_map[!names(css_map) %in% css_config$border_exclusions]
 
   # Add position: relative if missing
   if (!"position" %in% names(non_border)) {
@@ -229,10 +369,9 @@ consolidate_css_maps <- function(rec_with_maps) {
 
       # Smart consolidation resolver working directly with maps
       combined_map <- character()
-      border_flags <- c("--border-left", "--border-right", "--border-top", "--border-bottom")
-      color_flags <- c("--line-color-left", "--line-color-right", "--line-color-top", "--line-color-bottom")
-      trim_flags <- c("--trim-top-left", "--trim-top-right", "--trim-bottom-left", "--trim-bottom-right",
-                      "--trim-left-top", "--trim-left-bottom", "--trim-right-top", "--trim-right-bottom")
+      border_flags <- css_config$consolidation_flags$border
+      color_flags <- css_config$consolidation_flags$color
+      trim_flags <- css_config$consolidation_flags$trim
 
       for (map in maps) {
         for (key in names(map)) {
@@ -422,127 +561,19 @@ setMethod(
       css_maps
     }
 
-    # Create border CSS map (separated from the old process_border_styles)
-    create_border_css_map <- function(line, line_width, line_color, line_trim) {
-      line_color <- if (is.na(line_color)) {
-        "black"
-      } else {
-        standardize_colors(line_color, format = "hex")
-      }
-      line_width <- if (is.na(line_width)) 0.1 else line_width
-      left <- grepl("l", line)
-      right <- grepl("r", line)
-      top <- grepl("t", line)
-      bottom <- grepl("b", line)
+    # Create border CSS map using the new utility function
+    create_border_css_map <- generate_border_css
 
-      css_map <- character()
-
-      if (any(c(left, right, top, bottom))) {
-        line_width_em <- paste0(line_width, "em")
-        css_map[["position"]] <- "relative"
-        css_map[["--line-width"]] <- line_width_em
-
-        if (left) {
-          css_map[["--line-color-left"]] <- line_color
-          css_map[["--line-width-left"]] <- line_width_em
-          css_map[["--border-left"]] <- "1"
-        }
-        if (right) {
-          css_map[["--line-color-right"]] <- line_color
-          css_map[["--line-width-right"]] <- line_width_em
-          css_map[["--border-right"]] <- "1"
-        }
-        if (top) {
-          css_map[["--line-color-top"]] <- line_color
-          css_map[["--line-width-top"]] <- line_width_em
-          css_map[["--border-top"]] <- "1"
-        }
-        if (bottom) {
-          css_map[["--line-color-bottom"]] <- line_color
-          css_map[["--line-width-bottom"]] <- line_width_em
-          css_map[["--border-bottom"]] <- "1"
-        }
-
-        # Apply trimming values if specified
-        if (!is.na(line_trim)) {
-          trim_values <- list(
-            "trim-top-left" = if (grepl("l", line_trim) && top) "3%" else "0%",
-            "trim-top-right" = if (grepl("r", line_trim) && top) "3%" else "0%",
-            "trim-bottom-left" = if (grepl("l", line_trim) && bottom) "3%" else "0%",
-            "trim-bottom-right" = if (grepl("r", line_trim) && bottom) "3%" else "0%",
-            "trim-left-top" = if (grepl("t", line_trim) && left) "3%" else "0%",
-            "trim-left-bottom" = if (grepl("b", line_trim) && left) "3%" else "0%",
-            "trim-right-top" = if (grepl("t", line_trim) && right) "3%" else "0%",
-            "trim-right-bottom" = if (grepl("b", line_trim) && right) "3%" else "0%"
-          )
-
-          for (trim_name in names(trim_values)) {
-            css_var_name <- paste0("--", trim_name)
-            css_map[[css_var_name]] <- trim_values[[trim_name]]
-          }
-        }
-      }
-      css_map
-    }
-
-    # Border processing function (kept for compatibility, but now calls create_border_css_map)
+    # Border processing function (simplified using new utilities)
     process_border_styles <- function(css_maps, indices, line, line_width, line_color, line_trim) {
-      line_color <- if (is.na(line_color)) {
-        "black"
-      } else {
-        standardize_colors(line_color, format = "hex")
-      }
-      line_width <- if (is.na(line_width)) 0.1 else line_width
-      left <- grepl("l", line)
-      right <- grepl("r", line)
-      top <- grepl("t", line)
-      bottom <- grepl("b", line)
+      # Generate the border CSS map using the utility function
+      border_css <- generate_border_css(line, line_width, line_color, line_trim)
 
-      # Calculate trimming values
-      trim_values <- list()
-      if (!is.na(line_trim)) {
-        trim_values$trim_top_left <- if (grepl("l", line_trim) && top) "3%" else "0%"
-        trim_values$trim_top_right <- if (grepl("r", line_trim) && top) "3%" else "0%"
-        trim_values$trim_bottom_left <- if (grepl("l", line_trim) && bottom) "3%" else "0%"
-        trim_values$trim_bottom_right <- if (grepl("r", line_trim) && bottom) "3%" else "0%"
-        trim_values$trim_left_top <- if (grepl("t", line_trim) && left) "3%" else "0%"
-        trim_values$trim_left_bottom <- if (grepl("b", line_trim) && left) "3%" else "0%"
-        trim_values$trim_right_top <- if (grepl("t", line_trim) && right) "3%" else "0%"
-        trim_values$trim_right_bottom <- if (grepl("b", line_trim) && right) "3%" else "0%"
-      }
-
-      if (any(c(left, right, top, bottom))) {
-        line_width_em <- paste0(line_width, "em")
-
+      # Apply the generated CSS to all target cells
+      if (length(border_css) > 0) {
         for (cell_idx in which(indices)) {
-          css_maps[[cell_idx]][["position"]] <- "relative"
-          css_maps[[cell_idx]][["--line-width"]] <- line_width_em
-
-          if (left) {
-            css_maps[[cell_idx]][["--line-color-left"]] <- line_color
-            css_maps[[cell_idx]][["--line-width-left"]] <- line_width_em
-            css_maps[[cell_idx]][["--border-left"]] <- "1"
-          }
-          if (right) {
-            css_maps[[cell_idx]][["--line-color-right"]] <- line_color
-            css_maps[[cell_idx]][["--line-width-right"]] <- line_width_em
-            css_maps[[cell_idx]][["--border-right"]] <- "1"
-          }
-          if (top) {
-            css_maps[[cell_idx]][["--line-color-top"]] <- line_color
-            css_maps[[cell_idx]][["--line-width-top"]] <- line_width_em
-            css_maps[[cell_idx]][["--border-top"]] <- "1"
-          }
-          if (bottom) {
-            css_maps[[cell_idx]][["--line-color-bottom"]] <- line_color
-            css_maps[[cell_idx]][["--line-width-bottom"]] <- line_width_em
-            css_maps[[cell_idx]][["--border-bottom"]] <- "1"
-          }
-
-          # Apply trimming values if specified
-          for (trim_name in names(trim_values)) {
-            css_var_name <- paste0("--", gsub("_", "-", trim_name))
-            css_maps[[cell_idx]][[css_var_name]] <- trim_values[[trim_name]]
+          for (prop_name in names(border_css)) {
+            css_maps[[cell_idx]][[prop_name]] <- border_css[[prop_name]]
           }
         }
       }
@@ -685,7 +716,8 @@ setMethod(
               priority = if (nrow(rec_with_maps) > 0) max(rec_with_maps$priority, na.rm = TRUE) + 1 else 1000,
               stringsAsFactors = FALSE
             )
-            border_css_map <- c("--border-bottom" = "1")
+            border_css_map <- c()
+          border_css_map[[css_config$border_props$bottom$border]] <- "1"
             border_record$css_map <- list(border_css_map)
             rec_with_maps <- rbind(rec_with_maps, border_record)
           }
@@ -768,7 +800,7 @@ setMethod(
         css_rule <- css_render(pseudo_map)
 
         # Generate CSS using template
-        entry <- pseudo_css_templates(id_css, css_rule)
+        entry <- generate_pseudo_css(id_css, css_rule)
       } else {
         # Regular CSS rule without pseudo-elements
         entry <- sprintf(
