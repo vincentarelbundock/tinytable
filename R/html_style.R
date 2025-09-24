@@ -221,7 +221,10 @@ consolidate_css_maps <- function(rec_with_maps) {
       # Single rule - keep as is
       consolidated_list[[idx]] <- group
     } else {
-      # Multiple rules for the same cell - consolidate maps directly
+      # Multiple rules for the same cell - sort by priority to ensure correct override order
+      # Process theme styles (higher priority numbers) FIRST, then user styles (lower numbers)
+      # This way "last write wins" means user styles override theme styles
+      group <- group[order(group$priority, decreasing = TRUE), ]
       maps <- group$css_map
 
       # Smart consolidation resolver working directly with maps
@@ -247,6 +250,9 @@ consolidate_css_maps <- function(rec_with_maps) {
               new_color <- map[[key]]
               if (current_color == "black" && new_color != "black") {
                 combined_map[[key]] <- new_color
+              } else {
+                # Later styles override earlier ones (last write wins)
+                combined_map[[key]] <- new_color
               }
             } else {
               combined_map[[key]] <- map[[key]]
@@ -262,7 +268,7 @@ consolidate_css_maps <- function(rec_with_maps) {
               combined_map[[key]] <- map[[key]]
             }
           } else {
-            # Last write wins for regular properties
+            # Last write wins for regular properties (this is the key fix!)
             combined_map[[key]] <- map[[key]]
           }
         }
@@ -385,71 +391,39 @@ setMethod(
       }
     }
 
-    for (row in seq_len(nrow(sty))) {
-      # index: sty vs rec
-      idx_i <- sty$i[row]
-      if (is.na(idx_i)) {
-        idx_i <- unique(rec$i)
-      }
-      idx_j <- sty$j[row]
-      if (is.na(idx_j)) {
-        idx_j <- unique(rec$j)
-      }
-      idx <- rec$i == idx_i & rec$j == idx_j
+    # Property mapping table for style-to-CSS conversions
+    style_map <- list(
+      bold = list(css_prop = "font-weight", css_value = "bold", condition_fn = isTRUE),
+      italic = list(css_prop = "font-style", css_value = "italic", condition_fn = isTRUE),
+      underline = list(css_prop = "text-decoration", css_value = "underline", condition_fn = isTRUE),
+      strikeout = list(css_prop = "text-decoration", css_value = "line-through", condition_fn = isTRUE),
+      monospace = list(css_prop = "font-family", css_value = "monospace", condition_fn = isTRUE),
+      smallcap = list(css_prop = "font-variant", css_value = "small-caps", condition_fn = isTRUE),
+      alignv = list(css_prop = "vertical-align", value_fn = function(x) x, condition_fn = function(x) !is.na(x)),
+      align = list(css_prop = "text-align", value_fn = function(x) x, condition_fn = function(x) !is.na(x)),
+      color = list(css_prop = "color", value_fn = function(x) standardize_colors(x, format = "hex"), condition_fn = function(x) !is.na(x)),
+      background = list(css_prop = "background-color", value_fn = function(x) standardize_colors(x, format = "hex"), condition_fn = function(x) !is.na(x)),
+      fontsize = list(css_prop = "font-size", value_fn = function(x) paste0(x, "em"), condition_fn = function(x) !is.na(x)),
+      indent = list(css_prop = "padding-left", value_fn = function(x) paste0(x, "em"), condition_fn = function(x) !is.na(x))
+    )
 
-      # Directly assign CSS properties to named character vectors
-      if (isTRUE(sty[row, "bold"])) {
-        for (cell_idx in which(idx)) css_maps[[cell_idx]][["font-weight"]] <- "bold"
-      }
-      if (isTRUE(sty[row, "italic"])) {
-        for (cell_idx in which(idx)) css_maps[[cell_idx]][["font-style"]] <- "italic"
-      }
-      if (isTRUE(sty[row, "underline"])) {
-        for (cell_idx in which(idx)) css_maps[[cell_idx]][["text-decoration"]] <- "underline"
-      }
-      if (isTRUE(sty[row, "strikeout"])) {
-        for (cell_idx in which(idx)) css_maps[[cell_idx]][["text-decoration"]] <- "line-through"
-      }
-      if (isTRUE(sty[row, "monospace"])) {
-        for (cell_idx in which(idx)) css_maps[[cell_idx]][["font-family"]] <- "monospace"
-      }
-      if (isTRUE(sty[row, "smallcap"])) {
-        for (cell_idx in which(idx)) css_maps[[cell_idx]][["font-variant"]] <- "small-caps"
-      }
-      if (!is.na(sty[row, "color"])) {
-        color_val <- standardize_colors(sty[row, "color"], format = "hex")
-        for (cell_idx in which(idx)) css_maps[[cell_idx]][["color"]] <- color_val
-      }
-      if (!is.na(sty[row, "background"])) {
-        background_val <- standardize_colors(sty[row, "background"], format = "hex")
-        for (cell_idx in which(idx)) css_maps[[cell_idx]][["background-color"]] <- background_val
-      }
-      if (!is.na(sty[row, "fontsize"])) {
-        for (cell_idx in which(idx)) css_maps[[cell_idx]][["font-size"]] <- paste0(sty[row, "fontsize"], "em")
-      }
-      if (!is.na(sty[row, "alignv"])) {
-        for (cell_idx in which(idx)) css_maps[[cell_idx]][["vertical-align"]] <- sty[row, "alignv"]
-      }
-      if (!is.na(sty[row, "align"])) {
-        for (cell_idx in which(idx)) css_maps[[cell_idx]][["text-align"]] <- sty[row, "align"]
-      }
-      if (!is.na(sty[row, "indent"])) {
-        for (cell_idx in which(idx)) css_maps[[cell_idx]][["padding-left"]] <- paste0(sty[row, "indent"], "em")
-      }
-      if (!is.na(sty[row, "html_css"])) {
-        # Parse custom CSS and add to maps (only parse when necessary)
-        custom_css <- css_parse(sty[row, "html_css"])
-        for (cell_idx in which(idx)) {
-          for (prop_name in names(custom_css)) {
-            css_maps[[cell_idx]][[prop_name]] <- custom_css[[prop_name]]
-          }
+    # Generic property setter function
+    apply_style_property <- function(css_maps, indices, prop_name, prop_value, style_def) {
+      if (style_def$condition_fn(prop_value)) {
+        css_value <- if (!is.null(style_def$value_fn)) {
+          style_def$value_fn(prop_value)
+        } else {
+          style_def$css_value
+        }
+        for (cell_idx in which(indices)) {
+          css_maps[[cell_idx]][[style_def$css_prop]] <- css_value
         }
       }
+      css_maps
+    }
 
-      # Process border properties
-      line <- sty$line[row]
-      line_width <- sty$line_width[row]
-      line_color <- sty$line_color[row]
+    # Create border CSS map (separated from the old process_border_styles)
+    create_border_css_map <- function(line, line_width, line_color, line_trim) {
       line_color <- if (is.na(line_color)) {
         "black"
       } else {
@@ -461,87 +435,120 @@ setMethod(
       top <- grepl("t", line)
       bottom <- grepl("b", line)
 
-      # Set side-dependent trimming variables based on border presence and trim specification
-      line_trim <- if ("line_trim" %in% names(sty)) sty$line_trim[row] else NA
-
-
-      # Apply border-directional trimming based on trim specification and active borders
-      # Only set trim values when line_trim is explicitly specified AND the border is active
-      if (!is.na(line_trim)) {
-        # Top border trimming
-        trim_top_left <- if (grepl("l", line_trim) && top) "3%" else "0%"
-        trim_top_right <- if (grepl("r", line_trim) && top) "3%" else "0%"
-
-        # Bottom border trimming
-        trim_bottom_left <- if (grepl("l", line_trim) && bottom) "3%" else "0%"
-        trim_bottom_right <- if (grepl("r", line_trim) && bottom) "3%" else "0%"
-
-        # Left border trimming
-        trim_left_top <- if (grepl("t", line_trim) && left) "3%" else "0%"
-        trim_left_bottom <- if (grepl("b", line_trim) && left) "3%" else "0%"
-
-        # Right border trimming
-        trim_right_top <- if (grepl("t", line_trim) && right) "3%" else "0%"
-        trim_right_bottom <- if (grepl("b", line_trim) && right) "3%" else "0%"
-      } else {
-        # When line_trim is NA, don't set trim values (let consolidation handle it)
-        trim_top_left <- NA
-        trim_top_right <- NA
-        trim_bottom_left <- NA
-        trim_bottom_right <- NA
-        trim_left_top <- NA
-        trim_left_bottom <- NA
-        trim_right_top <- NA
-        trim_right_bottom <- NA
-      }
-
+      css_map <- character()
 
       if (any(c(left, right, top, bottom))) {
-        # Directly assign border CSS properties to named character vectors
+        line_width_em <- paste0(line_width, "em")
+        css_map[["position"]] <- "relative"
+        css_map[["--line-width"]] <- line_width_em
+
+        if (left) {
+          css_map[["--line-color-left"]] <- line_color
+          css_map[["--line-width-left"]] <- line_width_em
+          css_map[["--border-left"]] <- "1"
+        }
+        if (right) {
+          css_map[["--line-color-right"]] <- line_color
+          css_map[["--line-width-right"]] <- line_width_em
+          css_map[["--border-right"]] <- "1"
+        }
+        if (top) {
+          css_map[["--line-color-top"]] <- line_color
+          css_map[["--line-width-top"]] <- line_width_em
+          css_map[["--border-top"]] <- "1"
+        }
+        if (bottom) {
+          css_map[["--line-color-bottom"]] <- line_color
+          css_map[["--line-width-bottom"]] <- line_width_em
+          css_map[["--border-bottom"]] <- "1"
+        }
+
+        # Apply trimming values if specified
+        if (!is.na(line_trim)) {
+          trim_values <- list(
+            "trim-top-left" = if (grepl("l", line_trim) && top) "3%" else "0%",
+            "trim-top-right" = if (grepl("r", line_trim) && top) "3%" else "0%",
+            "trim-bottom-left" = if (grepl("l", line_trim) && bottom) "3%" else "0%",
+            "trim-bottom-right" = if (grepl("r", line_trim) && bottom) "3%" else "0%",
+            "trim-left-top" = if (grepl("t", line_trim) && left) "3%" else "0%",
+            "trim-left-bottom" = if (grepl("b", line_trim) && left) "3%" else "0%",
+            "trim-right-top" = if (grepl("t", line_trim) && right) "3%" else "0%",
+            "trim-right-bottom" = if (grepl("b", line_trim) && right) "3%" else "0%"
+          )
+
+          for (trim_name in names(trim_values)) {
+            css_var_name <- paste0("--", trim_name)
+            css_map[[css_var_name]] <- trim_values[[trim_name]]
+          }
+        }
+      }
+      css_map
+    }
+
+    # Border processing function (kept for compatibility, but now calls create_border_css_map)
+    process_border_styles <- function(css_maps, indices, line, line_width, line_color, line_trim) {
+      line_color <- if (is.na(line_color)) {
+        "black"
+      } else {
+        standardize_colors(line_color, format = "hex")
+      }
+      line_width <- if (is.na(line_width)) 0.1 else line_width
+      left <- grepl("l", line)
+      right <- grepl("r", line)
+      top <- grepl("t", line)
+      bottom <- grepl("b", line)
+
+      # Calculate trimming values
+      trim_values <- list()
+      if (!is.na(line_trim)) {
+        trim_values$trim_top_left <- if (grepl("l", line_trim) && top) "3%" else "0%"
+        trim_values$trim_top_right <- if (grepl("r", line_trim) && top) "3%" else "0%"
+        trim_values$trim_bottom_left <- if (grepl("l", line_trim) && bottom) "3%" else "0%"
+        trim_values$trim_bottom_right <- if (grepl("r", line_trim) && bottom) "3%" else "0%"
+        trim_values$trim_left_top <- if (grepl("t", line_trim) && left) "3%" else "0%"
+        trim_values$trim_left_bottom <- if (grepl("b", line_trim) && left) "3%" else "0%"
+        trim_values$trim_right_top <- if (grepl("t", line_trim) && right) "3%" else "0%"
+        trim_values$trim_right_bottom <- if (grepl("b", line_trim) && right) "3%" else "0%"
+      }
+
+      if (any(c(left, right, top, bottom))) {
         line_width_em <- paste0(line_width, "em")
 
-        for (cell_idx in which(idx)) {
+        for (cell_idx in which(indices)) {
           css_maps[[cell_idx]][["position"]] <- "relative"
           css_maps[[cell_idx]][["--line-width"]] <- line_width_em
 
-          # Only set border values for the specific directions that have line styling
-          # This avoids overriding theme borders for directions not explicitly styled
           if (left) {
             css_maps[[cell_idx]][["--line-color-left"]] <- line_color
             css_maps[[cell_idx]][["--line-width-left"]] <- line_width_em
             css_maps[[cell_idx]][["--border-left"]] <- "1"
           }
-
           if (right) {
             css_maps[[cell_idx]][["--line-color-right"]] <- line_color
             css_maps[[cell_idx]][["--line-width-right"]] <- line_width_em
             css_maps[[cell_idx]][["--border-right"]] <- "1"
           }
-
           if (top) {
             css_maps[[cell_idx]][["--line-color-top"]] <- line_color
             css_maps[[cell_idx]][["--line-width-top"]] <- line_width_em
             css_maps[[cell_idx]][["--border-top"]] <- "1"
           }
-
           if (bottom) {
             css_maps[[cell_idx]][["--line-color-bottom"]] <- line_color
             css_maps[[cell_idx]][["--line-width-bottom"]] <- line_width_em
             css_maps[[cell_idx]][["--border-bottom"]] <- "1"
           }
 
-          # Apply the directional trimming variables (only when explicitly specified)
-          if (!is.na(trim_top_left)) css_maps[[cell_idx]][["--trim-top-left"]] <- trim_top_left
-          if (!is.na(trim_top_right)) css_maps[[cell_idx]][["--trim-top-right"]] <- trim_top_right
-          if (!is.na(trim_bottom_left)) css_maps[[cell_idx]][["--trim-bottom-left"]] <- trim_bottom_left
-          if (!is.na(trim_bottom_right)) css_maps[[cell_idx]][["--trim-bottom-right"]] <- trim_bottom_right
-          if (!is.na(trim_left_top)) css_maps[[cell_idx]][["--trim-left-top"]] <- trim_left_top
-          if (!is.na(trim_left_bottom)) css_maps[[cell_idx]][["--trim-left-bottom"]] <- trim_left_bottom
-          if (!is.na(trim_right_top)) css_maps[[cell_idx]][["--trim-right-top"]] <- trim_right_top
-          if (!is.na(trim_right_bottom)) css_maps[[cell_idx]][["--trim-right-bottom"]] <- trim_right_bottom
+          # Apply trimming values if specified
+          for (trim_name in names(trim_values)) {
+            css_var_name <- paste0("--", gsub("_", "-", trim_name))
+            css_maps[[cell_idx]][[css_var_name]] <- trim_values[[trim_name]]
+          }
         }
       }
+      css_maps
     }
+
 
     # spans: before styles because we return(x) if there is no style
     for (row in seq_len(nrow(sty))) {
@@ -569,49 +576,122 @@ setMethod(
       }
     }
 
-    # Transfer borders from cells that will be removed by rowspans
-    # This handles theme-generated borders like from theme_grid()
-    max_table_row <- max(rec$i)
+    # Create separate records for each style rule applied to preserve priority order
+    # This ensures that later style_tt() calls override earlier ones during consolidation
+    rec_with_maps <- data.frame()
+
     for (row in seq_len(nrow(sty))) {
-      rowspan <- if (!is.na(sty$rowspan[row])) sty$rowspan[row] else 1
-      if (rowspan > 1) {
-        span_i <- sty$i[row]
-        span_j <- sty$j[row]
+      # Calculate cell indices (same as before)
+      idx_i <- sty$i[row]
+      if (is.na(idx_i)) {
+        idx_i <- unique(rec$i)
+      }
+      idx_j <- sty$j[row]
+      if (is.na(idx_j)) {
+        idx_j <- unique(rec$j)
+      }
 
-        # Check if this rowspan affects the last row (which would have the bottom table border)
-        max_affected_row <- span_i + rowspan - 1
+      # Find affected cells
+      affected_cells <- which(rec$i %in% idx_i & rec$j %in% idx_j)
 
-        if (max_affected_row >= max_table_row) {
-          # This rowspan affects the bottom of the table, so we need to ensure the spanning cell has a bottom border
-          # Find the corresponding cell in our CSS maps
-          cell_idx <- which(rec$i == span_i & rec$j == span_j)
-          if (length(cell_idx) > 0) {
-            # Add bottom border to the CSS map
-            css_maps[[cell_idx[1]]][["--border-bottom"]] <- "1"
-          } else {
-            # Create new CSS map for this cell
-            new_cell_idx <- length(css_maps) + 1
-            css_maps[[new_cell_idx]] <- c("--border-bottom" = "1", "border-bottom" = "1px solid black")
+      if (length(affected_cells) > 0 && any(!is.na(unlist(sty[row, ])))) {
+        # Create one CSS map for this style row
+        style_map_for_row <- character()
 
-            # Extend rec to include this new cell
-            new_rec_row <- data.frame(i = span_i, j = span_j)
-            rec <- rbind(rec, new_rec_row)
+        # Apply standard CSS properties for this row
+        for (prop_name in names(style_map)) {
+          if (prop_name %in% names(sty)) {
+            prop_value <- sty[row, prop_name]
+            style_def <- style_map[[prop_name]]
+            if (style_def$condition_fn(prop_value)) {
+              css_value <- if (!is.null(style_def$value_fn)) {
+                style_def$value_fn(prop_value)
+              } else {
+                style_def$css_value
+              }
+              style_map_for_row[[style_def$css_prop]] <- css_value
+            }
+          }
+        }
+
+        # Handle custom CSS for this row
+        if (!is.na(sty[row, "html_css"])) {
+          custom_css <- css_parse(sty[row, "html_css"])
+          for (prop_name in names(custom_css)) {
+            style_map_for_row[[prop_name]] <- custom_css[[prop_name]]
+          }
+        }
+
+        # Handle border properties for this row
+        line <- sty$line[row]
+        if (!is.na(line)) {
+          line_width <- sty$line_width[row]
+          line_color <- sty$line_color[row]
+          line_trim <- if ("line_trim" %in% names(sty)) sty$line_trim[row] else NA
+
+          # Create border CSS map
+          border_css <- create_border_css_map(line, line_width, line_color, line_trim)
+          for (prop_name in names(border_css)) {
+            style_map_for_row[[prop_name]] <- border_css[[prop_name]]
+          }
+        }
+
+        # Create records for each affected cell
+        if (length(style_map_for_row) > 0) {
+          for (cell_idx in affected_cells) {
+            new_record <- data.frame(
+              i = rec$i[cell_idx],
+              j = rec$j[cell_idx],
+              priority = row,  # Use row number as priority
+              stringsAsFactors = FALSE
+            )
+            new_record$css_map <- list(style_map_for_row)
+            rec_with_maps <- rbind(rec_with_maps, new_record)
           }
         }
       }
     }
 
-    # Create records with maps instead of strings
-    rec_with_maps <- data.frame(
-      i = rec$i,
-      j = rec$j,
-      stringsAsFactors = FALSE
-    )
-    rec_with_maps$css_map <- css_maps
+    # Add comprehensive rowspan/colspan border transfer logic
+    # This transfers borders from cells that will be removed by spans to the spanning cells
+    for (row in seq_len(nrow(sty))) {
+      rowspan <- if (!is.na(sty$rowspan[row])) sty$rowspan[row] else 1
+      colspan <- if (!is.na(sty$colspan[row])) sty$colspan[row] else 1
 
-    # Filter out empty CSS maps
-    has_css <- sapply(css_maps, function(m) length(m) > 0)
-    rec_with_maps <- rec_with_maps[has_css, , drop = FALSE]
+      if (rowspan > 1 || colspan > 1) {
+        span_i <- sty$i[row]
+        span_j <- sty$j[row]
+
+        # Find all cells that will be removed by this span
+        removed_cells <- expand.grid(
+          i = span_i:(span_i + rowspan - 1),
+          j = span_j:(span_j + colspan - 1)
+        )
+        # Remove the spanning cell itself from the list
+        removed_cells <- removed_cells[!(removed_cells$i == span_i & removed_cells$j == span_j), ]
+
+        # Check if any removed cells had borders that need to be transferred
+        if (nrow(removed_cells) > 0) {
+          # Create border transfer for the spanning cell
+          # For now, focus on bottom borders for cells in the last row of the span
+          max_table_row <- max(rec$i)
+          bottom_row_of_span <- span_i + rowspan - 1
+
+          if (bottom_row_of_span >= max_table_row) {
+            # This span reaches the bottom of the table, so transfer bottom border
+            border_record <- data.frame(
+              i = span_i,
+              j = span_j,
+              priority = if (nrow(rec_with_maps) > 0) max(rec_with_maps$priority, na.rm = TRUE) + 1 else 1000,
+              stringsAsFactors = FALSE
+            )
+            border_css_map <- c("--border-bottom" = "1")
+            border_record$css_map <- list(border_css_map)
+            rec_with_maps <- rbind(rec_with_maps, border_record)
+          }
+        }
+      }
+    }
 
     if (nrow(rec_with_maps) == 0) {
       return(x)
