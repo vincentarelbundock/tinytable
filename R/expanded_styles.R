@@ -26,10 +26,18 @@ expand_styles <- function(x) {
   style_list <- list()
 
   for (p in props) {
+    is_line <- grepl("line", p)
+
     # keep only relevant columns, unique rows, and rows with a concrete value for this property
-    cols <- intersect(c("i", "j", p), names(styles))
+    if (is_line) {
+      cols <- unique(c("i", "j", "line", p))
+    } else {
+      cols <- c("i", "j", p)
+    }
+    cols <- unique(intersect(cols, names(styles)))
     sub <- unique(styles[, cols, drop = FALSE])
     sub <- sub[!is.na(sub[[p]]), , drop = FALSE]
+
     if (nrow(sub) == 0) next
 
     # expand NA i/j
@@ -38,22 +46,26 @@ expand_styles <- function(x) {
 
     for (r in seq_len(nrow(sub))) {
       if (is.na(sub[r, "i"]) && is.na(sub[r, "j"])) {
-        rect_p <- merge(rect, sub[r, p, drop = FALSE], all = TRUE, sort = FALSE)
+        cols_expand <- setdiff(cols, c("i", "j"))
       } else if (is.na(sub[r, "i"])) {
-        rect_p <- merge(rect, sub[r, c("j", p), drop = FALSE], all = TRUE, sort = FALSE)
+        cols_expand <- setdiff(cols, "i")
       } else if (is.na(sub[r, "j"])) {
-        rect_p <- merge(rect, sub[r, c("i", p), drop = FALSE], all = TRUE, sort = FALSE)
+        cols_expand <- setdiff(cols, "j")
       } else {
-        rect_p <- merge(rect, sub[r, c("i", "j", p), drop = FALSE], all = TRUE, sort = FALSE)
+        cols_expand <- cols
       }
+      rect_p <- merge(rect, sub[r, cols_expand, drop = FALSE], all = TRUE, sort = FALSE)
       rect_p <- stats::na.omit(rect_p)
       row_style <- c(row_style, list(rect_p))
     }
     out <- do.call(rbind, row_style)
 
-    if (grepl("line", p)) {
+    if (is_line) {
       # there can be multiple line definitions per cell: t, b, l, r
+      # but for conflicts in same i,j,line combination, last style wins
       out <- unique(out)
+      # line, line_width, and line_color must be treated differently
+      out <- last_df(out, bycols = c("i", "j", "line"))
     } else {
       # last style wins
       out <- last_df(unique(out))

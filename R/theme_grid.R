@@ -5,13 +5,9 @@
 #' @return A modified `tinytable` object.
 #' @export
 theme_grid <- function(x, ...) {
-
   # prepare: before table is drawn
-  fn <- function(x) theme_latex(x, inner = "hlines, vlines,")
-  x <- build_prepare(x, fn, output = "latex")
-
-  fn <- function(x) theme_html(x, engine = "bootstrap", class = "table table-bordered")
-  x <- build_prepare(x, fn, output = "html")
+  x <- theme_latex(x, inner = "hlines, vlines,")
+  x <- theme_html(x, engine = "bootstrap", class = "table table-bordered")
 
   # finalize: after table is drawn
   fn <- function(x) {

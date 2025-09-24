@@ -506,8 +506,14 @@ setMethod(
                 css_entries[[cell_key]]$css_map[[prop]] <- pseudo_map[[prop]]
               }
             } else {
-              # For non-border properties, always overwrite (colors, widths, etc.)
-              css_entries[[cell_key]]$css_map[[prop]] <- pseudo_map[[prop]]
+              # For direction-specific width properties, don't overwrite existing values
+              if (prop %in% c("--line-width-left", "--line-width-right", "--line-width-top", "--line-width-bottom") &&
+                  !is.null(css_entries[[cell_key]]$css_map[[prop]])) {
+                # Keep existing direction-specific width
+              } else {
+                # For other non-border properties, always overwrite (colors, global width, etc.)
+                css_entries[[cell_key]]$css_map[[prop]] <- pseudo_map[[prop]]
+              }
             }
           }
           css_entries[[cell_key]]$has_border <- TRUE
