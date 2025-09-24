@@ -116,6 +116,8 @@ tt_strip(
 
 \item{html_css_rule}{\code{TRUE} reverts the effect of the \code{html_css_rule} argument from \code{style_tt()}.}
 
+\item{html_engine}{\code{TRUE} reverts the effect of the \code{engine} argument from \code{theme_html()}.}
+
 \item{tabularray_inner}{\code{TRUE} reverts the effect of the \code{inner} argument from \code{theme_latex()}.}
 
 \item{tabularray_outer}{\code{TRUE} reverts the effect of the \code{outer} argument from \code{theme_latex()}.}

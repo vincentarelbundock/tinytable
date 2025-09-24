@@ -64,7 +64,7 @@ setMethod(
       css_rules <- lapply(
         css_rules,
         function(z) {
-          transform(z, html = paste(html, collapse = " "))[1, ]
+          transform(z, html = paste(z$html, collapse = " "))[1, ]
         })
       css_rules <- do.call(rbind, css_rules)
       id <- unique(css_rules[, "html", drop = FALSE])

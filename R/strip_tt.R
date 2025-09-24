@@ -25,6 +25,7 @@
 #' @param html_class `TRUE` reverts the effect of the `html_class` argument from `style_tt()`.
 #' @param html_css `TRUE` reverts the effect of the `html_css` argument from `style_tt()`.
 #' @param html_css_rule `TRUE` reverts the effect of the `html_css_rule` argument from `style_tt()`.
+#' @param html_engine `TRUE` reverts the effect of the `engine` argument from `theme_html()`.
 #' @param tabularray_inner `TRUE` reverts the effect of the `inner` argument from `theme_latex()`.
 #' @param tabularray_outer `TRUE` reverts the effect of the `outer` argument from `theme_latex()`.
 #' @return An object of class `tt` representing the table with stripped styling.
