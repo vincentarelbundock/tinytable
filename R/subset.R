@@ -18,6 +18,7 @@ subset.tinytable <- function(x, subset, select, drop = FALSE, ...) {
   return(x)
 }
 
+
 #' Apply lazy subset operations
 #' @keywords internal
 #' @noRd

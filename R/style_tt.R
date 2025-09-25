@@ -59,11 +59,11 @@ process_regular_input <- function(x, i, j) {
 
   # Handle empty index case - return empty settings dataframe with proper structure
   if (length(ival) == 0) {
-    return(data.frame(i = integer(0), j = integer(0), tabularray = character(0)))
+    return(data.frame(i = integer(0), j = integer(0)))
   }
 
   # Create settings grid
-  settings <- expand.grid(i = ival, j = jval, tabularray = "")
+  settings <- expand.grid(i = ival, j = jval)
 
   # Order may be important for recycling
   if (is.null(i) && !is.null(j)) {
@@ -77,148 +77,36 @@ process_regular_input <- function(x, i, j) {
 #' Process align argument and add to settings
 #' @keywords internal
 #' @noRd
-process_align_argument <- function(settings, align, jval) {
+process_align_argument <- function(x, settings, align) {
   if (is.null(align)) {
     if (nrow(settings) > 0) {
-      settings[["align"]] <- NA
+      settings[["align"]] <- NA_character_
     }
     return(settings)
   }
 
-  if (nchar(align) == length(jval)) {
-    align_string <- strsplit(align, "")[[1]]
-    if (!all(align_string %in% c("c", "l", "r", "d"))) {
-      stop("`align` must be characters c, l, r, or d.", call. = FALSE)
-    }
-    align_string <- data.frame(j = jval, align = align_string)
-    settings <- merge(
-      settings,
-      align_string,
-      by = "j",
-      all.x = TRUE,
-      sort = FALSE
-    )
+  if (nchar(align) == ncol(x)) {
+    align <- strsplit(align, "")[[1]]
   } else if (nchar(align) == 1) {
-    if (!align %in% c("c", "l", "r", "d")) {
-      stop("`align` must be characters c, l, r, or d.", call. = FALSE)
-    }
-    align_string <- data.frame(j = jval, align = align)
-    settings <- merge(
-      settings,
-      align_string,
-      by = "j",
-      all.x = TRUE,
-      sort = FALSE
-    )
+    align <- rep(align, ncol(x))
   } else {
-    msg <- sprintf(
-      "`align` must be a single character or a string of length %s.",
-      length(jval)
-    )
+    msg <- sprintf("`align` must be a single character or a string of length %s.", ncol(x))
     stop(msg, call. = FALSE)
   }
 
-  return(settings)
-}
-
-#' Remove empty settings from dataframe
-#' @keywords internal
-#' @noRd
-remove_empty_settings <- function(settings) {
-  # Return early if no settings to process
-  if (nrow(settings) == 0 || ncol(settings) < 3) {
-    return(settings)
+  if (!all(align %in% c("c", "l", "r", "d"))) {
+    stop("`align` must be characters c, l, r, or d.", call. = FALSE)
   }
 
-  empty <- settings[, 3:ncol(settings)]
-  empty <- sapply(empty, function(x) is.na(x) | (is.logical(x) && !any(x)))
-
-  if (nrow(settings) == 1) {
-    empty <- all(empty)
-    settings <- settings[!empty, , drop = FALSE]
-  } else {
-    empty <- apply(empty, 1, all)
-    settings <- settings[!empty, , drop = FALSE]
+  for (j in seq_along(align)) {
+    settings$align <- NA_character_
+    idx <- which(settings$j == j)
+    settings$align[idx] <- align[j]
   }
 
   return(settings)
 }
 
-#' Remove duplicates from style data frame while preserving line-related entries
-#' @keywords internal
-#' @noRd
-style_unique_preserve_lines <- function(df) {
-  if (nrow(df) == 0) return(df)
-
-  # Line-related columns that can have multiple entries for the same i,j
-  line_cols <- c("line", "line_color", "line_width", "line_trim")
-
-  # Separate line entries from non-line entries
-  line_mask <- !is.na(df$line) & df$line != ""
-  line_entries <- df[line_mask, , drop = FALSE]
-  non_line_entries <- df[!line_mask, , drop = FALSE]
-
-  # Remove duplicates from non-line entries (standard unique behavior)
-  if (nrow(non_line_entries) > 0) {
-    non_line_entries <- unique(non_line_entries)
-  }
-
-  # For line entries, only remove duplicates that have identical line-related properties
-  # This allows multiple different line styles (e.g., top and bottom) for the same cell
-  if (nrow(line_entries) > 0) {
-    # Create a key for each line entry based on position and line properties
-    line_entries$dedup_key <- paste(
-      line_entries$i,
-      line_entries$j,
-      line_entries$line,
-      line_entries$line_color,
-      line_entries$line_width,
-      line_entries$line_trim,
-      sep = "|"
-    )
-
-    # Remove true duplicates (same position, same line properties)
-    line_entries <- line_entries[!duplicated(line_entries$dedup_key), ]
-    line_entries$dedup_key <- NULL  # Remove helper column
-  }
-
-  # Combine and return
-  result <- rbind(non_line_entries, line_entries)
-
-  # Sort by i, j for consistency (optional)
-  if (nrow(result) > 0) {
-    result <- result[order(result$i, result$j), ]
-  }
-
-  return(result)
-}
-
-#' Merge settings with existing styles
-#' @keywords internal
-#' @noRd
-merge_with_existing_styles <- function(x, settings) {
-  if (nrow(settings) == 0) {
-    return(x)
-  }
-
-  if (nrow(x@style) > 0 && ncol(x@style) != ncol(settings)) {
-    # Handle column mismatch
-    a <- x@style
-    b <- settings
-    if (!"tabularray" %in% colnames(a)) {
-      a$tabularray <- ""
-    }
-    if (!"tabularray" %in% colnames(b)) {
-      b$tabularray <- ""
-    }
-    settings <- rbind(a, b[, colnames(a)])
-    x@style <- style_unique_preserve_lines(settings)
-  } else {
-    x@style <- rbind(x@style, settings)
-  }
-
-  return(x)
-}
 
 # =============================================================================
 # MAIN FUNCTION
@@ -507,6 +395,7 @@ style_tt <- function(
     settings[["colspan"]] <- if (is.null(colspan)) NA else colspan
     settings[["rowspan"]] <- if (is.null(rowspan)) NA else rowspan
     settings[["html_css"]] <- if (!is.null(html_css)) {
+    settings[["tabularray"]] <- ""
       html_css
     } else {
       NA
@@ -556,13 +445,20 @@ style_tt <- function(
   }
 
   if (!is.matrix(i) || !is.logical(i)) {
-    jval <- sanitize_j(j, x)
-    settings <- process_align_argument(settings, align, jval)
+    settings <- process_align_argument(x, settings, align)
+  } else {
+    settings$align <- NA_character_
   }
 
-  settings <- remove_empty_settings(settings)
+  # sort column: important for bind
+  cols <- unique(c("i", "j", sort(colnames(settings))))
+  settings <- settings[, cols, drop = FALSE]
 
-  out <- merge_with_existing_styles(out, settings)
+  if (nrow(out@style) == 0) {
+    out@style <- settings
+  } else {
+    out@style <- rbind(out@style, settings)
+  }
 
   if (is.function(finalize)) {
     out@lazy_finalize <- c(out@lazy_finalize, list(finalize))
@@ -593,8 +489,6 @@ assert_style_tt <- function(
   line_color,
   line_width,
   line_trim,
-  tabularray_inner,
-  tabularray_outer,
   finalize = NULL,
   ...
 ) {

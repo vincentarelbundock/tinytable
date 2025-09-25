@@ -31,10 +31,10 @@ prepare_grid_style <- function(x) {
 
   for (idx in seq_along(styrows)) {
     sr <- styrows[[idx]]
-    
+
     # Check if table has column names (header row exists)
     has_header <- length(colnames(x)) > 0 && any(nzchar(colnames(x)))
-    
+
     if (is.na(sr$i) && is.na(sr$j)) {
       if (has_header) {
         cells <- expand.grid(i = c(0, seq_len(nrow(x))), j = seq_len(ncol(x)))
@@ -136,8 +136,7 @@ style_grid_group <- function(x) {
                   group_styles[style_idx, "background"]
                 } else {
                   NULL
-                }
-              )
+                })
               x@group_data_i[row_idx, col_idx] <- style_string_grid(
                 current_value,
                 styles
@@ -203,8 +202,7 @@ style_grid_group <- function(x) {
                   group_styles[style_idx, "background"]
                 } else {
                   NULL
-                }
-              )
+                })
               x@group_data_j[row_idx, col_idx] <- style_string_grid(
                 current_value,
                 styles
@@ -243,6 +241,9 @@ style_grid_body <- function(x) {
     row <- sty[idx, "i"]
     col <- sty[idx, "j"]
 
+    # when calling subset(select -x) we can have too many columns in @style
+    if (col > length(names(x))) next
+
     # Prepare styles list for the current cell
     styles <- list(
       bold = isTRUE(sty[idx, "bold"]),
@@ -258,7 +259,8 @@ style_grid_body <- function(x) {
     if (row == 0) {
       current_name <- colnames(x)[col]
       if (!identical(trimws(current_name), "")) {
-        colnames(x)[col] <- style_string_grid(current_name, styles)
+        tmp <- style_string_grid(current_name, styles)
+        colnames(x)[col] <- tmp
       }
     } else if (row < 0) {
       # Handle group headers (negative i)
