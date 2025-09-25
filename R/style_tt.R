@@ -283,6 +283,39 @@ style_tt <- function(
   finalize = NULL,
   ...
 ) {
+
+  obj <- match.call()
+  obj[[1]] <- quote(style_tt_lazy)
+  x@lazy_style <- c(x@lazy_style, list(obj))
+  return(x)
+}
+
+
+style_tt_lazy <- function(
+  x,
+  i = NULL,
+  j = NULL,
+  bold = FALSE,
+  italic = FALSE,
+  monospace = FALSE,
+  smallcap = FALSE,
+  underline = FALSE,
+  strikeout = FALSE,
+  color = NULL,
+  background = NULL,
+  fontsize = NULL,
+  align = NULL,
+  alignv = NULL,
+  colspan = NULL,
+  rowspan = NULL,
+  indent = NULL,
+  line = NULL,
+  line_color = "black",
+  line_width = 0.1,
+  line_trim = NULL,
+  finalize = NULL,
+  ...) {
+
   out <- x
 
   if ("tabularray_inner" %in% ...names()) {
@@ -366,8 +399,8 @@ style_tt <- function(
 
   # Process inputs and create settings
   if (
-    is.matrix(i) && is.logical(i) && nrow(i) == nrow(x) && ncol(i) == ncol(x)
-  ) {
+  is.matrix(i) && is.logical(i) && nrow(i) == nrow(x) && ncol(i) == ncol(x)
+) {
     settings <- process_logical_matrix_input(x, i, j)
   } else {
     settings <- process_regular_input(x, i, j)
@@ -379,8 +412,8 @@ style_tt <- function(
     settings[["background"]] <- if (is.null(background)) {
       NA
     } else {
-      as.vector(background)
-    }
+        as.vector(background)
+      }
     settings[["fontsize"]] <- if (is.null(fontsize)) NA else as.vector(fontsize)
     settings[["alignv"]] <- if (is.null(alignv)) NA else alignv
     settings[["line_color"]] <- if (is.null(line)) NA else line_color
@@ -395,11 +428,11 @@ style_tt <- function(
     settings[["colspan"]] <- if (is.null(colspan)) NA else colspan
     settings[["rowspan"]] <- if (is.null(rowspan)) NA else rowspan
     settings[["html_css"]] <- if (!is.null(html_css)) {
-    settings[["tabularray"]] <- ""
+      settings[["tabularray"]] <- ""
       html_css
     } else {
-      NA
-    }
+        NA
+      }
 
     # Expand compound line directions like "tblr" into separate entries
     if (!is.null(line) && nchar(line) > 1) {

@@ -6,12 +6,8 @@
 #' @export
 theme_grid <- function(x, ...) {
   # prepare: before table is drawn
-  fn <- function(x) {
-    x <- theme_latex(x, inner = "hlines, vlines,")
-    x <- theme_html(x, engine = "bootstrap", class = "table table-bordered")
-    return(x)
-  }
-  x <- build_prepare(x, fn)
+  x <- theme_latex(x, inner = "hlines, vlines,")
+  x <- theme_html(x, engine = "bootstrap", class = "table table-bordered")
 
   # finalize: after table is drawn
   fn <- function(x) {

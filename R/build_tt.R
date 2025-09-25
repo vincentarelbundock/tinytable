@@ -91,10 +91,6 @@ build_tt <- function(x, output = NULL) {
     x <- eval(l)
   }
 
-  # apply styling AFTER formatting/escaping to avoid escaping the style brackets
-  x <- style_notes(x)
-  x <- style_caption(x)
-
   # apply lazy subset operations before inserting group rows
   x <- subset_lazy(x)
 
@@ -109,6 +105,15 @@ build_tt <- function(x, output = NULL) {
       x <- p(x)
     }
   }
+
+  for (p in x@lazy_style) {
+    p[["x"]] <- x
+    x <- eval(p)
+  }
+
+  # apply styling AFTER formatting/escaping to avoid escaping the style brackets
+  x <- style_notes(x)
+  x <- style_caption(x)
 
   # plots and images
   for (l in x@lazy_plot) {

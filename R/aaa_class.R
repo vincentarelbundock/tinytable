@@ -35,6 +35,7 @@ setClass(
     lazy_format = "list",
     lazy_plot = "list",
     lazy_prepare = "list",
+    lazy_style = "list",
     lazy_subset = "ANY",
     names = "NULLorCharacter",
     ncol = "numeric",
