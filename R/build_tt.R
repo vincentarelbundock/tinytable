@@ -77,13 +77,6 @@ build_tt <- function(x, output = NULL) {
 
   x@output <- output
 
-  # pre-process: theme_*() calls that need formatting conditional on @output
-  for (p in x@lazy_prepare) {
-    o <- attr(p, "output")
-    if (is.null(o) || x@output %in% o) {
-      x <- p(x)
-    }
-  }
 
   # Calculate which positions are body vs group
   if (nrow(x@group_data_i) == 0) {
@@ -107,6 +100,15 @@ build_tt <- function(x, output = NULL) {
 
   # insert group rows into body
   x <- rbind_body_groupi(x)
+
+  # pre-process: theme_*() calls that need formatting conditional on @output
+  # this is useful after rbind() because we now have the final indices and headers
+  for (p in x@lazy_prepare) {
+    o <- attr(p, "output")
+    if (is.null(o) || x@output %in% o) {
+      x <- p(x)
+    }
+  }
 
   # plots and images
   for (l in x@lazy_plot) {
