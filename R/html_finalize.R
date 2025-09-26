@@ -18,8 +18,10 @@ setMethod(
     # Handle CSS inclusion - external file if NULL, inline if provided
     if (is.null(x@html_css_rule)) {
       # Use external CSS file
-      css_include <- sprintf('<link rel="stylesheet" href="%s">',
-                            system.file("tinytable.css", package = "tinytable"))
+      css_include <- sprintf(
+        '<link rel="stylesheet" href="%s">',
+        "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css"
+      )
     } else {
       # Use inline CSS
       css_include <- paste0("<style>\n", x@html_css_rule, "\n</style>")
@@ -33,8 +35,10 @@ setMethod(
     )
 
     # Add JavaScript include for external file
-    js_include <- sprintf('<script src="%s"></script>',
-                         system.file("js/tinytable.js", package = "tinytable"))
+    js_include <- sprintf(
+      '<script src="%s"></script>',
+      "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"
+    )
 
     out <- sub(
       "$tinytable_JS_INCLUDE",
