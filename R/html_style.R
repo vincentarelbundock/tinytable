@@ -41,11 +41,8 @@ style_to_css <- function(row) {
   if (!is.na(row$background)) {
     out <- c(out, paste0("background-color: ", standardize_colors(row$background, "hex")))
   }
-  if (!is.na(row$html_css) && nzchar(row$html_css)) {
-    custom <- css_parse(row$html_css)
-    if (length(custom)) {
-      out <- c(out, paste0(names(custom), ": ", unname(custom)))
-    }
+  if (!is.na(row$html_css)) {
+    out <- c(out, html_css = row$html_css)
   }
 
   # text decorations can be multiple
@@ -113,39 +110,6 @@ line_to_css <- function(
   )
   gsub("\n", " ", out)
 }
-
-
-
-
-#' Parse CSS rule into named character vector
-#' @keywords internal
-#' @noRd
-css_parse <- function(rule) {
-  if (is.null(rule) || !nzchar(trimws(rule))) return(character())
-  parts <- strsplit(rule, ";", fixed = TRUE)[[1]]
-  parts <- trimws(parts)
-  parts <- parts[nzchar(parts)]
-  out <- character()
-  for (p in parts) {
-    kv <- strsplit(p, ":", fixed = TRUE)[[1]]
-    if (length(kv) >= 2) {
-      k <- trimws(kv[1])
-      v <- trimws(paste(kv[-1], collapse = ":"))
-      out[k] <- v
-    }
-  }
-  out
-}
-
-#' Render named character vector back to CSS rule
-#' @keywords internal
-#' @noRd
-css_render <- function(x) {
-  if (!length(x)) return("")
-  paste0(names(x), ": ", unname(x), collapse = "; ")
-}
-
-
 
 
 
