@@ -7,7 +7,7 @@ last_df <- function(x, bycols = c("i", "j")) {
 }
 
 
-expand_lines <- function(styles) {
+expand_lines <- function(x, rect, styles) {
   # Extract line-related properties
   line_props <- names(styles)[grepl("^line", names(styles))]
   if (length(line_props) == 0) {
@@ -15,7 +15,39 @@ expand_lines <- function(styles) {
   }
   idx <- grepl("^line|^i$|^j$", names(styles))
   lines <- styles[!is.na(styles$line), idx, drop = FALSE]
-  lines
+
+  if (nrow(lines) == 0) {
+    return(NULL)
+  }
+
+  # Expand NA i/j for lines, similar to expand_other
+  line_list <- list()
+
+  for (r in seq_len(nrow(lines))) {
+    cols <- names(lines)
+    if (is.na(lines[r, "i"]) && is.na(lines[r, "j"])) {
+      cols_expand <- setdiff(cols, c("i", "j"))
+    } else if (is.na(lines[r, "i"])) {
+      cols_expand <- setdiff(cols, "i")
+    } else if (is.na(lines[r, "j"])) {
+      cols_expand <- setdiff(cols, "j")
+    } else {
+      cols_expand <- cols
+    }
+    rect_line <- merge(rect, lines[r, cols_expand, drop = FALSE], all = TRUE, sort = FALSE)
+    # Only remove rows where i or j are NA (essential columns), not other columns like line_trim
+    rect_line <- rect_line[!is.na(rect_line$i) & !is.na(rect_line$j), , drop = FALSE]
+    if (nrow(rect_line) > 0) {
+      line_list <- c(line_list, list(rect_line))
+    }
+  }
+
+  if (length(line_list) > 0) {
+    out <- do.call(rbind, line_list)
+    return(out)
+  } else {
+    return(NULL)
+  }
 }
 
 expand_other <- function(x, rect, styles) {
@@ -98,7 +130,7 @@ expand_style <- function(x) {
   }
 
   # Use separate functions for lines and other properties
-  style_lines <- expand_lines(styles)
+  style_lines <- expand_lines(x, rect, styles)
   style_other <- expand_other(x, rect, styles)
 
   list(lines = style_lines, other = style_other)

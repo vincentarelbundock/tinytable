@@ -102,27 +102,7 @@ strip_tt <- function(
     out@html_engine <- "tinytable"
   }
   if (html_css_rule) {
-    out@html_css_rule <- "
-    .tinytable {
-      margin-bottom: .5em;
-      margin-top: .5em;
-      border-collapse: collapse;
-      width: 100%;
-    }
-    .tinytable th,
-    .tinytable td {
-      font-weight: normal;
-      position: relative;
-      padding: 0.5rem;
-    }
-    .tinytable th {
-      text-align: left;
-      vertical-align: top;
-    }
-    .tinytable td {
-      vertical-align: top;
-    }
-    "
+    out@html_css_rule <- get_css()
   }
 
   # Reset individual style elements
