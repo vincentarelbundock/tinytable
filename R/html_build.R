@@ -159,7 +159,7 @@ setMethod(
 
     if (length(colnames(x)) > 0) {
       # Generate all header cells at once
-      col_indices <- seq_along(colnames(x)) - 1
+      col_indices <- seq_along(colnames(x))
       header_cells <- sprintf(
         '    <th scope="col" data-row="0" data-col="%d">%s</th>',
         col_indices,
@@ -187,7 +187,7 @@ setMethod(
     # Generate all cells at once using matrix operations
     row_indices <- rep(i_idx, each = ncol(x@data_body))
     col_indices <- rep(
-      seq_len(ncol(x@data_body)) - 1,
+      seq_len(ncol(x@data_body)),
       times = nrow(x@data_body)
     )
     cell_values <- as.vector(t(x@data_body))

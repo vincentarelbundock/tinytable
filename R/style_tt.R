@@ -108,188 +108,6 @@ process_align_argument <- function(x, settings, align) {
 }
 
 
-# =============================================================================
-# MAIN FUNCTION
-# =============================================================================
-
-#' Style a Tiny Table
-#'
-#' @details
-#' This function applies styling to a table created by `tt()`. It allows customization of text style (bold, italic, monospace), text and background colors, font size, cell width, text alignment, column span, and indentation. The function also supports passing native instructions to LaTeX (tabularray) and HTML (bootstrap) formats.
-#'
-#' @param x A table object created by `tt()`.
-#' @param i Numeric vector, logical matrix, string, or unquoted expression.
-#'   - Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.
-#'   - Logical matrix: A matrix with the same number of rows and columns as `x`. `i=0` is the header, and negative values are higher level headers. Row indices refer to rows *after* the insertion of row labels by `group_tt()`, when applicable.
-#'   - String: Table components "caption", "colnames", "groupi" (row group labels), "~groupi" (non-group rows), "groupj" (column group labels), "notes".
-#'   - Unquoted expression: When supplying an unquoted expression, it is first evaluated in the calling environment, then in the data frame passed to `tt()`.
-#' @param j Column indices where the styling should be applied. Can be:
-#' + Integer vectors indicating column positions.
-#' + Character vector indicating column names.
-#' + A single string specifying a Perl-style regular expression used to match column names.
-#' + Unquoted expression: Non-standard evaluation is supported. When supplying an unquoted expression, it is first evaluated in the calling environment, then in an environment that includes the columns of the original data passed to `tt()`, and `groupi` indices. See examples below.
-#' @param bold Logical; if `TRUE`, text is styled in bold.
-#' @param italic Logical; if `TRUE`, text is styled in italic.
-#' @param monospace Logical; if `TRUE`, text is styled in monospace font.
-#' @param smallcap Logical; if `TRUE`, text is styled in small caps. In Markdown output format, text is converted to uppercase.
-#' @param underline Logical; if `TRUE`, text is underlined.
-#' @param strikeout Logical; if `TRUE`, text has a strike through line.
-#' @param color Text color. There are several ways to specify colors, depending on the output format.
-#' + HTML:
-#'   - Hex code composed of # and 6 characters, ex: #CC79A7.
-#'   - Keywords: black, silver, gray, white, maroon, red, purple, fuchsia, green, lime, olive, yellow, navy, blue, teal, aqua
-#' + LaTeX:
-#'   - Hex code composed of # and 6 characters, ex: "#CC79A7". See the section below for instructions to add in LaTeX preambles.
-#'   - Keywords: black, blue, brown, cyan, darkgray, gray, green, lightgray, lime, magenta, olive, orange, pink, purple, red, teal, violet, white, yellow.
-#'   - Color blending using xcolor`, ex: `white!80!blue`, `green!20!red`.
-#'   - Color names with luminance levels from [the `ninecolors` package](https://mirror.quantum5.ca/CTAN/macros/latex/contrib/ninecolors/ninecolors.pdf) (ex: "azure4", "magenta8", "teal2", "gray1", "olive3").
-#' @param background Background color. Specified as a color name or hexadecimal code. Can be `NULL` for default color.
-#' @param fontsize Font size in em units. Can be `NULL` for default size.
-#' @param align A single character or a string with a number of characters equal to the number of columns in `j`. Valid characters include 'c' (center), 'l' (left), 'r' (right), 'd' (decimal). Decimal alignment is only available in LaTeX via the `siunitx` package. The width of columns is determined by the maximum number of digits to the left and to the right in all cells specified by `i` and `j`.
-#' @param alignv A single character specifying vertical alignment. Valid characters include 't' (top), 'm' (middle), 'b' (bottom).
-#' @param colspan Number of columns a cell should span. `i` and `j` must be of length 1.
-#' @param rowspan Number of rows a cell should span. `i` and `j` must be of length 1.
-#' @param indent Text indentation in em units. Positive values only.
-#' @param line String determines if solid lines (rules or borders) should be drawn around the cell, row, or column.
-#' + "t": top
-#' + "b": bottom
-#' + "l": left
-#' + "r": right
-#' + Can be combined such as: "lbt" to draw borders at the left, bottom, and top.
-#' @param line_color Color of the line. See the `color` argument for details.
-#' @param line_width Width of the line in em units (default: 0.1).
-#' @param line_trim String specifying line trimming. Acceptable values: "l" (left), "r" (right), "lr" (both sides). When specified, shortens the lines by 0.8pt on the specified side(s). Default: NULL (no trimming).
-#' @param finalize A function applied to the table object at the very end of table-building, for post-processing. For example, the function could use regular expressions to add LaTeX commands to the text version of the table hosted in `x@table_string`, or it could programmatically change the caption in `x@caption`.
-#' @param ... extra arguments are ignored
-#' @return An object of class `tt` representing the table.
-#' @template limitations_word_markdown
-#' @export
-#' @examplesIf knitr::is_html_output()
-#' @examples
-#' if (knitr::is_html_output()) options(tinytable_print_output = "html")
-#'
-#' library(tinytable)
-#'
-#' tt(mtcars[1:5, 1:6])
-#'
-#' # Alignment
-#' tt(mtcars[1:5, 1:6]) |>
-#'   style_tt(j = 1:5, align = "lcccr")
-#'
-#' # Colors and styles
-#' tt(mtcars[1:5, 1:6]) |>
-#'   style_tt(i = 2:3, background = "black", color = "orange", bold = TRUE)
-#'
-#' # column selection with `j``
-#' tt(mtcars[1:5, 1:6]) |>
-#'   style_tt(j = 5:6, background = "pink")
-#'
-#' tt(mtcars[1:5, 1:6]) |>
-#'   style_tt(j = "drat|wt", background = "pink")
-#'
-#' tt(mtcars[1:5, 1:6]) |>
-#'   style_tt(j = c("drat", "wt"), background = "pink")
-#'
-#' tt(mtcars[1:5, 1:6], theme = "void") |>
-#'   style_tt(
-#'     i = 2, j = 2,
-#'     colspan = 3,
-#'     rowspan = 2,
-#'     align = "c",
-#'     alignv = "m",
-#'     color = "white",
-#'     background = "black",
-#'     bold = TRUE)
-#'
-#' tt(mtcars[1:5, 1:6], theme = "void") |>
-#'   style_tt(
-#'     i = 0:3,
-#'     j = 1:3,
-#'     line = "tblr",
-#'     line_width = 0.4,
-#'     line_color = "teal")
-#'
-#' tt(mtcars[1:5, 1:6], theme = "striped") |>
-#'   style_tt(
-#'     i = c(2, 5),
-#'     j = 3,
-#'     strikeout = TRUE,
-#'     fontsize = 0.7)
-#'
-#' # Non-standard evaluation (NSE)
-#' dat <- data.frame(
-#'   w = c(143002.2092, 201399.181, 100188.3883),
-#'   x = c(1.43402, 201.399, 0.134588),
-#'   y = as.Date(c(897, 232, 198), origin = "1970-01-01"),
-#'   z = c(TRUE, TRUE, FALSE)
-#' )
-#' tt(dat) |>
-#'   style_tt(i = w > 150000, j = c("w", "x"), 
-#'            color = "white", background = "black")
-#'
-#' tt(mtcars[1:5, 1:6]) |>
-#'   theme_html(class = "table table-dark table-hover")
-#'
-#'
-#' inner <- "
-#' column{1-4}={halign=c},
-#' hlines = {fg=white},
-#' vlines = {fg=white},
-#' cell{1,6}{odd} = {bg=teal7},
-#' cell{1,6}{even} = {bg=green7},
-#' cell{2,4}{1,4} = {bg=red7},
-#' cell{3,5}{1,4} = {bg=purple7},
-#' cell{2}{2} = {r=4,c=2}{bg=azure7},
-#' "
-#' tt(mtcars[1:5, 1:4], theme = "void") |>
-#'   theme_latex(inner = inner)
-#'
-#' # Style group rows and non-group rows
-#' dat <- data.frame(x = 1:6, y = letters[1:6])
-#' dat |>
-#'   tt() |>
-#'   group_tt(i = list("Group A" = 3)) |>
-#'   style_tt(i = "groupi", background = "lightblue") |>
-#'   style_tt(i = "~groupi", background = "lightgray")
-#'
-#' # unquote expressions
-#' dat <- mtcars[1:10,]
-#' dat <- dat[order(dat$am),]
-#' tt(dat) |>
-#'    subset(mpg > 20) |>
-#'    group_tt(am)
-style_tt <- function(
-  x,
-  i = NULL,
-  j = NULL,
-  bold = FALSE,
-  italic = FALSE,
-  monospace = FALSE,
-  smallcap = FALSE,
-  underline = FALSE,
-  strikeout = FALSE,
-  color = NULL,
-  background = NULL,
-  fontsize = NULL,
-  align = NULL,
-  alignv = NULL,
-  colspan = NULL,
-  rowspan = NULL,
-  indent = NULL,
-  line = NULL,
-  line_color = "black",
-  line_width = 0.1,
-  line_trim = NULL,
-  finalize = NULL,
-  ...
-) {
-
-  obj <- match.call()
-  obj[[1]] <- quote(style_tt_lazy)
-  x@lazy_style <- c(x@lazy_style, list(obj))
-  return(x)
-}
-
 
 style_tt_lazy <- function(
   x,
@@ -343,10 +161,6 @@ style_tt_lazy <- function(
       call. = FALSE
     )
   }
-
-  # non-standard evaluation before anything else
-  tmp <- nse_i_j(x, i_expr = substitute(i), j_expr = substitute(j), pf = parent.frame())
-  list2env(tmp, environment())
 
   # this must be handled here rather than theme_html() because it is a cell-level issue
   html_css <- ...get("html_css")
@@ -639,3 +453,220 @@ assert_style_tt <- function(
     assert_length(strikeout, len = c(1, length(ival) * length(jval)))
   }
 }
+# =============================================================================
+# MAIN FUNCTION
+# =============================================================================
+
+#' Style a Tiny Table
+#'
+#' @details
+#' This function applies styling to a table created by `tt()`. It allows customization of text style (bold, italic, monospace), text and background colors, font size, cell width, text alignment, column span, and indentation. The function also supports passing native instructions to LaTeX (tabularray) and HTML (bootstrap) formats.
+#'
+#' @param x A table object created by `tt()`.
+#' @param i Numeric vector, logical matrix, string, or unquoted expression.
+#'   - Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.
+#'   - Logical matrix: A matrix with the same number of rows and columns as `x`. `i=0` is the header, and negative values are higher level headers. Row indices refer to rows *after* the insertion of row labels by `group_tt()`, when applicable.
+#'   - String: Table components "caption", "colnames", "groupi" (row group labels), "~groupi" (non-group rows), "groupj" (column group labels), "notes".
+#'   - Unquoted expression: When supplying an unquoted expression, it is first evaluated in the calling environment, then in the data frame passed to `tt()`.
+#' @param j Column indices where the styling should be applied. Can be:
+#' + Integer vectors indicating column positions.
+#' + Character vector indicating column names.
+#' + A single string specifying a Perl-style regular expression used to match column names.
+#' + Unquoted expression: Non-standard evaluation is supported. When supplying an unquoted expression, it is first evaluated in the calling environment, then in an environment that includes the columns of the original data passed to `tt()`, and `groupi` indices. See examples below.
+#' @param bold Logical; if `TRUE`, text is styled in bold.
+#' @param italic Logical; if `TRUE`, text is styled in italic.
+#' @param monospace Logical; if `TRUE`, text is styled in monospace font.
+#' @param smallcap Logical; if `TRUE`, text is styled in small caps. In Markdown output format, text is converted to uppercase.
+#' @param underline Logical; if `TRUE`, text is underlined.
+#' @param strikeout Logical; if `TRUE`, text has a strike through line.
+#' @param color Text color. There are several ways to specify colors, depending on the output format.
+#' + HTML:
+#'   - Hex code composed of # and 6 characters, ex: #CC79A7.
+#'   - Keywords: black, silver, gray, white, maroon, red, purple, fuchsia, green, lime, olive, yellow, navy, blue, teal, aqua
+#' + LaTeX:
+#'   - Hex code composed of # and 6 characters, ex: "#CC79A7". See the section below for instructions to add in LaTeX preambles.
+#'   - Keywords: black, blue, brown, cyan, darkgray, gray, green, lightgray, lime, magenta, olive, orange, pink, purple, red, teal, violet, white, yellow.
+#'   - Color blending using xcolor`, ex: `white!80!blue`, `green!20!red`.
+#'   - Color names with luminance levels from [the `ninecolors` package](https://mirror.quantum5.ca/CTAN/macros/latex/contrib/ninecolors/ninecolors.pdf) (ex: "azure4", "magenta8", "teal2", "gray1", "olive3").
+#' @param background Background color. Specified as a color name or hexadecimal code. Can be `NULL` for default color.
+#' @param fontsize Font size in em units. Can be `NULL` for default size.
+#' @param align A single character or a string with a number of characters equal to the number of columns in `j`. Valid characters include 'c' (center), 'l' (left), 'r' (right), 'd' (decimal). Decimal alignment is only available in LaTeX via the `siunitx` package. The width of columns is determined by the maximum number of digits to the left and to the right in all cells specified by `i` and `j`.
+#' @param alignv A single character specifying vertical alignment. Valid characters include 't' (top), 'm' (middle), 'b' (bottom).
+#' @param colspan Number of columns a cell should span. `i` and `j` must be of length 1.
+#' @param rowspan Number of rows a cell should span. `i` and `j` must be of length 1.
+#' @param indent Text indentation in em units. Positive values only.
+#' @param line String determines if solid lines (rules or borders) should be drawn around the cell, row, or column.
+#' + "t": top
+#' + "b": bottom
+#' + "l": left
+#' + "r": right
+#' + Can be combined such as: "lbt" to draw borders at the left, bottom, and top.
+#' @param line_color Color of the line. See the `color` argument for details.
+#' @param line_width Width of the line in em units (default: 0.1).
+#' @param line_trim String specifying line trimming. Acceptable values: "l" (left), "r" (right), "lr" (both sides). When specified, shortens the lines by 0.8pt on the specified side(s). Default: NULL (no trimming).
+#' @param finalize A function applied to the table object at the very end of table-building, for post-processing. For example, the function could use regular expressions to add LaTeX commands to the text version of the table hosted in `x@table_string`, or it could programmatically change the caption in `x@caption`.
+#' @param ... extra arguments are ignored
+#' @return An object of class `tt` representing the table.
+#' @template limitations_word_markdown
+#' @export
+#' @examplesIf knitr::is_html_output()
+#' @examples
+#' if (knitr::is_html_output()) options(tinytable_print_output = "html")
+#'
+#' library(tinytable)
+#'
+#' tt(mtcars[1:5, 1:6])
+#'
+#' # Alignment
+#' tt(mtcars[1:5, 1:6]) |>
+#'   style_tt(j = 1:5, align = "lcccr")
+#'
+#' # Colors and styles
+#' tt(mtcars[1:5, 1:6]) |>
+#'   style_tt(i = 2:3, background = "black", color = "orange", bold = TRUE)
+#'
+#' # column selection with `j``
+#' tt(mtcars[1:5, 1:6]) |>
+#'   style_tt(j = 5:6, background = "pink")
+#'
+#' tt(mtcars[1:5, 1:6]) |>
+#'   style_tt(j = "drat|wt", background = "pink")
+#'
+#' tt(mtcars[1:5, 1:6]) |>
+#'   style_tt(j = c("drat", "wt"), background = "pink")
+#'
+#' tt(mtcars[1:5, 1:6], theme = "void") |>
+#'   style_tt(
+#'     i = 2, j = 2,
+#'     colspan = 3,
+#'     rowspan = 2,
+#'     align = "c",
+#'     alignv = "m",
+#'     color = "white",
+#'     background = "black",
+#'     bold = TRUE)
+#'
+#' tt(mtcars[1:5, 1:6], theme = "void") |>
+#'   style_tt(
+#'     i = 0:3,
+#'     j = 1:3,
+#'     line = "tblr",
+#'     line_width = 0.4,
+#'     line_color = "teal")
+#'
+#' tt(mtcars[1:5, 1:6], theme = "striped") |>
+#'   style_tt(
+#'     i = c(2, 5),
+#'     j = 3,
+#'     strikeout = TRUE,
+#'     fontsize = 0.7)
+#'
+#' # Non-standard evaluation (NSE)
+#' dat <- data.frame(
+#'   w = c(143002.2092, 201399.181, 100188.3883),
+#'   x = c(1.43402, 201.399, 0.134588),
+#'   y = as.Date(c(897, 232, 198), origin = "1970-01-01"),
+#'   z = c(TRUE, TRUE, FALSE)
+#' )
+#' tt(dat) |>
+#'   style_tt(i = w > 150000, j = c("w", "x"), 
+#'            color = "white", background = "black")
+#'
+#' tt(mtcars[1:5, 1:6]) |>
+#'   theme_html(class = "table table-dark table-hover")
+#'
+#'
+#' inner <- "
+#' column{1-4}={halign=c},
+#' hlines = {fg=white},
+#' vlines = {fg=white},
+#' cell{1,6}{odd} = {bg=teal7},
+#' cell{1,6}{even} = {bg=green7},
+#' cell{2,4}{1,4} = {bg=red7},
+#' cell{3,5}{1,4} = {bg=purple7},
+#' cell{2}{2} = {r=4,c=2}{bg=azure7},
+#' "
+#' tt(mtcars[1:5, 1:4], theme = "void") |>
+#'   theme_latex(inner = inner)
+#'
+#' # Style group rows and non-group rows
+#' dat <- data.frame(x = 1:6, y = letters[1:6])
+#' dat |>
+#'   tt() |>
+#'   group_tt(i = list("Group A" = 3)) |>
+#'   style_tt(i = "groupi", background = "lightblue") |>
+#'   style_tt(i = "~groupi", background = "lightgray")
+#'
+#' # unquote expressions
+#' dat <- mtcars[1:10,]
+#' dat <- dat[order(dat$am),]
+#' tt(dat) |>
+#'    subset(mpg > 20) |>
+#'    group_tt(am)
+style_tt <- function(
+  x,
+  i = NULL,
+  j = NULL,
+  bold = FALSE,
+  italic = FALSE,
+  monospace = FALSE,
+  smallcap = FALSE,
+  underline = FALSE,
+  strikeout = FALSE,
+  color = NULL,
+  background = NULL,
+  fontsize = NULL,
+  align = NULL,
+  alignv = NULL,
+  colspan = NULL,
+  rowspan = NULL,
+  indent = NULL,
+  line = NULL,
+  line_color = "black",
+  line_width = 0.1,
+  line_trim = NULL,
+  finalize = NULL,
+  ...
+) {
+
+  
+  # non-standard evaluation before anything else
+  tmp <- nse_i_j(x, i_expr = substitute(i), j_expr = substitute(j), pf = parent.frame())
+  list2env(tmp, environment())
+
+  obj <- match.call()
+
+  # evaluate arguments immediately, except i and j, to avoid scoping issues
+  obj <- list(
+    style_tt_lazy,
+    x = quote(x),
+    i = i,
+    j = j,
+    bold = bold,
+    italic = italic,
+    monospace = monospace,
+    smallcap = smallcap,
+    underline = underline,
+    strikeout = strikeout,
+    color = color,
+    background = background,
+    fontsize = fontsize,
+    align = align,
+    alignv = alignv,
+    colspan = colspan,
+    rowspan = rowspan,
+    indent = indent,
+    line = line,
+    line_color = line_color,
+    line_width = line_width,
+    line_trim = line_trim,
+    finalize = finalize)
+  obj <- c(obj, list(...))
+  obj <- as.call(obj)
+
+  x@lazy_style <- c(x@lazy_style, list(obj))
+  return(x)
+}
+
+
+

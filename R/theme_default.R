@@ -9,33 +9,37 @@ theme_default <- function(x, ...) {
   # Placement for LaTeX and Typst
   x <- theme_latex(x, placement = get_option("tinytable_latex_placement", default = NULL))
   x <- theme_typst(x, align_figure = get_option("tinytable_typst_align_figure", "c"))
-  col <- "black"
-  # top
-  x <- style_tt(
-    x,
-    i = -x@nhead + 1,
-    line = "t",
-    line_color = col,
-    line_width = 0.10
-  )
-  # middle
-  if (length(x@names) > 0) {
+
+  fn <- function(x) {
+    col <- "black"
+    # top
     x <- style_tt(
       x,
-      i = 0,
+      i = -x@nhead + 1,
+      line = "t",
+      line_color = col,
+      line_width = 0.10
+    )
+    # middle
+    if (length(x@names) > 0) {
+      x <- style_tt(
+        x,
+        i = 0,
+        line = "b",
+        line_color = col,
+        line_width = 0.05
+      )
+    }
+    # bottom
+    x <- style_tt(
+      x,
+      i = nrow(x),
       line = "b",
       line_color = col,
-      line_width = 0.05
+      line_width = 0.10
     )
   }
-  # bottom
-  x <- style_tt(
-    x,
-    i = nrow(x),
-    line = "b",
-    line_color = col,
-    line_width = 0.10
-  )
+  x <- build_prepare(x, fn)
 
   return(x)
 }

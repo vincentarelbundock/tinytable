@@ -26,7 +26,7 @@ expand_styles <- function(x) {
   style_list <- list()
 
   for (p in props) {
-    is_line <- grepl("line", p)
+    is_line <- grepl("^line", p)
 
     # keep only relevant columns, unique rows, and rows with a concrete value for this property
     if (is_line) {
@@ -78,6 +78,22 @@ expand_styles <- function(x) {
 
   style_lines <- Reduce(function(d1, d2) merge(d1, d2, all = TRUE, sort = FALSE), style_lines)
   style_other <- Reduce(function(d1, d2) merge(d1, d2, all = TRUE, sort = FALSE), style_other)
+
+  # Ensure all expected style columns exist in style_other
+  if (!is.null(style_other)) {
+    expected_cols <- c("bold", "italic", "underline", "strikeout", "monospace", "smallcap",
+                       "align", "alignv", "color", "background", "fontsize", "indent", "html_css")
+    missing_cols <- setdiff(expected_cols, names(style_other))
+    if (length(missing_cols) > 0) {
+      for (col in missing_cols) {
+        if (col %in% c("bold", "italic", "underline", "strikeout", "monospace", "smallcap")) {
+          style_other[[col]] <- FALSE
+        } else {
+          style_other[[col]] <- NA
+        }
+      }
+    }
+  }
 
   out <- list(lines = style_lines, other = style_other)
 }
