@@ -108,7 +108,7 @@ line_to_css <- function(
     trim_bottom_left, trim_bottom_right, trim_left_bottom, trim_left_top,
     trim_right_bottom, trim_right_top, trim_top_left, trim_top_right
   )
-  gsub("\n", " ", out)
+  gsub("\\s+", " ", out)
 }
 
 
