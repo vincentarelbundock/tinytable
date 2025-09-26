@@ -134,22 +134,16 @@ setMethod(
     id <- get_id("")
     x@id <- id
 
-    # table and styling function in JS must have different names when there is more than one table on a page.
-    template <- gsub(
-      "styleCell",
-      paste0("styleCell_", id),
-      template,
-      fixed = TRUE
-    )
-    template <- gsub(
-      "spanCell",
-      paste0("spanCell_", id),
-      template,
-      fixed = TRUE
-    )
+    # Function factory eliminates need for function name manipulation
     template <- gsub(
       "$tinytable_TABLE_ID",
       paste0("tinytable_", id),
+      template,
+      fixed = TRUE
+    )
+    template <- gsub(
+      "$tinytable_ID",
+      id,
       template,
       fixed = TRUE
     )

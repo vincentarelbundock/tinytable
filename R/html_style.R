@@ -392,10 +392,11 @@ setMethod(
         "after"
       )
 
-      # Generate CSS entry - global pseudo-elements handle borders, we just set variables
+      # Generate CSS entry - scoped to table ID to prevent CSS cascade conflicts
+      table_id <- paste0("tinytable_", x@id)
       entry <- sprintf(
-        "    .tinytable td.%s, .tinytable th.%s { %s }",
-        id_css, id_css, css_rule
+        "    #%s td.%s, #%s th.%s { %s }",
+        table_id, id_css, table_id, id_css, css_rule
       )
       x@table_string <- lines_insert(
         x@table_string,

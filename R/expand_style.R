@@ -133,9 +133,11 @@ expand_other <- function(x, rect, styles) {
     style_other <- Reduce(function(d1, d2) merge(d1, d2, all = TRUE, sort = FALSE), style_list)
 
     # Ensure all expected style columns exist in style_other
+    # Include ALL columns that style_tt_lazy creates to ensure rbind compatibility
     expected_cols <- c(
       "bold", "italic", "underline", "strikeout", "monospace", "smallcap",
-      "align", "alignv", "color", "background", "fontsize", "indent", "html_css")
+      "align", "alignv", "color", "background", "fontsize", "indent", "html_css",
+      "colspan", "rowspan", "line", "line_color", "line_width", "line_trim")
     missing_cols <- setdiff(expected_cols, names(style_other))
     if (length(missing_cols) > 0) {
       for (col in missing_cols) {

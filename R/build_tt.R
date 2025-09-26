@@ -111,6 +111,15 @@ build_tt <- function(x, output = NULL) {
     x <- eval(p)
   }
 
+  # Fix colspan that exceeds column count after lazy styles are evaluated
+  if (nrow(x@style) > 0) {
+    end <- x@style$j + x@style$colspan - 1
+    x@style$colspan <- ifelse(
+      !is.na(end) & end > x@ncol,
+      x@style$colspan - (end - x@ncol),
+      x@style$colspan)
+  }
+
   # apply styling AFTER formatting/escaping to avoid escaping the style brackets
   x <- style_notes(x)
   x <- style_caption(x)

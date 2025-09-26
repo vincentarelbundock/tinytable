@@ -24,46 +24,11 @@
     </script>
     <!-- tinytable mathjax end -->
 
+    $tinytable_JS_INCLUDE
+
     <script>
-
-      function styleCell(i, j, css_id) {
-          var table = document.getElementById("$tinytable_TABLE_ID");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function spanCell(i, j, rowspan, colspan) {
-        var table = document.getElementById("$tinytable_TABLE_ID");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
+      // Create table-specific functions using external factory
+      const tableFns_$tinytable_ID = TinyTable.createTableFunctions("$tinytable_TABLE_ID");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
@@ -73,14 +38,14 @@
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_xsjwx284ljc2lem7zsd2(cell.i, cell.j, group.css_id);
+                  tableFns_$tinytable_ID.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
+    $tinytable_CSS_INCLUDE
     <style>
-    $tinytable_CSS_RULE
     /* tinytable css entries after */
     </style>
     <div class="container">

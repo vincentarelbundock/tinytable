@@ -17,7 +17,7 @@ setClass(
     ansi = "logical",
     body = "character",
     html_class = "character",
-    html_css_rule = "character",
+    html_css_rule = "NULLorCharacter",
     caption = "NULLorCharacter",
     css = "data.frame",
     data = "data.frame",
@@ -95,7 +95,11 @@ setMethod(
     .Object@width <- width
     .Object@notes <- notes
     .Object@height <- height
-    .Object@html_css_rule <- get_css()
+    # Generate unique ID first
+    .Object@id <- get_id("tinytable_")
+
+    # Default to NULL - framework CSS will be loaded externally
+    .Object@html_css_rule <- NULL
 
     # dynamic
     .Object@nrow <- nrow(.Object@data)
@@ -132,7 +136,6 @@ setMethod(
     .Object@html_class <- "tinytable"
     .Object@html_engine <- "tinytable"
     .Object@html_portable <- FALSE
-    .Object@id <- get_id("tinytable_")
     .Object@index_body <- numeric(0)
     .Object@latex_engine <- "xelatex"
     .Object@latex_preamble <- TRUE

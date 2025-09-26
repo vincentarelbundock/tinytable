@@ -15,9 +15,30 @@ setMethod(
       fixed = TRUE
     )
 
+    # Handle CSS inclusion - external file if NULL, inline if provided
+    if (is.null(x@html_css_rule)) {
+      # Use external CSS file
+      css_include <- sprintf('<link rel="stylesheet" href="%s">',
+                            system.file("tinytable.css", package = "tinytable"))
+    } else {
+      # Use inline CSS
+      css_include <- paste0("<style>\n", x@html_css_rule, "\n</style>")
+    }
+
     out <- sub(
-      "$tinytable_CSS_RULE",
-      x@html_css_rule,
+      "$tinytable_CSS_INCLUDE",
+      css_include,
+      out,
+      fixed = TRUE
+    )
+
+    # Add JavaScript include for external file
+    js_include <- sprintf('<script src="%s"></script>',
+                         system.file("js/tinytable.js", package = "tinytable"))
+
+    out <- sub(
+      "$tinytable_JS_INCLUDE",
+      js_include,
       out,
       fixed = TRUE
     )
@@ -45,9 +66,7 @@ setMethod(
       )
     }
 
-    # Changing function names to table ID to avoid conflict with other tables functions
-    out <- gsub("styleCell_\\w+\\(", paste0("styleCell_", x@id, "("), out)
-    out <- gsub("spanCell_\\w+\\(", paste0("spanCell_", x@id, "("), out)
+    # Function factory handles table isolation - no need for function name manipulation
 
     css_template <- "    .table td.%s, .table th.%s { %s }"
 

@@ -247,11 +247,12 @@ style_tt_lazy <- function(
     settings[["colspan"]] <- if (is.null(colspan)) NA else colspan
     settings[["rowspan"]] <- if (is.null(rowspan)) NA else rowspan
     settings[["html_css"]] <- if (!is.null(html_css)) {
-      settings[["tabularray"]] <- ""
       html_css
     } else {
-        NA
-      }
+      NA
+    }
+    # Always create tabularray column for consistency
+    settings[["tabularray"]] <- ""
 
     # Expand compound line directions like "tblr" into separate entries
     if (!is.null(line) && nchar(line) > 1) {
