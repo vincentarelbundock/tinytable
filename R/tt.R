@@ -232,6 +232,14 @@ tt.default <- function(
     out <- style_tt(out, finalize = fun_typst_height)
   }
 
+  # HTML: add column width styles if multiple widths specified
+  if (!is.null(width) && length(width) > 1) {
+    for (j in seq_len(ncol(x))) {
+      css <- sprintf("width: %s%%;", width[j] / sum(width) * 100)
+      out <- theme_html(out, j = j, css = css)
+    }
+  }
+
   return(out)
 }
 

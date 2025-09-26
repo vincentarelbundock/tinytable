@@ -122,7 +122,7 @@ setMethod(
       template <- sub(
         "width: auto;",
         sprintf(
-          "table-layout: fixed; width: %s%% !important;",
+          "table-layout: fixed; width: %s%%;",
           round(sum(x@width) * 100)
         ),
         template,
@@ -214,12 +214,6 @@ setMethod(
     # before style_eval()
     x@table_string <- out
 
-    if (length(x@width) > 1) {
-      for (j in seq_len(ncol(x))) {
-        css <- sprintf("width: %s%%;", x@width[j] / sum(x@width) * 100)
-        x <- style_tt(x, j = j, html_css = css)
-      }
-    }
 
     if (length(x@html_class) == 0) {
       if (
