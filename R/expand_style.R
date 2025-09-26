@@ -165,6 +165,7 @@ expand_style <- function(x) {
     return(list(lines = NULL, other = NULL))
   }
 
+
   # Use separate functions for lines and other properties
   style_lines <- expand_lines(x, rect, styles)
   style_other <- expand_other(x, rect, styles)

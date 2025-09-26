@@ -4,7 +4,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_3rd3sybyu853z57od2jq</title>
+    <title>tinytable_dykufroxa5xl0wxqu4pw</title>
     
   </head>
   <body>
@@ -12,8 +12,8 @@
 
     <script>
 
-      function styleCell_3rd3sybyu853z57od2jq(i, j, css_id) {
-          var table = document.getElementById("tinytable_3rd3sybyu853z57od2jq");
+      function styleCell_dykufroxa5xl0wxqu4pw(i, j, css_id) {
+          var table = document.getElementById("tinytable_dykufroxa5xl0wxqu4pw");
           var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
           if (cell) {
               console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
@@ -22,8 +22,8 @@
               console.warn(`Cell at (${i}, ${j}) not found.`);
           }
       }
-      function spanCell_3rd3sybyu853z57od2jq(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_3rd3sybyu853z57od2jq");
+      function spanCell_dykufroxa5xl0wxqu4pw(i, j, rowspan, colspan) {
+        var table = document.getElementById("tinytable_dykufroxa5xl0wxqu4pw");
         const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
         if (!targetCell) {
           console.warn(`Cell at (${i}, ${j}) not found.`);
@@ -54,169 +54,212 @@
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '3', j: 0 }, { i: '3', j: 1 }, { i: '3', j: 2 }, { i: '5', j: 0 }, { i: '5', j: 1 }, { i: '5', j: 2 }, { i: '7', j: 0 }, { i: '7', j: 1 }, { i: '7', j: 2 },  ], css_id: 'tinytable_css_v4wrudlw3dtklonfotyb',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 },  ], css_id: 'tinytable_css_v04j7xbejojeumwygj9v',}, 
-          { positions: [ { i: '10', j: 0 }, { i: '10', j: 1 }, { i: '10', j: 2 },  ], css_id: 'tinytable_css_s45htz57zr9jabo0gcw0',}, 
+          { positions: [ { i: '3', j: 1 }, { i: '5', j: 1 }, { i: '7', j: 1 }, { i: '3', j: 2 }, { i: '5', j: 2 }, { i: '7', j: 2 }, { i: '3', j: 3 }, { i: '5', j: 3 }, { i: '7', j: 3 } ], css_id: 'tinytable_css_gjlpbn7aq2pdz7mm1pk6',}, 
+          { positions: [ { i: '10', j: 1 }, { i: '10', j: 2 }, { i: '10', j: 3 } ], css_id: 'tinytable_css_6q8nqrquymo3ugm3drhx',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_vrj7vgsanq7cb170r52f',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_3rd3sybyu853z57od2jq(cell.i, cell.j, group.css_id);
+                  styleCell_dykufroxa5xl0wxqu4pw(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
     <style>
+    
     /* Core defaults */
-.tinytable {
-    /* tweak these if you want a “theme” */
-    --tt-border-color: black;
-    --tt-header-border-color: black;
-    --tt-striped-bg: rgba(0, 0, 0, .05);
-    --tt-hover-bg: rgba(0, 0, 0, .075);
-    --tt-caption-color: #6c757d;
+    .tinytable {
+        /* tweak these if you want a “theme” */
+        --tt-border-color: black;
+        --tt-header-border-color: black;
+        --tt-striped-bg: rgba(0, 0, 0, .05);
+        --tt-hover-bg: rgba(0, 0, 0, .075);
+        --tt-caption-color: #6c757d;
 
-    width: 100%;
-    margin: .5rem 0;
-    border-collapse: collapse;
-    background-color: transparent;
-}
+        width: 100%;
+        margin: .5rem 0;
+        border-collapse: collapse;
+        background-color: transparent;
+    }
 
-.tinytable th,
-.tinytable td {
-    position: relative;
-    padding: .5rem;               /* Bootstrap table cell padding */
-    vertical-align: top;          /* like .table */
-}
+    .tinytable th,
+    .tinytable td {
+        position: relative;
+        padding: .5rem;               /* Bootstrap table cell padding */
+        vertical-align: top;          /* like .table */
+    }
 
-.tinytable thead th {
-    text-align: left;
-    vertical-align: bottom;       /* Bootstrap header alignment */
-    font-weight: 400;             /* slightly bolder header */
-    border-bottom: none;
-}
+    .tinytable thead th {
+        text-align: left;
+        vertical-align: bottom;       /* Bootstrap header alignment */
+        font-weight: 400;             /* slightly bolder header */
+        border-bottom: none;
+    }
 
-/* Allow group headers to be centered */
-.tinytable thead th[align="center"] {
-    text-align: center;
-}
+    /* Allow group headers to be centered */
+    .tinytable thead th[align="center"] {
+        text-align: center;
+    }
 
-.tinytable tbody + tbody {
-    border-top: 2px solid var(--tt-border-color);
-}
+    .tinytable tbody + tbody {
+        border-top: 2px solid var(--tt-border-color);
+    }
 
-.tinytable caption {
-    caption-side: bottom;
-    padding: .5rem 0;
-    color: var(--tt-caption-color);
-}
+    .tinytable caption {
+        caption-side: bottom;
+        padding: .5rem 0;
+        color: var(--tt-caption-color);
+    }
 
-/* Optional variants (add these classes alongside .tinytable) */
+    /* Optional variants (add these classes alongside .tinytable) */
 
-/* Smaller padding: <table class="tinytable tinytable-sm"> */
-.tinytable-sm th,
-.tinytable-sm td {
-    padding: .25rem;
-}
+    /* Smaller padding: <table class="tinytable tinytable-sm"> */
+    .tinytable-sm th,
+    .tinytable-sm td {
+        padding: .25rem;
+    }
 
-/* Bordered table: <table class="tinytable tinytable-bordered"> */
-.tinytable-bordered {
-    border: 1px solid var(--tt-border-color);
-}
-.tinytable-bordered th,
-.tinytable-bordered td {
-    border: 1px solid var(--tt-border-color);
-}
+    /* Bordered table: <table class="tinytable tinytable-bordered"> */
+    .tinytable-bordered {
+        border: 1px solid var(--tt-border-color);
+    }
+    .tinytable-bordered th,
+    .tinytable-bordered td {
+        border: 1px solid var(--tt-border-color);
+    }
 
-/* Striped rows: <table class="tinytable tinytable-striped"> */
-.tinytable-striped tbody tr:nth-of-type(odd) {
-    background-color: var(--tt-striped-bg);
-}
+    /* Striped rows: <table class="tinytable tinytable-striped"> */
+    .tinytable-striped tbody tr:nth-of-type(odd) {
+        background-color: var(--tt-striped-bg);
+    }
 
-/* Hover state: <table class="tinytable tinytable-hover"> */
-.tinytable-hover tbody tr:hover {
-    background-color: var(--tt-hover-bg);
-}
+    /* Hover state: <table class="tinytable tinytable-hover"> */
+    .tinytable-hover tbody tr:hover {
+        background-color: var(--tt-hover-bg);
+    }
 
-/* Responsive wrapper: wrap table in <div class="tinytable-responsive"> */
-.tinytable-responsive {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
+    /* Responsive wrapper: wrap table in <div class="tinytable-responsive"> */
+    .tinytable-responsive {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Global border pseudo-element system */
+    .tinytable :is(td, th)[class*="tinytable_css_"] {
+        position: relative;
+
+        /* Default CSS variables (overridable by specific classes) */
+        --border-top: 0;    --border-right: 0;    --border-bottom: 0;    --border-left: 0;
+        --line-color-top: currentColor;    --line-color-right: currentColor;
+        --line-color-bottom: currentColor; --line-color-left: currentColor;
+        --line-width-top: 0.1em;    --line-width-right: 0.1em;
+        --line-width-bottom: 0.1em; --line-width-left: 0.1em;
+
+        --trim-top-left: 0%;    --trim-top-right: 0%;
+        --trim-right-top: 0%;   --trim-right-bottom: 0%;
+        --trim-bottom-left: 0%; --trim-bottom-right: 0%;
+        --trim-left-top: 0%;    --trim-left-bottom: 0%;
+    }
+
+    /* Draw top, left, and right borders with ::before */
+    .tinytable :is(td, th)[class*="tinytable_css_"]::before {
+        content: "";
+        position: absolute;
+        top: var(--trim-top-left, var(--trim-top-right, 0));
+        left: var(--trim-left-top, 0);
+        right: var(--trim-right-top, 0);
+        bottom: 0;
+        pointer-events: none;
+        z-index: 1;
+
+        border-top:  calc(var(--border-top)    * var(--line-width-top))    solid var(--line-color-top);
+        border-right:calc(var(--border-right)  * var(--line-width-right))  solid var(--line-color-right);
+        border-left: calc(var(--border-left)   * var(--line-width-left))   solid var(--line-color-left);
+    }
+
+    /* Draw bottom border as a block with ::after */
+    .tinytable :is(td, th)[class*="tinytable_css_"]::after {
+        content: "";
+        position: absolute;
+        left: var(--trim-bottom-left, 0);
+        right: var(--trim-bottom-right, 0);
+        bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0));
+        height: calc(var(--border-bottom) * var(--line-width-bottom));
+        background: var(--line-color-bottom);
+        pointer-events: none;
+        z-index: 2;
+    }
 
     /* tinytable css entries after */
-      .tinytable td.tinytable_css_v4wrudlw3dtklonfotyb, .tinytable th.tinytable_css_v4wrudlw3dtklonfotyb { color: white; background-color: #008080 }
-      .tinytable td.tinytable_css_v04j7xbejojeumwygj9v, .tinytable th.tinytable_css_v04j7xbejojeumwygj9v { position: relative; --line-color-bottom: black; --line-color-top: black; --line-color: black; --line-width: 0.1em; --border-left: 0; --border-right: 0; --border-top: 1; --border-bottom: 1; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-width-bottom: 0.05em; --trim-top-left: 0%; --trim-top-right: 0%; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-top: 0%; --trim-left-bottom: 0%; --trim-right-top: 0%; --trim-right-bottom: 0% }
-      .tinytable td.tinytable_css_v04j7xbejojeumwygj9v::before, .tinytable th.tinytable_css_v04j7xbejojeumwygj9v::before { content: ''; position: absolute; top: var(--trim-top-left, var(--trim-top-right, 0)); left: var(--trim-left-top, 0); right: var(--trim-right-top, 0); bottom: 0; pointer-events: none; z-index: 1; border-left: calc(var(--border-left) * var(--line-width-left, var(--line-width, 0.1em))) solid var(--line-color-left, var(--line-color, black)); border-right: calc(var(--border-right) * var(--line-width-right, var(--line-width, 0.1em))) solid var(--line-color-right, var(--line-color, black)); border-top: calc(var(--border-top) * var(--line-width-top, var(--line-width, 0.1em))) solid var(--line-color-top, var(--line-color, black)); }
-      .tinytable td.tinytable_css_v04j7xbejojeumwygj9v::after, .tinytable th.tinytable_css_v04j7xbejojeumwygj9v::after { content: ''; position: absolute; left: var(--trim-bottom-left, 0); right: var(--trim-bottom-right, 0); bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0)); height: calc(var(--border-bottom) * var(--line-width-bottom, var(--line-width, 0.1em))); background: var(--line-color-bottom, var(--line-color, black)); pointer-events: none; z-index: 2; }
-      .tinytable td.tinytable_css_s45htz57zr9jabo0gcw0, .tinytable th.tinytable_css_s45htz57zr9jabo0gcw0 { position: relative; --line-color-bottom: black; --line-color: black; --line-width: 0.1em; --border-left: 0; --border-right: 0; --border-top: 0; --border-bottom: 1; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-width-bottom: 0.1em; --trim-top-left: 0%; --trim-top-right: 0%; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-top: 0%; --trim-left-bottom: 0%; --trim-right-top: 0%; --trim-right-bottom: 0% }
-      .tinytable td.tinytable_css_s45htz57zr9jabo0gcw0::before, .tinytable th.tinytable_css_s45htz57zr9jabo0gcw0::before { content: ''; position: absolute; top: var(--trim-top-left, var(--trim-top-right, 0)); left: var(--trim-left-top, 0); right: var(--trim-right-top, 0); bottom: 0; pointer-events: none; z-index: 1; border-left: calc(var(--border-left) * var(--line-width-left, var(--line-width, 0.1em))) solid var(--line-color-left, var(--line-color, black)); border-right: calc(var(--border-right) * var(--line-width-right, var(--line-width, 0.1em))) solid var(--line-color-right, var(--line-color, black)); border-top: calc(var(--border-top) * var(--line-width-top, var(--line-width, 0.1em))) solid var(--line-color-top, var(--line-color, black)); }
-      .tinytable td.tinytable_css_s45htz57zr9jabo0gcw0::after, .tinytable th.tinytable_css_s45htz57zr9jabo0gcw0::after { content: ''; position: absolute; left: var(--trim-bottom-left, 0); right: var(--trim-bottom-right, 0); bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0)); height: calc(var(--border-bottom) * var(--line-width-bottom, var(--line-width, 0.1em))); background: var(--line-color-bottom, var(--line-color, black)); pointer-events: none; z-index: 2; }
+    .tinytable td.tinytable_css_gjlpbn7aq2pdz7mm1pk6, .tinytable th.tinytable_css_gjlpbn7aq2pdz7mm1pk6 { color: white; background-color: #008080 }
+    .tinytable td.tinytable_css_6q8nqrquymo3ugm3drhx, .tinytable th.tinytable_css_6q8nqrquymo3ugm3drhx {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    .tinytable td.tinytable_css_vrj7vgsanq7cb170r52f, .tinytable th.tinytable_css_vrj7vgsanq7cb170r52f {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_3rd3sybyu853z57od2jq" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
+      <table class="tinytable" id="tinytable_dykufroxa5xl0wxqu4pw" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
         <thead>
           
               <tr>
-                <th scope="col" data-row="0" data-col="0">mpg</th>
-                <th scope="col" data-row="0" data-col="1">am</th>
-                <th scope="col" data-row="0" data-col="2">vs</th>
+                <th scope="col" data-row="0" data-col="1">mpg</th>
+                <th scope="col" data-row="0" data-col="2">am</th>
+                <th scope="col" data-row="0" data-col="3">vs</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td data-row="1" data-col="0">21.0</td>
-                  <td data-row="1" data-col="1">1</td>
-                  <td data-row="1" data-col="2">0</td>
+                  <td data-row="1" data-col="1">21.0</td>
+                  <td data-row="1" data-col="2">1</td>
+                  <td data-row="1" data-col="3">0</td>
                 </tr>
                 <tr>
-                  <td data-row="2" data-col="0">21.0</td>
-                  <td data-row="2" data-col="1">1</td>
-                  <td data-row="2" data-col="2">0</td>
+                  <td data-row="2" data-col="1">21.0</td>
+                  <td data-row="2" data-col="2">1</td>
+                  <td data-row="2" data-col="3">0</td>
                 </tr>
                 <tr>
-                  <td data-row="3" data-col="0">22.8</td>
-                  <td data-row="3" data-col="1">1</td>
+                  <td data-row="3" data-col="1">22.8</td>
                   <td data-row="3" data-col="2">1</td>
+                  <td data-row="3" data-col="3">1</td>
                 </tr>
                 <tr>
-                  <td data-row="4" data-col="0">21.4</td>
-                  <td data-row="4" data-col="1">0</td>
-                  <td data-row="4" data-col="2">1</td>
+                  <td data-row="4" data-col="1">21.4</td>
+                  <td data-row="4" data-col="2">0</td>
+                  <td data-row="4" data-col="3">1</td>
                 </tr>
                 <tr>
-                  <td data-row="5" data-col="0">18.7</td>
-                  <td data-row="5" data-col="1">0</td>
+                  <td data-row="5" data-col="1">18.7</td>
                   <td data-row="5" data-col="2">0</td>
+                  <td data-row="5" data-col="3">0</td>
                 </tr>
                 <tr>
-                  <td data-row="6" data-col="0">18.1</td>
-                  <td data-row="6" data-col="1">0</td>
-                  <td data-row="6" data-col="2">1</td>
+                  <td data-row="6" data-col="1">18.1</td>
+                  <td data-row="6" data-col="2">0</td>
+                  <td data-row="6" data-col="3">1</td>
                 </tr>
                 <tr>
-                  <td data-row="7" data-col="0">14.3</td>
-                  <td data-row="7" data-col="1">0</td>
+                  <td data-row="7" data-col="1">14.3</td>
                   <td data-row="7" data-col="2">0</td>
+                  <td data-row="7" data-col="3">0</td>
                 </tr>
                 <tr>
-                  <td data-row="8" data-col="0">24.4</td>
-                  <td data-row="8" data-col="1">0</td>
-                  <td data-row="8" data-col="2">1</td>
+                  <td data-row="8" data-col="1">24.4</td>
+                  <td data-row="8" data-col="2">0</td>
+                  <td data-row="8" data-col="3">1</td>
                 </tr>
                 <tr>
-                  <td data-row="9" data-col="0">22.8</td>
-                  <td data-row="9" data-col="1">0</td>
-                  <td data-row="9" data-col="2">1</td>
+                  <td data-row="9" data-col="1">22.8</td>
+                  <td data-row="9" data-col="2">0</td>
+                  <td data-row="9" data-col="3">1</td>
                 </tr>
                 <tr>
-                  <td data-row="10" data-col="0">19.2</td>
-                  <td data-row="10" data-col="1">0</td>
-                  <td data-row="10" data-col="2">1</td>
+                  <td data-row="10" data-col="1">19.2</td>
+                  <td data-row="10" data-col="2">0</td>
+                  <td data-row="10" data-col="3">1</td>
                 </tr>
         </tbody>
       </table>

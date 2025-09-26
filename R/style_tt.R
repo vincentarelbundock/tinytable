@@ -98,8 +98,12 @@ process_align_argument <- function(x, settings, align) {
     stop("`align` must be characters c, l, r, or d.", call. = FALSE)
   }
 
-  for (j in seq_along(align)) {
+  # Initialize align column if it doesn't exist
+  if (!"align" %in% names(settings)) {
     settings$align <- NA_character_
+  }
+
+  for (j in seq_along(align)) {
     idx <- which(settings$j == j)
     settings$align[idx] <- align[j]
   }
@@ -229,6 +233,7 @@ style_tt_lazy <- function(
         as.vector(background)
       }
     settings[["fontsize"]] <- if (is.null(fontsize)) NA else as.vector(fontsize)
+    settings[["align"]] <- if (is.null(alignv)) NA else align
     settings[["alignv"]] <- if (is.null(alignv)) NA else alignv
     settings[["line_color"]] <- if (is.null(line)) NA else line_color
     settings[["line_width"]] <- if (is.null(line)) NA else line_width

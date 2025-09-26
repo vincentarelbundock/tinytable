@@ -54,8 +54,8 @@
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 },  ], css_id: 'tinytable_css_qnddps3hrarwxnclv9tv',}, 
-          { positions: [ { i: '6', j: 0 }, { i: '6', j: 1 }, { i: '6', j: 2 },  ], css_id: 'tinytable_css_dcq09jxgyitf4or5kg1s',}, 
+          { positions: [ { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 } ], css_id: 'tinytable_css_dcq09jxgyitf4or5kg1s',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_qnddps3hrarwxnclv9tv',}, 
           ];
 
           // Loop over the arrays to style the cells
@@ -68,133 +68,176 @@
     </script>
 
     <style>
+    
     /* Core defaults */
-.tinytable {
-    /* tweak these if you want a “theme” */
-    --tt-border-color: black;
-    --tt-header-border-color: black;
-    --tt-striped-bg: rgba(0, 0, 0, .05);
-    --tt-hover-bg: rgba(0, 0, 0, .075);
-    --tt-caption-color: #6c757d;
+    .tinytable {
+        /* tweak these if you want a “theme” */
+        --tt-border-color: black;
+        --tt-header-border-color: black;
+        --tt-striped-bg: rgba(0, 0, 0, .05);
+        --tt-hover-bg: rgba(0, 0, 0, .075);
+        --tt-caption-color: #6c757d;
 
-    width: 100%;
-    margin: .5rem 0;
-    border-collapse: collapse;
-    background-color: transparent;
-}
+        width: 100%;
+        margin: .5rem 0;
+        border-collapse: collapse;
+        background-color: transparent;
+    }
 
-.tinytable th,
-.tinytable td {
-    position: relative;
-    padding: .5rem;               /* Bootstrap table cell padding */
-    vertical-align: top;          /* like .table */
-}
+    .tinytable th,
+    .tinytable td {
+        position: relative;
+        padding: .5rem;               /* Bootstrap table cell padding */
+        vertical-align: top;          /* like .table */
+    }
 
-.tinytable thead th {
-    text-align: left;
-    vertical-align: bottom;       /* Bootstrap header alignment */
-    font-weight: 400;             /* slightly bolder header */
-    border-bottom: none;
-}
+    .tinytable thead th {
+        text-align: left;
+        vertical-align: bottom;       /* Bootstrap header alignment */
+        font-weight: 400;             /* slightly bolder header */
+        border-bottom: none;
+    }
 
-/* Allow group headers to be centered */
-.tinytable thead th[align="center"] {
-    text-align: center;
-}
+    /* Allow group headers to be centered */
+    .tinytable thead th[align="center"] {
+        text-align: center;
+    }
 
-.tinytable tbody + tbody {
-    border-top: 2px solid var(--tt-border-color);
-}
+    .tinytable tbody + tbody {
+        border-top: 2px solid var(--tt-border-color);
+    }
 
-.tinytable caption {
-    caption-side: bottom;
-    padding: .5rem 0;
-    color: var(--tt-caption-color);
-}
+    .tinytable caption {
+        caption-side: bottom;
+        padding: .5rem 0;
+        color: var(--tt-caption-color);
+    }
 
-/* Optional variants (add these classes alongside .tinytable) */
+    /* Optional variants (add these classes alongside .tinytable) */
 
-/* Smaller padding: <table class="tinytable tinytable-sm"> */
-.tinytable-sm th,
-.tinytable-sm td {
-    padding: .25rem;
-}
+    /* Smaller padding: <table class="tinytable tinytable-sm"> */
+    .tinytable-sm th,
+    .tinytable-sm td {
+        padding: .25rem;
+    }
 
-/* Bordered table: <table class="tinytable tinytable-bordered"> */
-.tinytable-bordered {
-    border: 1px solid var(--tt-border-color);
-}
-.tinytable-bordered th,
-.tinytable-bordered td {
-    border: 1px solid var(--tt-border-color);
-}
+    /* Bordered table: <table class="tinytable tinytable-bordered"> */
+    .tinytable-bordered {
+        border: 1px solid var(--tt-border-color);
+    }
+    .tinytable-bordered th,
+    .tinytable-bordered td {
+        border: 1px solid var(--tt-border-color);
+    }
 
-/* Striped rows: <table class="tinytable tinytable-striped"> */
-.tinytable-striped tbody tr:nth-of-type(odd) {
-    background-color: var(--tt-striped-bg);
-}
+    /* Striped rows: <table class="tinytable tinytable-striped"> */
+    .tinytable-striped tbody tr:nth-of-type(odd) {
+        background-color: var(--tt-striped-bg);
+    }
 
-/* Hover state: <table class="tinytable tinytable-hover"> */
-.tinytable-hover tbody tr:hover {
-    background-color: var(--tt-hover-bg);
-}
+    /* Hover state: <table class="tinytable tinytable-hover"> */
+    .tinytable-hover tbody tr:hover {
+        background-color: var(--tt-hover-bg);
+    }
 
-/* Responsive wrapper: wrap table in <div class="tinytable-responsive"> */
-.tinytable-responsive {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
+    /* Responsive wrapper: wrap table in <div class="tinytable-responsive"> */
+    .tinytable-responsive {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Global border pseudo-element system */
+    .tinytable :is(td, th)[class*="tinytable_css_"] {
+        position: relative;
+
+        /* Default CSS variables (overridable by specific classes) */
+        --border-top: 0;    --border-right: 0;    --border-bottom: 0;    --border-left: 0;
+        --line-color-top: currentColor;    --line-color-right: currentColor;
+        --line-color-bottom: currentColor; --line-color-left: currentColor;
+        --line-width-top: 0.1em;    --line-width-right: 0.1em;
+        --line-width-bottom: 0.1em; --line-width-left: 0.1em;
+
+        --trim-top-left: 0%;    --trim-top-right: 0%;
+        --trim-right-top: 0%;   --trim-right-bottom: 0%;
+        --trim-bottom-left: 0%; --trim-bottom-right: 0%;
+        --trim-left-top: 0%;    --trim-left-bottom: 0%;
+    }
+
+    /* Draw top, left, and right borders with ::before */
+    .tinytable :is(td, th)[class*="tinytable_css_"]::before {
+        content: "";
+        position: absolute;
+        top: var(--trim-top-left, var(--trim-top-right, 0));
+        left: var(--trim-left-top, 0);
+        right: var(--trim-right-top, 0);
+        bottom: 0;
+        pointer-events: none;
+        z-index: 1;
+
+        border-top:  calc(var(--border-top)    * var(--line-width-top))    solid var(--line-color-top);
+        border-right:calc(var(--border-right)  * var(--line-width-right))  solid var(--line-color-right);
+        border-left: calc(var(--border-left)   * var(--line-width-left))   solid var(--line-color-left);
+    }
+
+    /* Draw bottom border as a block with ::after */
+    .tinytable :is(td, th)[class*="tinytable_css_"]::after {
+        content: "";
+        position: absolute;
+        left: var(--trim-bottom-left, 0);
+        right: var(--trim-bottom-right, 0);
+        bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0));
+        height: calc(var(--border-bottom) * var(--line-width-bottom));
+        background: var(--line-color-bottom);
+        pointer-events: none;
+        z-index: 2;
+    }
 
     /* tinytable css entries after */
-      .tinytable td.tinytable_css_qnddps3hrarwxnclv9tv, .tinytable th.tinytable_css_qnddps3hrarwxnclv9tv { position: relative; --line-color-bottom: black; --line-color-top: black; --line-color: black; --line-width: 0.1em; --border-left: 0; --border-right: 0; --border-top: 1; --border-bottom: 1; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-width-bottom: 0.05em; --trim-top-left: 0%; --trim-top-right: 0%; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-top: 0%; --trim-left-bottom: 0%; --trim-right-top: 0%; --trim-right-bottom: 0% }
-      .tinytable td.tinytable_css_qnddps3hrarwxnclv9tv::before, .tinytable th.tinytable_css_qnddps3hrarwxnclv9tv::before { content: ''; position: absolute; top: var(--trim-top-left, var(--trim-top-right, 0)); left: var(--trim-left-top, 0); right: var(--trim-right-top, 0); bottom: 0; pointer-events: none; z-index: 1; border-left: calc(var(--border-left) * var(--line-width-left, var(--line-width, 0.1em))) solid var(--line-color-left, var(--line-color, black)); border-right: calc(var(--border-right) * var(--line-width-right, var(--line-width, 0.1em))) solid var(--line-color-right, var(--line-color, black)); border-top: calc(var(--border-top) * var(--line-width-top, var(--line-width, 0.1em))) solid var(--line-color-top, var(--line-color, black)); }
-      .tinytable td.tinytable_css_qnddps3hrarwxnclv9tv::after, .tinytable th.tinytable_css_qnddps3hrarwxnclv9tv::after { content: ''; position: absolute; left: var(--trim-bottom-left, 0); right: var(--trim-bottom-right, 0); bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0)); height: calc(var(--border-bottom) * var(--line-width-bottom, var(--line-width, 0.1em))); background: var(--line-color-bottom, var(--line-color, black)); pointer-events: none; z-index: 2; }
-      .tinytable td.tinytable_css_dcq09jxgyitf4or5kg1s, .tinytable th.tinytable_css_dcq09jxgyitf4or5kg1s { position: relative; --line-color-bottom: black; --line-color: black; --line-width: 0.1em; --border-left: 0; --border-right: 0; --border-top: 0; --border-bottom: 1; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-width-bottom: 0.1em; --trim-top-left: 0%; --trim-top-right: 0%; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-top: 0%; --trim-left-bottom: 0%; --trim-right-top: 0%; --trim-right-bottom: 0% }
-      .tinytable td.tinytable_css_dcq09jxgyitf4or5kg1s::before, .tinytable th.tinytable_css_dcq09jxgyitf4or5kg1s::before { content: ''; position: absolute; top: var(--trim-top-left, var(--trim-top-right, 0)); left: var(--trim-left-top, 0); right: var(--trim-right-top, 0); bottom: 0; pointer-events: none; z-index: 1; border-left: calc(var(--border-left) * var(--line-width-left, var(--line-width, 0.1em))) solid var(--line-color-left, var(--line-color, black)); border-right: calc(var(--border-right) * var(--line-width-right, var(--line-width, 0.1em))) solid var(--line-color-right, var(--line-color, black)); border-top: calc(var(--border-top) * var(--line-width-top, var(--line-width, 0.1em))) solid var(--line-color-top, var(--line-color, black)); }
-      .tinytable td.tinytable_css_dcq09jxgyitf4or5kg1s::after, .tinytable th.tinytable_css_dcq09jxgyitf4or5kg1s::after { content: ''; position: absolute; left: var(--trim-bottom-left, 0); right: var(--trim-bottom-right, 0); bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0)); height: calc(var(--border-bottom) * var(--line-width-bottom, var(--line-width, 0.1em))); background: var(--line-color-bottom, var(--line-color, black)); pointer-events: none; z-index: 2; }
+    .tinytable td.tinytable_css_dcq09jxgyitf4or5kg1s, .tinytable th.tinytable_css_dcq09jxgyitf4or5kg1s {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    .tinytable td.tinytable_css_qnddps3hrarwxnclv9tv, .tinytable th.tinytable_css_qnddps3hrarwxnclv9tv {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
       <table class="tinytable" id="tinytable_m4thvn8u3cwpmj8hiuwk" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
         <thead>
           
               <tr>
-                <th scope="col" data-row="0" data-col="0">LaTeX_Special</th>
-                <th scope="col" data-row="0" data-col="1">HTML_Special</th>
-                <th scope="col" data-row="0" data-col="2">Mixed_Content</th>
+                <th scope="col" data-row="0" data-col="1">LaTeX_Special</th>
+                <th scope="col" data-row="0" data-col="2">HTML_Special</th>
+                <th scope="col" data-row="0" data-col="3">Mixed_Content</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td data-row="1" data-col="0">Dollars $</td>
-                  <td data-row="1" data-col="1">&lt;br&gt;</td>
-                  <td data-row="1" data-col="2">$100 &amp; &lt;b&gt;bold&lt;/b&gt;</td>
+                  <td data-row="1" data-col="1">Dollars $</td>
+                  <td data-row="1" data-col="2">&lt;br&gt;</td>
+                  <td data-row="1" data-col="3">$100 &amp; &lt;b&gt;bold&lt;/b&gt;</td>
                 </tr>
                 <tr>
-                  <td data-row="2" data-col="0">Percent %</td>
-                  <td data-row="2" data-col="1">&lt;sup&gt;4&lt;/sup&gt;</td>
-                  <td data-row="2" data-col="2">50% &amp; &lt;i&gt;italic&lt;/i&gt;</td>
+                  <td data-row="2" data-col="1">Percent %</td>
+                  <td data-row="2" data-col="2">&lt;sup&gt;4&lt;/sup&gt;</td>
+                  <td data-row="2" data-col="3">50% &amp; &lt;i&gt;italic&lt;/i&gt;</td>
                 </tr>
                 <tr>
-                  <td data-row="3" data-col="0">Underscore _</td>
-                  <td data-row="3" data-col="1">&lt;emph&gt;blah&lt;/emph&gt;</td>
-                  <td data-row="3" data-col="2">user_name &amp; &lt;code&gt;code&lt;/code&gt;</td>
+                  <td data-row="3" data-col="1">Underscore _</td>
+                  <td data-row="3" data-col="2">&lt;emph&gt;blah&lt;/emph&gt;</td>
+                  <td data-row="3" data-col="3">user_name &amp; &lt;code&gt;code&lt;/code&gt;</td>
                 </tr>
                 <tr>
-                  <td data-row="4" data-col="0">Backslash \</td>
-                  <td data-row="4" data-col="1">&amp;amp;</td>
-                  <td data-row="4" data-col="2">$100 &amp; &lt;b&gt;bold&lt;/b&gt;</td>
+                  <td data-row="4" data-col="1">Backslash \</td>
+                  <td data-row="4" data-col="2">&amp;amp;</td>
+                  <td data-row="4" data-col="3">$100 &amp; &lt;b&gt;bold&lt;/b&gt;</td>
                 </tr>
                 <tr>
-                  <td data-row="5" data-col="0">Hash #</td>
-                  <td data-row="5" data-col="1">&amp;lt;</td>
-                  <td data-row="5" data-col="2">50% &amp; &lt;i&gt;italic&lt;/i&gt;</td>
+                  <td data-row="5" data-col="1">Hash #</td>
+                  <td data-row="5" data-col="2">&amp;lt;</td>
+                  <td data-row="5" data-col="3">50% &amp; &lt;i&gt;italic&lt;/i&gt;</td>
                 </tr>
                 <tr>
-                  <td data-row="6" data-col="0">Ampersand &amp;</td>
-                  <td data-row="6" data-col="1">&amp;gt;</td>
-                  <td data-row="6" data-col="2">user_name &amp; &lt;code&gt;code&lt;/code&gt;</td>
+                  <td data-row="6" data-col="1">Ampersand &amp;</td>
+                  <td data-row="6" data-col="2">&amp;gt;</td>
+                  <td data-row="6" data-col="3">user_name &amp; &lt;code&gt;code&lt;/code&gt;</td>
                 </tr>
         </tbody>
       </table>

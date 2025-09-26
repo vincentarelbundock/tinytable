@@ -31,7 +31,9 @@ style_to_css <- function(row) {
   if (isTRUE(row$italic))    out <- c(out, "font-style: italic")
   if (isTRUE(row$monospace)) out <- c(out, "font-family: monospace")
   if (isTRUE(row$smallcap))  out <- c(out, "font-variant: small-caps")
-  if (!is.na(row$align))     out <- c(out, paste0("text-align: ", row$align))
+  if (!is.na(row$align))     {
+    out <- c(out, paste0("text-align: ", row$align))
+  }
   if (!is.na(row$alignv))    out <- c(out, paste0("vertical-align: ", row$alignv))
   if (!is.na(row$fontsize))  out <- c(out, paste0("font-size: ", row$fontsize, "em"))
   if (!is.na(row$indent))    out <- c(out, paste0("padding-left: ", row$indent, "em"))
@@ -150,6 +152,7 @@ setMethod(
     sty <- expand_style(x)
     lines <- sty$lines
     other <- sty$other
+
 
     # rowspan/colspan spans first
     if (!is.null(other) && nrow(other) > 0 && any(c("rowspan", "colspan") %in% names(other))) {
