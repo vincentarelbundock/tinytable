@@ -267,6 +267,8 @@ process_delimiter_grouping <- function(x, j) {
     if (length(j_delim$groupnames) > 0) {
       for (level_groups in rev(j_delim$groupnames)) {
         x <- process_group_j(x, level_groups)
+        # Add line styling for each group level
+        x <- add_group_line_styling_simple(x, level_groups)
       }
     }
     j <- NULL # Set to NULL since we've already applied the groupings
