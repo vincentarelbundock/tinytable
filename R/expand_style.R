@@ -2,7 +2,43 @@ last_df <- function(x, bycols = c("i", "j")) {
   bycols <- as.list(x[, bycols, drop = FALSE])
   out <- split(x, bycols)
   out <- Filter(function(k) nrow(k) > 0, out)
-  out <- lapply(out, utils::tail, n = 1)
+
+  out <- lapply(out, function(group) {
+    if (nrow(group) == 1) {
+      return(group)
+    }
+
+    # Aggregate each column based on its type
+    result <- group[1, , drop = FALSE]  # Start with first row as template
+
+    for (col in names(group)) {
+      if (col %in% bycols) {
+        # Keep grouping columns as-is
+        next
+      }
+
+      values <- group[[col]]
+
+      if (is.logical(values)) {
+        # For logical: return any(TRUE)
+        result[[col]] <- any(values, na.rm = TRUE)
+      } else if (is.numeric(values)) {
+        # For numeric: return max()
+        result[[col]] <- max(values, na.rm = TRUE)
+      } else {
+        # For other types: return last non-NA value, or just last if all are NA
+        non_na_values <- values[!is.na(values)]
+        if (length(non_na_values) > 0) {
+          result[[col]] <- utils::tail(non_na_values, 1)
+        } else {
+          result[[col]] <- utils::tail(values, 1)
+        }
+      }
+    }
+
+    return(result)
+  })
+
   do.call(rbind, out)
 }
 
