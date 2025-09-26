@@ -130,7 +130,7 @@ html_groupj_html <- function(x, j_list, ihead) {
       '<th scope="col" align="center" colspan=%s data-row="%d" data-col="%d"%s>%s</th>',
       colspan_val,
       ihead,
-      k, # 1-based indexing to match @style
+      min(j_combined[[k]]), # Use the first column of the span, not the loop index
       width_style,
       names(j_combined)[k]
     )

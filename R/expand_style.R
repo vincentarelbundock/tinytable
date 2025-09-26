@@ -85,7 +85,7 @@ expand_other <- function(x, rect, styles) {
   }
 }
 
-expand_styles <- function(x) {
+expand_style <- function(x) {
   # 1) Full rectangle of cells
   iseq <- seq_len(nrow(x))
   iseq <- c(-1 * 0:(x@nhead - 1), iseq)

@@ -147,7 +147,7 @@ setMethod(
     # CSS rule will be handled by finalize() via template substitution
     # Removed duplicate html_setting call that was causing CSS duplication
 
-    sty <- expand_styles(x)
+    sty <- expand_style(x)
     lines <- sty$lines
     other <- sty$other
 
