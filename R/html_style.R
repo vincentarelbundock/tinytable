@@ -389,33 +389,11 @@ setMethod(
         "after"
       )
 
-      # Generate CSS entry with pseudo-elements for border styling
-      if (has_border) {
-        # Generate base rule with line_to_css() variables
-        base_rule <- sprintf(
-          "    .tinytable td.%s, .tinytable th.%s { %s }",
-          id_css, id_css, css_rule
-        )
-
-        # Generate pseudo-element rules that use the CSS variables
-        before_rule <- sprintf(
-          "    .tinytable td.%s::before, .tinytable th.%s::before { content: ''; position: absolute; top: var(--trim-top-left, var(--trim-top-right, 0)); left: var(--trim-left-top, 0); right: var(--trim-right-top, 0); bottom: 0; pointer-events: none; z-index: 1; border-left: calc(var(--border-left) * var(--line-width-left, var(--line-width, 0.1em))) solid var(--line-color-left, var(--line-color, black)); border-right: calc(var(--border-right) * var(--line-width-right, var(--line-width, 0.1em))) solid var(--line-color-right, var(--line-color, black)); border-top: calc(var(--border-top) * var(--line-width-top, var(--line-width, 0.1em))) solid var(--line-color-top, var(--line-color, black)); }",
-          id_css, id_css
-        )
-
-        after_rule <- sprintf(
-          "    .tinytable td.%s::after, .tinytable th.%s::after { content: ''; position: absolute; left: var(--trim-bottom-left, 0); right: var(--trim-bottom-right, 0); bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0)); height: calc(var(--border-bottom) * var(--line-width-bottom, var(--line-width, 0.1em))); background: var(--line-color-bottom, var(--line-color, black)); pointer-events: none; z-index: 2; }",
-          id_css, id_css
-        )
-
-        entry <- paste(base_rule, before_rule, after_rule, sep = "\n")
-      } else {
-        # Regular CSS rule without pseudo-elements
-        entry <- sprintf(
-          "    .tinytable td.%s, .tinytable th.%s { %s }",
-          id_css, id_css, css_rule
-        )
-      }
+      # Generate CSS entry - global pseudo-elements handle borders, we just set variables
+      entry <- sprintf(
+        "    .tinytable td.%s, .tinytable th.%s { %s }",
+        id_css, id_css, css_rule
+      )
       x@table_string <- lines_insert(
         x@table_string,
         entry,
