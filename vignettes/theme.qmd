@@ -104,6 +104,34 @@ tt(x) |>
 :::
 
 
+## Combining themes
+
+Themes are just functions that apply a set of transformations to a `tinytable` object. This means that users can combine themes to create new looks. For example, when we call `tt(x)` without specifying the `theme` argument, the `theme_default()` is applied automatically.
+
+```{r}
+x <- head(iris, 3)
+tt(x)
+```
+
+If we add a call to `theme_striped()`, we add grey background stripes, but keep the other default stylings (ex: top and bottom horizontal rules). 
+
+
+```{r}
+tt(x) |> theme_striped()
+```
+
+Alternatively, we could use `theme_empty()` to remove the and `theme_striped()` to get a very minimal look with just the stripes.
+
+```{r}
+tt(x) |> theme_empty() |> theme_striped()
+```
+
+Or use the `theme` argument to get the same effect.
+
+```{r}
+tt(x, theme = "empty") |> theme_striped()
+```
+
 ## User-written themes
 
 This section provides a few user-written themes that can be used to extend the functionality of `tinytable`. These themes are not included in the package by default, but they can be easily added to your workflow. If you would like your own custom theme to appear here, please open an issue on the [tinytable GitHub repository](https://github.com/vincentarelbundock/tinytable/issues) or submit a pull request.
