@@ -15,15 +15,35 @@ setMethod(
       fixed = TRUE
     )
 
-    # Handle CSS inclusion - external file if NULL, inline if provided
-    if (is.null(x@html_css_rule)) {
+    # Handle CSS inclusion - portable vs external
+    if (isTRUE(x@html_portable)) {
+      # For portable HTML, inline the CSS content from the file
+      css_file_path <- system.file("tinytable.css", package = "tinytable")
+      if (file.exists(css_file_path)) {
+        css_content <- readLines(css_file_path, warn = FALSE)
+        css_content <- paste(css_content, collapse = "\n")
+        css_include <- paste0("<style>\n", css_content, "\n</style>")
+
+        # Also include Bootstrap CSS via external link if using bootstrap engine
+        if (identical(x@html_engine, "bootstrap")) {
+          bootstrap_css_link <- '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">'
+          css_include <- paste(bootstrap_css_link, css_include, sep = "\n")
+        }
+      } else {
+        # Fallback to external if file not found
+        css_include <- sprintf(
+          '<link rel="stylesheet" href="%s">',
+          "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css"
+        )
+      }
+    } else if (is.null(x@html_css_rule)) {
       # Use external CSS file
       css_include <- sprintf(
         '<link rel="stylesheet" href="%s">',
         "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css"
       )
     } else {
-      # Use inline CSS
+      # Use inline CSS from css_rule
       css_include <- paste0("<style>\n", x@html_css_rule, "\n</style>")
     }
 
@@ -34,12 +54,33 @@ setMethod(
       fixed = TRUE
     )
 
-    # Add JavaScript include for external file
-    js_include <- '<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>'
-    bootstrap_include <- '   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>'
+    # Handle JavaScript inclusion - portable vs external
+    if (isTRUE(x@html_portable)) {
+      # For portable HTML, inline the JS content from the file
+      js_file_path <- system.file("tinytable.js", package = "tinytable")
+      if (file.exists(js_file_path)) {
+        js_content <- readLines(js_file_path, warn = FALSE)
+        js_content <- paste(js_content, collapse = "\n")
+        js_include <- paste0("<script>\n", js_content, "\n</script>")
+      } else {
+        # Fallback to external if file not found
+        js_include <- '<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>'
+      }
 
-    if (identical(x@html_engine, "bootstrap")) {
-      js_include <- paste(js_include, bootstrap_include, sep = "\n")
+      # Note: For portable mode, we still use external Bootstrap as it's large
+      # Users can override with custom css_rule if they need full portability
+      if (identical(x@html_engine, "bootstrap")) {
+        bootstrap_include <- '   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>'
+        js_include <- paste(js_include, bootstrap_include, sep = "\n")
+      }
+    } else {
+      # Use external files
+      js_include <- '<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>'
+      bootstrap_include <- '   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>'
+
+      if (identical(x@html_engine, "bootstrap")) {
+        js_include <- paste(js_include, bootstrap_include, sep = "\n")
+      }
     }
 
     out <- sub(
