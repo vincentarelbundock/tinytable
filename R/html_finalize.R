@@ -36,10 +36,10 @@ setMethod(
 
     # Add JavaScript include for external file
     js_include <- '<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>'
-    bootstrap_include <- '    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>'
+    bootstrap_include <- '   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>'
 
     if (identical(x@html_engine, "bootstrap")) {
-      js_include <- paste(bootstrap_include, js_include, sep = "\n")
+      js_include <- paste(js_include, bootstrap_include, sep = "\n")
     }
 
     out <- sub(
