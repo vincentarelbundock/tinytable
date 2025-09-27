@@ -11,6 +11,9 @@ theme_default <- function(x, ...) {
   x <- theme_typst(x, align_figure = get_option("tinytable_typst_align_figure", "c"))
 
   fn <- function(x) {
+    if (identical(x@output, "html") && identical(x@html_engine, "tabulator")) {
+      return(x)
+    }
     col <- "black"
     # top
     x <- style_tt(
