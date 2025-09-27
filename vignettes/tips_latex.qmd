@@ -89,7 +89,7 @@ foo & bar & baz \\
 
 In some contexts, users may want create cells with LaTeX or markdown code that spans multiple lines. This usually works well for HTML tables. But sometimes, in LaTeX, multi-line content with special environments must be wrapped in a `minipage` environment.
 
-In the example that follows, we create a Markdown list using asterisks. Then, we call `litedown::mark()` to render that list as bullet points (an `itemize` environment in LaTeX). Finally, we define a custom function called `minipagify` to wrap the bullet point in a `minipage` environment.
+In the example that follows, we create a Markdown list using asterisks. Then, we call `litedown::mark()` to render that list as bullet points (an `itemize` environment in LaTeX). Finally, we define a custom function called `minipage` to wrap the bullet point in an environment.
 
 ```{r}
 library(tinytable)
@@ -100,24 +100,14 @@ dat <- data.frame(
   B = c("6%", "$5.29")
 )
 
-# wrap in a minipage environment
-minipagify <- function(x) {
-  sprintf(
-    "\\minipage{\\textwidth}%s\\endminipage",
-    sapply(x, litedown::mark, "latex")
-  )
+minipage <- function(x) {
+  sprintf("\\begin{minipage}{\\textwidth}%s\\end{minipage}", mark(x, "latex"))
 }
-
-# only in LaTeX
-is_latex <- identical(knitr::pandoc_to(), "latex")
-is_html <- identical(knitr::pandoc_to(), "html")
-
-
 tab <- tt(dat, width = c(0.3, 0.2)) |>
   style_tt(j = 2, align = "c") |>
-  format_tt(j = 2, escape = TRUE) |>
-  format_tt(j = 1, fn = if (is_latex) minipagify else identity) |>
-  format_tt(j = 1, fn = if (is_html) litedown::mark else identity)
+  format_tt(escape = TRUE) |>
+  format_tt(j = 1, fn = mark, output = "html") |>
+  format_tt(j = 1, fn = minipage, output = "latex")
 
 tab
 ```

@@ -609,7 +609,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="multi-line-cells-with-minipage" class="level3">
 <h3 class="anchored" data-anchor-id="multi-line-cells-with-minipage">Multi-line cells with <code>minipage</code></h3>
 <p>In some contexts, users may want create cells with LaTeX or markdown code that spans multiple lines. This usually works well for HTML tables. But sometimes, in LaTeX, multi-line content with special environments must be wrapped in a <code>minipage</code> environment.</p>
-<p>In the example that follows, we create a Markdown list using asterisks. Then, we call <code>litedown::mark()</code> to render that list as bullet points (an <code>itemize</code> environment in LaTeX). Finally, we define a custom function called <code>minipagify</code> to wrap the bullet point in a <code>minipage</code> environment.</p>
+<p>In the example that follows, we create a Markdown list using asterisks. Then, we call <code>litedown::mark()</code> to render that list as bullet points (an <code>itemize</code> environment in LaTeX). Finally, we define a custom function called <code>minipage</code> to wrap the bullet point in an environment.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(litedown)</span>
@@ -619,26 +619,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">B =</span> <span class="fu">c</span>(<span class="st">"6%"</span>, <span class="st">"$5.29"</span>)</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># wrap in a minipage environment</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>minipagify <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sprintf</span>(</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span><span class="sc">\\</span><span class="st">minipage{</span><span class="sc">\\</span><span class="st">textwidth}%s</span><span class="sc">\\</span><span class="st">endminipage"</span>,</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sapply</span>(x, litedown<span class="sc">::</span>mark, <span class="st">"latex"</span>)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># only in LaTeX</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>is_latex <span class="ot">&lt;-</span> <span class="fu">identical</span>(knitr<span class="sc">::</span><span class="fu">pandoc_to</span>(), <span class="st">"latex"</span>)</span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>is_html <span class="ot">&lt;-</span> <span class="fu">identical</span>(knitr<span class="sc">::</span><span class="fu">pandoc_to</span>(), <span class="st">"html"</span>)</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">tt</span>(dat, <span class="at">width =</span> <span class="fu">c</span>(<span class="fl">0.3</span>, <span class="fl">0.2</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(<span class="at">j =</span> <span class="dv">2</span>, <span class="at">align =</span> <span class="st">"c"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">j =</span> <span class="dv">2</span>, <span class="at">escape =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
-<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">j =</span> <span class="dv">1</span>, <span class="at">fn =</span> <span class="cf">if</span> (is_latex) minipagify <span class="cf">else</span> identity) <span class="sc">|&gt;</span></span>
-<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">j =</span> <span class="dv">1</span>, <span class="at">fn =</span> <span class="cf">if</span> (is_html) litedown<span class="sc">::</span>mark <span class="cf">else</span> identity)</span>
-<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>tab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>minipage <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sprintf</span>(<span class="st">"</span><span class="sc">\\</span><span class="st">begin{minipage}{</span><span class="sc">\\</span><span class="st">textwidth}%s</span><span class="sc">\\</span><span class="st">end{minipage}"</span>, <span class="fu">mark</span>(x, <span class="st">"latex"</span>))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">tt</span>(dat, <span class="at">width =</span> <span class="fu">c</span>(<span class="fl">0.3</span>, <span class="fl">0.2</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(<span class="at">j =</span> <span class="dv">2</span>, <span class="at">align =</span> <span class="st">"c"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">escape =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">j =</span> <span class="dv">1</span>, <span class="at">fn =</span> mark, <span class="at">output =</span> <span class="st">"html"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">j =</span> <span class="dv">1</span>, <span class="at">fn =</span> minipage, <span class="at">output =</span> <span class="st">"latex"</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>tab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -646,23 +636,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_g688zcz516ljv0govx6x = TinyTable.createTableFunctions("tinytable_g688zcz516ljv0govx6x");
+      const tableFns_623uxizu0vfjtmqeq7ea = TinyTable.createTableFunctions("tinytable_623uxizu0vfjtmqeq7ea");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '1', j: 2 } ], css_id: 'tinytable_css_uryj0tlt5ppwg957iv26',}, 
-          { positions: [ { i: '1', j: 1 } ], css_id: 'tinytable_css_lwyxll0bkzshg1jl67eh',}, 
-          { positions: [ { i: '2', j: 2 } ], css_id: 'tinytable_css_kqvwq7d0jhmo9227hrlw',}, 
-          { positions: [ { i: '2', j: 1 } ], css_id: 'tinytable_css_81awfxg3bgl0fm4zgx3n',}, 
-          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_0qxq9ncg0wze4upt7o6m',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_5l56xf24c07gssb0ihhk',}, 
+          { positions: [ { i: '1', j: 2 } ], css_id: 'tinytable_css_0tl5ptem3dcwl26z83hj',}, 
+          { positions: [ { i: '1', j: 1 } ], css_id: 'tinytable_css_f5nlh6pxxlyw4y9699d0',}, 
+          { positions: [ { i: '2', j: 2 } ], css_id: 'tinytable_css_ag2fhjov09qrcp7icm1g',}, 
+          { positions: [ { i: '2', j: 1 } ], css_id: 'tinytable_css_dvcgxw6q4bbytt2z1fwd',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_xxt25ohizj3g3olda2xn',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_2phikp4xwnpch4htpruz',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_g688zcz516ljv0govx6x.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_623uxizu0vfjtmqeq7ea.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -671,15 +661,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_g688zcz516ljv0govx6x td.tinytable_css_uryj0tlt5ppwg957iv26, #tinytable_g688zcz516ljv0govx6x th.tinytable_css_uryj0tlt5ppwg957iv26 { text-align: center; width: 40%; }
-    #tinytable_g688zcz516ljv0govx6x td.tinytable_css_lwyxll0bkzshg1jl67eh, #tinytable_g688zcz516ljv0govx6x th.tinytable_css_lwyxll0bkzshg1jl67eh { width: 60%; }
-    #tinytable_g688zcz516ljv0govx6x td.tinytable_css_kqvwq7d0jhmo9227hrlw, #tinytable_g688zcz516ljv0govx6x th.tinytable_css_kqvwq7d0jhmo9227hrlw {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center; width: 40%; }
-    #tinytable_g688zcz516ljv0govx6x td.tinytable_css_81awfxg3bgl0fm4zgx3n, #tinytable_g688zcz516ljv0govx6x th.tinytable_css_81awfxg3bgl0fm4zgx3n {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; width: 60%; }
-    #tinytable_g688zcz516ljv0govx6x td.tinytable_css_0qxq9ncg0wze4upt7o6m, #tinytable_g688zcz516ljv0govx6x th.tinytable_css_0qxq9ncg0wze4upt7o6m {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center; width: 40%; }
-    #tinytable_g688zcz516ljv0govx6x td.tinytable_css_5l56xf24c07gssb0ihhk, #tinytable_g688zcz516ljv0govx6x th.tinytable_css_5l56xf24c07gssb0ihhk {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; width: 60%; }
+    #tinytable_623uxizu0vfjtmqeq7ea td.tinytable_css_0tl5ptem3dcwl26z83hj, #tinytable_623uxizu0vfjtmqeq7ea th.tinytable_css_0tl5ptem3dcwl26z83hj { text-align: center; width: 40%; }
+    #tinytable_623uxizu0vfjtmqeq7ea td.tinytable_css_f5nlh6pxxlyw4y9699d0, #tinytable_623uxizu0vfjtmqeq7ea th.tinytable_css_f5nlh6pxxlyw4y9699d0 { width: 60%; }
+    #tinytable_623uxizu0vfjtmqeq7ea td.tinytable_css_ag2fhjov09qrcp7icm1g, #tinytable_623uxizu0vfjtmqeq7ea th.tinytable_css_ag2fhjov09qrcp7icm1g {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center; width: 40%; }
+    #tinytable_623uxizu0vfjtmqeq7ea td.tinytable_css_dvcgxw6q4bbytt2z1fwd, #tinytable_623uxizu0vfjtmqeq7ea th.tinytable_css_dvcgxw6q4bbytt2z1fwd {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; width: 60%; }
+    #tinytable_623uxizu0vfjtmqeq7ea td.tinytable_css_xxt25ohizj3g3olda2xn, #tinytable_623uxizu0vfjtmqeq7ea th.tinytable_css_xxt25ohizj3g3olda2xn {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center; width: 40%; }
+    #tinytable_623uxizu0vfjtmqeq7ea td.tinytable_css_2phikp4xwnpch4htpruz, #tinytable_623uxizu0vfjtmqeq7ea th.tinytable_css_2phikp4xwnpch4htpruz {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; width: 60%; }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_g688zcz516ljv0govx6x" style="table-layout: fixed; width: 50%; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_623uxizu0vfjtmqeq7ea" style="table-layout: fixed; width: 50%; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
           
               <tr>
@@ -830,19 +820,19 @@ mpg &amp; cyl &amp; disp &amp; hp &amp; drat &amp; wt &amp; qsec &amp; vs &amp; 
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_ik5m4lsg4w1xc91scugj = TinyTable.createTableFunctions("tinytable_ik5m4lsg4w1xc91scugj");
+      const tableFns_k0qyfmc7jfcnkxrh49gd = TinyTable.createTableFunctions("tinytable_k0qyfmc7jfcnkxrh49gd");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 4 }, { i: '6', j: 5 } ], css_id: 'tinytable_css_3xrv7mhrwunuau5j71ho',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_j7beso88wooke6m04o9v',}, 
+          { positions: [ { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 4 }, { i: '6', j: 5 } ], css_id: 'tinytable_css_nq9qoi2q73rw9cetycqe',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_lduwthrym0zbirs1yn86',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_ik5m4lsg4w1xc91scugj.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_k0qyfmc7jfcnkxrh49gd.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -851,11 +841,11 @@ mpg &amp; cyl &amp; disp &amp; hp &amp; drat &amp; wt &amp; qsec &amp; vs &amp; 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_ik5m4lsg4w1xc91scugj td.tinytable_css_3xrv7mhrwunuau5j71ho, #tinytable_ik5m4lsg4w1xc91scugj th.tinytable_css_3xrv7mhrwunuau5j71ho {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    #tinytable_ik5m4lsg4w1xc91scugj td.tinytable_css_j7beso88wooke6m04o9v, #tinytable_ik5m4lsg4w1xc91scugj th.tinytable_css_j7beso88wooke6m04o9v {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_k0qyfmc7jfcnkxrh49gd td.tinytable_css_nq9qoi2q73rw9cetycqe, #tinytable_k0qyfmc7jfcnkxrh49gd th.tinytable_css_nq9qoi2q73rw9cetycqe {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_k0qyfmc7jfcnkxrh49gd td.tinytable_css_lduwthrym0zbirs1yn86, #tinytable_k0qyfmc7jfcnkxrh49gd th.tinytable_css_lduwthrym0zbirs1yn86 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_ik5m4lsg4w1xc91scugj" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_k0qyfmc7jfcnkxrh49gd" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
           </thead><caption>Rotated table.</caption>
               <tbody><tr>
@@ -934,19 +924,19 @@ mpg &amp; cyl &amp; disp &amp; hp &amp; drat &amp; wt &amp; qsec &amp; vs &amp; 
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_ralk3x4czxj84pnh6pmb = TinyTable.createTableFunctions("tinytable_ralk3x4czxj84pnh6pmb");
+      const tableFns_2p5xo8d10f2en5bv4ii4 = TinyTable.createTableFunctions("tinytable_2p5xo8d10f2en5bv4ii4");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '64', j: 1 }, { i: '64', j: 2 }, { i: '64', j: 3 }, { i: '64', j: 4 }, { i: '64', j: 5 }, { i: '64', j: 6 } ], css_id: 'tinytable_css_5m0tud0saxjmn1heday1',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 } ], css_id: 'tinytable_css_5rw00ldjroi438exm6y7',}, 
+          { positions: [ { i: '64', j: 1 }, { i: '64', j: 2 }, { i: '64', j: 3 }, { i: '64', j: 4 }, { i: '64', j: 5 }, { i: '64', j: 6 } ], css_id: 'tinytable_css_brbn413xeg1k5ac6cueo',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 } ], css_id: 'tinytable_css_gcwuxx1ilyulpvdb0mt6',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_ralk3x4czxj84pnh6pmb.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_2p5xo8d10f2en5bv4ii4.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -955,11 +945,11 @@ mpg &amp; cyl &amp; disp &amp; hp &amp; drat &amp; wt &amp; qsec &amp; vs &amp; 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_ralk3x4czxj84pnh6pmb td.tinytable_css_5m0tud0saxjmn1heday1, #tinytable_ralk3x4czxj84pnh6pmb th.tinytable_css_5m0tud0saxjmn1heday1 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    #tinytable_ralk3x4czxj84pnh6pmb td.tinytable_css_5rw00ldjroi438exm6y7, #tinytable_ralk3x4czxj84pnh6pmb th.tinytable_css_5rw00ldjroi438exm6y7 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_2p5xo8d10f2en5bv4ii4 td.tinytable_css_brbn413xeg1k5ac6cueo, #tinytable_2p5xo8d10f2en5bv4ii4 th.tinytable_css_brbn413xeg1k5ac6cueo {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_2p5xo8d10f2en5bv4ii4 td.tinytable_css_gcwuxx1ilyulpvdb0mt6, #tinytable_2p5xo8d10f2en5bv4ii4 th.tinytable_css_gcwuxx1ilyulpvdb0mt6 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_ralk3x4czxj84pnh6pmb" style="table-layout: fixed; width: 80% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_2p5xo8d10f2en5bv4ii4" style="table-layout: fixed; width: 80% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
           </thead><caption>A long 80\% width table with repeating headers.</caption>
               <tbody><tr>

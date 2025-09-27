@@ -560,10 +560,11 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="development">Development</h2>
 <p>Breaking changes:</p>
 <ul>
-<li><code>theme_void()</code> calls <code>strip_tt()</code> to drop every change made to this point, so the order of operations matter.</li>
+<li><code>theme_empty()</code> drops every change made to this point, so the order of operations matter.</li>
 <li><code>"html_portable"</code> is no longer a valid <code>output</code> format in <code>save_tt()</code> or <code>print()</code>. Use <code>theme_html(portable = TRUE)</code> instead.</li>
 <li><code>plot_tt()</code> deprecates the <code>asp</code> argument. Use <code>width_plot</code> and <code>height_plot</code> instead.</li>
 <li><code>theme_void()</code> becomes <code>theme_empty()</code> to avoid conflict with <code>ggplot2::theme_void()</code>.</li>
+<li>The experimental function <code>strip_tt()</code> was added very recently but is now removed. Use <code>theme_empty()</code> instead.</li>
 </ul>
 <p>Deprecated global options:</p>
 <ul>
@@ -596,6 +597,7 @@ window.Quarto = {
 </ul>
 <p>New arguments:</p>
 <ul>
+<li><code>format_tt(output = )</code> to apply formatting conditionally based on output format.</li>
 <li><code>style_tt(smallcap = TRUE)</code> to style text in small capitals. In HTML, LaTeX, and Typst, it uses proper small caps formatting. In Markdown, it converts text to uppercase.</li>
 <li><code>tt(x, colnames = "label")</code> renames column names using the <code>attr(df$x, "label")</code> attribute, when available, falling back to column names otherwise.</li>
 <li><code>format_tt(linebreak = "&lt;br&gt;")</code> can substitute a user-specified string to an appropriate character sequence to generate line breaks in the <code>output</code> of the <code>tinytable</code> (ex: <code>\\</code> for LaTeX, <code>&lt;br&gt;</code> for HTML, etc.)</li>
@@ -623,6 +625,7 @@ window.Quarto = {
 <li>Fixed bug in non-standard evaluation with the <code>i</code> condition matches nothing. Thanks to <a href="https://github.com/RJDan"><span class="citation" data-cites="RJDan">@RJDan</span></a> for report <a href="https://github.com/vincentarelbundock/tinytable/issues/564">#564</a>.</li>
 <li><code>group_tt(j = )</code> respects column widths in bootstrap HTML output.</li>
 <li>Better path handling in <code>plot_tt()</code></li>
+<li><code>save_tt("typst")</code> no longer aborts if there is <code>typst</code> directory. Thanks to <a href="https://github.com/sTeADone"><span class="citation" data-cites="sTeADone">@sTeADone</span></a> for report <a href="https://github.com/vincentarelbundock/tinytable/issues/580">#580</a>.</li>
 </ul>
 </section>
 <section id="section" class="level2">
