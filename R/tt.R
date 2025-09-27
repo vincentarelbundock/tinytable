@@ -42,6 +42,7 @@
 #' @template limitations_word_markdown
 #' @template tabulator
 #' @template global_options
+#' @template order_of_operations
 #'
 #' @examples
 #' library(tinytable)
