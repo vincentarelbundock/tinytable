@@ -20,7 +20,7 @@ setMethod(
       # Use external CSS file
       css_include <- sprintf(
         '<link rel="stylesheet" href="%s">',
-        "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable/inst/tinytable.css"
+        "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css"
       )
     } else {
       # Use inline CSS
@@ -35,10 +35,12 @@ setMethod(
     )
 
     # Add JavaScript include for external file
-    js_include <- sprintf(
-      '<script src="%s"></script>',
-      "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable/inst/tinytable.js"
-    )
+    js_include <- '<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>'
+    bootstrap_include <- '    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>'
+
+    if (identical(x@html_engine, "bootstrap")) {
+      js_include <- paste(bootstrap_include, js_include, sep = "\n")
+    }
 
     out <- sub(
       "$tinytable_JS_INCLUDE",
