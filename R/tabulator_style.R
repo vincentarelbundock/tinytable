@@ -112,7 +112,6 @@ setMethod(
       }
 
       unsupported_styles <- unique(unsupported_styles)
-      browser()
       if (length(unsupported_styles) > 0) {
         warning(
           "The following style_tt() arguments are not yet supported with tabulator output: ",
