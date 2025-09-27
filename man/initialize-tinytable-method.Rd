@@ -30,7 +30,7 @@
 
 \item{theme}{Function or string.
 \itemize{
-\item String: grid, revealjs, rotate, striped, void
+\item String: grid, revealjs, rotate, striped, void, empty
 \item Function: Applied to the \code{tinytable} object.
 }}
 

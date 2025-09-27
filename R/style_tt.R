@@ -59,11 +59,11 @@ process_regular_input <- function(x, i, j) {
 
   # Handle empty index case - return empty settings dataframe with proper structure
   if (length(ival) == 0) {
-    return(data.frame(i = integer(0), j = integer(0), tabularray = character(0)))
+    return(data.frame(i = integer(0), j = integer(0)))
   }
 
   # Create settings grid
-  settings <- expand.grid(i = ival, j = jval, tabularray = "")
+  settings <- expand.grid(i = ival, j = jval)
 
   # Order may be important for recycling
   if (is.null(i) && !is.null(j)) {
@@ -77,100 +77,392 @@ process_regular_input <- function(x, i, j) {
 #' Process align argument and add to settings
 #' @keywords internal
 #' @noRd
-process_align_argument <- function(settings, align, jval) {
+process_align_argument <- function(x, settings, align) {
   if (is.null(align)) {
     if (nrow(settings) > 0) {
-      settings[["align"]] <- NA
+      settings[["align"]] <- NA_character_
     }
     return(settings)
   }
 
-  if (nchar(align) == length(jval)) {
-    align_string <- strsplit(align, "")[[1]]
-    if (!all(align_string %in% c("c", "l", "r", "d"))) {
-      stop("`align` must be characters c, l, r, or d.", call. = FALSE)
-    }
-    align_string <- data.frame(j = jval, align = align_string)
-    settings <- merge(
-      settings,
-      align_string,
-      by = "j",
-      all.x = TRUE,
-      sort = FALSE
-    )
+  # Get the number of columns being styled
+  n_cols_styled <- length(unique(settings$j))
+
+  if (nchar(align) == n_cols_styled) {
+    align <- strsplit(align, "")[[1]]
   } else if (nchar(align) == 1) {
-    if (!align %in% c("c", "l", "r", "d")) {
-      stop("`align` must be characters c, l, r, or d.", call. = FALSE)
-    }
-    align_string <- data.frame(j = jval, align = align)
-    settings <- merge(
-      settings,
-      align_string,
-      by = "j",
-      all.x = TRUE,
-      sort = FALSE
-    )
+    align <- rep(align, n_cols_styled)
   } else {
-    msg <- sprintf(
-      "`align` must be a single character or a string of length %s.",
-      length(jval)
-    )
+    msg <- sprintf("`align` must be a single character or a string of length %s.", n_cols_styled)
     stop(msg, call. = FALSE)
   }
 
-  return(settings)
-}
-
-#' Remove empty settings from dataframe
-#' @keywords internal
-#' @noRd
-remove_empty_settings <- function(settings) {
-  # Return early if no settings to process
-  if (nrow(settings) == 0 || ncol(settings) < 3) {
-    return(settings)
+  if (!all(align %in% c("c", "l", "r", "d"))) {
+    stop("`align` must be characters c, l, r, or d.", call. = FALSE)
   }
 
-  empty <- settings[, 3:ncol(settings)]
-  empty <- sapply(empty, function(x) is.na(x) | (is.logical(x) && !any(x)))
+  # Initialize align column if it doesn't exist
+  if (!"align" %in% names(settings)) {
+    settings$align <- NA_character_
+  }
 
-  if (nrow(settings) == 1) {
-    empty <- all(empty)
-    settings <- settings[!empty, , drop = FALSE]
-  } else {
-    empty <- apply(empty, 1, all)
-    settings <- settings[!empty, , drop = FALSE]
+  unique_j <- unique(settings$j)
+  for (j in seq_along(align)) {
+    idx <- which(settings$j == unique_j[j])
+    settings$align[idx] <- align[j]
   }
 
   return(settings)
 }
 
-#' Merge settings with existing styles
-#' @keywords internal
-#' @noRd
-merge_with_existing_styles <- function(x, settings) {
-  if (nrow(settings) == 0) {
-    return(x)
+
+
+style_tt_lazy <- function(
+  x,
+  i = NULL,
+  j = NULL,
+  bold = FALSE,
+  italic = FALSE,
+  monospace = FALSE,
+  smallcap = FALSE,
+  underline = FALSE,
+  strikeout = FALSE,
+  color = NULL,
+  background = NULL,
+  fontsize = NULL,
+  align = NULL,
+  alignv = NULL,
+  colspan = NULL,
+  rowspan = NULL,
+  indent = NULL,
+  line = NULL,
+  line_color = "black",
+  line_width = 0.1,
+  line_trim = NULL,
+  finalize = NULL,
+  ...) {
+
+  out <- x
+
+  if ("tabularray_inner" %in% ...names()) {
+    x <- theme_latex(inner = ...get("tabularray_inner"))
+    warning("The `tabularray_inner` argument is deprecated. Use `theme_latex(x, inner = ...)` instead.",
+      call. = FALSE
+    )
+  }
+  if ("tabularray_outer" %in% ...names()) {
+    x <- theme_latex(outer = ...get("tabularray_outer"))
+    warning("The `tabularray_outer` argument is deprecated. Use `theme_latex(x, outer = ...)` instead.",
+      call. = FALSE
+    )
+  }
+  if ("html_class" %in% ...names()) {
+    x <- theme_html(x, class = ...get("html_class"))
+    warning(
+      "The `html_class` argument is deprecated. Use `theme_html(x, class = ...)` instead.",
+      call. = FALSE
+    )
+  }
+  if ("html_css_rule" %in% ...names()) {
+    x <- theme_html(x, css_rule = ...get("html_css_rule"))
+    warning("The `html_css_rule` argument is deprecated. Use `theme_html(x, css_rule = ...)` instead.",
+      call. = FALSE
+    )
   }
 
-  if (nrow(x@style) > 0 && ncol(x@style) != ncol(settings)) {
-    # Handle column mismatch
-    a <- x@style
-    b <- settings
-    if (!"tabularray" %in% colnames(a)) {
-      a$tabularray <- ""
-    }
-    if (!"tabularray" %in% colnames(b)) {
-      b$tabularray <- ""
-    }
-    settings <- rbind(a, b[, colnames(a)])
-    x@style <- unique(settings)
+  # this must be handled here rather than theme_html() because it is a cell-level issue
+  html_css <- ...get("html_css")
+
+  # Handle special cases first (before validation)
+  if (isTRUE(i %in% c("notes", "caption"))) {
+    return(apply_notes_caption_styling(
+      out,
+      i,
+      color,
+      fontsize,
+      bold,
+      italic,
+      monospace,
+      smallcap,
+      strikeout,
+      underline
+    ))
+  }
+
+  # Validate inputs (after special cases)
+  assert_style_tt(
+    x = out,
+    i = i,
+    j = j,
+    bold = bold,
+    italic = italic,
+    monospace = monospace,
+    smallcap = smallcap,
+    underline = underline,
+    strikeout = strikeout,
+    color = color,
+    background = background,
+    fontsize = fontsize,
+    align = align,
+    alignv = alignv,
+    colspan = colspan,
+    rowspan = rowspan,
+    indent = indent,
+    line = line,
+    line_color = line_color,
+    line_width = line_width,
+    line_trim = line_trim,
+    html_css = html_css,
+    finalize = finalize,
+    ...
+  )
+
+  sanity_align(align, i)
+
+  # Process inputs and create settings
+  if (
+  is.matrix(i) && is.logical(i) && nrow(i) == nrow(x) && ncol(i) == ncol(x)
+) {
+    settings <- process_logical_matrix_input(x, i, j)
   } else {
-    x@style <- rbind(x@style, settings)
+    settings <- process_regular_input(x, i, j)
   }
 
-  return(x)
+  # Build complete settings - skip if no rows to style
+  if (nrow(settings) > 0) {
+    settings[["color"]] <- if (is.null(color)) NA else as.vector(color)
+    settings[["background"]] <- if (is.null(background)) {
+      NA
+    } else {
+        as.vector(background)
+      }
+    settings[["fontsize"]] <- if (is.null(fontsize)) NA else as.vector(fontsize)
+    settings[["align"]] <- if (is.null(alignv)) NA else align
+    settings[["alignv"]] <- if (is.null(alignv)) NA else alignv
+    settings[["line_color"]] <- if (is.null(line)) NA else line_color
+    settings[["line_width"]] <- if (is.null(line)) NA else line_width
+    settings[["bold"]] <- bold
+    settings[["italic"]] <- italic
+    settings[["monospace"]] <- monospace
+    settings[["smallcap"]] <- smallcap
+    settings[["strikeout"]] <- strikeout
+    settings[["underline"]] <- underline
+    settings[["indent"]] <- if (is.null(indent)) NA else as.vector(indent)
+    settings[["colspan"]] <- if (is.null(colspan)) NA else colspan
+    settings[["rowspan"]] <- if (is.null(rowspan)) NA else rowspan
+    settings[["html_css"]] <- if (!is.null(html_css)) {
+      html_css
+    } else {
+      NA
+    }
+    # Always create tabularray column for consistency
+    settings[["tabularray"]] <- ""
+
+    # Expand compound line directions like "tblr" into separate entries
+    if (!is.null(line) && nchar(line) > 1) {
+      line_chars <- strsplit(line, "")[[1]]
+      # Create multiple rows for each line direction
+      expanded_settings <- do.call(rbind, lapply(line_chars, function(direction) {
+        new_settings <- settings
+        new_settings[["line"]] <- direction
+        new_settings
+      }))
+      settings <- expanded_settings
+    } else {
+      settings[["line"]] <- if (is.null(line)) NA else line
+    }
+
+    if (!is.null(line_trim)) {
+      split_consecutive <- function(x) {
+        x <- sort(unique(x))  # optional: ensure sorted & unique
+        groups <- cumsum(c(1, diff(x) != 1))
+        split(x, groups)
+      }
+      idx <- split_consecutive(settings$j)
+      left <- grepl("l", line_trim)
+      right <- grepl("r", line_trim)
+      for (d in idx) {
+        if (length(d) == 1) {
+          settings[["line_trim"]][settings$j == d] <- line_trim
+        } else {
+          if (left) {
+            settings[["line_trim"]][settings$j == min(d)] <- "l"
+          }
+          if (right) {
+            settings[["line_trim"]][settings$j == max(d)] <- "r"
+          }
+        }
+      }
+      ends <- unlist(lapply(idx, range))
+      settings[["line_trim"]][!settings$j %in% ends] <- NA
+    } else {
+      settings[["line_trim"]] <- NA
+    }
+
+  }
+
+  if (!is.matrix(i) || !is.logical(i)) {
+    settings <- process_align_argument(x, settings, align)
+  } else {
+    settings$align <- NA_character_
+  }
+
+  # sort column: important for bind
+  cols <- unique(c("i", "j", sort(colnames(settings))))
+  settings <- settings[, cols, drop = FALSE]
+
+  if (nrow(out@style) == 0) {
+    out@style <- settings
+  } else {
+    out@style <- rbind(out@style, settings)
+  }
+
+  if (is.function(finalize)) {
+    out@lazy_finalize <- c(out@lazy_finalize, list(finalize))
+  }
+
+  return(out)
 }
 
+assert_style_tt <- function(
+  x,
+  i,
+  j,
+  bold,
+  italic,
+  monospace,
+  smallcap,
+  underline,
+  strikeout,
+  color,
+  background,
+  fontsize,
+  align,
+  alignv,
+  colspan,
+  rowspan,
+  indent,
+  line,
+  line_color,
+  line_width,
+  line_trim,
+  finalize = NULL,
+  ...
+) {
+  # Validate alignv choice
+  assert_choice(alignv, c("t", "m", "b"), null.ok = TRUE)
+
+
+  # Validate finalize function
+  assert_function(finalize, null.ok = TRUE)
+
+  # Check for deprecated width argument
+  if ("width" %in% names(list(...))) {
+    stop("The `width` argument is now in the `tt()` function.", call. = FALSE)
+  }
+
+  assert_integerish(colspan, len = 1, lower = 2, null.ok = TRUE)
+  assert_integerish(rowspan, len = 1, lower = 2, null.ok = TRUE)
+  assert_numeric(indent, len = 1, lower = 0, null.ok = TRUE)
+  assert_character(background, null.ok = TRUE)
+  assert_character(color, null.ok = TRUE)
+  assert_numeric(fontsize, null.ok = TRUE)
+  assert_logical(bold)
+  assert_logical(italic)
+  assert_logical(monospace)
+  assert_logical(smallcap)
+  assert_logical(underline)
+  assert_logical(strikeout)
+  assert_string(line, null.ok = TRUE)
+  assert_string(line_color, null.ok = FALSE) # black default
+  assert_numeric(line_width, len = 1, lower = 0, null.ok = FALSE) # 0.1 default
+  assert_choice(line_trim, c("l", "r", "lr"), null.ok = TRUE)
+
+  # Validate that line_trim is only used with bottom lines
+  if (!is.null(line_trim) && !is.null(line)) {
+    if (!identical("b", line)) {
+      stop("line_trim can only be used with bottom lines (line must contain 'b').", call. = FALSE)
+    }
+  }
+
+  # must be handled here rather than theme_html() because it is a cell-level issue
+  html_css <- ...get("html_css")
+  assert_character(html_css, null.ok = TRUE)
+
+  if (is.character(line)) {
+    line <- strsplit(line, split = "")[[1]]
+    if (!all(line %in% c("t", "b", "l", "r"))) {
+      msg <- "`line` must be a string of characters t, b, l, or r."
+      stop(msg, call. = FALSE)
+    }
+  }
+
+  ival <- sanitize_i(i, x, calling_function = "style_tt")
+  jval <- sanitize_j(j, x)
+  inull <- isTRUE(attr(ival, "null"))
+  jnull <- isTRUE(attr(jval, "null"))
+
+  # 1
+  if (inull && jnull) {
+    assert_length(color, len = 1, null.ok = TRUE)
+    assert_length(background, len = 1, null.ok = TRUE)
+    assert_length(fontsize, len = 1, null.ok = TRUE)
+    assert_length(bold, len = 1)
+    assert_length(italic, len = 1)
+    assert_length(monospace, len = 1)
+    assert_length(smallcap, len = 1)
+    assert_length(underline, len = 1)
+    assert_length(strikeout, len = 1)
+
+    # 1 or #rows
+  } else if (!inull && jnull) {
+    assert_length(color, len = c(1, length(ival)), null.ok = TRUE)
+    assert_length(background, len = c(1, length(ival)), null.ok = TRUE)
+    assert_length(fontsize, len = c(1, length(ival)), null.ok = TRUE)
+    assert_length(bold, len = c(1, length(ival)))
+    assert_length(italic, len = c(1, length(ival)))
+    assert_length(monospace, len = c(1, length(ival)))
+    assert_length(smallcap, len = c(1, length(ival)))
+    assert_length(underline, len = c(1, length(ival)))
+    assert_length(strikeout, len = c(1, length(ival)))
+
+    # 1 or #cols
+  } else if (inull && !jnull) {
+    assert_length(color, len = c(1, length(jval)), null.ok = TRUE)
+    assert_length(background, len = c(1, length(jval)), null.ok = TRUE)
+    assert_length(fontsize, len = c(1, length(jval)), null.ok = TRUE)
+    assert_length(bold, len = c(1, length(jval)))
+    assert_length(italic, len = c(1, length(jval)))
+    assert_length(monospace, len = c(1, length(jval)))
+    assert_length(smallcap, len = c(1, length(jval)))
+    assert_length(underline, len = c(1, length(jval)))
+    assert_length(strikeout, len = c(1, length(jval)))
+
+    # 1 or #cells
+  } else if (!inull && !jnull) {
+    assert_length(
+      color,
+      len = c(1, length(ival) * length(jval)),
+      null.ok = TRUE
+    )
+    assert_length(
+      background,
+      len = c(1, length(ival) * length(jval)),
+      null.ok = TRUE
+    )
+    assert_length(
+      fontsize,
+      len = c(1, length(ival) * length(jval)),
+      null.ok = TRUE
+    )
+    assert_length(bold, len = c(1, length(ival) * length(jval)))
+    assert_length(italic, len = c(1, length(ival) * length(jval)))
+    assert_length(monospace, len = c(1, length(ival) * length(jval)))
+    assert_length(smallcap, len = c(1, length(ival) * length(jval)))
+    assert_length(underline, len = c(1, length(ival) * length(jval)))
+    assert_length(strikeout, len = c(1, length(ival) * length(jval)))
+  }
+}
 # =============================================================================
 # MAIN FUNCTION
 # =============================================================================
@@ -221,6 +513,7 @@ merge_with_existing_styles <- function(x, settings) {
 #' + Can be combined such as: "lbt" to draw borders at the left, bottom, and top.
 #' @param line_color Color of the line. See the `color` argument for details.
 #' @param line_width Width of the line in em units (default: 0.1).
+#' @param line_trim String specifying line trimming. Acceptable values: "l" (left), "r" (right), "lr" (both sides). When specified, shortens the lines by 0.8pt on the specified side(s). Default: NULL (no trimming).
 #' @param finalize A function applied to the table object at the very end of table-building, for post-processing. For example, the function could use regular expressions to add LaTeX commands to the text version of the table hosted in `x@table_string`, or it could programmatically change the caption in `x@caption`.
 #' @param ... extra arguments are ignored
 #' @return An object of class `tt` representing the table.
@@ -341,63 +634,22 @@ style_tt <- function(
   line = NULL,
   line_color = "black",
   line_width = 0.1,
+  line_trim = NULL,
   finalize = NULL,
   ...
 ) {
-  out <- x
 
-  if ("tabularray_inner" %in% ...names()) {
-    x <- theme_latex(inner = ...get("tabularray_inner"))
-    warning("The `tabularray_inner` argument is deprecated. Use `theme_latex(x, inner = ...)` instead.",
-      call. = FALSE
-    )
-  }
-  if ("tabularray_outer" %in% ...names()) {
-    x <- theme_latex(outer = ...get("tabularray_outer"))
-    warning("The `tabularray_outer` argument is deprecated. Use `theme_latex(x, outer = ...)` instead.",
-      call. = FALSE
-    )
-  }
-  if ("bootstrap_class" %in% ...names()) {
-    x <- theme_html(x, class = ...get("bootstrap_class"))
-    warning(
-      "The `bootstrap_class` argument is deprecated. Use `theme_html(x, class = ...)` instead.",
-      call. = FALSE
-    )
-  }
-  if ("bootstrap_css_rule" %in% ...names()) {
-    x <- theme_html(x, css_rule = ...get("bootstrap_css_rule"))
-    warning("The `bootstrap_css_rule` argument is deprecated. Use `theme_html(x, css_rule = ...)` instead.",
-      call. = FALSE
-    )
-  }
-
+  
   # non-standard evaluation before anything else
   tmp <- nse_i_j(x, i_expr = substitute(i), j_expr = substitute(j), pf = parent.frame())
   list2env(tmp, environment())
 
-  # this must be handled here rather than theme_html() because it is a cell-level issue
-  bootstrap_css <- ...get("bootstrap_css")
+  obj <- match.call()
 
-  # Handle special cases first (before validation)
-  if (isTRUE(i %in% c("notes", "caption"))) {
-    return(apply_notes_caption_styling(
-      out,
-      i,
-      color,
-      fontsize,
-      bold,
-      italic,
-      monospace,
-      smallcap,
-      strikeout,
-      underline
-    ))
-  }
-
-  # Validate inputs (after special cases)
-  assert_style_tt(
-    x = out,
+  # evaluate arguments immediately, except i and j, to avoid scoping issues
+  obj <- list(
+    style_tt_lazy,
+    x = quote(x),
     i = i,
     j = j,
     bold = bold,
@@ -417,196 +669,14 @@ style_tt <- function(
     line = line,
     line_color = line_color,
     line_width = line_width,
-    bootstrap_css = bootstrap_css,
-    finalize = finalize,
-    ...
-  )
+    line_trim = line_trim,
+    finalize = finalize)
+  obj <- c(obj, list(...))
+  obj <- as.call(obj)
 
-  sanity_align(align, i)
-
-  # Process inputs and create settings
-  if (
-    is.matrix(i) && is.logical(i) && nrow(i) == nrow(x) && ncol(i) == ncol(x)
-  ) {
-    settings <- process_logical_matrix_input(x, i, j)
-  } else {
-    settings <- process_regular_input(x, i, j)
-  }
-
-  # Build complete settings - skip if no rows to style
-  if (nrow(settings) > 0) {
-    settings[["color"]] <- if (is.null(color)) NA else as.vector(color)
-    settings[["background"]] <- if (is.null(background)) {
-      NA
-    } else {
-      as.vector(background)
-    }
-    settings[["fontsize"]] <- if (is.null(fontsize)) NA else as.vector(fontsize)
-    settings[["alignv"]] <- if (is.null(alignv)) NA else alignv
-    settings[["line"]] <- if (is.null(line)) NA else line
-    settings[["line_color"]] <- if (is.null(line)) NA else line_color
-    settings[["line_width"]] <- if (is.null(line)) NA else line_width
-    settings[["bold"]] <- bold
-    settings[["italic"]] <- italic
-    settings[["monospace"]] <- monospace
-    settings[["smallcap"]] <- smallcap
-    settings[["strikeout"]] <- strikeout
-    settings[["underline"]] <- underline
-    settings[["indent"]] <- if (is.null(indent)) NA else as.vector(indent)
-    settings[["colspan"]] <- if (is.null(colspan)) NA else colspan
-    settings[["rowspan"]] <- if (is.null(rowspan)) NA else rowspan
-    settings[["bootstrap_css"]] <- if (!is.null(bootstrap_css)) {
-      bootstrap_css
-    } else {
-      NA
-    }
-  }
-
-  if (!is.matrix(i) || !is.logical(i)) {
-    jval <- sanitize_j(j, x)
-    settings <- process_align_argument(settings, align, jval)
-  }
-
-  settings <- remove_empty_settings(settings)
-
-  out <- merge_with_existing_styles(out, settings)
-
-  if (is.function(finalize)) {
-    out@lazy_finalize <- c(out@lazy_finalize, list(finalize))
-  }
-
-  return(out)
+  x@lazy_style <- c(x@lazy_style, list(obj))
+  return(x)
 }
 
-assert_style_tt <- function(
-  x,
-  i,
-  j,
-  bold,
-  italic,
-  monospace,
-  smallcap,
-  underline,
-  strikeout,
-  color,
-  background,
-  fontsize,
-  align,
-  alignv,
-  colspan,
-  rowspan,
-  indent,
-  line,
-  line_color,
-  line_width,
-  tabularray_inner,
-  tabularray_outer,
-  finalize = NULL,
-  ...
-) {
-  # Validate alignv choice
-  assert_choice(alignv, c("t", "m", "b"), null.ok = TRUE)
 
 
-  # Validate finalize function
-  assert_function(finalize, null.ok = TRUE)
-
-  # Check for deprecated width argument
-  if ("width" %in% names(list(...))) {
-    stop("The `width` argument is now in the `tt()` function.", call. = FALSE)
-  }
-
-  assert_integerish(colspan, len = 1, lower = 2, null.ok = TRUE)
-  assert_integerish(rowspan, len = 1, lower = 2, null.ok = TRUE)
-  assert_numeric(indent, len = 1, lower = 0, null.ok = TRUE)
-  assert_character(background, null.ok = TRUE)
-  assert_character(color, null.ok = TRUE)
-  assert_numeric(fontsize, null.ok = TRUE)
-  assert_logical(bold)
-  assert_logical(italic)
-  assert_logical(monospace)
-  assert_logical(smallcap)
-  assert_logical(underline)
-  assert_logical(strikeout)
-  assert_string(line, null.ok = TRUE)
-  assert_string(line_color, null.ok = FALSE) # black default
-  assert_numeric(line_width, len = 1, lower = 0, null.ok = FALSE) # 0.1 default
-
-  # must be handled here rather than theme_html() because it is a cell-level issue
-  bootstrap_css <- ...get("bootstrap_css")
-  assert_character(bootstrap_css, null.ok = TRUE)
-
-  if (is.character(line)) {
-    line <- strsplit(line, split = "")[[1]]
-    if (!all(line %in% c("t", "b", "l", "r"))) {
-      msg <- "`line` must be a string of characters t, b, l, or r."
-      stop(msg, call. = FALSE)
-    }
-  }
-
-  ival <- sanitize_i(i, x, calling_function = "style_tt")
-  jval <- sanitize_j(j, x)
-  inull <- isTRUE(attr(ival, "null"))
-  jnull <- isTRUE(attr(jval, "null"))
-
-  # 1
-  if (inull && jnull) {
-    assert_length(color, len = 1, null.ok = TRUE)
-    assert_length(background, len = 1, null.ok = TRUE)
-    assert_length(fontsize, len = 1, null.ok = TRUE)
-    assert_length(bold, len = 1)
-    assert_length(italic, len = 1)
-    assert_length(monospace, len = 1)
-    assert_length(smallcap, len = 1)
-    assert_length(underline, len = 1)
-    assert_length(strikeout, len = 1)
-
-    # 1 or #rows
-  } else if (!inull && jnull) {
-    assert_length(color, len = c(1, length(ival)), null.ok = TRUE)
-    assert_length(background, len = c(1, length(ival)), null.ok = TRUE)
-    assert_length(fontsize, len = c(1, length(ival)), null.ok = TRUE)
-    assert_length(bold, len = c(1, length(ival)))
-    assert_length(italic, len = c(1, length(ival)))
-    assert_length(monospace, len = c(1, length(ival)))
-    assert_length(smallcap, len = c(1, length(ival)))
-    assert_length(underline, len = c(1, length(ival)))
-    assert_length(strikeout, len = c(1, length(ival)))
-
-    # 1 or #cols
-  } else if (inull && !jnull) {
-    assert_length(color, len = c(1, length(jval)), null.ok = TRUE)
-    assert_length(background, len = c(1, length(jval)), null.ok = TRUE)
-    assert_length(fontsize, len = c(1, length(jval)), null.ok = TRUE)
-    assert_length(bold, len = c(1, length(jval)))
-    assert_length(italic, len = c(1, length(jval)))
-    assert_length(monospace, len = c(1, length(jval)))
-    assert_length(smallcap, len = c(1, length(jval)))
-    assert_length(underline, len = c(1, length(jval)))
-    assert_length(strikeout, len = c(1, length(jval)))
-
-    # 1 or #cells
-  } else if (!inull && !jnull) {
-    assert_length(
-      color,
-      len = c(1, length(ival) * length(jval)),
-      null.ok = TRUE
-    )
-    assert_length(
-      background,
-      len = c(1, length(ival) * length(jval)),
-      null.ok = TRUE
-    )
-    assert_length(
-      fontsize,
-      len = c(1, length(ival) * length(jval)),
-      null.ok = TRUE
-    )
-    assert_length(bold, len = c(1, length(ival) * length(jval)))
-    assert_length(italic, len = c(1, length(ival) * length(jval)))
-    assert_length(monospace, len = c(1, length(ival) * length(jval)))
-    assert_length(smallcap, len = c(1, length(ival) * length(jval)))
-    assert_length(underline, len = c(1, length(ival) * length(jval)))
-    assert_length(strikeout, len = c(1, length(ival) * length(jval)))
-  }
-}

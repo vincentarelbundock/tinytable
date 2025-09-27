@@ -1,21 +1,54 @@
 setMethod(
   f = "finalize",
-  signature = "tinytable_bootstrap",
+  signature = "tinytable_html",
   definition = function(x, ...) {
     # class
-    cl <- x@bootstrap_class
-    if (is.null(cl) || length(cl) == 0) {
-      cl <- "table table-borderless"
+    cl <- x@html_class
+    if (!grepl("\\btinytable\\b", cl)) {
+      cl <- paste("tinytable", cl)
     }
+
     out <- sub(
-      "$tinytable_BOOTSTRAP_CLASS",
+      "$tinytable_HTML_CLASS",
       cl,
       x@table_string,
       fixed = TRUE
     )
 
+    # Handle CSS inclusion - external file if NULL, inline if provided
+    if (is.null(x@html_css_rule)) {
+      # Use external CSS file
+      css_include <- sprintf(
+        '<link rel="stylesheet" href="%s">',
+        "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css"
+      )
+    } else {
+      # Use inline CSS
+      css_include <- paste0("<style>\n", x@html_css_rule, "\n</style>")
+    }
+
+    out <- sub(
+      "$tinytable_CSS_INCLUDE",
+      css_include,
+      out,
+      fixed = TRUE
+    )
+
+    # Add JavaScript include for external file
+    js_include <- sprintf(
+      '<script src="%s"></script>',
+      "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"
+    )
+
+    out <- sub(
+      "$tinytable_JS_INCLUDE",
+      js_include,
+      out,
+      fixed = TRUE
+    )
+
     if (isTRUE(getOption("knitr.in.progress"))) {
-      # Rmarkdown and Quarto load their own bootstrap, which we probably don't want to override
+      # Rmarkdown and Quarto load their own html, which we probably don't want to override
       out <- lines_drop(
         out,
         "jsdelivr.*bootstrap",
@@ -37,14 +70,12 @@ setMethod(
       )
     }
 
-    # Changing function names to table ID to avoid conflict with other tables functions
-    out <- gsub("styleCell_\\w+\\(", paste0("styleCell_", x@id, "("), out)
-    out <- gsub("spanCell_\\w+\\(", paste0("spanCell_", x@id, "("), out)
+    # Function factory handles table isolation - no need for function name manipulation
 
     css_template <- "    .table td.%s, .table th.%s { %s }"
 
     css <- unique(stats::na.omit(x@css))
-    css <- css[which(css$bootstrap != ""), ]
+    css <- css[which(css$html != ""), ]
 
     if (nrow(css) > 0) {
       css_rules <- css
@@ -56,10 +87,10 @@ setMethod(
       css_rules <- lapply(
         css_rules,
         function(z) {
-          transform(z, bootstrap = paste(bootstrap, collapse = " "))[1, ]
+          transform(z, html = paste(z$html, collapse = " "))[1, ]
         })
       css_rules <- do.call(rbind, css_rules)
-      id <- unique(css_rules[, "bootstrap", drop = FALSE])
+      id <- unique(css_rules[, "html", drop = FALSE])
       id$id <- sapply(
         seq_len(nrow(id)),
         function(z) sprintf("tinytable_css_%s", get_id())
@@ -75,17 +106,17 @@ setMethod(
           css_rules$j[[ii]],
           css_rules$id[[ii]]
         )
-        out <- bootstrap_setting(out, listener, component = "cell")
+        out <- html_setting(out, listener, component = "cell")
       }
-      css_rules_unique <- unique(css_rules[, c("bootstrap", "id")])
+      css_rules_unique <- unique(css_rules[, c("html", "id")])
       for (ii in seq_len(nrow(css_rules_unique))) {
         css_rule <- sprintf(
           css_template,
           css_rules_unique$id[[ii]],
           css_rules_unique$id[[ii]],
-          css_rules_unique$bootstrap[[ii]]
+          css_rules_unique$html[[ii]]
         )
-        out <- bootstrap_setting(out, css_rule, component = "css")
+        out <- html_setting(out, css_rule, component = "css")
       }
     }
 

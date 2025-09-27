@@ -26,6 +26,7 @@ style_tt(
   line = NULL,
   line_color = "black",
   line_width = 0.1,
+  line_trim = NULL,
   finalize = NULL,
   ...
 )
@@ -51,6 +52,7 @@ tt_style(
   line = NULL,
   line_color = "black",
   line_width = 0.1,
+  line_trim = NULL,
   finalize = NULL,
   ...
 )
@@ -128,6 +130,8 @@ tt_style(
 \item{line_color}{Color of the line. See the \code{color} argument for details.}
 
 \item{line_width}{Width of the line in em units (default: 0.1).}
+
+\item{line_trim}{String specifying line trimming. Acceptable values: "l" (left), "r" (right), "lr" (both sides). When specified, shortens the lines by 0.8pt on the specified side(s). Default: NULL (no trimming).}
 
 \item{finalize}{A function applied to the table object at the very end of table-building, for post-processing. For example, the function could use regular expressions to add LaTeX commands to the text version of the table hosted in \code{x@table_string}, or it could programmatically change the caption in \code{x@caption}.}
 

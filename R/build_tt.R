@@ -60,25 +60,23 @@ build_tt <- function(x, output = NULL) {
   output <- infer_output(x)
 
   x <- switch(output,
-    html = swap_class(x, "tinytable_bootstrap"),
-    bootstrap = swap_class(x, "tinytable_bootstrap"),
+    html = {
+      if (identical(x@html_engine, "tabulator")) {
+        swap_class(x, "tinytable_tabulator")
+      } else {
+        swap_class(x, "tinytable_html")
+      }
+    },
     latex = swap_class(x, "tinytable_tabularray"),
     markdown = swap_class(x, "tinytable_grid"),
     gfm = swap_class(x, "tinytable_grid"),
     typst = swap_class(x, "tinytable_typst"),
     dataframe = swap_class(x, "tinytable_dataframe"),
-    tabulator = swap_class(x, "tinytable_tabulator"),
+    stop("Unsupported output format: '", output, "'. Supported formats are: html, latex, markdown, gfm, typst, dataframe", call. = FALSE)
   )
 
   x@output <- output
 
-  # pre-process: theme_*() calls that need formatting conditional on @output
-  for (p in x@lazy_prepare) {
-    o <- attr(p, "output")
-    if (is.null(o) || x@output %in% o) {
-      x <- p(x)
-    }
-  }
 
   # Calculate which positions are body vs group
   if (nrow(x@group_data_i) == 0) {
@@ -93,15 +91,38 @@ build_tt <- function(x, output = NULL) {
     x <- eval(l)
   }
 
-  # apply styling AFTER formatting/escaping to avoid escaping the style brackets
-  x <- style_notes(x)
-  x <- style_caption(x)
-
   # apply lazy subset operations before inserting group rows
   x <- subset_lazy(x)
 
   # insert group rows into body
   x <- rbind_body_groupi(x)
+
+  # pre-process: theme_*() calls that need formatting conditional on @output
+  # this is useful after rbind() because we now have the final indices and headers
+  for (p in x@lazy_prepare) {
+    o <- attr(p, "output")
+    if (is.null(o) || x@output %in% o) {
+      x <- p(x)
+    }
+  }
+
+  for (p in x@lazy_style) {
+    p[["x"]] <- x
+    x <- eval(p)
+  }
+
+  # Fix colspan that exceeds column count after lazy styles are evaluated
+  if (nrow(x@style) > 0) {
+    end <- x@style$j + x@style$colspan - 1
+    x@style$colspan <- ifelse(
+      !is.na(end) & end > x@ncol,
+      x@style$colspan - (end - x@ncol),
+      x@style$colspan)
+  }
+
+  # apply styling AFTER formatting/escaping to avoid escaping the style brackets
+  x <- style_notes(x)
+  x <- style_caption(x)
 
   # plots and images
   for (l in x@lazy_plot) {

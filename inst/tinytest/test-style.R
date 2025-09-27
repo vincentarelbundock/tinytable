@@ -68,20 +68,31 @@ tab1 <- tt(dat)
 tab2 <- tt(dat)
 
 # These should not error when no rows match the condition
-expect_silent(style_tt(tab1, i = {feed == 'cool'}, bold = TRUE))
-expect_silent(style_tt(tab2, i = which(feed == 'cool'), bold = TRUE))
+expect_silent(style_tt(tab1, i = {
+    feed == "cool"
+}, bold = TRUE))
+expect_silent(style_tt(tab2, i = which(feed == "cool"), bold = TRUE))
 
 
 # smallcap styling functionality
 tab <- tt(head(iris),
-   caption = "Motor Trend Car Road Tests",
-   notes = "Source: Henderson and Velleman (1981)") |>
-   style_tt(i = "colnames", smallcap = TRUE) |>
-   style_tt(i = "caption", smallcap = TRUE) |>
-   style_tt(i = "notes", smallcap = TRUE) |>
-   style_tt(i = 1:3, j = 5, smallcap = TRUE)
+    caption = "Motor Trend Car Road Tests",
+    notes = "Source: Henderson and Velleman (1981)") |>
+    style_tt(i = "colnames", smallcap = TRUE) |>
+    style_tt(i = "caption", smallcap = TRUE) |>
+    style_tt(i = "notes", smallcap = TRUE) |>
+    style_tt(i = 1:3, j = 5, smallcap = TRUE)
 t <- expect_table(tab)
 expect_snapshot_print(t[["html"]], "style-smallcap.html")
 expect_snapshot_print(t[["latex"]], "style-smallcap.tex")
 expect_snapshot_print(t[["typst"]], "style-smallcap.typ")
 expect_snapshot_print(t[["markdown"]], "style-smallcap.md")
+
+
+# partial align
+tab <- tt(mtcars[1:5, 1:6]) |> style_tt(j = c(2, 4), align = "cr")
+t <- expect_table(tab)
+expect_snapshot_print(t[["html"]], "style-align_partial.html")
+expect_snapshot_print(t[["latex"]], "style-align_partial.tex")
+expect_snapshot_print(t[["typst"]], "style-align_partial.typ")
+expect_snapshot_print(t[["markdown"]], "style-align_partial.md")

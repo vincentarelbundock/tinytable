@@ -38,20 +38,6 @@ setMethod(
     body <- apply(as.data.frame(x@data_body), 1, paste, collapse = " & ")
     body <- paste(body, "\\\\")
 
-    # theme: booktabs
-    th <- if (length(x@theme) > 0) x@theme[[1]] else NULL
-    if (
-      is.null(th) || is.function(th) || isTRUE(th %in% c("default", "striped"))
-    ) {
-      if (length(colnames(x)) > 0) {
-        # %% are important to distinguish between potentially redundant data rows
-        header[length(header)] <- paste(
-          header[length(header)],
-          "\\midrule %% TinyTableHeader"
-        )
-      }
-    }
-
     # body: finish
     idx <- grep("\\$tinytable_BODY", template)
     out <- c(
@@ -126,5 +112,4 @@ setMethod(
     x@body <- body
 
     return(x)
-  }
-)
+  })

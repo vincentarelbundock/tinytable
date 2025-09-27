@@ -26,6 +26,7 @@ tab <- tt(cormat, digits = 2) |>
 expect_equal(dim(tab), c(5, 5))
 
 
-expect_error(tt(head(iris)) |> style_tt(j = "BadColumn"), pattern = "No columns match the pattern")
+expect_error(tt(head(iris)) |> style_tt(j = "BadColumn") |> print(),
+  pattern = "No columns match the pattern")
 
 options(tinytable_print_output = NULL)

@@ -1,0 +1,70 @@
+<!-- preamble start -->
+<!DOCTYPE html> 
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>$tinytable_TABLE_ID</title>
+    $tinytable_BOOTSTRAP_CDN
+  </head>
+  <body>
+<!-- preamble end -->
+
+    <!-- tinytable mathjax start -->
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+    </script>
+    <!-- tinytable mathjax end -->
+
+    $tinytable_JS_INCLUDE
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_$tinytable_ID = TinyTable.createTableFunctions("$tinytable_TABLE_ID");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_$tinytable_ID.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    $tinytable_CSS_INCLUDE
+    <style>
+    /* tinytable css entries after */
+    </style>
+    <div class="container">
+      <table class="$tinytable_HTML_CLASS" id="$tinytable_TABLE_ID" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
+        <thead>
+          $tinytable_HTML_CAPTION
+          $tinytable_HTML_HEADER
+        </thead>
+        $tinytable_HTML_NOTE
+        <tbody>
+          $tinytable_HTML_BODY
+        </tbody>
+      </table>
+    </div>
+    <!-- postamble start -->
+  </body>
+
+</html>
+<!-- postamble end -->
+<!-- hack to avoid NA insertion in last line -->
+
+

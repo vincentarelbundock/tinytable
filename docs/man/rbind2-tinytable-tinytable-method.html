@@ -159,8 +159,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Themes</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../vignettes/custom.html">
- <span class="dropdown-text">Customization</span></a>
+    <a class="dropdown-item" href="../vignettes/html.html">
+ <span class="dropdown-text">HTML customization</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../vignettes/notebooks.html">
@@ -182,7 +182,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
   <li class="nav-item">
     <a class="nav-link active" href="../vignettes/tinytable_tutorial.pdf" aria-current="page"> 
-<span class="menu-text">Tutorial (PDF)</span></a>
+<span class="menu-text">Tutorial (LaTeX)</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../vignettes/tinytable_tutorial_typst.pdf"> 
@@ -224,7 +224,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
- <span class="menu-text">Tutorial</span></a>
+ <span class="menu-text">Tutorial (HTML)</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -268,8 +268,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/custom.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Customization</span></a>
+  <a href="../vignettes/html.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">HTML</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -307,13 +307,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/tinytable_tutorial.pdf" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Tutorial (PDF)</span></a>
+ <span class="menu-text">Tutorial (LaTeX)</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/tinytable_tutorial_typst.pdf" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Tutorial (Typst)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/word.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial (Word)</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -431,8 +437,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/theme_void.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><code>theme_void</code></span></a>
+  <a href="../man/theme_empty.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_empty</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -529,7 +535,7 @@ rbind2(x, y, use_names = TRUE, headers = TRUE, ...)
 <h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
 <table role="presentation">
 <tbody><tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="x">x</code>
 </td>
 <td>
@@ -537,7 +543,7 @@ rbind2(x, y, use_names = TRUE, headers = TRUE, ...)
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="y">y</code>
 </td>
 <td>
@@ -545,7 +551,7 @@ rbind2(x, y, use_names = TRUE, headers = TRUE, ...)
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="use_names">use_names</code>
 </td>
 <td>
@@ -553,7 +559,7 @@ rbind2(x, y, use_names = TRUE, headers = TRUE, ...)
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="headers">headers</code>
 </td>
 <td>
@@ -561,7 +567,7 @@ Logical. TRUE inserts the colnames of <code>y</code> as an extra row between the
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="...">…</code>
 </td>
 <td>
@@ -611,123 +617,89 @@ Additional arguments are ignored.
 <div class="cell-output-display">
 <!-- preamble start -->
 
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
     <script>
-
-      function styleCell_kasvh3xr0b8peshznuh0(i, j, css_id) {
-          var table = document.getElementById("tinytable_kasvh3xr0b8peshznuh0");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function spanCell_kasvh3xr0b8peshznuh0(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_kasvh3xr0b8peshznuh0");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
+      // Create table-specific functions using external factory
+      const tableFns_rj8f61uitzf8ro81wmit = TinyTable.createTableFunctions("tinytable_rj8f61uitzf8ro81wmit");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '6', j: 0 }, { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 4 },  ], css_id: 'tinytable_css_6n4qb17810rdy0hdznpe',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_ukis3030p5kmdvwj08tc',}, 
+          { positions: [ { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 4 }, { i: '6', j: 5 } ], css_id: 'tinytable_css_5fufa4h59kb6mqo4mr4x',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_5lknim9jzke9ofp3nofk',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_kasvh3xr0b8peshznuh0(cell.i, cell.j, group.css_id);
+                  tableFns_rj8f61uitzf8ro81wmit.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
     <style>
-      /* tinytable css entries after */
-      .table td.tinytable_css_6n4qb17810rdy0hdznpe, .table th.tinytable_css_6n4qb17810rdy0hdznpe { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_ukis3030p5kmdvwj08tc, .table th.tinytable_css_ukis3030p5kmdvwj08tc { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+    /* tinytable css entries after */
+    #tinytable_rj8f61uitzf8ro81wmit td.tinytable_css_5fufa4h59kb6mqo4mr4x, #tinytable_rj8f61uitzf8ro81wmit th.tinytable_css_5fufa4h59kb6mqo4mr4x {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_rj8f61uitzf8ro81wmit td.tinytable_css_5lknim9jzke9ofp3nofk, #tinytable_rj8f61uitzf8ro81wmit th.tinytable_css_5lknim9jzke9ofp3nofk {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_kasvh3xr0b8peshznuh0" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_rj8f61uitzf8ro81wmit" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
-        </thead><caption>Combine two tiny tables.</caption>
+          </thead><caption>Combine two tiny tables.</caption>
               <tbody><tr>
-                <th scope="col" data-row="0" data-col="0">mpg</th>
-                <th scope="col" data-row="0" data-col="1">cyl</th>
-                <th scope="col" data-row="0" data-col="2">vs</th>
-                <th scope="col" data-row="0" data-col="3">am</th>
-                <th scope="col" data-row="0" data-col="4">gear</th>
+                <th scope="col" data-row="0" data-col="1">mpg</th>
+                <th scope="col" data-row="0" data-col="2">cyl</th>
+                <th scope="col" data-row="0" data-col="3">vs</th>
+                <th scope="col" data-row="0" data-col="4">am</th>
+                <th scope="col" data-row="0" data-col="5">gear</th>
               </tr>
         
         
         </tbody><tbody>
                 <tr>
-                  <td data-row="1" data-col="0">21.0</td>
-                  <td data-row="1" data-col="1">6</td>
-                  <td data-row="1" data-col="2">NA</td>
+                  <td data-row="1" data-col="1">21.0</td>
+                  <td data-row="1" data-col="2">6</td>
                   <td data-row="1" data-col="3">NA</td>
                   <td data-row="1" data-col="4">NA</td>
+                  <td data-row="1" data-col="5">NA</td>
                 </tr>
                 <tr>
-                  <td data-row="2" data-col="0">21.0</td>
-                  <td data-row="2" data-col="1">6</td>
-                  <td data-row="2" data-col="2">NA</td>
+                  <td data-row="2" data-col="1">21.0</td>
+                  <td data-row="2" data-col="2">6</td>
                   <td data-row="2" data-col="3">NA</td>
                   <td data-row="2" data-col="4">NA</td>
+                  <td data-row="2" data-col="5">NA</td>
                 </tr>
                 <tr>
-                  <td data-row="3" data-col="0">22.8</td>
-                  <td data-row="3" data-col="1">4</td>
-                  <td data-row="3" data-col="2">NA</td>
+                  <td data-row="3" data-col="1">22.8</td>
+                  <td data-row="3" data-col="2">4</td>
                   <td data-row="3" data-col="3">NA</td>
                   <td data-row="3" data-col="4">NA</td>
+                  <td data-row="3" data-col="5">NA</td>
                 </tr>
                 <tr>
-                  <td data-row="4" data-col="0">NA</td>
                   <td data-row="4" data-col="1">NA</td>
-                  <td data-row="4" data-col="2">vs</td>
-                  <td data-row="4" data-col="3">am</td>
-                  <td data-row="4" data-col="4">gear</td>
+                  <td data-row="4" data-col="2">NA</td>
+                  <td data-row="4" data-col="3">vs</td>
+                  <td data-row="4" data-col="4">am</td>
+                  <td data-row="4" data-col="5">gear</td>
                 </tr>
                 <tr>
-                  <td data-row="5" data-col="0">NA</td>
                   <td data-row="5" data-col="1">NA</td>
-                  <td data-row="5" data-col="2">1</td>
-                  <td data-row="5" data-col="3">0</td>
-                  <td data-row="5" data-col="4">3</td>
+                  <td data-row="5" data-col="2">NA</td>
+                  <td data-row="5" data-col="3">1</td>
+                  <td data-row="5" data-col="4">0</td>
+                  <td data-row="5" data-col="5">3</td>
                 </tr>
                 <tr>
-                  <td data-row="6" data-col="0">NA</td>
                   <td data-row="6" data-col="1">NA</td>
-                  <td data-row="6" data-col="2">0</td>
+                  <td data-row="6" data-col="2">NA</td>
                   <td data-row="6" data-col="3">0</td>
-                  <td data-row="6" data-col="4">3</td>
+                  <td data-row="6" data-col="4">0</td>
+                  <td data-row="6" data-col="5">3</td>
                 </tr>
         </tbody>
       </table>
@@ -738,123 +710,89 @@ Additional arguments are ignored.
 <div class="cell-output-display">
 <!-- preamble start -->
 
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
     <script>
-
-      function styleCell_aama9zlot8nrlj5u6iz8(i, j, css_id) {
-          var table = document.getElementById("tinytable_aama9zlot8nrlj5u6iz8");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function spanCell_aama9zlot8nrlj5u6iz8(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_aama9zlot8nrlj5u6iz8");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
+      // Create table-specific functions using external factory
+      const tableFns_3w3wuxxludd2uyi12968 = TinyTable.createTableFunctions("tinytable_3w3wuxxludd2uyi12968");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '6', j: 0 }, { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 4 },  ], css_id: 'tinytable_css_lf4zw5lccbr7ogdy3w2j',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_a58v44rw8ieikzdukhw4',}, 
+          { positions: [ { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 4 }, { i: '6', j: 5 } ], css_id: 'tinytable_css_faq4zeni1q5jjag55qwd',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_y7s491cfhcg03z35rwyx',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_aama9zlot8nrlj5u6iz8(cell.i, cell.j, group.css_id);
+                  tableFns_3w3wuxxludd2uyi12968.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
     <style>
-      /* tinytable css entries after */
-      .table td.tinytable_css_lf4zw5lccbr7ogdy3w2j, .table th.tinytable_css_lf4zw5lccbr7ogdy3w2j { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_a58v44rw8ieikzdukhw4, .table th.tinytable_css_a58v44rw8ieikzdukhw4 { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+    /* tinytable css entries after */
+    #tinytable_3w3wuxxludd2uyi12968 td.tinytable_css_faq4zeni1q5jjag55qwd, #tinytable_3w3wuxxludd2uyi12968 th.tinytable_css_faq4zeni1q5jjag55qwd {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_3w3wuxxludd2uyi12968 td.tinytable_css_y7s491cfhcg03z35rwyx, #tinytable_3w3wuxxludd2uyi12968 th.tinytable_css_y7s491cfhcg03z35rwyx {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_aama9zlot8nrlj5u6iz8" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_3w3wuxxludd2uyi12968" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
-        </thead><caption>Combine two tiny tables.</caption>
+          </thead><caption>Combine two tiny tables.</caption>
               <tbody><tr>
-                <th scope="col" data-row="0" data-col="0">mpg</th>
-                <th scope="col" data-row="0" data-col="1">cyl</th>
-                <th scope="col" data-row="0" data-col="2">vs</th>
-                <th scope="col" data-row="0" data-col="3">am</th>
-                <th scope="col" data-row="0" data-col="4">gear</th>
+                <th scope="col" data-row="0" data-col="1">mpg</th>
+                <th scope="col" data-row="0" data-col="2">cyl</th>
+                <th scope="col" data-row="0" data-col="3">vs</th>
+                <th scope="col" data-row="0" data-col="4">am</th>
+                <th scope="col" data-row="0" data-col="5">gear</th>
               </tr>
         
         
         </tbody><tbody>
                 <tr>
-                  <td data-row="1" data-col="0">21.0</td>
-                  <td data-row="1" data-col="1">6</td>
-                  <td data-row="1" data-col="2"> </td>
+                  <td data-row="1" data-col="1">21.0</td>
+                  <td data-row="1" data-col="2">6</td>
                   <td data-row="1" data-col="3"> </td>
                   <td data-row="1" data-col="4"> </td>
+                  <td data-row="1" data-col="5"> </td>
                 </tr>
                 <tr>
-                  <td data-row="2" data-col="0">21.0</td>
-                  <td data-row="2" data-col="1">6</td>
-                  <td data-row="2" data-col="2"> </td>
+                  <td data-row="2" data-col="1">21.0</td>
+                  <td data-row="2" data-col="2">6</td>
                   <td data-row="2" data-col="3"> </td>
                   <td data-row="2" data-col="4"> </td>
+                  <td data-row="2" data-col="5"> </td>
                 </tr>
                 <tr>
-                  <td data-row="3" data-col="0">22.8</td>
-                  <td data-row="3" data-col="1">4</td>
-                  <td data-row="3" data-col="2"> </td>
+                  <td data-row="3" data-col="1">22.8</td>
+                  <td data-row="3" data-col="2">4</td>
                   <td data-row="3" data-col="3"> </td>
                   <td data-row="3" data-col="4"> </td>
+                  <td data-row="3" data-col="5"> </td>
                 </tr>
                 <tr>
-                  <td data-row="4" data-col="0"> </td>
                   <td data-row="4" data-col="1"> </td>
-                  <td data-row="4" data-col="2">vs</td>
-                  <td data-row="4" data-col="3">am</td>
-                  <td data-row="4" data-col="4">gear</td>
+                  <td data-row="4" data-col="2"> </td>
+                  <td data-row="4" data-col="3">vs</td>
+                  <td data-row="4" data-col="4">am</td>
+                  <td data-row="4" data-col="5">gear</td>
                 </tr>
                 <tr>
-                  <td data-row="5" data-col="0"> </td>
                   <td data-row="5" data-col="1"> </td>
-                  <td data-row="5" data-col="2">1</td>
-                  <td data-row="5" data-col="3">0</td>
-                  <td data-row="5" data-col="4">3</td>
+                  <td data-row="5" data-col="2"> </td>
+                  <td data-row="5" data-col="3">1</td>
+                  <td data-row="5" data-col="4">0</td>
+                  <td data-row="5" data-col="5">3</td>
                 </tr>
                 <tr>
-                  <td data-row="6" data-col="0"> </td>
                   <td data-row="6" data-col="1"> </td>
-                  <td data-row="6" data-col="2">0</td>
+                  <td data-row="6" data-col="2"> </td>
                   <td data-row="6" data-col="3">0</td>
-                  <td data-row="6" data-col="4">3</td>
+                  <td data-row="6" data-col="4">0</td>
+                  <td data-row="6" data-col="5">3</td>
                 </tr>
         </tbody>
       </table>
@@ -866,116 +804,82 @@ Additional arguments are ignored.
 <div class="cell-output-display">
 <!-- preamble start -->
 
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
     <script>
-
-      function styleCell_69l6jguih6z3q8zmlt95(i, j, css_id) {
-          var table = document.getElementById("tinytable_69l6jguih6z3q8zmlt95");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function spanCell_69l6jguih6z3q8zmlt95(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_69l6jguih6z3q8zmlt95");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
+      // Create table-specific functions using external factory
+      const tableFns_jkvfsjlyo0puf8mv37cn = TinyTable.createTableFunctions("tinytable_jkvfsjlyo0puf8mv37cn");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '5', j: 0 }, { i: '5', j: 1 }, { i: '5', j: 2 }, { i: '5', j: 3 }, { i: '5', j: 4 },  ], css_id: 'tinytable_css_vz5k0vov9l63ryc0rwnl',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_g4ophkk9bl8wmp4h6w3f',}, 
+          { positions: [ { i: '5', j: 1 }, { i: '5', j: 2 }, { i: '5', j: 3 }, { i: '5', j: 4 }, { i: '5', j: 5 } ], css_id: 'tinytable_css_tc8i1o89wd0ogmj5tz2v',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_f8jjpu28bv24ew62395b',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_69l6jguih6z3q8zmlt95(cell.i, cell.j, group.css_id);
+                  tableFns_jkvfsjlyo0puf8mv37cn.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
     <style>
-      /* tinytable css entries after */
-      .table td.tinytable_css_vz5k0vov9l63ryc0rwnl, .table th.tinytable_css_vz5k0vov9l63ryc0rwnl { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_g4ophkk9bl8wmp4h6w3f, .table th.tinytable_css_g4ophkk9bl8wmp4h6w3f { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+    /* tinytable css entries after */
+    #tinytable_jkvfsjlyo0puf8mv37cn td.tinytable_css_tc8i1o89wd0ogmj5tz2v, #tinytable_jkvfsjlyo0puf8mv37cn th.tinytable_css_tc8i1o89wd0ogmj5tz2v {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_jkvfsjlyo0puf8mv37cn td.tinytable_css_f8jjpu28bv24ew62395b, #tinytable_jkvfsjlyo0puf8mv37cn th.tinytable_css_f8jjpu28bv24ew62395b {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_69l6jguih6z3q8zmlt95" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_jkvfsjlyo0puf8mv37cn" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
-        </thead><caption>Combine two tiny tables.</caption>
+          </thead><caption>Combine two tiny tables.</caption>
               <tbody><tr>
-                <th scope="col" data-row="0" data-col="0">mpg</th>
-                <th scope="col" data-row="0" data-col="1">cyl</th>
-                <th scope="col" data-row="0" data-col="2">vs</th>
-                <th scope="col" data-row="0" data-col="3">am</th>
-                <th scope="col" data-row="0" data-col="4">gear</th>
+                <th scope="col" data-row="0" data-col="1">mpg</th>
+                <th scope="col" data-row="0" data-col="2">cyl</th>
+                <th scope="col" data-row="0" data-col="3">vs</th>
+                <th scope="col" data-row="0" data-col="4">am</th>
+                <th scope="col" data-row="0" data-col="5">gear</th>
               </tr>
         
         
         </tbody><tbody>
                 <tr>
-                  <td data-row="1" data-col="0">21.0</td>
-                  <td data-row="1" data-col="1">6</td>
-                  <td data-row="1" data-col="2">NA</td>
+                  <td data-row="1" data-col="1">21.0</td>
+                  <td data-row="1" data-col="2">6</td>
                   <td data-row="1" data-col="3">NA</td>
                   <td data-row="1" data-col="4">NA</td>
+                  <td data-row="1" data-col="5">NA</td>
                 </tr>
                 <tr>
-                  <td data-row="2" data-col="0">21.0</td>
-                  <td data-row="2" data-col="1">6</td>
-                  <td data-row="2" data-col="2">NA</td>
+                  <td data-row="2" data-col="1">21.0</td>
+                  <td data-row="2" data-col="2">6</td>
                   <td data-row="2" data-col="3">NA</td>
                   <td data-row="2" data-col="4">NA</td>
+                  <td data-row="2" data-col="5">NA</td>
                 </tr>
                 <tr>
-                  <td data-row="3" data-col="0">22.8</td>
-                  <td data-row="3" data-col="1">4</td>
-                  <td data-row="3" data-col="2">NA</td>
+                  <td data-row="3" data-col="1">22.8</td>
+                  <td data-row="3" data-col="2">4</td>
                   <td data-row="3" data-col="3">NA</td>
                   <td data-row="3" data-col="4">NA</td>
+                  <td data-row="3" data-col="5">NA</td>
                 </tr>
                 <tr>
-                  <td data-row="4" data-col="0">NA</td>
                   <td data-row="4" data-col="1">NA</td>
-                  <td data-row="4" data-col="2">1</td>
-                  <td data-row="4" data-col="3">0</td>
-                  <td data-row="4" data-col="4">3</td>
+                  <td data-row="4" data-col="2">NA</td>
+                  <td data-row="4" data-col="3">1</td>
+                  <td data-row="4" data-col="4">0</td>
+                  <td data-row="4" data-col="5">3</td>
                 </tr>
                 <tr>
-                  <td data-row="5" data-col="0">NA</td>
                   <td data-row="5" data-col="1">NA</td>
-                  <td data-row="5" data-col="2">0</td>
+                  <td data-row="5" data-col="2">NA</td>
                   <td data-row="5" data-col="3">0</td>
-                  <td data-row="5" data-col="4">3</td>
+                  <td data-row="5" data-col="4">0</td>
+                  <td data-row="5" data-col="5">3</td>
                 </tr>
         </tbody>
       </table>
@@ -987,109 +891,75 @@ Additional arguments are ignored.
 <div class="cell-output-display">
 <!-- preamble start -->
 
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
     <script>
-
-      function styleCell_n72eym1u60l48e9gv0ap(i, j, css_id) {
-          var table = document.getElementById("tinytable_n72eym1u60l48e9gv0ap");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function spanCell_n72eym1u60l48e9gv0ap(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_n72eym1u60l48e9gv0ap");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
+      // Create table-specific functions using external factory
+      const tableFns_ef0u8j0igsfnmik34h6m = TinyTable.createTableFunctions("tinytable_ef0u8j0igsfnmik34h6m");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '6', j: 0 }, { i: '6', j: 1 }, { i: '6', j: 2 },  ], css_id: 'tinytable_css_c5mv7ikx1j9zfh5bgkb9',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 },  ], css_id: 'tinytable_css_ol1w4xq6bf45xwtk8kqd',}, 
+          { positions: [ { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 } ], css_id: 'tinytable_css_1tedmhn0s1b2mwu39b4h',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_rq7nmsymgze1clefzzct',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_n72eym1u60l48e9gv0ap(cell.i, cell.j, group.css_id);
+                  tableFns_ef0u8j0igsfnmik34h6m.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
     <style>
-      /* tinytable css entries after */
-      .table td.tinytable_css_c5mv7ikx1j9zfh5bgkb9, .table th.tinytable_css_c5mv7ikx1j9zfh5bgkb9 { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_ol1w4xq6bf45xwtk8kqd, .table th.tinytable_css_ol1w4xq6bf45xwtk8kqd { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+    /* tinytable css entries after */
+    #tinytable_ef0u8j0igsfnmik34h6m td.tinytable_css_1tedmhn0s1b2mwu39b4h, #tinytable_ef0u8j0igsfnmik34h6m th.tinytable_css_1tedmhn0s1b2mwu39b4h {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_ef0u8j0igsfnmik34h6m td.tinytable_css_rq7nmsymgze1clefzzct, #tinytable_ef0u8j0igsfnmik34h6m th.tinytable_css_rq7nmsymgze1clefzzct {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_n72eym1u60l48e9gv0ap" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_ef0u8j0igsfnmik34h6m" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
-        </thead><caption>Combine two tiny tables.</caption>
+          </thead><caption>Combine two tiny tables.</caption>
               <tbody><tr>
-                <th scope="col" data-row="0" data-col="0">mpg</th>
-                <th scope="col" data-row="0" data-col="1">cyl</th>
-                <th scope="col" data-row="0" data-col="2">gear</th>
+                <th scope="col" data-row="0" data-col="1">mpg</th>
+                <th scope="col" data-row="0" data-col="2">cyl</th>
+                <th scope="col" data-row="0" data-col="3">gear</th>
               </tr>
         
         
         </tbody><tbody>
                 <tr>
-                  <td data-row="1" data-col="0">21.0</td>
-                  <td data-row="1" data-col="1">6</td>
-                  <td data-row="1" data-col="2">NA</td>
+                  <td data-row="1" data-col="1">21.0</td>
+                  <td data-row="1" data-col="2">6</td>
+                  <td data-row="1" data-col="3">NA</td>
                 </tr>
                 <tr>
-                  <td data-row="2" data-col="0">21.0</td>
-                  <td data-row="2" data-col="1">6</td>
-                  <td data-row="2" data-col="2">NA</td>
+                  <td data-row="2" data-col="1">21.0</td>
+                  <td data-row="2" data-col="2">6</td>
+                  <td data-row="2" data-col="3">NA</td>
                 </tr>
                 <tr>
-                  <td data-row="3" data-col="0">22.8</td>
-                  <td data-row="3" data-col="1">4</td>
-                  <td data-row="3" data-col="2">NA</td>
+                  <td data-row="3" data-col="1">22.8</td>
+                  <td data-row="3" data-col="2">4</td>
+                  <td data-row="3" data-col="3">NA</td>
                 </tr>
                 <tr>
-                  <td data-row="4" data-col="0">vs</td>
-                  <td data-row="4" data-col="1">am</td>
-                  <td data-row="4" data-col="2">gear</td>
+                  <td data-row="4" data-col="1">vs</td>
+                  <td data-row="4" data-col="2">am</td>
+                  <td data-row="4" data-col="3">gear</td>
                 </tr>
                 <tr>
-                  <td data-row="5" data-col="0">1</td>
-                  <td data-row="5" data-col="1">0</td>
-                  <td data-row="5" data-col="2">3</td>
+                  <td data-row="5" data-col="1">1</td>
+                  <td data-row="5" data-col="2">0</td>
+                  <td data-row="5" data-col="3">3</td>
                 </tr>
                 <tr>
-                  <td data-row="6" data-col="0">0</td>
                   <td data-row="6" data-col="1">0</td>
-                  <td data-row="6" data-col="2">3</td>
+                  <td data-row="6" data-col="2">0</td>
+                  <td data-row="6" data-col="3">3</td>
                 </tr>
         </tbody>
       </table>

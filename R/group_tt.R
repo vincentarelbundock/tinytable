@@ -17,7 +17,7 @@ handle_deprecated_args <- function(...) {
 #' Process matrix insertion for row grouping
 #' @keywords internal
 #' @noRd
-process_matrix_insertion <- function(x, i, j) {
+progress_group_matrix <- function(x, i, j) {
   k <- group_tt_ij_k(x, i, j)
   converted_from_list <- k[[3]]
 
@@ -60,7 +60,7 @@ process_matrix_insertion <- function(x, i, j) {
 #' Process row grouping with list input
 #' @keywords internal
 #' @noRd
-process_row_grouping <- function(x, i, j) {
+process_group_i <- function(x, i, j) {
   # Convert list to matrix insertion format for row grouping
   k <- group_tt_ij_k(x, i, NULL) # Pass NULL for j to trigger list conversion
   converted_from_list <- k[[3]]
@@ -100,7 +100,7 @@ process_row_grouping <- function(x, i, j) {
 #' Process column grouping
 #' @keywords internal
 #' @noRd
-process_column_grouping <- function(x, j) {
+process_group_j <- function(x, j) {
   j <- sanitize_group_index(j, hi = ncol(x), orientation = "column")
   x@nhead <- x@nhead + 1
 
@@ -113,7 +113,8 @@ process_column_grouping <- function(x, j) {
     group_cols <- j[[i]]
     # Set the label in the first column of the span
     new_row[group_cols[1]] <- group_name
-    # Set empty string in continuation columns (if span > 1)
+    # For spans > 1: set continuation columns based on output format
+    # HTML needs empty strings, Typst needs repeated text
     if (length(group_cols) > 1) {
       new_row[group_cols[-1]] <- ""
     }
@@ -139,7 +140,135 @@ process_column_grouping <- function(x, j) {
     x@group_data_j <- rbind_nocol(new_header_row, x@group_data_j)
   }
 
+  # Add colspan styling for each group span
+  # The group header row index depends on how many group rows exist
+  # Most recent group is at -1, previous groups at -2, -3, etc.
+  header_row_i <- -nrow(x@group_data_j)
+  for (i in seq_along(j)) {
+    group_cols <- j[[i]]
+    if (length(group_cols) > 1) {
+      # Add center alignment and colspan for groups that span multiple columns
+      x <- style_tt(x, i = header_row_i, j = group_cols[1], align = "c", colspan = length(group_cols))
+    } else {
+      # Just center alignment for single-column groups
+      x <- style_tt(x, i = header_row_i, j = group_cols[1], align = "c")
+    }
+  }
+
   return(x)
+}
+
+#' Add styling lines for the newly created column group using user-provided columns
+#' @keywords internal
+#' @noRd
+add_group_line_styling_simple <- function(x, j) {
+  # Sanitize j to get proper indices (same as what was passed to group_tt)
+  j <- sanitize_group_index(j, hi = ncol(x), orientation = "column")
+
+  # The newly added group will be at row -1 in the final HTML structure
+  # (since bootstrap processes groups from last to first, the last group ends up at -1)
+  group_row_i <- -1
+
+  # Clear existing styling for all header rows since the row positions will shift
+  if (nrow(x@style) > 0) {
+    existing_header_mask <- x@style$i < 0 & !is.na(x@style$i)
+    if (any(existing_header_mask, na.rm = TRUE)) {
+      x@style <- x@style[!existing_header_mask, ]
+    }
+  }
+
+  # Re-style all group rows (both existing and new) based on final HTML structure
+  # Most recent group (last in @group_data_j) goes to row -1, previous groups go to -2, -3, etc.
+  for (group_idx in nrow(x@group_data_j):1) {
+    table_row_i <- -(nrow(x@group_data_j) - group_idx + 1)
+
+    # Add center alignment
+    x <- style_tt(x, i = table_row_i, align = "c")
+
+    # All groups (including the newly added one) are now stored in @group_data_j
+    # So we can reconstruct all of them from stored data
+    group_row_data <- as.character(x@group_data_j[group_idx, ])
+    current_j <- parse_group_row_spans(group_row_data)
+
+    # Add lines for each named group
+    for (idx in seq_along(current_j)) {
+      group_name <- names(current_j)[idx]
+      group_cols <- current_j[[idx]]
+
+      # Only add lines for non-empty group names
+      if (!is.null(group_name) && trimws(group_name) != "") {
+        # Determine trimming based on column positions
+        trim_left <- min(group_cols) > 1
+        trim_right <- max(group_cols) < ncol(x)
+
+        # Build trim specification
+        line_trim_spec <- ""
+        if (trim_left && trim_right) {
+          line_trim_spec <- "lr"
+        } else if (trim_left) {
+          line_trim_spec <- "l"
+        } else if (trim_right) {
+          line_trim_spec <- "r"
+        } else {
+          line_trim_spec <- NULL  # No trimming
+        }
+
+        x <- style_tt(
+          x,
+          i = table_row_i,
+          j = group_cols,
+          line = "b",
+          line_width = 0.05,
+          line_color = "black",
+          line_trim = line_trim_spec
+        )
+      }
+    }
+  }
+
+  return(x)
+}
+
+
+#' Parse a group row into column spans (similar to bootstrap_groupj_span)
+#' @keywords internal
+#' @noRd
+parse_group_row_spans <- function(group_row) {
+  j_list <- list()
+  i <- 1
+
+  while (i <= length(group_row)) {
+    current_label <- group_row[i]
+
+    # Skip NA (ungrouped) columns
+    if (is.na(current_label)) {
+      i <- i + 1
+      next
+    }
+
+    span_start <- i
+
+    # Find the end of this span
+    if (trimws(current_label) != "") {
+      i <- i + 1 # Move past the current label
+      # Continue through empty strings (continuation of span)
+      while (
+        i <= length(group_row) &&
+          !is.na(group_row[i]) &&
+          trimws(group_row[i]) == ""
+      ) {
+        i <- i + 1
+      }
+      span_end <- i - 1
+
+      # Add to j_list if non-empty label
+      j_list[[current_label]] <- span_start:span_end
+    } else {
+      i <- i + 1
+    }
+  }
+
+  j_list
 }
 
 #' Process delimiter-based column grouping
@@ -153,7 +282,9 @@ process_delimiter_grouping <- function(x, j) {
     # Apply multiple levels of grouping if they exist (in reverse order)
     if (length(j_delim$groupnames) > 0) {
       for (level_groups in rev(j_delim$groupnames)) {
-        x <- process_column_grouping(x, level_groups)
+        x <- process_group_j(x, level_groups)
+        # Add line styling for each group level
+        x <- add_group_line_styling_simple(x, level_groups)
       }
     }
     j <- NULL # Set to NULL since we've already applied the groupings
@@ -267,7 +398,10 @@ group_tt <- function(
   }
 
   # non-standard evaluation before anything else
-  tmp <- nse_i_j(x, i_expr = substitute(i), j_expr = substitute(j), pf = parent.frame())
+  tmp <- nse_i_j(x,
+    i_expr = substitute(i),
+    j_expr = substitute(j),
+    pf = parent.frame())
   i <- tmp$i
 
   if (is.null(i) && is.null(j)) {
@@ -279,16 +413,14 @@ group_tt <- function(
   }
 
   # matrix insertion case
-  if (
-    (isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) ||
-      (is.list(i) && is.null(j))
-  ) {
-    return(process_matrix_insertion(x, i, j))
+  if ((isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) ||
+    (is.list(i) && is.null(j))) {
+    return(progress_group_matrix(x, i, j))
   }
 
   # row grouping when i is a list (but j is also provided)
   if (is.list(i) && !is.null(j)) {
-    x <- process_row_grouping(x, i, j)
+    x <- process_group_i(x, i, j)
   }
 
   # delimiter-based column grouping
@@ -300,7 +432,8 @@ group_tt <- function(
 
   # column grouping
   if (!is.null(j)) {
-    x <- process_column_grouping(x, j)
+    x <- process_group_j(x, j)
+    x <- add_group_line_styling_simple(x, j)
   }
 
   return(x)

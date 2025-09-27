@@ -9,8 +9,7 @@ insert_tabularray_content <- function(x, content = NULL, type = "body") {
     out <- x
 
     out <- strsplit(out, "\n")[[1]]
-    comment <- switch(
-        type,
+    comment <- switch(type,
         "body" = "% tabularray inner close",
         "outer" = "% tabularray outer close",
         "inner" = "% tabularray inner close"
@@ -163,10 +162,11 @@ build_tabularray_header <- function(group_row, ncols) {
 
     for (span in spans) {
         header[span$start] <- span$label
-        cmidrules <- c(
-            cmidrules,
-            sprintf("\\cmidrule[lr]{%s-%s}", span$start, span$end)
-        )
+        cmidrules <- NULL
+        # cmidrules <- c(
+        #     cmidrules,
+        #     sprintf("\\cmidrule[lr]{%s-%s}", span$start, span$end)
+        # )
     }
 
     header_line <- paste(header, collapse = " & ")
@@ -201,24 +201,3 @@ insert_tabularray_header <- function(x, header_line) {
     return(x)
 }
 
-#' Apply styling to tabularray header spans
-#' @keywords internal
-#' @noRd
-style_tabularray_header_spans <- function(x, group_row, row_ihead) {
-    spans <- find_consecutive_spans(group_row)
-
-    for (span in spans) {
-        cs <- if (span$length == 1) NULL else span$length
-        args <- list(
-            tt_build_now = TRUE,
-            x = x,
-            i = row_ihead,
-            j = span$start,
-            align = "c",
-            colspan = cs
-        )
-        x <- do.call(style_tt, args)
-    }
-
-    return(x)
-}

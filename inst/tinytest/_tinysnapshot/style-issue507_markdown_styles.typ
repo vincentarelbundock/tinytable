@@ -8,11 +8,12 @@ block[ // start block
 
   #let style-dict = (
     // tinytable style-dict after
-    "9_0": 0, "9_1": 0, "9_2": 0, "3_0": 1, "4_0": 1, "5_0": 1, "3_1": 1, "4_1": 1, "5_1": 1, "3_2": 1, "4_2": 1, "5_2": 1, "7_0": 2, "7_1": 2, "7_2": 2
+    "0_0": 0, "0_1": 0, "0_2": 0, "9_0": 1, "9_1": 1, "9_2": 1, "3_0": 2, "4_0": 2, "5_0": 2, "3_1": 2, "4_1": 2, "5_1": 2, "3_2": 2, "4_2": 2, "5_2": 2, "7_0": 3, "7_1": 3, "7_2": 3
   )
 
   #let style-array = ( 
     // tinytable cell style after
+    (align: center,),
     (bold: true,),
     (italic: true,),
     (strikeout: true,),
@@ -60,6 +61,7 @@ block[ // start block
       let style = get-style(x, y)
       if style != none and "background" in style { style.background }
     },
+ table.hline(y: 1, start: 0, end: 3, stroke: 0.05em + black),
  table.hline(y: 2, start: 0, end: 3, stroke: 0.05em + black),
  table.hline(y: 12, start: 0, end: 3, stroke: 0.1em + black),
  table.hline(y: 0, start: 0, end: 3, stroke: 0.1em + black),
@@ -68,7 +70,7 @@ block[ // start block
     // tinytable header start
     table.header(
       repeat: true,
-table.cell(stroke: (bottom: .05em + black), colspan: 1, align: center)[Hello],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[World],
+[Hello], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[World],
 [mpg], [cyl], [disp],
     ),
     // tinytable header end

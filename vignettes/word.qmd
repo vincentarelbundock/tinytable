@@ -1,0 +1,36 @@
+
+# Microsoft Word `.docx`
+
+To create Word documents, `tinytable` proceeds in two steps:
+
+1. Generate a markdown table.
+2. Call the external [Pandoc software](https://pandoc.org/) to convert the markdown table to a Word document.
+
+This workflow is powerful, because Pandoc recognizes many different table structures, including column and row spans, header groups, etc.
+
+Unfortunately, this workflow also limits the range of styling options available in Word. Indeed, many arguments in the `style_tt()` function do not have formal markdown notation to represent them, and are thus unavailable. For example, while `italic`, `bold`, and `strikeout`, are supported, `color` and `background` are not.
+
+Beyond these constraints, the `tinytable` functionality related to formatting, grouping, and more remain relevant to Word. Please visit [https://vincentarelbundock.github.io/tinytable/](https://vincentarelbundock.github.io/tinytable/) to learn more.
+
+## Images to Word
+
+Users who want full styling capabilities in Word can save tables as image files and insert them in their documents. Here is an example Quarto notebook illustrating this workflow.
+
+````{verbatim}
+---
+format: docx
+---
+
+```{r}
+#| out-width: "50%"
+library(tinytable)
+
+options(tinytable_save_overwrite = TRUE)
+
+tt(mtcars[1:10, 1:5]) |>
+  style_tt(j = 2:3, background = "black", color = "white") |>
+  save_tt("table_01.png")
+
+knitr::include_graphics("table_01.png")
+```
+````

@@ -124,8 +124,8 @@ ul.task-list li input[type="checkbox"] {
  <span class="dropdown-text">Themes</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../vignettes/custom.html">
- <span class="dropdown-text">Customization</span></a>
+    <a class="dropdown-item" href="../vignettes/html.html">
+ <span class="dropdown-text">HTML customization</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../vignettes/notebooks.html">
@@ -147,7 +147,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
   <li class="nav-item">
     <a class="nav-link active" href="../vignettes/tinytable_tutorial.pdf" aria-current="page"> 
-<span class="menu-text">Tutorial (PDF)</span></a>
+<span class="menu-text">Tutorial (LaTeX)</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../vignettes/tinytable_tutorial_typst.pdf"> 
@@ -189,7 +189,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
- <span class="menu-text">Tutorial</span></a>
+ <span class="menu-text">Tutorial (HTML)</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -233,8 +233,8 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/custom.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Customization</span></a>
+  <a href="../vignettes/html.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">HTML</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -272,13 +272,19 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/tinytable_tutorial.pdf" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Tutorial (PDF)</span></a>
+ <span class="menu-text">Tutorial (LaTeX)</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/tinytable_tutorial_typst.pdf" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Tutorial (Typst)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/word.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial (Word)</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -396,8 +402,8 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/theme_void.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><code>theme_void</code></span></a>
+  <a href="../man/theme_empty.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_empty</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -486,12 +492,12 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
 <pre><code class="language-R">theme_html(
   x,
-  engine = get_option("tinytable_html_engine", default = "bootstrap"),
+  engine = get_option("tinytable_html_engine", default = NULL),
   i = NULL,
   j = NULL,
-  class = get_option("tinytable_html_class"),
-  css = get_option("tinytable_html_css"),
-  css_rule = get_option("tinytable_html_css_rule"),
+  class = get_option("tinytable_html_class", default = NULL),
+  css = get_option("tinytable_html_css", default = NULL),
+  css_rule = get_option("tinytable_html_css_rule", default = NULL),
   portable = get_option("tinytable_html_portable"),
   tabulator_columns = get_option("tinytable_html_tabulator_columns"),
   tabulator_css_rule = get_option("tinytable_html_tabulator_css_rule"),
@@ -509,7 +515,7 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
 <table role="presentation">
 <tbody><tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="x">x</code>
 </td>
 <td>
@@ -517,15 +523,15 @@ A <code>tinytable</code> object.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="engine">engine</code>
 </td>
 <td>
-Character string specifying the HTML engine: "bootstrap", "raw", or "tabulator".
+Character string specifying the HTML engine: "tinytable", "bootstrap", or "tabulator".
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="i">i</code>
 </td>
 <td>
@@ -533,7 +539,7 @@ Row indices.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="j">j</code>
 </td>
 <td>
@@ -541,15 +547,15 @@ Column indices.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="class">class</code>
 </td>
 <td>
-String. Bootstrap table class.
+String. HTML table class.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="css">css</code>
 </td>
 <td>
@@ -557,7 +563,7 @@ Character vector. CSS style declarations.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="css_rule">css_rule</code>
 </td>
 <td>
@@ -565,7 +571,7 @@ String. Complete CSS rules.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="portable">portable</code>
 </td>
 <td>
@@ -573,7 +579,7 @@ Logical. If not NULL, sets whether to create portable HTML output with base64-en
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="tabulator_columns">tabulator_columns</code>
 </td>
 <td>
@@ -581,7 +587,7 @@ Custom column definitions.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="tabulator_css_rule">tabulator_css_rule</code>
 </td>
 <td>
@@ -589,7 +595,7 @@ Complete CSS rules.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="tabulator_layout">tabulator_layout</code>
 </td>
 <td>
@@ -597,7 +603,7 @@ Character string. Table layout algorithm for column sizing. Default is "fitDataT
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="tabulator_options">tabulator_options</code>
 </td>
 <td>
@@ -605,7 +611,7 @@ Custom Tabulator.js configuration options.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="tabulator_pagination">tabulator_pagination</code>
 </td>
 <td>
@@ -627,7 +633,7 @@ Custom Tabulator.js configuration options.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="tabulator_search">tabulator_search</code>
 </td>
 <td>
@@ -646,7 +652,7 @@ Custom Tabulator.js configuration options.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="tabulator_stylesheet">tabulator_stylesheet</code>
 </td>
 <td>
@@ -654,7 +660,7 @@ Character string. CSS stylesheet theme for Tabulator.js tables. Default is "boot
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="...">…</code>
 </td>
 <td>

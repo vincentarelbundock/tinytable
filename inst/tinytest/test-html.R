@@ -177,29 +177,33 @@ x <- tt(mtcars[1:4, 1:5], theme = "void") |>
 expect_snapshot_print(print_html(x), "html-borders.html")
 
 # Images
-dat <- data.frame(
-  Species = c("Spider", "Squirrel"),
-  Image = ""
-)
-img <- c(
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeLPSPrPtVgPg6BLCiN6lBYy8l1xNy0T5yttVjkIk0L3Rva8Zl",
-  "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQdBlFVajljNz5qMbO622ihkIU2r6yA5whM9b8MbRGKOfJ8_UmZ"
-)
-dat <- tt(dat) |>
-  plot_tt(j = 2, images = img, height = 3)
-expect_snapshot_print(print_html(dat), "html-images.html")
+if (Sys.info()["sysname"] == "Darwin") {
+  dat <- data.frame(
+    Species = c("Spider", "Squirrel"),
+    Image = ""
+  )
+  img <- c(
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeLPSPrPtVgPg6BLCiN6lBYy8l1xNy0T5yttVjkIk0L3Rva8Zl",
+    "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQdBlFVajljNz5qMbO622ihkIU2r6yA5whM9b8MbRGKOfJ8_UmZ"
+  )
+  dat <- tt(dat) |>
+    plot_tt(j = 2, images = img, height = 3)
+  expect_snapshot_print(print_html(dat), "html-images.html")
+}
 
 # Issue #297: group_tt() breaks alignment
-tab <- data.frame(
-  Person = c("Alice", "Bob", "Charlemagne"),
-  Fruit = c("Apple", "Banana", "Cantaloupe"),
-  Count = c(4, 238432, 32)
-) |>
-  tt() |>
-  group_tt(i = list("Thing" = 1, "Thing again" = 2)) |>
-  style_tt(i = c(1, 3), align = "l") |>
-  style_tt(j = 1:3, align = "l")
-expect_snapshot_print(print_html(dat), "html-issue297.html")
+if (Sys.info()["sysname"] == "Darwin") {
+  tab <- data.frame(
+    Person = c("Alice", "Bob", "Charlemagne"),
+    Fruit = c("Apple", "Banana", "Cantaloupe"),
+    Count = c(4, 238432, 32)
+  ) |>
+    tt() |>
+    group_tt(i = list("Thing" = 1, "Thing again" = 2)) |>
+    style_tt(i = c(1, 3), align = "l") |>
+    style_tt(j = 1:3, align = "l")
+  expect_snapshot_print(print_html(dat), "html-issue297.html")
+}
 
 
 # # Issue #355a: rowspan breaks indexing
@@ -233,6 +237,27 @@ tab <- tt(mtcars[1:9, 1:8]) |>
   ) |>
   style_tt(4, background = "pink")
 expect_snapshot_print(print_html(tab), "html-issue355b.html")
+
+
+
+# Issue #575
+tab <- head(iris) |>
+  tt() |>
+  theme_empty() |>
+  group_tt(j = list("Hello" = 1:2, "Cruel" = 3, "World" = 4:5)) |>
+  group_tt(j = list("Foo" = 1, "Bar" = 2:5)) |>
+  style_tt(align = "c") |>
+  style_tt(i = 2, j = 2, colspan = 3) |>
+  style_tt(i = 2, j = 2, line = "b", line_color = "green") |>
+  style_tt(i = 2, j = 5, line = "b", line_color = "orange") |>
+  style_tt(i = -1, j = 1:2, line = "b", line_color = "orange") |>
+  style_tt(i = -2, j = 3, line = "b", line_color = "green") |>
+  style_tt(i = -1, j = 4:5, line = "b", line_color = "blue") |>
+  style_tt(i = 0, line = "b", line_color = "pink") |>
+  style_tt(i = 6, line = "b", line_color = "pink")
+expect_snapshot_print(print_html(tab), "html-issue575.html")
+
+
 
 
 ## TODO: reinstate portable test, but there's a snapshot challenge

@@ -10,6 +10,8 @@ To run all tests: `pkgload::load_all(); tinytest::run_test_dir()`
 
 Many operations inside `tinytable` are "lazy", and the s4 slots will not be filled until a table is "built". To build a table in a given format, call `print(x, "html")` or `build_tt(x, "html")` where `x` is a `tinytable` object. This will trigger the lazy evaluation and fill the S4 slots with the necessary data.
 
+x@style is only filled on print, so use `print(x, "html")` and `cat()` to debug.
+
 ### Development workflow
 - Always use `pkgload::load_all()` before testing any code changes
 - Test changes with specific test files: `tinytest::run_test_file("inst/tinytest/test-html.R")`
@@ -42,7 +44,7 @@ Many operations inside `tinytable` are "lazy", and the s4 slots will not be fill
 ### Core Table Creation Flow
 1. **`tt()`** - Main entry point that creates tinytable objects from data frames
 2. **`build_tt()`** - Central processing function that handles matrix combination, lazy evaluation, formatting, and styling
-3. **Format-specific backends**: `tt_bootstrap()` (HTML), `tt_tabularray()` (LaTeX), `tt_grid()` (text), `tt_typst()` (Typst)
+3. **Format-specific backends**: HTML (`html_*` files with bootstrap/tabulator engines), LaTeX (`tabularray_*` files), text (`grid_*` files), Typst (`typst_*` files)
 4. **Finalization**: Format-specific finalize functions render the final output
 
 ### S4 Class Architecture
@@ -80,9 +82,9 @@ The package uses a centralized matrix combination approach:
 
 ### File Organization
 - `R/` - Main package code
-  - `class.R` - S4 class definition and core methods
+  - `aaa_class.R` - S4 class definition and core methods
   - `build_tt.R` - Central processing pipeline
-  - `tt*.R` - Backend implementations for each output format
+  - Backend implementations: `html_*.R` (HTML), `tabularray_*.R` (LaTeX), `grid_*.R` (text), `typst_*.R` (Typst), `tabulator_*.R` (HTML Tabulator engine)
   - `style_*.R` - Styling functions for each backend
   - `group_*.R` - Grouping functions for each backend
   - `finalize_*.R` - Final rendering for each backend
@@ -95,8 +97,8 @@ The package uses a centralized matrix combination approach:
 Uses `tinytest` framework with snapshot testing via `tinysnapshot`. Test files are organized by functionality (`test-html.R`, `test-latex.R`, `test-style_tt.R`, etc.) with corresponding snapshot files in `_tinysnapshot/`.
 
 ## Output Format Support
-- HTML: Bootstrap CSS framework
-- LaTeX: tabularray package 
+- HTML: Two engines available - Bootstrap CSS framework (default) and Tabulator.js for interactive tables
+- LaTeX: tabularray package
 - Markdown: GitHub Flavored Markdown
 - Typst: Modern typesetting system
 - Word: Limited styling via pandoc
@@ -113,5 +115,5 @@ Uses `tinytest` framework with snapshot testing via `tinysnapshot`. Test files a
 ## Important Development Patterns
 - **Order matters in `build_tt()`**: Lazy evaluation ensures operations are applied in correct sequence
 - **Index-based data management**: Row/column positions are tracked via index slots, not direct data manipulation
-- **Backend isolation**: Each format backend (`tt_bootstrap`, `tt_tabularray`, etc.) works with finalized data
+- **Backend isolation**: Each format backend (`html_*`, `tabularray_*`, `grid_*`, `typst_*`, `tabulator_*`) works with finalized data
 - **Snapshot testing**: Visual regression testing captures exact output for each format - update snapshots carefully

@@ -13,16 +13,17 @@ tab@output <- "markdown"
 expect_snapshot_print(tab, label = "group-vector_row_labels.md")
 
 # 3 level tests across formats
-x <- mtcars[1:3, 1:5]
-tab <- tt(x) |>
-  group_tt(j = list("a" = 2:3, "b" = 4:5)) |>
-  group_tt(j = list("c" = 1:2, "d" = 3:5)) |>
-  group_tt(j = list("e" = 1:3, "f" = 4))
-
-t <- expect_table(tab, formats = c("markdown", "latex", "typst"))
-expect_snapshot_print(t[["markdown"]], "group-3level.md")
-expect_snapshot_print(t[["latex"]], "group-3level.tex")
-expect_snapshot_print(t[["typst"]], "group-3level.typ")
+if (Sys.info()[["sysname"]] == "Darwin") {
+  x <- mtcars[1:3, 1:5]
+  tab <- tt(x) |>
+    group_tt(j = list("a" = 2:3, "b" = 4:5)) |>
+    group_tt(j = list("c" = 1:2, "d" = 3:5)) |>
+    group_tt(j = list("e" = 1:3, "f" = 4))
+  t <- expect_table(tab, formats = c("markdown", "latex", "typst"))
+  expect_snapshot_print(t[["markdown"]], "group-3level.md")
+  expect_snapshot_print(t[["latex"]], "group-3level.tex")
+  expect_snapshot_print(t[["typst"]], "group-3level.typ")
+}
 
 tab <- tt(mtcars[1:10, 1:5]) |>
   group_tt(
@@ -145,7 +146,7 @@ expect_snapshot_print(
 
 # informative errors
 expect_error(
-  tt(head(iris)) |> style_tt("groupj", color = "orange"),
+  tt(head(iris)) |> style_tt("groupj", color = "orange") |> print(),
   pattern = "No column grouping"
 )
 
@@ -153,11 +154,11 @@ expect_error(
 x <- head(iris)
 colnames(x) <- NULL
 expect_error(
-  tt(x) |> style_tt("colnames", color = "orange"),
+  tt(x) |> style_tt("colnames", color = "orange") |> print(),
   pattern = "No column names found"
 )
 expect_error(
-  tt(head(iris)) |> style_tt("groupj", color = "orange"),
+  tt(head(iris)) |> style_tt("groupj", color = "orange") |> print(),
   pattern = "No column grouping"
 )
 

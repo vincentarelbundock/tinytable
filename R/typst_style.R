@@ -62,6 +62,12 @@ typst_apply_styles <- function(x, rec) {
     style_dict_entries <- c(style_dict_entries, entry)
   }
 
+  # Remove duplicate keys (keep last occurrence for each coordinate)
+  if (length(style_dict_entries) > 0) {
+    keys <- gsub('"([^"]+)":\\s*\\d+', '\\1', style_dict_entries)
+    style_dict_entries <- style_dict_entries[!duplicated(keys, fromLast = TRUE)]
+  }
+
   # Insert style-dict entries as single line
   if (length(style_dict_entries) > 0) {
     combined_dict <- paste0(
@@ -90,124 +96,6 @@ typst_apply_styles <- function(x, rec) {
 }
 
 
-#' Process Typst styles and generate CSS and line data
-#' @keywords internal
-#' @noRd
-typst_process_styles <- function(sty, rec) {
-  css <- rep("", nrow(rec))
-  lin <- data.frame()
-
-  for (row in seq_len(nrow(sty))) {
-    idx_i <- sty$i[row]
-    if (is.na(idx_i)) {
-      idx_i <- unique(rec$i)
-    }
-    idx_j <- sty$j[row]
-    if (is.na(idx_j)) {
-      idx_j <- unique(rec$j)
-    }
-    idx <- rec$i == idx_i & rec$j == idx_j
-
-    if (isTRUE(sty[row, "bold"])) {
-      css[idx] <- typst_insert_field(css[idx], "bold", "true")
-    }
-    if (isTRUE(sty[row, "italic"])) {
-      css[idx] <- typst_insert_field(css[idx], "italic", "true")
-    }
-    if (isTRUE(sty[row, "underline"])) {
-      css[idx] <- typst_insert_field(css[idx], "underline", "true")
-    }
-    if (isTRUE(sty[row, "strikeout"])) {
-      css[idx] <- typst_insert_field(css[idx], "strikeout", "true")
-    }
-    if (isTRUE(sty[row, "monospace"])) {
-      css[idx] <- typst_insert_field(css[idx], "monospace", "true")
-    }
-    if (isTRUE(sty[row, "smallcap"])) {
-      css[idx] <- typst_insert_field(css[idx], "smallcaps", "true")
-    }
-
-    # Combine horizontal and vertical alignment
-    align_h <- sty[row, "align"]
-    align_v <- sty[row, "alignv"]
-
-    if (!is.na(align_h) || !is.na(align_v)) {
-      combined_align <- character(0)
-      if (!is.na(align_h)) {
-        combined_align <- c(combined_align, align_h)
-      }
-      if (!is.na(align_v)) {
-        combined_align <- c(combined_align, align_v)
-      }
-      final_align <- paste(combined_align, collapse = " + ")
-      css[idx] <- typst_insert_field(css[idx], "align", final_align)
-    }
-
-    fs <- sty[row, "indent"]
-    if (!is.na(fs)) {
-      css[idx] <- typst_insert_field(css[idx], "indent", sprintf("%sem", fs))
-    }
-
-    fs <- sty[row, "fontsize"]
-    if (!is.na(fs)) {
-      css[idx] <- typst_insert_field(
-        css[idx],
-        "fontsize",
-        sprintf("%sem", fs)
-      )
-    }
-
-    col <- standardize_colors(sty[row, "color"], format = "typst")
-    if (!is.na(col)) {
-      css[idx] <- typst_insert_field(css[idx], "color", col)
-    }
-
-    bg <- standardize_colors(sty[row, "background"], format = "typst")
-    if (!is.na(bg)) {
-      css[idx] <- typst_insert_field(css[idx], "background", bg)
-    }
-
-    lin <- typst_add_line_data(lin, sty, row, rec, idx)
-  }
-
-  css <- typst_clean_css(css)
-
-  return(list(css = css, lin = lin))
-}
-
-#' Add line data to Typst line data frame
-#' @keywords internal
-#' @noRd
-typst_add_line_data <- function(lin, sty, row, rec, idx) {
-  line <- sty[row, "line"]
-  if (is.na(line)) {
-    return(lin)
-  }
-
-  # Check if idx matches any cells
-  if (!any(idx)) {
-    return(lin)
-  }
-
-  line_color <- standardize_colors(
-    sty[row, "line_color"],
-    format = "typst"
-  )
-  line_color <- ifelse(is.na(line_color), "black", line_color)
-  line_width <- sty[row, "line_width"]
-  if (is.na(line_width)) {
-    line_width <- 0.1
-  }
-
-  tmp <- data.frame(
-    i = rec$i[idx],
-    j = rec$j[idx],
-    line = unname(line),
-    line_color = unname(line_color),
-    line_width = unname(line_width)
-  )
-  return(rbind(lin, tmp))
-}
 
 
 typst_split_chunks <- function(x) {
@@ -267,6 +155,134 @@ typst_hlines <- function(x, lin) {
   return(x)
 }
 
+# =============================================================================
+# NEW SIMPLIFIED FUNCTIONS USING expand_style()
+# =============================================================================
+
+#' Process Typst line styles using expanded data
+#' @keywords internal
+#' @noRd
+process_typst_lines <- function(x, lines) {
+  if (is.null(lines) || nrow(lines) == 0) {
+    return(x)
+  }
+
+  # Convert tinytable indexing to Typst 0-based indexing
+  # tinytable: 0=colnames, -1=group1, -2=group2, ..., 1,2,3=data
+  # Typst: group headers come first, then colnames, then data
+  # Need to account for the fact that group headers are inserted at the top
+
+  # Convert tinytable indexing to Typst 0-based indexing
+  # tinytable: 0=colnames, -1=group1, -2=group2, ..., 1,2,3=data
+  # Typst: group headers come first (0,1,...), then colnames, then data
+  if (x@nhead > 0) {
+    # Case with headers/colnames: normal conversion
+    lines$i <- ifelse(lines$i < 0,
+                     x@nhead + lines$i - 1,  # Headers: -1 becomes nhead-2, -2 becomes nhead-3
+                     lines$i + x@nhead - 1)  # Column names (0) and data: 0 becomes nhead-1, 1 becomes nhead
+  } else {
+    # Case with no headers (nhead = 0): filter out i=0 (non-existent colnames), then convert
+    lines <- lines[lines$i > 0, , drop = FALSE]  # Remove i=0 entries
+    if (nrow(lines) > 0) {
+      lines$i <- lines$i - 1  # Data rows: 1 becomes 0, 2 becomes 1, etc.
+    }
+  }
+  lines$j <- lines$j - 1
+
+  # Process horizontal and vertical lines
+  x <- typst_hlines(x, lines)
+  x <- typst_vlines(x, lines)
+
+  return(x)
+}
+
+#' Process Typst other styles using expanded data
+#' @keywords internal
+#' @noRd
+process_typst_other_styles <- function(x, other) {
+  if (is.null(other) || nrow(other) == 0) {
+    return(x)
+  }
+
+  # Map alignments to Typst format
+  other <- typst_map_alignments(other)
+
+  # Generate CSS for each cell
+  css <- rep("", nrow(other))
+
+  for (row in seq_len(nrow(other))) {
+    if (isTRUE(other[row, "bold"])) {
+      css[row] <- typst_insert_field(css[row], "bold", "true")
+    }
+    if (isTRUE(other[row, "italic"])) {
+      css[row] <- typst_insert_field(css[row], "italic", "true")
+    }
+    if (isTRUE(other[row, "underline"])) {
+      css[row] <- typst_insert_field(css[row], "underline", "true")
+    }
+    if (isTRUE(other[row, "strikeout"])) {
+      css[row] <- typst_insert_field(css[row], "strikeout", "true")
+    }
+    if (isTRUE(other[row, "monospace"])) {
+      css[row] <- typst_insert_field(css[row], "mono", "true")
+    }
+    if (!is.na(other[row, "color"])) {
+      color_value <- standardize_colors(other[row, "color"], format = "typst")
+      css[row] <- typst_insert_field(css[row], "color", color_value)
+    }
+    if (!is.na(other[row, "background"])) {
+      bg_value <- standardize_colors(other[row, "background"], format = "typst")
+      css[row] <- typst_insert_field(css[row], "background", bg_value)
+    }
+    if (!is.na(other[row, "fontsize"])) {
+      css[row] <- typst_insert_field(css[row], "fontsize", paste0(other[row, "fontsize"], "em"))
+    }
+    # Handle alignment (combining horizontal and vertical if both present)
+    align_h <- other[row, "align"]
+    align_v <- other[row, "alignv"]
+    if (!is.na(align_h) || !is.na(align_v)) {
+      align_parts <- character(0)
+      if (!is.na(align_h)) align_parts <- c(align_parts, align_h)
+      if (!is.na(align_v)) align_parts <- c(align_parts, align_v)
+      combined_align <- paste(align_parts, collapse = " + ")
+      css[row] <- typst_insert_field(css[row], "align", combined_align)
+    }
+    if (!is.na(other[row, "indent"]) && other[row, "indent"] > 0) {
+      css[row] <- typst_insert_field(css[row], "indent", paste0(other[row, "indent"], "em"))
+    }
+  }
+
+  # Clean CSS and add to data frame
+  other$css <- sapply(css, typst_clean_css)
+
+  # Convert tinytable indexing to Typst 0-based indexing
+  # tinytable: 0=colnames, -1=group1, -2=group2, ..., 1,2,3=data
+  # Typst: group headers come first, then colnames, then data
+  # Need to account for the fact that group headers are inserted at the top
+
+  # Convert tinytable indexing to Typst 0-based indexing
+  # tinytable: 0=colnames, -1=group1, -2=group2, ..., 1,2,3=data
+  # Typst: group headers come first (0,1,...), then colnames, then data
+  if (x@nhead > 0) {
+    # Case with headers/colnames: normal conversion
+    other$i <- ifelse(other$i < 0,
+                     x@nhead + other$i - 1,  # Headers: -1 becomes nhead-2, -2 becomes nhead-3
+                     other$i + x@nhead - 1)  # Column names (0) and data: 0 becomes nhead-1, 1 becomes nhead
+  } else {
+    # Case with no headers (nhead = 0): filter out i=0 (non-existent colnames), then convert
+    other <- other[other$i > 0, , drop = FALSE]  # Remove i=0 entries
+    if (nrow(other) > 0) {
+      other$i <- other$i - 1  # Data rows: 1 becomes 0, 2 becomes 1, etc.
+    }
+  }
+  other$j <- other$j - 1
+
+  # Generate style-dict and style-array for optimized lookup
+  x <- typst_apply_styles(x, other)
+
+  return(x)
+}
+
 typst_vlines <- function(x, lin) {
   lin <- lin[grepl("l|r", lin$line), , drop = FALSE]
   if (nrow(lin) == 0) {
@@ -281,7 +297,11 @@ typst_vlines <- function(x, lin) {
     xmin <- k$j[1]
     xmax <- xmin + 1
     line <- k$line[1]
-    color <- if (is.na(k$line_color[1])) "black" else k$line_color[1]
+    color <- if (is.na(k$line_color[1])) {
+      "black"
+    } else {
+      standardize_colors(k$line_color[1], format = "typst")
+    }
     width <- if (is.na(k$line_width[1])) 0.1 else k$line_width[1]
     width <- sprintf("%sem", width)
     out <- ""
@@ -338,10 +358,13 @@ setMethod(
     midrule = FALSE, # undocumented, only used by `group_tt()`
     ...
   ) {
-    sty <- x@style
+    # Use expand_style like tabularray_style.R
+    sty <- expand_style(x)
+    lines <- sty$lines
+    other <- sty$other
 
     # gutters are used for group_tt(j) but look ugly with cell fill
-    if (!all(is.na(sty$background))) {
+    if (!is.null(other) && !all(is.na(other$background))) {
       x@table_string <- lines_drop(
         x@table_string,
         "column-gutter:",
@@ -349,35 +372,11 @@ setMethod(
       )
     }
 
-    sty <- typst_map_alignments(sty)
+    # Process lines using the expanded data
+    x <- process_typst_lines(x, lines)
 
-    # sty & rec use the same 1-based indices as tinytable::tt()
-    rec <- expand.grid(
-      i = c(-(seq_len(x@nhead) - 1), seq_len(x@nrow)),
-      j = seq_len(x@ncol)
-    )
-    css <- rep("", nrow(rec))
-
-    result <- typst_process_styles(sty, rec)
-    css <- result$css
-    lin <- result$lin
-
-    rec$css <- css
-
-    # 0-based indexing
-    lin$i <- lin$i + x@nhead - 1
-    lin$j <- lin$j - 1
-    rec$i <- rec$i + x@nhead - 1
-    rec$j <- rec$j - 1
-
-    # TODO: spans before styles, as in bootstrap
-
-    # Generate style-dict and style-array for optimized lookup
-    x <- typst_apply_styles(x, rec)
-
-    x <- typst_hlines(x, lin)
-
-    x <- typst_vlines(x, lin)
+    # Process other styles using the expanded data
+    x <- process_typst_other_styles(x, other)
 
     return(x)
   }

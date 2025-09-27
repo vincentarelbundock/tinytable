@@ -8,12 +8,13 @@ block[ // start block
 
   #let style-dict = (
     // tinytable style-dict after
-    "2_0": 0, "3_0": 0, "4_0": 0, "5_0": 0, "6_0": 0, "2_1": 0, "3_1": 0, "4_1": 0, "5_1": 0, "6_1": 0, "2_2": 0, "3_2": 0, "4_2": 0, "5_2": 0, "6_2": 0, "2_3": 0, "3_3": 0, "4_3": 0, "5_3": 0, "6_3": 0, "2_4": 0, "3_4": 0, "4_4": 0, "5_4": 0, "6_4": 0
+    "0_0": 0, "0_1": 0, "0_2": 0, "0_3": 0, "0_4": 0, "2_0": 1, "3_0": 1, "4_0": 1, "5_0": 1, "6_0": 1, "2_1": 1, "3_1": 1, "4_1": 1, "5_1": 1, "6_1": 1, "2_2": 1, "3_2": 1, "4_2": 1, "5_2": 1, "6_2": 1, "2_3": 1, "3_3": 1, "4_3": 1, "5_3": 1, "6_3": 1, "2_4": 1, "3_4": 1, "4_4": 1, "5_4": 1, "6_4": 1
   )
 
   #let style-array = ( 
     // tinytable cell style after
-    (align: center, color: white, background: rgb("#0000FF"),),
+    (align: center,),
+    (color: white, background: rgb("#0000FF"), align: center,),
   )
 
   // Helper function to get cell style
@@ -57,6 +58,7 @@ block[ // start block
       let style = get-style(x, y)
       if style != none and "background" in style { style.background }
     },
+ table.hline(y: 1, start: 1, end: 5, stroke: 0.05em + black),
  table.hline(y: 2, start: 0, end: 5, stroke: 0.05em + black),
  table.hline(y: 14, start: 0, end: 5, stroke: 0.1em + black),
  table.hline(y: 0, start: 0, end: 5, stroke: 0.1em + black),
@@ -65,7 +67,7 @@ block[ // start block
     // tinytable header start
     table.header(
       repeat: true,
-[ ],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[First],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[Second],
+[ ], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[First], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[Second],
 [mpg], [cyl], [disp], [hp], [drat],
     ),
     // tinytable header end

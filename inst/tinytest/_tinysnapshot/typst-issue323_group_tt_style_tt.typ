@@ -8,13 +8,13 @@ block[ // start block
 
   #let style-dict = (
     // tinytable style-dict after
-    "4_0": 0, "6_0": 0, "10_0": 0, "4_1": 0, "6_1": 0, "10_1": 0, "4_2": 0, "6_2": 0, "10_2": 0, "4_3": 0, "6_3": 0, "10_3": 0, "4_4": 0, "6_4": 0, "10_4": 0, "4_5": 0, "6_5": 0, "10_5": 0, "4_6": 0, "6_6": 0, "10_6": 0, "4_7": 0, "6_7": 0, "10_7": 0, "0_0": 1, "0_1": 1, "0_2": 1, "0_3": 1, "0_4": 1, "0_5": 1, "0_6": 1, "0_7": 1
+    "0_0": 0, "0_1": 0, "0_2": 0, "0_3": 0, "0_4": 0, "0_5": 0, "0_6": 0, "0_7": 0, "4_0": 1, "6_0": 1, "10_0": 1, "4_1": 1, "6_1": 1, "10_1": 1, "4_2": 1, "6_2": 1, "10_2": 1, "4_3": 1, "6_3": 1, "10_3": 1, "4_4": 1, "6_4": 1, "10_4": 1, "4_5": 1, "6_5": 1, "10_5": 1, "4_6": 1, "6_6": 1, "10_6": 1, "4_7": 1, "6_7": 1, "10_7": 1
   )
 
   #let style-array = ( 
     // tinytable cell style after
-    (align: center, color: rgb("#FFA500"), background: black,),
-    (color: rgb("#FFA500"),),
+    (color: rgb("#FFA500"), align: center,),
+    (color: rgb("#FFA500"), background: black, align: center,),
   )
 
   // Helper function to get cell style
@@ -58,6 +58,8 @@ block[ // start block
       let style = get-style(x, y)
       if style != none and "background" in style { style.background }
     },
+ table.hline(y: 1, start: 0, end: 5, stroke: 0.05em + black),
+ table.hline(y: 1, start: 6, end: 7, stroke: 0.05em + black),
  table.hline(y: 2, start: 0, end: 8, stroke: 0.05em + black),
  table.hline(y: 14, start: 0, end: 8, stroke: 0.1em + black),
  table.hline(y: 0, start: 0, end: 8, stroke: 0.1em + black),
@@ -66,7 +68,7 @@ block[ // start block
     // tinytable header start
     table.header(
       repeat: true,
-table.cell(stroke: (bottom: .05em + black), colspan: 3, align: center)[Hamburgers],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[Halloumi],[ ],table.cell(stroke: (bottom: .05em + black), colspan: 1, align: center)[Tofu],[ ],
+table.cell(stroke: (bottom: .05em + black), colspan: 3, align: center)[Hamburgers], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[Halloumi], [ ], [Tofu], [ ],
 [mpg], [cyl], [disp], [hp], [drat], [wt], [qsec], [vs],
     ),
     // tinytable header end

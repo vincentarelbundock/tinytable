@@ -4,103 +4,69 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_rclrld385w2us91e9lj2</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>tinytable_9k0f04u6n6nlqajp5ys5</title>
+    
   </head>
   <body>
 <!-- preamble end -->
 
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
     <script>
-
-      function styleCell_rclrld385w2us91e9lj2(i, j, css_id) {
-          var table = document.getElementById("tinytable_rclrld385w2us91e9lj2");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function spanCell_rclrld385w2us91e9lj2(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_rclrld385w2us91e9lj2");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
+      // Create table-specific functions using external factory
+      const tableFns_9k0f04u6n6nlqajp5ys5 = TinyTable.createTableFunctions("tinytable_9k0f04u6n6nlqajp5ys5");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '2', j: 1 },  ], css_id: 'tinytable_css_2fcze5lbw6klpl77v9py',}, 
-          { positions: [ { i: '1', j: 1 },  ], css_id: 'tinytable_css_rp3ir8sb79unu2f4pui7',}, 
-          { positions: [ { i: '0', j: 1 },  ], css_id: 'tinytable_css_8cgp603zuiwj47zhrdbt',}, 
-          { positions: [ { i: '2', j: 0 },  ], css_id: 'tinytable_css_tqyfisnuaya2n7dakjcf',}, 
-          { positions: [ { i: '0', j: 0 },  ], css_id: 'tinytable_css_pdaldz37ywznzm7isuuj',}, 
+          { positions: [ { i: '1', j: 2 } ], css_id: 'tinytable_css_h6243s2a1uliavg4l946',}, 
+          { positions: [ { i: '2', j: 2 } ], css_id: 'tinytable_css_dvh4rr7y7apxfo1p2z6o',}, 
+          { positions: [ { i: '2', j: 1 } ], css_id: 'tinytable_css_vpw8ed9pa31mi2vj0osc',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_ma2lso0ex67eqbzb60js',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_z53o4j5nuvw2hfoj7wms',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_rclrld385w2us91e9lj2(cell.i, cell.j, group.css_id);
+                  tableFns_9k0f04u6n6nlqajp5ys5.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
     <style>
-      /* tinytable css entries after */
-      .table td.tinytable_css_2fcze5lbw6klpl77v9py, .table th.tinytable_css_2fcze5lbw6klpl77v9py { text-align: right; border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_rp3ir8sb79unu2f4pui7, .table th.tinytable_css_rp3ir8sb79unu2f4pui7 { text-align: right; }
-      .table td.tinytable_css_8cgp603zuiwj47zhrdbt, .table th.tinytable_css_8cgp603zuiwj47zhrdbt { text-align: right; border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_tqyfisnuaya2n7dakjcf, .table th.tinytable_css_tqyfisnuaya2n7dakjcf { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_pdaldz37ywznzm7isuuj, .table th.tinytable_css_pdaldz37ywznzm7isuuj { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+    /* tinytable css entries after */
+    #tinytable_9k0f04u6n6nlqajp5ys5 td.tinytable_css_h6243s2a1uliavg4l946, #tinytable_9k0f04u6n6nlqajp5ys5 th.tinytable_css_h6243s2a1uliavg4l946 { text-align: right }
+    #tinytable_9k0f04u6n6nlqajp5ys5 td.tinytable_css_dvh4rr7y7apxfo1p2z6o, #tinytable_9k0f04u6n6nlqajp5ys5 th.tinytable_css_dvh4rr7y7apxfo1p2z6o {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: right }
+    #tinytable_9k0f04u6n6nlqajp5ys5 td.tinytable_css_vpw8ed9pa31mi2vj0osc, #tinytable_9k0f04u6n6nlqajp5ys5 th.tinytable_css_vpw8ed9pa31mi2vj0osc {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_9k0f04u6n6nlqajp5ys5 td.tinytable_css_ma2lso0ex67eqbzb60js, #tinytable_9k0f04u6n6nlqajp5ys5 th.tinytable_css_ma2lso0ex67eqbzb60js {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: right }
+    #tinytable_9k0f04u6n6nlqajp5ys5 td.tinytable_css_z53o4j5nuvw2hfoj7wms, #tinytable_9k0f04u6n6nlqajp5ys5 th.tinytable_css_z53o4j5nuvw2hfoj7wms {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_rclrld385w2us91e9lj2" style="table-layout: fixed; width: 100% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
+      <table class="tinytable" id="tinytable_9k0f04u6n6nlqajp5ys5" style="table-layout: fixed; width: 100% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing='true'>
         <thead>
-        
+          
               <tr>
-                <th scope="col" data-row="0" data-col="0">Column1</th>
-                <th scope="col" data-row="0" data-col="1">Column2</th>
+                <th scope="col" data-row="0" data-col="1">Column1</th>
+                <th scope="col" data-row="0" data-col="2">Column2</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td data-row="1" data-col="0">Some text</td>
                   <td data-row="1" data-col="1">Some text</td>
+                  <td data-row="1" data-col="2">Some text</td>
                 </tr>
                 <tr>
-                  <td data-row="2" data-col="0">123</td>
-                  <td data-row="2" data-col="1">456</td>
+                  <td data-row="2" data-col="1">123</td>
+                  <td data-row="2" data-col="2">456</td>
                 </tr>
         </tbody>
       </table>
     </div>
-<!-- postamble start -->
+    <!-- postamble start -->
   </body>
 
 </html>

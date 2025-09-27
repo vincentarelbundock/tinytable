@@ -347,7 +347,7 @@ fg <- ifelse(as.matrix(k) < 1.7, tail(bg, 1), head(bg, 1))
 
 # table
 tt(k, width = .7, theme = "void", colnames = FALSE) |>
-  style_tt(j = 1:5, align = "ccccc") |>
+  style_tt(j = 1:5, align = "ccccc", alignv = "m") |>
   style_tt(
     i = 1:4,
     j = 1:5,
@@ -430,18 +430,4 @@ tt(data, caption = "Three friends.") |>
 ```
 
 ![ANSI Terminal Output](figures/ansi_example.png)
-
-## Word
-
-Word tables have limited styling support. The only supported arguments are: `bold`, `italic`, and `strikeout`. These limitations are due to the fact that we create Word documents by converting a markdown table to .docx via the Pandoc software, which requires going through a text-only intermediate format.
-
-Here's a basic example styling the group headers directly using markdown syntax:
-
-```{r}
-mtcars[1:4, 1:4] |>
-  tt() |>
-  group_tt(i = list("*Hello*" = 1, "__World__" = 3)) |>
-  print("markdown")
-```
-
 

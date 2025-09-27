@@ -28,7 +28,7 @@ apply_group_j <- function(x, i, j, format_fn, components, ...) {
     return(x)
   }
 
-  if (!"groupj" %in% components && !any(i < 0)) {
+  if (!"groupj" %in% components && !any(i < 0, na.rm = TRUE)) {
     return(x)
   }
 
@@ -48,8 +48,8 @@ apply_group_j <- function(x, i, j, format_fn, components, ...) {
         }
       }
     }
-  } else if (any(i < 0)) {
-    i_idx <- i[i < 0]
+  } else if (any(i < 0, na.rm = TRUE)) {
+    i_idx <- i[i < 0 & !is.na(i)]
     i_idx <- i_idx - min(i_idx) + 1
     for (row in i_idx) {
       for (col in j) {

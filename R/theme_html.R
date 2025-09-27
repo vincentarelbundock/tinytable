@@ -1,9 +1,9 @@
 #' HTML-specific styles and options
 #' @param x A `tinytable` object.
-#' @param engine Character string specifying the HTML engine: "bootstrap", "raw", or "tabulator".
+#' @param engine Character string specifying the HTML engine: "tinytable", "bootstrap", or "tabulator".
 #' @param i Row indices.
 #' @param j Column indices.
-#' @param class String. Bootstrap table class.
+#' @param class String. HTML table class.
 #' @param css Character vector. CSS style declarations.
 #' @param css_rule String. Complete CSS rules.
 #' @param portable Logical. If not NULL, sets whether to create portable HTML output with base64-encoded images (bootstrap engine only).
@@ -31,12 +31,12 @@
 #' @export
 theme_html <- function(
     x,
-    engine = get_option("tinytable_html_engine", default = "bootstrap"),
+    engine = get_option("tinytable_html_engine", default = NULL),
     i = NULL,
     j = NULL,
-    class = get_option("tinytable_html_class"),
-    css = get_option("tinytable_html_css"),
-    css_rule = get_option("tinytable_html_css_rule"),
+    class = get_option("tinytable_html_class", default = NULL),
+    css = get_option("tinytable_html_css", default = NULL),
+    css_rule = get_option("tinytable_html_css_rule", default = NULL),
     portable = get_option("tinytable_html_portable"),
     tabulator_columns = get_option("tinytable_html_tabulator_columns"),
     tabulator_css_rule = get_option("tinytable_html_tabulator_css_rule"),
@@ -46,13 +46,26 @@ theme_html <- function(
     tabulator_search = get_option("tinytable_html_tabulator_search"),
     tabulator_stylesheet = get_option("tinytable_html_tabulator_stylesheet"),
     ...) {
-  assert_choice(engine, c("bootstrap", "raw", "tabulator"))
+  assert_string(class, null.ok = TRUE)
+  assert_choice(engine, c("tinytable", "bootstrap", "tabulator"), null.ok = TRUE)
   assert_choice(tabulator_search, c("top", "bottom"), null.ok = TRUE)
   sanity_tabulator_css_rule(tabulator_css_rule)
   sanity_tabulator_columns(tabulator_columns)
 
   if (!is.null(engine)) {
     x@html_engine <- engine
+    if (engine == "bootstrap" && is.null(class) && identical(x@html_class, "tinytable")) {
+      x@html_class <- "table"
+    }
+  }
+
+  if (!is.null(css_rule)) {
+    assert_string(css_rule)
+    x@html_css_rule <- css_rule
+  }
+
+  if (!is.null(class)) {
+    x@html_class <- class
   }
 
   if (!is.null(portable)) {
@@ -63,28 +76,11 @@ theme_html <- function(
     x@html_portable <- portable
   }
 
-  if (engine == "raw") {
-    x <- theme_html_raw(
-      x,
-      i = i,
-      j = j,
-      class = class,
-      css = css,
-      css_rule = css_rule,
-      ...
-    )
-    return(x)
+  # Handle css parameter for styling
+  if (!is.null(css)) {
+    # Use style_tt with html_css parameter - let style_tt handle the expansion logic
+    x <- style_tt(x, i = i, j = j, html_css = css)
   }
-
-  x <- theme_html_bootstrap(
-    x,
-    i = i,
-    j = j,
-    class = class,
-    css = css,
-    css_rule = css_rule,
-    ...
-  )
 
   x <- theme_html_tabulator(
     x,

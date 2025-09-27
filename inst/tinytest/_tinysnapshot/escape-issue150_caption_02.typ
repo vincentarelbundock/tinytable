@@ -8,10 +8,12 @@ block[ // start block
 
   #let style-dict = (
     // tinytable style-dict after
+    "0_0": 0, "0_1": 0, "0_2": 0, "0_3": 0
   )
 
   #let style-array = ( 
     // tinytable cell style after
+    (align: center,),
   )
 
   // Helper function to get cell style
@@ -56,6 +58,7 @@ block[ // start block
       let style = get-style(x, y)
       if style != none and "background" in style { style.background }
     },
+ table.hline(y: 1, start: 0, end: 4, stroke: 0.05em + black),
  table.hline(y: 2, start: 0, end: 4, stroke: 0.05em + black),
  table.hline(y: 5, start: 0, end: 4, stroke: 0.1em + black),
  table.hline(y: 0, start: 0, end: 4, stroke: 0.1em + black),
@@ -64,7 +67,7 @@ block[ // start block
     // tinytable header start
     table.header(
       repeat: true,
-table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[foo\_bar],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[banana\_fish],
+table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[foo\_bar], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[banana\_fish],
 [blah\_blah\_underscore], [dollar\$sign], [percent%sign], [ampersand&sign],
     ),
     // tinytable header end

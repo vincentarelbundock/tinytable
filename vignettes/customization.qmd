@@ -1,0 +1,68 @@
+# Customization
+
+This section covers customization options for `tinytable`. For format-specific customization, see:
+
+- [HTML customization](html.qmd) - Bootstrap, CSS subclasses, custom CSS rules
+- [LaTeX/PDF customization](latex.qmd) - Tabularray features and styling
+
+```{r}
+library(tinytable)
+options(tinytable_tt_digits = 3)
+x <- mtcars[1:4, 1:5]
+```
+
+## Methods to support non-data frame objects
+
+The `tt()` function is a "generic" that can dispatch an object to an appropriate method based on the class of that object. The `tinytable` supplies methods for `data.frame`, `data.table`, and `tibble`. But users can define new method to automatically create tables for whatever object they like.
+
+For example, let's say we fit a linear regression model (class `lm`) and extract the results using the `tidy()` function from the `broom` package. We can create a table from the results as follows:
+
+```{r}
+library(broom)
+library(tinytable)
+mod <- lm(mpg ~ hp + factor(cyl), data = mtcars)
+results <- tidy(mod)
+tt(results)
+```
+
+Alternatively, we can create an S3 method for the `lm` class, and then pass any model we fit to that class to automatically obtain a nice table.
+
+```{r}
+tt.lm <- function(x, ...) {
+  results <- broom::tidy(x)
+  out <- tt(results, ...)
+  out <- format_tt(out, j = "p.value", escape = TRUE,
+    fn = \(p) format.pval(p, digits = 1))
+  return(out)
+}
+
+lm(mpg ~ hp, data = mtcars) |> tt(digits = 1)
+
+lm(mpg ~ hp + factor(cyl), data = mtcars) |> tt(digits = 1)
+```
+
+## Shiny
+
+`tinytable` is a great complement to Shiny for displaying HTML tables in a web app. The styling in a `tinytable` is applied by JavaScript functions and CSS. Thus, to ensure that this styling is preserved in a Shiny app, one strategy is to bake the entire page, save it in a temporary file, and load it using the `includeHTML` function from the `shiny` package. This approach is illustrated in this minimal example:
+
+
+```{r, eval = FALSE}
+library("shiny")
+library("tinytable")
+
+fn <- paste(tempfile(), ".html")
+tab <- tt(mtcars[1:5, 1:4]) |>
+  style_tt(i = 0:5, color = "orange", background = "black") |>
+  save_tt(fn)
+
+shinyApp(
+  ui = fluidPage(
+    fluidRow(column(
+      12, h1("This is test of tinytable"),
+      shiny::includeHTML(fn)
+    ))
+  ),
+  server = function(input, output) {
+  }
+)
+```

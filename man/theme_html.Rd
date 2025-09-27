@@ -6,12 +6,12 @@
 \usage{
 theme_html(
   x,
-  engine = get_option("tinytable_html_engine", default = "bootstrap"),
+  engine = get_option("tinytable_html_engine", default = NULL),
   i = NULL,
   j = NULL,
-  class = get_option("tinytable_html_class"),
-  css = get_option("tinytable_html_css"),
-  css_rule = get_option("tinytable_html_css_rule"),
+  class = get_option("tinytable_html_class", default = NULL),
+  css = get_option("tinytable_html_css", default = NULL),
+  css_rule = get_option("tinytable_html_css_rule", default = NULL),
   portable = get_option("tinytable_html_portable"),
   tabulator_columns = get_option("tinytable_html_tabulator_columns"),
   tabulator_css_rule = get_option("tinytable_html_tabulator_css_rule"),
@@ -27,13 +27,13 @@ theme_html(
 \arguments{
 \item{x}{A \code{tinytable} object.}
 
-\item{engine}{Character string specifying the HTML engine: "bootstrap", "raw", or "tabulator".}
+\item{engine}{Character string specifying the HTML engine: "tinytable", "bootstrap", or "tabulator".}
 
 \item{i}{Row indices.}
 
 \item{j}{Column indices.}
 
-\item{class}{String. Bootstrap table class.}
+\item{class}{String. HTML table class.}
 
 \item{css}{Character vector. CSS style declarations.}
 

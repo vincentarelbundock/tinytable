@@ -41,7 +41,7 @@ tt(dat) |>
   save_tt("/path/to/your/file.html")
 ```
 
-In notebooks like Quarto or R markdown, `tinytable` will automatically create an HTML when appropriate. Whenn the `tinytable_html_engine` option is set to `"tabulator"`, the table will be rendered using Tabulator.js.
+In notebooks like Quarto or R markdown, `tinytable` will automatically create an HTML when appropriate. To create an interactive HTML table, we use the `theme_html(engine="tabulator")` function and argument. This produces a table that uses the Tabulator.js framework.
 
 ```{r}
 dat <- data.frame(
@@ -52,7 +52,8 @@ dat <- data.frame(
   best = c(TRUE, FALSE, FALSE)
 )
 
-tt(dat)
+tab <- tt(dat) |> theme_html(engine = "tabulator")
+tab
 ```
 
 ## Pagination and filtering
@@ -65,6 +66,7 @@ We also set `search=TRUE` to include a filtering box. Try typing the letters "vi
 
 ```{r}
 tt(iris) |> theme_html(
+  engine = "tabulator",
   tabulator_pagination = c(5, 10, 50), 
   tabulator_search = "bottom")
 ```
@@ -77,7 +79,7 @@ Formatting numeric and date columns in Tabulator tables requires us to use the J
 In particular, for numeric values, `format_tt()` is always set to `num_fmt="decimal"`. 
 
 ```{r}
-tt(dat) |>
+tab |>
   format_tt(j = "salary", digits = 2, num_mark_big = ",") |>
   format_tt(j = "random", digits = 4)
 ```
@@ -85,7 +87,7 @@ tt(dat) |>
 For dates, `tabulator` uses Luxon date format tokens, not R's `strptime` format. Common patterns include:
 
 ```{r}
-tt(dat) |> format_tt(j = "date", date = "M/d/yyyy")
+tab |> format_tt(j = "date", date = "M/d/yyyy")
 ```
 
 Here is a table with some common Luxon date formats and their output examples:
@@ -152,7 +154,7 @@ $TINYTABLE_ID .tabulator-header .tabulator-col {
   color: white;
 }
 "
-tt(dat) |> theme_html(tabulator_css_rule = css_rule)
+tt(dat) |> theme_html(engine = "tabulator", tabulator_css_rule = css_rule)
 ```
 
 
@@ -190,18 +192,18 @@ custom_columns <- '
   },
 ]'
 
-tt(dat) |> theme_html(tabulator_columns = custom_columns)
+tt(dat) |> theme_html(engine = "tabulator", tabulator_columns = custom_columns)
 ```
 
-And now we change more options, such as the layout and height of the table:
+And now we change more options, such as the layout and height of the table, including `height` which changes the height of the scrollable area.
 
 ```{r}
 opts <- "
   layout: 'fitColumns',
-  height: '200px'
+  height: '300px'
 "
 
-tt(dat) |> theme_html(tabulator_options = opts)
+tt(head(iris, 25)) |> theme_html(tabulator_options = opts)
 ```
 
 

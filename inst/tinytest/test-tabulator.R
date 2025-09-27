@@ -1,10 +1,11 @@
 source("helpers.R")
 options(tinytable_html_engine = "tabulator")
+options(tinytable_tt_theme = theme_html)
 
 # Basic tabulator table
 dat <- head(iris)
 tab <- tt(dat)
-out <- save_tt(tab, "tabulator")
+out <- save_tt(tab, "html")
 expect_true(is.character(out))
 expect_true(grepl("tabulator", out))
 expect_true(grepl("Sepal.Length", out))
@@ -19,7 +20,7 @@ dat <- data.frame(
 )
 
 tab <- tt(dat)
-out <- save_tt(tab, "tabulator")
+out <- save_tt(tab, "html")
 expect_true(is.character(out))
 expect_true(grepl("Montréal", out))
 expect_true(grepl("true", out, ignore.case = TRUE))
@@ -29,7 +30,7 @@ tab <- tt(iris) |> theme_html(
   tabulator_pagination = c(5, 10, 50),
   tabulator_search = "top"
 )
-out <- save_tt(tab, "tabulator")
+out <- save_tt(tab, "html")
 expect_true(grepl("pagination", out))
 expect_true(grepl("search", out))
 expect_true(grepl("paginationSize.*5", out))
@@ -38,13 +39,13 @@ expect_true(grepl("paginationSize.*5", out))
 tab <- tt(dat) |>
   format_tt(j = "salary", digits = 2, num_mark_big = ",") |>
   format_tt(j = "random", digits = 4)
-out <- save_tt(tab, "tabulator")
+out <- save_tt(tab, "html")
 expect_true(grepl("decimal", out))
 expect_true(grepl("salary.*decimal", out))
 
 # Format date columns
 tab <- tt(dat) |> format_tt(j = "date", date = "M/d/yyyy")
-out <- save_tt(tab, "tabulator")
+out <- save_tt(tab, "html")
 expect_true(grepl("M/d/yyyy", out))
 expect_true(grepl("datetime", out))
 
@@ -55,12 +56,12 @@ simple_dat <- data.frame(
 )
 
 tab <- tt(simple_dat)
-out <- save_tt(tab, "tabulator")
+out <- save_tt(tab, "html")
 expect_true(grepl("Alice", out))
 
 # Style alignment
 tab <- tt(simple_dat) |> style_tt(align = "r")
-out <- save_tt(tab, "tabulator")
+out <- save_tt(tab, "html")
 expect_true(grepl("right", out))
 
 # Custom CSS rules
@@ -71,7 +72,7 @@ $TINYTABLE_ID .tabulator-header .tabulator-col {
 }
 "
 tab <- tt(simple_dat) |> theme_html(tabulator_css_rule = css_rule)
-out <- save_tt(tab, "tabulator")
+out <- save_tt(tab, "html")
 expect_true(grepl("background-color.*black", out))
 expect_true(grepl("color.*white", out))
 
@@ -101,7 +102,7 @@ custom_columns <- '[
 ]'
 
 tab <- tt(dat_custom) |> theme_html(tabulator_columns = custom_columns)
-out <- save_tt(tab, "tabulator")
+out <- save_tt(tab, "html")
 expect_true(grepl("tickCross", out))
 expect_true(grepl("money", out))
 expect_true(grepl("Best city", out))
@@ -113,10 +114,9 @@ opts <- "
 "
 
 tab <- tt(dat_custom) |> theme_html(tabulator_options = opts)
-out <- save_tt(tab, "tabulator")
+out <- save_tt(tab, "html")
 expect_true(grepl("fitColumns", out))
 expect_true(grepl("200px", out))
 
 # Reset global option
 options(tinytable_html_engine = NULL)
-

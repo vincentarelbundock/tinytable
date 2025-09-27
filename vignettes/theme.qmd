@@ -102,65 +102,7 @@ tt(x) |>
   print("latex")
 ```
 :::
-::: {.content-visible when-format="typst"}
-## Tabular 
-LaTeX and HTML only.
-:::
 
-::: {.content-visible unless-format="pdf"}
-## LaTeX Resize
-LaTeX only.
-
-## Placement
-LaTeX only.
-
-## Rotate
-LaTeX only.
-
-## Multipage
-LaTeX only.
-:::
-
-::: {.content-hidden unless-format="pdf"}
-The `theme_latex()` function includes resize functionality to adjust the size of tables in LaTeX outputs, making them fit within a specified width of the page. This is useful for large tables that need to be scaled down to fit the document layout. This table will be scaled to 90% of the available line width, ensuring it fits nicely within the document.
-
-```{r}
-tmp <- cbind(mtcars, mtcars)[1:10, ]
-
-tt(tmp) |> theme_latex(resize_width = .9, resize_direction = "down")
-```
-
-## LaTeX Placement
-
-The `theme_latex()` function includes placement control over the positioning of the table in LaTeX documents, using floating parameters like `H` (from the `float` LaTeX package) to specify where the table should appear.
-
-```{r placement-theme}
-options(tinytable_latex_placement = NULL)
-tt(x) |>
-  theme_latex(placement = "H") |>
-  print(output = "latex")
-```
-
-## Rotate
-
-```{r}
-tt(head(iris), caption = "Rotated table.") |>
-  theme_rotate(angle = 45)
-```
-
-## Multipage
-
-The `multipage` theme is designed for LaTeX documents to allow long tables to continue across multiple pages. This theme ensures that tables are not truncated and that all data is presented clearly.
-
-```{r}
-tmp <- rbind(mtcars, mtcars)[, 1:6]
-
-cap <- "A long 80\\% width table with repeating headers."
-
-tt(tmp, width = .8, caption = cap) |>
-  theme_latex(multipage = TRUE, rowhead = 1)
-```
-:::
 
 ## User-written themes
 

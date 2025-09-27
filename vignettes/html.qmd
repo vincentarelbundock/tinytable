@@ -1,0 +1,192 @@
+# HTML customization
+
+```{=html}
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']]
+  },
+  svg: {
+    fontCache: 'global'
+  }
+};
+</script>
+```
+
+```{r}
+library(tinytable)
+options(tinytable_tt_digits = 3)
+x <- mtcars[1:4, 1:5]
+```
+
+## `tinytable` subclasses
+
+The `tinytable` package comes with built-in CSS subclasses that provide Bootstrap-style functionality without requiring the Bootstrap framework. These subclasses can be applied using `theme_html()` with the `class` argument.
+
+The available subclasses can be viewed by calling `cat(tinytable:::get_css())`. Here are the main options:
+
+### Small padding (`tinytable-sm`)
+
+```{r, eval = knitr::is_html_output()}
+tt(x) |> theme_html(class = "tinytable tinytable-sm")
+```
+
+### Bordered table (`tinytable-bordered`)
+
+```{r, eval = knitr::is_html_output()}
+tt(x) |> theme_html(class = "tinytable tinytable-bordered")
+```
+
+### Striped rows (`tinytable-striped`)
+
+```{r, eval = knitr::is_html_output()}
+tt(x) |> theme_html(class = "tinytable tinytable-striped")
+```
+
+### Hover effects (`tinytable-hover`)
+
+```{r, eval = knitr::is_html_output()}
+tt(x) |> theme_html(class = "tinytable tinytable-hover")
+```
+
+### Multiple classes combined
+
+```{r, eval = knitr::is_html_output()}
+tt(x) |> theme_html(class = "tinytable tinytable-sm tinytable-hover tinytable-bordered")
+```
+
+## CSS: cells
+
+The `style_tt()` function allows us to declare CSS properties and values for individual cells, columns, or rows of a table. For example, if we want to make the first column bold, we could do:
+
+```{r}
+tt(x) |>
+  theme_html(j = 1, css = "font-weight: bold; color: red;")
+```
+
+## CSS: table
+
+For more extensive customization, we can supply a complete CSS rule for the `.tinytable` class. To do so, we use the `theme_html()` function and its `css_rule` argument. 
+
+Notes:
+
+1. Using `css_rule` will completely overwrite the default `tinytable` CSS styling. You can retrieve the original with `tinytable:::get_css()` as a string, which you can manipulate and combine as required.
+2. We assign a custom class name to the table using the `class` argument in `theme_html()`, otherwise styles will spill over to other tables in the same document.
+
+```{r, eval = knitr::is_html_output()}
+css_rule <- "
+.gradienttable {
+  background: linear-gradient(45deg, #EA8D8D, #A890FE);
+  width: 600px;
+  border-collapse: collapse;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.gradienttable th,
+.gradienttable td {
+  padding: 5px;
+  background-color: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+.gradienttable tbody tr:hover {
+  background-color: rgba(255,255,255,0.3);
+}
+
+.gradienttable tbody td:hover:before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -9999px;
+  bottom: -9999px;
+  background-color: rgba(255,255,255,0.2);
+  z-index: -1;
+}
+
+.gradienttable thead th {
+    border-bottom: none;
+}
+"
+
+tt(x, width = 2 / 3) |>
+  theme_empty() |>
+  theme_html(css_rule = css_rule, class = "gradienttable") |>
+  style_tt(j = 1:5, align = "ccccc")
+```
+
+
+And here's another example:
+
+
+```{r}
+css <- "
+.squirreltable {
+  background-size: cover;
+  background-position: center;
+  background-image: url('https://user-images.githubusercontent.com/987057/82732352-b9aabf00-9cda-11ea-92a6-26750cf097d0.png');
+  --bs-table-bg: transparent;
+}
+.squirreltable thead th {
+    border-bottom: none;
+}
+"
+
+tt(mtcars[1:10, 1:8]) |>
+  theme_empty() |>
+  theme_html(css_rule = css, class = "squirreltable")
+```
+
+And yet another one. Some Rmarkdown documents like `bookdown` use older versions of Bootstrap that do not have a `caption-top` class. We can recreate that functionality with CSS rules and classes. For example,
+
+```r
+rule <- ".bottomcaption {caption-side: bottom;}"
+tt(head(iris), caption = "Hello world") |>
+  theme_html(class = "bottomcaption", css_rule = rule)
+```
+
+
+## Bootstrap
+
+The Bootstrap framework provides a number of built-in themes to style tables, using "classes." To use them, call `theme_html()` to set `engine="bootstrap"`, and then use the `class` argument. A list of available Bootstrap classes can be found here: <https://getbootstrap.com/docs/5.3/content/tables/>
+
+For these examples we set a global option that calls `theme_empty()` in order to remove the top, mid, and bottom rules of the table. This is optional, but helps illustrate the basic Bootstrap styling. We also override some default CSS rules set by `tinytable`, using the `css_rule` argument. We also set the default `css_rule` to an empty string in order to override the default `tinytable` CSS rules.
+
+```{r, eval = knitr::is_html_output()}
+options(tinytable_tt_theme = theme_empty)
+options(tinytable_html_css_rule = "")
+
+tt(x) |> theme_html(engine = "bootstrap", class = "table")
+```
+
+To produce a "bordered" table, we use the `table-bordered` class:
+
+
+```{r, eval = knitr::is_html_output()}
+tt(x) |> theme_html(engine = "bootstrap", class = "table table-bordered")
+```
+
+We can also combine several Bootstrap classes. Here, we get a table with the "hover" feature:
+
+```{r, eval = knitr::is_html_output()}
+tt(x) |> theme_html(engine = "bootstrap", class = "table table-hover")
+```
+
+By default, Bootstrap 5 places captions at the bottom of the table. This can be changed by using a different class:
+
+```{r}
+tt(x, caption = "A caption on top") |>
+  theme_html(engine = "bootstrap", class = "table caption-top")
+```
+
+::: {.callout-warning}
+Quarto ships with its own set of Bootstrap CSS rules, which may sometimes interfere with `tinytable` styles. It is somewhat "safer" to work with the default and more vanilla `tinytable` class rather than set `engine = "bootstrap"` Also, Quarto does not appear to support all bootstrap subclasses, like `table caption-top`.
+:::
+
+```{r}
+options(tinytable_tt_theme = NULL)
+options(tinytable_html_css_rule = NULL)
+```
+

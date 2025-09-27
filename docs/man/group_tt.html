@@ -159,8 +159,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Themes</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../vignettes/custom.html">
- <span class="dropdown-text">Customization</span></a>
+    <a class="dropdown-item" href="../vignettes/html.html">
+ <span class="dropdown-text">HTML customization</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../vignettes/notebooks.html">
@@ -182,7 +182,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
   <li class="nav-item">
     <a class="nav-link active" href="../vignettes/tinytable_tutorial.pdf" aria-current="page"> 
-<span class="menu-text">Tutorial (PDF)</span></a>
+<span class="menu-text">Tutorial (LaTeX)</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../vignettes/tinytable_tutorial_typst.pdf"> 
@@ -224,7 +224,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
- <span class="menu-text">Tutorial</span></a>
+ <span class="menu-text">Tutorial (HTML)</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -268,8 +268,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/custom.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Customization</span></a>
+  <a href="../vignettes/html.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">HTML</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -307,13 +307,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/tinytable_tutorial.pdf" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Tutorial (PDF)</span></a>
+ <span class="menu-text">Tutorial (LaTeX)</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/tinytable_tutorial_typst.pdf" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Tutorial (Typst)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/word.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial (Word)</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -431,8 +437,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/theme_void.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><code>theme_void</code></span></a>
+  <a href="../man/theme_empty.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_empty</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -544,7 +550,7 @@ tt_group(
 <h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
 <table role="presentation">
 <tbody><tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="x">x</code>
 </td>
 <td>
@@ -552,7 +558,7 @@ A data frame, data table, or tibble to be rendered as a table.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="i">i</code>
 </td>
 <td>
@@ -582,7 +588,7 @@ A data frame, data table, or tibble to be rendered as a table.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="j">j</code>
 </td>
 <td>
@@ -604,7 +610,7 @@ A data frame, data table, or tibble to be rendered as a table.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="...">…</code>
 </td>
 <td>
@@ -646,130 +652,96 @@ Other arguments are ignored.
 <div class="cell-output-display">
 <!-- preamble start -->
 
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
     <script>
-
-      function styleCell_5t01tcx26gn11cvm91s1(i, j, css_id) {
-          var table = document.getElementById("tinytable_5t01tcx26gn11cvm91s1");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function spanCell_5t01tcx26gn11cvm91s1(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_5t01tcx26gn11cvm91s1");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
+      // Create table-specific functions using external factory
+      const tableFns_ogj18od8gvirlnu96ozb = TinyTable.createTableFunctions("tinytable_ogj18od8gvirlnu96ozb");
       // tinytable span after
-      window.addEventListener('load', function () { spanCell_5t01tcx26gn11cvm91s1(10, 0, 1, 2) })
-      window.addEventListener('load', function () { spanCell_5t01tcx26gn11cvm91s1(8, 0, 1, 2) })
-      window.addEventListener('load', function () { spanCell_5t01tcx26gn11cvm91s1(5, 0, 1, 2) })
-      window.addEventListener('load', function () { spanCell_5t01tcx26gn11cvm91s1(1, 0, 1, 2) })
+      window.addEventListener('load', function () { tableFns_ogj18od8gvirlnu96ozb.spanCell(10, 1, 1, 2) })
+      window.addEventListener('load', function () { tableFns_ogj18od8gvirlnu96ozb.spanCell(8, 1, 1, 2) })
+      window.addEventListener('load', function () { tableFns_ogj18od8gvirlnu96ozb.spanCell(5, 1, 1, 2) })
+      window.addEventListener('load', function () { tableFns_ogj18od8gvirlnu96ozb.spanCell(1, 1, 1, 2) })
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '12', j: 0 }, { i: '12', j: 1 },  ], css_id: 'tinytable_css_9h2z4igmztwjgf6xcmd7',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 },  ], css_id: 'tinytable_css_yzp0vextjx1bjxa6hkoq',}, 
+          { positions: [ { i: '12', j: 1 }, { i: '12', j: 2 } ], css_id: 'tinytable_css_ym1dnpz364se1l6lq8xl',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 } ], css_id: 'tinytable_css_e1hsfuoloqe8v6r5ovg1',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_5t01tcx26gn11cvm91s1(cell.i, cell.j, group.css_id);
+                  tableFns_ogj18od8gvirlnu96ozb.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
     <style>
-      /* tinytable css entries after */
-      .table td.tinytable_css_9h2z4igmztwjgf6xcmd7, .table th.tinytable_css_9h2z4igmztwjgf6xcmd7 { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_yzp0vextjx1bjxa6hkoq, .table th.tinytable_css_yzp0vextjx1bjxa6hkoq { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+    /* tinytable css entries after */
+    #tinytable_ogj18od8gvirlnu96ozb td.tinytable_css_ym1dnpz364se1l6lq8xl, #tinytable_ogj18od8gvirlnu96ozb th.tinytable_css_ym1dnpz364se1l6lq8xl {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_ogj18od8gvirlnu96ozb td.tinytable_css_e1hsfuoloqe8v6r5ovg1, #tinytable_ogj18od8gvirlnu96ozb th.tinytable_css_e1hsfuoloqe8v6r5ovg1 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_5t01tcx26gn11cvm91s1" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_ogj18od8gvirlnu96ozb" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
-        
+          
               <tr>
-                <th scope="col" data-row="0" data-col="0">x1</th>
-                <th scope="col" data-row="0" data-col="1">x2</th>
+                <th scope="col" data-row="0" data-col="1">x1</th>
+                <th scope="col" data-row="0" data-col="2">x2</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td data-row="1" data-col="0">a</td>
                   <td data-row="1" data-col="1">a</td>
+                  <td data-row="1" data-col="2">a</td>
                 </tr>
                 <tr>
-                  <td data-row="2" data-col="0">-1.03840123</td>
-                  <td data-row="2" data-col="1">-0.6049831</td>
+                  <td data-row="2" data-col="1">1.6670529</td>
+                  <td data-row="2" data-col="2">-0.27886866</td>
                 </tr>
                 <tr>
-                  <td data-row="3" data-col="0">0.58408003</td>
-                  <td data-row="3" data-col="1">-1.4091572</td>
+                  <td data-row="3" data-col="1">-0.4532044</td>
+                  <td data-row="3" data-col="2">0.92602699</td>
                 </tr>
                 <tr>
-                  <td data-row="4" data-col="0">0.08113561</td>
-                  <td data-row="4" data-col="1">0.4967689</td>
+                  <td data-row="4" data-col="1">1.2579992</td>
+                  <td data-row="4" data-col="2">1.37310307</td>
                 </tr>
                 <tr>
-                  <td data-row="5" data-col="0">b</td>
                   <td data-row="5" data-col="1">b</td>
+                  <td data-row="5" data-col="2">b</td>
                 </tr>
                 <tr>
-                  <td data-row="6" data-col="0">1.15701021</td>
-                  <td data-row="6" data-col="1">0.2404235</td>
+                  <td data-row="6" data-col="1">0.1933554</td>
+                  <td data-row="6" data-col="2">1.00154422</td>
                 </tr>
                 <tr>
-                  <td data-row="7" data-col="0">-0.23517187</td>
-                  <td data-row="7" data-col="1">2.3927826</td>
+                  <td data-row="7" data-col="1">0.5752932</td>
+                  <td data-row="7" data-col="2">-0.06439472</td>
                 </tr>
                 <tr>
-                  <td data-row="8" data-col="0">c</td>
                   <td data-row="8" data-col="1">c</td>
+                  <td data-row="8" data-col="2">c</td>
                 </tr>
                 <tr>
-                  <td data-row="9" data-col="0">-1.09033502</td>
-                  <td data-row="9" data-col="1">-1.2827855</td>
+                  <td data-row="9" data-col="1">-0.5478697</td>
+                  <td data-row="9" data-col="2">0.17472210</td>
                 </tr>
                 <tr>
-                  <td data-row="10" data-col="0">a</td>
                   <td data-row="10" data-col="1">a</td>
+                  <td data-row="10" data-col="2">a</td>
                 </tr>
                 <tr>
-                  <td data-row="11" data-col="0">-0.61840096</td>
-                  <td data-row="11" data-col="1">-0.8399756</td>
+                  <td data-row="11" data-col="1">2.1088261</td>
+                  <td data-row="11" data-col="2">1.13549583</td>
                 </tr>
                 <tr>
-                  <td data-row="12" data-col="0">-1.43526458</td>
-                  <td data-row="12" data-col="1">-0.8111932</td>
+                  <td data-row="12" data-col="1">-0.1525719</td>
+                  <td data-row="12" data-col="2">0.18295472</td>
                 </tr>
         </tbody>
       </table>
@@ -791,176 +763,148 @@ Other arguments are ignored.
 <div class="cell-output-display">
 <!-- preamble start -->
 
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
     <script>
-
-      function styleCell_6up9i0whhr5cbsikx8wk(i, j, css_id) {
-          var table = document.getElementById("tinytable_6up9i0whhr5cbsikx8wk");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function spanCell_6up9i0whhr5cbsikx8wk(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_6up9i0whhr5cbsikx8wk");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
+      // Create table-specific functions using external factory
+      const tableFns_vlq5fo55om0mao6fj9t0 = TinyTable.createTableFunctions("tinytable_vlq5fo55om0mao6fj9t0");
       // tinytable span after
-      window.addEventListener('load', function () { spanCell_6up9i0whhr5cbsikx8wk(9, 0, 1, 5) })
-      window.addEventListener('load', function () { spanCell_6up9i0whhr5cbsikx8wk(3, 0, 1, 5) })
+      window.addEventListener('load', function () { tableFns_vlq5fo55om0mao6fj9t0.spanCell(-1, 4, 1, 2) })
+      window.addEventListener('load', function () { tableFns_vlq5fo55om0mao6fj9t0.spanCell(-1, 2, 1, 2) })
+      window.addEventListener('load', function () { tableFns_vlq5fo55om0mao6fj9t0.spanCell(9, 1, 1, 5) })
+      window.addEventListener('load', function () { tableFns_vlq5fo55om0mao6fj9t0.spanCell(3, 1, 1, 5) })
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '-1', j: 2 }, { i: '-1', j: 1 },  ], css_id: 'tinytable_css_jzvp6yd0h7uin1i7m70u',}, 
-          { positions: [ { i: '12', j: 3 }, { i: '12', j: 2 }, { i: '12', j: 0 }, { i: '12', j: 1 }, { i: '12', j: 4 },  ], css_id: 'tinytable_css_91tqju4znbcdjmqsi2wi',}, 
-          { positions: [ { i: '-1', j: 0 }, { i: '-1', j: 3 }, { i: '-1', j: 4 },  ], css_id: 'tinytable_css_8qendvsuej9i8y2ga05e',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 3 }, { i: '0', j: 2 }, { i: '0', j: 1 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_07saxucxt4y0lrx9fk9q',}, 
+          { positions: [ { i: '12', j: 1 }, { i: '12', j: 2 }, { i: '12', j: 3 }, { i: '12', j: 4 }, { i: '12', j: 5 } ], css_id: 'tinytable_css_9xyndh5nv5rcl0br8rna',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_v32nn7a9ce7gfy35hphx',}, 
+          { positions: [ { i: '-1', j: 5 } ], css_id: 'tinytable_css_eoiilddsdu4sha6f3y6r',}, 
+          { positions: [ { i: '-1', j: 3 } ], css_id: 'tinytable_css_amgf54eg3zvt72cdi11p',}, 
+          { positions: [ { i: '-1', j: 2 }, { i: '-1', j: 4 } ], css_id: 'tinytable_css_08psm7wbwe19jb32or7f',}, 
+          { positions: [ { i: '-1', j: 1 } ], css_id: 'tinytable_css_2racgpv4ou07ryf9krwm',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_6up9i0whhr5cbsikx8wk(cell.i, cell.j, group.css_id);
+                  tableFns_vlq5fo55om0mao6fj9t0.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
     <style>
-      /* tinytable css entries after */
-      .table td.tinytable_css_jzvp6yd0h7uin1i7m70u, .table th.tinytable_css_jzvp6yd0h7uin1i7m70u { border-top: solid #d3d8dc 0.1em; text-align: center; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_91tqju4znbcdjmqsi2wi, .table th.tinytable_css_91tqju4znbcdjmqsi2wi { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_8qendvsuej9i8y2ga05e, .table th.tinytable_css_8qendvsuej9i8y2ga05e { border-top: solid #d3d8dc 0.1em; text-align: center; }
-      .table td.tinytable_css_07saxucxt4y0lrx9fk9q, .table th.tinytable_css_07saxucxt4y0lrx9fk9q { border-bottom: solid #d3d8dc 0.05em; }
+    /* tinytable css entries after */
+    #tinytable_vlq5fo55om0mao6fj9t0 td.tinytable_css_9xyndh5nv5rcl0br8rna, #tinytable_vlq5fo55om0mao6fj9t0 th.tinytable_css_9xyndh5nv5rcl0br8rna {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_vlq5fo55om0mao6fj9t0 td.tinytable_css_v32nn7a9ce7gfy35hphx, #tinytable_vlq5fo55om0mao6fj9t0 th.tinytable_css_v32nn7a9ce7gfy35hphx {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_vlq5fo55om0mao6fj9t0 td.tinytable_css_eoiilddsdu4sha6f3y6r, #tinytable_vlq5fo55om0mao6fj9t0 th.tinytable_css_eoiilddsdu4sha6f3y6r {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_vlq5fo55om0mao6fj9t0 td.tinytable_css_amgf54eg3zvt72cdi11p, #tinytable_vlq5fo55om0mao6fj9t0 th.tinytable_css_amgf54eg3zvt72cdi11p {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 3%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_vlq5fo55om0mao6fj9t0 td.tinytable_css_08psm7wbwe19jb32or7f, #tinytable_vlq5fo55om0mao6fj9t0 th.tinytable_css_08psm7wbwe19jb32or7f {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 3%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_vlq5fo55om0mao6fj9t0 td.tinytable_css_2racgpv4ou07ryf9krwm, #tinytable_vlq5fo55om0mao6fj9t0 th.tinytable_css_2racgpv4ou07ryf9krwm {  position: relative; --border-bottom: 0; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_6up9i0whhr5cbsikx8wk" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_vlq5fo55om0mao6fj9t0" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
 <tr>
-<th scope="col" align="center" colspan="1" data-row="-1" data-col="0"> </th>
-<th scope="col" align="center" colspan="2" data-row="-1" data-col="1">Foo</th>
-<th scope="col" align="center" colspan="2" data-row="-1" data-col="2">Bar</th>
+<th scope="col" align="center" colspan="1" data-row="-1" data-col="1"> </th>
+<th scope="col" align="center" colspan="2" data-row="-1" data-col="2">Foo</th>
+<th scope="col" align="center" colspan="2" data-row="-1" data-col="4">Bar</th>
 </tr>
-        
+          
               <tr>
-                <th scope="col" data-row="0" data-col="0">mpg</th>
-                <th scope="col" data-row="0" data-col="1">cyl</th>
-                <th scope="col" data-row="0" data-col="2">disp</th>
-                <th scope="col" data-row="0" data-col="3">hp</th>
-                <th scope="col" data-row="0" data-col="4">drat</th>
+                <th scope="col" data-row="0" data-col="1">mpg</th>
+                <th scope="col" data-row="0" data-col="2">cyl</th>
+                <th scope="col" data-row="0" data-col="3">disp</th>
+                <th scope="col" data-row="0" data-col="4">hp</th>
+                <th scope="col" data-row="0" data-col="5">drat</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td data-row="1" data-col="0">21.0</td>
-                  <td data-row="1" data-col="1">6</td>
-                  <td data-row="1" data-col="2">160.0</td>
-                  <td data-row="1" data-col="3">110</td>
-                  <td data-row="1" data-col="4">3.90</td>
+                  <td data-row="1" data-col="1">21.0</td>
+                  <td data-row="1" data-col="2">6</td>
+                  <td data-row="1" data-col="3">160.0</td>
+                  <td data-row="1" data-col="4">110</td>
+                  <td data-row="1" data-col="5">3.90</td>
                 </tr>
                 <tr>
-                  <td data-row="2" data-col="0">21.0</td>
-                  <td data-row="2" data-col="1">6</td>
-                  <td data-row="2" data-col="2">160.0</td>
-                  <td data-row="2" data-col="3">110</td>
-                  <td data-row="2" data-col="4">3.90</td>
+                  <td data-row="2" data-col="1">21.0</td>
+                  <td data-row="2" data-col="2">6</td>
+                  <td data-row="2" data-col="3">160.0</td>
+                  <td data-row="2" data-col="4">110</td>
+                  <td data-row="2" data-col="5">3.90</td>
                 </tr>
                 <tr>
-                  <td data-row="3" data-col="0">Hello</td>
                   <td data-row="3" data-col="1">Hello</td>
                   <td data-row="3" data-col="2">Hello</td>
                   <td data-row="3" data-col="3">Hello</td>
                   <td data-row="3" data-col="4">Hello</td>
+                  <td data-row="3" data-col="5">Hello</td>
                 </tr>
                 <tr>
-                  <td data-row="4" data-col="0">22.8</td>
-                  <td data-row="4" data-col="1">4</td>
-                  <td data-row="4" data-col="2">108.0</td>
-                  <td data-row="4" data-col="3">93</td>
-                  <td data-row="4" data-col="4">3.85</td>
+                  <td data-row="4" data-col="1">22.8</td>
+                  <td data-row="4" data-col="2">4</td>
+                  <td data-row="4" data-col="3">108.0</td>
+                  <td data-row="4" data-col="4">93</td>
+                  <td data-row="4" data-col="5">3.85</td>
                 </tr>
                 <tr>
-                  <td data-row="5" data-col="0">21.4</td>
-                  <td data-row="5" data-col="1">6</td>
-                  <td data-row="5" data-col="2">258.0</td>
-                  <td data-row="5" data-col="3">110</td>
-                  <td data-row="5" data-col="4">3.08</td>
+                  <td data-row="5" data-col="1">21.4</td>
+                  <td data-row="5" data-col="2">6</td>
+                  <td data-row="5" data-col="3">258.0</td>
+                  <td data-row="5" data-col="4">110</td>
+                  <td data-row="5" data-col="5">3.08</td>
                 </tr>
                 <tr>
-                  <td data-row="6" data-col="0">18.7</td>
-                  <td data-row="6" data-col="1">8</td>
-                  <td data-row="6" data-col="2">360.0</td>
-                  <td data-row="6" data-col="3">175</td>
-                  <td data-row="6" data-col="4">3.15</td>
+                  <td data-row="6" data-col="1">18.7</td>
+                  <td data-row="6" data-col="2">8</td>
+                  <td data-row="6" data-col="3">360.0</td>
+                  <td data-row="6" data-col="4">175</td>
+                  <td data-row="6" data-col="5">3.15</td>
                 </tr>
                 <tr>
-                  <td data-row="7" data-col="0">18.1</td>
-                  <td data-row="7" data-col="1">6</td>
-                  <td data-row="7" data-col="2">225.0</td>
-                  <td data-row="7" data-col="3">105</td>
-                  <td data-row="7" data-col="4">2.76</td>
+                  <td data-row="7" data-col="1">18.1</td>
+                  <td data-row="7" data-col="2">6</td>
+                  <td data-row="7" data-col="3">225.0</td>
+                  <td data-row="7" data-col="4">105</td>
+                  <td data-row="7" data-col="5">2.76</td>
                 </tr>
                 <tr>
-                  <td data-row="8" data-col="0">14.3</td>
-                  <td data-row="8" data-col="1">8</td>
-                  <td data-row="8" data-col="2">360.0</td>
-                  <td data-row="8" data-col="3">245</td>
-                  <td data-row="8" data-col="4">3.21</td>
+                  <td data-row="8" data-col="1">14.3</td>
+                  <td data-row="8" data-col="2">8</td>
+                  <td data-row="8" data-col="3">360.0</td>
+                  <td data-row="8" data-col="4">245</td>
+                  <td data-row="8" data-col="5">3.21</td>
                 </tr>
                 <tr>
-                  <td data-row="9" data-col="0">World</td>
                   <td data-row="9" data-col="1">World</td>
                   <td data-row="9" data-col="2">World</td>
                   <td data-row="9" data-col="3">World</td>
                   <td data-row="9" data-col="4">World</td>
+                  <td data-row="9" data-col="5">World</td>
                 </tr>
                 <tr>
-                  <td data-row="10" data-col="0">24.4</td>
-                  <td data-row="10" data-col="1">4</td>
-                  <td data-row="10" data-col="2">146.7</td>
-                  <td data-row="10" data-col="3">62</td>
-                  <td data-row="10" data-col="4">3.69</td>
+                  <td data-row="10" data-col="1">24.4</td>
+                  <td data-row="10" data-col="2">4</td>
+                  <td data-row="10" data-col="3">146.7</td>
+                  <td data-row="10" data-col="4">62</td>
+                  <td data-row="10" data-col="5">3.69</td>
                 </tr>
                 <tr>
-                  <td data-row="11" data-col="0">22.8</td>
-                  <td data-row="11" data-col="1">4</td>
-                  <td data-row="11" data-col="2">140.8</td>
-                  <td data-row="11" data-col="3">95</td>
-                  <td data-row="11" data-col="4">3.92</td>
+                  <td data-row="11" data-col="1">22.8</td>
+                  <td data-row="11" data-col="2">4</td>
+                  <td data-row="11" data-col="3">140.8</td>
+                  <td data-row="11" data-col="4">95</td>
+                  <td data-row="11" data-col="5">3.92</td>
                 </tr>
                 <tr>
-                  <td data-row="12" data-col="0">19.2</td>
-                  <td data-row="12" data-col="1">6</td>
-                  <td data-row="12" data-col="2">167.6</td>
-                  <td data-row="12" data-col="3">123</td>
-                  <td data-row="12" data-col="4">3.92</td>
+                  <td data-row="12" data-col="1">19.2</td>
+                  <td data-row="12" data-col="2">6</td>
+                  <td data-row="12" data-col="3">167.6</td>
+                  <td data-row="12" data-col="4">123</td>
+                  <td data-row="12" data-col="5">3.92</td>
                 </tr>
         </tbody>
       </table>
@@ -977,110 +921,75 @@ Other arguments are ignored.
 <div class="cell-output-display">
 <!-- preamble start -->
 
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
     <script>
-
-      function styleCell_v8uh78klijgg4n2gp48d(i, j, css_id) {
-          var table = document.getElementById("tinytable_v8uh78klijgg4n2gp48d");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function spanCell_v8uh78klijgg4n2gp48d(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_v8uh78klijgg4n2gp48d");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
+      // Create table-specific functions using external factory
+      const tableFns_rb18z62g77i4c59xm11z = TinyTable.createTableFunctions("tinytable_rb18z62g77i4c59xm11z");
       // tinytable span after
-      window.addEventListener('load', function () { spanCell_v8uh78klijgg4n2gp48d(9, 0, 1, 8) })
-      window.addEventListener('load', function () { spanCell_v8uh78klijgg4n2gp48d(5, 0, 1, 8) })
-      window.addEventListener('load', function () { spanCell_v8uh78klijgg4n2gp48d(3, 0, 1, 8) })
+      window.addEventListener('load', function () { tableFns_rb18z62g77i4c59xm11z.spanCell(9, 1, 1, 8) })
+      window.addEventListener('load', function () { tableFns_rb18z62g77i4c59xm11z.spanCell(5, 1, 1, 8) })
+      window.addEventListener('load', function () { tableFns_rb18z62g77i4c59xm11z.spanCell(3, 1, 1, 8) })
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '12', j: 0 }, { i: '12', j: 1 }, { i: '12', j: 2 }, { i: '12', j: 3 }, { i: '12', j: 4 }, { i: '12', j: 5 }, { i: '12', j: 6 }, { i: '12', j: 7 },  ], css_id: 'tinytable_css_9zwx2qptsihktmqpvbya',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 }, { i: '0', j: 7 },  ], css_id: 'tinytable_css_e4q3c7mkqdx3z064lxvm',}, 
+          { positions: [ { i: '12', j: 1 }, { i: '12', j: 2 }, { i: '12', j: 3 }, { i: '12', j: 4 }, { i: '12', j: 5 }, { i: '12', j: 6 }, { i: '12', j: 7 }, { i: '12', j: 8 } ], css_id: 'tinytable_css_5bbasejui7fj5ihc56m9',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 }, { i: '0', j: 7 }, { i: '0', j: 8 } ], css_id: 'tinytable_css_7108ye8jhve4fk5scqy5',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_v8uh78klijgg4n2gp48d(cell.i, cell.j, group.css_id);
+                  tableFns_rb18z62g77i4c59xm11z.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
     <style>
-      /* tinytable css entries after */
-      .table td.tinytable_css_9zwx2qptsihktmqpvbya, .table th.tinytable_css_9zwx2qptsihktmqpvbya { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_e4q3c7mkqdx3z064lxvm, .table th.tinytable_css_e4q3c7mkqdx3z064lxvm { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+    /* tinytable css entries after */
+    #tinytable_rb18z62g77i4c59xm11z td.tinytable_css_5bbasejui7fj5ihc56m9, #tinytable_rb18z62g77i4c59xm11z th.tinytable_css_5bbasejui7fj5ihc56m9 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_rb18z62g77i4c59xm11z td.tinytable_css_7108ye8jhve4fk5scqy5, #tinytable_rb18z62g77i4c59xm11z th.tinytable_css_7108ye8jhve4fk5scqy5 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_v8uh78klijgg4n2gp48d" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_rb18z62g77i4c59xm11z" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
-        
+          
               <tr>
-                <th scope="col" data-row="0" data-col="0">mpg</th>
-                <th scope="col" data-row="0" data-col="1">cyl</th>
-                <th scope="col" data-row="0" data-col="2">disp</th>
-                <th scope="col" data-row="0" data-col="3">hp</th>
-                <th scope="col" data-row="0" data-col="4">drat</th>
-                <th scope="col" data-row="0" data-col="5">wt</th>
-                <th scope="col" data-row="0" data-col="6">qsec</th>
-                <th scope="col" data-row="0" data-col="7">vs</th>
+                <th scope="col" data-row="0" data-col="1">mpg</th>
+                <th scope="col" data-row="0" data-col="2">cyl</th>
+                <th scope="col" data-row="0" data-col="3">disp</th>
+                <th scope="col" data-row="0" data-col="4">hp</th>
+                <th scope="col" data-row="0" data-col="5">drat</th>
+                <th scope="col" data-row="0" data-col="6">wt</th>
+                <th scope="col" data-row="0" data-col="7">qsec</th>
+                <th scope="col" data-row="0" data-col="8">vs</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td data-row="1" data-col="0">21.0</td>
-                  <td data-row="1" data-col="1">6</td>
-                  <td data-row="1" data-col="2">160.0</td>
-                  <td data-row="1" data-col="3">110</td>
-                  <td data-row="1" data-col="4">3.90</td>
-                  <td data-row="1" data-col="5">2.620</td>
-                  <td data-row="1" data-col="6">16.46</td>
-                  <td data-row="1" data-col="7">0</td>
+                  <td data-row="1" data-col="1">21.0</td>
+                  <td data-row="1" data-col="2">6</td>
+                  <td data-row="1" data-col="3">160.0</td>
+                  <td data-row="1" data-col="4">110</td>
+                  <td data-row="1" data-col="5">3.90</td>
+                  <td data-row="1" data-col="6">2.620</td>
+                  <td data-row="1" data-col="7">16.46</td>
+                  <td data-row="1" data-col="8">0</td>
                 </tr>
                 <tr>
-                  <td data-row="2" data-col="0">21.0</td>
-                  <td data-row="2" data-col="1">6</td>
-                  <td data-row="2" data-col="2">160.0</td>
-                  <td data-row="2" data-col="3">110</td>
-                  <td data-row="2" data-col="4">3.90</td>
-                  <td data-row="2" data-col="5">2.875</td>
-                  <td data-row="2" data-col="6">17.02</td>
-                  <td data-row="2" data-col="7">0</td>
+                  <td data-row="2" data-col="1">21.0</td>
+                  <td data-row="2" data-col="2">6</td>
+                  <td data-row="2" data-col="3">160.0</td>
+                  <td data-row="2" data-col="4">110</td>
+                  <td data-row="2" data-col="5">3.90</td>
+                  <td data-row="2" data-col="6">2.875</td>
+                  <td data-row="2" data-col="7">17.02</td>
+                  <td data-row="2" data-col="8">0</td>
                 </tr>
                 <tr>
-                  <td data-row="3" data-col="0">I like (fake) hamburgers</td>
                   <td data-row="3" data-col="1">I like (fake) hamburgers</td>
                   <td data-row="3" data-col="2">I like (fake) hamburgers</td>
                   <td data-row="3" data-col="3">I like (fake) hamburgers</td>
@@ -1088,19 +997,19 @@ Other arguments are ignored.
                   <td data-row="3" data-col="5">I like (fake) hamburgers</td>
                   <td data-row="3" data-col="6">I like (fake) hamburgers</td>
                   <td data-row="3" data-col="7">I like (fake) hamburgers</td>
+                  <td data-row="3" data-col="8">I like (fake) hamburgers</td>
                 </tr>
                 <tr>
-                  <td data-row="4" data-col="0">22.8</td>
-                  <td data-row="4" data-col="1">4</td>
-                  <td data-row="4" data-col="2">108.0</td>
-                  <td data-row="4" data-col="3">93</td>
-                  <td data-row="4" data-col="4">3.85</td>
-                  <td data-row="4" data-col="5">2.320</td>
-                  <td data-row="4" data-col="6">18.61</td>
-                  <td data-row="4" data-col="7">1</td>
+                  <td data-row="4" data-col="1">22.8</td>
+                  <td data-row="4" data-col="2">4</td>
+                  <td data-row="4" data-col="3">108.0</td>
+                  <td data-row="4" data-col="4">93</td>
+                  <td data-row="4" data-col="5">3.85</td>
+                  <td data-row="4" data-col="6">2.320</td>
+                  <td data-row="4" data-col="7">18.61</td>
+                  <td data-row="4" data-col="8">1</td>
                 </tr>
                 <tr>
-                  <td data-row="5" data-col="0">She prefers halloumi</td>
                   <td data-row="5" data-col="1">She prefers halloumi</td>
                   <td data-row="5" data-col="2">She prefers halloumi</td>
                   <td data-row="5" data-col="3">She prefers halloumi</td>
@@ -1108,39 +1017,39 @@ Other arguments are ignored.
                   <td data-row="5" data-col="5">She prefers halloumi</td>
                   <td data-row="5" data-col="6">She prefers halloumi</td>
                   <td data-row="5" data-col="7">She prefers halloumi</td>
+                  <td data-row="5" data-col="8">She prefers halloumi</td>
                 </tr>
                 <tr>
-                  <td data-row="6" data-col="0">21.4</td>
-                  <td data-row="6" data-col="1">6</td>
-                  <td data-row="6" data-col="2">258.0</td>
-                  <td data-row="6" data-col="3">110</td>
-                  <td data-row="6" data-col="4">3.08</td>
-                  <td data-row="6" data-col="5">3.215</td>
-                  <td data-row="6" data-col="6">19.44</td>
-                  <td data-row="6" data-col="7">1</td>
+                  <td data-row="6" data-col="1">21.4</td>
+                  <td data-row="6" data-col="2">6</td>
+                  <td data-row="6" data-col="3">258.0</td>
+                  <td data-row="6" data-col="4">110</td>
+                  <td data-row="6" data-col="5">3.08</td>
+                  <td data-row="6" data-col="6">3.215</td>
+                  <td data-row="6" data-col="7">19.44</td>
+                  <td data-row="6" data-col="8">1</td>
                 </tr>
                 <tr>
-                  <td data-row="7" data-col="0">18.7</td>
-                  <td data-row="7" data-col="1">8</td>
-                  <td data-row="7" data-col="2">360.0</td>
-                  <td data-row="7" data-col="3">175</td>
-                  <td data-row="7" data-col="4">3.15</td>
-                  <td data-row="7" data-col="5">3.440</td>
-                  <td data-row="7" data-col="6">17.02</td>
-                  <td data-row="7" data-col="7">0</td>
+                  <td data-row="7" data-col="1">18.7</td>
+                  <td data-row="7" data-col="2">8</td>
+                  <td data-row="7" data-col="3">360.0</td>
+                  <td data-row="7" data-col="4">175</td>
+                  <td data-row="7" data-col="5">3.15</td>
+                  <td data-row="7" data-col="6">3.440</td>
+                  <td data-row="7" data-col="7">17.02</td>
+                  <td data-row="7" data-col="8">0</td>
                 </tr>
                 <tr>
-                  <td data-row="8" data-col="0">18.1</td>
-                  <td data-row="8" data-col="1">6</td>
-                  <td data-row="8" data-col="2">225.0</td>
-                  <td data-row="8" data-col="3">105</td>
-                  <td data-row="8" data-col="4">2.76</td>
-                  <td data-row="8" data-col="5">3.460</td>
-                  <td data-row="8" data-col="6">20.22</td>
-                  <td data-row="8" data-col="7">1</td>
+                  <td data-row="8" data-col="1">18.1</td>
+                  <td data-row="8" data-col="2">6</td>
+                  <td data-row="8" data-col="3">225.0</td>
+                  <td data-row="8" data-col="4">105</td>
+                  <td data-row="8" data-col="5">2.76</td>
+                  <td data-row="8" data-col="6">3.460</td>
+                  <td data-row="8" data-col="7">20.22</td>
+                  <td data-row="8" data-col="8">1</td>
                 </tr>
                 <tr>
-                  <td data-row="9" data-col="0">They love tofu</td>
                   <td data-row="9" data-col="1">They love tofu</td>
                   <td data-row="9" data-col="2">They love tofu</td>
                   <td data-row="9" data-col="3">They love tofu</td>
@@ -1148,36 +1057,37 @@ Other arguments are ignored.
                   <td data-row="9" data-col="5">They love tofu</td>
                   <td data-row="9" data-col="6">They love tofu</td>
                   <td data-row="9" data-col="7">They love tofu</td>
+                  <td data-row="9" data-col="8">They love tofu</td>
                 </tr>
                 <tr>
-                  <td data-row="10" data-col="0">14.3</td>
-                  <td data-row="10" data-col="1">8</td>
-                  <td data-row="10" data-col="2">360.0</td>
-                  <td data-row="10" data-col="3">245</td>
-                  <td data-row="10" data-col="4">3.21</td>
-                  <td data-row="10" data-col="5">3.570</td>
-                  <td data-row="10" data-col="6">15.84</td>
-                  <td data-row="10" data-col="7">0</td>
+                  <td data-row="10" data-col="1">14.3</td>
+                  <td data-row="10" data-col="2">8</td>
+                  <td data-row="10" data-col="3">360.0</td>
+                  <td data-row="10" data-col="4">245</td>
+                  <td data-row="10" data-col="5">3.21</td>
+                  <td data-row="10" data-col="6">3.570</td>
+                  <td data-row="10" data-col="7">15.84</td>
+                  <td data-row="10" data-col="8">0</td>
                 </tr>
                 <tr>
-                  <td data-row="11" data-col="0">24.4</td>
-                  <td data-row="11" data-col="1">4</td>
-                  <td data-row="11" data-col="2">146.7</td>
-                  <td data-row="11" data-col="3">62</td>
-                  <td data-row="11" data-col="4">3.69</td>
-                  <td data-row="11" data-col="5">3.190</td>
-                  <td data-row="11" data-col="6">20.00</td>
-                  <td data-row="11" data-col="7">1</td>
+                  <td data-row="11" data-col="1">24.4</td>
+                  <td data-row="11" data-col="2">4</td>
+                  <td data-row="11" data-col="3">146.7</td>
+                  <td data-row="11" data-col="4">62</td>
+                  <td data-row="11" data-col="5">3.69</td>
+                  <td data-row="11" data-col="6">3.190</td>
+                  <td data-row="11" data-col="7">20.00</td>
+                  <td data-row="11" data-col="8">1</td>
                 </tr>
                 <tr>
-                  <td data-row="12" data-col="0">22.8</td>
-                  <td data-row="12" data-col="1">4</td>
-                  <td data-row="12" data-col="2">140.8</td>
-                  <td data-row="12" data-col="3">95</td>
-                  <td data-row="12" data-col="4">3.92</td>
-                  <td data-row="12" data-col="5">3.150</td>
-                  <td data-row="12" data-col="6">22.90</td>
-                  <td data-row="12" data-col="7">1</td>
+                  <td data-row="12" data-col="1">22.8</td>
+                  <td data-row="12" data-col="2">4</td>
+                  <td data-row="12" data-col="3">140.8</td>
+                  <td data-row="12" data-col="4">95</td>
+                  <td data-row="12" data-col="5">3.92</td>
+                  <td data-row="12" data-col="6">3.150</td>
+                  <td data-row="12" data-col="7">22.90</td>
+                  <td data-row="12" data-col="8">1</td>
                 </tr>
         </tbody>
       </table>
@@ -1195,185 +1105,159 @@ Other arguments are ignored.
 <div class="cell-output-display">
 <!-- preamble start -->
 
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
     <script>
-
-      function styleCell_xoamsjkn0ly0vbupibgc(i, j, css_id) {
-          var table = document.getElementById("tinytable_xoamsjkn0ly0vbupibgc");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function spanCell_xoamsjkn0ly0vbupibgc(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_xoamsjkn0ly0vbupibgc");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
+      // Create table-specific functions using external factory
+      const tableFns_yke7ig43mgwg6ojmkpeh = TinyTable.createTableFunctions("tinytable_yke7ig43mgwg6ojmkpeh");
       // tinytable span after
+      window.addEventListener('load', function () { tableFns_yke7ig43mgwg6ojmkpeh.spanCell(-1, 4, 1, 2) })
+      window.addEventListener('load', function () { tableFns_yke7ig43mgwg6ojmkpeh.spanCell(-1, 1, 1, 3) })
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '-1', j: 2 }, { i: '-1', j: 5 }, { i: '-1', j: 4 }, { i: '-1', j: 7 }, { i: '-1', j: 6 },  ], css_id: 'tinytable_css_igsr0n3u37qpydop2kgp',}, 
-          { positions: [ { i: '9', j: 3 }, { i: '9', j: 2 }, { i: '9', j: 1 }, { i: '9', j: 0 }, { i: '9', j: 7 }, { i: '9', j: 6 }, { i: '9', j: 5 }, { i: '9', j: 4 },  ], css_id: 'tinytable_css_3995j8sjagqgy0ui2290',}, 
-          { positions: [ { i: '-1', j: 1 }, { i: '-1', j: 0 }, { i: '-1', j: 3 },  ], css_id: 'tinytable_css_h9u1wvanqgilbq4jzugd',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 3 }, { i: '0', j: 2 }, { i: '0', j: 1 }, { i: '0', j: 4 }, { i: '0', j: 7 }, { i: '0', j: 6 }, { i: '0', j: 5 },  ], css_id: 'tinytable_css_bpkpazmsnyykshpdshuc',}, 
+          { positions: [ { i: '9', j: 1 }, { i: '9', j: 2 }, { i: '9', j: 3 }, { i: '9', j: 4 }, { i: '9', j: 5 }, { i: '9', j: 6 }, { i: '9', j: 7 }, { i: '9', j: 8 } ], css_id: 'tinytable_css_wqb7k6kncgd81viaoedr',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 }, { i: '0', j: 7 }, { i: '0', j: 8 } ], css_id: 'tinytable_css_hu94k3tm1jlx8hnyede9',}, 
+          { positions: [ { i: '-1', j: 7 } ], css_id: 'tinytable_css_wzy8h84s9qdicueg70uc',}, 
+          { positions: [ { i: '-1', j: 6 }, { i: '-1', j: 8 } ], css_id: 'tinytable_css_wnn8rcgpybd8dezpjhfz',}, 
+          { positions: [ { i: '-1', j: 4 } ], css_id: 'tinytable_css_apqysdu5ahd7pko3snbd',}, 
+          { positions: [ { i: '-1', j: 3 }, { i: '-1', j: 5 } ], css_id: 'tinytable_css_qss016t8a0z6gopwicud',}, 
+          { positions: [ { i: '-1', j: 1 }, { i: '-1', j: 2 } ], css_id: 'tinytable_css_mvsepve9p4sjnrw8a3ma',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_xoamsjkn0ly0vbupibgc(cell.i, cell.j, group.css_id);
+                  tableFns_yke7ig43mgwg6ojmkpeh.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
     <style>
-      /* tinytable css entries after */
-      .table td.tinytable_css_igsr0n3u37qpydop2kgp, .table th.tinytable_css_igsr0n3u37qpydop2kgp { border-top: solid #d3d8dc 0.1em; text-align: center; }
-      .table td.tinytable_css_3995j8sjagqgy0ui2290, .table th.tinytable_css_3995j8sjagqgy0ui2290 { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_h9u1wvanqgilbq4jzugd, .table th.tinytable_css_h9u1wvanqgilbq4jzugd { border-top: solid #d3d8dc 0.1em; text-align: center; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_bpkpazmsnyykshpdshuc, .table th.tinytable_css_bpkpazmsnyykshpdshuc { border-bottom: solid #d3d8dc 0.05em; }
+    /* tinytable css entries after */
+    #tinytable_yke7ig43mgwg6ojmkpeh td.tinytable_css_wqb7k6kncgd81viaoedr, #tinytable_yke7ig43mgwg6ojmkpeh th.tinytable_css_wqb7k6kncgd81viaoedr {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_yke7ig43mgwg6ojmkpeh td.tinytable_css_hu94k3tm1jlx8hnyede9, #tinytable_yke7ig43mgwg6ojmkpeh th.tinytable_css_hu94k3tm1jlx8hnyede9 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_yke7ig43mgwg6ojmkpeh td.tinytable_css_wzy8h84s9qdicueg70uc, #tinytable_yke7ig43mgwg6ojmkpeh th.tinytable_css_wzy8h84s9qdicueg70uc {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 3%; --trim-bottom-right: 3%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_yke7ig43mgwg6ojmkpeh td.tinytable_css_wnn8rcgpybd8dezpjhfz, #tinytable_yke7ig43mgwg6ojmkpeh th.tinytable_css_wnn8rcgpybd8dezpjhfz {  position: relative; --border-bottom: 0; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_yke7ig43mgwg6ojmkpeh td.tinytable_css_apqysdu5ahd7pko3snbd, #tinytable_yke7ig43mgwg6ojmkpeh th.tinytable_css_apqysdu5ahd7pko3snbd {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 3%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_yke7ig43mgwg6ojmkpeh td.tinytable_css_qss016t8a0z6gopwicud, #tinytable_yke7ig43mgwg6ojmkpeh th.tinytable_css_qss016t8a0z6gopwicud {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 3%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_yke7ig43mgwg6ojmkpeh td.tinytable_css_mvsepve9p4sjnrw8a3ma, #tinytable_yke7ig43mgwg6ojmkpeh th.tinytable_css_mvsepve9p4sjnrw8a3ma {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_xoamsjkn0ly0vbupibgc" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_yke7ig43mgwg6ojmkpeh" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
 <tr>
-<th scope="col" align="center" colspan="3" data-row="-1" data-col="0">Hamburgers</th>
-<th scope="col" align="center" colspan="2" data-row="-1" data-col="1">Halloumi</th>
-<th scope="col" align="center" colspan="1" data-row="-1" data-col="2"> </th>
-<th scope="col" align="center" colspan="1" data-row="-1" data-col="3">Tofu</th>
-<th scope="col" align="center" colspan="1" data-row="-1" data-col="4"> </th>
+<th scope="col" align="center" colspan="3" data-row="-1" data-col="1">Hamburgers</th>
+<th scope="col" align="center" colspan="2" data-row="-1" data-col="4">Halloumi</th>
+<th scope="col" align="center" colspan="1" data-row="-1" data-col="6"> </th>
+<th scope="col" align="center" colspan="1" data-row="-1" data-col="7">Tofu</th>
+<th scope="col" align="center" colspan="1" data-row="-1" data-col="8"> </th>
 </tr>
-        
+          
               <tr>
-                <th scope="col" data-row="0" data-col="0">mpg</th>
-                <th scope="col" data-row="0" data-col="1">cyl</th>
-                <th scope="col" data-row="0" data-col="2">disp</th>
-                <th scope="col" data-row="0" data-col="3">hp</th>
-                <th scope="col" data-row="0" data-col="4">drat</th>
-                <th scope="col" data-row="0" data-col="5">wt</th>
-                <th scope="col" data-row="0" data-col="6">qsec</th>
-                <th scope="col" data-row="0" data-col="7">vs</th>
+                <th scope="col" data-row="0" data-col="1">mpg</th>
+                <th scope="col" data-row="0" data-col="2">cyl</th>
+                <th scope="col" data-row="0" data-col="3">disp</th>
+                <th scope="col" data-row="0" data-col="4">hp</th>
+                <th scope="col" data-row="0" data-col="5">drat</th>
+                <th scope="col" data-row="0" data-col="6">wt</th>
+                <th scope="col" data-row="0" data-col="7">qsec</th>
+                <th scope="col" data-row="0" data-col="8">vs</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td data-row="1" data-col="0">21.0</td>
-                  <td data-row="1" data-col="1">6</td>
-                  <td data-row="1" data-col="2">160.0</td>
-                  <td data-row="1" data-col="3">110</td>
-                  <td data-row="1" data-col="4">3.90</td>
-                  <td data-row="1" data-col="5">2.620</td>
-                  <td data-row="1" data-col="6">16.46</td>
-                  <td data-row="1" data-col="7">0</td>
+                  <td data-row="1" data-col="1">21.0</td>
+                  <td data-row="1" data-col="2">6</td>
+                  <td data-row="1" data-col="3">160.0</td>
+                  <td data-row="1" data-col="4">110</td>
+                  <td data-row="1" data-col="5">3.90</td>
+                  <td data-row="1" data-col="6">2.620</td>
+                  <td data-row="1" data-col="7">16.46</td>
+                  <td data-row="1" data-col="8">0</td>
                 </tr>
                 <tr>
-                  <td data-row="2" data-col="0">21.0</td>
-                  <td data-row="2" data-col="1">6</td>
-                  <td data-row="2" data-col="2">160.0</td>
-                  <td data-row="2" data-col="3">110</td>
-                  <td data-row="2" data-col="4">3.90</td>
-                  <td data-row="2" data-col="5">2.875</td>
-                  <td data-row="2" data-col="6">17.02</td>
-                  <td data-row="2" data-col="7">0</td>
+                  <td data-row="2" data-col="1">21.0</td>
+                  <td data-row="2" data-col="2">6</td>
+                  <td data-row="2" data-col="3">160.0</td>
+                  <td data-row="2" data-col="4">110</td>
+                  <td data-row="2" data-col="5">3.90</td>
+                  <td data-row="2" data-col="6">2.875</td>
+                  <td data-row="2" data-col="7">17.02</td>
+                  <td data-row="2" data-col="8">0</td>
                 </tr>
                 <tr>
-                  <td data-row="3" data-col="0">22.8</td>
-                  <td data-row="3" data-col="1">4</td>
-                  <td data-row="3" data-col="2">108.0</td>
-                  <td data-row="3" data-col="3">93</td>
-                  <td data-row="3" data-col="4">3.85</td>
-                  <td data-row="3" data-col="5">2.320</td>
-                  <td data-row="3" data-col="6">18.61</td>
-                  <td data-row="3" data-col="7">1</td>
+                  <td data-row="3" data-col="1">22.8</td>
+                  <td data-row="3" data-col="2">4</td>
+                  <td data-row="3" data-col="3">108.0</td>
+                  <td data-row="3" data-col="4">93</td>
+                  <td data-row="3" data-col="5">3.85</td>
+                  <td data-row="3" data-col="6">2.320</td>
+                  <td data-row="3" data-col="7">18.61</td>
+                  <td data-row="3" data-col="8">1</td>
                 </tr>
                 <tr>
-                  <td data-row="4" data-col="0">21.4</td>
-                  <td data-row="4" data-col="1">6</td>
-                  <td data-row="4" data-col="2">258.0</td>
-                  <td data-row="4" data-col="3">110</td>
-                  <td data-row="4" data-col="4">3.08</td>
-                  <td data-row="4" data-col="5">3.215</td>
-                  <td data-row="4" data-col="6">19.44</td>
-                  <td data-row="4" data-col="7">1</td>
+                  <td data-row="4" data-col="1">21.4</td>
+                  <td data-row="4" data-col="2">6</td>
+                  <td data-row="4" data-col="3">258.0</td>
+                  <td data-row="4" data-col="4">110</td>
+                  <td data-row="4" data-col="5">3.08</td>
+                  <td data-row="4" data-col="6">3.215</td>
+                  <td data-row="4" data-col="7">19.44</td>
+                  <td data-row="4" data-col="8">1</td>
                 </tr>
                 <tr>
-                  <td data-row="5" data-col="0">18.7</td>
-                  <td data-row="5" data-col="1">8</td>
-                  <td data-row="5" data-col="2">360.0</td>
-                  <td data-row="5" data-col="3">175</td>
-                  <td data-row="5" data-col="4">3.15</td>
-                  <td data-row="5" data-col="5">3.440</td>
-                  <td data-row="5" data-col="6">17.02</td>
-                  <td data-row="5" data-col="7">0</td>
+                  <td data-row="5" data-col="1">18.7</td>
+                  <td data-row="5" data-col="2">8</td>
+                  <td data-row="5" data-col="3">360.0</td>
+                  <td data-row="5" data-col="4">175</td>
+                  <td data-row="5" data-col="5">3.15</td>
+                  <td data-row="5" data-col="6">3.440</td>
+                  <td data-row="5" data-col="7">17.02</td>
+                  <td data-row="5" data-col="8">0</td>
                 </tr>
                 <tr>
-                  <td data-row="6" data-col="0">18.1</td>
-                  <td data-row="6" data-col="1">6</td>
-                  <td data-row="6" data-col="2">225.0</td>
-                  <td data-row="6" data-col="3">105</td>
-                  <td data-row="6" data-col="4">2.76</td>
-                  <td data-row="6" data-col="5">3.460</td>
-                  <td data-row="6" data-col="6">20.22</td>
-                  <td data-row="6" data-col="7">1</td>
+                  <td data-row="6" data-col="1">18.1</td>
+                  <td data-row="6" data-col="2">6</td>
+                  <td data-row="6" data-col="3">225.0</td>
+                  <td data-row="6" data-col="4">105</td>
+                  <td data-row="6" data-col="5">2.76</td>
+                  <td data-row="6" data-col="6">3.460</td>
+                  <td data-row="6" data-col="7">20.22</td>
+                  <td data-row="6" data-col="8">1</td>
                 </tr>
                 <tr>
-                  <td data-row="7" data-col="0">14.3</td>
-                  <td data-row="7" data-col="1">8</td>
-                  <td data-row="7" data-col="2">360.0</td>
-                  <td data-row="7" data-col="3">245</td>
-                  <td data-row="7" data-col="4">3.21</td>
-                  <td data-row="7" data-col="5">3.570</td>
-                  <td data-row="7" data-col="6">15.84</td>
-                  <td data-row="7" data-col="7">0</td>
+                  <td data-row="7" data-col="1">14.3</td>
+                  <td data-row="7" data-col="2">8</td>
+                  <td data-row="7" data-col="3">360.0</td>
+                  <td data-row="7" data-col="4">245</td>
+                  <td data-row="7" data-col="5">3.21</td>
+                  <td data-row="7" data-col="6">3.570</td>
+                  <td data-row="7" data-col="7">15.84</td>
+                  <td data-row="7" data-col="8">0</td>
                 </tr>
                 <tr>
-                  <td data-row="8" data-col="0">24.4</td>
-                  <td data-row="8" data-col="1">4</td>
-                  <td data-row="8" data-col="2">146.7</td>
-                  <td data-row="8" data-col="3">62</td>
-                  <td data-row="8" data-col="4">3.69</td>
-                  <td data-row="8" data-col="5">3.190</td>
-                  <td data-row="8" data-col="6">20.00</td>
-                  <td data-row="8" data-col="7">1</td>
+                  <td data-row="8" data-col="1">24.4</td>
+                  <td data-row="8" data-col="2">4</td>
+                  <td data-row="8" data-col="3">146.7</td>
+                  <td data-row="8" data-col="4">62</td>
+                  <td data-row="8" data-col="5">3.69</td>
+                  <td data-row="8" data-col="6">3.190</td>
+                  <td data-row="8" data-col="7">20.00</td>
+                  <td data-row="8" data-col="8">1</td>
                 </tr>
                 <tr>
-                  <td data-row="9" data-col="0">22.8</td>
-                  <td data-row="9" data-col="1">4</td>
-                  <td data-row="9" data-col="2">140.8</td>
-                  <td data-row="9" data-col="3">95</td>
-                  <td data-row="9" data-col="4">3.92</td>
-                  <td data-row="9" data-col="5">3.150</td>
-                  <td data-row="9" data-col="6">22.90</td>
-                  <td data-row="9" data-col="7">1</td>
+                  <td data-row="9" data-col="1">22.8</td>
+                  <td data-row="9" data-col="2">4</td>
+                  <td data-row="9" data-col="3">140.8</td>
+                  <td data-row="9" data-col="4">95</td>
+                  <td data-row="9" data-col="5">3.92</td>
+                  <td data-row="9" data-col="6">3.150</td>
+                  <td data-row="9" data-col="7">22.90</td>
+                  <td data-row="9" data-col="8">1</td>
                 </tr>
         </tbody>
       </table>
@@ -1387,140 +1271,116 @@ Other arguments are ignored.
 <div class="cell-output-display">
 <!-- preamble start -->
 
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
     <script>
-
-      function styleCell_ciouxk7mog9mzclyh81e(i, j, css_id) {
-          var table = document.getElementById("tinytable_ciouxk7mog9mzclyh81e");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function spanCell_ciouxk7mog9mzclyh81e(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_ciouxk7mog9mzclyh81e");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
+      // Create table-specific functions using external factory
+      const tableFns_1f42jjs7stlebgyp5pu0 = TinyTable.createTableFunctions("tinytable_1f42jjs7stlebgyp5pu0");
       // tinytable span after
+      window.addEventListener('load', function () { tableFns_1f42jjs7stlebgyp5pu0.spanCell(-1, 5, 1, 2) })
+      window.addEventListener('load', function () { tableFns_1f42jjs7stlebgyp5pu0.spanCell(-1, 4, 1, 3) })
+      window.addEventListener('load', function () { tableFns_1f42jjs7stlebgyp5pu0.spanCell(-1, 3, 1, 2) })
+      window.addEventListener('load', function () { tableFns_1f42jjs7stlebgyp5pu0.spanCell(-1, 1, 1, 3) })
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '-2', j: 2 }, { i: '-2', j: 3 }, { i: '-2', j: 4 }, { i: '-2', j: 5 },  ], css_id: 'tinytable_css_35oo370e2cb191nw2mfv',}, 
-          { positions: [ { i: '-1', j: 2 }, { i: '-1', j: 3 },  ], css_id: 'tinytable_css_0h4j17q2ma5zld0u12bj',}, 
-          { positions: [ { i: '5', j: 0 }, { i: '5', j: 1 }, { i: '5', j: 2 }, { i: '5', j: 3 }, { i: '5', j: 4 }, { i: '5', j: 5 },  ], css_id: 'tinytable_css_bzad2aj0336ag15uca5e',}, 
-          { positions: [ { i: '-2', j: 0 }, { i: '-2', j: 1 },  ], css_id: 'tinytable_css_1fov1u3o51svqe7gxofs',}, 
-          { positions: [ { i: '-1', j: 0 }, { i: '-1', j: 1 }, { i: '-1', j: 4 }, { i: '-1', j: 5 },  ], css_id: 'tinytable_css_5zqoq355dun8dzoqcnjg',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 },  ], css_id: 'tinytable_css_1c2svx5miagkxms9tsay',}, 
+          { positions: [ { i: '-1', j: 1 }, { i: '-1', j: 2 } ], css_id: 'tinytable_css_z9t0l4j9n1l7vg1ldrz5',}, 
+          { positions: [ { i: '5', j: 1 }, { i: '5', j: 2 }, { i: '5', j: 3 }, { i: '5', j: 4 }, { i: '5', j: 5 }, { i: '5', j: 6 } ], css_id: 'tinytable_css_4g5giu1v40hc562e23c2',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 } ], css_id: 'tinytable_css_6ssoem78ipd9wqb255vd',}, 
+          { positions: [ { i: '-2', j: 4 } ], css_id: 'tinytable_css_853ucliodzv3mb4fsxv3',}, 
+          { positions: [ { i: '-2', j: 3 } ], css_id: 'tinytable_css_2ehdz6pn8bt2toi0m9w7',}, 
+          { positions: [ { i: '-2', j: 1 }, { i: '-2', j: 2 }, { i: '-2', j: 5 }, { i: '-2', j: 6 } ], css_id: 'tinytable_css_wphn6w08jwvbq352h45t',}, 
+          { positions: [ { i: '-1', j: 6 } ], css_id: 'tinytable_css_60lji5kyxc7xb6cas7nf',}, 
+          { positions: [ { i: '-1', j: 4 } ], css_id: 'tinytable_css_1r5p4vqe09q4apk9so6f',}, 
+          { positions: [ { i: '-1', j: 3 }, { i: '-1', j: 5 } ], css_id: 'tinytable_css_u62t2lbmr255jiaggs80',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_ciouxk7mog9mzclyh81e(cell.i, cell.j, group.css_id);
+                  tableFns_1f42jjs7stlebgyp5pu0.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
     <style>
-      /* tinytable css entries after */
-      .table td.tinytable_css_35oo370e2cb191nw2mfv, .table th.tinytable_css_35oo370e2cb191nw2mfv { border-top: solid #d3d8dc 0.1em; text-align: center; }
-      .table td.tinytable_css_0h4j17q2ma5zld0u12bj, .table th.tinytable_css_0h4j17q2ma5zld0u12bj { text-align: center; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_bzad2aj0336ag15uca5e, .table th.tinytable_css_bzad2aj0336ag15uca5e { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_1fov1u3o51svqe7gxofs, .table th.tinytable_css_1fov1u3o51svqe7gxofs { border-top: solid #d3d8dc 0.1em; text-align: center; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_5zqoq355dun8dzoqcnjg, .table th.tinytable_css_5zqoq355dun8dzoqcnjg { text-align: center; }
-      .table td.tinytable_css_1c2svx5miagkxms9tsay, .table th.tinytable_css_1c2svx5miagkxms9tsay { border-bottom: solid #d3d8dc 0.05em; }
+    /* tinytable css entries after */
+    #tinytable_1f42jjs7stlebgyp5pu0 td.tinytable_css_z9t0l4j9n1l7vg1ldrz5, #tinytable_1f42jjs7stlebgyp5pu0 th.tinytable_css_z9t0l4j9n1l7vg1ldrz5 { text-align: center }
+    #tinytable_1f42jjs7stlebgyp5pu0 td.tinytable_css_4g5giu1v40hc562e23c2, #tinytable_1f42jjs7stlebgyp5pu0 th.tinytable_css_4g5giu1v40hc562e23c2 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_1f42jjs7stlebgyp5pu0 td.tinytable_css_6ssoem78ipd9wqb255vd, #tinytable_1f42jjs7stlebgyp5pu0 th.tinytable_css_6ssoem78ipd9wqb255vd {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_1f42jjs7stlebgyp5pu0 td.tinytable_css_853ucliodzv3mb4fsxv3, #tinytable_1f42jjs7stlebgyp5pu0 th.tinytable_css_853ucliodzv3mb4fsxv3 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 3%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_1f42jjs7stlebgyp5pu0 td.tinytable_css_2ehdz6pn8bt2toi0m9w7, #tinytable_1f42jjs7stlebgyp5pu0 th.tinytable_css_2ehdz6pn8bt2toi0m9w7 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 3%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_1f42jjs7stlebgyp5pu0 td.tinytable_css_wphn6w08jwvbq352h45t, #tinytable_1f42jjs7stlebgyp5pu0 th.tinytable_css_wphn6w08jwvbq352h45t {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_1f42jjs7stlebgyp5pu0 td.tinytable_css_60lji5kyxc7xb6cas7nf, #tinytable_1f42jjs7stlebgyp5pu0 th.tinytable_css_60lji5kyxc7xb6cas7nf {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_1f42jjs7stlebgyp5pu0 td.tinytable_css_1r5p4vqe09q4apk9so6f, #tinytable_1f42jjs7stlebgyp5pu0 th.tinytable_css_1r5p4vqe09q4apk9so6f {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 3%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_1f42jjs7stlebgyp5pu0 td.tinytable_css_u62t2lbmr255jiaggs80, #tinytable_1f42jjs7stlebgyp5pu0 th.tinytable_css_u62t2lbmr255jiaggs80 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 3%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_ciouxk7mog9mzclyh81e" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_1f42jjs7stlebgyp5pu0" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
 <tr>
-<th scope="col" align="center" colspan="3" data-row="-2" data-col="0">Foo</th>
-<th scope="col" align="center" colspan="3" data-row="-2" data-col="1">Bar</th>
+<th scope="col" align="center" colspan="3" data-row="-2" data-col="1">Foo</th>
+<th scope="col" align="center" colspan="3" data-row="-2" data-col="4">Bar</th>
 </tr>
 <tr>
-<th scope="col" align="center" colspan="1" data-row="-1" data-col="0"> </th>
 <th scope="col" align="center" colspan="1" data-row="-1" data-col="1"> </th>
-<th scope="col" align="center" colspan="2" data-row="-1" data-col="2">World</th>
-<th scope="col" align="center" colspan="2" data-row="-1" data-col="3">Hello</th>
+<th scope="col" align="center" colspan="1" data-row="-1" data-col="2"> </th>
+<th scope="col" align="center" colspan="2" data-row="-1" data-col="3">World</th>
+<th scope="col" align="center" colspan="2" data-row="-1" data-col="5">Hello</th>
 </tr>
-        
+          
               <tr>
-                <th scope="col" data-row="0" data-col="0">mpg</th>
-                <th scope="col" data-row="0" data-col="1">cyl</th>
-                <th scope="col" data-row="0" data-col="2">disp</th>
-                <th scope="col" data-row="0" data-col="3">hp</th>
-                <th scope="col" data-row="0" data-col="4">drat</th>
-                <th scope="col" data-row="0" data-col="5">wt</th>
+                <th scope="col" data-row="0" data-col="1">mpg</th>
+                <th scope="col" data-row="0" data-col="2">cyl</th>
+                <th scope="col" data-row="0" data-col="3">disp</th>
+                <th scope="col" data-row="0" data-col="4">hp</th>
+                <th scope="col" data-row="0" data-col="5">drat</th>
+                <th scope="col" data-row="0" data-col="6">wt</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td data-row="1" data-col="0">21.0</td>
-                  <td data-row="1" data-col="1">6</td>
-                  <td data-row="1" data-col="2">160</td>
-                  <td data-row="1" data-col="3">110</td>
-                  <td data-row="1" data-col="4">3.90</td>
-                  <td data-row="1" data-col="5">2.620</td>
+                  <td data-row="1" data-col="1">21.0</td>
+                  <td data-row="1" data-col="2">6</td>
+                  <td data-row="1" data-col="3">160</td>
+                  <td data-row="1" data-col="4">110</td>
+                  <td data-row="1" data-col="5">3.90</td>
+                  <td data-row="1" data-col="6">2.620</td>
                 </tr>
                 <tr>
-                  <td data-row="2" data-col="0">21.0</td>
-                  <td data-row="2" data-col="1">6</td>
-                  <td data-row="2" data-col="2">160</td>
-                  <td data-row="2" data-col="3">110</td>
-                  <td data-row="2" data-col="4">3.90</td>
-                  <td data-row="2" data-col="5">2.875</td>
+                  <td data-row="2" data-col="1">21.0</td>
+                  <td data-row="2" data-col="2">6</td>
+                  <td data-row="2" data-col="3">160</td>
+                  <td data-row="2" data-col="4">110</td>
+                  <td data-row="2" data-col="5">3.90</td>
+                  <td data-row="2" data-col="6">2.875</td>
                 </tr>
                 <tr>
-                  <td data-row="3" data-col="0">22.8</td>
-                  <td data-row="3" data-col="1">4</td>
-                  <td data-row="3" data-col="2">108</td>
-                  <td data-row="3" data-col="3">93</td>
-                  <td data-row="3" data-col="4">3.85</td>
-                  <td data-row="3" data-col="5">2.320</td>
+                  <td data-row="3" data-col="1">22.8</td>
+                  <td data-row="3" data-col="2">4</td>
+                  <td data-row="3" data-col="3">108</td>
+                  <td data-row="3" data-col="4">93</td>
+                  <td data-row="3" data-col="5">3.85</td>
+                  <td data-row="3" data-col="6">2.320</td>
                 </tr>
                 <tr>
-                  <td data-row="4" data-col="0">21.4</td>
-                  <td data-row="4" data-col="1">6</td>
-                  <td data-row="4" data-col="2">258</td>
-                  <td data-row="4" data-col="3">110</td>
-                  <td data-row="4" data-col="4">3.08</td>
-                  <td data-row="4" data-col="5">3.215</td>
+                  <td data-row="4" data-col="1">21.4</td>
+                  <td data-row="4" data-col="2">6</td>
+                  <td data-row="4" data-col="3">258</td>
+                  <td data-row="4" data-col="4">110</td>
+                  <td data-row="4" data-col="5">3.08</td>
+                  <td data-row="4" data-col="6">3.215</td>
                 </tr>
                 <tr>
-                  <td data-row="5" data-col="0">18.7</td>
-                  <td data-row="5" data-col="1">8</td>
-                  <td data-row="5" data-col="2">360</td>
-                  <td data-row="5" data-col="3">175</td>
-                  <td data-row="5" data-col="4">3.15</td>
-                  <td data-row="5" data-col="5">3.440</td>
+                  <td data-row="5" data-col="1">18.7</td>
+                  <td data-row="5" data-col="2">8</td>
+                  <td data-row="5" data-col="3">360</td>
+                  <td data-row="5" data-col="4">175</td>
+                  <td data-row="5" data-col="5">3.15</td>
+                  <td data-row="5" data-col="6">3.440</td>
                 </tr>
         </tbody>
       </table>
@@ -1540,98 +1400,68 @@ Other arguments are ignored.
 <div class="cell-output-display">
 <!-- preamble start -->
 
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
     <script>
-
-      function styleCell_lsq1oue6q6wbol2w6ate(i, j, css_id) {
-          var table = document.getElementById("tinytable_lsq1oue6q6wbol2w6ate");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function spanCell_lsq1oue6q6wbol2w6ate(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_lsq1oue6q6wbol2w6ate");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
+      // Create table-specific functions using external factory
+      const tableFns_8wnadbk68lij3cstdutg = TinyTable.createTableFunctions("tinytable_8wnadbk68lij3cstdutg");
       // tinytable span after
+      window.addEventListener('load', function () { tableFns_8wnadbk68lij3cstdutg.spanCell(-1, 4, 1, 3) })
+      window.addEventListener('load', function () { tableFns_8wnadbk68lij3cstdutg.spanCell(-1, 1, 1, 3) })
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '-1', j: 3 }, { i: '-1', j: 2 }, { i: '-1', j: 5 }, { i: '-1', j: 4 },  ], css_id: 'tinytable_css_rejfgjiksfbyuuvah34m',}, 
-          { positions: [ { i: '1', j: 0 }, { i: '1', j: 1 }, { i: '1', j: 4 }, { i: '1', j: 3 }, { i: '1', j: 2 }, { i: '1', j: 5 },  ], css_id: 'tinytable_css_1mtfpvmfg8vl8jbuuz9l',}, 
-          { positions: [ { i: '-1', j: 0 }, { i: '-1', j: 1 },  ], css_id: 'tinytable_css_2yopjk2az5v96aeq28hx',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 3 }, { i: '0', j: 2 }, { i: '0', j: 1 }, { i: '0', j: 4 }, { i: '0', j: 5 },  ], css_id: 'tinytable_css_dtz8uvq9z4rk3ib2d5am',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '1', j: 2 }, { i: '1', j: 3 }, { i: '1', j: 4 }, { i: '1', j: 5 }, { i: '1', j: 6 } ], css_id: 'tinytable_css_d8zfoelcj492etpc0e5m',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 } ], css_id: 'tinytable_css_7fczrsiy124srcq6c2ew',}, 
+          { positions: [ { i: '-1', j: 4 } ], css_id: 'tinytable_css_wb2oj50qts2ogxei2p7q',}, 
+          { positions: [ { i: '-1', j: 3 } ], css_id: 'tinytable_css_toja1f97zjlcj1wyd37c',}, 
+          { positions: [ { i: '-1', j: 1 }, { i: '-1', j: 2 }, { i: '-1', j: 5 }, { i: '-1', j: 6 } ], css_id: 'tinytable_css_qm7pypz7vxhh75liyhsa',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_lsq1oue6q6wbol2w6ate(cell.i, cell.j, group.css_id);
+                  tableFns_8wnadbk68lij3cstdutg.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
     <style>
-      /* tinytable css entries after */
-      .table td.tinytable_css_rejfgjiksfbyuuvah34m, .table th.tinytable_css_rejfgjiksfbyuuvah34m { border-top: solid #d3d8dc 0.1em; text-align: center; }
-      .table td.tinytable_css_1mtfpvmfg8vl8jbuuz9l, .table th.tinytable_css_1mtfpvmfg8vl8jbuuz9l { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_2yopjk2az5v96aeq28hx, .table th.tinytable_css_2yopjk2az5v96aeq28hx { border-top: solid #d3d8dc 0.1em; text-align: center; border-bottom: solid #d3d8dc 0.05em; }
-      .table td.tinytable_css_dtz8uvq9z4rk3ib2d5am, .table th.tinytable_css_dtz8uvq9z4rk3ib2d5am { border-bottom: solid #d3d8dc 0.05em; }
+    /* tinytable css entries after */
+    #tinytable_8wnadbk68lij3cstdutg td.tinytable_css_d8zfoelcj492etpc0e5m, #tinytable_8wnadbk68lij3cstdutg th.tinytable_css_d8zfoelcj492etpc0e5m {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_8wnadbk68lij3cstdutg td.tinytable_css_7fczrsiy124srcq6c2ew, #tinytable_8wnadbk68lij3cstdutg th.tinytable_css_7fczrsiy124srcq6c2ew {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_8wnadbk68lij3cstdutg td.tinytable_css_wb2oj50qts2ogxei2p7q, #tinytable_8wnadbk68lij3cstdutg th.tinytable_css_wb2oj50qts2ogxei2p7q {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 3%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_8wnadbk68lij3cstdutg td.tinytable_css_toja1f97zjlcj1wyd37c, #tinytable_8wnadbk68lij3cstdutg th.tinytable_css_toja1f97zjlcj1wyd37c {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 3%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_8wnadbk68lij3cstdutg td.tinytable_css_qm7pypz7vxhh75liyhsa, #tinytable_8wnadbk68lij3cstdutg th.tinytable_css_qm7pypz7vxhh75liyhsa {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_lsq1oue6q6wbol2w6ate" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_8wnadbk68lij3cstdutg" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
 <tr>
-<th scope="col" align="center" colspan="3" data-row="-1" data-col="0">A</th>
-<th scope="col" align="center" colspan="3" data-row="-1" data-col="1">B</th>
+<th scope="col" align="center" colspan="3" data-row="-1" data-col="1">A</th>
+<th scope="col" align="center" colspan="3" data-row="-1" data-col="4">B</th>
 </tr>
-        
+          
               <tr>
-                <th scope="col" data-row="0" data-col="0">id</th>
-                <th scope="col" data-row="0" data-col="1">a1</th>
-                <th scope="col" data-row="0" data-col="2">a2</th>
-                <th scope="col" data-row="0" data-col="3">b1</th>
-                <th scope="col" data-row="0" data-col="4">b2</th>
-                <th scope="col" data-row="0" data-col="5">C</th>
+                <th scope="col" data-row="0" data-col="1">id</th>
+                <th scope="col" data-row="0" data-col="2">a1</th>
+                <th scope="col" data-row="0" data-col="3">a2</th>
+                <th scope="col" data-row="0" data-col="4">b1</th>
+                <th scope="col" data-row="0" data-col="5">b2</th>
+                <th scope="col" data-row="0" data-col="6">C</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td data-row="1" data-col="0">1</td>
-                  <td data-row="1" data-col="1">2</td>
-                  <td data-row="1" data-col="2">3</td>
-                  <td data-row="1" data-col="3">4</td>
-                  <td data-row="1" data-col="4">5</td>
-                  <td data-row="1" data-col="5">6</td>
+                  <td data-row="1" data-col="1">1</td>
+                  <td data-row="1" data-col="2">2</td>
+                  <td data-row="1" data-col="3">3</td>
+                  <td data-row="1" data-col="4">4</td>
+                  <td data-row="1" data-col="5">5</td>
+                  <td data-row="1" data-col="6">6</td>
                 </tr>
         </tbody>
       </table>
@@ -1645,144 +1475,110 @@ Other arguments are ignored.
 <div class="cell-output-display">
 <!-- preamble start -->
 
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
     <script>
-
-      function styleCell_sn7jx8pj7f46esytl3jp(i, j, css_id) {
-          var table = document.getElementById("tinytable_sn7jx8pj7f46esytl3jp");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function spanCell_sn7jx8pj7f46esytl3jp(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_sn7jx8pj7f46esytl3jp");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
+      // Create table-specific functions using external factory
+      const tableFns_d5vwcrem7cbhqycw2jqw = TinyTable.createTableFunctions("tinytable_d5vwcrem7cbhqycw2jqw");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '9', j: 0 }, { i: '9', j: 1 }, { i: '9', j: 2 }, { i: '9', j: 3 }, { i: '9', j: 4 },  ], css_id: 'tinytable_css_f4yqxnuhz8ehayugbp6c',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_vne18qnio7p6axak0ocu',}, 
+          { positions: [ { i: '9', j: 1 }, { i: '9', j: 2 }, { i: '9', j: 3 }, { i: '9', j: 4 }, { i: '9', j: 5 } ], css_id: 'tinytable_css_7zzji8rbf7oskbpmof83',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_8hmc5vswgmrhuuo0i9u0',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_sn7jx8pj7f46esytl3jp(cell.i, cell.j, group.css_id);
+                  tableFns_d5vwcrem7cbhqycw2jqw.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
     <style>
-      /* tinytable css entries after */
-      .table td.tinytable_css_f4yqxnuhz8ehayugbp6c, .table th.tinytable_css_f4yqxnuhz8ehayugbp6c { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_vne18qnio7p6axak0ocu, .table th.tinytable_css_vne18qnio7p6axak0ocu { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+    /* tinytable css entries after */
+    #tinytable_d5vwcrem7cbhqycw2jqw td.tinytable_css_7zzji8rbf7oskbpmof83, #tinytable_d5vwcrem7cbhqycw2jqw th.tinytable_css_7zzji8rbf7oskbpmof83 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_d5vwcrem7cbhqycw2jqw td.tinytable_css_8hmc5vswgmrhuuo0i9u0, #tinytable_d5vwcrem7cbhqycw2jqw th.tinytable_css_8hmc5vswgmrhuuo0i9u0 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_sn7jx8pj7f46esytl3jp" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_d5vwcrem7cbhqycw2jqw" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
-        
+          
               <tr>
-                <th scope="col" data-row="0" data-col="0">Sepal.Length</th>
-                <th scope="col" data-row="0" data-col="1">Sepal.Width</th>
-                <th scope="col" data-row="0" data-col="2">Petal.Length</th>
-                <th scope="col" data-row="0" data-col="3">Petal.Width</th>
-                <th scope="col" data-row="0" data-col="4">Species</th>
+                <th scope="col" data-row="0" data-col="1">Sepal.Length</th>
+                <th scope="col" data-row="0" data-col="2">Sepal.Width</th>
+                <th scope="col" data-row="0" data-col="3">Petal.Length</th>
+                <th scope="col" data-row="0" data-col="4">Petal.Width</th>
+                <th scope="col" data-row="0" data-col="5">Species</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td data-row="1" data-col="0">5.1</td>
-                  <td data-row="1" data-col="1">3.5</td>
-                  <td data-row="1" data-col="2">1.4</td>
-                  <td data-row="1" data-col="3">0.2</td>
-                  <td data-row="1" data-col="4">setosa</td>
+                  <td data-row="1" data-col="1">5.1</td>
+                  <td data-row="1" data-col="2">3.5</td>
+                  <td data-row="1" data-col="3">1.4</td>
+                  <td data-row="1" data-col="4">0.2</td>
+                  <td data-row="1" data-col="5">setosa</td>
                 </tr>
                 <tr>
-                  <td data-row="2" data-col="0">Sepal.Length</td>
-                  <td data-row="2" data-col="1">Sepal.Width</td>
-                  <td data-row="2" data-col="2">Petal.Length</td>
-                  <td data-row="2" data-col="3">Petal.Width</td>
-                  <td data-row="2" data-col="4">Species</td>
+                  <td data-row="2" data-col="1">Sepal.Length</td>
+                  <td data-row="2" data-col="2">Sepal.Width</td>
+                  <td data-row="2" data-col="3">Petal.Length</td>
+                  <td data-row="2" data-col="4">Petal.Width</td>
+                  <td data-row="2" data-col="5">Species</td>
                 </tr>
                 <tr>
-                  <td data-row="3" data-col="0">4.9</td>
-                  <td data-row="3" data-col="1">3.0</td>
-                  <td data-row="3" data-col="2">1.4</td>
-                  <td data-row="3" data-col="3">0.2</td>
-                  <td data-row="3" data-col="4">setosa</td>
+                  <td data-row="3" data-col="1">4.9</td>
+                  <td data-row="3" data-col="2">3.0</td>
+                  <td data-row="3" data-col="3">1.4</td>
+                  <td data-row="3" data-col="4">0.2</td>
+                  <td data-row="3" data-col="5">setosa</td>
                 </tr>
                 <tr>
-                  <td data-row="4" data-col="0">4.7</td>
-                  <td data-row="4" data-col="1">3.2</td>
-                  <td data-row="4" data-col="2">1.3</td>
-                  <td data-row="4" data-col="3">0.2</td>
-                  <td data-row="4" data-col="4">setosa</td>
+                  <td data-row="4" data-col="1">4.7</td>
+                  <td data-row="4" data-col="2">3.2</td>
+                  <td data-row="4" data-col="3">1.3</td>
+                  <td data-row="4" data-col="4">0.2</td>
+                  <td data-row="4" data-col="5">setosa</td>
                 </tr>
                 <tr>
-                  <td data-row="5" data-col="0">4.6</td>
-                  <td data-row="5" data-col="1">3.1</td>
-                  <td data-row="5" data-col="2">1.5</td>
-                  <td data-row="5" data-col="3">0.2</td>
-                  <td data-row="5" data-col="4">setosa</td>
+                  <td data-row="5" data-col="1">4.6</td>
+                  <td data-row="5" data-col="2">3.1</td>
+                  <td data-row="5" data-col="3">1.5</td>
+                  <td data-row="5" data-col="4">0.2</td>
+                  <td data-row="5" data-col="5">setosa</td>
                 </tr>
                 <tr>
-                  <td data-row="6" data-col="0">Sepal.Length</td>
-                  <td data-row="6" data-col="1">Sepal.Width</td>
-                  <td data-row="6" data-col="2">Petal.Length</td>
-                  <td data-row="6" data-col="3">Petal.Width</td>
-                  <td data-row="6" data-col="4">Species</td>
+                  <td data-row="6" data-col="1">Sepal.Length</td>
+                  <td data-row="6" data-col="2">Sepal.Width</td>
+                  <td data-row="6" data-col="3">Petal.Length</td>
+                  <td data-row="6" data-col="4">Petal.Width</td>
+                  <td data-row="6" data-col="5">Species</td>
                 </tr>
                 <tr>
-                  <td data-row="7" data-col="0">5.0</td>
-                  <td data-row="7" data-col="1">3.6</td>
-                  <td data-row="7" data-col="2">1.4</td>
-                  <td data-row="7" data-col="3">0.2</td>
-                  <td data-row="7" data-col="4">setosa</td>
+                  <td data-row="7" data-col="1">5.0</td>
+                  <td data-row="7" data-col="2">3.6</td>
+                  <td data-row="7" data-col="3">1.4</td>
+                  <td data-row="7" data-col="4">0.2</td>
+                  <td data-row="7" data-col="5">setosa</td>
                 </tr>
                 <tr>
-                  <td data-row="8" data-col="0">5.4</td>
-                  <td data-row="8" data-col="1">3.9</td>
-                  <td data-row="8" data-col="2">1.7</td>
-                  <td data-row="8" data-col="3">0.4</td>
-                  <td data-row="8" data-col="4">setosa</td>
+                  <td data-row="8" data-col="1">5.4</td>
+                  <td data-row="8" data-col="2">3.9</td>
+                  <td data-row="8" data-col="3">1.7</td>
+                  <td data-row="8" data-col="4">0.4</td>
+                  <td data-row="8" data-col="5">setosa</td>
                 </tr>
                 <tr>
-                  <td data-row="9" data-col="0">4.6</td>
-                  <td data-row="9" data-col="1">3.4</td>
-                  <td data-row="9" data-col="2">1.4</td>
-                  <td data-row="9" data-col="3">0.3</td>
-                  <td data-row="9" data-col="4">setosa</td>
+                  <td data-row="9" data-col="1">4.6</td>
+                  <td data-row="9" data-col="2">3.4</td>
+                  <td data-row="9" data-col="3">1.4</td>
+                  <td data-row="9" data-col="4">0.3</td>
+                  <td data-row="9" data-col="5">setosa</td>
                 </tr>
         </tbody>
       </table>
@@ -1798,146 +1594,112 @@ Other arguments are ignored.
 <div class="cell-output-display">
 <!-- preamble start -->
 
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
     <script>
-
-      function styleCell_37i6pko0zn1jbmn1v57l(i, j, css_id) {
-          var table = document.getElementById("tinytable_37i6pko0zn1jbmn1v57l");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function spanCell_37i6pko0zn1jbmn1v57l(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_37i6pko0zn1jbmn1v57l");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
+      // Create table-specific functions using external factory
+      const tableFns_o3um7tu1napd59qxx1cz = TinyTable.createTableFunctions("tinytable_o3um7tu1napd59qxx1cz");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '9', j: 0 }, { i: '9', j: 1 }, { i: '9', j: 2 }, { i: '9', j: 3 }, { i: '9', j: 4 },  ], css_id: 'tinytable_css_azhrp2y0yqqmabwjggak',}, 
-          { positions: [ { i: '2', j: 0 }, { i: '3', j: 0 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '2', j: 4 }, { i: '3', j: 4 },  ], css_id: 'tinytable_css_h3mt550yss9kpe2b94du',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_58c4csq4bovbz05ouv9q',}, 
+          { positions: [ { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '2', j: 3 }, { i: '3', j: 3 }, { i: '2', j: 4 }, { i: '3', j: 4 }, { i: '2', j: 5 }, { i: '3', j: 5 } ], css_id: 'tinytable_css_v9dhhvakmaz2vj76wznu',}, 
+          { positions: [ { i: '9', j: 1 }, { i: '9', j: 2 }, { i: '9', j: 3 }, { i: '9', j: 4 }, { i: '9', j: 5 } ], css_id: 'tinytable_css_rm73cq64iox99w106q4g',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_jgafqbl8ece5peeihby8',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_37i6pko0zn1jbmn1v57l(cell.i, cell.j, group.css_id);
+                  tableFns_o3um7tu1napd59qxx1cz.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
     <style>
-      /* tinytable css entries after */
-      .table td.tinytable_css_azhrp2y0yqqmabwjggak, .table th.tinytable_css_azhrp2y0yqqmabwjggak { border-bottom: solid #d3d8dc 0.1em; }
-      .table td.tinytable_css_h3mt550yss9kpe2b94du, .table th.tinytable_css_h3mt550yss9kpe2b94du { background-color: #FFC0CB; }
-      .table td.tinytable_css_58c4csq4bovbz05ouv9q, .table th.tinytable_css_58c4csq4bovbz05ouv9q { border-top: solid #d3d8dc 0.1em; border-bottom: solid #d3d8dc 0.05em; }
+    /* tinytable css entries after */
+    #tinytable_o3um7tu1napd59qxx1cz td.tinytable_css_v9dhhvakmaz2vj76wznu, #tinytable_o3um7tu1napd59qxx1cz th.tinytable_css_v9dhhvakmaz2vj76wznu { background-color: #FFC0CB }
+    #tinytable_o3um7tu1napd59qxx1cz td.tinytable_css_rm73cq64iox99w106q4g, #tinytable_o3um7tu1napd59qxx1cz th.tinytable_css_rm73cq64iox99w106q4g {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_o3um7tu1napd59qxx1cz td.tinytable_css_jgafqbl8ece5peeihby8, #tinytable_o3um7tu1napd59qxx1cz th.tinytable_css_jgafqbl8ece5peeihby8 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="table table-borderless" id="tinytable_37i6pko0zn1jbmn1v57l" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_o3um7tu1napd59qxx1cz" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
-        
+          
               <tr>
-                <th scope="col" data-row="0" data-col="0">Sepal.Length</th>
-                <th scope="col" data-row="0" data-col="1">Sepal.Width</th>
-                <th scope="col" data-row="0" data-col="2">Petal.Length</th>
-                <th scope="col" data-row="0" data-col="3">Petal.Width</th>
-                <th scope="col" data-row="0" data-col="4">Species</th>
+                <th scope="col" data-row="0" data-col="1">Sepal.Length</th>
+                <th scope="col" data-row="0" data-col="2">Sepal.Width</th>
+                <th scope="col" data-row="0" data-col="3">Petal.Length</th>
+                <th scope="col" data-row="0" data-col="4">Petal.Width</th>
+                <th scope="col" data-row="0" data-col="5">Species</th>
               </tr>
         </thead>
         
         <tbody>
                 <tr>
-                  <td data-row="1" data-col="0">5.1</td>
-                  <td data-row="1" data-col="1">3.5</td>
-                  <td data-row="1" data-col="2">1.4</td>
-                  <td data-row="1" data-col="3">0.2</td>
-                  <td data-row="1" data-col="4">setosa</td>
+                  <td data-row="1" data-col="1">5.1</td>
+                  <td data-row="1" data-col="2">3.5</td>
+                  <td data-row="1" data-col="3">1.4</td>
+                  <td data-row="1" data-col="4">0.2</td>
+                  <td data-row="1" data-col="5">setosa</td>
                 </tr>
                 <tr>
-                  <td data-row="2" data-col="0">a</td>
-                  <td data-row="2" data-col="1">b</td>
-                  <td data-row="2" data-col="2">c</td>
-                  <td data-row="2" data-col="3">d</td>
-                  <td data-row="2" data-col="4">e</td>
+                  <td data-row="2" data-col="1">a</td>
+                  <td data-row="2" data-col="2">b</td>
+                  <td data-row="2" data-col="3">c</td>
+                  <td data-row="2" data-col="4">d</td>
+                  <td data-row="2" data-col="5">e</td>
                 </tr>
                 <tr>
-                  <td data-row="3" data-col="0">1</td>
-                  <td data-row="3" data-col="1">2</td>
-                  <td data-row="3" data-col="2">3</td>
-                  <td data-row="3" data-col="3">4</td>
-                  <td data-row="3" data-col="4">5</td>
+                  <td data-row="3" data-col="1">1</td>
+                  <td data-row="3" data-col="2">2</td>
+                  <td data-row="3" data-col="3">3</td>
+                  <td data-row="3" data-col="4">4</td>
+                  <td data-row="3" data-col="5">5</td>
                 </tr>
                 <tr>
-                  <td data-row="4" data-col="0">4.9</td>
-                  <td data-row="4" data-col="1">3.0</td>
-                  <td data-row="4" data-col="2">1.4</td>
-                  <td data-row="4" data-col="3">0.2</td>
-                  <td data-row="4" data-col="4">setosa</td>
+                  <td data-row="4" data-col="1">4.9</td>
+                  <td data-row="4" data-col="2">3.0</td>
+                  <td data-row="4" data-col="3">1.4</td>
+                  <td data-row="4" data-col="4">0.2</td>
+                  <td data-row="4" data-col="5">setosa</td>
                 </tr>
                 <tr>
-                  <td data-row="5" data-col="0">4.7</td>
-                  <td data-row="5" data-col="1">3.2</td>
-                  <td data-row="5" data-col="2">1.3</td>
-                  <td data-row="5" data-col="3">0.2</td>
-                  <td data-row="5" data-col="4">setosa</td>
+                  <td data-row="5" data-col="1">4.7</td>
+                  <td data-row="5" data-col="2">3.2</td>
+                  <td data-row="5" data-col="3">1.3</td>
+                  <td data-row="5" data-col="4">0.2</td>
+                  <td data-row="5" data-col="5">setosa</td>
                 </tr>
                 <tr>
-                  <td data-row="6" data-col="0">4.6</td>
-                  <td data-row="6" data-col="1">3.1</td>
-                  <td data-row="6" data-col="2">1.5</td>
-                  <td data-row="6" data-col="3">0.2</td>
-                  <td data-row="6" data-col="4">setosa</td>
+                  <td data-row="6" data-col="1">4.6</td>
+                  <td data-row="6" data-col="2">3.1</td>
+                  <td data-row="6" data-col="3">1.5</td>
+                  <td data-row="6" data-col="4">0.2</td>
+                  <td data-row="6" data-col="5">setosa</td>
                 </tr>
                 <tr>
-                  <td data-row="7" data-col="0">5.0</td>
-                  <td data-row="7" data-col="1">3.6</td>
-                  <td data-row="7" data-col="2">1.4</td>
-                  <td data-row="7" data-col="3">0.2</td>
-                  <td data-row="7" data-col="4">setosa</td>
+                  <td data-row="7" data-col="1">5.0</td>
+                  <td data-row="7" data-col="2">3.6</td>
+                  <td data-row="7" data-col="3">1.4</td>
+                  <td data-row="7" data-col="4">0.2</td>
+                  <td data-row="7" data-col="5">setosa</td>
                 </tr>
                 <tr>
-                  <td data-row="8" data-col="0">5.4</td>
-                  <td data-row="8" data-col="1">3.9</td>
-                  <td data-row="8" data-col="2">1.7</td>
-                  <td data-row="8" data-col="3">0.4</td>
-                  <td data-row="8" data-col="4">setosa</td>
+                  <td data-row="8" data-col="1">5.4</td>
+                  <td data-row="8" data-col="2">3.9</td>
+                  <td data-row="8" data-col="3">1.7</td>
+                  <td data-row="8" data-col="4">0.4</td>
+                  <td data-row="8" data-col="5">setosa</td>
                 </tr>
                 <tr>
-                  <td data-row="9" data-col="0">4.6</td>
-                  <td data-row="9" data-col="1">3.4</td>
-                  <td data-row="9" data-col="2">1.4</td>
-                  <td data-row="9" data-col="3">0.3</td>
-                  <td data-row="9" data-col="4">setosa</td>
+                  <td data-row="9" data-col="1">4.6</td>
+                  <td data-row="9" data-col="2">3.4</td>
+                  <td data-row="9" data-col="3">1.4</td>
+                  <td data-row="9" data-col="4">0.3</td>
+                  <td data-row="9" data-col="5">setosa</td>
                 </tr>
         </tbody>
       </table>

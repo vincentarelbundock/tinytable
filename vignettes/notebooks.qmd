@@ -63,7 +63,6 @@ Caption goes here.
 :::
 ````
 
-::: {.content-visible when-format="html"}
 ### Quarto data processing
 
 Quarto automatically applies [some data processing](https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing) to the content of the tables it renders. By default, `tinytable` disables this processing, because it can enter in conflict with styling and formatting features of the package. 
@@ -72,7 +71,6 @@ To enable Quarto data processing, we can use the `quarto` argument of the `forma
 
 ```{r, eval = knitr::is_html_output()}
 k <- data.frame(Thing = "qwerty", Citation = "@Lovelace1842")
-
 tt(k) |> format_tt(quarto = TRUE)
 ```
 
@@ -108,7 +106,7 @@ Back to normal:
 ```{r, eval = knitr::is_html_output()}
 options(tinytable_quarto_disable_processing = TRUE)
 ```
-:::
+
 
 ### Sub-captions
 
@@ -206,12 +204,6 @@ tab |> style_tt(i = 5, background = "orange")
 ```
 ````
 
-### Typst
-
-See [the Tips and Tricks on Typst](https://vincentarelbundock.github.io/tinytable/vignettes/tips.html#typst) for important notes on using Typst in Quarto documents.
-
-
-
 ## Rmarkdown
 
 ### Math
@@ -264,7 +256,6 @@ output            :
 header-includes   :
   - \usepackage{tabularray}
   - \usepackage{graphicx}
-  - \UseTblrLibrary{booktabs}
   - \UseTblrLibrary{siunitx}
   - \newcommand{\tinytableTabularrayUnderline}[1]{\underline{#1}}
   - \newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}
@@ -284,9 +275,6 @@ tt(head(iris), caption = "\\label{tab:tinytableref} Hello world!") |>
 ```
 ```{r}
 ````
-
-
-
 
 
 ## Bookdown

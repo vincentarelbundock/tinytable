@@ -4,5 +4,6 @@ theme_dictionary <- list(
   "revealjs" = theme_revealjs,
   "rotate" = theme_rotate,
   "striped" = theme_striped,
-  "void" = theme_empty
+  "void" = theme_empty,
+  "empty" = theme_empty
 )

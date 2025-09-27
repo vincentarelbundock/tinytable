@@ -159,8 +159,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="dropdown-text">Themes</span></a>
   </li>  
         <li>
-    <a class="dropdown-item" href="../vignettes/custom.html">
- <span class="dropdown-text">Customization</span></a>
+    <a class="dropdown-item" href="../vignettes/html.html">
+ <span class="dropdown-text">HTML customization</span></a>
   </li>  
         <li>
     <a class="dropdown-item" href="../vignettes/notebooks.html">
@@ -182,7 +182,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>
   <li class="nav-item">
     <a class="nav-link active" href="../vignettes/tinytable_tutorial.pdf" aria-current="page"> 
-<span class="menu-text">Tutorial (PDF)</span></a>
+<span class="menu-text">Tutorial (LaTeX)</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../vignettes/tinytable_tutorial_typst.pdf"> 
@@ -224,7 +224,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
- <span class="menu-text">Tutorial</span></a>
+ <span class="menu-text">Tutorial (HTML)</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -268,8 +268,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/custom.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Customization</span></a>
+  <a href="../vignettes/html.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">HTML</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -307,13 +307,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/tinytable_tutorial.pdf" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Tutorial (PDF)</span></a>
+ <span class="menu-text">Tutorial (LaTeX)</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../vignettes/tinytable_tutorial_typst.pdf" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Tutorial (Typst)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/word.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial (Word)</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -431,8 +437,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../man/theme_void.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><code>theme_void</code></span></a>
+  <a href="../man/theme_empty.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_empty</code></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -546,6 +552,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   line = NULL,
   line_color = "black",
   line_width = 0.1,
+  line_trim = NULL,
   finalize = NULL,
   ...
 )
@@ -571,6 +578,7 @@ tt_style(
   line = NULL,
   line_color = "black",
   line_width = 0.1,
+  line_trim = NULL,
   finalize = NULL,
   ...
 )
@@ -580,7 +588,7 @@ tt_style(
 <h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
 <table role="presentation">
 <tbody><tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="x">x</code>
 </td>
 <td>
@@ -588,7 +596,7 @@ A table object created by <code>tt()</code>.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="i">i</code>
 </td>
 <td>
@@ -610,7 +618,7 @@ A table object created by <code>tt()</code>.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="j">j</code>
 </td>
 <td>
@@ -632,7 +640,7 @@ A table object created by <code>tt()</code>.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="bold">bold</code>
 </td>
 <td>
@@ -640,7 +648,7 @@ Logical; if <code>TRUE</code>, text is styled in bold.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="italic">italic</code>
 </td>
 <td>
@@ -648,7 +656,7 @@ Logical; if <code>TRUE</code>, text is styled in italic.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="monospace">monospace</code>
 </td>
 <td>
@@ -656,7 +664,7 @@ Logical; if <code>TRUE</code>, text is styled in monospace font.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="smallcap">smallcap</code>
 </td>
 <td>
@@ -664,7 +672,7 @@ Logical; if <code>TRUE</code>, text is styled in small caps. In Markdown output 
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="underline">underline</code>
 </td>
 <td>
@@ -672,7 +680,7 @@ Logical; if <code>TRUE</code>, text is underlined.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="strikeout">strikeout</code>
 </td>
 <td>
@@ -680,7 +688,7 @@ Logical; if <code>TRUE</code>, text has a strike through line.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="color">color</code>
 </td>
 <td>
@@ -718,7 +726,7 @@ Logical; if <code>TRUE</code>, text has a strike through line.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="background">background</code>
 </td>
 <td>
@@ -726,7 +734,7 @@ Background color. Specified as a color name or hexadecimal code. Can be <code>NU
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="fontsize">fontsize</code>
 </td>
 <td>
@@ -734,7 +742,7 @@ Font size in em units. Can be <code>NULL</code> for default size.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="align">align</code>
 </td>
 <td>
@@ -742,7 +750,7 @@ A single character or a string with a number of characters equal to the number o
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="alignv">alignv</code>
 </td>
 <td>
@@ -750,7 +758,7 @@ A single character specifying vertical alignment. Valid characters include ‘t�
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="colspan">colspan</code>
 </td>
 <td>
@@ -758,7 +766,7 @@ Number of columns a cell should span. <code>i</code> and <code>j</code> must be 
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="rowspan">rowspan</code>
 </td>
 <td>
@@ -766,7 +774,7 @@ Number of rows a cell should span. <code>i</code> and <code>j</code> must be of 
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="indent">indent</code>
 </td>
 <td>
@@ -774,7 +782,7 @@ Text indentation in em units. Positive values only.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="line">line</code>
 </td>
 <td>
@@ -799,7 +807,7 @@ Text indentation in em units. Positive values only.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="line_color">line_color</code>
 </td>
 <td>
@@ -807,7 +815,7 @@ Color of the line. See the <code>color</code> argument for details.
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="line_width">line_width</code>
 </td>
 <td>
@@ -815,7 +823,15 @@ Width of the line in em units (default: 0.1).
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="line_trim">line_trim</code>
+</td>
+<td>
+String specifying line trimming. Acceptable values: "l" (left), "r" (right), "lr" (both sides). When specified, shortens the lines by 0.8pt on the specified side(s). Default: NULL (no trimming).
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="finalize">finalize</code>
 </td>
 <td>
@@ -823,7 +839,7 @@ A function applied to the table object at the very end of table-building, for po
 </td>
 </tr>
 <tr>
-<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="...">…</code>
 </td>
 <td>

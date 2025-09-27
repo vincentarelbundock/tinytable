@@ -44,13 +44,7 @@ save_tt <- function(
     out <- build_tt(x, output = "gfm")@table_string
     return(as.character(out))
   } else if (identical(output, "html")) {
-    out <- build_tt(x, output = x@html_engine)@table_string
-    return(as.character(out))
-  } else if (identical(output, "bootstrap")) {
-    out <- build_tt(x, output = "bootstrap")@table_string
-    return(as.character(out))
-  } else if (identical(output, "tabulator")) {
-    out <- build_tt(x, output = "tabulator")@table_string
+    out <- build_tt(x, output = "html")@table_string
     return(as.character(out))
   } else if (identical(output, "latex")) {
     out <- build_tt(x, output = "latex")@table_string
@@ -71,7 +65,7 @@ save_tt <- function(
 
   output_format <- switch(file_ext,
     "png" = "html",
-    "html" = x@html_engine,
+    "html" = "html",
     "pdf" = "latex",
     "tex" = "latex",
     "md" = "markdown",
@@ -81,7 +75,7 @@ save_tt <- function(
     "docx" = "markdown",
     "typ" = "typst",
     stop(
-      "The supported file extensions are: .png, .html, .pdf, .tex, .typ, .qmd, .Rmd, .txt, .docx, and .md. Supported output formats are: markdown, latex, typst, html, bootstrap, tabulator, and dataframe.",
+      "The supported file extensions are: .png, .html, .pdf, .tex, .typ, .qmd, .Rmd, .txt, .docx, and .md. Supported output formats are: markdown, latex, typst, html, and dataframe.",
       call. = FALSE
     )
   )
@@ -166,7 +160,6 @@ latex_standalone <- "
 \\usepackage{float}
 \\usepackage[normalem]{ulem}
 \\usepackage[x11names, svgnames]{xcolor}
-\\UseTblrLibrary{booktabs}
 \\UseTblrLibrary{siunitx}
 \\newcommand{\\tinytableTabularrayUnderline}[1]{\\underline{#1}}
 \\newcommand{\\tinytableTabularrayStrikeout}[1]{\\sout{#1}}

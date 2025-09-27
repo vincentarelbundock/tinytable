@@ -48,7 +48,7 @@ tt(x, ...)
 
 \item{theme}{Function or string.
 \itemize{
-\item String: grid, revealjs, rotate, striped, void
+\item String: grid, revealjs, rotate, striped, void, empty
 \item Function: Applied to the \code{tinytable} object.
 }}
 
@@ -101,7 +101,6 @@ Note: Your document will fail to compile to PDF in Quarto if you enable caching 
 \\usepackage\{graphicx\}
 \\usepackage\{rotating\}
 \\usepackage[normalem]\{ulem\}
-\\UseTblrLibrary\{booktabs\}
 \\UseTblrLibrary\{siunitx\}
 \newcommand{\tinytableTabularrayUnderline}[1]\{\\underline\{#1\}\}
 \newcommand{\tinytableTabularrayStrikeout}[1]\{\\sout\{#1\}\}

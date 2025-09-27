@@ -8,8 +8,7 @@ setMethod(
     # Only handle column grouping - row insertions now use matrix insertion
     x <- group_tabularray_col(x, j, ...)
     return(x)
-  }
-)
+  })
 
 group_tabularray_col <- function(x, j, ihead, ...) {
   # Process column groups from @group_data_j
@@ -31,8 +30,7 @@ group_tabularray_col <- function(x, j, ihead, ...) {
       header_position <- nrow(x@group_data_j) - row_idx + 1
       row_ihead <- ihead - (header_position - 1)
 
-      # Apply styling to spans
-      x <- style_tabularray_header_spans(x, group_row, row_ihead)
+      # Styling is now handled generically in group_tt.R via style_tt() calls
     }
   }
 

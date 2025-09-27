@@ -128,6 +128,9 @@ sanitize_j <- function(j, x, skip_tabulator_types = FALSE) {
 }
 
 sanitize_output <- function(x, output) {
+  if (is.null(x)) {
+    stop("'x' cannot be NULL", call. = FALSE)
+  }
   if (is.null(output)) {
     return(x)
   }
@@ -135,15 +138,12 @@ sanitize_output <- function(x, output) {
   assert_choice(
     output,
     choice = c(
-      "tinytable",
-      "markdown",
       "latex",
       "html",
       "typst",
       "dataframe",
-      "gfm",
-      "tabulator",
-      "bootstrap"
+      "markdown",
+      "gfm"
     )
   )
   
@@ -155,16 +155,8 @@ infer_output <- function(x) {
   output <- x@output
   
   # If output is already set to a specific format, respect it
-  if (!is.null(output) && !isTRUE(output == "tinytable")) {
-    if (output == "html") {
-      # When user explicitly asks for "html", use the object's engine setting
-      html_framework <- x@html_engine
-      assert_choice(html_framework, choice = c("tabulator", "bootstrap"))
-      return(if (html_framework == "tabulator") "tabulator" else "bootstrap")
-    } else {
-      # For all other specific formats, use them as-is
-      return(output)
-    }
+  if (!is.null(output) && !identical(output, "tinytable")) {
+    return(output)
   } else {
     # Only do inference when output is NULL or "tinytable"
     has_viewer <- interactive() && !is.null(getOption("viewer"))
@@ -186,6 +178,7 @@ infer_output <- function(x) {
   }
 
   if (isTRUE(check_dependency("knitr"))) {
+
     if (isTRUE(knitr::pandoc_to() %in% c("latex", "beamer"))) {
       if (isTRUE(x@latex_preamble)) {
         usepackage_latex("float")
@@ -195,7 +188,6 @@ infer_output <- function(x) {
             "\\usepackage[normalem]{ulem}",
             "\\usepackage{graphicx}",
             "\\usepackage{rotating}",
-            "\\UseTblrLibrary{booktabs}",
             "\\UseTblrLibrary{siunitx}",
             "\\NewTableCommand{\\tinytableDefineColor}[3]{\\definecolor{#1}{#2}{#3}}",
             "\\newcommand{\\tinytableTabularrayUnderline}[1]{\\underline{#1}}",
@@ -205,9 +197,7 @@ infer_output <- function(x) {
       }
       out <- "latex"
     } else if (isTRUE(knitr::pandoc_to() %in% c("html", "revealjs"))) {
-      # Check HTML engine preference from object slot
-      html_framework <- x@html_engine
-      out <- if (html_framework == "tabulator") "tabulator" else "bootstrap"
+      out <- "html"
     } else if (isTRUE(knitr::pandoc_to() == "typst")) {
       out <- "typst"
       if (isTRUE(check_dependency("quarto"))) {
@@ -216,8 +206,7 @@ infer_output <- function(x) {
           stop(msg, call. = FALSE)
         }
       }
-    } else if (isTRUE(knitr::pandoc_to() == "docx")) {
-      out <- "markdown"
+    # docx, markdown variants, and unknown formats
     } else {
       out <- "markdown"
     }

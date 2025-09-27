@@ -8,10 +8,12 @@ block[ // start block
 
   #let style-dict = (
     // tinytable style-dict after
+    "0_0": 0, "0_1": 0, "0_2": 0, "0_3": 0, "0_4": 0, "0_5": 0, "0_6": 0, "0_7": 0
   )
 
   #let style-array = ( 
     // tinytable cell style after
+    (align: center,),
   )
 
   // Helper function to get cell style
@@ -56,6 +58,8 @@ block[ // start block
       let style = get-style(x, y)
       if style != none and "background" in style { style.background }
     },
+ table.hline(y: 1, start: 0, end: 5, stroke: 0.05em + black),
+ table.hline(y: 1, start: 6, end: 7, stroke: 0.05em + black),
  table.hline(y: 2, start: 0, end: 8, stroke: 0.05em + black),
  table.hline(y: 11, start: 0, end: 8, stroke: 0.1em + black),
  table.hline(y: 0, start: 0, end: 8, stroke: 0.1em + black),
@@ -64,7 +68,7 @@ block[ // start block
     // tinytable header start
     table.header(
       repeat: true,
-table.cell(stroke: (bottom: .05em + black), colspan: 3, align: center)[Hamburgers],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[Halloumi],[ ],table.cell(stroke: (bottom: .05em + black), colspan: 1, align: center)[Tofu],[ ],
+table.cell(stroke: (bottom: .05em + black), colspan: 3, align: center)[Hamburgers], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[Halloumi], [ ], [Tofu], [ ],
 [mpg], [cyl], [disp], [hp], [drat], [wt], [qsec], [vs],
     ),
     // tinytable header end
