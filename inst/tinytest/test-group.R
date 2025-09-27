@@ -145,7 +145,7 @@ expect_snapshot_print(
 
 # informative errors
 expect_error(
-  tt(head(iris)) |> style_tt("groupj", color = "orange"),
+  tt(head(iris)) |> style_tt("groupj", color = "orange") |> print(),
   pattern = "No column grouping"
 )
 
@@ -153,11 +153,11 @@ expect_error(
 x <- head(iris)
 colnames(x) <- NULL
 expect_error(
-  tt(x) |> style_tt("colnames", color = "orange"),
+  tt(x) |> style_tt("colnames", color = "orange") |> print(),
   pattern = "No column names found"
 )
 expect_error(
-  tt(head(iris)) |> style_tt("groupj", color = "orange"),
+  tt(head(iris)) |> style_tt("groupj", color = "orange") |> print(),
   pattern = "No column grouping"
 )
 

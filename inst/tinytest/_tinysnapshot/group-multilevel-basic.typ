@@ -8,7 +8,7 @@ block[ // start block
 
   #let style-dict = (
     // tinytable style-dict after
-    "1_0": 0, "0_0": 0, "1_1": 0, "0_1": 0
+    "0_0": 0, "1_0": 0, "0_1": 0, "1_1": 0
   )
 
   #let style-array = ( 

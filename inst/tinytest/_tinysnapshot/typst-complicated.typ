@@ -8,16 +8,16 @@ block[ // start block
 
   #let style-dict = (
     // tinytable style-dict after
-    "1_1": 0, "0_1": 0, "2_1": 0, "4_1": 0, "5_1": 0, "1_2": 0, "0_2": 0, "2_2": 0, "4_2": 0, "5_2": 0, "1_3": 0, "0_3": 0, "2_3": 0, "3_3": 0, "4_3": 0, "5_3": 0, "3_1": 1, "3_2": 1, "3_0": 2, "1_0": 3, "0_0": 3, "2_0": 3, "4_0": 3, "5_0": 3, "1_4": 4, "0_4": 4, "2_4": 4, "3_4": 4, "4_4": 4, "5_4": 4
+    "0_1": 0, "1_1": 0, "2_1": 0, "4_1": 0, "5_1": 0, "0_2": 0, "1_2": 0, "2_2": 0, "4_2": 0, "5_2": 0, "0_3": 0, "1_3": 0, "2_3": 0, "3_3": 0, "4_3": 0, "5_3": 0, "0_4": 1, "1_4": 1, "2_4": 1, "3_4": 1, "4_4": 1, "5_4": 1, "3_0": 2, "3_1": 3, "3_2": 3, "0_0": 4, "1_0": 4, "2_0": 4, "4_0": 4, "5_0": 4
   )
 
   #let style-array = ( 
     // tinytable cell style after
     (align: center,),
-    (align: center, bold: true, strikeout: true, color: white, background: black,),
-    (align: left, bold: true, strikeout: true, color: rgb("#FF0000"), background: black, italic: true,),
-    (align: left, italic: true, color: rgb("#FF0000"),),
     (align: right,),
+    (bold: true, italic: true, strikeout: true, color: rgb("#FF0000"), background: black, align: left,),
+    (bold: true, strikeout: true, color: white, background: black, align: center,),
+    (italic: true, color: rgb("#FF0000"), align: left,),
   )
 
   // Helper function to get cell style

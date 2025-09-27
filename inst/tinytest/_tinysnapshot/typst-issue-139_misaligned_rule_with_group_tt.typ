@@ -14,7 +14,7 @@ block[ // start block
   #let style-array = ( 
     // tinytable cell style after
     (align: center,),
-    (align: center, color: white, background: rgb("#0000FF"),),
+    (color: white, background: rgb("#0000FF"), align: center,),
   )
 
   // Helper function to get cell style

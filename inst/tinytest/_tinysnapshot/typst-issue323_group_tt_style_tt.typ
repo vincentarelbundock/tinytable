@@ -13,8 +13,8 @@ block[ // start block
 
   #let style-array = ( 
     // tinytable cell style after
-    (align: center, color: rgb("#FFA500"),),
-    (align: center, color: rgb("#FFA500"), background: black,),
+    (color: rgb("#FFA500"), align: center,),
+    (color: rgb("#FFA500"), background: black, align: center,),
   )
 
   // Helper function to get cell style

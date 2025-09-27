@@ -85,12 +85,15 @@ process_align_argument <- function(x, settings, align) {
     return(settings)
   }
 
-  if (nchar(align) == ncol(x)) {
+  # Get the number of columns being styled
+  n_cols_styled <- length(unique(settings$j))
+
+  if (nchar(align) == n_cols_styled) {
     align <- strsplit(align, "")[[1]]
   } else if (nchar(align) == 1) {
-    align <- rep(align, ncol(x))
+    align <- rep(align, n_cols_styled)
   } else {
-    msg <- sprintf("`align` must be a single character or a string of length %s.", ncol(x))
+    msg <- sprintf("`align` must be a single character or a string of length %s.", n_cols_styled)
     stop(msg, call. = FALSE)
   }
 
@@ -103,8 +106,9 @@ process_align_argument <- function(x, settings, align) {
     settings$align <- NA_character_
   }
 
+  unique_j <- unique(settings$j)
   for (j in seq_along(align)) {
-    idx <- which(settings$j == j)
+    idx <- which(settings$j == unique_j[j])
     settings$align[idx] <- align[j]
   }
 
