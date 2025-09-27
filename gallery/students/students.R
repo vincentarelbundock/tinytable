@@ -107,8 +107,6 @@ w[c(2, 5, 9, 13)] <- 1.2
 tab <- tt(tabla_final,
   width = w,
   notes = "Adapted from [a table by Illak Zapata](https://illak-blog.netlify.app).") |>
-  # bootstrap theme removes default grid
-  theme_html(class = "table table-borderless") |>
   # format numbers, missing values, and markdown notes
   format_tt(j = c(3, 7, 11), fn = fmt_n) |>
   format_tt(replace = TRUE) |> # NA -> ""
@@ -148,5 +146,5 @@ tab <- tt(tabla_final,
   style_tt(i = 1:nrow(tabla_final), j = 7, color = alu$fg, background = alu$bg, bold = TRUE) |>
   style_tt(i = 1:nrow(tabla_final), j = 11, color = pd$fg, background = pd$bg, bold = TRUE)
 
-save_tt(tab, "students.html")
-# print(tab, "html")
+# save_tt(tab, "students.html")
+print(tab, "html")
