@@ -33,9 +33,6 @@ save_tt <- function(
   assert_string(output)
   assert_flag(overwrite)
 
-  if (file.exists(output) && !overwrite) {
-    stop("File already exists and overwrite is set to FALSE.", call. = FALSE)
-  }
 
   if (identical(output, "markdown")) {
     out <- build_tt(x, output = "markdown")@table_string
@@ -57,6 +54,10 @@ save_tt <- function(
     out <- as.data.frame(lapply(out, trimws))
     colnames(out) <- NULL
     return(out)
+  }
+
+  if (file.exists(output) && !overwrite) {
+    stop("File already exists and overwrite is set to FALSE.", call. = FALSE)
   }
 
   x@output_dir <- dirname(output)
