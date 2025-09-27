@@ -113,7 +113,8 @@ process_group_j <- function(x, j) {
     group_cols <- j[[i]]
     # Set the label in the first column of the span
     new_row[group_cols[1]] <- group_name
-    # Set empty string in continuation columns (if span > 1)
+    # For spans > 1: set continuation columns based on output format
+    # HTML needs empty strings, Typst needs repeated text
     if (length(group_cols) > 1) {
       new_row[group_cols[-1]] <- ""
     }
@@ -140,8 +141,9 @@ process_group_j <- function(x, j) {
   }
 
   # Add colspan styling for each group span
-  # The group header row will be at row index -1 (most recent group)
-  header_row_i <- -1
+  # The group header row index depends on how many group rows exist
+  # Most recent group is at -1, previous groups at -2, -3, etc.
+  header_row_i <- -nrow(x@group_data_j)
   for (i in seq_along(j)) {
     group_cols <- j[[i]]
     if (length(group_cols) > 1) {

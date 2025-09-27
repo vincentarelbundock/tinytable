@@ -159,7 +159,8 @@ setMethod(
       for (row in seq_len(nrow(other))) {
         rowspan <- if ("rowspan" %in% names(other) && !is.na(other$rowspan[row])) other$rowspan[row] else 1
         colspan <- if ("colspan" %in% names(other) && !is.na(other$colspan[row])) other$colspan[row] else 1
-        if (rowspan > 1 || colspan > 1) {
+        # Skip JavaScript spans for column group headers (negative i) since HTML already handles them via colspan
+        if ((rowspan > 1 || colspan > 1) && other$i[row] >= 0) {
           # Use the factory function approach instead of individual function names
           listener <- "      window.addEventListener('load', function () { tableFns_%s.spanCell(%s, %s, %s, %s) })"
           listener <- sprintf(
