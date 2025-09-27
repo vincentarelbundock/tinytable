@@ -52,7 +52,7 @@ colnames(k) <- NULL
 bg <- hcl.colors(20, "Inferno")
 fg <- ifelse(as.matrix(k) < 17, tail(bg, 1), head(bg, 1))
 fs <- 1:20
-tab <- tt(k, width = .5, theme = "void") |>
+tab <- tt(k, width = .5, theme = "empty") |>
   style_tt(
     i = 1:4,
     j = 1:5,
@@ -166,7 +166,7 @@ k <- tt(k) |>
 expect_snapshot_print(print_html(k), "html-conditional_styling.html")
 
 # Borders
-x <- tt(mtcars[1:4, 1:5], theme = "void") |>
+x <- tt(mtcars[1:4, 1:5], theme = "empty") |>
   style_tt(
     i = 0:3,
     j = 1:3,

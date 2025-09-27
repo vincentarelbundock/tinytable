@@ -12,5 +12,5 @@ theme_empty(x, ...)
 \item{...}{Additional arguments are ignored.}
 }
 \description{
-This function calls \code{strip_tt()} to remove all the styles, groups, and formatting applied to a \code{tinytable} object. It returns a nearly blank table, with only the cell information. Warning: since this function strips the \code{tinytable} object, the order in which it is called in a pipeline matters.
+This function calls styles and formatting applied to a \code{tinytable} object up to that point in the pipeline.
 }

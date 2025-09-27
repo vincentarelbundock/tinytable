@@ -48,7 +48,7 @@ tt(x, ...)
 
 \item{theme}{Function or string.
 \itemize{
-\item String: grid, revealjs, rotate, striped, void, empty
+\item String: grid, revealjs, rotate, striped, empty
 \item Function: Applied to the \code{tinytable} object.
 }}
 

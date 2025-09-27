@@ -545,7 +545,7 @@ assert_style_tt <- function(
 #' tt(mtcars[1:5, 1:6]) |>
 #'   style_tt(j = c("drat", "wt"), background = "pink")
 #'
-#' tt(mtcars[1:5, 1:6], theme = "void") |>
+#' tt(mtcars[1:5, 1:6], theme = "empty") |>
 #'   style_tt(
 #'     i = 2, j = 2,
 #'     colspan = 3,
@@ -556,7 +556,7 @@ assert_style_tt <- function(
 #'     background = "black",
 #'     bold = TRUE)
 #'
-#' tt(mtcars[1:5, 1:6], theme = "void") |>
+#' tt(mtcars[1:5, 1:6], theme = "empty") |>
 #'   style_tt(
 #'     i = 0:3,
 #'     j = 1:3,
@@ -596,7 +596,7 @@ assert_style_tt <- function(
 #' cell{3,5}{1,4} = {bg=purple7},
 #' cell{2}{2} = {r=4,c=2}{bg=azure7},
 #' "
-#' tt(mtcars[1:5, 1:4], theme = "void") |>
+#' tt(mtcars[1:5, 1:4], theme = "empty") |>
 #'   theme_latex(inner = inner)
 #'
 #' # Style group rows and non-group rows

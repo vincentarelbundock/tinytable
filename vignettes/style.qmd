@@ -346,7 +346,7 @@ bg <- hcl.colors(20, "Inferno")
 fg <- ifelse(as.matrix(k) < 1.7, tail(bg, 1), head(bg, 1))
 
 # table
-tt(k, width = .7, theme = "void", colnames = FALSE) |>
+tt(k, width = .7, theme = "empty", colnames = FALSE) |>
   style_tt(j = 1:5, align = "ccccc", alignv = "m") |>
   style_tt(
     i = 1:4,
@@ -374,7 +374,7 @@ The `style_tt` function allows us to customize the borders that surround eacell 
 Here is an example where we draw lines around every border ("t", "b", "l", and "r") of specified cells.
 
 ```{r}
-tt(x, theme = "void") |>
+tt(x, theme = "empty") |>
   style_tt(
     i = 0:3,
     j = 1:3,
@@ -387,7 +387,7 @@ tt(x, theme = "void") |>
 And here is an example with horizontal rules:
 
 ```{r}
-tt(x, theme = "void") |>
+tt(x, theme = "empty") |>
   style_tt(i = 0, line = "t", line_color = "orange", line_width = 0.4) |>
   style_tt(i = 1, line = "t", line_color = "purple", line_width = 0.2) |>
   style_tt(i = 4, line = "b", line_color = "orange", line_width = 0.4)
@@ -397,7 +397,7 @@ tt(x, theme = "void") |>
 ```{r}
 dat <- data.frame(1:2, 3:4, 5:6, 7:8)
 
-tt(dat, theme = "void", colnames = FALSE) |>
+tt(dat, theme = "empty", colnames = FALSE) |>
   style_tt(
     line = "tblr", line_color = "white", line_width = 0.5,
     background = "blue", color = "white"

@@ -4,7 +4,7 @@ using("tinysnapshot")
 
 # Issue #514: vignette white lines with blue background
 dat <- data.frame(1:2, 3:4, 5:6, 7:8)
-tab <- tt(dat, theme = "void", colnames = FALSE) |>
+tab <- tt(dat, theme = "empty", colnames = FALSE) |>
     style_tt(
         line = "tblr",
         line_color = "white",

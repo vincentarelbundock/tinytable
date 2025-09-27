@@ -107,6 +107,9 @@ w[c(2, 5, 9, 13)] <- 1.2
 tab <- tt(tabla_final,
   width = w,
   notes = "Adapted from [a table by Illak Zapata](https://illak-blog.netlify.app).") |>
+  theme_empty() |>
+  # span: rows
+  group_tt(j = span) |>
   # format numbers, missing values, and markdown notes
   format_tt(j = c(3, 7, 11), fn = fmt_n) |>
   format_tt(replace = TRUE) |> # NA -> ""
@@ -127,8 +130,6 @@ tab <- tt(tabla_final,
   # span: column 1
   style_tt(i = 1, j = 1, rowspan = 4) |>
   style_tt(i = 7, j = 1, rowspan = 2) |>
-  # span: rows
-  group_tt(j = span) |>
   # style: alignment
   style_tt(align = "llcrclcrclcrcl") |>
   style_tt(alignv = "m") |>
@@ -137,7 +138,6 @@ tab <- tt(tabla_final,
   style_tt(i = 0, smallcap = TRUE) |>
   style_tt(i = "groupj", smallcap = TRUE) |>
   # style: horizontal rules
-  strip_tt(line = TRUE) |>
   style_tt(i = 1, line = "t", line_color = "black", line_width = .15) |>
   style_tt(i = c(2:4, 8), line = "t", line_color = "white", line_width = .05) |>
   style_tt(i = c(5:7, 9:10), line = "t", line_color = "black", line_width = .05) |>

@@ -34,7 +34,7 @@ expect_snapshot_print(
 )
 
 expect_snapshot_print(
-  tt(x, theme = "void"),
+  tt(x, theme = "empty"),
   label = "latex-theme_empty.tex"
 )
 
@@ -254,7 +254,7 @@ colnames(k) <- NULL
 bg <- hcl.colors(20, "Inferno")
 fg <- ifelse(as.matrix(k) < 1.7, tail(bg, 1), head(bg, 1))
 expect_snapshot_print(
-  (tt(k, width = .7, theme = "void") |>
+  (tt(k, width = .7, theme = "empty") |>
     style_tt(j = 1:5, align = "ccccc") |>
     style_tt(
       i = 1:4,
@@ -268,7 +268,7 @@ expect_snapshot_print(
 
 # Borders
 expect_snapshot_print(
-  tt(x, theme = "void") |>
+  tt(x, theme = "empty") |>
     style_tt(
       i = 0:3,
       j = 1:3,

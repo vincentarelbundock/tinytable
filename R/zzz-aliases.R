@@ -22,13 +22,6 @@ tt_format <- format_tt
 #' @export
 tt_plot <- plot_tt
 
-#' Alias for `strip_tt()`
-#'
-#' @rdname strip_tt
-#' @export
-tt_strip <- strip_tt
-
-
 #' Alias for `save_tt()`
 #'
 #' @rdname save_tt

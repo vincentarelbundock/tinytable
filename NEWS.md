@@ -4,10 +4,11 @@
 
 Breaking changes:
 
-* `theme_void()` calls `strip_tt()` to drop every change made to this point, so the order of operations matter.
+* `theme_empty()` drops every change made to this point, so the order of operations matter.
 * `"html_portable"` is no longer a valid `output` format in `save_tt()` or `print()`. Use `theme_html(portable = TRUE)` instead.
 * `plot_tt()` deprecates the `asp` argument. Use `width_plot` and `height_plot` instead.
 * `theme_void()` becomes `theme_empty()` to avoid conflict with `ggplot2::theme_void()`.
+* The experimental function `strip_tt()` was added very recently but is now removed. Use `theme_empty()` instead.
 
 Deprecated global options:
 
