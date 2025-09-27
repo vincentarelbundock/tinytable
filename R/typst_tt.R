@@ -1,9 +1,11 @@
 apply_typst_spans <- function(body, sty) {
   # spans must be replaced before concatenating strings
+  # Only process spans for positive row indices (data body), not headers (negative indices)
   spans <- sty[
     which(
-      (!is.na(sty$colspan) & sty$colspan > 1) |
-        (!is.na(sty$rowspan) & sty$rowspan > 1)
+      ((!is.na(sty$colspan) & sty$colspan > 1) |
+        (!is.na(sty$rowspan) & sty$rowspan > 1)) &
+        (!is.na(sty$i) & sty$i > 0)
     ),
     ,
     drop = FALSE
@@ -77,6 +79,7 @@ setMethod(
     out <- typst_widths(x, out)
     out <- typst_notes(x, out)
     out <- typst_alignment(x, out)
+    out <- typst_add_gutter(x, out)
     x@table_string <- out
     return(x)
   }
@@ -121,12 +124,34 @@ typst_body <- function(x, out) {
 
 # Helper function to process header
 typst_header <- function(x, out) {
+  # Collect all header lines in correct visual order (top to bottom)
+  all_headers <- character(0)
+
+  # Add group headers (first call first = top of table)
+  if (nrow(x@group_data_j) > 0) {
+    for (row_idx in 1:nrow(x@group_data_j)) {
+      group_row <- as.character(x@group_data_j[row_idx, ])
+      header_line <- typst_build_group_header(group_row)
+      if (!is.null(header_line)) {
+        all_headers <- c(all_headers, header_line)
+      }
+    }
+  }
+
+  # Add regular column headers (closest to data = bottom of header)
   header <- !is.null(colnames(x)) && length(colnames(x)) > 0
   if (header) {
     header <- paste(paste0("[", colnames(x), "]"), collapse = ", ")
     header <- paste0(header, ",")
-    out <- lines_insert(out, header, "repeat: true", "after")
+    all_headers <- c(all_headers, header)
   }
+
+  # Insert all headers at once
+  if (length(all_headers) > 0) {
+    all_headers_text <- paste(all_headers, collapse = "\n")
+    out <- lines_insert(out, all_headers_text, "repeat: true", "after")
+  }
+
   out
 }
 
@@ -232,4 +257,70 @@ typst_insert <- function(x, content = NULL, type = "body") {
 
   out <- paste(out, collapse = "\n")
   return(out)
+}
+
+# Helper function to build Typst group header from group row data
+typst_build_group_header <- function(group_row) {
+  header_parts <- character(0)
+  i <- 1
+
+  while (i <= length(group_row)) {
+    current_label <- group_row[i]
+
+    # Skip NA (ungrouped) columns
+    if (is.na(current_label)) {
+      header_parts <- c(header_parts, "[ ]")
+      i <- i + 1
+      next
+    }
+
+    # Find the span for this label
+    span_start <- i
+    if (trimws(current_label) != "") {
+      i <- i + 1 # Move past the current label
+      # Continue through empty strings (continuation of span)
+      while (i <= length(group_row) && !is.na(group_row[i]) && trimws(group_row[i]) == "") {
+        i <- i + 1
+      }
+    } else {
+      # Empty label, just add empty cell
+      header_parts <- c(header_parts, "[ ]")
+      i <- i + 1
+      next
+    }
+
+    span_length <- i - span_start
+
+    if (span_length > 1) {
+      # Multi-column span - use table.cell with colspan
+      header_parts <- c(header_parts, sprintf(
+        "table.cell(stroke: (bottom: .05em + black), colspan: %s, align: center)[%s]",
+        span_length,
+        current_label
+      ))
+    } else {
+      # Single column - just centered content
+      header_parts <- c(header_parts, sprintf("[%s]", current_label))
+    }
+  }
+
+  if (length(header_parts) > 0) {
+    paste0(paste(header_parts, collapse = ", "), ",")
+  } else {
+    NULL
+  }
+}
+
+# Helper function to add column gutter if needed
+typst_add_gutter <- function(x, out) {
+  # Add column gutter if there are column groups and it's not already present
+  if (nrow(x@group_data_j) > 0 && !any(grepl("column-gutter", out))) {
+    out <- lines_insert(
+      out,
+      "    column-gutter: 5pt,",
+      "// tinytable table start",
+      "after"
+    )
+  }
+  out
 }

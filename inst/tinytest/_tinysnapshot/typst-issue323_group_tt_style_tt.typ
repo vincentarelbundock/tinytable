@@ -68,7 +68,7 @@ block[ // start block
     // tinytable header start
     table.header(
       repeat: true,
-table.cell(stroke: (bottom: .05em + black), colspan: 3, align: center)[Hamburgers],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[Halloumi],[ ],table.cell(stroke: (bottom: .05em + black), colspan: 1, align: center)[Tofu],[ ],
+table.cell(stroke: (bottom: .05em + black), colspan: 3, align: center)[Hamburgers], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[Halloumi], [ ], [Tofu], [ ],
 [mpg], [cyl], [disp], [hp], [drat], [wt], [qsec], [vs],
     ),
     // tinytable header end

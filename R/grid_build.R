@@ -81,7 +81,10 @@ adjust_colspan_widths <- function(tab, width_cols, colspan_info, header) {
     # Get the actual row index in the tab matrix
     tab_row_idx <- if (header) i_row + 1 else i_row
 
-    if (tab_row_idx <= nrow(tab) && j_col <= ncol(tab)) {
+    # Skip if row index is invalid (negative indices are used for group headers)
+    if (tab_row_idx <= 0 || tab_row_idx > nrow(tab) || j_col <= 0 || j_col > ncol(tab)) {
+      next
+    }
       # Get content width of the colspan cell
       cell_content <- tab[tab_row_idx, j_col]
       content_width <- ansi_nchar(cell_content)
@@ -102,7 +105,6 @@ adjust_colspan_widths <- function(tab, width_cols, colspan_info, header) {
           width_cols[col] <- width_cols[col] + ceiling(width_per_col)
         }
       }
-    }
   }
 
   return(width_cols)

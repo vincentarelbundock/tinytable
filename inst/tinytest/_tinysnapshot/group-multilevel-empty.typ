@@ -71,8 +71,8 @@ block[ // start block
     // tinytable header start
     table.header(
       repeat: true,
-table.cell(stroke: (bottom: .05em + black), colspan: 3, align: center)[A],[ ],
-[ ],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[B],table.cell(stroke: (bottom: .05em + black), colspan: 1, align: center)[D],
+table.cell(stroke: (bottom: .05em + black), colspan: 3, align: center)[A], [ ],
+[ ], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[B], [D],
 [C], [C], [B], [E],
     ),
     // tinytable header end

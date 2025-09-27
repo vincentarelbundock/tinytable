@@ -316,6 +316,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Tutorial (Typst)</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/word.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial (Word)</span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
@@ -611,200 +617,89 @@ Additional arguments are ignored.
 <div class="cell-output-display">
 <!-- preamble start -->
 
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
     <script>
-
-      function styleCell_sfqksj7s2vc3drn041k3(i, j, css_id) {
-          var table = document.getElementById("tinytable_sfqksj7s2vc3drn041k3");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function spanCell_sfqksj7s2vc3drn041k3(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_sfqksj7s2vc3drn041k3");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
+      // Create table-specific functions using external factory
+      const tableFns_rj8f61uitzf8ro81wmit = TinyTable.createTableFunctions("tinytable_rj8f61uitzf8ro81wmit");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '6', j: 0 }, { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 4 },  ], css_id: 'tinytable_css_125vper3l2nly9gz6uwd',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_uzkyyx9h6zmo9mabh97b',}, 
+          { positions: [ { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 4 }, { i: '6', j: 5 } ], css_id: 'tinytable_css_5fufa4h59kb6mqo4mr4x',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_5lknim9jzke9ofp3nofk',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_sfqksj7s2vc3drn041k3(cell.i, cell.j, group.css_id);
+                  tableFns_rj8f61uitzf8ro81wmit.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
     <style>
-    /* Core defaults */
-.tinytable {
-    /* tweak these if you want a “theme” */
-    --tt-border-color: black;
-    --tt-header-border-color: black;
-    --tt-striped-bg: rgba(0, 0, 0, .05);
-    --tt-hover-bg: rgba(0, 0, 0, .075);
-    --tt-caption-color: #6c757d;
-
-    width: 100%;
-    margin: .5rem 0;
-    border-collapse: collapse;
-    background-color: transparent;
-}
-
-.tinytable th,
-.tinytable td {
-    position: relative;
-    padding: .5rem;               /* Bootstrap table cell padding */
-    vertical-align: top;          /* like .table */
-}
-
-.tinytable thead th {
-    text-align: left;
-    vertical-align: bottom;       /* Bootstrap header alignment */
-    font-weight: 600;             /* slightly bolder header */
-    border-bottom: none;
-}
-
-.tinytable tbody + tbody {
-    border-top: 2px solid var(--tt-border-color);
-}
-
-.tinytable caption {
-    caption-side: bottom;
-    padding: .5rem 0;
-    color: var(--tt-caption-color);
-}
-
-/* Optional variants (add these classes alongside .tinytable) */
-
-/* Smaller padding: <table class="tinytable tinytable-sm"> */
-.tinytable-sm th,
-.tinytable-sm td {
-    padding: .25rem;
-}
-
-/* Bordered table: <table class="tinytable tinytable-bordered"> */
-.tinytable-bordered {
-    border: 1px solid var(--tt-border-color);
-}
-.tinytable-bordered th,
-.tinytable-bordered td {
-    border: 1px solid var(--tt-border-color);
-}
-
-/* Striped rows: <table class="tinytable tinytable-striped"> */
-.tinytable-striped tbody tr:nth-of-type(odd) {
-    background-color: var(--tt-striped-bg);
-}
-
-/* Hover state: <table class="tinytable tinytable-hover"> */
-.tinytable-hover tbody tr:hover {
-    background-color: var(--tt-hover-bg);
-}
-
-/* Responsive wrapper: wrap table in <div class="tinytable-responsive"> */
-.tinytable-responsive {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
     /* tinytable css entries after */
-      .tinytable td.tinytable_css_125vper3l2nly9gz6uwd, .tinytable th.tinytable_css_125vper3l2nly9gz6uwd { position: relative; --line-color-bottom: black; --line-color: black; --line-width: 0.1em; --border-left: 0; --border-right: 0; --border-top: 0; --border-bottom: 1; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-width-bottom: 0.1em; --trim-top-left: 0%; --trim-top-right: 0%; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-top: 0%; --trim-left-bottom: 0%; --trim-right-top: 0%; --trim-right-bottom: 0% }
-      .tinytable td.tinytable_css_125vper3l2nly9gz6uwd::before, .tinytable th.tinytable_css_125vper3l2nly9gz6uwd::before { content: ''; position: absolute; top: var(--trim-top-left, var(--trim-top-right, 0)); left: var(--trim-left-top, 0); right: var(--trim-right-top, 0); bottom: 0; pointer-events: none; z-index: 1; border-left: calc(var(--border-left) * var(--line-width-left, var(--line-width, 0.1em))) solid var(--line-color-left, var(--line-color, black)); border-right: calc(var(--border-right) * var(--line-width-right, var(--line-width, 0.1em))) solid var(--line-color-right, var(--line-color, black)); border-top: calc(var(--border-top) * var(--line-width-top, var(--line-width, 0.1em))) solid var(--line-color-top, var(--line-color, black)); }
-      .tinytable td.tinytable_css_125vper3l2nly9gz6uwd::after, .tinytable th.tinytable_css_125vper3l2nly9gz6uwd::after { content: ''; position: absolute; left: var(--trim-bottom-left, 0); right: var(--trim-bottom-right, 0); bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0)); height: calc(var(--border-bottom) * var(--line-width-bottom, var(--line-width, 0.1em))); background: var(--line-color-bottom, var(--line-color, black)); pointer-events: none; z-index: 2; }
-      .tinytable td.tinytable_css_uzkyyx9h6zmo9mabh97b, .tinytable th.tinytable_css_uzkyyx9h6zmo9mabh97b { position: relative; --line-color-top: black; --line-color-bottom: black; --line-color: black; --line-width: 0.05em; --border-left: 0; --border-right: 0; --border-top: 1; --border-bottom: 1; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-width-bottom: 0.05em; --trim-top-left: 0%; --trim-top-right: 0%; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-top: 0%; --trim-left-bottom: 0%; --trim-right-top: 0%; --trim-right-bottom: 0% }
-      .tinytable td.tinytable_css_uzkyyx9h6zmo9mabh97b::before, .tinytable th.tinytable_css_uzkyyx9h6zmo9mabh97b::before { content: ''; position: absolute; top: var(--trim-top-left, var(--trim-top-right, 0)); left: var(--trim-left-top, 0); right: var(--trim-right-top, 0); bottom: 0; pointer-events: none; z-index: 1; border-left: calc(var(--border-left) * var(--line-width-left, var(--line-width, 0.1em))) solid var(--line-color-left, var(--line-color, black)); border-right: calc(var(--border-right) * var(--line-width-right, var(--line-width, 0.1em))) solid var(--line-color-right, var(--line-color, black)); border-top: calc(var(--border-top) * var(--line-width-top, var(--line-width, 0.1em))) solid var(--line-color-top, var(--line-color, black)); }
-      .tinytable td.tinytable_css_uzkyyx9h6zmo9mabh97b::after, .tinytable th.tinytable_css_uzkyyx9h6zmo9mabh97b::after { content: ''; position: absolute; left: var(--trim-bottom-left, 0); right: var(--trim-bottom-right, 0); bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0)); height: calc(var(--border-bottom) * var(--line-width-bottom, var(--line-width, 0.1em))); background: var(--line-color-bottom, var(--line-color, black)); pointer-events: none; z-index: 2; }
+    #tinytable_rj8f61uitzf8ro81wmit td.tinytable_css_5fufa4h59kb6mqo4mr4x, #tinytable_rj8f61uitzf8ro81wmit th.tinytable_css_5fufa4h59kb6mqo4mr4x {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_rj8f61uitzf8ro81wmit td.tinytable_css_5lknim9jzke9ofp3nofk, #tinytable_rj8f61uitzf8ro81wmit th.tinytable_css_5lknim9jzke9ofp3nofk {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_sfqksj7s2vc3drn041k3" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_rj8f61uitzf8ro81wmit" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
           </thead><caption>Combine two tiny tables.</caption>
               <tbody><tr>
-                <th scope="col" data-row="0" data-col="0">mpg</th>
-                <th scope="col" data-row="0" data-col="1">cyl</th>
-                <th scope="col" data-row="0" data-col="2">vs</th>
-                <th scope="col" data-row="0" data-col="3">am</th>
-                <th scope="col" data-row="0" data-col="4">gear</th>
+                <th scope="col" data-row="0" data-col="1">mpg</th>
+                <th scope="col" data-row="0" data-col="2">cyl</th>
+                <th scope="col" data-row="0" data-col="3">vs</th>
+                <th scope="col" data-row="0" data-col="4">am</th>
+                <th scope="col" data-row="0" data-col="5">gear</th>
               </tr>
         
         
         </tbody><tbody>
                 <tr>
-                  <td data-row="1" data-col="0">21.0</td>
-                  <td data-row="1" data-col="1">6</td>
-                  <td data-row="1" data-col="2">NA</td>
+                  <td data-row="1" data-col="1">21.0</td>
+                  <td data-row="1" data-col="2">6</td>
                   <td data-row="1" data-col="3">NA</td>
                   <td data-row="1" data-col="4">NA</td>
+                  <td data-row="1" data-col="5">NA</td>
                 </tr>
                 <tr>
-                  <td data-row="2" data-col="0">21.0</td>
-                  <td data-row="2" data-col="1">6</td>
-                  <td data-row="2" data-col="2">NA</td>
+                  <td data-row="2" data-col="1">21.0</td>
+                  <td data-row="2" data-col="2">6</td>
                   <td data-row="2" data-col="3">NA</td>
                   <td data-row="2" data-col="4">NA</td>
+                  <td data-row="2" data-col="5">NA</td>
                 </tr>
                 <tr>
-                  <td data-row="3" data-col="0">22.8</td>
-                  <td data-row="3" data-col="1">4</td>
-                  <td data-row="3" data-col="2">NA</td>
+                  <td data-row="3" data-col="1">22.8</td>
+                  <td data-row="3" data-col="2">4</td>
                   <td data-row="3" data-col="3">NA</td>
                   <td data-row="3" data-col="4">NA</td>
+                  <td data-row="3" data-col="5">NA</td>
                 </tr>
                 <tr>
-                  <td data-row="4" data-col="0">NA</td>
                   <td data-row="4" data-col="1">NA</td>
-                  <td data-row="4" data-col="2">vs</td>
-                  <td data-row="4" data-col="3">am</td>
-                  <td data-row="4" data-col="4">gear</td>
+                  <td data-row="4" data-col="2">NA</td>
+                  <td data-row="4" data-col="3">vs</td>
+                  <td data-row="4" data-col="4">am</td>
+                  <td data-row="4" data-col="5">gear</td>
                 </tr>
                 <tr>
-                  <td data-row="5" data-col="0">NA</td>
                   <td data-row="5" data-col="1">NA</td>
-                  <td data-row="5" data-col="2">1</td>
-                  <td data-row="5" data-col="3">0</td>
-                  <td data-row="5" data-col="4">3</td>
+                  <td data-row="5" data-col="2">NA</td>
+                  <td data-row="5" data-col="3">1</td>
+                  <td data-row="5" data-col="4">0</td>
+                  <td data-row="5" data-col="5">3</td>
                 </tr>
                 <tr>
-                  <td data-row="6" data-col="0">NA</td>
                   <td data-row="6" data-col="1">NA</td>
-                  <td data-row="6" data-col="2">0</td>
+                  <td data-row="6" data-col="2">NA</td>
                   <td data-row="6" data-col="3">0</td>
-                  <td data-row="6" data-col="4">3</td>
+                  <td data-row="6" data-col="4">0</td>
+                  <td data-row="6" data-col="5">3</td>
                 </tr>
         </tbody>
       </table>
@@ -815,200 +710,89 @@ Additional arguments are ignored.
 <div class="cell-output-display">
 <!-- preamble start -->
 
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
     <script>
-
-      function styleCell_4h6768hmq3tordpyejnv(i, j, css_id) {
-          var table = document.getElementById("tinytable_4h6768hmq3tordpyejnv");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function spanCell_4h6768hmq3tordpyejnv(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_4h6768hmq3tordpyejnv");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
+      // Create table-specific functions using external factory
+      const tableFns_3w3wuxxludd2uyi12968 = TinyTable.createTableFunctions("tinytable_3w3wuxxludd2uyi12968");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '6', j: 0 }, { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 4 },  ], css_id: 'tinytable_css_venpg8bz3z1r9a0n2e3w',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_k90rk4kyasr439zl20hq',}, 
+          { positions: [ { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 4 }, { i: '6', j: 5 } ], css_id: 'tinytable_css_faq4zeni1q5jjag55qwd',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_y7s491cfhcg03z35rwyx',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_4h6768hmq3tordpyejnv(cell.i, cell.j, group.css_id);
+                  tableFns_3w3wuxxludd2uyi12968.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
     <style>
-    /* Core defaults */
-.tinytable {
-    /* tweak these if you want a “theme” */
-    --tt-border-color: black;
-    --tt-header-border-color: black;
-    --tt-striped-bg: rgba(0, 0, 0, .05);
-    --tt-hover-bg: rgba(0, 0, 0, .075);
-    --tt-caption-color: #6c757d;
-
-    width: 100%;
-    margin: .5rem 0;
-    border-collapse: collapse;
-    background-color: transparent;
-}
-
-.tinytable th,
-.tinytable td {
-    position: relative;
-    padding: .5rem;               /* Bootstrap table cell padding */
-    vertical-align: top;          /* like .table */
-}
-
-.tinytable thead th {
-    text-align: left;
-    vertical-align: bottom;       /* Bootstrap header alignment */
-    font-weight: 600;             /* slightly bolder header */
-    border-bottom: none;
-}
-
-.tinytable tbody + tbody {
-    border-top: 2px solid var(--tt-border-color);
-}
-
-.tinytable caption {
-    caption-side: bottom;
-    padding: .5rem 0;
-    color: var(--tt-caption-color);
-}
-
-/* Optional variants (add these classes alongside .tinytable) */
-
-/* Smaller padding: <table class="tinytable tinytable-sm"> */
-.tinytable-sm th,
-.tinytable-sm td {
-    padding: .25rem;
-}
-
-/* Bordered table: <table class="tinytable tinytable-bordered"> */
-.tinytable-bordered {
-    border: 1px solid var(--tt-border-color);
-}
-.tinytable-bordered th,
-.tinytable-bordered td {
-    border: 1px solid var(--tt-border-color);
-}
-
-/* Striped rows: <table class="tinytable tinytable-striped"> */
-.tinytable-striped tbody tr:nth-of-type(odd) {
-    background-color: var(--tt-striped-bg);
-}
-
-/* Hover state: <table class="tinytable tinytable-hover"> */
-.tinytable-hover tbody tr:hover {
-    background-color: var(--tt-hover-bg);
-}
-
-/* Responsive wrapper: wrap table in <div class="tinytable-responsive"> */
-.tinytable-responsive {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
     /* tinytable css entries after */
-      .tinytable td.tinytable_css_venpg8bz3z1r9a0n2e3w, .tinytable th.tinytable_css_venpg8bz3z1r9a0n2e3w { position: relative; --line-color-bottom: black; --line-color: black; --line-width: 0.1em; --border-left: 0; --border-right: 0; --border-top: 0; --border-bottom: 1; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-width-bottom: 0.1em; --trim-top-left: 0%; --trim-top-right: 0%; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-top: 0%; --trim-left-bottom: 0%; --trim-right-top: 0%; --trim-right-bottom: 0% }
-      .tinytable td.tinytable_css_venpg8bz3z1r9a0n2e3w::before, .tinytable th.tinytable_css_venpg8bz3z1r9a0n2e3w::before { content: ''; position: absolute; top: var(--trim-top-left, var(--trim-top-right, 0)); left: var(--trim-left-top, 0); right: var(--trim-right-top, 0); bottom: 0; pointer-events: none; z-index: 1; border-left: calc(var(--border-left) * var(--line-width-left, var(--line-width, 0.1em))) solid var(--line-color-left, var(--line-color, black)); border-right: calc(var(--border-right) * var(--line-width-right, var(--line-width, 0.1em))) solid var(--line-color-right, var(--line-color, black)); border-top: calc(var(--border-top) * var(--line-width-top, var(--line-width, 0.1em))) solid var(--line-color-top, var(--line-color, black)); }
-      .tinytable td.tinytable_css_venpg8bz3z1r9a0n2e3w::after, .tinytable th.tinytable_css_venpg8bz3z1r9a0n2e3w::after { content: ''; position: absolute; left: var(--trim-bottom-left, 0); right: var(--trim-bottom-right, 0); bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0)); height: calc(var(--border-bottom) * var(--line-width-bottom, var(--line-width, 0.1em))); background: var(--line-color-bottom, var(--line-color, black)); pointer-events: none; z-index: 2; }
-      .tinytable td.tinytable_css_k90rk4kyasr439zl20hq, .tinytable th.tinytable_css_k90rk4kyasr439zl20hq { position: relative; --line-color-top: black; --line-color-bottom: black; --line-color: black; --line-width: 0.05em; --border-left: 0; --border-right: 0; --border-top: 1; --border-bottom: 1; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-width-bottom: 0.05em; --trim-top-left: 0%; --trim-top-right: 0%; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-top: 0%; --trim-left-bottom: 0%; --trim-right-top: 0%; --trim-right-bottom: 0% }
-      .tinytable td.tinytable_css_k90rk4kyasr439zl20hq::before, .tinytable th.tinytable_css_k90rk4kyasr439zl20hq::before { content: ''; position: absolute; top: var(--trim-top-left, var(--trim-top-right, 0)); left: var(--trim-left-top, 0); right: var(--trim-right-top, 0); bottom: 0; pointer-events: none; z-index: 1; border-left: calc(var(--border-left) * var(--line-width-left, var(--line-width, 0.1em))) solid var(--line-color-left, var(--line-color, black)); border-right: calc(var(--border-right) * var(--line-width-right, var(--line-width, 0.1em))) solid var(--line-color-right, var(--line-color, black)); border-top: calc(var(--border-top) * var(--line-width-top, var(--line-width, 0.1em))) solid var(--line-color-top, var(--line-color, black)); }
-      .tinytable td.tinytable_css_k90rk4kyasr439zl20hq::after, .tinytable th.tinytable_css_k90rk4kyasr439zl20hq::after { content: ''; position: absolute; left: var(--trim-bottom-left, 0); right: var(--trim-bottom-right, 0); bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0)); height: calc(var(--border-bottom) * var(--line-width-bottom, var(--line-width, 0.1em))); background: var(--line-color-bottom, var(--line-color, black)); pointer-events: none; z-index: 2; }
+    #tinytable_3w3wuxxludd2uyi12968 td.tinytable_css_faq4zeni1q5jjag55qwd, #tinytable_3w3wuxxludd2uyi12968 th.tinytable_css_faq4zeni1q5jjag55qwd {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_3w3wuxxludd2uyi12968 td.tinytable_css_y7s491cfhcg03z35rwyx, #tinytable_3w3wuxxludd2uyi12968 th.tinytable_css_y7s491cfhcg03z35rwyx {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_4h6768hmq3tordpyejnv" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_3w3wuxxludd2uyi12968" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
           </thead><caption>Combine two tiny tables.</caption>
               <tbody><tr>
-                <th scope="col" data-row="0" data-col="0">mpg</th>
-                <th scope="col" data-row="0" data-col="1">cyl</th>
-                <th scope="col" data-row="0" data-col="2">vs</th>
-                <th scope="col" data-row="0" data-col="3">am</th>
-                <th scope="col" data-row="0" data-col="4">gear</th>
+                <th scope="col" data-row="0" data-col="1">mpg</th>
+                <th scope="col" data-row="0" data-col="2">cyl</th>
+                <th scope="col" data-row="0" data-col="3">vs</th>
+                <th scope="col" data-row="0" data-col="4">am</th>
+                <th scope="col" data-row="0" data-col="5">gear</th>
               </tr>
         
         
         </tbody><tbody>
                 <tr>
-                  <td data-row="1" data-col="0">21.0</td>
-                  <td data-row="1" data-col="1">6</td>
-                  <td data-row="1" data-col="2"> </td>
+                  <td data-row="1" data-col="1">21.0</td>
+                  <td data-row="1" data-col="2">6</td>
                   <td data-row="1" data-col="3"> </td>
                   <td data-row="1" data-col="4"> </td>
+                  <td data-row="1" data-col="5"> </td>
                 </tr>
                 <tr>
-                  <td data-row="2" data-col="0">21.0</td>
-                  <td data-row="2" data-col="1">6</td>
-                  <td data-row="2" data-col="2"> </td>
+                  <td data-row="2" data-col="1">21.0</td>
+                  <td data-row="2" data-col="2">6</td>
                   <td data-row="2" data-col="3"> </td>
                   <td data-row="2" data-col="4"> </td>
+                  <td data-row="2" data-col="5"> </td>
                 </tr>
                 <tr>
-                  <td data-row="3" data-col="0">22.8</td>
-                  <td data-row="3" data-col="1">4</td>
-                  <td data-row="3" data-col="2"> </td>
+                  <td data-row="3" data-col="1">22.8</td>
+                  <td data-row="3" data-col="2">4</td>
                   <td data-row="3" data-col="3"> </td>
                   <td data-row="3" data-col="4"> </td>
+                  <td data-row="3" data-col="5"> </td>
                 </tr>
                 <tr>
-                  <td data-row="4" data-col="0"> </td>
                   <td data-row="4" data-col="1"> </td>
-                  <td data-row="4" data-col="2">vs</td>
-                  <td data-row="4" data-col="3">am</td>
-                  <td data-row="4" data-col="4">gear</td>
+                  <td data-row="4" data-col="2"> </td>
+                  <td data-row="4" data-col="3">vs</td>
+                  <td data-row="4" data-col="4">am</td>
+                  <td data-row="4" data-col="5">gear</td>
                 </tr>
                 <tr>
-                  <td data-row="5" data-col="0"> </td>
                   <td data-row="5" data-col="1"> </td>
-                  <td data-row="5" data-col="2">1</td>
-                  <td data-row="5" data-col="3">0</td>
-                  <td data-row="5" data-col="4">3</td>
+                  <td data-row="5" data-col="2"> </td>
+                  <td data-row="5" data-col="3">1</td>
+                  <td data-row="5" data-col="4">0</td>
+                  <td data-row="5" data-col="5">3</td>
                 </tr>
                 <tr>
-                  <td data-row="6" data-col="0"> </td>
                   <td data-row="6" data-col="1"> </td>
-                  <td data-row="6" data-col="2">0</td>
+                  <td data-row="6" data-col="2"> </td>
                   <td data-row="6" data-col="3">0</td>
-                  <td data-row="6" data-col="4">3</td>
+                  <td data-row="6" data-col="4">0</td>
+                  <td data-row="6" data-col="5">3</td>
                 </tr>
         </tbody>
       </table>
@@ -1020,193 +804,82 @@ Additional arguments are ignored.
 <div class="cell-output-display">
 <!-- preamble start -->
 
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
     <script>
-
-      function styleCell_9nlz9xij0cf8l6glsiec(i, j, css_id) {
-          var table = document.getElementById("tinytable_9nlz9xij0cf8l6glsiec");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function spanCell_9nlz9xij0cf8l6glsiec(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_9nlz9xij0cf8l6glsiec");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
+      // Create table-specific functions using external factory
+      const tableFns_jkvfsjlyo0puf8mv37cn = TinyTable.createTableFunctions("tinytable_jkvfsjlyo0puf8mv37cn");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '5', j: 0 }, { i: '5', j: 1 }, { i: '5', j: 2 }, { i: '5', j: 3 }, { i: '5', j: 4 },  ], css_id: 'tinytable_css_zvyn1thf5syjk7lv33ou',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 },  ], css_id: 'tinytable_css_83u8qwvx5bui6k710mdp',}, 
+          { positions: [ { i: '5', j: 1 }, { i: '5', j: 2 }, { i: '5', j: 3 }, { i: '5', j: 4 }, { i: '5', j: 5 } ], css_id: 'tinytable_css_tc8i1o89wd0ogmj5tz2v',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_f8jjpu28bv24ew62395b',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_9nlz9xij0cf8l6glsiec(cell.i, cell.j, group.css_id);
+                  tableFns_jkvfsjlyo0puf8mv37cn.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
     <style>
-    /* Core defaults */
-.tinytable {
-    /* tweak these if you want a “theme” */
-    --tt-border-color: black;
-    --tt-header-border-color: black;
-    --tt-striped-bg: rgba(0, 0, 0, .05);
-    --tt-hover-bg: rgba(0, 0, 0, .075);
-    --tt-caption-color: #6c757d;
-
-    width: 100%;
-    margin: .5rem 0;
-    border-collapse: collapse;
-    background-color: transparent;
-}
-
-.tinytable th,
-.tinytable td {
-    position: relative;
-    padding: .5rem;               /* Bootstrap table cell padding */
-    vertical-align: top;          /* like .table */
-}
-
-.tinytable thead th {
-    text-align: left;
-    vertical-align: bottom;       /* Bootstrap header alignment */
-    font-weight: 600;             /* slightly bolder header */
-    border-bottom: none;
-}
-
-.tinytable tbody + tbody {
-    border-top: 2px solid var(--tt-border-color);
-}
-
-.tinytable caption {
-    caption-side: bottom;
-    padding: .5rem 0;
-    color: var(--tt-caption-color);
-}
-
-/* Optional variants (add these classes alongside .tinytable) */
-
-/* Smaller padding: <table class="tinytable tinytable-sm"> */
-.tinytable-sm th,
-.tinytable-sm td {
-    padding: .25rem;
-}
-
-/* Bordered table: <table class="tinytable tinytable-bordered"> */
-.tinytable-bordered {
-    border: 1px solid var(--tt-border-color);
-}
-.tinytable-bordered th,
-.tinytable-bordered td {
-    border: 1px solid var(--tt-border-color);
-}
-
-/* Striped rows: <table class="tinytable tinytable-striped"> */
-.tinytable-striped tbody tr:nth-of-type(odd) {
-    background-color: var(--tt-striped-bg);
-}
-
-/* Hover state: <table class="tinytable tinytable-hover"> */
-.tinytable-hover tbody tr:hover {
-    background-color: var(--tt-hover-bg);
-}
-
-/* Responsive wrapper: wrap table in <div class="tinytable-responsive"> */
-.tinytable-responsive {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
     /* tinytable css entries after */
-      .tinytable td.tinytable_css_zvyn1thf5syjk7lv33ou, .tinytable th.tinytable_css_zvyn1thf5syjk7lv33ou { position: relative; --line-color-bottom: black; --line-color: black; --line-width: 0.1em; --border-left: 0; --border-right: 0; --border-top: 0; --border-bottom: 1; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-width-bottom: 0.1em; --trim-top-left: 0%; --trim-top-right: 0%; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-top: 0%; --trim-left-bottom: 0%; --trim-right-top: 0%; --trim-right-bottom: 0% }
-      .tinytable td.tinytable_css_zvyn1thf5syjk7lv33ou::before, .tinytable th.tinytable_css_zvyn1thf5syjk7lv33ou::before { content: ''; position: absolute; top: var(--trim-top-left, var(--trim-top-right, 0)); left: var(--trim-left-top, 0); right: var(--trim-right-top, 0); bottom: 0; pointer-events: none; z-index: 1; border-left: calc(var(--border-left) * var(--line-width-left, var(--line-width, 0.1em))) solid var(--line-color-left, var(--line-color, black)); border-right: calc(var(--border-right) * var(--line-width-right, var(--line-width, 0.1em))) solid var(--line-color-right, var(--line-color, black)); border-top: calc(var(--border-top) * var(--line-width-top, var(--line-width, 0.1em))) solid var(--line-color-top, var(--line-color, black)); }
-      .tinytable td.tinytable_css_zvyn1thf5syjk7lv33ou::after, .tinytable th.tinytable_css_zvyn1thf5syjk7lv33ou::after { content: ''; position: absolute; left: var(--trim-bottom-left, 0); right: var(--trim-bottom-right, 0); bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0)); height: calc(var(--border-bottom) * var(--line-width-bottom, var(--line-width, 0.1em))); background: var(--line-color-bottom, var(--line-color, black)); pointer-events: none; z-index: 2; }
-      .tinytable td.tinytable_css_83u8qwvx5bui6k710mdp, .tinytable th.tinytable_css_83u8qwvx5bui6k710mdp { position: relative; --line-color-top: black; --line-color-bottom: black; --line-color: black; --line-width: 0.05em; --border-left: 0; --border-right: 0; --border-top: 1; --border-bottom: 1; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-width-bottom: 0.05em; --trim-top-left: 0%; --trim-top-right: 0%; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-top: 0%; --trim-left-bottom: 0%; --trim-right-top: 0%; --trim-right-bottom: 0% }
-      .tinytable td.tinytable_css_83u8qwvx5bui6k710mdp::before, .tinytable th.tinytable_css_83u8qwvx5bui6k710mdp::before { content: ''; position: absolute; top: var(--trim-top-left, var(--trim-top-right, 0)); left: var(--trim-left-top, 0); right: var(--trim-right-top, 0); bottom: 0; pointer-events: none; z-index: 1; border-left: calc(var(--border-left) * var(--line-width-left, var(--line-width, 0.1em))) solid var(--line-color-left, var(--line-color, black)); border-right: calc(var(--border-right) * var(--line-width-right, var(--line-width, 0.1em))) solid var(--line-color-right, var(--line-color, black)); border-top: calc(var(--border-top) * var(--line-width-top, var(--line-width, 0.1em))) solid var(--line-color-top, var(--line-color, black)); }
-      .tinytable td.tinytable_css_83u8qwvx5bui6k710mdp::after, .tinytable th.tinytable_css_83u8qwvx5bui6k710mdp::after { content: ''; position: absolute; left: var(--trim-bottom-left, 0); right: var(--trim-bottom-right, 0); bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0)); height: calc(var(--border-bottom) * var(--line-width-bottom, var(--line-width, 0.1em))); background: var(--line-color-bottom, var(--line-color, black)); pointer-events: none; z-index: 2; }
+    #tinytable_jkvfsjlyo0puf8mv37cn td.tinytable_css_tc8i1o89wd0ogmj5tz2v, #tinytable_jkvfsjlyo0puf8mv37cn th.tinytable_css_tc8i1o89wd0ogmj5tz2v {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_jkvfsjlyo0puf8mv37cn td.tinytable_css_f8jjpu28bv24ew62395b, #tinytable_jkvfsjlyo0puf8mv37cn th.tinytable_css_f8jjpu28bv24ew62395b {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_9nlz9xij0cf8l6glsiec" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_jkvfsjlyo0puf8mv37cn" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
           </thead><caption>Combine two tiny tables.</caption>
               <tbody><tr>
-                <th scope="col" data-row="0" data-col="0">mpg</th>
-                <th scope="col" data-row="0" data-col="1">cyl</th>
-                <th scope="col" data-row="0" data-col="2">vs</th>
-                <th scope="col" data-row="0" data-col="3">am</th>
-                <th scope="col" data-row="0" data-col="4">gear</th>
+                <th scope="col" data-row="0" data-col="1">mpg</th>
+                <th scope="col" data-row="0" data-col="2">cyl</th>
+                <th scope="col" data-row="0" data-col="3">vs</th>
+                <th scope="col" data-row="0" data-col="4">am</th>
+                <th scope="col" data-row="0" data-col="5">gear</th>
               </tr>
         
         
         </tbody><tbody>
                 <tr>
-                  <td data-row="1" data-col="0">21.0</td>
-                  <td data-row="1" data-col="1">6</td>
-                  <td data-row="1" data-col="2">NA</td>
+                  <td data-row="1" data-col="1">21.0</td>
+                  <td data-row="1" data-col="2">6</td>
                   <td data-row="1" data-col="3">NA</td>
                   <td data-row="1" data-col="4">NA</td>
+                  <td data-row="1" data-col="5">NA</td>
                 </tr>
                 <tr>
-                  <td data-row="2" data-col="0">21.0</td>
-                  <td data-row="2" data-col="1">6</td>
-                  <td data-row="2" data-col="2">NA</td>
+                  <td data-row="2" data-col="1">21.0</td>
+                  <td data-row="2" data-col="2">6</td>
                   <td data-row="2" data-col="3">NA</td>
                   <td data-row="2" data-col="4">NA</td>
+                  <td data-row="2" data-col="5">NA</td>
                 </tr>
                 <tr>
-                  <td data-row="3" data-col="0">22.8</td>
-                  <td data-row="3" data-col="1">4</td>
-                  <td data-row="3" data-col="2">NA</td>
+                  <td data-row="3" data-col="1">22.8</td>
+                  <td data-row="3" data-col="2">4</td>
                   <td data-row="3" data-col="3">NA</td>
                   <td data-row="3" data-col="4">NA</td>
+                  <td data-row="3" data-col="5">NA</td>
                 </tr>
                 <tr>
-                  <td data-row="4" data-col="0">NA</td>
                   <td data-row="4" data-col="1">NA</td>
-                  <td data-row="4" data-col="2">1</td>
-                  <td data-row="4" data-col="3">0</td>
-                  <td data-row="4" data-col="4">3</td>
+                  <td data-row="4" data-col="2">NA</td>
+                  <td data-row="4" data-col="3">1</td>
+                  <td data-row="4" data-col="4">0</td>
+                  <td data-row="4" data-col="5">3</td>
                 </tr>
                 <tr>
-                  <td data-row="5" data-col="0">NA</td>
                   <td data-row="5" data-col="1">NA</td>
-                  <td data-row="5" data-col="2">0</td>
+                  <td data-row="5" data-col="2">NA</td>
                   <td data-row="5" data-col="3">0</td>
-                  <td data-row="5" data-col="4">3</td>
+                  <td data-row="5" data-col="4">0</td>
+                  <td data-row="5" data-col="5">3</td>
                 </tr>
         </tbody>
       </table>
@@ -1218,186 +891,75 @@ Additional arguments are ignored.
 <div class="cell-output-display">
 <!-- preamble start -->
 
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
     <script>
-
-      function styleCell_ugqoeb8ck6ihuhh68rv1(i, j, css_id) {
-          var table = document.getElementById("tinytable_ugqoeb8ck6ihuhh68rv1");
-          var cell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-          if (cell) {
-              console.log(`Styling cell at (${i}, ${j}) with class ${css_id}`);
-              cell.classList.add(css_id);
-          } else {
-              console.warn(`Cell at (${i}, ${j}) not found.`);
-          }
-      }
-      function spanCell_ugqoeb8ck6ihuhh68rv1(i, j, rowspan, colspan) {
-        var table = document.getElementById("tinytable_ugqoeb8ck6ihuhh68rv1");
-        const targetCell = table.querySelector(`[data-row="${i}"][data-col="${j}"]`);
-        if (!targetCell) {
-          console.warn(`Cell at (${i}, ${j}) not found.`);
-        }
-
-        // Get all cells that need to be removed
-        const cellsToRemove = [];
-        for (let r = 0; r < rowspan; r++) {
-          for (let c = 0; c < colspan; c++) {
-            if (r === 0 && c === 0) continue; // Skip the target cell
-            const cell = table.querySelector(`[data-row="${i + r}"][data-col="${j + c}"]`);
-            if (cell) {
-              cellsToRemove.push(cell);
-            }
-          }
-        }
-
-        // Remove all cells
-        cellsToRemove.forEach(cell => cell.remove());
-
-        // Set rowspan and colspan of the target cell if it exists
-        if (targetCell) {
-          targetCell.rowSpan = rowspan;
-          targetCell.colSpan = colspan;
-        }
-      }
+      // Create table-specific functions using external factory
+      const tableFns_ef0u8j0igsfnmik34h6m = TinyTable.createTableFunctions("tinytable_ef0u8j0igsfnmik34h6m");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '6', j: 0 }, { i: '6', j: 1 }, { i: '6', j: 2 },  ], css_id: 'tinytable_css_brn5n7xpttex6k64wsyh',}, 
-          { positions: [ { i: '0', j: 0 }, { i: '0', j: 1 }, { i: '0', j: 2 },  ], css_id: 'tinytable_css_4vqyaimhegkl2l7lyb58',}, 
+          { positions: [ { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 } ], css_id: 'tinytable_css_1tedmhn0s1b2mwu39b4h',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_rq7nmsymgze1clefzzct',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  styleCell_ugqoeb8ck6ihuhh68rv1(cell.i, cell.j, group.css_id);
+                  tableFns_ef0u8j0igsfnmik34h6m.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
     <style>
-    /* Core defaults */
-.tinytable {
-    /* tweak these if you want a “theme” */
-    --tt-border-color: black;
-    --tt-header-border-color: black;
-    --tt-striped-bg: rgba(0, 0, 0, .05);
-    --tt-hover-bg: rgba(0, 0, 0, .075);
-    --tt-caption-color: #6c757d;
-
-    width: 100%;
-    margin: .5rem 0;
-    border-collapse: collapse;
-    background-color: transparent;
-}
-
-.tinytable th,
-.tinytable td {
-    position: relative;
-    padding: .5rem;               /* Bootstrap table cell padding */
-    vertical-align: top;          /* like .table */
-}
-
-.tinytable thead th {
-    text-align: left;
-    vertical-align: bottom;       /* Bootstrap header alignment */
-    font-weight: 600;             /* slightly bolder header */
-    border-bottom: none;
-}
-
-.tinytable tbody + tbody {
-    border-top: 2px solid var(--tt-border-color);
-}
-
-.tinytable caption {
-    caption-side: bottom;
-    padding: .5rem 0;
-    color: var(--tt-caption-color);
-}
-
-/* Optional variants (add these classes alongside .tinytable) */
-
-/* Smaller padding: <table class="tinytable tinytable-sm"> */
-.tinytable-sm th,
-.tinytable-sm td {
-    padding: .25rem;
-}
-
-/* Bordered table: <table class="tinytable tinytable-bordered"> */
-.tinytable-bordered {
-    border: 1px solid var(--tt-border-color);
-}
-.tinytable-bordered th,
-.tinytable-bordered td {
-    border: 1px solid var(--tt-border-color);
-}
-
-/* Striped rows: <table class="tinytable tinytable-striped"> */
-.tinytable-striped tbody tr:nth-of-type(odd) {
-    background-color: var(--tt-striped-bg);
-}
-
-/* Hover state: <table class="tinytable tinytable-hover"> */
-.tinytable-hover tbody tr:hover {
-    background-color: var(--tt-hover-bg);
-}
-
-/* Responsive wrapper: wrap table in <div class="tinytable-responsive"> */
-.tinytable-responsive {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
-
     /* tinytable css entries after */
-      .tinytable td.tinytable_css_brn5n7xpttex6k64wsyh, .tinytable th.tinytable_css_brn5n7xpttex6k64wsyh { position: relative; --line-color-bottom: black; --line-color: black; --line-width: 0.1em; --border-left: 0; --border-right: 0; --border-top: 0; --border-bottom: 1; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-width-bottom: 0.1em; --trim-top-left: 0%; --trim-top-right: 0%; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-top: 0%; --trim-left-bottom: 0%; --trim-right-top: 0%; --trim-right-bottom: 0% }
-      .tinytable td.tinytable_css_brn5n7xpttex6k64wsyh::before, .tinytable th.tinytable_css_brn5n7xpttex6k64wsyh::before { content: ''; position: absolute; top: var(--trim-top-left, var(--trim-top-right, 0)); left: var(--trim-left-top, 0); right: var(--trim-right-top, 0); bottom: 0; pointer-events: none; z-index: 1; border-left: calc(var(--border-left) * var(--line-width-left, var(--line-width, 0.1em))) solid var(--line-color-left, var(--line-color, black)); border-right: calc(var(--border-right) * var(--line-width-right, var(--line-width, 0.1em))) solid var(--line-color-right, var(--line-color, black)); border-top: calc(var(--border-top) * var(--line-width-top, var(--line-width, 0.1em))) solid var(--line-color-top, var(--line-color, black)); }
-      .tinytable td.tinytable_css_brn5n7xpttex6k64wsyh::after, .tinytable th.tinytable_css_brn5n7xpttex6k64wsyh::after { content: ''; position: absolute; left: var(--trim-bottom-left, 0); right: var(--trim-bottom-right, 0); bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0)); height: calc(var(--border-bottom) * var(--line-width-bottom, var(--line-width, 0.1em))); background: var(--line-color-bottom, var(--line-color, black)); pointer-events: none; z-index: 2; }
-      .tinytable td.tinytable_css_4vqyaimhegkl2l7lyb58, .tinytable th.tinytable_css_4vqyaimhegkl2l7lyb58 { position: relative; --line-color-top: black; --line-color-bottom: black; --line-color: black; --line-width: 0.05em; --border-left: 0; --border-right: 0; --border-top: 1; --border-bottom: 1; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --line-width-bottom: 0.05em; --trim-top-left: 0%; --trim-top-right: 0%; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-top: 0%; --trim-left-bottom: 0%; --trim-right-top: 0%; --trim-right-bottom: 0% }
-      .tinytable td.tinytable_css_4vqyaimhegkl2l7lyb58::before, .tinytable th.tinytable_css_4vqyaimhegkl2l7lyb58::before { content: ''; position: absolute; top: var(--trim-top-left, var(--trim-top-right, 0)); left: var(--trim-left-top, 0); right: var(--trim-right-top, 0); bottom: 0; pointer-events: none; z-index: 1; border-left: calc(var(--border-left) * var(--line-width-left, var(--line-width, 0.1em))) solid var(--line-color-left, var(--line-color, black)); border-right: calc(var(--border-right) * var(--line-width-right, var(--line-width, 0.1em))) solid var(--line-color-right, var(--line-color, black)); border-top: calc(var(--border-top) * var(--line-width-top, var(--line-width, 0.1em))) solid var(--line-color-top, var(--line-color, black)); }
-      .tinytable td.tinytable_css_4vqyaimhegkl2l7lyb58::after, .tinytable th.tinytable_css_4vqyaimhegkl2l7lyb58::after { content: ''; position: absolute; left: var(--trim-bottom-left, 0); right: var(--trim-bottom-right, 0); bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0)); height: calc(var(--border-bottom) * var(--line-width-bottom, var(--line-width, 0.1em))); background: var(--line-color-bottom, var(--line-color, black)); pointer-events: none; z-index: 2; }
+    #tinytable_ef0u8j0igsfnmik34h6m td.tinytable_css_1tedmhn0s1b2mwu39b4h, #tinytable_ef0u8j0igsfnmik34h6m th.tinytable_css_1tedmhn0s1b2mwu39b4h {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_ef0u8j0igsfnmik34h6m td.tinytable_css_rq7nmsymgze1clefzzct, #tinytable_ef0u8j0igsfnmik34h6m th.tinytable_css_rq7nmsymgze1clefzzct {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_ugqoeb8ck6ihuhh68rv1" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_ef0u8j0igsfnmik34h6m" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
           </thead><caption>Combine two tiny tables.</caption>
               <tbody><tr>
-                <th scope="col" data-row="0" data-col="0">mpg</th>
-                <th scope="col" data-row="0" data-col="1">cyl</th>
-                <th scope="col" data-row="0" data-col="2">gear</th>
+                <th scope="col" data-row="0" data-col="1">mpg</th>
+                <th scope="col" data-row="0" data-col="2">cyl</th>
+                <th scope="col" data-row="0" data-col="3">gear</th>
               </tr>
         
         
         </tbody><tbody>
                 <tr>
-                  <td data-row="1" data-col="0">21.0</td>
-                  <td data-row="1" data-col="1">6</td>
-                  <td data-row="1" data-col="2">NA</td>
+                  <td data-row="1" data-col="1">21.0</td>
+                  <td data-row="1" data-col="2">6</td>
+                  <td data-row="1" data-col="3">NA</td>
                 </tr>
                 <tr>
-                  <td data-row="2" data-col="0">21.0</td>
-                  <td data-row="2" data-col="1">6</td>
-                  <td data-row="2" data-col="2">NA</td>
+                  <td data-row="2" data-col="1">21.0</td>
+                  <td data-row="2" data-col="2">6</td>
+                  <td data-row="2" data-col="3">NA</td>
                 </tr>
                 <tr>
-                  <td data-row="3" data-col="0">22.8</td>
-                  <td data-row="3" data-col="1">4</td>
-                  <td data-row="3" data-col="2">NA</td>
+                  <td data-row="3" data-col="1">22.8</td>
+                  <td data-row="3" data-col="2">4</td>
+                  <td data-row="3" data-col="3">NA</td>
                 </tr>
                 <tr>
-                  <td data-row="4" data-col="0">vs</td>
-                  <td data-row="4" data-col="1">am</td>
-                  <td data-row="4" data-col="2">gear</td>
+                  <td data-row="4" data-col="1">vs</td>
+                  <td data-row="4" data-col="2">am</td>
+                  <td data-row="4" data-col="3">gear</td>
                 </tr>
                 <tr>
-                  <td data-row="5" data-col="0">1</td>
-                  <td data-row="5" data-col="1">0</td>
-                  <td data-row="5" data-col="2">3</td>
+                  <td data-row="5" data-col="1">1</td>
+                  <td data-row="5" data-col="2">0</td>
+                  <td data-row="5" data-col="3">3</td>
                 </tr>
                 <tr>
-                  <td data-row="6" data-col="0">0</td>
                   <td data-row="6" data-col="1">0</td>
-                  <td data-row="6" data-col="2">3</td>
+                  <td data-row="6" data-col="2">0</td>
+                  <td data-row="6" data-col="3">3</td>
                 </tr>
         </tbody>
       </table>

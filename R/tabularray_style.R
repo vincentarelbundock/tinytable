@@ -643,6 +643,7 @@ setMethod(
     lines <- sty$lines
     other <- sty$other
 
+
     # Process lines using the expanded data
     x <- process_tabularray_lines(x, lines)
 

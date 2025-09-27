@@ -70,7 +70,7 @@ block[ // start block
     // tinytable header start
     table.header(
       repeat: true,
-[ ],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[Group 2],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[Group 1],
+[ ], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[Group 2], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[Group 1],
 [mpg], [cyl], [disp], [hp], [drat],
     ),
     // tinytable header end

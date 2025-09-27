@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>subset.tinytable – tinytable</title>
+<title>tips_typst – tinytable</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -465,11 +500,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#subsetting-a-tinytable-object" id="toc-subsetting-a-tinytable-object" class="nav-link active" data-scroll-target="#subsetting-a-tinytable-object">Subsetting a <code>tinytable</code> object</a>
+  <li><a href="#typst" id="toc-typst" class="nav-link active" data-scroll-target="#typst">Typst</a>
   <ul class="collapse">
-  <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
-  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
-  <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
+  <li><a href="#multi-page-long-tables" id="toc-multi-page-long-tables" class="nav-link" data-scroll-target="#multi-page-long-tables">Multi-page long tables</a></li>
+  <li><a href="#kind" id="toc-kind" class="nav-link" data-scroll-target="#kind"><code>kind</code></a></li>
+  <li><a href="#rowspan-and-colspan" id="toc-rowspan-and-colspan" class="nav-link" data-scroll-target="#rowspan-and-colspan"><code>rowspan</code> and <code>colspan</code></a></li>
   </ul></li>
   </ul>
 </nav>
@@ -480,62 +515,49 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="subsetting-a-tinytable-object" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="subsetting-a-tinytable-object">Subsetting a <code>tinytable</code> object</h2>
-<section id="description" class="level3">
-<h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Return subsets <code>tinytable</code> which meet conditions.</p>
+<section id="typst" class="level2">
+<h2 class="anchored" data-anchor-id="typst">Typst</h2>
+<section id="multi-page-long-tables" class="level3">
+<h3 class="anchored" data-anchor-id="multi-page-long-tables">Multi-page long tables</h3>
+<p>The Typst tables created by <code>tinytable</code> are automatically broken across pages with repeated headers. However, in Quarto documents, the Quarto software wraps tables in an non-breakable <code>#figure</code> environment. This can break the display of long tables. One solution is to use a raw Typst code block to set Figures to be breakable:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>format: typst</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>```{=typst}</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>#show figure: set block(breakable: true)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>```</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>```{r}</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>#| tbl-cap: "blah blah blah"</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>#| label: tbl-blah</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>library(tinytable)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>tt(head(iris, 50))</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>```</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="usage" class="level3">
-<h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">## S3 method for class 'tinytable'
-subset(x, subset, select, drop = FALSE, ...)
-</code></pre>
+<section id="kind" class="level3">
+<h3 class="anchored" data-anchor-id="kind"><code>kind</code></h3>
+<p>By default, <code>tinytable</code> adds <code>kind:"tinytable"</code> to all tables produced by the package. This can easily be modified using the <code>finalize</code> argument of the <code>style_tt()</code> function, and it can be applied automatically to all tables by setting a default theme. For example,</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>theme_fancy <span class="ot">&lt;-</span> <span class="cf">function</span>(x, ...) {</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  fancytable <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (x<span class="sc">@</span>output <span class="sc">==</span> <span class="st">"typst"</span>) {</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    x<span class="sc">@</span>table_string <span class="ot">&lt;-</span> <span class="fu">sub</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">'kind: "tinytable"'</span>, </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">'kind: "fancytable"'</span>, </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        x<span class="sc">@</span>table_string, <span class="at">fixed =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(x)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  x <span class="sc">|&gt;</span> <span class="fu">style_tt</span>(<span class="at">finalize =</span> fancytable)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tinytable_tt_theme =</span> theme_fancy)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(<span class="fu">head</span>(iris)) <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="st">"typst"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="arguments" class="level3">
-<h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
-<table role="presentation">
-<tbody><tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="x">x</code>
-</td>
-<td>
-object to be subsetted.
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="subset">subset</code>
-</td>
-<td>
-logical expression indicating elements or rows to keep: missing values are taken as false.
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="select">select</code>
-</td>
-<td>
-expression, indicating columns to select from a data frame.
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="drop">drop</code>
-</td>
-<td>
-passed on to <code>[</code> indexing operator.
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="...">…</code>
-</td>
-<td>
-further arguments to be passed to or from other methods.
-</td>
-</tr>
-</tbody></table>
+<section id="rowspan-and-colspan" class="level3">
+<h3 class="anchored" data-anchor-id="rowspan-and-colspan"><code>rowspan</code> and <code>colspan</code></h3>
+<p>If a table has cells that span across the full table (<code>colspan</code> equal to <code>nrow(tab)</code>), the <code>rowspan</code> argument can collapse multiple rows into a single cell. See this forum post for explanation why:</p>
+<p><a href="https://forum.typst.app/t/why-is-a-rowspan-cell-with-colspan-equal-to-number-of-columns-seemingly-only-spanning-one-row/5047">https://forum.typst.app/t/why-is-a-rowspan-cell-with-colspan-equal-to-number-of-columns-seemingly-only-spanning-one-row/5047</a></p>
 
 
 </section>

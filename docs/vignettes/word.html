@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>subset.tinytable – tinytable</title>
+<title>word – tinytable</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -30,6 +65,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
+<link href="../man/tt.html" rel="next">
+<link href="../vignettes/tinytable_tutorial_typst.pdf" rel="prev">
 <link href="../favicon.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -172,7 +209,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../vignettes/word.html">Tutorial (Word)</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
     </div>
@@ -281,7 +318,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../vignettes/word.html" class="sidebar-item-text sidebar-link">
+  <a href="../vignettes/word.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">Tutorial (Word)</span></a>
   </div>
 </li>
@@ -465,11 +502,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#subsetting-a-tinytable-object" id="toc-subsetting-a-tinytable-object" class="nav-link active" data-scroll-target="#subsetting-a-tinytable-object">Subsetting a <code>tinytable</code> object</a>
+  <li><a href="#microsoft-word-.docx" id="toc-microsoft-word-.docx" class="nav-link active" data-scroll-target="#microsoft-word-.docx">Microsoft Word <code>.docx</code></a>
   <ul class="collapse">
-  <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
-  <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
-  <li><a href="#arguments" id="toc-arguments" class="nav-link" data-scroll-target="#arguments">Arguments</a></li>
+  <li><a href="#images-to-word" id="toc-images-to-word" class="nav-link" data-scroll-target="#images-to-word">Images to Word</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -480,62 +515,35 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="subsetting-a-tinytable-object" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="subsetting-a-tinytable-object">Subsetting a <code>tinytable</code> object</h2>
-<section id="description" class="level3">
-<h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Return subsets <code>tinytable</code> which meet conditions.</p>
-</section>
-<section id="usage" class="level3">
-<h3 class="anchored" data-anchor-id="usage">Usage</h3>
-<pre><code class="language-R">## S3 method for class 'tinytable'
-subset(x, subset, select, drop = FALSE, ...)
-</code></pre>
-</section>
-<section id="arguments" class="level3">
-<h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
-<table role="presentation">
-<tbody><tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="x">x</code>
-</td>
-<td>
-object to be subsetted.
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="subset">subset</code>
-</td>
-<td>
-logical expression indicating elements or rows to keep: missing values are taken as false.
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="select">select</code>
-</td>
-<td>
-expression, indicating columns to select from a data frame.
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="drop">drop</code>
-</td>
-<td>
-passed on to <code>[</code> indexing operator.
-</td>
-</tr>
-<tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
-<code id="...">…</code>
-</td>
-<td>
-further arguments to be passed to or from other methods.
-</td>
-</tr>
-</tbody></table>
+<section id="microsoft-word-.docx" class="level1">
+<h1>Microsoft Word <code>.docx</code></h1>
+<p>To create Word documents, <code>tinytable</code> proceeds in two steps:</p>
+<ol type="1">
+<li>Generate a markdown table.</li>
+<li>Call the external <a href="https://pandoc.org/">Pandoc software</a> to convert the markdown table to a Word document.</li>
+</ol>
+<p>This workflow is powerful, because Pandoc recognizes many different table structures, including column and row spans, header groups, etc.</p>
+<p>Unfortunately, this workflow also limits the range of styling options available in Word. Indeed, many arguments in the <code>style_tt()</code> function do not have formal markdown notation to represent them, and are thus unavailable. For example, while <code>italic</code>, <code>bold</code>, and <code>strikeout</code>, are supported, <code>color</code> and <code>background</code> are not.</p>
+<p>Beyond these constraints, the <code>tinytable</code> functionality related to formatting, grouping, and more remain relevant to Word. Please visit <a href="https://vincentarelbundock.github.io/tinytable/">https://vincentarelbundock.github.io/tinytable/</a> to learn more.</p>
+<section id="images-to-word" class="level2">
+<h2 class="anchored" data-anchor-id="images-to-word">Images to Word</h2>
+<p>Users who want full styling capabilities in Word can save tables as image files and insert them in their documents. Here is an example Quarto notebook illustrating this workflow.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>format: docx</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>```{r}</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>#| out-width: "50%"</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>library(tinytable)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>options(tinytable_save_overwrite = TRUE)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>tt(mtcars[1:10, 1:5]) |&gt;</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  style_tt(j = 2:3, background = "black", color = "white") |&gt;</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  save_tt("table_01.png")</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>knitr::include_graphics("table_01.png")</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>```</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
@@ -941,6 +949,18 @@ further arguments to be passed to or from other methods.
     }
   });
   </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../vignettes/tinytable_tutorial_typst.pdf" class="pagination-link" aria-label="Tutorial (Typst)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Tutorial (Typst)</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../man/tt.html" class="pagination-link" aria-label="`tt`">
+        <span class="nav-page-text"><code>tt</code></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
 </div> <!-- /content -->
 
 

@@ -67,7 +67,7 @@ block[ // start block
     // tinytable header start
     table.header(
       repeat: true,
-[ ],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[First],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[Second],
+[ ], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[First], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[Second],
 [mpg], [cyl], [disp], [hp], [drat],
     ),
     // tinytable header end

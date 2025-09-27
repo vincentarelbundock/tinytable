@@ -201,24 +201,3 @@ insert_tabularray_header <- function(x, header_line) {
     return(x)
 }
 
-#' Apply styling to tabularray header spans
-#' @keywords internal
-#' @noRd
-style_tabularray_header_spans <- function(x, group_row, row_ihead) {
-    spans <- find_consecutive_spans(group_row)
-
-    for (span in spans) {
-        cs <- if (span$length == 1) NULL else span$length
-        args <- list(
-            tt_build_now = TRUE,
-            x = x,
-            i = row_ihead,
-            j = span$start,
-            align = "c",
-            colspan = cs
-        )
-        x <- do.call(style_tt, args)
-    }
-
-    return(x)
-}

@@ -82,9 +82,9 @@ block[ // start block
     // tinytable header start
     table.header(
       repeat: true,
-table.cell(stroke: (bottom: .05em + black), colspan: 3, align: center)[e],table.cell(stroke: (bottom: .05em + black), colspan: 1, align: center)[f],[ ],
-table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[c],table.cell(stroke: (bottom: .05em + black), colspan: 3, align: center)[d],
-[ ],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[a],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[b],
+table.cell(stroke: (bottom: .05em + black), colspan: 3, align: center)[e], [f], [ ],
+table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[c], table.cell(stroke: (bottom: .05em + black), colspan: 3, align: center)[d],
+[ ], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[a], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[b],
 [mpg], [cyl], [disp], [hp], [drat],
     ),
     // tinytable header end

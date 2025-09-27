@@ -139,6 +139,20 @@ process_group_j <- function(x, j) {
     x@group_data_j <- rbind_nocol(new_header_row, x@group_data_j)
   }
 
+  # Add colspan styling for each group span
+  # The group header row will be at row index -1 (most recent group)
+  header_row_i <- -1
+  for (i in seq_along(j)) {
+    group_cols <- j[[i]]
+    if (length(group_cols) > 1) {
+      # Add center alignment and colspan for groups that span multiple columns
+      x <- style_tt(x, i = header_row_i, j = group_cols[1], align = "c", colspan = length(group_cols))
+    } else {
+      # Just center alignment for single-column groups
+      x <- style_tt(x, i = header_row_i, j = group_cols[1], align = "c")
+    }
+  }
+
   return(x)
 }
 

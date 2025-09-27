@@ -74,8 +74,8 @@ block[ // start block
     // tinytable header start
     table.header(
       repeat: true,
-table.cell(stroke: (bottom: .05em + black), colspan: 3, align: center)[A],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[B],table.cell(stroke: (bottom: .05em + black), colspan: 1, align: center)[C],
-table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[X],table.cell(stroke: (bottom: .05em + black), colspan: 1, align: center)[Y],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[Z],table.cell(stroke: (bottom: .05em + black), colspan: 1, align: center)[W],
+table.cell(stroke: (bottom: .05em + black), colspan: 3, align: center)[A], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[B], [C],
+table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[X], [Y], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[Z], [W],
 [1], [2], [1], [1], [2], [W],
     ),
     // tinytable header end

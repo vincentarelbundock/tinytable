@@ -67,7 +67,7 @@ block[ // start block
     // tinytable header start
     table.header(
       repeat: true,
-table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[foo\_bar],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[banana\_fish],
+table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[foo\_bar], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[banana\_fish],
 [blah\_blah\_underscore], [dollar\$sign], [percent%sign], [ampersand&sign],
     ),
     // tinytable header end

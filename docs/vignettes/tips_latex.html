@@ -1,0 +1,1888 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>tips_latex – tinytable</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../favicon.svg" rel="icon" type="image/svg+xml">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c1f63da3e08f13bc72dc17e92cfd001d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-7a1cf0ce6a35c33c76e38788b9a54737.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../figures/tinytable_logo_notext.png" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">tinytable</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-tutorial-(html" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Tutorial (HTML)</span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="nav-menu-tutorial-(html">    
+        <li>
+    <a class="dropdown-item" href="../vignettes/tinytable.html">
+ <span class="dropdown-text">Tiny Tables</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../vignettes/format.html">
+ <span class="dropdown-text">Formatting</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../vignettes/style.html">
+ <span class="dropdown-text">Style</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../vignettes/group.html">
+ <span class="dropdown-text">Groups and labels</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../vignettes/plot.html">
+ <span class="dropdown-text">Plots and images</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../vignettes/theme.html">
+ <span class="dropdown-text">Themes</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../vignettes/html.html">
+ <span class="dropdown-text">HTML customization</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../vignettes/notebooks.html">
+ <span class="dropdown-text">Notebooks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../vignettes/interactive.html">
+ <span class="dropdown-text">Interactive tables</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../vignettes/tips.html">
+ <span class="dropdown-text">Tips and Tricks</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../vignettes/gallery.html">
+ <span class="dropdown-text">Gallery</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" href="../vignettes/tinytable_tutorial.pdf" aria-current="page"> 
+<span class="menu-text">Tutorial (LaTeX)</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../vignettes/tinytable_tutorial_typst.pdf"> 
+<span class="menu-text">Tutorial (Typst)</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/vincentarelbundock/tinytable"> <i class="bi bi-github" role="img" aria-label="tinytable GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com/vincentab"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Tutorial (HTML)</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/tinytable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tiny tables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/format.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Format</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/style.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Style</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/group.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Groups and labels</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/plot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Plots and images</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/theme.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Themes</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/html.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">HTML</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/notebooks.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Notebooks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/interactive.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Interactive tables</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/tips.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tips and tricks</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/alternatives.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Alternatives</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/gallery.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Gallery</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/tinytable_tutorial.pdf" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial (LaTeX)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/tinytable_tutorial_typst.pdf" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial (Typst)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/word.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tutorial (Word)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Functions</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/tt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>tt</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/format_tt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>format_tt</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/style_tt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>style_tt</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/group_tt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>group_tt</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/plot_tt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>plot_tt</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/save_tt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>save_tt</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Theme formats</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/theme_html.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_html</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/theme_latex.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_latex</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/theme_typst.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_typst</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Theme styles</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/theme_default.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_default</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/theme_grid.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_grid</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/theme_revealjs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_revealjs</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/theme_rotate.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_rotate</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/theme_striped.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_striped</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/theme_empty.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_empty</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/theme_tt.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>theme_tt</code> (deprecated)</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+          <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Helpers</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth2 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/print.tinytable.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>print</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../man/rbind2-tinytable-tinytable-method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><code>rbind2</code></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../NEWS.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">News</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../LICENSE.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">License</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../CITATION.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Citation</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#latex" id="toc-latex" class="nav-link active" data-scroll-target="#latex">LaTeX</a>
+  <ul class="collapse">
+  <li><a href="#preamble" id="toc-preamble" class="nav-link" data-scroll-target="#preamble">Preamble</a></li>
+  <li><a href="#setspace" id="toc-setspace" class="nav-link" data-scroll-target="#setspace"><code>setspace</code></a></li>
+  <li><a href="#multi-line-cells-with-minipage" id="toc-multi-line-cells-with-minipage" class="nav-link" data-scroll-target="#multi-line-cells-with-minipage">Multi-line cells with <code>minipage</code></a></li>
+  <li><a href="#global-styles" id="toc-global-styles" class="nav-link" data-scroll-target="#global-styles">Global styles</a></li>
+  <li><a href="#beamer" id="toc-beamer" class="nav-link" data-scroll-target="#beamer">Beamer</a></li>
+  <li><a href="#label-and-caption-position" id="toc-label-and-caption-position" class="nav-link" data-scroll-target="#label-and-caption-position">Label and caption position</a></li>
+  <li><a href="#placement" id="toc-placement" class="nav-link" data-scroll-target="#placement">Placement</a></li>
+  <li><a href="#rotate" id="toc-rotate" class="nav-link" data-scroll-target="#rotate">Rotate</a></li>
+  <li><a href="#multipage" id="toc-multipage" class="nav-link" data-scroll-target="#multipage">Multipage</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
+
+
+
+
+<section id="latex" class="level2">
+<h2 class="anchored" data-anchor-id="latex">LaTeX</h2>
+<section id="preamble" class="level3">
+<h3 class="anchored" data-anchor-id="preamble">Preamble</h3>
+<p><code>tinytable</code> uses the <code>tabularray</code> package from your LaTeX distribution to draw tables. <code>tabularray</code>, in turn, provides special <code>tblr</code>, <code>talltblr</code>, and <code>longtblr</code> environments to display tabular data.</p>
+<p>When rendering a document from Quarto or Rmarkdown directly to PDF, <code>tinytable</code> will populate the LaTeX preamble automatically with all the required packages (except when code chunks are cached). For standalone LaTeX documents, these commands should be inserted in the preamble manually:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">\usepackage</span>{<span class="ex">tabularray</span>}</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">\usepackage</span>{<span class="ex">float</span>}</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">\usepackage</span>{<span class="ex">graphicx</span>}</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">\usepackage</span>{<span class="ex">rotating</span>}</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="bu">\usepackage</span>[normalem]{<span class="ex">ulem</span>}</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">\UseTblrLibrary</span>{siunitx}</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand</span>{<span class="ex">\tinytableTabularrayUnderline</span>}[1]{<span class="fu">\underline</span>{#1}}</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand</span>{<span class="ex">\tinytableTabularrayStrikeout</span>}[1]{<span class="fu">\sout</span>{#1}}</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">\NewTableCommand</span>{<span class="fu">\tinytableDefineColor</span>}[3]{<span class="fu">\definecolor</span>{#1}{#2}{#3}}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="setspace" class="level3">
+<h3 class="anchored" data-anchor-id="setspace"><code>setspace</code></h3>
+<p>Some users have encountered unexpected spacing behavior when generating tables that are <em>not</em> wrapped in a <code>\begin{table}</code> environment (ex: <code>multipage</code> or raw <code>tblr</code>).</p>
+<p>One issue stems from the fact that the <code>\begin{table}</code> environment resets any spacing commands in the preamble or body by default, such as:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode tex code-with-copy"><code class="sourceCode latex"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">\usepackage</span>{<span class="ex">setspace</span>}</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">\doublespacing</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>This means that when using <code>theme_latex(environment="tabular")</code> —which does not wrap the table in a <code>table</code> environment— the spacing is <em>not</em> reset, and tables are double spaced. This is not a bug, since double-spacing is in fact what the user requested. Nevertheless, the behavior can seem surprising for those used to the automagical <code>table</code> environment spacing reset.</p>
+<p>One workaround is to add the following to the document preamble when using multipage/longtblr:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode tex code-with-copy"><code class="sourceCode latex"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">\usepackage</span>{<span class="ex">etoolbox</span>}</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">\AtBeginEnvironment</span>{longtblr}{<span class="kw">\begin</span>{<span class="ex">singlespacing</span>}}</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">\AtEndEnvironment</span>{longtblr}{<span class="kw">\end</span>{<span class="ex">singlespacing</span>}}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Example Quarto doc:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode md code-with-copy"><code class="sourceCode markdown"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> longtblr and setspacing</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">  pdf:</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">    include-in-header:</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">      - text: |</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">         % Tinytable preamble</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">         \usepackage{tabularray}</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">         \usepackage{float}</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">         \usepackage{graphicx}</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">         \usepackage{codehigh}</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">         \usepackage[normalem]{ulem}</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">         \UseTblrLibrary{booktabs}</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">         \newcommand{\tinytableTabularrayUnderline}[1]{\underline</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">         {#1}}</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">         \newcommand{\tinytableTabularrayStrikeout}[1]{\sout{#1}}</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">         \NewTableCommand{\tinytableDefineColor}[3]{\definecolor{</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">         #1}{#2}{#3}}</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">         % Spacing Commands</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">         \usepackage{setspace}</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">         \doublespacing</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">         % Fix Spacing in longtblr</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">         \usepackage{etoolbox}</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">         \AtBeginEnvironment{longtblr}{\begin{singlespacing}}</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">         \AtEndEnvironment{longtblr}{\end{singlespacing}}</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="in">```{=latex}</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a><span class="in">\begin{longtblr}[         %% tabularray outer open</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a><span class="in">]                     %% tabularray outer close</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="in">{                     %% tabularray inner open</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a><span class="in">colspec={Q[]Q[]Q[]Q[]},</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="in">}                     %% tabularray inner close</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="in">\toprule</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="in">foo &amp; bar &amp; baz \\</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="in">foo &amp; bar &amp; baz \\</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="in">foo &amp; bar &amp; baz \\</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a><span class="in">\bottomrule</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a><span class="in">\end{longtblr}</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="multi-line-cells-with-minipage" class="level3">
+<h3 class="anchored" data-anchor-id="multi-line-cells-with-minipage">Multi-line cells with <code>minipage</code></h3>
+<p>In some contexts, users may want create cells with LaTeX or markdown code that spans multiple lines. This usually works well for HTML tables. But sometimes, in LaTeX, multi-line content with special environments must be wrapped in a <code>minipage</code> environment.</p>
+<p>In the example that follows, we create a Markdown list using asterisks. Then, we call <code>litedown::mark()</code> to render that list as bullet points (an <code>itemize</code> environment in LaTeX). Finally, we define a custom function called <code>minipagify</code> to wrap the bullet point in a <code>minipage</code> environment.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(litedown)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">A =</span> <span class="fu">c</span>(<span class="st">"Blah *blah* blah"</span>, <span class="st">"- Thing 1</span><span class="sc">\n</span><span class="st">- Thing 2"</span>),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">B =</span> <span class="fu">c</span>(<span class="st">"6%"</span>, <span class="st">"$5.29"</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># wrap in a minipage environment</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>minipagify <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sprintf</span>(</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"</span><span class="sc">\\</span><span class="st">minipage{</span><span class="sc">\\</span><span class="st">textwidth}%s</span><span class="sc">\\</span><span class="st">endminipage"</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sapply</span>(x, litedown<span class="sc">::</span>mark, <span class="st">"latex"</span>)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># only in LaTeX</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>is_latex <span class="ot">&lt;-</span> <span class="fu">identical</span>(knitr<span class="sc">::</span><span class="fu">pandoc_to</span>(), <span class="st">"latex"</span>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>is_html <span class="ot">&lt;-</span> <span class="fu">identical</span>(knitr<span class="sc">::</span><span class="fu">pandoc_to</span>(), <span class="st">"html"</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">tt</span>(dat, <span class="at">width =</span> <span class="fu">c</span>(<span class="fl">0.3</span>, <span class="fl">0.2</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(<span class="at">j =</span> <span class="dv">2</span>, <span class="at">align =</span> <span class="st">"c"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">j =</span> <span class="dv">2</span>, <span class="at">escape =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">j =</span> <span class="dv">1</span>, <span class="at">fn =</span> <span class="cf">if</span> (is_latex) minipagify <span class="cf">else</span> identity) <span class="sc">|&gt;</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">j =</span> <span class="dv">1</span>, <span class="at">fn =</span> <span class="cf">if</span> (is_html) litedown<span class="sc">::</span>mark <span class="cf">else</span> identity)</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>tab</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_ag7bdv1t8qrq87rxicrt = TinyTable.createTableFunctions("tinytable_ag7bdv1t8qrq87rxicrt");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '1', j: 2 } ], css_id: 'tinytable_css_hncqiggxmhh12tkr9s6o',}, 
+          { positions: [ { i: '1', j: 1 } ], css_id: 'tinytable_css_i3gxvg773w7mxhx347mt',}, 
+          { positions: [ { i: '2', j: 2 } ], css_id: 'tinytable_css_qj81awxapaosddjaxi9r',}, 
+          { positions: [ { i: '2', j: 1 } ], css_id: 'tinytable_css_185bjoldgxgoz636t6hz',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_awp3j73oeq4779nttklr',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_stqw2lwydfd64ya9lsi6',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_ag7bdv1t8qrq87rxicrt.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_ag7bdv1t8qrq87rxicrt td.tinytable_css_hncqiggxmhh12tkr9s6o, #tinytable_ag7bdv1t8qrq87rxicrt th.tinytable_css_hncqiggxmhh12tkr9s6o { text-align: center; width: 40%; }
+    #tinytable_ag7bdv1t8qrq87rxicrt td.tinytable_css_i3gxvg773w7mxhx347mt, #tinytable_ag7bdv1t8qrq87rxicrt th.tinytable_css_i3gxvg773w7mxhx347mt { width: 60%; }
+    #tinytable_ag7bdv1t8qrq87rxicrt td.tinytable_css_qj81awxapaosddjaxi9r, #tinytable_ag7bdv1t8qrq87rxicrt th.tinytable_css_qj81awxapaosddjaxi9r {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center; width: 40%; }
+    #tinytable_ag7bdv1t8qrq87rxicrt td.tinytable_css_185bjoldgxgoz636t6hz, #tinytable_ag7bdv1t8qrq87rxicrt th.tinytable_css_185bjoldgxgoz636t6hz {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; width: 60%; }
+    #tinytable_ag7bdv1t8qrq87rxicrt td.tinytable_css_awp3j73oeq4779nttklr, #tinytable_ag7bdv1t8qrq87rxicrt th.tinytable_css_awp3j73oeq4779nttklr {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center; width: 40%; }
+    #tinytable_ag7bdv1t8qrq87rxicrt td.tinytable_css_stqw2lwydfd64ya9lsi6, #tinytable_ag7bdv1t8qrq87rxicrt th.tinytable_css_stqw2lwydfd64ya9lsi6 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; width: 60%; }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_ag7bdv1t8qrq87rxicrt" style="table-layout: fixed; width: 50%; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+          
+              <tr>
+                <th scope="col" data-row="0" data-col="1">A</th>
+                <th scope="col" data-row="0" data-col="2">B</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1"><p>Blah <em>blah</em> blah</p>
+<ul>
+<li>Thing 1</li>
+<li>Thing 2</li>
+</ul></td>
+                  <td data-row="1" data-col="2">6%</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1"><p>Blah <em>blah</em> blah</p>
+<ul>
+<li>Thing 1</li>
+<li>Thing 2</li>
+</ul></td>
+                  <td data-row="2" data-col="2">$5.29</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+</section>
+<section id="global-styles" class="level3">
+<h3 class="anchored" data-anchor-id="global-styles">Global styles</h3>
+<p><code>tabularray</code> allows very powerful styling and themeing options. See <a href="https://ctan.org/pkg/tabularray">the reference manual</a> for more information.</p>
+<p>For example, you can change the size of footnotes in all tables of a document with:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>format: </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    pdf:</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        keep-tex: true</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        header-includes: |</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>            \SetTblrStyle{foot}{font=\LARGE}</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>```{r}</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>library(tinytable)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>library(magrittr)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>tt(head(iris), notes = "Blah blah")</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>```</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="beamer" class="level3">
+<h3 class="anchored" data-anchor-id="beamer">Beamer</h3>
+<p>Due to <a href="https://github.com/rstudio/rmarkdown/issues/2478">a bug in the upstream package <code>rmarkdown</code></a>, Quarto or Rmarkdown presentations compiled to Beamer cannot include adequate package loading commands in the preamble automatically. This bug prevents <code>tinytable::usepackage_latex()</code> from modifying the preamble. Here’s a workaround.</p>
+<p>Save this LaTeX code as <code>preamble.tex</code>:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">\RequirePackage</span>{tabularray}</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">\RequirePackage</span>{booktabs}</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">\RequirePackage</span>{float}</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="bu">\usepackage</span>[normalem]{<span class="ex">ulem</span>}</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="bu">\usepackage</span>{<span class="ex">graphicx</span>}</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">\UseTblrLibrary</span>{booktabs}</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">\UseTblrLibrary</span>{siunitx}</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">\NewTableCommand</span>{<span class="fu">\tinytableDefineColor</span>}[3]{<span class="fu">\definecolor</span>{#1}{#2}{#3}}</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand</span>{<span class="ex">\tinytableTabularrayUnderline</span>}[1]{<span class="fu">\underline</span>{#1}}</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="fu">\newcommand</span>{<span class="ex">\tinytableTabularrayStrikeout</span>}[1]{<span class="fu">\sout</span>{#1}}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then, load <code>preamble.tex</code> in your YAML header:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">output</span><span class="kw">:</span><span class="at"> </span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">beamer_presentation</span><span class="kw">:</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">includes</span><span class="kw">:</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="at">      </span><span class="fu">in_header</span><span class="kw">:</span><span class="at"> preamble.tex</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>With these changes, the table should appear with colors as expected.</p>
+</section>
+<section id="label-and-caption-position" class="level3">
+<h3 class="anchored" data-anchor-id="label-and-caption-position">Label and caption position</h3>
+<p>In LaTeX, we can use <code>tabularray</code> options in the preamble or the table to change the location of the label and caption. The example below shows a Quarto document with caption at the bottom.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>---</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>output: </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    pdf_document:</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>header-includes:</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  - \usepackage{tabularray}</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a> ---</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>```{=latex}</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>\DefTblrTemplate{firsthead,middlehead,lasthead}{default}{}</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>\DefTblrTemplate{firstfoot,middlefoot}{default}{}</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>\DefTblrTemplate{lastfoot}{default}% </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  \UseTblrTemplate{caption}{default}</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>```</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>```{r, echo=FALSE}</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>library(modelsummary)</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>library(tinytable)</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>mod &lt;- list()</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>mod[['One variable']] &lt;- lm(mpg ~ hp, mtcars)</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>mod[['Two variables']] &lt;- lm(mpg ~ hp + drat, mtcars)</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>modelsummary(mod,</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>             title = "Regression Models")|&gt;</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>  theme_latex(outer = "label={tblr:test}")</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>```</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>Table \ref{tblr:test}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="placement" class="level3">
+<h3 class="anchored" data-anchor-id="placement">Placement</h3>
+<p>The <code>theme_latex()</code> function includes placement control over the positioning of the table in LaTeX documents, using floating parameters like <code>H</code> (from the <code>float</code> LaTeX package) to specify where the table should appear.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tinytable_latex_placement =</span> <span class="cn">NULL</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">head</span>(mtcars)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x) <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_latex</span>(<span class="at">placement =</span> <span class="st">"H"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">output =</span> <span class="st">"latex"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>\begin{table}[H]
+\centering
+\begin{tblr}[         %% tabularray outer open
+]                     %% tabularray outer close
+{                     %% tabularray inner open
+colspec={Q[]Q[]Q[]Q[]Q[]Q[]Q[]Q[]Q[]Q[]Q[]},
+hline{2}={1-11}{solid, black, 0.05em},
+hline{1}={1-11}{solid, black, 0.1em},
+hline{8}={1-11}{solid, black, 0.1em},
+}                     %% tabularray inner close
+mpg &amp; cyl &amp; disp &amp; hp &amp; drat &amp; wt &amp; qsec &amp; vs &amp; am &amp; gear &amp; carb \\
+21.0 &amp; 6 &amp; 160 &amp; 110 &amp; 3.90 &amp; 2.620 &amp; 16.46 &amp; 0 &amp; 1 &amp; 4 &amp; 4 \\
+21.0 &amp; 6 &amp; 160 &amp; 110 &amp; 3.90 &amp; 2.875 &amp; 17.02 &amp; 0 &amp; 1 &amp; 4 &amp; 4 \\
+22.8 &amp; 4 &amp; 108 &amp; 93 &amp; 3.85 &amp; 2.320 &amp; 18.61 &amp; 1 &amp; 1 &amp; 4 &amp; 1 \\
+21.4 &amp; 6 &amp; 258 &amp; 110 &amp; 3.08 &amp; 3.215 &amp; 19.44 &amp; 1 &amp; 0 &amp; 3 &amp; 1 \\
+18.7 &amp; 8 &amp; 360 &amp; 175 &amp; 3.15 &amp; 3.440 &amp; 17.02 &amp; 0 &amp; 0 &amp; 3 &amp; 2 \\
+18.1 &amp; 6 &amp; 225 &amp; 105 &amp; 2.76 &amp; 3.460 &amp; 20.22 &amp; 1 &amp; 0 &amp; 3 &amp; 1 \\
+\end{tblr}
+\end{table} </code></pre>
+</div>
+</div>
+</section>
+<section id="rotate" class="level3">
+<h3 class="anchored" data-anchor-id="rotate">Rotate</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(<span class="fu">head</span>(iris), <span class="at">caption =</span> <span class="st">"Rotated table."</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_rotate</span>(<span class="at">angle =</span> <span class="dv">45</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_cefz9s9flhja303tkbjj = TinyTable.createTableFunctions("tinytable_cefz9s9flhja303tkbjj");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 4 }, { i: '6', j: 5 } ], css_id: 'tinytable_css_y2sqnm1rumhchb9vratj',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_j6lwzcr1ty8vxmmk1s6t',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_cefz9s9flhja303tkbjj.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_cefz9s9flhja303tkbjj td.tinytable_css_y2sqnm1rumhchb9vratj, #tinytable_cefz9s9flhja303tkbjj th.tinytable_css_y2sqnm1rumhchb9vratj {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_cefz9s9flhja303tkbjj td.tinytable_css_j6lwzcr1ty8vxmmk1s6t, #tinytable_cefz9s9flhja303tkbjj th.tinytable_css_j6lwzcr1ty8vxmmk1s6t {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_cefz9s9flhja303tkbjj" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+          </thead><caption>Rotated table.</caption>
+              <tbody><tr>
+                <th scope="col" data-row="0" data-col="1">Sepal.Length</th>
+                <th scope="col" data-row="0" data-col="2">Sepal.Width</th>
+                <th scope="col" data-row="0" data-col="3">Petal.Length</th>
+                <th scope="col" data-row="0" data-col="4">Petal.Width</th>
+                <th scope="col" data-row="0" data-col="5">Species</th>
+              </tr>
+        
+        
+        </tbody><tbody>
+                <tr>
+                  <td data-row="1" data-col="1">5.1</td>
+                  <td data-row="1" data-col="2">3.5</td>
+                  <td data-row="1" data-col="3">1.4</td>
+                  <td data-row="1" data-col="4">0.2</td>
+                  <td data-row="1" data-col="5">setosa</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1">4.9</td>
+                  <td data-row="2" data-col="2">3.0</td>
+                  <td data-row="2" data-col="3">1.4</td>
+                  <td data-row="2" data-col="4">0.2</td>
+                  <td data-row="2" data-col="5">setosa</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">4.7</td>
+                  <td data-row="3" data-col="2">3.2</td>
+                  <td data-row="3" data-col="3">1.3</td>
+                  <td data-row="3" data-col="4">0.2</td>
+                  <td data-row="3" data-col="5">setosa</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1">4.6</td>
+                  <td data-row="4" data-col="2">3.1</td>
+                  <td data-row="4" data-col="3">1.5</td>
+                  <td data-row="4" data-col="4">0.2</td>
+                  <td data-row="4" data-col="5">setosa</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">5.0</td>
+                  <td data-row="5" data-col="2">3.6</td>
+                  <td data-row="5" data-col="3">1.4</td>
+                  <td data-row="5" data-col="4">0.2</td>
+                  <td data-row="5" data-col="5">setosa</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1">5.4</td>
+                  <td data-row="6" data-col="2">3.9</td>
+                  <td data-row="6" data-col="3">1.7</td>
+                  <td data-row="6" data-col="4">0.4</td>
+                  <td data-row="6" data-col="5">setosa</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+</section>
+<section id="multipage" class="level3">
+<h3 class="anchored" data-anchor-id="multipage">Multipage</h3>
+<p>The <code>multipage</code> theme is designed for LaTeX documents to allow long tables to continue across multiple pages. This theme ensures that tables are not truncated and that all data is presented clearly.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>tmp <span class="ot">&lt;-</span> <span class="fu">rbind</span>(mtcars, mtcars)[, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>]</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>cap <span class="ot">&lt;-</span> <span class="st">"A long 80</span><span class="sc">\\</span><span class="st">% width table with repeating headers."</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(tmp, <span class="at">width =</span> .<span class="dv">8</span>, <span class="at">caption =</span> cap) <span class="sc">|&gt;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_latex</span>(<span class="at">multipage =</span> <span class="cn">TRUE</span>, <span class="at">rowhead =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_sg05y68enko6y8h4zguv = TinyTable.createTableFunctions("tinytable_sg05y68enko6y8h4zguv");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '64', j: 1 }, { i: '64', j: 2 }, { i: '64', j: 3 }, { i: '64', j: 4 }, { i: '64', j: 5 }, { i: '64', j: 6 } ], css_id: 'tinytable_css_saxfymap8rcfuynktxqk',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 }, { i: '0', j: 6 } ], css_id: 'tinytable_css_k54mn2rrdvzejh2aimde',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_sg05y68enko6y8h4zguv.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_sg05y68enko6y8h4zguv td.tinytable_css_saxfymap8rcfuynktxqk, #tinytable_sg05y68enko6y8h4zguv th.tinytable_css_saxfymap8rcfuynktxqk {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_sg05y68enko6y8h4zguv td.tinytable_css_k54mn2rrdvzejh2aimde, #tinytable_sg05y68enko6y8h4zguv th.tinytable_css_k54mn2rrdvzejh2aimde {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_sg05y68enko6y8h4zguv" style="table-layout: fixed; width: 80% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        <thead>
+          </thead><caption>A long 80\% width table with repeating headers.</caption>
+              <tbody><tr>
+                <th scope="col" data-row="0" data-col="1">mpg</th>
+                <th scope="col" data-row="0" data-col="2">cyl</th>
+                <th scope="col" data-row="0" data-col="3">disp</th>
+                <th scope="col" data-row="0" data-col="4">hp</th>
+                <th scope="col" data-row="0" data-col="5">drat</th>
+                <th scope="col" data-row="0" data-col="6">wt</th>
+              </tr>
+        
+        
+        </tbody><tbody>
+                <tr>
+                  <td data-row="1" data-col="1">21.0</td>
+                  <td data-row="1" data-col="2">6</td>
+                  <td data-row="1" data-col="3">160.0</td>
+                  <td data-row="1" data-col="4">110</td>
+                  <td data-row="1" data-col="5">3.90</td>
+                  <td data-row="1" data-col="6">2.620</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1">21.0</td>
+                  <td data-row="2" data-col="2">6</td>
+                  <td data-row="2" data-col="3">160.0</td>
+                  <td data-row="2" data-col="4">110</td>
+                  <td data-row="2" data-col="5">3.90</td>
+                  <td data-row="2" data-col="6">2.875</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">22.8</td>
+                  <td data-row="3" data-col="2">4</td>
+                  <td data-row="3" data-col="3">108.0</td>
+                  <td data-row="3" data-col="4">93</td>
+                  <td data-row="3" data-col="5">3.85</td>
+                  <td data-row="3" data-col="6">2.320</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1">21.4</td>
+                  <td data-row="4" data-col="2">6</td>
+                  <td data-row="4" data-col="3">258.0</td>
+                  <td data-row="4" data-col="4">110</td>
+                  <td data-row="4" data-col="5">3.08</td>
+                  <td data-row="4" data-col="6">3.215</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">18.7</td>
+                  <td data-row="5" data-col="2">8</td>
+                  <td data-row="5" data-col="3">360.0</td>
+                  <td data-row="5" data-col="4">175</td>
+                  <td data-row="5" data-col="5">3.15</td>
+                  <td data-row="5" data-col="6">3.440</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1">18.1</td>
+                  <td data-row="6" data-col="2">6</td>
+                  <td data-row="6" data-col="3">225.0</td>
+                  <td data-row="6" data-col="4">105</td>
+                  <td data-row="6" data-col="5">2.76</td>
+                  <td data-row="6" data-col="6">3.460</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">14.3</td>
+                  <td data-row="7" data-col="2">8</td>
+                  <td data-row="7" data-col="3">360.0</td>
+                  <td data-row="7" data-col="4">245</td>
+                  <td data-row="7" data-col="5">3.21</td>
+                  <td data-row="7" data-col="6">3.570</td>
+                </tr>
+                <tr>
+                  <td data-row="8" data-col="1">24.4</td>
+                  <td data-row="8" data-col="2">4</td>
+                  <td data-row="8" data-col="3">146.7</td>
+                  <td data-row="8" data-col="4">62</td>
+                  <td data-row="8" data-col="5">3.69</td>
+                  <td data-row="8" data-col="6">3.190</td>
+                </tr>
+                <tr>
+                  <td data-row="9" data-col="1">22.8</td>
+                  <td data-row="9" data-col="2">4</td>
+                  <td data-row="9" data-col="3">140.8</td>
+                  <td data-row="9" data-col="4">95</td>
+                  <td data-row="9" data-col="5">3.92</td>
+                  <td data-row="9" data-col="6">3.150</td>
+                </tr>
+                <tr>
+                  <td data-row="10" data-col="1">19.2</td>
+                  <td data-row="10" data-col="2">6</td>
+                  <td data-row="10" data-col="3">167.6</td>
+                  <td data-row="10" data-col="4">123</td>
+                  <td data-row="10" data-col="5">3.92</td>
+                  <td data-row="10" data-col="6">3.440</td>
+                </tr>
+                <tr>
+                  <td data-row="11" data-col="1">17.8</td>
+                  <td data-row="11" data-col="2">6</td>
+                  <td data-row="11" data-col="3">167.6</td>
+                  <td data-row="11" data-col="4">123</td>
+                  <td data-row="11" data-col="5">3.92</td>
+                  <td data-row="11" data-col="6">3.440</td>
+                </tr>
+                <tr>
+                  <td data-row="12" data-col="1">16.4</td>
+                  <td data-row="12" data-col="2">8</td>
+                  <td data-row="12" data-col="3">275.8</td>
+                  <td data-row="12" data-col="4">180</td>
+                  <td data-row="12" data-col="5">3.07</td>
+                  <td data-row="12" data-col="6">4.070</td>
+                </tr>
+                <tr>
+                  <td data-row="13" data-col="1">17.3</td>
+                  <td data-row="13" data-col="2">8</td>
+                  <td data-row="13" data-col="3">275.8</td>
+                  <td data-row="13" data-col="4">180</td>
+                  <td data-row="13" data-col="5">3.07</td>
+                  <td data-row="13" data-col="6">3.730</td>
+                </tr>
+                <tr>
+                  <td data-row="14" data-col="1">15.2</td>
+                  <td data-row="14" data-col="2">8</td>
+                  <td data-row="14" data-col="3">275.8</td>
+                  <td data-row="14" data-col="4">180</td>
+                  <td data-row="14" data-col="5">3.07</td>
+                  <td data-row="14" data-col="6">3.780</td>
+                </tr>
+                <tr>
+                  <td data-row="15" data-col="1">10.4</td>
+                  <td data-row="15" data-col="2">8</td>
+                  <td data-row="15" data-col="3">472.0</td>
+                  <td data-row="15" data-col="4">205</td>
+                  <td data-row="15" data-col="5">2.93</td>
+                  <td data-row="15" data-col="6">5.250</td>
+                </tr>
+                <tr>
+                  <td data-row="16" data-col="1">10.4</td>
+                  <td data-row="16" data-col="2">8</td>
+                  <td data-row="16" data-col="3">460.0</td>
+                  <td data-row="16" data-col="4">215</td>
+                  <td data-row="16" data-col="5">3.00</td>
+                  <td data-row="16" data-col="6">5.424</td>
+                </tr>
+                <tr>
+                  <td data-row="17" data-col="1">14.7</td>
+                  <td data-row="17" data-col="2">8</td>
+                  <td data-row="17" data-col="3">440.0</td>
+                  <td data-row="17" data-col="4">230</td>
+                  <td data-row="17" data-col="5">3.23</td>
+                  <td data-row="17" data-col="6">5.345</td>
+                </tr>
+                <tr>
+                  <td data-row="18" data-col="1">32.4</td>
+                  <td data-row="18" data-col="2">4</td>
+                  <td data-row="18" data-col="3">78.7</td>
+                  <td data-row="18" data-col="4">66</td>
+                  <td data-row="18" data-col="5">4.08</td>
+                  <td data-row="18" data-col="6">2.200</td>
+                </tr>
+                <tr>
+                  <td data-row="19" data-col="1">30.4</td>
+                  <td data-row="19" data-col="2">4</td>
+                  <td data-row="19" data-col="3">75.7</td>
+                  <td data-row="19" data-col="4">52</td>
+                  <td data-row="19" data-col="5">4.93</td>
+                  <td data-row="19" data-col="6">1.615</td>
+                </tr>
+                <tr>
+                  <td data-row="20" data-col="1">33.9</td>
+                  <td data-row="20" data-col="2">4</td>
+                  <td data-row="20" data-col="3">71.1</td>
+                  <td data-row="20" data-col="4">65</td>
+                  <td data-row="20" data-col="5">4.22</td>
+                  <td data-row="20" data-col="6">1.835</td>
+                </tr>
+                <tr>
+                  <td data-row="21" data-col="1">21.5</td>
+                  <td data-row="21" data-col="2">4</td>
+                  <td data-row="21" data-col="3">120.1</td>
+                  <td data-row="21" data-col="4">97</td>
+                  <td data-row="21" data-col="5">3.70</td>
+                  <td data-row="21" data-col="6">2.465</td>
+                </tr>
+                <tr>
+                  <td data-row="22" data-col="1">15.5</td>
+                  <td data-row="22" data-col="2">8</td>
+                  <td data-row="22" data-col="3">318.0</td>
+                  <td data-row="22" data-col="4">150</td>
+                  <td data-row="22" data-col="5">2.76</td>
+                  <td data-row="22" data-col="6">3.520</td>
+                </tr>
+                <tr>
+                  <td data-row="23" data-col="1">15.2</td>
+                  <td data-row="23" data-col="2">8</td>
+                  <td data-row="23" data-col="3">304.0</td>
+                  <td data-row="23" data-col="4">150</td>
+                  <td data-row="23" data-col="5">3.15</td>
+                  <td data-row="23" data-col="6">3.435</td>
+                </tr>
+                <tr>
+                  <td data-row="24" data-col="1">13.3</td>
+                  <td data-row="24" data-col="2">8</td>
+                  <td data-row="24" data-col="3">350.0</td>
+                  <td data-row="24" data-col="4">245</td>
+                  <td data-row="24" data-col="5">3.73</td>
+                  <td data-row="24" data-col="6">3.840</td>
+                </tr>
+                <tr>
+                  <td data-row="25" data-col="1">19.2</td>
+                  <td data-row="25" data-col="2">8</td>
+                  <td data-row="25" data-col="3">400.0</td>
+                  <td data-row="25" data-col="4">175</td>
+                  <td data-row="25" data-col="5">3.08</td>
+                  <td data-row="25" data-col="6">3.845</td>
+                </tr>
+                <tr>
+                  <td data-row="26" data-col="1">27.3</td>
+                  <td data-row="26" data-col="2">4</td>
+                  <td data-row="26" data-col="3">79.0</td>
+                  <td data-row="26" data-col="4">66</td>
+                  <td data-row="26" data-col="5">4.08</td>
+                  <td data-row="26" data-col="6">1.935</td>
+                </tr>
+                <tr>
+                  <td data-row="27" data-col="1">26.0</td>
+                  <td data-row="27" data-col="2">4</td>
+                  <td data-row="27" data-col="3">120.3</td>
+                  <td data-row="27" data-col="4">91</td>
+                  <td data-row="27" data-col="5">4.43</td>
+                  <td data-row="27" data-col="6">2.140</td>
+                </tr>
+                <tr>
+                  <td data-row="28" data-col="1">30.4</td>
+                  <td data-row="28" data-col="2">4</td>
+                  <td data-row="28" data-col="3">95.1</td>
+                  <td data-row="28" data-col="4">113</td>
+                  <td data-row="28" data-col="5">3.77</td>
+                  <td data-row="28" data-col="6">1.513</td>
+                </tr>
+                <tr>
+                  <td data-row="29" data-col="1">15.8</td>
+                  <td data-row="29" data-col="2">8</td>
+                  <td data-row="29" data-col="3">351.0</td>
+                  <td data-row="29" data-col="4">264</td>
+                  <td data-row="29" data-col="5">4.22</td>
+                  <td data-row="29" data-col="6">3.170</td>
+                </tr>
+                <tr>
+                  <td data-row="30" data-col="1">19.7</td>
+                  <td data-row="30" data-col="2">6</td>
+                  <td data-row="30" data-col="3">145.0</td>
+                  <td data-row="30" data-col="4">175</td>
+                  <td data-row="30" data-col="5">3.62</td>
+                  <td data-row="30" data-col="6">2.770</td>
+                </tr>
+                <tr>
+                  <td data-row="31" data-col="1">15.0</td>
+                  <td data-row="31" data-col="2">8</td>
+                  <td data-row="31" data-col="3">301.0</td>
+                  <td data-row="31" data-col="4">335</td>
+                  <td data-row="31" data-col="5">3.54</td>
+                  <td data-row="31" data-col="6">3.570</td>
+                </tr>
+                <tr>
+                  <td data-row="32" data-col="1">21.4</td>
+                  <td data-row="32" data-col="2">4</td>
+                  <td data-row="32" data-col="3">121.0</td>
+                  <td data-row="32" data-col="4">109</td>
+                  <td data-row="32" data-col="5">4.11</td>
+                  <td data-row="32" data-col="6">2.780</td>
+                </tr>
+                <tr>
+                  <td data-row="33" data-col="1">21.0</td>
+                  <td data-row="33" data-col="2">6</td>
+                  <td data-row="33" data-col="3">160.0</td>
+                  <td data-row="33" data-col="4">110</td>
+                  <td data-row="33" data-col="5">3.90</td>
+                  <td data-row="33" data-col="6">2.620</td>
+                </tr>
+                <tr>
+                  <td data-row="34" data-col="1">21.0</td>
+                  <td data-row="34" data-col="2">6</td>
+                  <td data-row="34" data-col="3">160.0</td>
+                  <td data-row="34" data-col="4">110</td>
+                  <td data-row="34" data-col="5">3.90</td>
+                  <td data-row="34" data-col="6">2.875</td>
+                </tr>
+                <tr>
+                  <td data-row="35" data-col="1">22.8</td>
+                  <td data-row="35" data-col="2">4</td>
+                  <td data-row="35" data-col="3">108.0</td>
+                  <td data-row="35" data-col="4">93</td>
+                  <td data-row="35" data-col="5">3.85</td>
+                  <td data-row="35" data-col="6">2.320</td>
+                </tr>
+                <tr>
+                  <td data-row="36" data-col="1">21.4</td>
+                  <td data-row="36" data-col="2">6</td>
+                  <td data-row="36" data-col="3">258.0</td>
+                  <td data-row="36" data-col="4">110</td>
+                  <td data-row="36" data-col="5">3.08</td>
+                  <td data-row="36" data-col="6">3.215</td>
+                </tr>
+                <tr>
+                  <td data-row="37" data-col="1">18.7</td>
+                  <td data-row="37" data-col="2">8</td>
+                  <td data-row="37" data-col="3">360.0</td>
+                  <td data-row="37" data-col="4">175</td>
+                  <td data-row="37" data-col="5">3.15</td>
+                  <td data-row="37" data-col="6">3.440</td>
+                </tr>
+                <tr>
+                  <td data-row="38" data-col="1">18.1</td>
+                  <td data-row="38" data-col="2">6</td>
+                  <td data-row="38" data-col="3">225.0</td>
+                  <td data-row="38" data-col="4">105</td>
+                  <td data-row="38" data-col="5">2.76</td>
+                  <td data-row="38" data-col="6">3.460</td>
+                </tr>
+                <tr>
+                  <td data-row="39" data-col="1">14.3</td>
+                  <td data-row="39" data-col="2">8</td>
+                  <td data-row="39" data-col="3">360.0</td>
+                  <td data-row="39" data-col="4">245</td>
+                  <td data-row="39" data-col="5">3.21</td>
+                  <td data-row="39" data-col="6">3.570</td>
+                </tr>
+                <tr>
+                  <td data-row="40" data-col="1">24.4</td>
+                  <td data-row="40" data-col="2">4</td>
+                  <td data-row="40" data-col="3">146.7</td>
+                  <td data-row="40" data-col="4">62</td>
+                  <td data-row="40" data-col="5">3.69</td>
+                  <td data-row="40" data-col="6">3.190</td>
+                </tr>
+                <tr>
+                  <td data-row="41" data-col="1">22.8</td>
+                  <td data-row="41" data-col="2">4</td>
+                  <td data-row="41" data-col="3">140.8</td>
+                  <td data-row="41" data-col="4">95</td>
+                  <td data-row="41" data-col="5">3.92</td>
+                  <td data-row="41" data-col="6">3.150</td>
+                </tr>
+                <tr>
+                  <td data-row="42" data-col="1">19.2</td>
+                  <td data-row="42" data-col="2">6</td>
+                  <td data-row="42" data-col="3">167.6</td>
+                  <td data-row="42" data-col="4">123</td>
+                  <td data-row="42" data-col="5">3.92</td>
+                  <td data-row="42" data-col="6">3.440</td>
+                </tr>
+                <tr>
+                  <td data-row="43" data-col="1">17.8</td>
+                  <td data-row="43" data-col="2">6</td>
+                  <td data-row="43" data-col="3">167.6</td>
+                  <td data-row="43" data-col="4">123</td>
+                  <td data-row="43" data-col="5">3.92</td>
+                  <td data-row="43" data-col="6">3.440</td>
+                </tr>
+                <tr>
+                  <td data-row="44" data-col="1">16.4</td>
+                  <td data-row="44" data-col="2">8</td>
+                  <td data-row="44" data-col="3">275.8</td>
+                  <td data-row="44" data-col="4">180</td>
+                  <td data-row="44" data-col="5">3.07</td>
+                  <td data-row="44" data-col="6">4.070</td>
+                </tr>
+                <tr>
+                  <td data-row="45" data-col="1">17.3</td>
+                  <td data-row="45" data-col="2">8</td>
+                  <td data-row="45" data-col="3">275.8</td>
+                  <td data-row="45" data-col="4">180</td>
+                  <td data-row="45" data-col="5">3.07</td>
+                  <td data-row="45" data-col="6">3.730</td>
+                </tr>
+                <tr>
+                  <td data-row="46" data-col="1">15.2</td>
+                  <td data-row="46" data-col="2">8</td>
+                  <td data-row="46" data-col="3">275.8</td>
+                  <td data-row="46" data-col="4">180</td>
+                  <td data-row="46" data-col="5">3.07</td>
+                  <td data-row="46" data-col="6">3.780</td>
+                </tr>
+                <tr>
+                  <td data-row="47" data-col="1">10.4</td>
+                  <td data-row="47" data-col="2">8</td>
+                  <td data-row="47" data-col="3">472.0</td>
+                  <td data-row="47" data-col="4">205</td>
+                  <td data-row="47" data-col="5">2.93</td>
+                  <td data-row="47" data-col="6">5.250</td>
+                </tr>
+                <tr>
+                  <td data-row="48" data-col="1">10.4</td>
+                  <td data-row="48" data-col="2">8</td>
+                  <td data-row="48" data-col="3">460.0</td>
+                  <td data-row="48" data-col="4">215</td>
+                  <td data-row="48" data-col="5">3.00</td>
+                  <td data-row="48" data-col="6">5.424</td>
+                </tr>
+                <tr>
+                  <td data-row="49" data-col="1">14.7</td>
+                  <td data-row="49" data-col="2">8</td>
+                  <td data-row="49" data-col="3">440.0</td>
+                  <td data-row="49" data-col="4">230</td>
+                  <td data-row="49" data-col="5">3.23</td>
+                  <td data-row="49" data-col="6">5.345</td>
+                </tr>
+                <tr>
+                  <td data-row="50" data-col="1">32.4</td>
+                  <td data-row="50" data-col="2">4</td>
+                  <td data-row="50" data-col="3">78.7</td>
+                  <td data-row="50" data-col="4">66</td>
+                  <td data-row="50" data-col="5">4.08</td>
+                  <td data-row="50" data-col="6">2.200</td>
+                </tr>
+                <tr>
+                  <td data-row="51" data-col="1">30.4</td>
+                  <td data-row="51" data-col="2">4</td>
+                  <td data-row="51" data-col="3">75.7</td>
+                  <td data-row="51" data-col="4">52</td>
+                  <td data-row="51" data-col="5">4.93</td>
+                  <td data-row="51" data-col="6">1.615</td>
+                </tr>
+                <tr>
+                  <td data-row="52" data-col="1">33.9</td>
+                  <td data-row="52" data-col="2">4</td>
+                  <td data-row="52" data-col="3">71.1</td>
+                  <td data-row="52" data-col="4">65</td>
+                  <td data-row="52" data-col="5">4.22</td>
+                  <td data-row="52" data-col="6">1.835</td>
+                </tr>
+                <tr>
+                  <td data-row="53" data-col="1">21.5</td>
+                  <td data-row="53" data-col="2">4</td>
+                  <td data-row="53" data-col="3">120.1</td>
+                  <td data-row="53" data-col="4">97</td>
+                  <td data-row="53" data-col="5">3.70</td>
+                  <td data-row="53" data-col="6">2.465</td>
+                </tr>
+                <tr>
+                  <td data-row="54" data-col="1">15.5</td>
+                  <td data-row="54" data-col="2">8</td>
+                  <td data-row="54" data-col="3">318.0</td>
+                  <td data-row="54" data-col="4">150</td>
+                  <td data-row="54" data-col="5">2.76</td>
+                  <td data-row="54" data-col="6">3.520</td>
+                </tr>
+                <tr>
+                  <td data-row="55" data-col="1">15.2</td>
+                  <td data-row="55" data-col="2">8</td>
+                  <td data-row="55" data-col="3">304.0</td>
+                  <td data-row="55" data-col="4">150</td>
+                  <td data-row="55" data-col="5">3.15</td>
+                  <td data-row="55" data-col="6">3.435</td>
+                </tr>
+                <tr>
+                  <td data-row="56" data-col="1">13.3</td>
+                  <td data-row="56" data-col="2">8</td>
+                  <td data-row="56" data-col="3">350.0</td>
+                  <td data-row="56" data-col="4">245</td>
+                  <td data-row="56" data-col="5">3.73</td>
+                  <td data-row="56" data-col="6">3.840</td>
+                </tr>
+                <tr>
+                  <td data-row="57" data-col="1">19.2</td>
+                  <td data-row="57" data-col="2">8</td>
+                  <td data-row="57" data-col="3">400.0</td>
+                  <td data-row="57" data-col="4">175</td>
+                  <td data-row="57" data-col="5">3.08</td>
+                  <td data-row="57" data-col="6">3.845</td>
+                </tr>
+                <tr>
+                  <td data-row="58" data-col="1">27.3</td>
+                  <td data-row="58" data-col="2">4</td>
+                  <td data-row="58" data-col="3">79.0</td>
+                  <td data-row="58" data-col="4">66</td>
+                  <td data-row="58" data-col="5">4.08</td>
+                  <td data-row="58" data-col="6">1.935</td>
+                </tr>
+                <tr>
+                  <td data-row="59" data-col="1">26.0</td>
+                  <td data-row="59" data-col="2">4</td>
+                  <td data-row="59" data-col="3">120.3</td>
+                  <td data-row="59" data-col="4">91</td>
+                  <td data-row="59" data-col="5">4.43</td>
+                  <td data-row="59" data-col="6">2.140</td>
+                </tr>
+                <tr>
+                  <td data-row="60" data-col="1">30.4</td>
+                  <td data-row="60" data-col="2">4</td>
+                  <td data-row="60" data-col="3">95.1</td>
+                  <td data-row="60" data-col="4">113</td>
+                  <td data-row="60" data-col="5">3.77</td>
+                  <td data-row="60" data-col="6">1.513</td>
+                </tr>
+                <tr>
+                  <td data-row="61" data-col="1">15.8</td>
+                  <td data-row="61" data-col="2">8</td>
+                  <td data-row="61" data-col="3">351.0</td>
+                  <td data-row="61" data-col="4">264</td>
+                  <td data-row="61" data-col="5">4.22</td>
+                  <td data-row="61" data-col="6">3.170</td>
+                </tr>
+                <tr>
+                  <td data-row="62" data-col="1">19.7</td>
+                  <td data-row="62" data-col="2">6</td>
+                  <td data-row="62" data-col="3">145.0</td>
+                  <td data-row="62" data-col="4">175</td>
+                  <td data-row="62" data-col="5">3.62</td>
+                  <td data-row="62" data-col="6">2.770</td>
+                </tr>
+                <tr>
+                  <td data-row="63" data-col="1">15.0</td>
+                  <td data-row="63" data-col="2">8</td>
+                  <td data-row="63" data-col="3">301.0</td>
+                  <td data-row="63" data-col="4">335</td>
+                  <td data-row="63" data-col="5">3.54</td>
+                  <td data-row="63" data-col="6">3.570</td>
+                </tr>
+                <tr>
+                  <td data-row="64" data-col="1">21.4</td>
+                  <td data-row="64" data-col="2">4</td>
+                  <td data-row="64" data-col="3">121.0</td>
+                  <td data-row="64" data-col="4">109</td>
+                  <td data-row="64" data-col="5">4.11</td>
+                  <td data-row="64" data-col="6">2.780</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

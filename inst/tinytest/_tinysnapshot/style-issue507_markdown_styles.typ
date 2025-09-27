@@ -70,7 +70,7 @@ block[ // start block
     // tinytable header start
     table.header(
       repeat: true,
-table.cell(stroke: (bottom: .05em + black), colspan: 1, align: center)[Hello],table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[World],
+[Hello], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[World],
 [mpg], [cyl], [disp],
     ),
     // tinytable header end
