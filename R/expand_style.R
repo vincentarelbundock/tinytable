@@ -118,10 +118,7 @@ expand_other <- function(x, rect, styles) {
         cols_expand <- cols
       }
       rect_p <- merge(rect, sub[r, cols_expand, drop = FALSE], all = TRUE, sort = FALSE)
-      # Don't use na.omit here - it removes rows where i=NA but we need those for column-wide styles
-      # rect_p <- stats::na.omit(rect_p)
-      # Only remove rows where both i and j are NA (which shouldn't happen)
-      rect_p <- rect_p[!(is.na(rect_p$i) & is.na(rect_p$j)), , drop = FALSE]
+      rect_p <- stats::na.omit(rect_p)
       row_style <- c(row_style, list(rect_p))
     }
     out <- do.call(rbind, row_style)

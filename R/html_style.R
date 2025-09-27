@@ -160,11 +160,11 @@ setMethod(
         rowspan <- if ("rowspan" %in% names(other) && !is.na(other$rowspan[row])) other$rowspan[row] else 1
         colspan <- if ("colspan" %in% names(other) && !is.na(other$colspan[row])) other$colspan[row] else 1
         if (rowspan > 1 || colspan > 1) {
-          id <- get_id(stem = "spanCell_")
-          listener <- "      window.addEventListener('load', function () { %s(%s, %s, %s, %s) })"
+          # Use the factory function approach instead of individual function names
+          listener <- "      window.addEventListener('load', function () { tableFns_%s.spanCell(%s, %s, %s, %s) })"
           listener <- sprintf(
             listener,
-            id,
+            x@id,
             other$i[row],
             other$j[row],
             rowspan,
