@@ -20,7 +20,7 @@ setMethod(
       # Use external CSS file
       css_include <- sprintf(
         '<link rel="stylesheet" href="%s">',
-        "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css"
+        "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable/inst/tinytable.css"
       )
     } else {
       # Use inline CSS
@@ -37,7 +37,7 @@ setMethod(
     # Add JavaScript include for external file
     js_include <- sprintf(
       '<script src="%s"></script>',
-      "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"
+      "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable/inst/tinytable.js"
     )
 
     out <- sub(
