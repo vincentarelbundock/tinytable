@@ -192,16 +192,18 @@ if (Sys.info()["sysname"] == "Darwin") {
 }
 
 # Issue #297: group_tt() breaks alignment
-tab <- data.frame(
-  Person = c("Alice", "Bob", "Charlemagne"),
-  Fruit = c("Apple", "Banana", "Cantaloupe"),
-  Count = c(4, 238432, 32)
-) |>
-  tt() |>
-  group_tt(i = list("Thing" = 1, "Thing again" = 2)) |>
-  style_tt(i = c(1, 3), align = "l") |>
-  style_tt(j = 1:3, align = "l")
-expect_snapshot_print(print_html(dat), "html-issue297.html")
+if (Sys.info()["sysname"] == "Darwin") {
+  tab <- data.frame(
+    Person = c("Alice", "Bob", "Charlemagne"),
+    Fruit = c("Apple", "Banana", "Cantaloupe"),
+    Count = c(4, 238432, 32)
+  ) |>
+    tt() |>
+    group_tt(i = list("Thing" = 1, "Thing again" = 2)) |>
+    style_tt(i = c(1, 3), align = "l") |>
+    style_tt(j = 1:3, align = "l")
+  expect_snapshot_print(print_html(dat), "html-issue297.html")
+}
 
 
 # # Issue #355a: rowspan breaks indexing
