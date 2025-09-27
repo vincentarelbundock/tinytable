@@ -97,6 +97,10 @@ build_tt <- function(x, output = NULL) {
   # insert group rows into body
   x <- rbind_body_groupi(x)
 
+  # apply theme_*() before style_tt()
+  lazy_style <- x@lazy_style
+  x@lazy_style <- list()
+
   # pre-process: theme_*() calls that need formatting conditional on @output
   # this is useful after rbind() because we now have the final indices and headers
   for (p in x@lazy_prepare) {
@@ -105,6 +109,9 @@ build_tt <- function(x, output = NULL) {
       x <- p(x)
     }
   }
+
+  # apply theme_*() before style_tt()
+  x@lazy_style <- c(x@lazy_style, lazy_style)
 
   for (p in x@lazy_style) {
     p[["x"]] <- x
