@@ -31,6 +31,7 @@ New functions:
 
 New arguments:
 
+* `format_tt(output = )` to apply formatting conditionally based on output format.
 * `style_tt(smallcap = TRUE)` to style text in small capitals. In HTML, LaTeX, and Typst, it uses proper small caps formatting. In Markdown, it converts text to uppercase.
 * `tt(x, colnames = "label")` renames column names using the `attr(df$x, "label")` attribute, when available, falling back to column names otherwise.
 * `format_tt(linebreak = "<br>")` can substitute a user-specified string to an appropriate character sequence to generate line breaks in the `output` of the `tinytable` (ex: `\\` for LaTeX, `<br>` for HTML, etc.)

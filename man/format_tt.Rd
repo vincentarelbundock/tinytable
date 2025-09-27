@@ -26,7 +26,8 @@ format_tt(
   quarto = get_option("tinytable_format_quarto", default = FALSE),
   fn = get_option("tinytable_format_fn", default = NULL),
   sprintf = get_option("tinytable_format_sprintf", default = NULL),
-  linebreak = get_option("tinytable_format_linebreak", default = NULL)
+  linebreak = get_option("tinytable_format_linebreak", default = NULL),
+  output = get_option("tinytable_format_output", default = NULL)
 )
 
 tt_format(
@@ -50,7 +51,8 @@ tt_format(
   quarto = get_option("tinytable_format_quarto", default = FALSE),
   fn = get_option("tinytable_format_fn", default = NULL),
   sprintf = get_option("tinytable_format_sprintf", default = NULL),
-  linebreak = get_option("tinytable_format_linebreak", default = NULL)
+  linebreak = get_option("tinytable_format_linebreak", default = NULL),
+  output = get_option("tinytable_format_output", default = NULL)
 )
 }
 \arguments{
@@ -116,6 +118,8 @@ tt_format(
 \item{sprintf}{String passed to the \code{?sprintf} function to format numbers or interpolate strings with a user-defined pattern (similar to the \code{glue} package, but using Base R).}
 
 \item{linebreak}{NULL or a single string. If it is a string, replaces that string with appropriate line break sequences depending on the output format (HTML: \verb{<br>}, LaTeX: \verb{\\\\\\\\}, Typst: \verb{\\\\ }). Markdown output is excluded from line break replacement.}
+
+\item{output}{Apply formatting only if the \code{tt()} object is rendered in the specified format. One of "latex", "html", "typst", or "markdown". If \code{NULL} (default), apply formatting regardless of the output format.}
 }
 \value{
 A data frame with formatted columns.

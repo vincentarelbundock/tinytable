@@ -327,3 +327,14 @@ d <- data.frame(dates = dates)
 tab <- tt(d) |> format_tt(j = 1, date = "%Y")
 formatted_table <- save_tt(tab, "dataframe")
 expect_equivalent(formatted_table[[1]], c("dates", "2023", "2023"))
+
+
+# Conditional formatting
+dat <- data.frame(a = c("*Hello*", "**World**"))
+cap <- "HTML render 1st row. LaTeX render 2nd row."
+tab <- tt(dat, caption = cap) |>
+  format_tt(i = 1, j = 1, markdown = TRUE, output = "html") |>
+  format_tt(i = 2, j = 1, markdown = TRUE, output = "latex")
+t <- expect_table(tab, formats = c("html", "latex"))
+expect_snapshot_print(t[["html"]], "format_tt-conditional_output.html")
+expect_snapshot_print(t[["latex"]], "format_tt-conditional_output.tex")

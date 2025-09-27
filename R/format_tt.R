@@ -33,6 +33,7 @@
 #' @param quarto Logical. Enable Quarto data processing and wrap cell content in a `data-qmd` span (HTML) or `\QuartoMarkdownBase64{}` macro (LaTeX). See warnings in the Global Options section below.
 #' @param sprintf String passed to the `?sprintf` function to format numbers or interpolate strings with a user-defined pattern (similar to the `glue` package, but using Base R).
 #' @param linebreak NULL or a single string. If it is a string, replaces that string with appropriate line break sequences depending on the output format (HTML: `<br>`, LaTeX: `\\\\`, Typst: `\\ `). Markdown output is excluded from line break replacement.
+#' @param output Apply formatting only if the `tt()` object is rendered in the specified format. One of "latex", "html", "typst", or "markdown". If `NULL` (default), apply formatting regardless of the output format.
 #' @inheritParams tt
 #' @inheritParams style_tt
 #' @template global_options
@@ -94,30 +95,30 @@
 #' tt(dat) |> format_tt(escape = TRUE)
 #'
 format_tt <- function(
-  x,
-  i = NULL,
-  j = NULL,
-  digits = get_option("tinytable_format_digits", default = NULL),
-  num_fmt = get_option("tinytable_format_num_fmt", default = "significant"),
-  num_zero = get_option("tinytable_format_num_zero", default = FALSE),
-  num_suffix = get_option("tinytable_format_num_suffix", default = FALSE),
-  num_mark_big = get_option("tinytable_format_num_mark_big", default = ""),
-  num_mark_dec = get_option(
-    "tinytable_format_num_mark_dec",
-    default = getOption("OutDec", default = ".")
-  ),
-  date = get_option("tinytable_format_date", default = NULL),
-  bool = get_option("tinytable_format_bool", default = NULL),
-  math = get_option("tinytable_format_math", default = FALSE),
-  other = get_option("tinytable_format_other", default = NULL),
-  replace = get_option("tinytable_format_replace", default = FALSE),
-  escape = get_option("tinytable_format_escape", default = FALSE),
-  markdown = get_option("tinytable_format_markdown", default = FALSE),
-  quarto = get_option("tinytable_format_quarto", default = FALSE),
-  fn = get_option("tinytable_format_fn", default = NULL),
-  sprintf = get_option("tinytable_format_sprintf", default = NULL),
-  linebreak = get_option("tinytable_format_linebreak", default = NULL)
-) {
+    x,
+    i = NULL,
+    j = NULL,
+    digits = get_option("tinytable_format_digits", default = NULL),
+    num_fmt = get_option("tinytable_format_num_fmt", default = "significant"),
+    num_zero = get_option("tinytable_format_num_zero", default = FALSE),
+    num_suffix = get_option("tinytable_format_num_suffix", default = FALSE),
+    num_mark_big = get_option("tinytable_format_num_mark_big", default = ""),
+    num_mark_dec = get_option(
+      "tinytable_format_num_mark_dec",
+      default = getOption("OutDec", default = ".")
+    ),
+    date = get_option("tinytable_format_date", default = NULL),
+    bool = get_option("tinytable_format_bool", default = NULL),
+    math = get_option("tinytable_format_math", default = FALSE),
+    other = get_option("tinytable_format_other", default = NULL),
+    replace = get_option("tinytable_format_replace", default = FALSE),
+    escape = get_option("tinytable_format_escape", default = FALSE),
+    markdown = get_option("tinytable_format_markdown", default = FALSE),
+    quarto = get_option("tinytable_format_quarto", default = FALSE),
+    fn = get_option("tinytable_format_fn", default = NULL),
+    sprintf = get_option("tinytable_format_sprintf", default = NULL),
+    linebreak = get_option("tinytable_format_linebreak", default = NULL),
+    output = get_option("tinytable_format_output", default = NULL)) {
   assert_integerish(digits, len = 1, null.ok = TRUE)
   assert_choice(
     num_fmt,
@@ -133,6 +134,7 @@ format_tt <- function(
   assert_flag(markdown)
   assert_flag(quarto)
   assert_function(fn, null.ok = TRUE)
+  assert_choice(output, c("latex", "html", "typst", "markdown"), null.ok = TRUE)
   assert_string(sprintf, null.ok = TRUE)
   assert_string(linebreak, null.ok = TRUE)
   replace <- sanitize_replace(replace)
@@ -165,7 +167,8 @@ format_tt <- function(
       markdown = markdown,
       quarto = quarto,
       other = other,
-      linebreak = linebreak
+      linebreak = linebreak,
+      output = output
     )
     out@lazy_format <- c(out@lazy_format, list(cal))
   } else {
@@ -189,7 +192,8 @@ format_tt <- function(
       escape = escape,
       quarto = quarto,
       markdown = markdown,
-      linebreak = linebreak
+      linebreak = linebreak,
+      output = output
     )
   }
 
@@ -198,33 +202,39 @@ format_tt <- function(
 
 
 format_tt_lazy <- function(
-  x,
-  i,
-  j,
-  digits,
-  num_fmt,
-  num_zero,
-  num_suffix,
-  num_mark_big,
-  num_mark_dec,
-  replace,
-  fn,
-  sprintf,
-  date_format,
-  bool,
-  math,
-  escape,
-  markdown,
-  quarto,
-  other,
-  linebreak
-) {
+    x,
+    i,
+    j,
+    digits,
+    num_fmt,
+    num_zero,
+    num_suffix,
+    num_mark_big,
+    num_mark_dec,
+    replace,
+    fn,
+    sprintf,
+    date_format,
+    bool,
+    math,
+    escape,
+    markdown,
+    quarto,
+    other,
+    linebreak,
+    output) {
   if (inherits(x, "tbl_df")) {
     assert_dependency("tibble")
     x_is_tibble <- TRUE
     x <- as.data.frame(x, check.names = FALSE)
   } else {
     x_is_tibble <- FALSE
+  }
+
+  if (inherits(x, "tinytable") && !is.null(output)) {
+    if (!identical(x@output, output)) {
+      return(x)
+    }
   }
 
   # important for tabulator
