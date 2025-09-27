@@ -35,7 +35,6 @@ tab <- tt(lem_table,
   notes = footnotes) |>
   # themes
   theme_striped() |>
-  theme_html(class = "table caption-top") |> # bootstrap class
   # lemur images
   plot_tt(
     j = 1,
@@ -46,7 +45,7 @@ tab <- tt(lem_table,
     j = 3, fun = plot_bar,
     data = as.list(lem_nums$taxon),
     df = lem_count,
-    height = 5,
+    height = 4.5,
     height_plot = 600,
     width_plot = 3400) |>
   # line plots
@@ -60,7 +59,7 @@ tab <- tt(lem_table,
   # alignment: vertical + horizontal
   style_tt(j = 1, alignv = "m") |>
   style_tt(i = 1:nrow(lem_table), j = 3:4, align = "c", alignv = "m") |>
-  style_tt(i = "colnames", alignv = "t")
+  style_tt(i = "colnames", alignv = "t", align = "l")
 
-save_tt(tab, "lemurs.html", overwrite = TRUE)
-# print(tab, "html")
+# save_tt(tab, "lemurs.html", overwrite = TRUE)
+print(tab, "html")
