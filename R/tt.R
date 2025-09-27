@@ -101,6 +101,10 @@ tt.default <- function(
   assert_integerish(digits, len = 1, null.ok = TRUE)
   notes <- sanitize_notes(notes)
 
+  if (identical(theme, "void")) {
+    theme <- "empty"
+    warning("`theme = 'void'` is deprecated. Please use `theme = 'empty'` instead.", call. = FALSE)
+  }
   if (!isTRUE(check_function(theme)) && !isTRUE(check_string(theme))) {
     stop("The `theme` argument must be a function or a string.", call. = FALSE)
   }

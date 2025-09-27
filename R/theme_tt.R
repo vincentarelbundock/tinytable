@@ -35,6 +35,7 @@ theme_tt <- function(x, theme, ...) {
     call. = FALSE
   )
 
+
   if (identical(theme, "default")) {
     x <- theme_default(x)
   } else if (identical(theme, "grid")) {
