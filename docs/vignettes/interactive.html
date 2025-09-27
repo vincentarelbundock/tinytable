@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.32">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -70,14 +70,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../favicon.svg" rel="icon" type="image/svg+xml">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="../site_libs/quarto-html/popper.min.js"></script>
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-c1f63da3e08f13bc72dc17e92cfd001d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-f16cd255ecb5ae9510f6a112aa2ee9ab.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-7a1cf0ce6a35c33c76e38788b9a54737.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-8498537ff65c2aaf2c3c0819ff511eee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -117,7 +118,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a href="../index.html" class="navbar-brand navbar-brand-logo">
-    <img src="../figures/tinytable_logo_notext.png" alt="" class="navbar-logo">
+    <img src="../figures/tinytable_logo_notext.png" alt="" class="navbar-logo light-content">
+    <img src="../figures/tinytable_logo_notext.png" alt="" class="navbar-logo dark-content">
     </a>
     <a class="navbar-brand" href="../index.html">
     <span class="navbar-title">tinytable</span>
@@ -188,6 +190,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <a class="nav-link" href="../vignettes/tinytable_tutorial_typst.pdf"> 
 <span class="menu-text">Tutorial (Typst)</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../vignettes/gallery.html"> 
+<span class="menu-text">Gallery</span></a>
+  </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/vincentarelbundock/tinytable"> <i class="bi bi-github" role="img" aria-label="tinytable GitHub">
 </i> 
@@ -219,6 +225,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="../index.html" class="sidebar-logo-link">
+      </a>
+      </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
@@ -320,6 +330,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <div class="sidebar-item-container"> 
   <a href="../vignettes/word.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Tutorial (Word)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../vignettes/gallery.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Gallery</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -529,7 +545,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-Experimental Feature
+<span class="screen-reader-only">Warning</span>Experimental Feature
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -550,19 +566,19 @@ Experimental Feature
 <h2 class="anchored" data-anchor-id="drawing-printing-and-saving">Drawing, printing, and saving</h2>
 <p>To create an interactive table, use <code>output = "tabulator"</code> when printing your table:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">head</span>(iris)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat) <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="st">"tabulator"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat) <span class="sc">|&gt;</span> <span class="fu">print</span>(<span class="st">"tabulator"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>To save the table to file, we can use the <code>save_tt()</code> function. One issue to consider, however, is that <code>tinytable</code> supports two types of HTML output: <code>tabulator</code> and <code>bootstrap</code>. To select the default HTML engine, users can call the <code>theme_html()</code> function:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat) <span class="sc">|&gt;</span> </span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat) <span class="sc">|&gt;</span> </span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_html</span>(<span class="at">engine =</span> <span class="st">"tabulator"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">save_tt</span>(<span class="st">"/path/to/your/file.html"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">save_tt</span>(<span class="st">"/path/to/your/file.html"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>In notebooks like Quarto or R markdown, <code>tinytable</code> will automatically create an HTML when appropriate. Whenn the <code>tinytable_html_engine</code> option is set to <code>"tabulator"</code>, the table will be rendered using Tabulator.js.</p>
+<p>In notebooks like Quarto or R markdown, <code>tinytable</code> will automatically create an HTML when appropriate. To create an interactive HTML table, we use the <code>theme_html(engine="tabulator")</code> function and argument. This produces a table that uses the Tabulator.js framework.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">city =</span> <span class="fu">c</span>(<span class="st">"Montréal"</span>, <span class="st">"Toronto"</span>, <span class="st">"Vancouver"</span>),</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">salary =</span> <span class="fu">c</span>(<span class="fl">14002.22</span>, <span class="fl">201399.11</span>, <span class="fl">80188.38</span>),</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">random =</span> <span class="fu">c</span>(<span class="fl">1.43402</span>, <span class="fl">201.399</span>, <span class="fl">0.134588</span>),</span>
@@ -570,77 +586,57 @@ Experimental Feature
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">best =</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">FALSE</span>)</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">tt</span>(dat) <span class="sc">|&gt;</span> <span class="fu">theme_html</span>(<span class="at">engine =</span> <span class="st">"tabulator"</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>tab</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
-    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
 
+  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytable_1fgtu6a8rmmc8bniayow</title>
+    <link href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/scss/tabulator_tinytable.min.css" rel="stylesheet">
+  
+  
+<!-- preamble end -->
+
+    <div class="container">
+      
+      <div id="tinytable_1fgtu6a8rmmc8bniayow" style="margin-left: auto; margin-right: auto;"></div>
+      
+      <br>
+    </div>
+
+    <!-- Luxon for date handling -->
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
+    
+    <!-- Tabulator JS -->
+    <script src="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/js/tabulator.min.js"></script>
     <script>
-      // Create table-specific functions using external factory
-      const tableFns_s7xt7zuzt5xtusqbdhg5 = TinyTable.createTableFunctions("tinytable_s7xt7zuzt5xtusqbdhg5");
-      // tinytable span after
-      window.addEventListener('load', function () {
-          var cellsToStyle = [
-            // tinytable style arrays after
-          { positions: [ { i: '3', j: 1 }, { i: '3', j: 2 }, { i: '3', j: 3 }, { i: '3', j: 4 }, { i: '3', j: 5 } ], css_id: 'tinytable_css_naeq9evy7yuup0xzo96l',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_9nfuhyaxe9b1e3o99afk',}, 
-          ];
+      (function() {
+        const { DateTime } = luxon;
 
-          // Loop over the arrays to style the cells
-          cellsToStyle.forEach(function (group) {
-              group.positions.forEach(function (cell) {
-                  tableFns_s7xt7zuzt5xtusqbdhg5.styleCell(cell.i, cell.j, group.css_id);
-              });
-          });
-      });
+        const table_tinytable_1fgtu6a8rmmc8bniayow = new Tabulator("#tinytable_1fgtu6a8rmmc8bniayow", {
+          dependencies: { DateTime },
+          data: [{"city":"Montréal","salary":14002.22,"random":1.43402,"date":"1970-08-01","best":true},{"city":"Toronto","salary":201399.11,"random":201.399,"date":"1972-03-30","best":false},{"city":"Vancouver","salary":80188.38,"random":0.134588,"date":"1971-06-07","best":false}],
+          columns: [{"title":"city","field":"city"},{"title":"salary","field":"salary"},{"title":"random","field":"random"},{"title":"date","field":"date"},{"title":"best","field":"best"}],
+          
+        layout: 'fitDataTable'
+      ,
+        });
+
+        
+      })();
     </script>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
-    <style>
-    /* tinytable css entries after */
-    #tinytable_s7xt7zuzt5xtusqbdhg5 td.tinytable_css_naeq9evy7yuup0xzo96l, #tinytable_s7xt7zuzt5xtusqbdhg5 th.tinytable_css_naeq9evy7yuup0xzo96l {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    #tinytable_s7xt7zuzt5xtusqbdhg5 td.tinytable_css_9nfuhyaxe9b1e3o99afk, #tinytable_s7xt7zuzt5xtusqbdhg5 th.tinytable_css_9nfuhyaxe9b1e3o99afk {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    </style>
-    <div class="container">
-      <table class="tinytable" id="tinytable_s7xt7zuzt5xtusqbdhg5" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
-        <thead>
-          
-              <tr>
-                <th scope="col" data-row="0" data-col="1">city</th>
-                <th scope="col" data-row="0" data-col="2">salary</th>
-                <th scope="col" data-row="0" data-col="3">random</th>
-                <th scope="col" data-row="0" data-col="4">date</th>
-                <th scope="col" data-row="0" data-col="5">best</th>
-              </tr>
-        </thead>
-        
-        <tbody>
-                <tr>
-                  <td data-row="1" data-col="1">Montréal</td>
-                  <td data-row="1" data-col="2">14002.22</td>
-                  <td data-row="1" data-col="3">1.434020</td>
-                  <td data-row="1" data-col="4">1970-12-01</td>
-                  <td data-row="1" data-col="5">TRUE</td>
-                </tr>
-                <tr>
-                  <td data-row="2" data-col="1">Toronto</td>
-                  <td data-row="2" data-col="2">201399.11</td>
-                  <td data-row="2" data-col="3">201.399000</td>
-                  <td data-row="2" data-col="4">1972-07-14</td>
-                  <td data-row="2" data-col="5">FALSE</td>
-                </tr>
-                <tr>
-                  <td data-row="3" data-col="1">Vancouver</td>
-                  <td data-row="3" data-col="2">80188.38</td>
-                  <td data-row="3" data-col="3">0.134588</td>
-                  <td data-row="3" data-col="4">1972-06-24</td>
-                  <td data-row="3" data-col="5">FALSE</td>
-                </tr>
-        </tbody>
-      </table>
-    </div>
-<!-- hack to avoid NA insertion in last line -->
+    
+
+<!-- postamble start -->
+  
+
+
+
 </div>
 </div>
 </section>
@@ -650,13 +646,10 @@ Experimental Feature
 <p>To apply a theme, call the <code>theme_html()</code> function. See <code>?theme_html</code> for a list of arguments that can be used to customize the number of pagination rows, behaviour of the search bar, and various other elements. Below, we supply a vector to control both the number of rows per page and the options available in the drop down menu that controls pagination.</p>
 <p>We also set <code>search=TRUE</code> to include a filtering box. Try typing the letters “vir” in the search box to filter the <code>iris</code> dataset and find the Virginica flowers.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(iris) <span class="sc">|&gt;</span> <span class="fu">theme_html</span>(</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">tabulator_pagination =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">50</span>), </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">tabulator_search =</span> <span class="st">"bottom"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: The following style_tt() arguments are not yet supported with
-tabulator output: line. Only 'align' and 'alignv' are currently supported.</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(iris) <span class="sc">|&gt;</span> <span class="fu">theme_html</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">engine =</span> <span class="st">"tabulator"</span>,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">tabulator_pagination =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">50</span>), </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">tabulator_search =</span> <span class="st">"bottom"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -664,7 +657,7 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_qew4c1q5x8hpe6uzt59g</title>
+    <title>tinytable_2ldple2l9v3a76cqjpqe</title>
     <link href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/scss/tabulator_tinytable.min.css" rel="stylesheet">
   
   
@@ -672,9 +665,9 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
 
     <div class="container">
       
-      <div id="tinytable_qew4c1q5x8hpe6uzt59g" style="margin-left: auto; margin-right: auto;"></div>
+      <div id="tinytable_2ldple2l9v3a76cqjpqe" style="margin-left: auto; margin-right: auto;"></div>
       
-        <div class="mb-3"><input type="text" id="search_qew4c1q5x8hpe6uzt59g" class="form-control" placeholder="Search table..." style="margin-bottom: 10px;"></div>
+        <div class="mb-3"><input type="text" id="search_2ldple2l9v3a76cqjpqe" class="form-control" placeholder="Search table..." style="margin-bottom: 10px;"></div>
     
       <br>
     </div>
@@ -688,7 +681,7 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
       (function() {
         const { DateTime } = luxon;
 
-        const table_tinytable_qew4c1q5x8hpe6uzt59g = new Tabulator("#tinytable_qew4c1q5x8hpe6uzt59g", {
+        const table_tinytable_2ldple2l9v3a76cqjpqe = new Tabulator("#tinytable_2ldple2l9v3a76cqjpqe", {
           dependencies: { DateTime },
           data: [{"Sepal_Length":5.1,"Sepal_Width":3.5,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.9,"Sepal_Width":3,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.7,"Sepal_Width":3.2,"Petal_Length":1.3,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.6,"Sepal_Width":3.1,"Petal_Length":1.5,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5,"Sepal_Width":3.6,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.4,"Sepal_Width":3.9,"Petal_Length":1.7,"Petal_Width":0.4,"Species":"setosa"},{"Sepal_Length":4.6,"Sepal_Width":3.4,"Petal_Length":1.4,"Petal_Width":0.3,"Species":"setosa"},{"Sepal_Length":5,"Sepal_Width":3.4,"Petal_Length":1.5,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.4,"Sepal_Width":2.9,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.9,"Sepal_Width":3.1,"Petal_Length":1.5,"Petal_Width":0.1,"Species":"setosa"},{"Sepal_Length":5.4,"Sepal_Width":3.7,"Petal_Length":1.5,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.8,"Sepal_Width":3.4,"Petal_Length":1.6,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.8,"Sepal_Width":3,"Petal_Length":1.4,"Petal_Width":0.1,"Species":"setosa"},{"Sepal_Length":4.3,"Sepal_Width":3,"Petal_Length":1.1,"Petal_Width":0.1,"Species":"setosa"},{"Sepal_Length":5.8,"Sepal_Width":4,"Petal_Length":1.2,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.7,"Sepal_Width":4.4,"Petal_Length":1.5,"Petal_Width":0.4,"Species":"setosa"},{"Sepal_Length":5.4,"Sepal_Width":3.9,"Petal_Length":1.3,"Petal_Width":0.4,"Species":"setosa"},{"Sepal_Length":5.1,"Sepal_Width":3.5,"Petal_Length":1.4,"Petal_Width":0.3,"Species":"setosa"},{"Sepal_Length":5.7,"Sepal_Width":3.8,"Petal_Length":1.7,"Petal_Width":0.3,"Species":"setosa"},{"Sepal_Length":5.1,"Sepal_Width":3.8,"Petal_Length":1.5,"Petal_Width":0.3,"Species":"setosa"},{"Sepal_Length":5.4,"Sepal_Width":3.4,"Petal_Length":1.7,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.1,"Sepal_Width":3.7,"Petal_Length":1.5,"Petal_Width":0.4,"Species":"setosa"},{"Sepal_Length":4.6,"Sepal_Width":3.6,"Petal_Length":1,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.1,"Sepal_Width":3.3,"Petal_Length":1.7,"Petal_Width":0.5,"Species":"setosa"},{"Sepal_Length":4.8,"Sepal_Width":3.4,"Petal_Length":1.9,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5,"Sepal_Width":3,"Petal_Length":1.6,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5,"Sepal_Width":3.4,"Petal_Length":1.6,"Petal_Width":0.4,"Species":"setosa"},{"Sepal_Length":5.2,"Sepal_Width":3.5,"Petal_Length":1.5,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.2,"Sepal_Width":3.4,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.7,"Sepal_Width":3.2,"Petal_Length":1.6,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.8,"Sepal_Width":3.1,"Petal_Length":1.6,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.4,"Sepal_Width":3.4,"Petal_Length":1.5,"Petal_Width":0.4,"Species":"setosa"},{"Sepal_Length":5.2,"Sepal_Width":4.1,"Petal_Length":1.5,"Petal_Width":0.1,"Species":"setosa"},{"Sepal_Length":5.5,"Sepal_Width":4.2,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.9,"Sepal_Width":3.1,"Petal_Length":1.5,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5,"Sepal_Width":3.2,"Petal_Length":1.2,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.5,"Sepal_Width":3.5,"Petal_Length":1.3,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.9,"Sepal_Width":3.6,"Petal_Length":1.4,"Petal_Width":0.1,"Species":"setosa"},{"Sepal_Length":4.4,"Sepal_Width":3,"Petal_Length":1.3,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.1,"Sepal_Width":3.4,"Petal_Length":1.5,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5,"Sepal_Width":3.5,"Petal_Length":1.3,"Petal_Width":0.3,"Species":"setosa"},{"Sepal_Length":4.5,"Sepal_Width":2.3,"Petal_Length":1.3,"Petal_Width":0.3,"Species":"setosa"},{"Sepal_Length":4.4,"Sepal_Width":3.2,"Petal_Length":1.3,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5,"Sepal_Width":3.5,"Petal_Length":1.6,"Petal_Width":0.6,"Species":"setosa"},{"Sepal_Length":5.1,"Sepal_Width":3.8,"Petal_Length":1.9,"Petal_Width":0.4,"Species":"setosa"},{"Sepal_Length":4.8,"Sepal_Width":3,"Petal_Length":1.4,"Petal_Width":0.3,"Species":"setosa"},{"Sepal_Length":5.1,"Sepal_Width":3.8,"Petal_Length":1.6,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.6,"Sepal_Width":3.2,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.3,"Sepal_Width":3.7,"Petal_Length":1.5,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5,"Sepal_Width":3.3,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":7,"Sepal_Width":3.2,"Petal_Length":4.7,"Petal_Width":1.4,"Species":"versicolor"},{"Sepal_Length":6.4,"Sepal_Width":3.2,"Petal_Length":4.5,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":6.9,"Sepal_Width":3.1,"Petal_Length":4.9,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":5.5,"Sepal_Width":2.3,"Petal_Length":4,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":6.5,"Sepal_Width":2.8,"Petal_Length":4.6,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":5.7,"Sepal_Width":2.8,"Petal_Length":4.5,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":6.3,"Sepal_Width":3.3,"Petal_Length":4.7,"Petal_Width":1.6,"Species":"versicolor"},{"Sepal_Length":4.9,"Sepal_Width":2.4,"Petal_Length":3.3,"Petal_Width":1,"Species":"versicolor"},{"Sepal_Length":6.6,"Sepal_Width":2.9,"Petal_Length":4.6,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":5.2,"Sepal_Width":2.7,"Petal_Length":3.9,"Petal_Width":1.4,"Species":"versicolor"},{"Sepal_Length":5,"Sepal_Width":2,"Petal_Length":3.5,"Petal_Width":1,"Species":"versicolor"},{"Sepal_Length":5.9,"Sepal_Width":3,"Petal_Length":4.2,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":6,"Sepal_Width":2.2,"Petal_Length":4,"Petal_Width":1,"Species":"versicolor"},{"Sepal_Length":6.1,"Sepal_Width":2.9,"Petal_Length":4.7,"Petal_Width":1.4,"Species":"versicolor"},{"Sepal_Length":5.6,"Sepal_Width":2.9,"Petal_Length":3.6,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":6.7,"Sepal_Width":3.1,"Petal_Length":4.4,"Petal_Width":1.4,"Species":"versicolor"},{"Sepal_Length":5.6,"Sepal_Width":3,"Petal_Length":4.5,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":5.8,"Sepal_Width":2.7,"Petal_Length":4.1,"Petal_Width":1,"Species":"versicolor"},{"Sepal_Length":6.2,"Sepal_Width":2.2,"Petal_Length":4.5,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":5.6,"Sepal_Width":2.5,"Petal_Length":3.9,"Petal_Width":1.1,"Species":"versicolor"},{"Sepal_Length":5.9,"Sepal_Width":3.2,"Petal_Length":4.8,"Petal_Width":1.8,"Species":"versicolor"},{"Sepal_Length":6.1,"Sepal_Width":2.8,"Petal_Length":4,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":6.3,"Sepal_Width":2.5,"Petal_Length":4.9,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":6.1,"Sepal_Width":2.8,"Petal_Length":4.7,"Petal_Width":1.2,"Species":"versicolor"},{"Sepal_Length":6.4,"Sepal_Width":2.9,"Petal_Length":4.3,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":6.6,"Sepal_Width":3,"Petal_Length":4.4,"Petal_Width":1.4,"Species":"versicolor"},{"Sepal_Length":6.8,"Sepal_Width":2.8,"Petal_Length":4.8,"Petal_Width":1.4,"Species":"versicolor"},{"Sepal_Length":6.7,"Sepal_Width":3,"Petal_Length":5,"Petal_Width":1.7,"Species":"versicolor"},{"Sepal_Length":6,"Sepal_Width":2.9,"Petal_Length":4.5,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":5.7,"Sepal_Width":2.6,"Petal_Length":3.5,"Petal_Width":1,"Species":"versicolor"},{"Sepal_Length":5.5,"Sepal_Width":2.4,"Petal_Length":3.8,"Petal_Width":1.1,"Species":"versicolor"},{"Sepal_Length":5.5,"Sepal_Width":2.4,"Petal_Length":3.7,"Petal_Width":1,"Species":"versicolor"},{"Sepal_Length":5.8,"Sepal_Width":2.7,"Petal_Length":3.9,"Petal_Width":1.2,"Species":"versicolor"},{"Sepal_Length":6,"Sepal_Width":2.7,"Petal_Length":5.1,"Petal_Width":1.6,"Species":"versicolor"},{"Sepal_Length":5.4,"Sepal_Width":3,"Petal_Length":4.5,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":6,"Sepal_Width":3.4,"Petal_Length":4.5,"Petal_Width":1.6,"Species":"versicolor"},{"Sepal_Length":6.7,"Sepal_Width":3.1,"Petal_Length":4.7,"Petal_Width":1.5,"Species":"versicolor"},{"Sepal_Length":6.3,"Sepal_Width":2.3,"Petal_Length":4.4,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":5.6,"Sepal_Width":3,"Petal_Length":4.1,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":5.5,"Sepal_Width":2.5,"Petal_Length":4,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":5.5,"Sepal_Width":2.6,"Petal_Length":4.4,"Petal_Width":1.2,"Species":"versicolor"},{"Sepal_Length":6.1,"Sepal_Width":3,"Petal_Length":4.6,"Petal_Width":1.4,"Species":"versicolor"},{"Sepal_Length":5.8,"Sepal_Width":2.6,"Petal_Length":4,"Petal_Width":1.2,"Species":"versicolor"},{"Sepal_Length":5,"Sepal_Width":2.3,"Petal_Length":3.3,"Petal_Width":1,"Species":"versicolor"},{"Sepal_Length":5.6,"Sepal_Width":2.7,"Petal_Length":4.2,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":5.7,"Sepal_Width":3,"Petal_Length":4.2,"Petal_Width":1.2,"Species":"versicolor"},{"Sepal_Length":5.7,"Sepal_Width":2.9,"Petal_Length":4.2,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":6.2,"Sepal_Width":2.9,"Petal_Length":4.3,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":5.1,"Sepal_Width":2.5,"Petal_Length":3,"Petal_Width":1.1,"Species":"versicolor"},{"Sepal_Length":5.7,"Sepal_Width":2.8,"Petal_Length":4.1,"Petal_Width":1.3,"Species":"versicolor"},{"Sepal_Length":6.3,"Sepal_Width":3.3,"Petal_Length":6,"Petal_Width":2.5,"Species":"virginica"},{"Sepal_Length":5.8,"Sepal_Width":2.7,"Petal_Length":5.1,"Petal_Width":1.9,"Species":"virginica"},{"Sepal_Length":7.1,"Sepal_Width":3,"Petal_Length":5.9,"Petal_Width":2.1,"Species":"virginica"},{"Sepal_Length":6.3,"Sepal_Width":2.9,"Petal_Length":5.6,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":6.5,"Sepal_Width":3,"Petal_Length":5.8,"Petal_Width":2.2,"Species":"virginica"},{"Sepal_Length":7.6,"Sepal_Width":3,"Petal_Length":6.6,"Petal_Width":2.1,"Species":"virginica"},{"Sepal_Length":4.9,"Sepal_Width":2.5,"Petal_Length":4.5,"Petal_Width":1.7,"Species":"virginica"},{"Sepal_Length":7.3,"Sepal_Width":2.9,"Petal_Length":6.3,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":6.7,"Sepal_Width":2.5,"Petal_Length":5.8,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":7.2,"Sepal_Width":3.6,"Petal_Length":6.1,"Petal_Width":2.5,"Species":"virginica"},{"Sepal_Length":6.5,"Sepal_Width":3.2,"Petal_Length":5.1,"Petal_Width":2,"Species":"virginica"},{"Sepal_Length":6.4,"Sepal_Width":2.7,"Petal_Length":5.3,"Petal_Width":1.9,"Species":"virginica"},{"Sepal_Length":6.8,"Sepal_Width":3,"Petal_Length":5.5,"Petal_Width":2.1,"Species":"virginica"},{"Sepal_Length":5.7,"Sepal_Width":2.5,"Petal_Length":5,"Petal_Width":2,"Species":"virginica"},{"Sepal_Length":5.8,"Sepal_Width":2.8,"Petal_Length":5.1,"Petal_Width":2.4,"Species":"virginica"},{"Sepal_Length":6.4,"Sepal_Width":3.2,"Petal_Length":5.3,"Petal_Width":2.3,"Species":"virginica"},{"Sepal_Length":6.5,"Sepal_Width":3,"Petal_Length":5.5,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":7.7,"Sepal_Width":3.8,"Petal_Length":6.7,"Petal_Width":2.2,"Species":"virginica"},{"Sepal_Length":7.7,"Sepal_Width":2.6,"Petal_Length":6.9,"Petal_Width":2.3,"Species":"virginica"},{"Sepal_Length":6,"Sepal_Width":2.2,"Petal_Length":5,"Petal_Width":1.5,"Species":"virginica"},{"Sepal_Length":6.9,"Sepal_Width":3.2,"Petal_Length":5.7,"Petal_Width":2.3,"Species":"virginica"},{"Sepal_Length":5.6,"Sepal_Width":2.8,"Petal_Length":4.9,"Petal_Width":2,"Species":"virginica"},{"Sepal_Length":7.7,"Sepal_Width":2.8,"Petal_Length":6.7,"Petal_Width":2,"Species":"virginica"},{"Sepal_Length":6.3,"Sepal_Width":2.7,"Petal_Length":4.9,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":6.7,"Sepal_Width":3.3,"Petal_Length":5.7,"Petal_Width":2.1,"Species":"virginica"},{"Sepal_Length":7.2,"Sepal_Width":3.2,"Petal_Length":6,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":6.2,"Sepal_Width":2.8,"Petal_Length":4.8,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":6.1,"Sepal_Width":3,"Petal_Length":4.9,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":6.4,"Sepal_Width":2.8,"Petal_Length":5.6,"Petal_Width":2.1,"Species":"virginica"},{"Sepal_Length":7.2,"Sepal_Width":3,"Petal_Length":5.8,"Petal_Width":1.6,"Species":"virginica"},{"Sepal_Length":7.4,"Sepal_Width":2.8,"Petal_Length":6.1,"Petal_Width":1.9,"Species":"virginica"},{"Sepal_Length":7.9,"Sepal_Width":3.8,"Petal_Length":6.4,"Petal_Width":2,"Species":"virginica"},{"Sepal_Length":6.4,"Sepal_Width":2.8,"Petal_Length":5.6,"Petal_Width":2.2,"Species":"virginica"},{"Sepal_Length":6.3,"Sepal_Width":2.8,"Petal_Length":5.1,"Petal_Width":1.5,"Species":"virginica"},{"Sepal_Length":6.1,"Sepal_Width":2.6,"Petal_Length":5.6,"Petal_Width":1.4,"Species":"virginica"},{"Sepal_Length":7.7,"Sepal_Width":3,"Petal_Length":6.1,"Petal_Width":2.3,"Species":"virginica"},{"Sepal_Length":6.3,"Sepal_Width":3.4,"Petal_Length":5.6,"Petal_Width":2.4,"Species":"virginica"},{"Sepal_Length":6.4,"Sepal_Width":3.1,"Petal_Length":5.5,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":6,"Sepal_Width":3,"Petal_Length":4.8,"Petal_Width":1.8,"Species":"virginica"},{"Sepal_Length":6.9,"Sepal_Width":3.1,"Petal_Length":5.4,"Petal_Width":2.1,"Species":"virginica"},{"Sepal_Length":6.7,"Sepal_Width":3.1,"Petal_Length":5.6,"Petal_Width":2.4,"Species":"virginica"},{"Sepal_Length":6.9,"Sepal_Width":3.1,"Petal_Length":5.1,"Petal_Width":2.3,"Species":"virginica"},{"Sepal_Length":5.8,"Sepal_Width":2.7,"Petal_Length":5.1,"Petal_Width":1.9,"Species":"virginica"},{"Sepal_Length":6.8,"Sepal_Width":3.2,"Petal_Length":5.9,"Petal_Width":2.3,"Species":"virginica"},{"Sepal_Length":6.7,"Sepal_Width":3.3,"Petal_Length":5.7,"Petal_Width":2.5,"Species":"virginica"},{"Sepal_Length":6.7,"Sepal_Width":3,"Petal_Length":5.2,"Petal_Width":2.3,"Species":"virginica"},{"Sepal_Length":6.3,"Sepal_Width":2.5,"Petal_Length":5,"Petal_Width":1.9,"Species":"virginica"},{"Sepal_Length":6.5,"Sepal_Width":3,"Petal_Length":5.2,"Petal_Width":2,"Species":"virginica"},{"Sepal_Length":6.2,"Sepal_Width":3.4,"Petal_Length":5.4,"Petal_Width":2.3,"Species":"virginica"},{"Sepal_Length":5.9,"Sepal_Width":3,"Petal_Length":5.1,"Petal_Width":1.8,"Species":"virginica"}],
           columns: [{"title":"Sepal.Length","field":"Sepal_Length"},{"title":"Sepal.Width","field":"Sepal_Width"},{"title":"Petal.Length","field":"Petal_Length"},{"title":"Petal.Width","field":"Petal_Width"},{"title":"Species","field":"Species"}],
@@ -702,22 +695,22 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
 
         
         // Expose table reference globally for search functionality
-        window.table_tinytable_qew4c1q5x8hpe6uzt59g = table_tinytable_qew4c1q5x8hpe6uzt59g;
+        window.table_tinytable_2ldple2l9v3a76cqjpqe = table_tinytable_2ldple2l9v3a76cqjpqe;
 
         // Search functionality (runs within the table IIFE scope)
-        const columns_qew4c1q5x8hpe6uzt59g = [{"title":"Sepal.Length","field":"Sepal_Length"},{"title":"Sepal.Width","field":"Sepal_Width"},{"title":"Petal.Length","field":"Petal_Length"},{"title":"Petal.Width","field":"Petal_Width"},{"title":"Species","field":"Species"}];
-        const searchFields_qew4c1q5x8hpe6uzt59g = columns_qew4c1q5x8hpe6uzt59g.map(col => col.field);
+        const columns_2ldple2l9v3a76cqjpqe = [{"title":"Sepal.Length","field":"Sepal_Length"},{"title":"Sepal.Width","field":"Sepal_Width"},{"title":"Petal.Length","field":"Petal_Length"},{"title":"Petal.Width","field":"Petal_Width"},{"title":"Species","field":"Species"}];
+        const searchFields_2ldple2l9v3a76cqjpqe = columns_2ldple2l9v3a76cqjpqe.map(col => col.field);
 
         // Attach search listener using the globally exposed table reference
-        const searchElement = document.getElementById("search_qew4c1q5x8hpe6uzt59g");
+        const searchElement = document.getElementById("search_2ldple2l9v3a76cqjpqe");
         if (searchElement) {
           searchElement.addEventListener("input", function () {
             const term = this.value.trim();
             if (!term) {
-              window.table_tinytable_qew4c1q5x8hpe6uzt59g.clearFilter();
+              window.table_tinytable_2ldple2l9v3a76cqjpqe.clearFilter();
             } else {
-              window.table_tinytable_qew4c1q5x8hpe6uzt59g.setFilter(function(data) {
-                return searchFields_qew4c1q5x8hpe6uzt59g.some(field => {
+              window.table_tinytable_2ldple2l9v3a76cqjpqe.setFilter(function(data) {
+                return searchFields_2ldple2l9v3a76cqjpqe.some(field => {
                   const value = data[field];
                   if (value === null || value === undefined) return false;
                   return String(value).toLowerCase().includes(term.toLowerCase());
@@ -745,154 +738,112 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
 <p>Formatting numeric and date columns in Tabulator tables requires us to use the Javascript functionality rather than <code>tinytable</code>’s internals, if we want to preserve functionality like sorting.</p>
 <p>In particular, for numeric values, <code>format_tt()</code> is always set to <code>num_fmt="decimal"</code>.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat) <span class="sc">|&gt;</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">j =</span> <span class="st">"salary"</span>, <span class="at">digits =</span> <span class="dv">2</span>, <span class="at">num_mark_big =</span> <span class="st">","</span>) <span class="sc">|&gt;</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">j =</span> <span class="st">"random"</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>tab <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">j =</span> <span class="st">"salary"</span>, <span class="at">digits =</span> <span class="dv">2</span>, <span class="at">num_mark_big =</span> <span class="st">","</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">format_tt</span>(<span class="at">j =</span> <span class="st">"random"</span>, <span class="at">digits =</span> <span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
-    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
 
+  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytable_5mz8ej0qg4hn709qownp</title>
+    <link href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/scss/tabulator_tinytable.min.css" rel="stylesheet">
+  
+  
+<!-- preamble end -->
+
+    <div class="container">
+      
+      <div id="tinytable_5mz8ej0qg4hn709qownp" style="margin-left: auto; margin-right: auto;"></div>
+      
+      <br>
+    </div>
+
+    <!-- Luxon for date handling -->
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
+    
+    <!-- Tabulator JS -->
+    <script src="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/js/tabulator.min.js"></script>
     <script>
-      // Create table-specific functions using external factory
-      const tableFns_ldh5wtpfrda2ygwhyegs = TinyTable.createTableFunctions("tinytable_ldh5wtpfrda2ygwhyegs");
-      // tinytable span after
-      window.addEventListener('load', function () {
-          var cellsToStyle = [
-            // tinytable style arrays after
-          { positions: [ { i: '3', j: 1 }, { i: '3', j: 2 }, { i: '3', j: 3 }, { i: '3', j: 4 }, { i: '3', j: 5 } ], css_id: 'tinytable_css_9n1y68nb2vi508ot9hvy',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_q8bud3j619umwbg9yv8q',}, 
-          ];
+      (function() {
+        const { DateTime } = luxon;
 
-          // Loop over the arrays to style the cells
-          cellsToStyle.forEach(function (group) {
-              group.positions.forEach(function (cell) {
-                  tableFns_ldh5wtpfrda2ygwhyegs.styleCell(cell.i, cell.j, group.css_id);
-              });
-          });
-      });
+        const table_tinytable_5mz8ej0qg4hn709qownp = new Tabulator("#tinytable_5mz8ej0qg4hn709qownp", {
+          dependencies: { DateTime },
+          data: [{"city":"Montréal","salary":14002.22,"random":1.43402,"date":"1970-08-01","best":true},{"city":"Toronto","salary":201399.11,"random":201.399,"date":"1972-03-30","best":false},{"city":"Vancouver","salary":80188.38,"random":0.134588,"date":"1971-06-07","best":false}],
+          columns: [{"title":"city","field":"city"},{"title":"salary","field":"salary","formatter":"money","formatterParams":{"decimal":".","thousand":",","precision":2,"symbol":"","symbolAfter":false}},{"title":"random","field":"random","formatter":"money","formatterParams":{"decimal":".","thousand":"","precision":4,"symbol":"","symbolAfter":false}},{"title":"date","field":"date"},{"title":"best","field":"best"}],
+          
+        layout: 'fitDataTable'
+      ,
+        });
+
+        
+      })();
     </script>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
-    <style>
-    /* tinytable css entries after */
-    #tinytable_ldh5wtpfrda2ygwhyegs td.tinytable_css_9n1y68nb2vi508ot9hvy, #tinytable_ldh5wtpfrda2ygwhyegs th.tinytable_css_9n1y68nb2vi508ot9hvy {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    #tinytable_ldh5wtpfrda2ygwhyegs td.tinytable_css_q8bud3j619umwbg9yv8q, #tinytable_ldh5wtpfrda2ygwhyegs th.tinytable_css_q8bud3j619umwbg9yv8q {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    </style>
-    <div class="container">
-      <table class="tinytable" id="tinytable_ldh5wtpfrda2ygwhyegs" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
-        <thead>
-          
-              <tr>
-                <th scope="col" data-row="0" data-col="1">city</th>
-                <th scope="col" data-row="0" data-col="2">salary</th>
-                <th scope="col" data-row="0" data-col="3">random</th>
-                <th scope="col" data-row="0" data-col="4">date</th>
-                <th scope="col" data-row="0" data-col="5">best</th>
-              </tr>
-        </thead>
-        
-        <tbody>
-                <tr>
-                  <td data-row="1" data-col="1">Montréal</td>
-                  <td data-row="1" data-col="2">14,002</td>
-                  <td data-row="1" data-col="3">1.434</td>
-                  <td data-row="1" data-col="4">1970-12-01</td>
-                  <td data-row="1" data-col="5">TRUE</td>
-                </tr>
-                <tr>
-                  <td data-row="2" data-col="1">Toronto</td>
-                  <td data-row="2" data-col="2">201,399</td>
-                  <td data-row="2" data-col="3">201.399</td>
-                  <td data-row="2" data-col="4">1972-07-14</td>
-                  <td data-row="2" data-col="5">FALSE</td>
-                </tr>
-                <tr>
-                  <td data-row="3" data-col="1">Vancouver</td>
-                  <td data-row="3" data-col="2">80,188</td>
-                  <td data-row="3" data-col="3">0.1346</td>
-                  <td data-row="3" data-col="4">1972-06-24</td>
-                  <td data-row="3" data-col="5">FALSE</td>
-                </tr>
-        </tbody>
-      </table>
-    </div>
-<!-- hack to avoid NA insertion in last line -->
+    
+
+<!-- postamble start -->
+  
+
+
+
 </div>
 </div>
 <p>For dates, <code>tabulator</code> uses Luxon date format tokens, not R’s <code>strptime</code> format. Common patterns include:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat) <span class="sc">|&gt;</span> <span class="fu">format_tt</span>(<span class="at">j =</span> <span class="st">"date"</span>, <span class="at">date =</span> <span class="st">"M/d/yyyy"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>tab <span class="sc">|&gt;</span> <span class="fu">format_tt</span>(<span class="at">j =</span> <span class="st">"date"</span>, <span class="at">date =</span> <span class="st">"M/d/yyyy"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
-    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
 
+  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>tinytable_bzzeqm5pin1ko22zdase</title>
+    <link href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/scss/tabulator_tinytable.min.css" rel="stylesheet">
+  
+  
+<!-- preamble end -->
+
+    <div class="container">
+      
+      <div id="tinytable_bzzeqm5pin1ko22zdase" style="margin-left: auto; margin-right: auto;"></div>
+      
+      <br>
+    </div>
+
+    <!-- Luxon for date handling -->
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
+    
+    <!-- Tabulator JS -->
+    <script src="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/js/tabulator.min.js"></script>
     <script>
-      // Create table-specific functions using external factory
-      const tableFns_6mb2lhlkutrnp06k2vnn = TinyTable.createTableFunctions("tinytable_6mb2lhlkutrnp06k2vnn");
-      // tinytable span after
-      window.addEventListener('load', function () {
-          var cellsToStyle = [
-            // tinytable style arrays after
-          { positions: [ { i: '3', j: 1 }, { i: '3', j: 2 }, { i: '3', j: 3 }, { i: '3', j: 4 }, { i: '3', j: 5 } ], css_id: 'tinytable_css_oxtwmkypk7ron7m1d7m6',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_rgeiinb2uqrfd17vjgjo',}, 
-          ];
+      (function() {
+        const { DateTime } = luxon;
 
-          // Loop over the arrays to style the cells
-          cellsToStyle.forEach(function (group) {
-              group.positions.forEach(function (cell) {
-                  tableFns_6mb2lhlkutrnp06k2vnn.styleCell(cell.i, cell.j, group.css_id);
-              });
-          });
-      });
+        const table_tinytable_bzzeqm5pin1ko22zdase = new Tabulator("#tinytable_bzzeqm5pin1ko22zdase", {
+          dependencies: { DateTime },
+          data: [{"city":"Montréal","salary":14002.22,"random":1.43402,"date":"1970-08-01","best":true},{"city":"Toronto","salary":201399.11,"random":201.399,"date":"1972-03-30","best":false},{"city":"Vancouver","salary":80188.38,"random":0.134588,"date":"1971-06-07","best":false}],
+          columns: [{"title":"city","field":"city"},{"title":"salary","field":"salary"},{"title":"random","field":"random"},{"title":"date","field":"date","formatter":"datetime","formatterParams":{"inputFormat":"yyyy-MM-dd","outputFormat":"M/d/yyyy","invalidPlaceholder":""},"sorter":"datetime","sorterParams":{"format":"yyyy-MM-dd","alignEmptyValues":"bottom"}},{"title":"best","field":"best"}],
+          
+        layout: 'fitDataTable'
+      ,
+        });
+
+        
+      })();
     </script>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
-    <style>
-    /* tinytable css entries after */
-    #tinytable_6mb2lhlkutrnp06k2vnn td.tinytable_css_oxtwmkypk7ron7m1d7m6, #tinytable_6mb2lhlkutrnp06k2vnn th.tinytable_css_oxtwmkypk7ron7m1d7m6 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    #tinytable_6mb2lhlkutrnp06k2vnn td.tinytable_css_rgeiinb2uqrfd17vjgjo, #tinytable_6mb2lhlkutrnp06k2vnn th.tinytable_css_rgeiinb2uqrfd17vjgjo {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    </style>
-    <div class="container">
-      <table class="tinytable" id="tinytable_6mb2lhlkutrnp06k2vnn" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
-        <thead>
-          
-              <tr>
-                <th scope="col" data-row="0" data-col="1">city</th>
-                <th scope="col" data-row="0" data-col="2">salary</th>
-                <th scope="col" data-row="0" data-col="3">random</th>
-                <th scope="col" data-row="0" data-col="4">date</th>
-                <th scope="col" data-row="0" data-col="5">best</th>
-              </tr>
-        </thead>
-        
-        <tbody>
-                <tr>
-                  <td data-row="1" data-col="1">Montréal</td>
-                  <td data-row="1" data-col="2">14002.22</td>
-                  <td data-row="1" data-col="3">1.434020</td>
-                  <td data-row="1" data-col="4">M/d/yyyy</td>
-                  <td data-row="1" data-col="5">TRUE</td>
-                </tr>
-                <tr>
-                  <td data-row="2" data-col="1">Toronto</td>
-                  <td data-row="2" data-col="2">201399.11</td>
-                  <td data-row="2" data-col="3">201.399000</td>
-                  <td data-row="2" data-col="4">M/d/yyyy</td>
-                  <td data-row="2" data-col="5">FALSE</td>
-                </tr>
-                <tr>
-                  <td data-row="3" data-col="1">Vancouver</td>
-                  <td data-row="3" data-col="2">80188.38</td>
-                  <td data-row="3" data-col="3">0.134588</td>
-                  <td data-row="3" data-col="4">M/d/yyyy</td>
-                  <td data-row="3" data-col="5">FALSE</td>
-                </tr>
-        </tbody>
-      </table>
-    </div>
-<!-- hack to avoid NA insertion in last line -->
+    
+
+<!-- postamble start -->
+  
+
+
+
 </div>
 </div>
 <p>Here is a table with some common Luxon date formats and their output examples:</p>
@@ -900,36 +851,36 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
 <div class="cell-output-display">
 <!-- preamble start -->
 
-    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_olb78s2ficwf1zkz071p = TinyTable.createTableFunctions("tinytable_olb78s2ficwf1zkz071p");
+      const tableFns_e4uhy9v18fgugc4a9sev = TinyTable.createTableFunctions("tinytable_e4uhy9v18fgugc4a9sev");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 } ], css_id: 'tinytable_css_ruywcw0a967txjqi9w6n',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_z8wor998owobq7b2qmnf',}, 
+          { positions: [ { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 } ], css_id: 'tinytable_css_5as5thjq9ghvqjymlxfm',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_f5p4cp2z1s5i5poa0lq2',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_olb78s2ficwf1zkz071p.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_e4uhy9v18fgugc4a9sev.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_olb78s2ficwf1zkz071p td.tinytable_css_ruywcw0a967txjqi9w6n, #tinytable_olb78s2ficwf1zkz071p th.tinytable_css_ruywcw0a967txjqi9w6n {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    #tinytable_olb78s2ficwf1zkz071p td.tinytable_css_z8wor998owobq7b2qmnf, #tinytable_olb78s2ficwf1zkz071p th.tinytable_css_z8wor998owobq7b2qmnf {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_e4uhy9v18fgugc4a9sev td.tinytable_css_5as5thjq9ghvqjymlxfm, #tinytable_e4uhy9v18fgugc4a9sev th.tinytable_css_5as5thjq9ghvqjymlxfm {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_e4uhy9v18fgugc4a9sev td.tinytable_css_f5p4cp2z1s5i5poa0lq2, #tinytable_e4uhy9v18fgugc4a9sev th.tinytable_css_f5p4cp2z1s5i5poa0lq2 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_olb78s2ficwf1zkz071p" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_e4uhy9v18fgugc4a9sev" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
           
               <tr>
@@ -981,42 +932,42 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
 <h2 class="anchored" data-anchor-id="style">Style</h2>
 <p>Support for <code>style_tt()</code> is very limited in interactive tables. For now, only the <code>align</code> and <code>alignv</code> arguments of that function are supported.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat) <span class="sc">|&gt;</span> <span class="fu">style_tt</span>(<span class="at">align =</span> <span class="st">"r"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat) <span class="sc">|&gt;</span> <span class="fu">style_tt</span>(<span class="at">align =</span> <span class="st">"r"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
-    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/js/tinytable.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_00po6jz7lr57p16iebe4 = TinyTable.createTableFunctions("tinytable_00po6jz7lr57p16iebe4");
+      const tableFns_0fveevfzzvmy88nesre1 = TinyTable.createTableFunctions("tinytable_0fveevfzzvmy88nesre1");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 } ], css_id: 'tinytable_css_gveq1gvhd7xzko2dd0r1',}, 
-          { positions: [ { i: '3', j: 1 }, { i: '3', j: 2 }, { i: '3', j: 3 }, { i: '3', j: 4 }, { i: '3', j: 5 } ], css_id: 'tinytable_css_91bqna6ogex1pw1jhwjx',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_rdgtdg949orksav211wn',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '1', j: 3 }, { i: '2', j: 3 }, { i: '1', j: 4 }, { i: '2', j: 4 }, { i: '1', j: 5 }, { i: '2', j: 5 } ], css_id: 'tinytable_css_sgvnruzer0lap0oswf54',}, 
+          { positions: [ { i: '3', j: 1 }, { i: '3', j: 2 }, { i: '3', j: 3 }, { i: '3', j: 4 }, { i: '3', j: 5 } ], css_id: 'tinytable_css_5se2hmw9rxaqkwrl4rhs',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_ckzt64hvy9qbuuie7shi',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_00po6jz7lr57p16iebe4.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_0fveevfzzvmy88nesre1.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
     </script>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@issue575/inst/tinytable.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_00po6jz7lr57p16iebe4 td.tinytable_css_gveq1gvhd7xzko2dd0r1, #tinytable_00po6jz7lr57p16iebe4 th.tinytable_css_gveq1gvhd7xzko2dd0r1 { text-align: right }
-    #tinytable_00po6jz7lr57p16iebe4 td.tinytable_css_91bqna6ogex1pw1jhwjx, #tinytable_00po6jz7lr57p16iebe4 th.tinytable_css_91bqna6ogex1pw1jhwjx {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: right }
-    #tinytable_00po6jz7lr57p16iebe4 td.tinytable_css_rdgtdg949orksav211wn, #tinytable_00po6jz7lr57p16iebe4 th.tinytable_css_rdgtdg949orksav211wn {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: right }
+    #tinytable_0fveevfzzvmy88nesre1 td.tinytable_css_sgvnruzer0lap0oswf54, #tinytable_0fveevfzzvmy88nesre1 th.tinytable_css_sgvnruzer0lap0oswf54 { text-align: right }
+    #tinytable_0fveevfzzvmy88nesre1 td.tinytable_css_5se2hmw9rxaqkwrl4rhs, #tinytable_0fveevfzzvmy88nesre1 th.tinytable_css_5se2hmw9rxaqkwrl4rhs {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: right }
+    #tinytable_0fveevfzzvmy88nesre1 td.tinytable_css_ckzt64hvy9qbuuie7shi, #tinytable_0fveevfzzvmy88nesre1 th.tinytable_css_ckzt64hvy9qbuuie7shi {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: right }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_00po6jz7lr57p16iebe4" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_0fveevfzzvmy88nesre1" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <thead>
           
               <tr>
@@ -1033,21 +984,21 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
                   <td data-row="1" data-col="1">Montréal</td>
                   <td data-row="1" data-col="2">14002.22</td>
                   <td data-row="1" data-col="3">1.434020</td>
-                  <td data-row="1" data-col="4">1970-12-01</td>
+                  <td data-row="1" data-col="4">1970-08-01</td>
                   <td data-row="1" data-col="5">TRUE</td>
                 </tr>
                 <tr>
                   <td data-row="2" data-col="1">Toronto</td>
                   <td data-row="2" data-col="2">201399.11</td>
                   <td data-row="2" data-col="3">201.399000</td>
-                  <td data-row="2" data-col="4">1972-07-14</td>
+                  <td data-row="2" data-col="4">1972-03-30</td>
                   <td data-row="2" data-col="5">FALSE</td>
                 </tr>
                 <tr>
                   <td data-row="3" data-col="1">Vancouver</td>
                   <td data-row="3" data-col="2">80188.38</td>
                   <td data-row="3" data-col="3">0.134588</td>
-                  <td data-row="3" data-col="4">1972-06-24</td>
+                  <td data-row="3" data-col="4">1971-06-07</td>
                   <td data-row="3" data-col="5">FALSE</td>
                 </tr>
         </tbody>
@@ -1062,7 +1013,7 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
 <p>Tabulator ships with multiple complete CSS style sheets. The default in <code>tinytable</code> is Bootstrap 5, but you can customize the appearance using the <code>theme_html()</code> function (when available). Alternatives include <code>"default"</code>, <code>"simple"</code>, <code>"midnight"</code>, <code>"modern"</code>, <code>"site"</code>, <code>"site_dark"</code>, <code>"bootstrap3"</code>, <code>"bootstrap4"</code>, <code>"bootstrap5"</code>, <code>"semanticui"</code>, <code>"bulma"</code>, and <code>"materialize"</code>.</p>
 <p>The syntax looks like this:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(iris) <span class="sc">|&gt;</span> <span class="fu">theme_html</span>(<span class="at">tabulator_stylesheet =</span> <span class="st">"semanticui"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(iris) <span class="sc">|&gt;</span> <span class="fu">theme_html</span>(<span class="at">tabulator_stylesheet =</span> <span class="st">"semanticui"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -1125,17 +1076,13 @@ Warning
 <h2 class="anchored" data-anchor-id="css">CSS</h2>
 <p>For more advanced styling, you can add custom CSS rules using the <code>tabulator_css_rule</code> argument in <code>theme_html()</code>. The CSS rule must include at least one <code>$TINYTABLE_ID</code> placeholder, which gets replaced with the unique table identifier to ensure styles only apply to that specific table.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>css_rule <span class="ot">&lt;-</span> <span class="st">"</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="st">$TINYTABLE_ID .tabulator-header .tabulator-col {</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="st">  background-color: black;</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="st">  color: white;</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat) <span class="sc">|&gt;</span> <span class="fu">theme_html</span>(<span class="at">tabulator_css_rule =</span> css_rule)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: The following style_tt() arguments are not yet supported with
-tabulator output: line. Only 'align' and 'alignv' are currently supported.</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>css_rule <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="st">$TINYTABLE_ID .tabulator-header .tabulator-col {</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="st">  background-color: black;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="st">  color: white;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="st">}</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat) <span class="sc">|&gt;</span> <span class="fu">theme_html</span>(<span class="at">engine =</span> <span class="st">"tabulator"</span>, <span class="at">tabulator_css_rule =</span> css_rule)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -1143,7 +1090,7 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_5z4t9bzr876y9z0w27f5</title>
+    <title>tinytable_58zxbtn1clufm3nibavm</title>
     <link href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/scss/tabulator_tinytable.min.css" rel="stylesheet">
   
   
@@ -1151,7 +1098,7 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
 
     <div class="container">
       
-      <div id="tinytable_5z4t9bzr876y9z0w27f5" style="margin-left: auto; margin-right: auto;"></div>
+      <div id="tinytable_58zxbtn1clufm3nibavm" style="margin-left: auto; margin-right: auto;"></div>
       
       <br>
     </div>
@@ -1165,9 +1112,9 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
       (function() {
         const { DateTime } = luxon;
 
-        const table_tinytable_5z4t9bzr876y9z0w27f5 = new Tabulator("#tinytable_5z4t9bzr876y9z0w27f5", {
+        const table_tinytable_58zxbtn1clufm3nibavm = new Tabulator("#tinytable_58zxbtn1clufm3nibavm", {
           dependencies: { DateTime },
-          data: [{"city":"Montréal","salary":14002.22,"random":1.43402,"date":"1970-12-01","best":true},{"city":"Toronto","salary":201399.11,"random":201.399,"date":"1972-07-14","best":false},{"city":"Vancouver","salary":80188.38,"random":0.134588,"date":"1972-06-24","best":false}],
+          data: [{"city":"Montréal","salary":14002.22,"random":1.43402,"date":"1970-08-01","best":true},{"city":"Toronto","salary":201399.11,"random":201.399,"date":"1972-03-30","best":false},{"city":"Vancouver","salary":80188.38,"random":0.134588,"date":"1971-06-07","best":false}],
           columns: [{"title":"city","field":"city"},{"title":"salary","field":"salary"},{"title":"random","field":"random"},{"title":"date","field":"date"},{"title":"best","field":"best"}],
           
         layout: 'fitDataTable'
@@ -1180,7 +1127,7 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
 
     <style>
 
-#tinytable_5z4t9bzr876y9z0w27f5 .tabulator-header .tabulator-col {
+#tinytable_58zxbtn1clufm3nibavm .tabulator-header .tabulator-col {
   background-color: black;
   color: white;
 }
@@ -1201,36 +1148,32 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
 <p>The <code>options</code> argument allows you to override any default Tabulator configuration. The <code>columns</code> argument lets you completely customize column definitions, including formatters, styling, and behavior.</p>
 <p>In this example, we redefine how columns are formatted.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">city =</span> <span class="fu">c</span>(<span class="st">"Toronto"</span>, <span class="st">"Montreal"</span>, <span class="st">"Vancouver"</span>),</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">salary =</span> <span class="fu">c</span>(<span class="dv">75000</span>, <span class="dv">68000</span>, <span class="dv">82000</span>),</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">best =</span> <span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>custom_columns <span class="ot">&lt;-</span> <span class="st">'</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="st">[</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="st">    "title": "City", </span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="st">    "field": "city"</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="st">  }, </span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="st">    "title": "Best city", </span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="st">    "field": "best", </span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="st">    "formatter": "tickCross"</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="st">  }, </span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="st">    "title": "Salary", </span></span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="st">    "field": "salary", </span></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="st">    "formatter": "money", </span></span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="st">    "formatterParams": {"precision": 0, "symbol": "$"}</span></span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="st">  },</span></span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="st">]'</span></span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat) <span class="sc">|&gt;</span> <span class="fu">theme_html</span>(<span class="at">tabulator_columns =</span> custom_columns)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: The following style_tt() arguments are not yet supported with
-tabulator output: line. Only 'align' and 'alignv' are currently supported.</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">city =</span> <span class="fu">c</span>(<span class="st">"Toronto"</span>, <span class="st">"Montreal"</span>, <span class="st">"Vancouver"</span>),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">salary =</span> <span class="fu">c</span>(<span class="dv">75000</span>, <span class="dv">68000</span>, <span class="dv">82000</span>),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">best =</span> <span class="fu">c</span>(<span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>custom_columns <span class="ot">&lt;-</span> <span class="st">'</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="st">[</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="st">    "title": "City", </span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="st">    "field": "city"</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="st">  }, </span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="st">    "title": "Best city", </span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="st">    "field": "best", </span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="st">    "formatter": "tickCross"</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="st">  }, </span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="st">  {</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="st">    "title": "Salary", </span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="st">    "field": "salary", </span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="st">    "formatter": "money", </span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="st">    "formatterParams": {"precision": 0, "symbol": "$"}</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="st">  },</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="st">]'</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat) <span class="sc">|&gt;</span> <span class="fu">theme_html</span>(<span class="at">engine =</span> <span class="st">"tabulator"</span>, <span class="at">tabulator_columns =</span> custom_columns)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -1238,7 +1181,7 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_swkjnoapqgctptsp2jx4</title>
+    <title>tinytable_7owfqmcy3f7d46904e9k</title>
     <link href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/scss/tabulator_tinytable.min.css" rel="stylesheet">
   
   
@@ -1246,7 +1189,7 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
 
     <div class="container">
       
-      <div id="tinytable_swkjnoapqgctptsp2jx4" style="margin-left: auto; margin-right: auto;"></div>
+      <div id="tinytable_7owfqmcy3f7d46904e9k" style="margin-left: auto; margin-right: auto;"></div>
       
       <br>
     </div>
@@ -1260,7 +1203,7 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
       (function() {
         const { DateTime } = luxon;
 
-        const table_tinytable_swkjnoapqgctptsp2jx4 = new Tabulator("#tinytable_swkjnoapqgctptsp2jx4", {
+        const table_tinytable_7owfqmcy3f7d46904e9k = new Tabulator("#tinytable_7owfqmcy3f7d46904e9k", {
           dependencies: { DateTime },
           data: [{"city":"Toronto","salary":75000,"best":false},{"city":"Montreal","salary":68000,"best":true},{"city":"Vancouver","salary":82000,"best":false}],
           columns: 
@@ -1299,18 +1242,14 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
 
 </div>
 </div>
-<p>And now we change more options, such as the layout and height of the table:</p>
+<p>And now we change more options, such as the layout and height of the table, including <code>height</code> which changes the height of the scrollable area.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>opts <span class="ot">&lt;-</span> <span class="st">"</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="st">  layout: 'fitColumns',</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="st">  height: '200px'</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat) <span class="sc">|&gt;</span> <span class="fu">theme_html</span>(<span class="at">tabulator_options =</span> opts)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: The following style_tt() arguments are not yet supported with
-tabulator output: line. Only 'align' and 'alignv' are currently supported.</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>opts <span class="ot">&lt;-</span> <span class="st">"</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="st">  layout: 'fitColumns',</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="st">  height: '300px'</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(<span class="fu">head</span>(iris, <span class="dv">25</span>)) <span class="sc">|&gt;</span> <span class="fu">theme_html</span>(<span class="at">tabulator_options =</span> opts)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -1318,7 +1257,7 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tinytable_xnq93q9pdnbaqykdfurc</title>
+    <title>tinytable_797b0hteombe2gvyt0sk</title>
     <link href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/scss/tabulator_tinytable.min.css" rel="stylesheet">
   
   
@@ -1326,7 +1265,7 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
 
     <div class="container">
       
-      <div id="tinytable_xnq93q9pdnbaqykdfurc" style="margin-left: auto; margin-right: auto;"></div>
+      <div id="tinytable_797b0hteombe2gvyt0sk" style="margin-left: auto; margin-right: auto;"></div>
       
       <br>
     </div>
@@ -1340,13 +1279,13 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
       (function() {
         const { DateTime } = luxon;
 
-        const table_tinytable_xnq93q9pdnbaqykdfurc = new Tabulator("#tinytable_xnq93q9pdnbaqykdfurc", {
+        const table_tinytable_797b0hteombe2gvyt0sk = new Tabulator("#tinytable_797b0hteombe2gvyt0sk", {
           dependencies: { DateTime },
-          data: [{"city":"Toronto","salary":75000,"best":false},{"city":"Montreal","salary":68000,"best":true},{"city":"Vancouver","salary":82000,"best":false}],
-          columns: [{"title":"city","field":"city"},{"title":"salary","field":"salary"},{"title":"best","field":"best"}],
+          data: [{"Sepal_Length":5.1,"Sepal_Width":3.5,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.9,"Sepal_Width":3,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.7,"Sepal_Width":3.2,"Petal_Length":1.3,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.6,"Sepal_Width":3.1,"Petal_Length":1.5,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5,"Sepal_Width":3.6,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.4,"Sepal_Width":3.9,"Petal_Length":1.7,"Petal_Width":0.4,"Species":"setosa"},{"Sepal_Length":4.6,"Sepal_Width":3.4,"Petal_Length":1.4,"Petal_Width":0.3,"Species":"setosa"},{"Sepal_Length":5,"Sepal_Width":3.4,"Petal_Length":1.5,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.4,"Sepal_Width":2.9,"Petal_Length":1.4,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.9,"Sepal_Width":3.1,"Petal_Length":1.5,"Petal_Width":0.1,"Species":"setosa"},{"Sepal_Length":5.4,"Sepal_Width":3.7,"Petal_Length":1.5,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.8,"Sepal_Width":3.4,"Petal_Length":1.6,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":4.8,"Sepal_Width":3,"Petal_Length":1.4,"Petal_Width":0.1,"Species":"setosa"},{"Sepal_Length":4.3,"Sepal_Width":3,"Petal_Length":1.1,"Petal_Width":0.1,"Species":"setosa"},{"Sepal_Length":5.8,"Sepal_Width":4,"Petal_Length":1.2,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.7,"Sepal_Width":4.4,"Petal_Length":1.5,"Petal_Width":0.4,"Species":"setosa"},{"Sepal_Length":5.4,"Sepal_Width":3.9,"Petal_Length":1.3,"Petal_Width":0.4,"Species":"setosa"},{"Sepal_Length":5.1,"Sepal_Width":3.5,"Petal_Length":1.4,"Petal_Width":0.3,"Species":"setosa"},{"Sepal_Length":5.7,"Sepal_Width":3.8,"Petal_Length":1.7,"Petal_Width":0.3,"Species":"setosa"},{"Sepal_Length":5.1,"Sepal_Width":3.8,"Petal_Length":1.5,"Petal_Width":0.3,"Species":"setosa"},{"Sepal_Length":5.4,"Sepal_Width":3.4,"Petal_Length":1.7,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.1,"Sepal_Width":3.7,"Petal_Length":1.5,"Petal_Width":0.4,"Species":"setosa"},{"Sepal_Length":4.6,"Sepal_Width":3.6,"Petal_Length":1,"Petal_Width":0.2,"Species":"setosa"},{"Sepal_Length":5.1,"Sepal_Width":3.3,"Petal_Length":1.7,"Petal_Width":0.5,"Species":"setosa"},{"Sepal_Length":4.8,"Sepal_Width":3.4,"Petal_Length":1.9,"Petal_Width":0.2,"Species":"setosa"}],
+          columns: [{"title":"Sepal.Length","field":"Sepal_Length"},{"title":"Sepal.Width","field":"Sepal_Width"},{"title":"Petal.Length","field":"Petal_Length"},{"title":"Petal.Width","field":"Petal_Width"},{"title":"Species","field":"Species"}],
           
   layout: 'fitColumns',
-  height: '200px'
+  height: '300px'
 ,
         });
 
@@ -1420,13 +1359,14 @@ tabulator output: line. Only 'align' and 'alignv' are currently supported.</code
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
