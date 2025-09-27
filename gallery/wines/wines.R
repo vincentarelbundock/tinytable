@@ -53,7 +53,9 @@ tab <- tt(tbl,
   notes = "Adapted from [a beautiful table by Abdoul Madjid.](https://github.com/AbdoulMa/RStudio-Table-Contest-2021)",
   width = c(1, 4, 5, 3, 5, 6, 3, 2, 2)) |>
   theme_empty() |>
-  theme_html(class = "table table-hover table-responsive-sm caption-top") |>
+  theme_html(
+    engine = "bootstrap",
+    class = "table table-hover table-responsive-sm caption-top") |>
   format_tt(j = 8, fn = scales::label_currency()) |>
   format_tt(j = 9, fn = scales::label_percent(scale = 1)) |>
   format_tt("notes", markdown = TRUE) |>
@@ -63,5 +65,5 @@ tab <- tt(tbl,
   plot_tt(i = 0, j = 2:9, images = header_icons, height = 3) |>
   plot_tt(j = 1, images = df$bottle_image, height = 4)
 
-save_tt(tab, output = "wines.html", overwrite = TRUE)
-# print(tab, "html")
+# save_tt(tab, output = "wines.html", overwrite = TRUE)
+print(tab, "html")
