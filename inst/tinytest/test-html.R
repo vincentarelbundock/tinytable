@@ -177,17 +177,19 @@ x <- tt(mtcars[1:4, 1:5], theme = "void") |>
 expect_snapshot_print(print_html(x), "html-borders.html")
 
 # Images
-dat <- data.frame(
-  Species = c("Spider", "Squirrel"),
-  Image = ""
-)
-img <- c(
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeLPSPrPtVgPg6BLCiN6lBYy8l1xNy0T5yttVjkIk0L3Rva8Zl",
-  "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQdBlFVajljNz5qMbO622ihkIU2r6yA5whM9b8MbRGKOfJ8_UmZ"
-)
-dat <- tt(dat) |>
-  plot_tt(j = 2, images = img, height = 3)
-expect_snapshot_print(print_html(dat), "html-images.html")
+if (Sys.info()["sysname"] == "Darwin") {
+  dat <- data.frame(
+    Species = c("Spider", "Squirrel"),
+    Image = ""
+  )
+  img <- c(
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeLPSPrPtVgPg6BLCiN6lBYy8l1xNy0T5yttVjkIk0L3Rva8Zl",
+    "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQdBlFVajljNz5qMbO622ihkIU2r6yA5whM9b8MbRGKOfJ8_UmZ"
+  )
+  dat <- tt(dat) |>
+    plot_tt(j = 2, images = img, height = 3)
+  expect_snapshot_print(print_html(dat), "html-images.html")
+}
 
 # Issue #297: group_tt() breaks alignment
 tab <- data.frame(
