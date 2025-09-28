@@ -116,8 +116,8 @@ print.tinytable <- function(
     cat(tab, "\n")
   } else if (output == "html") {
     if (is_rstudio_notebook()) {
-      html_kable <- htmltools_browsable(tab)
-      print(html_kable)
+      html_tinytable <- htmltools_browsable(tab)
+      print(html_tinytable)
       return(invisible(NULL))
     }
 

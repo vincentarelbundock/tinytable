@@ -178,7 +178,8 @@ infer_output <- function(x) {
 
   if (isTRUE(check_dependency("knitr"))) {
 
-    if (isTRUE(knitr::pandoc_to() %in% c("latex", "beamer"))) {
+    pandoc_to <- knitr::pandoc_to()
+    if (isTRUE(pandoc_to %in% c("latex", "beamer"))) {
       if (isTRUE(x@latex_preamble)) {
         usepackage_latex("float")
         usepackage_latex(
@@ -195,9 +196,9 @@ infer_output <- function(x) {
         )
       }
       out <- "latex"
-    } else if (isTRUE(knitr::pandoc_to() %in% c("html", "revealjs"))) {
+    } else if (isTRUE(pandoc_to %in% c("html", "revealjs"))) {
       out <- "html"
-    } else if (isTRUE(knitr::pandoc_to() == "typst")) {
+    } else if (isTRUE(pandoc_to == "typst")) {
       out <- "typst"
       if (isTRUE(check_dependency("quarto"))) {
         if (isTRUE(quarto::quarto_version() < "1.5.29")) {
@@ -206,11 +207,11 @@ infer_output <- function(x) {
         }
       }
     # docx, markdown variants, and unknown formats
-    } else {
+    } else if (!is.null(pandoc_to)) {
       out <- "markdown"
     }
   }
-
+  
   return(out)
 }
 
