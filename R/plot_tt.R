@@ -27,6 +27,7 @@
 #' - See the tutorial on the `tinytable` website for more information.
 #' @param data a list of data frames or vectors to be used by the plotting functions in `fun`.
 #' @param images Character vector, the paths to the images to be inserted. Paths are relative to the main table file or Quarto (Rmarkdown) document.
+#' @param sprintf Character string, a sprintf format string to format the generated cell content. Default is "%s" which displays the content as-is. Use this to wrap images or plots in custom markup.
 #' @param assets Path to the directory where generated assets are stored. This path is relative to the location where a table is saved.
 #' @param ... Extra arguments are passed to the function in `fun`. Important: Custom plotting functions must always have `...` as an argument.
 #'
@@ -84,6 +85,7 @@ plot_tt <- function(
     height_plot = 400,
     width_plot = 1200,
     images = NULL,
+    sprintf = "%s",
     assets = "tinytable_assets",
     ...) {
   # non-standard evaluation before anything else
@@ -107,7 +109,7 @@ plot_tt <- function(
   assert_character(images, len = len, null.ok = TRUE)
 
   if (!is.null(images) && length(images) != len) {
-    msg <- sprintf(
+    msg <- base::sprintf(
       "`images` must match the dimensions of `i` and `j`: length %s.",
       len
     )
@@ -172,6 +174,7 @@ plot_tt <- function(
     height_plot = height_plot,
     width_plot = width_plot,
     images = images,
+    sprintf = sprintf,
     assets = assets
   )
   cal <- c(cal, list(...))
@@ -194,6 +197,7 @@ plot_tt_lazy <- function(
     data = NULL,
     xlim = NULL,
     images = NULL,
+    sprintf = "%s",
     assets = "tinytable_assets",
     ...) {
   out <- x@data_body
@@ -284,11 +288,11 @@ plot_tt_lazy <- function(
 
   if (isTRUE(x@output == "latex")) {
     cell <- "\\includegraphics[height=%sem]{%s}"
-    cell <- sprintf(cell, height, images)
+    cell <- base::sprintf(cell, height, images)
   } else if (is_portable) {
     http <- grepl("^http", trimws(images))
     images[!http] <- encode(images[!http])
-    cell <- sprintf('<img src="%s" style="height: %sem;">', images, height)
+    cell <- base::sprintf('<img src="%s" style="height: %sem;">', images, height)
   } else if (is_html) {
     # Convert relative paths to absolute paths for save_tt/print
     http <- grepl("^http", trimws(images))
@@ -300,19 +304,21 @@ plot_tt_lazy <- function(
         }
       }
     }
-    cell <- sprintf('<img src="%s" style="height: %sem;">', images, height)
+    cell <- base::sprintf('<img src="%s" style="height: %sem;">', images, height)
   } else if (isTRUE(x@output == "markdown")) {
     cell <- "![](%s){ height=%s }"
-    cell <- sprintf(cell, images, height * 16)
+    cell <- base::sprintf(cell, images, height * 16)
   } else if (isTRUE(x@output == "typst")) {
     cell <- '#image("%s", height: %sem)'
-    cell <- sprintf(cell, images, height)
+    cell <- base::sprintf(cell, images, height)
   } else if (isTRUE(x@output == "dataframe")) {
     cell <- "%s"
-    cell <- sprintf(cell, images)
+    cell <- base::sprintf(cell, images)
   } else {
     stop("here be dragons")
   }
+
+  cell <- base::sprintf(sprintf, cell)
 
   # Handle column header insertions (i=0)
   if (0 %in% i) {
@@ -338,7 +344,7 @@ plot_tt_lazy <- function(
     if (length(body_indices) > 0) {
       body_i <- i[body_indices]
       for (i_val in body_i) {
-        for (j_val in j) {
+        for (j_val in j) {plot_tt
           out[i_val, j_val] <- cell[cell_idx]
           cell_idx <- cell_idx + 1
         }
@@ -440,5 +446,5 @@ encode <- function(images) {
   }
 
   encoded <- sapply(images, base64enc::base64encode)
-  sprintf("data:image/%s;base64, %s", ext, encoded)
+  base::sprintf("data:image/%s;base64, %s", ext, encoded)
 }

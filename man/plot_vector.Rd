@@ -14,6 +14,7 @@ plot_vector(
   height_plot = 400,
   width_plot = 1200,
   images = NULL,
+  sprintf = "\%s",
   assets = "tinytable_assets",
   ...
 )
@@ -21,11 +22,28 @@ plot_vector(
 \arguments{
 \item{output}{Output format. One of "html", "latex", "typst", "markdown", etc.}
 
-\item{fun}{String or function to generate inline plots (same as in plot_tt).}
+\item{fun}{String or function to generate inline plots.
+\itemize{
+\item Built-in plot types (strings):
+\itemize{
+\item \code{"histogram"}: Creates histograms from numeric vectors. Accepts \code{color} argument.
+\item \code{"density"}: Creates density plots from numeric vectors. Accepts \code{color} argument.
+\item \code{"bar"}: Creates horizontal bar charts from single numeric values. Accepts \code{color} and \code{xlim} arguments.
+\item \code{"barpct"}: Creates horizontal percentage bar charts from single numeric values between 0 and 1. Accepts \code{color} and \code{background} arguments.
+\item \code{"line"}: Creates line plots from data frames with \code{x} and \code{y} columns. Accepts \code{color} and \code{xlim} arguments.
+}
+\item Custom functions:
+\itemize{
+\item Functions that return \code{ggplot2} objects.
+\item Functions that return another function which generates a base \code{R} plot, ex: \code{function(x) {function() hist(x)}}
+\item Note: When using custom ggplot2 functions that return plots with text elements, the text size will normally need to be adjusted because the plot is inserted as a very small image in the table. Text sizes of 1 or smaller often work well (e.g., \code{theme(text = element_text(size = 1))}).
+}
+\item See the tutorial on the \code{tinytable} website for more information.
+}}
 
-\item{data}{A list of data frames or vectors to be used by the plotting functions in \code{fun}.}
+\item{data}{a list of data frames or vectors to be used by the plotting functions in \code{fun}.}
 
-\item{color}{String name of color to use for inline plots.}
+\item{color}{string Name of color to use for inline plots (passed to the \code{col} argument base \code{graphics} plots in \code{R}).}
 
 \item{xlim}{Numeric vector of length 2.}
 
@@ -35,11 +53,13 @@ plot_vector(
 
 \item{width_plot}{Numeric, the width of generated plot images in pixels (default: 1200).}
 
-\item{images}{Character vector, the paths to the images to be inserted.}
+\item{images}{Character vector, the paths to the images to be inserted. Paths are relative to the main table file or Quarto (Rmarkdown) document.}
 
-\item{assets}{Path to the directory where generated assets are stored.}
+\item{sprintf}{Character string, a sprintf format string to format the generated cell content. Default is "\%s" which displays the content as-is. Use this to wrap images or plots in custom markup.}
 
-\item{...}{Extra arguments are passed to the function in \code{fun}.}
+\item{assets}{Path to the directory where generated assets are stored. This path is relative to the location where a table is saved.}
+
+\item{...}{Extra arguments are passed to the function in \code{fun}. Important: Custom plotting functions must always have \code{...} as an argument.}
 }
 \value{
 A character vector with plot file paths or HTML tags.

@@ -4,16 +4,7 @@
 #' This function creates plots by creating a temporary `tt()` object and applying `plot_tt()`. It returns a character vector containing the image paths or HTML tags for the plots.
 #'
 #' @param output Output format. One of "html", "latex", "typst", "markdown", etc.
-#' @param fun String or function to generate inline plots (same as in plot_tt).
-#' @param data A list of data frames or vectors to be used by the plotting functions in `fun`.
-#' @param color String name of color to use for inline plots.
-#' @param xlim Numeric vector of length 2.
-#' @param height Numeric, the height of the images in the table in em units.
-#' @param height_plot Numeric, the height of generated plot images in pixels (default: 400).
-#' @param width_plot Numeric, the width of generated plot images in pixels (default: 1200).
-#' @param images Character vector, the paths to the images to be inserted.
-#' @param assets Path to the directory where generated assets are stored.
-#' @param ... Extra arguments are passed to the function in `fun`.
+#' @inheritParams plot_tt
 #' @return A character vector with plot file paths or HTML tags.
 #' @export
 #' @examples
@@ -39,6 +30,7 @@ plot_vector <- function(
     height_plot = 400,
     width_plot = 1200,
     images = NULL,
+    sprintf = "%s",
     assets = "tinytable_assets",
     ...) {
   # Determine the length based on data or images
@@ -66,6 +58,7 @@ plot_vector <- function(
     height_plot = height_plot,
     width_plot = width_plot,
     images = images,
+    sprintf = sprintf,
     assets = assets,
     ...
   )
@@ -77,4 +70,3 @@ plot_vector <- function(
   plot_data <- built_result@data_body$x
   return(plot_data)
 }
-

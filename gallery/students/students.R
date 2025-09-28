@@ -71,29 +71,23 @@ colnames(tabla_final)[!idx] <- ""
 idx <- grepl("Total", colnames(tabla_final))
 colnames(tabla_final)[idx] <- "Total"
 
-privadas <- style_vector("Privadas", color = "#B0AEB0", smallcap = TRUE, output = "html")
-privadas <- paste0("<br>", privadas)
-colnames(tabla_final)[colnames(tabla_final) == "UE_Percent"] <- paste0(
-  style_vector("Estatales", color = "#5E2A72", smallcap = TRUE),
-  privadas)
-colnames(tabla_final)[colnames(tabla_final) == "ALUM_Percent"] <- paste0(
-  style_vector("Estatales", color = "#D5676D", smallcap = TRUE),
-  privadas)
-colnames(tabla_final)[colnames(tabla_final) == "PD_Percent"] <- paste0(
-  style_vector("Estatales", color = "#4F91B4", smallcap = TRUE),
-  privadas)
+colnames(tabla_final)[c(5, 9, 13)] <- paste(
+  style_vector(rep("Estatales", 3), color = c("#5E2A72", "#D5676D", "#4F91B4"), smallcap = TRUE),
+  style_vector("Privadas", color = "#B0AEB0", smallcap = TRUE, output = "html"),
+  sep = "<br>")
 
 
-# column spanners
-# plot_vector() returns a vector of <img> tags
+# column spanners with images and text
+# plot_vector() returns a vector of <img> tags with text labels
+# sprintf argument inserts images into the text at %s
 img <- plot_vector(
   images = c(
     "data/school-building-with-flag-svgrepo-com.svg",
     "data/student-svgrepo-com.svg",
     "data/teacher-svgrepo-com.svg"
   ),
-  height = 2)
-img <- paste0(img, "<br>", c("Unidades Educativas", "Alumnos", "Personal Docente"))
+  height = 2,
+  sprintf = c("%s<br>Unidades Educativas", "%s<br>Alumnos", "%s<br>Personal Docente"))
 span <- setNames(list(3:6, 7:10, 11:14), img)
 
 

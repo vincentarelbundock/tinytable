@@ -17,6 +17,7 @@ plot_tt(
   height_plot = 400,
   width_plot = 1200,
   images = NULL,
+  sprintf = "\%s",
   assets = "tinytable_assets",
   ...
 )
@@ -33,6 +34,7 @@ tt_plot(
   height_plot = 400,
   width_plot = 1200,
   images = NULL,
+  sprintf = "\%s",
   assets = "tinytable_assets",
   ...
 )
@@ -78,6 +80,8 @@ images will be inserted in all columns.}
 \item{width_plot}{Numeric, the width of generated plot images in pixels (default: 1200).}
 
 \item{images}{Character vector, the paths to the images to be inserted. Paths are relative to the main table file or Quarto (Rmarkdown) document.}
+
+\item{sprintf}{Character string, a sprintf format string to format the generated cell content. Default is "\%s" which displays the content as-is. Use this to wrap images or plots in custom markup.}
 
 \item{assets}{Path to the directory where generated assets are stored. This path is relative to the location where a table is saved.}
 

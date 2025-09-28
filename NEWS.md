@@ -40,6 +40,7 @@ New arguments:
 * `theme_markdown(vline=FALSE, hline=FALSE)` suppresses lines.
 * `plot_tt(height_plot, width_plot)` control the size (in pixels) of the plotting device canvas. This allows users to control the resolution of the original plot, as well as the relative size of elements.
 * `plot_tt(fun = "barpct", color = "red", background = "blue")` draws percentage bars with two colors for p and 1-p.
+* `plot_tt(sprintf = "...")` allows custom formatting of generated cell content with sprintf patterns.
 
 New miscellaneous features:
 
