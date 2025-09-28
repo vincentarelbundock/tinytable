@@ -88,23 +88,15 @@ tt_style(
 
 \item{strikeout}{Logical; if \code{TRUE}, text has a strike through line.}
 
-\item{color}{Text color. There are several ways to specify colors, depending on the output format.
+\item{color}{Text color. Colors are standardized across output formats and can be specified as:
 \itemize{
-\item HTML:
-\itemize{
-\item Hex code composed of # and 6 characters, ex: #CC79A7.
-\item Keywords: black, silver, gray, white, maroon, red, purple, fuchsia, green, lime, olive, yellow, navy, blue, teal, aqua
-}
-\item LaTeX:
-\itemize{
-\item Hex code composed of # and 6 characters, ex: "#CC79A7". See the section below for instructions to add in LaTeX preambles.
-\item Keywords: black, blue, brown, cyan, darkgray, gray, green, lightgray, lime, magenta, olive, orange, pink, purple, red, teal, violet, white, yellow.
-\item Color blending using xcolor\verb{, ex: }white!80!blue\verb{, }green!20!red`.
-\item Color names with luminance levels from \href{https://mirror.quantum5.ca/CTAN/macros/latex/contrib/ninecolors/ninecolors.pdf}{the \code{ninecolors} package} (ex: "azure4", "magenta8", "teal2", "gray1", "olive3").
-}
+\item Hex codes: "#CC79A7", "#FF0000", "#123ABC"
+\item R color names: Any color recognized by R, such as "red", "blue", "forestgreen", "lightblue"
+\item Extended color names: 749+ named colors from the LaTeX xcolor package (see \code{tinytable:::latex_colors} for the full list)
+\item LaTeX color blending (LaTeX output only): "white!80!blue", "red!50", "green!20!red"
 }}
 
-\item{background}{Background color. Specified as a color name or hexadecimal code. Can be \code{NULL} for default color.}
+\item{background}{Background color. Same color specification options as the \code{color} parameter. Can be \code{NULL} for default color.}
 
 \item{fontsize}{Font size in em units. Can be \code{NULL} for default size.}
 

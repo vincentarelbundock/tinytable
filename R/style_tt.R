@@ -489,16 +489,12 @@ assert_style_tt <- function(
 #' @param smallcap Logical; if `TRUE`, text is styled in small caps. In Markdown output format, text is converted to uppercase.
 #' @param underline Logical; if `TRUE`, text is underlined.
 #' @param strikeout Logical; if `TRUE`, text has a strike through line.
-#' @param color Text color. There are several ways to specify colors, depending on the output format.
-#' + HTML:
-#'   - Hex code composed of # and 6 characters, ex: #CC79A7.
-#'   - Keywords: black, silver, gray, white, maroon, red, purple, fuchsia, green, lime, olive, yellow, navy, blue, teal, aqua
-#' + LaTeX:
-#'   - Hex code composed of # and 6 characters, ex: "#CC79A7". See the section below for instructions to add in LaTeX preambles.
-#'   - Keywords: black, blue, brown, cyan, darkgray, gray, green, lightgray, lime, magenta, olive, orange, pink, purple, red, teal, violet, white, yellow.
-#'   - Color blending using xcolor`, ex: `white!80!blue`, `green!20!red`.
-#'   - Color names with luminance levels from [the `ninecolors` package](https://mirror.quantum5.ca/CTAN/macros/latex/contrib/ninecolors/ninecolors.pdf) (ex: "azure4", "magenta8", "teal2", "gray1", "olive3").
-#' @param background Background color. Specified as a color name or hexadecimal code. Can be `NULL` for default color.
+#' @param color Text color. Colors are standardized across output formats and can be specified as:
+#'   - Hex codes: "#CC79A7", "#FF0000", "#123ABC"
+#'   - R color names: Any color recognized by R, such as "red", "blue", "forestgreen", "lightblue"
+#'   - Extended color names: 749+ named colors from the LaTeX xcolor package (see `tinytable:::latex_colors` for the full list)
+#'   - LaTeX color blending (LaTeX output only): "white!80!blue", "red!50", "green!20!red"
+#' @param background Background color. Same color specification options as the `color` parameter. Can be `NULL` for default color.
 #' @param fontsize Font size in em units. Can be `NULL` for default size.
 #' @param align A single character or a string with a number of characters equal to the number of columns in `j`. Valid characters include 'c' (center), 'l' (left), 'r' (right), 'd' (decimal). Decimal alignment is only available in LaTeX via the `siunitx` package. The width of columns is determined by the maximum number of digits to the left and to the right in all cells specified by `i` and `j`.
 #' @param alignv A single character specifying vertical alignment. Valid characters include 't' (top), 'm' (middle), 'b' (bottom).
