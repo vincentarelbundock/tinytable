@@ -55,6 +55,17 @@ tt(dat) |>
 ```
 :::
 
+We can also combine text and images using the `sprintf` argument and `%s` placeholder:
+
+```{r}
+tt(head(iris)) |>
+    plot_tt(1, 1,
+        images = "figures/spider.png",
+        sprintf = "Boris: %s",
+        height = 5) |>
+    style_tt(i = 1, j = 1, alignv = "m")
+```
+
 ## Inline plots
 
 We can draw inline plots three ways, with

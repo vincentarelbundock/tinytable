@@ -552,6 +552,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   height_plot = 400,
   width_plot = 1200,
   images = NULL,
+  sprintf = "%s",
   assets = "tinytable_assets",
   ...
 )
@@ -573,7 +574,46 @@ Output format. One of "html", "latex", "typst", "markdown", etc.
 <code id="fun">fun</code>
 </td>
 <td>
-String or function to generate inline plots (same as in plot_tt).
+<p>String or function to generate inline plots.</p>
+<ul>
+<li>
+<p>Built-in plot types (strings):</p>
+<ul>
+<li>
+<p><code>“histogram”</code>: Creates histograms from numeric vectors. Accepts <code>color</code> argument.</p>
+</li>
+<li>
+<p><code>“density”</code>: Creates density plots from numeric vectors. Accepts <code>color</code> argument.</p>
+</li>
+<li>
+<p><code>“bar”</code>: Creates horizontal bar charts from single numeric values. Accepts <code>color</code> and <code>xlim</code> arguments.</p>
+</li>
+<li>
+<p><code>“barpct”</code>: Creates horizontal percentage bar charts from single numeric values between 0 and 1. Accepts <code>color</code> and <code>background</code> arguments.</p>
+</li>
+<li>
+<p><code>“line”</code>: Creates line plots from data frames with <code>x</code> and <code>y</code> columns. Accepts <code>color</code> and <code>xlim</code> arguments.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>Custom functions:</p>
+<ul>
+<li>
+<p>Functions that return <code>ggplot2</code> objects.</p>
+</li>
+<li>
+<p>Functions that return another function which generates a base <code>R</code> plot, ex: <code>function(x) {function() hist(x)}</code></p>
+</li>
+<li>
+<p>Note: When using custom ggplot2 functions that return plots with text elements, the text size will normally need to be adjusted because the plot is inserted as a very small image in the table. Text sizes of 1 or smaller often work well (e.g., <code>theme(text = element_text(size = 1))</code>).</p>
+</li>
+</ul>
+</li>
+<li>
+<p>See the tutorial on the <code>tinytable</code> website for more information.</p>
+</li>
+</ul>
 </td>
 </tr>
 <tr>
@@ -581,7 +621,7 @@ String or function to generate inline plots (same as in plot_tt).
 <code id="data">data</code>
 </td>
 <td>
-A list of data frames or vectors to be used by the plotting functions in <code>fun</code>.
+a list of data frames or vectors to be used by the plotting functions in <code>fun</code>.
 </td>
 </tr>
 <tr>
@@ -589,7 +629,7 @@ A list of data frames or vectors to be used by the plotting functions in <code>f
 <code id="color">color</code>
 </td>
 <td>
-String name of color to use for inline plots.
+string Name of color to use for inline plots (passed to the <code>col</code> argument base <code>graphics</code> plots in <code>R</code>).
 </td>
 </tr>
 <tr>
@@ -629,7 +669,15 @@ Numeric, the width of generated plot images in pixels (default: 1200).
 <code id="images">images</code>
 </td>
 <td>
-Character vector, the paths to the images to be inserted.
+Character vector, the paths to the images to be inserted. Paths are relative to the main table file or Quarto (Rmarkdown) document.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="sprintf">sprintf</code>
+</td>
+<td>
+Character string, a sprintf format string to format the generated cell content. Default is "%s" which displays the content as-is. Use this to wrap images or plots in custom markup.
 </td>
 </tr>
 <tr>
@@ -637,7 +685,7 @@ Character vector, the paths to the images to be inserted.
 <code id="assets">assets</code>
 </td>
 <td>
-Path to the directory where generated assets are stored.
+Path to the directory where generated assets are stored. This path is relative to the location where a table is saved.
 </td>
 </tr>
 <tr>
@@ -645,7 +693,7 @@ Path to the directory where generated assets are stored.
 <code id="...">…</code>
 </td>
 <td>
-Extra arguments are passed to the function in <code>fun</code>.
+Extra arguments are passed to the function in <code>fun</code>. Important: Custom plotting functions must always have <code>…</code> as an argument.
 </td>
 </tr>
 </tbody></table>
