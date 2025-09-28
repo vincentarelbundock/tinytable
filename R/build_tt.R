@@ -69,10 +69,9 @@ build_tt <- function(x, output = NULL) {
     },
     latex = swap_class(x, "tinytable_tabularray"),
     markdown = swap_class(x, "tinytable_grid"),
-    gfm = swap_class(x, "tinytable_grid"),
     typst = swap_class(x, "tinytable_typst"),
     dataframe = swap_class(x, "tinytable_dataframe"),
-    stop("Unsupported output format: '", output, "'. Supported formats are: html, latex, markdown, gfm, typst, dataframe", call. = FALSE)
+    stop("Unsupported output format: '", output, "'. Supported formats are: html, latex, markdown, typst, dataframe", call. = FALSE)
   )
 
   x@output <- output
@@ -168,7 +167,7 @@ build_tt <- function(x, output = NULL) {
   }
 
   x@table_string <- lines_drop_consecutive_empty(x@table_string)
-  if (output == "gfm") {
+  if (x@markdown_style == "gfm") {
     assert_dependency("pandoc")
     x@table_string <- paste(
       pandoc::pandoc_convert(text = x@table_string, to = "gfm"),

@@ -4,6 +4,7 @@
 
 Breaking changes:
 
+* `"gfm"` is no longer a valid `output` format. Use `output = "markdown"` with `theme_markdown(style = "gfm")` instead.
 * `theme_empty()` drops every change made to this point, so the order of operations matter.
 * `"html_portable"` is no longer a valid `output` format in `save_tt()` or `print()`. Use `theme_html(portable = TRUE)` instead.
 * `plot_tt()` deprecates the `asp` argument. Use `width_plot` and `height_plot` instead.

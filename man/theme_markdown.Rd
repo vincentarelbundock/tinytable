@@ -7,6 +7,7 @@
 theme_markdown(
   x,
   ansi = FALSE,
+  style = NULL,
   vline = NULL,
   hline = NULL,
   hline_header = NULL,
@@ -17,6 +18,8 @@ theme_markdown(
 \item{x}{A \code{tinytable} object.}
 
 \item{ansi}{Logical. If TRUE, enables ANSI color codes for grid styling. Default is FALSE.}
+
+\item{style}{Character. Markdown style format. Can be "grid" or "gfm". Default is NULL.}
 
 \item{vline}{Logical. Enable/disable vertical lines. Default is TRUE.}
 

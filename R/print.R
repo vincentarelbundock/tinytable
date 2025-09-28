@@ -112,7 +112,7 @@ print.tinytable <- function(
     } else {
       return(out)
     }
-  } else if (output %in% c("latex", "typst", "markdown", "gfm")) {
+  } else if (output %in% c("latex", "typst", "markdown")) {
     cat(tab, "\n")
   } else if (output == "html") {
     if (is_rstudio_notebook()) {

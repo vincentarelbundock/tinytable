@@ -207,11 +207,10 @@ style_notes <- function(x) {
     "latex" = style_string_latex,
     "tabularray" = style_string_latex,
     "markdown" = style_string_markdown,
-    "gfm" = style_string_markdown,
     function(k, ...) identity(k)
   )
   # Check if we should use ANSI styling for grid output
-  if (x@output %in% c("markdown", "gfm") && isTRUE(x@ansi)) {
+  if (x@output == "markdown" && isTRUE(x@ansi)) {
     fun <- style_string_ansi
   }
   for (i in seq_along(x@notes)) {
@@ -233,11 +232,10 @@ style_caption <- function(x) {
     "latex" = style_string_latex,
     "tabularray" = style_string_latex,
     "markdown" = style_string_markdown,
-    "gfm" = style_string_markdown,
     function(k, ...) identity(k)
   )
   # Check if we should use ANSI styling for grid output
-  if (x@output %in% c("markdown", "gfm") && isTRUE(x@ansi)) {
+  if (x@output == "markdown" && isTRUE(x@ansi)) {
     fun <- style_string_ansi
   }
   if (length(x@caption) > 0) {

@@ -142,8 +142,7 @@ sanitize_output <- function(x, output) {
       "html",
       "typst",
       "dataframe",
-      "markdown",
-      "gfm"
+      "markdown"
     )
   )
   

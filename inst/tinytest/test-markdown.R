@@ -76,8 +76,8 @@ expect_snapshot_print(tab, label = "markdown-footnote")
 if (!is_local) {
   exit_file("Run on Vincent's machine")
 }
-options(tinytable_print_output = "gfm")
-expect_snapshot_print(tt(head(iris)), label = "markdown-gfm")
+options(tinytable_print_output = "markdown")
+expect_snapshot_print(tt(head(iris)) |> theme_markdown(style = "gfm"), label = "markdown-gfm")
 
 # Long group labels - row groups
 options(tinytable_print_output = "markdown")

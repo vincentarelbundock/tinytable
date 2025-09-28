@@ -37,6 +37,7 @@ setClass(
     lazy_prepare = "list",
     lazy_style = "list",
     lazy_subset = "ANY",
+    markdown_style = "character",
     names = "NULLorCharacter",
     ncol = "numeric",
     nhead = "numeric",
@@ -144,6 +145,7 @@ setMethod(
     .Object@lazy_plot <- list()
     .Object@lazy_prepare <- list()
     .Object@lazy_subset <- NULL
+    .Object@markdown_style <- "grid"
     .Object@output <- "tinytable"
     .Object@output_dir <- getwd()
     .Object@style <- data.frame()

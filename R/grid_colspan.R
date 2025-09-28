@@ -1,5 +1,5 @@
 grid_colspan <- function(x) {
-    if (!x@output %in% c("markdown", "gfm", "dataframe")) {
+    if (!x@output %in% c("markdown", "dataframe")) {
         return(x)
     }
 
