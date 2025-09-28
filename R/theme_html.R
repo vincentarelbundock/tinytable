@@ -6,7 +6,7 @@
 #' @param class String. HTML table class.
 #' @param css Character vector. CSS style declarations.
 #' @param css_rule String. Complete CSS rules.
-#' @param portable Logical. If not NULL, sets whether to create portable HTML output with base64-encoded images (bootstrap engine only).
+#' @param portable Logical. Sets whether to create portable HTML output with embedded Javascript, CSS, and base64-encoded images.
 #' @param tabulator_stylesheet Character string. CSS stylesheet theme for Tabulator.js tables.
 #'   Default is "bootstrap5". Available options: "default", "simple", "midnight", "modern",
 #'   "site", "site_dark", "bootstrap3", "bootstrap4", "bootstrap5", "semanticui", "bulma",

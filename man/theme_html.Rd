@@ -39,7 +39,7 @@ theme_html(
 
 \item{css_rule}{String. Complete CSS rules.}
 
-\item{portable}{Logical. If not NULL, sets whether to create portable HTML output with base64-encoded images (bootstrap engine only).}
+\item{portable}{Logical. Sets whether to create portable HTML output with embedded Javascript, CSS, and base64-encoded images.}
 
 \item{tabulator_columns}{Custom column definitions.}
 

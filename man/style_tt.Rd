@@ -265,4 +265,18 @@ dat <- dat[order(dat$am),]
 tt(dat) |>
    subset(mpg > 20) |>
    group_tt(am)
+
+# style elements: captions and colnames
+notes <- list(
+  "*" = "Hello world", 
+  "a" = "Bacon ipsum dolor amet kevin t-bone porchetta.")
+tt(head(iris), 
+   width = .5,
+   caption = "This is a Caption Example.", 
+   notes = notes) |>
+  style_tt(2, 2, background = "pink", rowspan = 2, colspan = 2, 
+    alignv = "m", align = "c", line = "tblr") |>
+  style_tt("colnames", italic = TRUE) |>
+  style_tt("caption", smallcap = TRUE)
+
 }

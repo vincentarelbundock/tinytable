@@ -1,124 +1,237 @@
 
-    /* Core defaults */
-    .tinytable {
-        /* tweak these if you want a “theme” */
-        --tt-border-color: black;
-        --tt-header-border-color: black;
-        --tt-striped-bg: rgba(0, 0, 0, .05);
-        --tt-hover-bg: rgba(0, 0, 0, .075);
-        --tt-caption-color: #6c757d;
+/* ========================================================================
+ * tinytable CSS - Core styling for HTML table output
+ * ======================================================================== */
 
-        width: 100%;
-        margin: .5rem 0;
-        border-collapse: collapse;
-        background-color: transparent;
-    }
+/* ========================================================================
+ * CSS Custom Properties (Theme Variables)
+ * ======================================================================== */
+.tinytable {
+    /* Colors */
+    --tt-border-color: black;
+    --tt-header-border-color: black;
+    --tt-striped-bg: rgba(0, 0, 0, .05);
+    --tt-hover-bg: rgba(0, 0, 0, .075);
+    --tt-caption-color: #6c757d;
+    --tt-footnote-color: #6c757d;
 
-    .tinytable th,
-    .tinytable td {
-        position: relative;
-        padding: .5rem;               /* Bootstrap table cell padding */
-        vertical-align: top;          /* like .table */
-    }
+    /* Spacing */
+    --tt-cell-padding: .5rem;
+    --tt-cell-padding-sm: .25rem;
+    --tt-table-margin: .5rem 0;
+    --tt-caption-padding: .5rem 0;
+    --tt-footnote-padding: .2rem .5rem;
+    --tt-footnote-first-padding-top: .35rem;
+    --tt-footnote-gap: .1rem;
 
-    .tinytable thead th {
-        text-align: left;
-        vertical-align: bottom;       /* Bootstrap header alignment */
-        font-weight: 400;             /* slightly bolder header */
-        border-bottom: none;
-    }
+    /* Typography */
+    --tt-font-size-footnote: 0.875rem;
+    --tt-font-size-sup: 0.75em;
+    --tt-line-height-footnote: 1.25;
+    --tt-line-height-footnote-tight: 1.2;
+    --tt-font-weight-header: normal;
 
-    /* Allow group headers to be centered */
-    .tinytable thead th[align="center"] {
-        text-align: center;
-    }
+    /* Border widths */
+    --tt-border-width: 1px;
+    --tt-border-width-tbody: 2px;
+}
 
-    .tinytable tbody + tbody {
-        border-top: 2px solid var(--tt-border-color);
-    }
+/* ========================================================================
+ * Base Table Styles
+ * ======================================================================== */
+.tinytable {
+    width: 100%;
+    margin: var(--tt-table-margin);
+    border-collapse: collapse;
+    background-color: transparent;
+    font-family: inherit;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
 
-    .tinytable caption {
-        padding: .5rem 0;
-        color: var(--tt-caption-color);
-    }
+.tinytable * {
+    font-family: inherit;
+}
 
-    /* Optional variants (add these classes alongside .tinytable) */
+/* ========================================================================
+ * Cell Styles
+ * ======================================================================== */
+.tinytable th,
+.tinytable td {
+    position: relative;
+    padding: var(--tt-cell-padding);
+    vertical-align: top;
+}
 
-    /* Smaller padding: <table class="tinytable tinytable-sm"> */
-    .tinytable-sm th,
-    .tinytable-sm td {
-        padding: .25rem;
-    }
+.tinytable thead th {
+    text-align: left;
+    vertical-align: bottom;
+    font-weight: var(--tt-font-weight-header);
+    border-bottom: none;
+}
 
-    /* Bordered table: <table class="tinytable tinytable-bordered"> */
-    .tinytable-bordered {
-        border: 1px solid var(--tt-border-color);
-    }
-    .tinytable-bordered th,
-    .tinytable-bordered td {
-        border: 1px solid var(--tt-border-color);
-    }
+.tinytable thead th[align="center"] {
+    text-align: center;
+}
 
-    /* Striped rows: <table class="tinytable tinytable-striped"> */
-    .tinytable-striped tbody tr:nth-of-type(odd) {
-        background-color: var(--tt-striped-bg);
-    }
+.tinytable tbody + tbody {
+    border-top: var(--tt-border-width-tbody) solid var(--tt-border-color);
+}
 
-    /* Hover state: <table class="tinytable tinytable-hover"> */
-    .tinytable-hover tbody tr:hover {
-        background-color: var(--tt-hover-bg);
-    }
+/* ========================================================================
+ * Table Variants
+ * ======================================================================== */
 
-    /* Responsive wrapper: wrap table in <div class="tinytable-responsive"> */
-    .tinytable-responsive {
-        width: 100%;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
+/* Small padding variant */
+.tinytable-sm th,
+.tinytable-sm td {
+    padding: var(--tt-cell-padding-sm);
+}
 
-    /* Global border pseudo-element system */
-    .tinytable :is(td, th)[class*="tinytable_css_"] {
-        position: relative;
+/* Bordered variant */
+.tinytable-bordered {
+    border: var(--tt-border-width) solid var(--tt-border-color);
+}
 
-        /* Default CSS variables (overridable by specific classes) */
-        --border-top: 0;    --border-right: 0;    --border-bottom: 0;    --border-left: 0;
-        --line-color-top: currentColor;    --line-color-right: currentColor;
-        --line-color-bottom: currentColor; --line-color-left: currentColor;
-        --line-width-top: 0.1em;    --line-width-right: 0.1em;
-        --line-width-bottom: 0.1em; --line-width-left: 0.1em;
+.tinytable-bordered th,
+.tinytable-bordered td {
+    border: var(--tt-border-width) solid var(--tt-border-color);
+}
 
-        --trim-top-left: 0%;    --trim-top-right: 0%;
-        --trim-right-top: 0%;   --trim-right-bottom: 0%;
-        --trim-bottom-left: 0%; --trim-bottom-right: 0%;
-        --trim-left-top: 0%;    --trim-left-bottom: 0%;
-    }
+/* Striped rows variant */
+.tinytable-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--tt-striped-bg);
+}
 
-    /* Draw top, left, and right borders with ::before */
-    .tinytable :is(td, th)[class*="tinytable_css_"]::before {
-        content: "";
-        position: absolute;
-        top: var(--trim-top-left, var(--trim-top-right, 0));
-        left: var(--trim-left-top, 0);
-        right: var(--trim-right-top, 0);
-        bottom: 0;
-        pointer-events: none;
-        z-index: 1;
+/* Hover effect variant */
+.tinytable-hover tbody tr:hover {
+    background-color: var(--tt-hover-bg);
+}
 
-        border-top:  calc(var(--border-top)    * var(--line-width-top))    solid var(--line-color-top);
-        border-right:calc(var(--border-right)  * var(--line-width-right))  solid var(--line-color-right);
-        border-left: calc(var(--border-left)   * var(--line-width-left))   solid var(--line-color-left);
-    }
+/* Responsive wrapper */
+.tinytable-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
 
-    /* Draw bottom border as a block with ::after */
-    .tinytable :is(td, th)[class*="tinytable_css_"]::after {
-        content: "";
-        position: absolute;
-        left: var(--trim-bottom-left, 0);
-        right: var(--trim-bottom-right, 0);
-        bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0));
-        height: calc(var(--border-bottom) * var(--line-width-bottom));
-        background: var(--line-color-bottom);
-        pointer-events: none;
-        z-index: 2;
-    }
+/* ========================================================================
+ * Custom Border System (Pseudo-elements)
+ * ======================================================================== */
+.tinytable :is(td, th)[class*="tinytable_css_"] {
+    position: relative;
+
+    /* Border control variables */
+    --border-top: 0;
+    --border-right: 0;
+    --border-bottom: 0;
+    --border-left: 0;
+
+    /* Border color variables */
+    --line-color-top: currentColor;
+    --line-color-right: currentColor;
+    --line-color-bottom: currentColor;
+    --line-color-left: currentColor;
+
+    /* Border width variables */
+    --line-width-top: 0.1em;
+    --line-width-right: 0.1em;
+    --line-width-bottom: 0.1em;
+    --line-width-left: 0.1em;
+
+    /* Border trim variables */
+    --trim-top-left: 0%;
+    --trim-top-right: 0%;
+    --trim-right-top: 0%;
+    --trim-right-bottom: 0%;
+    --trim-bottom-left: 0%;
+    --trim-bottom-right: 0%;
+    --trim-left-top: 0%;
+    --trim-left-bottom: 0%;
+}
+
+/* Top, left, and right borders using ::before */
+.tinytable :is(td, th)[class*="tinytable_css_"]::before {
+    content: "";
+    position: absolute;
+    top: var(--trim-top-left, var(--trim-top-right, 0));
+    left: var(--trim-left-top, 0);
+    right: var(--trim-right-top, 0);
+    bottom: 0;
+    pointer-events: none;
+    z-index: 1;
+    border-top: calc(var(--border-top) * var(--line-width-top)) solid var(--line-color-top);
+    border-right: calc(var(--border-right) * var(--line-width-right)) solid var(--line-color-right);
+    border-left: calc(var(--border-left) * var(--line-width-left)) solid var(--line-color-left);
+}
+
+/* Bottom border using ::after */
+.tinytable :is(td, th)[class*="tinytable_css_"]::after {
+    content: "";
+    position: absolute;
+    left: var(--trim-bottom-left, 0);
+    right: var(--trim-bottom-right, 0);
+    bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0));
+    height: calc(var(--border-bottom) * var(--line-width-bottom));
+    background: var(--line-color-bottom);
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* ========================================================================
+ * Container and Layout Components
+ * ======================================================================== */
+.tinytable-container {
+    padding: 10px;
+    overflow-x: auto;
+    overflow-y: auto;
+    width: auto;
+    height: auto;
+}
+
+/* ========================================================================
+ * Caption Styling
+ * ======================================================================== */
+.tinytable caption {
+    padding: var(--tt-caption-padding);
+    /* color: var(--tt-caption-color); */
+    caption-side: top;
+    font-size: 1rem;
+    text-align: left;
+}
+
+/* ========================================================================
+ * Footnotes and Table Footer
+ * ======================================================================== */
+.tinytable tfoot {
+    border-top: var(--tt-border-width) solid var(--tt-border-color);
+}
+
+.tinytable tfoot tr:first-child td {
+    padding-top: var(--tt-footnote-first-padding-top);
+}
+
+.tinytable tfoot td {
+    padding: var(--tt-footnote-padding);
+    font-size: var(--tt-font-size-footnote);
+    line-height: 1.25;
+    background-color: transparent;
+}
+
+/* Remove extra gap between footnote rows */
+.tinytable tfoot tr + tr td {
+    padding-top: var(--tt-footnote-gap);
+}
+
+/* Make superscripts not inflate line boxes */
+.tinytable tfoot sup {
+    font-size: var(--tt-font-size-sup);
+    line-height: 0;
+    vertical-align: text-top;
+}
+
+/* Slightly tighter for wrapped footnote text */
+.tinytable tfoot tr:nth-child(n+2) td {
+    line-height: 1.2;
+}
 
