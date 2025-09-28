@@ -67,12 +67,16 @@ tt(x) |>
 
 ## CSS: table
 
-For more extensive customization, we can supply a complete CSS rule for the `.tinytable` class. To do so, we use the `theme_html()` function and its `css_rule` argument. 
+The default HTML class for `tinytable` is `.tinytable`. We can use this class to customize the overall appearance of the table using CSS. The default CSS style sheet can be viewed here:
+
+[https://github.com/vincentarelbundock/tinytable/blob/main/inst/tinytable.css](https://github.com/vincentarelbundock/tinytable/blob/main/inst/tinytable.css)
+
+For extensive customization, users can modify this file, read it as a string in `R`, and supply it to the `css_rule` argument of the `theme_html()` function. Alternatively, they can write their own completely customized CSS rules, as illustrated below.
 
 Notes:
 
 1. Using `css_rule` will completely overwrite the default `tinytable` CSS styling. You can retrieve the original with `tinytable:::get_css()` as a string, which you can manipulate and combine as required.
-2. We assign a custom class name to the table using the `class` argument in `theme_html()`, otherwise styles will spill over to other tables in the same document.
+2. When creating a completely new stylesheet, it is useful to assign a custom class name to the table with the `class` argument in `theme_html()`. Otherwise styles may spill over to other tables in the same document.
 
 ```{r, eval = knitr::is_html_output()}
 css_rule <- "
@@ -190,3 +194,18 @@ options(tinytable_tt_theme = NULL)
 options(tinytable_html_css_rule = NULL)
 ```
 
+## Fontawesome
+
+We can use [the `fontawesome` package](https://rstudio.github.io/fontawesome/index.html) to include fancy icons in HTML tables:
+
+```{r, eval = knitr::is_html_output()}
+library(fontawesome)
+library(tinytable)
+tmp <- mtcars[1:4, 1:4]
+tmp[1, 1] <- paste(fa("r-project"), "for statistics")
+tt(tmp)
+```
+
+## Miscellaneous
+
+* [Relative widths tables: `table-layout: fixed` vs `auto`.](https://github.com/vincentarelbundock/tinytable/issues/305)
