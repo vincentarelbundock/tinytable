@@ -135,27 +135,9 @@ tt(x,
 
 ## Tutorial
 
-The `tinytable` 0.13.0.27 tutorial will take you much further. It is
-available in two formats:
-
-- [Tutorial
-  (PDF)](https://vincentarelbundock.github.io/tinytable/vignettes/tinytable_tutorial.pdf)
-- Tutorial (HTML):
-  - [Tiny
-    tables](https://vincentarelbundock.github.io/tinytable/vignettes/tinytable.html)
-  - [Format](https://vincentarelbundock.github.io/tinytable/vignettes/format.html)
-  - [Style](https://vincentarelbundock.github.io/tinytable/vignettes/style.html)
-  - [Group
-    labels](https://vincentarelbundock.github.io/tinytable/vignettes/group.html)
-  - [Plots and
-    images](https://vincentarelbundock.github.io/tinytable/vignettes/plot.html)
-  - [Themes](https://vincentarelbundock.github.io/tinytable/vignettes/theme.html)
-  - [Notebooks (Quarto, Rmarkdown, Bookdown,
-    etc.)](https://vincentarelbundock.github.io/tinytable/vignettes/notebooks.html)
-  - [Customization](https://vincentarelbundock.github.io/tinytable/vignettes/custom.html)
-  - [Tips and
-    trips](https://vincentarelbundock.github.io/tinytable/vignettes/tips.html)
-  - [Alternatives](https://vincentarelbundock.github.io/tinytable/vignettes/alternatives.html)
+The `tinytable` 0.14.0 tutorial will take you much further. It is
+available in HTML and PDF formats at:
+<https://vincentarelbundock.github.io/tinytable/>
 
 [^1]: Styling options in Word are somewhat limited. See the FAQ page and
     the `style_tt()` documentation for details.
