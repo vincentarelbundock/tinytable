@@ -11,6 +11,9 @@ apply_typst_spans <- function(body, sty) {
     drop = FALSE
   ]
   if (nrow(spans) > 0) {
+    # Deduplicate spans by i, j, colspan, and rowspan to avoid applying the same span multiple times
+    # This can happen when line styles are expanded (e.g., "lt" becomes "l" and "t" entries)
+    spans <- spans[!duplicated(spans[, c("i", "j", "colspan", "rowspan")]), , drop = FALSE]
     table_nrows <- nrow(body)
     table_ncols <- ncol(body)
 

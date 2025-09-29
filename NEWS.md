@@ -1,5 +1,11 @@
 # News
 
+## Development
+
+Bugs:
+
+* Issue in Typst when calling `style_tt()` with both a `rowspan` and a `line`. Thanks to @eringrand for reporting Issue #592.
+
 ## 0.14.0
 
 Breaking changes:

@@ -162,4 +162,75 @@ tab <- df |>
   save_tt("typst")
 expect_true(is.character(tab) && nchar(tab) > 0)
 
+
+
+# Issue #592
+table <- data.frame(
+  stringsAsFactors = FALSE,
+  check.names = FALSE,
+  metric = c(
+    "Adoption",
+    "Adoption",
+    "Adoption",
+    "Adoption",
+    "Adoption",
+    "NPS",
+    "NPS",
+    "NPS",
+    "NPS",
+    "NPS",
+    "Overall Satisfaction",
+    "Overall Satisfaction",
+    "Overall Satisfaction",
+    "Overall Satisfaction",
+    "Overall Satisfaction"),
+  tier = c(
+    "1",
+    "2 ", "3 ", "3 ", "3 ", "1",
+    "2 ", "3 ", "3 ", "3 ", "1",
+    "2 ", "3 ", "3 ", "3"),
+  role = c(
+    "",
+    "x", "x", "y", "z", "",
+    "x", "x", "y", "z", "",
+    "x", "x", "y", "z"),
+  Overall = c(
+    "90.9%", "87.9%", "90.6%", "90.6%", "100%", "19",
+    "39.9", "47.2", "14.6", "100", "80.7%",
+    "90.4%", "80.9%", "91.8%", "100%"),
+  state1 = c(
+    "90.5%", "91%", "91%", "92.3%", "100%", "24.2",
+    "40.3", "51.4", "11.5", "100", "82.4%",
+    "89.4%", "78.4%", "91.6%", "100%"),
+  state2 = c(
+    "95.7%", "75%", NA, NA, NA, "11.5", "45.7", NA,
+    NA, NA, "79.7%", "94.4%", NA, NA, NA),
+  state3 = c(
+    "91.5%", "85.9%", "95.4%", "100%", NA, "23.8",
+    "44.7", "70.8", "22.2", NA, "82.4%", "88.1%",
+    "55.6%", "98.4%", NA)
+)
+tab <- tt(table) |>
+  theme_empty() |>
+  style_tt(i = c(3, 8, 13), j = 2, rowspan = 3, alignv = "m") |>
+  style_tt(i = 0, line = "tblr") |>
+  style_tt(j = 1, line = "l") |>
+  style_tt(j = 2, i = 1:nrow(table), alignv = "m", line = "lt") |>
+  style_tt(j = 3:length(table), i = 1:nrow(table), line = "r") |>
+  style_tt(j = 4:length(table), i = 1:nrow(table), line = "t") |>
+  style_tt(j = 3, i = c(1, 2, 3, 6, 7, 8, 11, 12, 13, 16), line = "t") |>
+  style_tt(
+    i = seq(1, nrow(table), by = 5),
+    j = 1,
+    rowspan = 5,
+    align = "c",
+    alignv = "m",
+    line = "lt"
+  ) |>
+  style_tt(i = nrow(table), j = 1:length(table), line = "b") |>
+  format_tt(linebreak = "\n", replace = "", output = "typst")
+expect_snapshot_print(tab, label = "typst-issue592.typ")
+
+
+
 options(tinytable_print_output = NULL)
