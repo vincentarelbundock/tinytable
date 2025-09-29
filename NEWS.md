@@ -2,6 +2,10 @@
 
 ## Development
 
+New features:
+
+* `theme_html(tabulator_search = "column")` adds header filters to each column in Tabulator tables, allowing per-column searching.
+
 Bugs:
 
 * Issue in Typst when calling `style_tt()` with both a `rowspan` and a `line`. Thanks to @eringrand for reporting Issue #592.

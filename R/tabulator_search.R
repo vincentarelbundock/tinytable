@@ -45,6 +45,45 @@ tabulator_search_listener <- function(search_id, columns_json) {
   return(js)
 }
 
+#' Apply column header filters
+#' @param x tinytable object
+#' @return Modified tinytable object
+#' @keywords internal
+#' @noRd
+tabulator_apply_column_search <- function(x) {
+  # Clean up search placeholders (not needed for column search)
+  x@table_string <- sub(
+    "$tinytable_TABULATOR_SEARCH_TOP",
+    "",
+    x@table_string,
+    fixed = TRUE
+  )
+
+  x@table_string <- sub(
+    "$tinytable_TABULATOR_SEARCH_BOTTOM",
+    "",
+    x@table_string,
+    fixed = TRUE
+  )
+
+  x@table_string <- sub(
+    "$tinytable_TABULATOR_SEARCH_LISTENER",
+    "",
+    x@table_string,
+    fixed = TRUE
+  )
+
+  # Add headerFilter to each column definition
+  if (length(x@tabulator_columns) > 0) {
+    for (i in seq_along(x@tabulator_columns)) {
+      # Add input header filter to each column
+      x@tabulator_columns[[i]][["headerFilter"]] <- "input"
+    }
+  }
+
+  return(x)
+}
+
 #' Apply search functionality to table
 #' @param x tinytable object
 #' @return Modified tinytable object
@@ -73,6 +112,12 @@ tabulator_apply_search <- function(x) {
       x@table_string,
       fixed = TRUE
     )
+    return(x)
+  }
+
+  # Handle column header filters
+  if (x@tabulator_search == "column") {
+    x <- tabulator_apply_column_search(x)
     return(x)
   }
 

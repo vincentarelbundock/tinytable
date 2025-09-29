@@ -23,6 +23,7 @@
 #'   - NULL (default): Preserves existing search settings, does not change previous configuration
 #'   - "top": Adds search box above the table
 #'   - "bottom": Adds search box below the table
+#'   - "column": Adds header filters to each column for per-column searching
 #' @param tabulator_options Custom Tabulator.js configuration options.
 #' @param tabulator_css_rule Complete CSS rules.
 #' @param tabulator_columns Custom column definitions.
@@ -48,7 +49,7 @@ theme_html <- function(
     ...) {
   assert_string(class, null.ok = TRUE)
   assert_choice(engine, c("tinytable", "bootstrap", "tabulator"), null.ok = TRUE)
-  assert_choice(tabulator_search, c("top", "bottom"), null.ok = TRUE)
+  assert_choice(tabulator_search, c("top", "bottom", "column"), null.ok = TRUE)
   sanity_tabulator_css_rule(tabulator_css_rule)
   sanity_tabulator_columns(tabulator_columns)
 
