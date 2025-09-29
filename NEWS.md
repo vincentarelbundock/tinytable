@@ -5,6 +5,7 @@
 New features:
 
 * `theme_html(tabulator_search = "column")` adds header filters to each column in Tabulator tables, allowing per-column searching.
+* `theme_striped()` now supports Tabulator tables with alternating row background colors.
 
 Bugs:
 

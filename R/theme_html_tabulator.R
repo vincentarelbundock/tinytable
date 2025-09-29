@@ -196,7 +196,16 @@ theme_html_tabulator <- function(
     }
     table@tabulator_options <- opts
     if (!is.null(tabulator_css_rule)) {
-      table@tabulator_css_rule <- tabulator_css_rule
+      # Append CSS rules instead of overwriting
+      if (nchar(table@tabulator_css_rule) > 0) {
+        table@tabulator_css_rule <- paste(
+          table@tabulator_css_rule,
+          tabulator_css_rule,
+          sep = "\n"
+        )
+      } else {
+        table@tabulator_css_rule <- tabulator_css_rule
+      }
     }
     if (!is.null(tabulator_columns)) {
       # Handle both character strings (backward compatibility) and lists
