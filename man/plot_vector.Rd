@@ -28,8 +28,7 @@ plot_vector(
 \itemize{
 \item \code{"histogram"}: Creates histograms from numeric vectors. Accepts \code{color} argument.
 \item \code{"density"}: Creates density plots from numeric vectors. Accepts \code{color} argument.
-\item \code{"bar"}: Creates horizontal bar charts from single numeric values. Accepts \code{color} and \code{xlim} arguments.
-\item \code{"barpct"}: Creates horizontal percentage bar charts from single numeric values between 0 and 1. Accepts \code{color} and \code{background} arguments.
+\item \code{"bar"}: Creates horizontal bar charts from single numeric values. Accepts \code{color} (single value, or length-2 vector for bar and background colors in static formats) and \code{xlim} arguments.
 \item \code{"line"}: Creates line plots from data frames with \code{x} and \code{y} columns. Accepts \code{color} and \code{xlim} arguments.
 }
 \item Custom functions:
@@ -43,9 +42,9 @@ plot_vector(
 
 \item{data}{a list of data frames or vectors to be used by the plotting functions in \code{fun}.}
 
-\item{color}{string Name of color to use for inline plots (passed to the \code{col} argument base \code{graphics} plots in \code{R}).}
+\item{color}{string Name of color to use for inline plots (passed to the \code{col} argument base \code{graphics} plots in \code{R}). For bar plots in static output formats (PNG, PDF, etc.), can be a vector of length 2: c(bar_color, background_color) to show progress against a maximum. Note: Tabulator format only uses the first color.}
 
-\item{xlim}{Numeric vector of length 2.}
+\item{xlim}{Numeric vector of length 2. Controls the range of bar plots.}
 
 \item{height}{Numeric, the height of the images in the table in em units.}
 

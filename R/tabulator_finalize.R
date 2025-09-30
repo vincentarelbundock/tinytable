@@ -24,6 +24,9 @@ setMethod(
     # Apply custom CSS
     x <- tabulator_apply_css(x)
 
+    # Apply post-initialization JavaScript
+    x <- tabulator_apply_post_init(x)
+
     # Clean up JS markers (formatters are now in inst/tinytable.js)
     x@tabulator_options <- gsub("\n// NEEDS_HISTOGRAM_JS", "", x@tabulator_options, fixed = TRUE)
     x@tabulator_options <- gsub("\n// NEEDS_SPARKLINE_JS", "", x@tabulator_options, fixed = TRUE)

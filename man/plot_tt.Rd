@@ -54,8 +54,7 @@ images will be inserted in all columns.}
 \itemize{
 \item \code{"histogram"}: Creates histograms from numeric vectors. Accepts \code{color} argument.
 \item \code{"density"}: Creates density plots from numeric vectors. Accepts \code{color} argument.
-\item \code{"bar"}: Creates horizontal bar charts from single numeric values. Accepts \code{color} and \code{xlim} arguments.
-\item \code{"barpct"}: Creates horizontal percentage bar charts from single numeric values between 0 and 1. Accepts \code{color} and \code{background} arguments.
+\item \code{"bar"}: Creates horizontal bar charts from single numeric values. Accepts \code{color} (single value, or length-2 vector for bar and background colors in static formats) and \code{xlim} arguments.
 \item \code{"line"}: Creates line plots from data frames with \code{x} and \code{y} columns. Accepts \code{color} and \code{xlim} arguments.
 }
 \item Custom functions:
@@ -69,9 +68,9 @@ images will be inserted in all columns.}
 
 \item{data}{a list of data frames or vectors to be used by the plotting functions in \code{fun}.}
 
-\item{color}{string Name of color to use for inline plots (passed to the \code{col} argument base \code{graphics} plots in \code{R}).}
+\item{color}{string Name of color to use for inline plots (passed to the \code{col} argument base \code{graphics} plots in \code{R}). For bar plots in static output formats (PNG, PDF, etc.), can be a vector of length 2: c(bar_color, background_color) to show progress against a maximum. Note: Tabulator format only uses the first color.}
 
-\item{xlim}{Numeric vector of length 2.}
+\item{xlim}{Numeric vector of length 2. Controls the range of bar plots.}
 
 \item{height}{Numeric, the height of the images in the table in em units.}
 
@@ -99,6 +98,18 @@ The \code{plot_tt()} can insert images and inline plots into tables.
 }
 \examples{
 \dontrun{
+# Bar plots with single and dual colors
+dat <- data.frame(
+  Metric = c("Sales", "Conversion", "Growth", "Efficiency"),
+  Value = c(75, 45, 92, 38),
+  Percentage = c(0.75, 0.45, 0.92, 0.38)
+)
+
+tt(dat) |>
+  plot_tt(j = 2, fun = "bar", data = as.list(dat$Value), color = "darkorange") |>
+  plot_tt(j = 3, fun = "bar", data = as.list(dat$Percentage),
+          color = c("steelblue", "lightgrey"), xlim = c(0, 1))
+
 # Built-in plot types
 plot_data <- list(mtcars$mpg, mtcars$hp, mtcars$qsec)
 
@@ -106,24 +117,17 @@ dat <- data.frame(
   Variables = c("mpg", "hp", "qsec"),
   Histogram = "",
   Density = "",
-  Bar = "",
-  BarPct = "",
   Line = ""
 )
 
 # Random data for sparklines
 lines <- lapply(1:3, \(x) data.frame(x = 1:10, y = rnorm(10)))
 
-# Percentage data (values between 0 and 1)
-pct_data <- list(0.65, 0.82, 0.41)
-
 tt(dat) |>
   plot_tt(j = 2, fun = "histogram", data = plot_data) |>
   plot_tt(j = 3, fun = "density", data = plot_data, color = "darkgreen") |>
-  plot_tt(j = 4, fun = "bar", data = list(2, 3, 6), color = "orange") |>
-  plot_tt(j = 5, fun = "barpct", data = pct_data, color = "steelblue") |>
-  plot_tt(j = 6, fun = "line", data = lines, color = "blue") |>
-  style_tt(j = 2:6, align = "c")
+  plot_tt(j = 4, fun = "line", data = lines, color = "blue") |>
+  style_tt(j = 2:4, align = "c")
 
 # Custom function example (must have ... argument)
 custom_hist <- function(d, ...) {

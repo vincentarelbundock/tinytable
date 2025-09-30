@@ -129,7 +129,15 @@ tt(luxon_formats)
 
 ## Style
 
-Support for `style_tt()` is very limited in interactive tables. For now, only the `align` and `alignv` arguments of that function are supported.
+The `style_tt()` function supports comprehensive styling for Tabulator tables, including bold, italic, color, background, fontsize, and more. Styles are applied with cell-level precision and persist across sorting and pagination.
+
+```{r}
+tt(iris) |>
+  theme_html(engine = "tabulator", tabulator_pagination = c(10, 50)) |>
+  style_tt(i = seq(1, 150, by = 5), j = 2, background = "black", color = "white")
+```
+
+Note: Column-wide alignment (`align` and `alignv`) is supported, but row-specific alignment (using `i` with alignment arguments) is not currently available.
 
 ```{r}
 tt(dat) |> style_tt(align = "r")

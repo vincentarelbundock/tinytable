@@ -1,45 +1,59 @@
 last_df <- function(x, bycols = c("i", "j")) {
-  bycols <- as.list(x[, bycols, drop = FALSE])
-  out <- split(x, bycols)
-  out <- Filter(function(k) nrow(k) > 0, out)
+  # Fast path: if all rows are unique by (i,j), no aggregation needed
+  key <- paste(x[[bycols[1]]], x[[bycols[2]]], sep = "_")
+  if (!anyDuplicated(key)) {
+    return(x)
+  }
 
-  out <- lapply(out, function(group) {
-    if (nrow(group) == 1) {
-      return(group)
-    }
+  # Use data.table-style aggregation for speed
+  # Split by grouping columns
+  bycols_list <- as.list(x[, bycols, drop = FALSE])
+  groups <- split(seq_len(nrow(x)), bycols_list)
 
-    # Aggregate each column based on its type
-    result <- group[1, , drop = FALSE]  # Start with first row as template
+  # Pre-allocate result
+  result_list <- vector("list", length(groups))
 
-    for (col in names(group)) {
-      if (col %in% bycols) {
-        # Keep grouping columns as-is
-        next
-      }
+  # Determine column types once
+  col_names <- names(x)
+  is_grouping <- col_names %in% bycols
 
-      values <- group[[col]]
+  for (g_idx in seq_along(groups)) {
+    idx <- groups[[g_idx]]
 
-      if (is.logical(values)) {
-        # For logical: return any(TRUE)
-        result[[col]] <- any(values, na.rm = TRUE)
-      } else if (is.numeric(values)) {
-        # For numeric: return max()
-        result[[col]] <- max(values, na.rm = TRUE)
-      } else {
-        # For other types: return last non-NA value, or just last if all are NA
-        non_na_values <- values[!is.na(values)]
-        if (length(non_na_values) > 0) {
-          result[[col]] <- utils::tail(non_na_values, 1)
+    if (length(idx) == 1) {
+      # Single row, just copy it
+      result_list[[g_idx]] <- x[idx, , drop = FALSE]
+    } else {
+      # Multiple rows, aggregate
+      group_data <- x[idx, , drop = FALSE]
+      result_row <- group_data[1, , drop = FALSE]  # Template
+
+      # Vectorized aggregation for non-grouping columns
+      for (col_idx in which(!is_grouping)) {
+        col <- col_names[col_idx]
+        values <- group_data[[col]]
+
+        # Skip if values is empty
+        if (length(values) == 0) {
+          next
+        }
+
+        if (is.logical(values)) {
+          result_row[[col]] <- any(values, na.rm = TRUE)
+        } else if (is.numeric(values)) {
+          result_row[[col]] <- max(values, na.rm = TRUE)
         } else {
-          result[[col]] <- utils::tail(values, 1)
+          # For other types: last non-NA value, or just last
+          non_na <- values[!is.na(values)]
+          result_row[[col]] <- if (length(non_na) > 0) non_na[length(non_na)] else values[length(values)]
         }
       }
+
+      result_list[[g_idx]] <- result_row
     }
+  }
 
-    return(result)
-  })
-
-  do.call(rbind, out)
+  do.call(rbind, result_list)
 }
 
 
@@ -130,9 +144,26 @@ expand_other <- function(x, rect, styles) {
     style_list[[p]] <- out
   }
 
-  # Merge all other styles
+  # Merge all other styles efficiently
   if (length(style_list) > 0) {
-    style_other <- Reduce(function(d1, d2) merge(d1, d2, all = TRUE, sort = FALSE), style_list)
+    # Instead of using Reduce(merge), collect all unique (i,j) pairs first
+    # Then add columns from each style_list element
+    all_cells <- unique(do.call(rbind, lapply(style_list, function(x) x[, c("i", "j"), drop = FALSE])))
+
+    # Start with the (i,j) base
+    style_other <- all_cells
+
+    # Add each style property column
+    for (p in names(style_list)) {
+      prop_data <- style_list[[p]]
+      # Create a merge key
+      style_other_key <- paste(style_other$i, style_other$j, sep = "_")
+      prop_key <- paste(prop_data$i, prop_data$j, sep = "_")
+
+      # Match and assign values
+      match_idx <- match(style_other_key, prop_key)
+      style_other[[p]] <- prop_data[[p]][match_idx]
+    }
 
     # Ensure all expected style columns exist in style_other
     # Include ALL columns that style_tt_lazy creates to ensure rbind compatibility

@@ -4,6 +4,7 @@
 
 New features:
 
+* `style_tt()` now supports comprehensive styling for Tabulator tables including bold, italic, color, background, fontsize, and more. Cell-specific styles persist across sorting and pagination operations.
 * `theme_html(tabulator_search = "column")` adds header filters to each column in Tabulator tables, allowing per-column searching.
 * `theme_striped()` now supports Tabulator tables with alternating row background colors.
 * `plot_tt()` now supports Tabulator tables with JavaScript-based rendering for built-in plot types (`bar`, `barpct`, `histogram`, `line`, `density`).

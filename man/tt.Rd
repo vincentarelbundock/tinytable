@@ -149,7 +149,7 @@ The Tabulator.js library provides powerful interactive table features including 
 
 \strong{Limitations:}
 \itemize{
-\item Limited \code{style_tt()} support (only \code{align} and \code{alignv})
+\item \code{style_tt()} supports most styling options (bold, italic, color, background, fontsize, etc.) with cell-level precision. Styles persist across sorting and pagination. Column-wide alignment only (row-specific \code{align}/\code{alignv} with \code{i} argument not supported)
 \item Row-based formatting (\code{format_tt()} with \code{i} argument) not supported
 \item Global stylesheets affect all tables in multi-table documents
 \item Date formatting uses Luxon tokens, not R's \code{strptime} format

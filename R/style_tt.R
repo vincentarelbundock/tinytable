@@ -217,6 +217,24 @@ style_tt_lazy <- function(
     ...
   )
 
+  # Add Tabulator-specific validation via lazy_prepare
+  # This checks alignment restrictions when output is determined
+  if (!is.null(align) || !is.null(alignv)) {
+    validate_fn <- function(x) {
+      if (x@html_engine == "tabulator") {
+        if (!is.null(i)) {
+          stop(
+            "Tabulator does not support row-specific alignment. ",
+            "When using `align` or `alignv` with Tabulator output, `i` must be NULL to apply alignment to entire columns.",
+            call. = FALSE
+          )
+        }
+      }
+      return(x)
+    }
+    out <- build_prepare(out, validate_fn, output = "html")
+  }
+
   sanity_align(align, i)
 
   # Process inputs and create settings

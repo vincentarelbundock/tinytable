@@ -62,6 +62,7 @@ setClass(
     tabulator_columns = "list",
     tabulator_css_rule = "character",
     tabulator_options = "character",
+    tabulator_post_init = "character",
     tabulator_search = "NULLorCharacter",
     tabulator_stylesheet = "character",
     theme = "list",
@@ -157,6 +158,7 @@ setMethod(
     .Object@tabulator_css_rule <- ""
     .Object@tabulator_format_bool <- FALSE
     .Object@tabulator_options <- ""
+    .Object@tabulator_post_init <- ""
     .Object@tabulator_search <- NULL
     .Object@tabulator_stylesheet <- ""
 

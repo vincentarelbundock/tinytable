@@ -64,6 +64,7 @@ Default is "fitDataTable". Available options: "fitDataTable", "fitData", "fitDat
 \item NULL (default): Preserves existing search settings, does not change previous configuration
 \item "top": Adds search box above the table
 \item "bottom": Adds search box below the table
+\item "column": Adds header filters to each column for per-column searching
 }}
 
 \item{tabulator_stylesheet}{Character string. CSS stylesheet theme for Tabulator.js tables.

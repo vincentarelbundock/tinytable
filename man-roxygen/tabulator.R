@@ -15,7 +15,7 @@
 #'
 #' **Limitations:**
 #'
-#' * Limited `style_tt()` support (only `align` and `alignv`)
+#' * `style_tt()` supports most styling options (bold, italic, color, background, fontsize, etc.) with cell-level precision. Styles persist across sorting and pagination. Column-wide alignment only (row-specific `align`/`alignv` with `i` argument not supported)
 #' * Row-based formatting (`format_tt()` with `i` argument) not supported
 #' * Global stylesheets affect all tables in multi-table documents
 #' * Date formatting uses Luxon tokens, not R's `strptime` format
