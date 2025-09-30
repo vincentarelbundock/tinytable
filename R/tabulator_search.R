@@ -73,11 +73,42 @@ tabulator_apply_column_search <- function(x) {
     fixed = TRUE
   )
 
-  # Add headerFilter to each column definition
+  # Add headerFilter to each column definition based on data type
   if (length(x@tabulator_columns) > 0) {
     for (i in seq_along(x@tabulator_columns)) {
-      # Add input header filter to each column
-      x@tabulator_columns[[i]][["headerFilter"]] <- "input"
+      col_title <- x@tabulator_columns[[i]][["title"]]
+
+      # Find the column in the original data to check its type
+      col_idx <- which(x@names == col_title)
+
+      if (length(col_idx) == 1 && col_idx <= ncol(x@data)) {
+        col_data <- x@data[[col_idx]]
+
+        # Determine appropriate filter type based on column data type
+        if (is.numeric(col_data)) {
+          # Use number filter for numeric columns with min/max operators
+          x@tabulator_columns[[i]][["headerFilter"]] <- "number"
+          x@tabulator_columns[[i]][["headerFilterPlaceholder"]] <- "Filter..."
+          x@tabulator_columns[[i]][["headerFilterFunc"]] <- ">="
+        } else if (inherits(col_data, c("Date", "POSIXct", "POSIXlt"))) {
+          # Use input filter for dates (could be enhanced with date picker)
+          x@tabulator_columns[[i]][["headerFilter"]] <- "input"
+          x@tabulator_columns[[i]][["headerFilterPlaceholder"]] <- "Filter..."
+        } else if (is.logical(col_data)) {
+          # Use select filter for logical columns
+          x@tabulator_columns[[i]][["headerFilter"]] <- "tickCross"
+          x@tabulator_columns[[i]][["headerFilterParams"]] <- list(tristate = TRUE)
+          x@tabulator_columns[[i]][["headerFilterPlaceholder"]] <- "All"
+        } else {
+          # Use input filter for text columns
+          x@tabulator_columns[[i]][["headerFilter"]] <- "input"
+          x@tabulator_columns[[i]][["headerFilterPlaceholder"]] <- "Filter..."
+        }
+      } else {
+        # Default to input filter if we can't determine the type
+        x@tabulator_columns[[i]][["headerFilter"]] <- "input"
+        x@tabulator_columns[[i]][["headerFilterPlaceholder"]] <- "Filter..."
+      }
     }
   }
 

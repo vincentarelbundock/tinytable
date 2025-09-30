@@ -67,10 +67,33 @@ We also set `search=TRUE` to include a filtering box. Try typing the letters "vi
 ```{r}
 tt(iris) |> theme_html(
   engine = "tabulator",
-  tabulator_pagination = c(5, 10, 50), 
+  tabulator_pagination = c(5, 10, 50),
   tabulator_search = "bottom")
 ```
 
+### Column Search
+
+For more granular filtering, use `tabulator_search = "column"` to add header filters to each column. The filter type is automatically selected based on the column's data type:
+
+- **Numeric columns**: Number input with >= comparison
+- **Text columns**: Text input with substring matching
+- **Logical columns**: Tristate tickCross filter (true/false/all)
+- **Date columns**: Text input for date filtering
+
+```{r}
+dat <- data.frame(
+  Name = c("Alice", "Bob", "Charlie", "David", "Eve"),
+  Age = c(25, 30, 35, 28, 32),
+  Salary = c(50000.5, 65000.75, 72000.0, 55000.25, 68000.5),
+  Active = c(TRUE, FALSE, TRUE, TRUE, FALSE),
+  StartDate = as.Date(c("2020-01-15", "2019-06-20", "2021-03-10", "2020-09-05", "2018-11-30"))
+)
+
+tt(dat) |>
+  theme_html(engine = "tabulator", tabulator_search = "column")
+```
+
+Try filtering by age (e.g., type "30" in the Age column), searching for names containing "a", or filtering by the Active status.
 
 ## Format
 
