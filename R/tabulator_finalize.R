@@ -24,6 +24,32 @@ setMethod(
     # Apply custom CSS
     x <- tabulator_apply_css(x)
 
+    # Clean up JS markers (formatters are now in inst/tinytable.js)
+    x@tabulator_options <- gsub("\n// NEEDS_HISTOGRAM_JS", "", x@tabulator_options, fixed = TRUE)
+    x@tabulator_options <- gsub("\n// NEEDS_SPARKLINE_JS", "", x@tabulator_options, fixed = TRUE)
+
+    # Inject tinytable.js (inline if portable, external link otherwise)
+    if (isTRUE(x@html_portable)) {
+      # Inline the JS for portable HTML
+      js_file <- system.file("tinytable.js", package = "tinytable")
+      if (file.exists(js_file)) {
+        js_content <- paste(readLines(js_file), collapse = "\n")
+        js_tag <- sprintf("<script>\n%s\n</script>", js_content)
+      } else {
+        js_tag <- ""
+      }
+    } else {
+      # External link (will work when package is installed)
+      js_tag <- '<script src="https://vincentarelbundock.github.io/tinytable/tinytable.js"></script>'
+    }
+
+    x@table_string <- gsub(
+      "$tinytable_TINYTABLE_JS",
+      js_tag,
+      x@table_string,
+      fixed = TRUE
+    )
+
     # Final cleanup - handle custom columns or basic columns
     x <- tabulator_finalize_columns_placeholder(x)
 

@@ -202,6 +202,14 @@ plot_tt_lazy <- function(
     ...) {
   out <- x@data_body
 
+  # Handle Tabulator plots with JavaScript formatters
+  is_tabulator <- isTRUE(x@output == "html" && x@html_engine == "tabulator")
+  if (is_tabulator && !is.null(data)) {
+    return(plot_tt_tabulator(
+      x, i = i, j = j, fun = fun, data = data,
+      color = color, xlim = xlim, background = list(...)$background, ...
+    ))
+  }
 
   is_html <- isTRUE(x@output %in% c("html", "bootstrap", "tabulator"))
   is_quarto <- isTRUE(check_dependency("knitr")) && !is.null(knitr::pandoc_to())
@@ -447,4 +455,120 @@ encode <- function(images) {
 
   encoded <- sapply(images, base64enc::base64encode)
   base::sprintf("data:image/%s;base64, %s", ext, encoded)
+}
+
+
+#' Handle plot_tt for Tabulator tables
+#' @keywords internal
+#' @noRd
+plot_tt_tabulator <- function(
+    x,
+    i = NULL,
+    j = NULL,
+    fun = NULL,
+    data = NULL,
+    color = "black",
+    xlim = NULL,
+    background = "lightgrey",
+    ...) {
+
+  # Determine plot type from fun
+  plot_type <- NULL
+  if (is.list(fun) && length(fun) > 0) {
+    # Extract plot type from function name
+    fun_obj <- fun[[1]]
+    if (identical(fun_obj, tiny_histogram)) {
+      plot_type <- "histogram"
+    } else if (identical(fun_obj, tiny_density)) {
+      plot_type <- "density"
+    } else if (identical(fun_obj, tiny_bar)) {
+      plot_type <- "bar"
+    } else if (identical(fun_obj, tiny_barpct)) {
+      plot_type <- "barpct"
+    } else if (identical(fun_obj, tiny_line)) {
+      plot_type <- "line"
+    }
+  }
+
+  if (is.null(plot_type)) {
+    # For custom functions, fall back to PNG rendering
+    warning(
+      "Custom plotting functions are not yet supported with Tabulator. ",
+      "Built-in plot types (histogram, density, bar, barpct, line) will use JavaScript rendering. ",
+      "Custom functions will fall back to PNG images.",
+      call. = FALSE
+    )
+    return(x)
+  }
+
+  # Handle the case where i is NA (from sanitize_i when i was NULL)
+  if (all(is.na(i)) && isTRUE(attr(i, "null"))) {
+    # Use the body rows from the attributes
+    i_body <- attr(i, "body")
+  } else {
+    i_body <- i
+  }
+
+  # Track which custom JS has been marked as needed
+  needs_histogram <- FALSE
+  needs_sparkline <- FALSE
+
+  # Process each column
+  for (col_idx in j) {
+    col_name <- x@names[col_idx]
+
+    # Get data for this column
+    col_data_idx <- 1
+    if (length(j) > 1) {
+      col_data_idx <- which(j == col_idx)
+    }
+
+    for (row_idx in seq_along(i_body)) {
+      data_idx <- (col_data_idx - 1) * length(i_body) + row_idx
+      plot_data <- data[[data_idx]]
+
+      # Create formatter configuration
+      formatter_info <- tabulator_plot_formatter(
+        plot_type = plot_type,
+        data = plot_data,
+        color = color,
+        xlim = xlim,
+        background = background
+      )
+
+      # Store the formatted data in the cell
+      if (plot_type %in% c("line", "density", "histogram")) {
+        # For sparkline and histogram, store as JSON array string
+        json_array <- paste0("[", paste(formatter_info$data, collapse = ","), "]")
+        x@data_body[i_body[row_idx], col_idx] <- json_array
+      } else {
+        # For progress/bar, store the numeric value
+        x@data_body[i_body[row_idx], col_idx] <- formatter_info$data
+      }
+
+      # Store the formatter configuration in tabulator_column_formatters (once per column)
+      if (is.null(x@tabulator_column_formatters[[col_name]])) {
+        x@tabulator_column_formatters[[col_name]] <- formatter_info$config
+      }
+
+      # Track which custom JS is needed (once per plot type)
+      if (isTRUE(formatter_info$requires_custom_js)) {
+        if (plot_type == "histogram") {
+          needs_histogram <- TRUE
+        } else if (plot_type %in% c("line", "density")) {
+          needs_sparkline <- TRUE
+        }
+      }
+    }
+  }
+
+  # Add markers for needed custom JS (once total)
+  if (needs_histogram && !grepl("NEEDS_HISTOGRAM_JS", x@tabulator_options, fixed = TRUE)) {
+    x@tabulator_options <- paste0(x@tabulator_options, "\n// NEEDS_HISTOGRAM_JS")
+  }
+  if (needs_sparkline && !grepl("NEEDS_SPARKLINE_JS", x@tabulator_options, fixed = TRUE)) {
+    x@tabulator_options <- paste0(x@tabulator_options, "\n// NEEDS_SPARKLINE_JS")
+  }
+
+  return(x)
 }

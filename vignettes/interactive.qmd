@@ -206,7 +206,42 @@ opts <- "
 tt(head(iris, 25)) |> theme_html(tabulator_options = opts)
 ```
 
+## Inline plots
 
+The `plot_tt()` function supports JavaScript-based inline plots in Tabulator tables. Built-in plot types include histograms, density plots, sparklines, and progress bars.
+
+```{r}
+set.seed(123)
+dat <- data.frame(
+  Variable = c("mpg", "hp", "qsec"),
+  Histogram = "",
+  Density = "",
+  Bar = "",
+  BarPct = "",
+  Line = ""
+)
+
+# Prepare plot data
+histogram_data <- list(rnorm(50, mean = 20), rnorm(50, mean = 50), rnorm(50, mean = 35))
+density_data <- list(rnorm(100, mean = 20), rnorm(100, mean = 50), rnorm(100, mean = 35))
+bar_data <- list(25, 150, 45)
+pct_data <- list(0.65, 0.82, 0.41)
+line_data <- lapply(1:3, function(x) data.frame(x = 1:10, y = rnorm(10)))
+
+tt(dat) |>
+  theme_html(engine = "tabulator") |>
+  plot_tt(j = 2, fun = "histogram", data = histogram_data, color = "purple") |>
+  plot_tt(j = 3, fun = "density", data = density_data, color = "darkred") |>
+  plot_tt(j = 4, fun = "bar", data = bar_data, color = "steelblue") |>
+  plot_tt(j = 5, fun = "barpct", data = pct_data, color = "orange") |>
+  plot_tt(j = 6, fun = "line", data = line_data, color = "darkgreen")
+```
+
+All plots are rendered client-side using JavaScript, which means:
+
+- No PNG generation needed
+- Better performance and smaller file sizes
+- Native integration with Tabulator's sorting and filtering
 
 
 

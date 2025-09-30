@@ -6,6 +6,8 @@ New features:
 
 * `theme_html(tabulator_search = "column")` adds header filters to each column in Tabulator tables, allowing per-column searching.
 * `theme_striped()` now supports Tabulator tables with alternating row background colors.
+* `plot_tt()` now supports Tabulator tables with JavaScript-based rendering for built-in plot types (`bar`, `barpct`, `histogram`, `line`, `density`).
+* `theme_html(tabulator_css_rule = ...)` now appends CSS rules instead of overwriting them, allowing multiple calls to combine styles.
 
 Bugs:
 
