@@ -3,7 +3,7 @@
 # =============================================================================
 
 #' Create Tabulator plot formatters for plot_tt()
-#' @param plot_type Character string: "histogram", "density", "bar", "barpct", "line"
+#' @param plot_type Character string: "histogram", "density", "bar", "line"
 #' @param data Data for the plot
 #' @param color Color for the plot (single value or length-2 vector)
 #' @param xlim X-axis limits
@@ -63,29 +63,6 @@ tabulator_plot_formatter <- function(
     )
 
     return(list(config = formatter_config, data = data))
-
-  } else if (plot_type == "barpct") {
-    # Use progress formatter for percentage bars
-    if (!is.numeric(data) || length(data) != 1) {
-      stop("Barpct data must be a single numeric value between 0 and 1", call. = FALSE)
-    }
-    if (!all(data >= 0 & data <= 1, na.rm = TRUE)) {
-      stop("Barpct data must be between 0 and 1", call. = FALSE)
-    }
-
-    # Convert to percentage
-    pct_value <- data * 100
-
-    formatter_config$formatter <- "progress"
-    formatter_config$formatterParams <- list(
-      min = 0,
-      max = 100,
-      color = bar_color,
-      legendColor = "#000000",
-      legendAlign = "center"
-    )
-
-    return(list(config = formatter_config, data = pct_value))
 
   } else if (plot_type == "histogram") {
     # For histogram, use custom formatter with canvas

@@ -485,8 +485,6 @@ plot_tt_tabulator <- function(
       plot_type <- "density"
     } else if (identical(fun_obj, tiny_bar)) {
       plot_type <- "bar"
-    } else if (identical(fun_obj, tiny_barpct)) {
-      plot_type <- "barpct"
     } else if (identical(fun_obj, tiny_line)) {
       plot_type <- "line"
     }

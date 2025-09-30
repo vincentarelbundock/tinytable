@@ -95,14 +95,6 @@ function tinytable_sparkline(cell, p = {}) {
   path.setAttribute("stroke", color);
   path.setAttribute("stroke-width", sw);
   svg.appendChild(path);
-  if (!fill) {
-    const dot = document.createElementNS(NS, "circle");
-    dot.setAttribute("cx", x(n - 1));
-    dot.setAttribute("cy", y(values[n - 1]));
-    dot.setAttribute("r", 2.2);
-    dot.setAttribute("fill", color);
-    svg.appendChild(dot);
-  }
   return svg;
 }
 
