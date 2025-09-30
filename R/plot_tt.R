@@ -11,14 +11,13 @@
 #' @param height Numeric, the height of the images in the table in em units.
 #' @param height_plot Numeric, the height of generated plot images in pixels (default: 400).
 #' @param width_plot Numeric, the width of generated plot images in pixels (default: 1200).
-#' @param color string Name of color to use for inline plots (passed to the `col` argument base `graphics` plots in `R`).
-#' @param xlim Numeric vector of length 2.
+#' @param color string Name of color to use for inline plots (passed to the `col` argument base `graphics` plots in `R`). For bar plots in static output formats (PNG, PDF, etc.), can be a vector of length 2: c(bar_color, background_color) to show progress against a maximum. Note: Tabulator format only uses the first color.
+#' @param xlim Numeric vector of length 2. Controls the range of bar plots.
 #' @param fun  String or function to generate inline plots.
 #' - Built-in plot types (strings):
 #'   - `"histogram"`: Creates histograms from numeric vectors. Accepts `color` argument.
 #'   - `"density"`: Creates density plots from numeric vectors. Accepts `color` argument.
-#'   - `"bar"`: Creates horizontal bar charts from single numeric values. Accepts `color` and `xlim` arguments.
-#'   - `"barpct"`: Creates horizontal percentage bar charts from single numeric values between 0 and 1. Accepts `color` and `background` arguments.
+#'   - `"bar"`: Creates horizontal bar charts from single numeric values. Accepts `color` (single value, or length-2 vector for bar and background colors in static formats) and `xlim` arguments.
 #'   - `"line"`: Creates line plots from data frames with `x` and `y` columns. Accepts `color` and `xlim` arguments.
 #' - Custom functions:
 #'   - Functions that return `ggplot2` objects.
@@ -37,6 +36,18 @@
 #'
 #' @examples
 #' \dontrun{
+#' # Bar plots with single and dual colors
+#' dat <- data.frame(
+#'   Metric = c("Sales", "Conversion", "Growth", "Efficiency"),
+#'   Value = c(75, 45, 92, 38),
+#'   Percentage = c(0.75, 0.45, 0.92, 0.38)
+#' )
+#'
+#' tt(dat) |>
+#'   plot_tt(j = 2, fun = "bar", data = as.list(dat$Value), color = "darkorange") |>
+#'   plot_tt(j = 3, fun = "bar", data = as.list(dat$Percentage),
+#'           color = c("steelblue", "lightgrey"), xlim = c(0, 1))
+#'
 #' # Built-in plot types
 #' plot_data <- list(mtcars$mpg, mtcars$hp, mtcars$qsec)
 #'
@@ -44,24 +55,17 @@
 #'   Variables = c("mpg", "hp", "qsec"),
 #'   Histogram = "",
 #'   Density = "",
-#'   Bar = "",
-#'   BarPct = "",
 #'   Line = ""
 #' )
 #'
 #' # Random data for sparklines
 #' lines <- lapply(1:3, \(x) data.frame(x = 1:10, y = rnorm(10)))
 #'
-#' # Percentage data (values between 0 and 1)
-#' pct_data <- list(0.65, 0.82, 0.41)
-#'
 #' tt(dat) |>
 #'   plot_tt(j = 2, fun = "histogram", data = plot_data) |>
 #'   plot_tt(j = 3, fun = "density", data = plot_data, color = "darkgreen") |>
-#'   plot_tt(j = 4, fun = "bar", data = list(2, 3, 6), color = "orange") |>
-#'   plot_tt(j = 5, fun = "barpct", data = pct_data, color = "steelblue") |>
-#'   plot_tt(j = 6, fun = "line", data = lines, color = "blue") |>
-#'   style_tt(j = 2:6, align = "c")
+#'   plot_tt(j = 4, fun = "line", data = lines, color = "blue") |>
+#'   style_tt(j = 2:4, align = "c")
 #'
 #' # Custom function example (must have ... argument)
 #' custom_hist <- function(d, ...) {
@@ -152,10 +156,13 @@ plot_tt <- function(
         stop("Data for 'barpct' must be between 0 and 1 (percentages).", call. = FALSE)
       }
     }
-    if (is.null(xlim)) {
-      xlim <- c(0, 1)
+    # Always set xlim to c(0, 1) for barpct
+    xlim <- c(0, 1)
+    # Default to lightgrey background if color is single value
+    if (length(color) == 1) {
+      color <- c(color, "lightgrey")
     }
-    fun <- rep(list(tiny_barpct), length(data))
+    fun <- rep(list(tiny_bar), length(data))
   } else {
     fun <- rep(list(fun), length(data))
   }
@@ -207,7 +214,7 @@ plot_tt_lazy <- function(
   if (is_tabulator && !is.null(data)) {
     return(plot_tt_tabulator(
       x, i = i, j = j, fun = fun, data = data,
-      color = color, xlim = xlim, background = list(...)$background, ...
+      color = color, xlim = xlim, ...
     ))
   }
 
@@ -262,6 +269,7 @@ plot_tt_lazy <- function(
           call. = FALSE
         )
       }
+
       p <- plot_fun(data[[idx]], xlim = xlim, color = color, ...)
 
       # ggplot2
@@ -397,37 +405,32 @@ tiny_density <- function(d, color = "black", ...) {
   }
 }
 
-tiny_barpct <- function(
-    d,
-    color = "black",
-    background = "lightgrey",
-    xlim = c(0, 1),
-    ...) {
-  function() {
-    stopifnot(is.numeric(d), all(d >= 0 & d <= 1, na.rm = TRUE))
-
-    color <- standardize_colors(color)
-    bg_col <- standardize_colors(background)
-
-    comp <- 1 - d
-    mat <- rbind(d, comp)
-
-    graphics::barplot(
-      mat,
-      horiz  = TRUE,
-      col    = c(color, bg_col),
-      xlim   = xlim,
-      space  = 0,
-      beside = FALSE,
-      axes   = FALSE,
-      ...
-    )
-  }
-}
-
 tiny_bar <- function(d, color = "black", xlim = 0:1, ...) {
   function() {
-    graphics::barplot(d, horiz = TRUE, col = color, xlim = xlim)
+    if (length(color) == 2) {
+      # Two colors: stacked bar with background
+      bar_col <- standardize_colors(color[1])
+      bg_col <- standardize_colors(color[2])
+
+      # Calculate the remaining portion based on xlim
+      max_val <- xlim[2]
+      comp <- max_val - d
+      mat <- rbind(d, comp)
+
+      graphics::barplot(
+        mat,
+        horiz  = TRUE,
+        col    = c(bar_col, bg_col),
+        xlim   = xlim,
+        space  = 0,
+        beside = FALSE,
+        axes   = FALSE,
+        ...
+      )
+    } else {
+      # Single color: simple bar without background
+      graphics::barplot(d, horiz = TRUE, col = color, xlim = xlim)
+    }
   }
 }
 
@@ -469,7 +472,6 @@ plot_tt_tabulator <- function(
     data = NULL,
     color = "black",
     xlim = NULL,
-    background = "lightgrey",
     ...) {
 
   # Determine plot type from fun
@@ -532,8 +534,7 @@ plot_tt_tabulator <- function(
         plot_type = plot_type,
         data = plot_data,
         color = color,
-        xlim = xlim,
-        background = background
+        xlim = xlim
       )
 
       # Store the formatted data in the cell

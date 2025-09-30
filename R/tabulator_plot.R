@@ -5,9 +5,8 @@
 #' Create Tabulator plot formatters for plot_tt()
 #' @param plot_type Character string: "histogram", "density", "bar", "barpct", "line"
 #' @param data Data for the plot
-#' @param color Color for the plot
+#' @param color Color for the plot (single value or length-2 vector)
 #' @param xlim X-axis limits
-#' @param background Background color (for barpct)
 #' @return List with formatter configuration
 #' @keywords internal
 #' @noRd
@@ -15,10 +14,13 @@ tabulator_plot_formatter <- function(
     plot_type,
     data,
     color = "black",
-    xlim = NULL,
-    background = "lightgrey") {
+    xlim = NULL) {
 
   formatter_config <- list()
+
+  # Handle color as single value or length-2 vector
+  bar_color <- color[1]
+  bg_color <- if (length(color) == 2) color[2] else NULL
 
   if (plot_type == "line") {
     # Use custom SVG sparkline formatter
@@ -32,7 +34,7 @@ tabulator_plot_formatter <- function(
 
     formatter_config$formatter <- "tinytable_sparkline"
     formatter_config$formatterParams <- list(
-      color = color,
+      color = bar_color,
       width = 120,
       height = 30,
       strokeWidth = 1.5
@@ -55,10 +57,11 @@ tabulator_plot_formatter <- function(
     formatter_config$formatterParams <- list(
       min = 0,
       max = max_val,
-      color = color,
+      color = bar_color,
       legendColor = "#000000",
       legendAlign = "left"
     )
+
     return(list(config = formatter_config, data = data))
 
   } else if (plot_type == "barpct") {
@@ -77,10 +80,11 @@ tabulator_plot_formatter <- function(
     formatter_config$formatterParams <- list(
       min = 0,
       max = 100,
-      color = color,
+      color = bar_color,
       legendColor = "#000000",
       legendAlign = "center"
     )
+
     return(list(config = formatter_config, data = pct_value))
 
   } else if (plot_type == "histogram") {
@@ -94,7 +98,7 @@ tabulator_plot_formatter <- function(
       config = list(
         formatter = "tinytable_histogram",
         formatterParams = list(
-          color = color,
+          color = bar_color,
           width = 120,
           height = 30
         )
@@ -114,7 +118,7 @@ tabulator_plot_formatter <- function(
 
     formatter_config$formatter <- "tinytable_sparkline"
     formatter_config$formatterParams <- list(
-      color = color,
+      color = bar_color,
       fillArea = TRUE,
       width = 120,
       height = 30,
