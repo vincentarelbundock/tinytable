@@ -9,10 +9,10 @@ setMethod(
 
     # Check if custom columns are provided
     has_custom_columns <- is.list(x@tabulator_columns) && !is.null(x@tabulator_columns$json_string)
-    
+
     if (!has_custom_columns) {
-        # Process columns (formatting, styling, conversion) only for basic columns
-        x <- tabulator_apply_columns(x)
+      # Process columns (formatting, styling, conversion) only for basic columns
+      x <- tabulator_apply_columns(x)
     }
 
     # Apply options
@@ -43,7 +43,7 @@ setMethod(
       }
     } else {
       # External link (will work when package is installed)
-      js_tag <- '<script src="https://vincentarelbundock.github.io/tinytable/tinytable.js"></script>'
+      js_tag <- '<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>'
     }
 
     x@table_string <- gsub(
@@ -57,5 +57,4 @@ setMethod(
     x <- tabulator_finalize_columns_placeholder(x)
 
     return(x)
-  }
-)
+  })

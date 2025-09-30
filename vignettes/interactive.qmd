@@ -129,21 +129,7 @@ tt(luxon_formats)
 
 ## Style
 
-The `style_tt()` function supports comprehensive styling for Tabulator tables, including bold, italic, color, background, fontsize, and more. Styles are applied with cell-level precision and persist across sorting and pagination.
-
-```{r}
-tt(iris) |>
-  theme_html(engine = "tabulator", tabulator_pagination = c(10, 50)) |>
-  style_tt(i = seq(1, 150, by = 5), j = 2, background = "black", color = "white")
-```
-
-Note: Column-wide alignment (`align` and `alignv`) is supported, but row-specific alignment (using `i` with alignment arguments) is not currently available.
-
-```{r}
-tt(dat) |> style_tt(align = "r")
-```
-
-Here's an example that applies a gradient color scale to a column, dynamically adjusting text color for readability:
+The `style_tt()` function supports comprehensive styling for Tabulator tables, including bold, italic, color, background, fontsize, and more. Styles are applied with cell-level precision and persist across sorting and pagination. Here's an example that applies a gradient color scale to a column, dynamically adjusting text color for readability:
 
 ```{r}
 gradient <- function(x, palette = "Inferno", n = 256) {
@@ -153,13 +139,19 @@ gradient <- function(x, palette = "Inferno", n = 256) {
 }
 
 tt(iris) |>
-    theme_html(engine = "tabulator", tabulator_pagination = c(25, 50, 150)) |>
+    theme_html(engine = "tabulator", tabulator_pagination = c(10, 50, 150)) |>
     style_tt(
         i = 1:nrow(iris),
         j = 1,
         align = "c",
         color = ifelse(iris[[1]] < quantile(iris[[1]], .8), "white", "black"),
         background = gradient(iris[[1]]))
+```
+
+Note: Column-wide alignment (`align` and `alignv`) is supported, but row-specific alignment (using `i` with alignment arguments) is not currently available.
+
+```{r}
+tt(dat) |> style_tt(align = "r")
 ```
 
 ## CSS
@@ -225,7 +217,7 @@ opts <- "
 tt(head(iris, 25)) |> theme_html(tabulator_options = opts)
 ```
 
-## Inline plots
+## Plots and images
 
 The `plot_tt()` function supports JavaScript-based inline plots in Tabulator tables. Built-in plot types include histograms, density plots, sparklines, and progress bars.
 
@@ -260,13 +252,6 @@ All plots are rendered client-side using JavaScript, which means:
 - Native integration with Tabulator's sorting and filtering
 
 
-
-```{r}
-#| include: false
-# reset the global option to Bootstrap to avoid affecting other documents
-options(tinytable_html_engine = NULL)
-```
-
 ## Style sheets
 
 Tabulator ships with multiple complete CSS style sheets. The default in `tinytable` is Bootstrap 5, but you can customize the appearance using the `theme_html()` function (when available). Alternatives include `"default"`, `"simple"`, `"midnight"`, `"modern"`, `"site"`, `"site_dark"`, `"bootstrap3"`, `"bootstrap4"`, `"bootstrap5"`, `"semanticui"`, `"bulma"`, and `"materialize"`.
@@ -299,3 +284,8 @@ Here are some screenshots of different stylesheets.
 ![midnight](figures/tabulator_stylesheet_midnight.png)
 
 
+```{r}
+#| include: false
+# reset the global option to Bootstrap to avoid affecting other documents
+options(tinytable_html_engine = NULL)
+```
