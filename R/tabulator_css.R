@@ -38,30 +38,3 @@ tabulator_apply_css <- function(x) {
     return(x)
 }
 
-
-#' Apply post-initialization JavaScript
-#' @param x tinytable object
-#' @return Modified tinytable object
-#' @keywords internal
-#' @noRd
-tabulator_apply_post_init <- function(x) {
-    if (nchar(x@tabulator_post_init) > 0) {
-        # Replace POST_INIT placeholder
-        x@table_string <- gsub(
-            "$tinytable_TABULATOR_POST_INIT",
-            x@tabulator_post_init,
-            x@table_string,
-            fixed = TRUE
-        )
-    } else {
-        # Clean up POST_INIT placeholder if no post-init JS
-        x@table_string <- gsub(
-            "$tinytable_TABULATOR_POST_INIT",
-            "",
-            x@table_string,
-            fixed = TRUE
-        )
-    }
-
-    return(x)
-}

@@ -10,7 +10,11 @@ setMethod(
     # Check if custom columns are provided
     has_custom_columns <- is.list(x@tabulator_columns) && !is.null(x@tabulator_columns$json_string)
 
-    if (!has_custom_columns) {
+    if (has_custom_columns) {
+      # Use custom JSON directly
+      x@table_string <- gsub("$tinytable_TABULATOR_COLUMNS", x@tabulator_columns$json_string, x@table_string, fixed = TRUE)
+      x@table_string <- gsub("columns: \\[.*?\\]", paste0("columns: ", x@tabulator_columns$json_string), x@table_string)
+    } else {
       # Process columns (formatting, styling, conversion) only for basic columns
       x <- tabulator_apply_columns(x)
     }
@@ -25,7 +29,21 @@ setMethod(
     x <- tabulator_apply_css(x)
 
     # Apply post-initialization JavaScript
-    x <- tabulator_apply_post_init(x)
+    if (nchar(x@tabulator_post_init) > 0) {
+        x@table_string <- gsub(
+            "$tinytable_TABULATOR_POST_INIT",
+            x@tabulator_post_init,
+            x@table_string,
+            fixed = TRUE
+        )
+    } else {
+        x@table_string <- gsub(
+            "$tinytable_TABULATOR_POST_INIT",
+            "",
+            x@table_string,
+            fixed = TRUE
+        )
+    }
 
     # Clean up JS markers (formatters are now in inst/tinytable.js)
     x@tabulator_options <- gsub("\n// NEEDS_HISTOGRAM_JS", "", x@tabulator_options, fixed = TRUE)
