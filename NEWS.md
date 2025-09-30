@@ -2,6 +2,19 @@
 
 ## Development
 
+New features:
+
+* `style_tt()` now supports comprehensive styling for Tabulator tables including bold, italic, color, background, fontsize, and more. Cell-specific styles persist across sorting and pagination operations.
+* `theme_html(tabulator_search = "column")` adds header filters to each column in Tabulator tables, allowing per-column searching.
+* `theme_striped()` now supports Tabulator tables with alternating row background colors.
+* `plot_tt()` now supports Tabulator tables with JavaScript-based rendering for built-in plot types (`bar`, `barpct`, `histogram`, `line`, `density`).
+* `theme_html(tabulator_css_rule = ...)` now appends CSS rules instead of overwriting them, allowing multiple calls to combine styles.
+* `plot_tt()` bar plots now accept `color` as a length-2 vector (`c(bar_color, background_color)`) to show progress bars with backgrounds in static formats (PNG, PDF, LaTeX). Use `xlim` to control the range. Note: Tabulator format uses only the first color.
+
+Changes:
+
+* `plot_tt(fun = "barpct")` is deprecated but still supported for backward compatibility. Use `fun = "bar"` with `xlim = c(0, 1)` and a two-color vector instead.
+
 Bugs:
 
 * Issue in Typst when calling `style_tt()` with both a `rowspan` and a `line`. Thanks to @eringrand for reporting Issue #592.

@@ -37,3 +37,4 @@ tabulator_apply_css <- function(x) {
 
     return(x)
 }
+

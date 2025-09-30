@@ -9,10 +9,14 @@ setMethod(
 
     # Check if custom columns are provided
     has_custom_columns <- is.list(x@tabulator_columns) && !is.null(x@tabulator_columns$json_string)
-    
-    if (!has_custom_columns) {
-        # Process columns (formatting, styling, conversion) only for basic columns
-        x <- tabulator_apply_columns(x)
+
+    if (has_custom_columns) {
+      # Use custom JSON directly
+      x@table_string <- gsub("$tinytable_TABULATOR_COLUMNS", x@tabulator_columns$json_string, x@table_string, fixed = TRUE)
+      x@table_string <- gsub("columns: \\[.*?\\]", paste0("columns: ", x@tabulator_columns$json_string), x@table_string)
+    } else {
+      # Process columns (formatting, styling, conversion) only for basic columns
+      x <- tabulator_apply_columns(x)
     }
 
     # Apply options
@@ -24,9 +28,48 @@ setMethod(
     # Apply custom CSS
     x <- tabulator_apply_css(x)
 
-    # Final cleanup - handle custom columns or basic columns
-    x <- tabulator_finalize_columns_placeholder(x)
+    # Apply post-initialization JavaScript
+    if (nchar(x@tabulator_post_init) > 0) {
+        x@table_string <- gsub(
+            "$tinytable_TABULATOR_POST_INIT",
+            x@tabulator_post_init,
+            x@table_string,
+            fixed = TRUE
+        )
+    } else {
+        x@table_string <- gsub(
+            "$tinytable_TABULATOR_POST_INIT",
+            "",
+            x@table_string,
+            fixed = TRUE
+        )
+    }
+
+    # Clean up JS markers (formatters are now in inst/tinytable.js)
+    x@tabulator_options <- gsub("\n// NEEDS_HISTOGRAM_JS", "", x@tabulator_options, fixed = TRUE)
+    x@tabulator_options <- gsub("\n// NEEDS_SPARKLINE_JS", "", x@tabulator_options, fixed = TRUE)
+
+    # Inject tinytable.js (inline if portable, external link otherwise)
+    if (isTRUE(x@html_portable)) {
+      # Inline the JS for portable HTML
+      js_file <- system.file("tinytable.js", package = "tinytable")
+      if (file.exists(js_file)) {
+        js_content <- paste(readLines(js_file), collapse = "\n")
+        js_tag <- sprintf("<script>\n%s\n</script>", js_content)
+      } else {
+        js_tag <- ""
+      }
+    } else {
+      # External link (will work when package is installed)
+      js_tag <- '<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>'
+    }
+
+    x@table_string <- gsub(
+      "$tinytable_TINYTABLE_JS",
+      js_tag,
+      x@table_string,
+      fixed = TRUE
+    )
 
     return(x)
-  }
-)
+  })

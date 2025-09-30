@@ -1,411 +1,168 @@
-# =============================================================================
-# TABULATOR COLUMN CONSTANTS
-# =============================================================================
+# -----------------------------------------------------------------------------
+# constants
+# -----------------------------------------------------------------------------
+TAB_NUM <- c("integer", "numeric", "double")
+TAB_DATE <- c("Date", "POSIXct", "POSIXlt")
+TAB_FORM <- c(TAB_NUM, "logical", TAB_DATE)
 
-# Data type constants
-TABULATOR_NUMERIC_TYPES <- c("integer", "numeric", "double")
-TABULATOR_DATE_TYPES <- c("Date", "POSIXct", "POSIXlt")
-TABULATOR_FORMATTABLE_TYPES <- c(
-    TABULATOR_NUMERIC_TYPES,
-    "logical",
-    TABULATOR_DATE_TYPES
-)
-TABULATOR_DATA_TYPE_FORMATTERS <- list(
-    numeric = "money",
-    integer = "money",
-    double = "money",
-    logical = "tickCross",
-    Date = "datetime",
-    POSIXct = "datetime",
-    POSIXlt = "datetime"
-)
-
-# =============================================================================
-# TABULATOR COLUMN FORMATTING
-# =============================================================================
-
-#' Format tabulator column based on data type
-#'
-#' @param x A tinytable object
-#' @param j Column index or name to format
-#' @param ... Formatting arguments
-#' @return Column definition list or NULL if not formattable
-#' @keywords internal
-#' @noRd
-format_tabulator_column <- function(x, j, ...) {
-    # Sanitize column reference
-    j_clean <- sanitize_j(j, x)
-    if (length(j_clean) != 1) {
-        stop("Column reference must resolve to a single column", call. = FALSE)
-    }
-
-    # Check that column names exist
-    if (is.null(x@names) || length(x@names) == 0) {
-        stop("Column names are required for tabulator tables", call. = FALSE)
-    }
-
-    # Get column info
-    col_name <- x@names[j_clean]
-    col_type <- class(x@data[[j_clean]])[1]
-
-    # Only apply formatters to formattable columns
-    if (!(col_type %in% TABULATOR_FORMATTABLE_TYPES)) {
-        return(NULL)
-    }
-
-    # Create field name (clean for JavaScript)
-    field_name <- tabulator_clean_column_name(col_name)
-
-    # Build column definition based on type
-    col_def <- tabulator_column_specification(
-        col_name,
-        field_name,
-        col_type,
-        ...
-    )
-
-    return(col_def)
+# small helpers
+`%||%` <- function(a, b) if (is.null(a)) b else a
+merge_lists <- function(x, y) { # shallow merge; rhs wins
+    x[names(y)] <- y
+    x
 }
 
-#' Build column definition based on data type
-#' @param col_name Original column name
-#' @param field_name Cleaned field name
-#' @param col_type Column data type
-#' @param ... Formatting arguments
-#' @return Column definition list
-#' @keywords internal
-#' @noRd
-tabulator_column_specification <- function(
-    col_name,
-    field_name,
-    col_type,
-    ...
-) {
-    args <- list(...)
+# -----------------------------------------------------------------------------
+# single formatter registry (data-driven)
+# Each entry returns a list(title/field/formatter/params/…),
+# given (col_def, x, j, args).
+# -----------------------------------------------------------------------------
+tabulator_column_registry <- list(
+    numeric = function(col_def, x, j, args) {
+        digits <- args$digits %||% get_option("tinytable_format_digits")
+        num_fmt <- args$num_fmt %||% get_option("tinytable_format_num_fmt", "significant")
+        thousand <- args$num_mark_big %||% get_option("tinytable_format_num_mark_big", "")
+        decimal <- args$num_mark_dec %||% get_option("tinytable_format_num_mark_dec", get_option("OutDec", "."))
+        # num_zero   <- args$num_zero    %||% get_option("tinytable_format_num_zero", FALSE)  # keep if needed
 
-    # Basic column definition
-    col_def <- list(
-        title = col_name,
-        field = field_name
-    )
+        merge_lists(col_def, list(
+            formatter = "money",
+            formatterParams = list(
+                decimal = decimal,
+                thousand = thousand,
+                precision = digits %||% 2,
+                symbol = "",
+                symbolAfter = FALSE
+            )
+        ))
+    },
+    logical = function(col_def, x, j, args) {
+        bool_fun <- args$bool %||% get_option("tinytable_format_bool")
+        merge_lists(col_def, list(
+            formatter = if (!is.null(bool_fun) && is.function(bool_fun)) "plaintext" else "tickCross"
+        ))
+    },
+    Date = function(col_def, x, j, args) {
+        fmt_out <- args$date %||% get_option("tinytable_format_date") %||% "M/d/yyyy"
+        merge_lists(col_def, list(
+            formatter = "datetime",
+            sorter = "datetime",
+            formatterParams = list(
+                inputFormat = "yyyy-MM-dd",
+                outputFormat = fmt_out,
+                invalidPlaceholder = ""
+            ),
+            sorterParams = list(
+                format = "yyyy-MM-dd",
+                alignEmptyValues = "bottom"
+            )
+        ))
+    },
+    POSIXct = function(col_def, x, j, args) {
+        fmt_out <- args$date %||% get_option("tinytable_format_date") %||% "M/d/yyyy HH:mm:ss"
+        merge_lists(col_def, list(
+            formatter = "datetime",
+            sorter = "datetime",
+            formatterParams = list(
+                inputFormat = "yyyy-MM-dd HH:mm:ss",
+                outputFormat = fmt_out,
+                invalidPlaceholder = ""
+            ),
+            sorterParams = list(
+                format = "yyyy-MM-dd HH:mm:ss",
+                alignEmptyValues = "bottom"
+            )
+        ))
+    },
+    POSIXlt = function(col_def, x, j, args) {
+        tabulator_column_registry$POSIXct(col_def, x, j, args)
+    })
 
-    # Add formatter based on type
-    if (col_type %in% TABULATOR_NUMERIC_TYPES) {
-        col_def <- tabulator_format_numeric(col_def, args)
-    } else if (col_type == "logical") {
-        col_def <- tabulator_format_boolean(col_def, args)
-    } else if (col_type %in% TABULATOR_DATE_TYPES) {
-        col_def <- tabulator_format_date(col_def, col_type, args)
-    }
-
-    return(col_def)
-}
-
-#' Add numeric formatter to column definition
-#' @param col_def Column definition
-#' @param args Formatting arguments
-#' @return Updated column definition
-#' @keywords internal
-#' @noRd
-tabulator_format_numeric <- function(col_def, args) {
-    digits <- args$digits %||%
-        get_option("tinytable_format_digits", default = NULL)
-    num_fmt <- args$num_fmt %||%
-        get_option("tinytable_format_num_fmt", default = "significant")
-    num_mark_big <- args$num_mark_big %||%
-        get_option("tinytable_format_num_mark_big", default = "")
-    num_mark_dec <- args$num_mark_dec %||%
-        get_option(
-            "tinytable_format_num_mark_dec",
-            default = getOption("OutDec", default = ".")
-        )
-    num_zero <- args$num_zero %||%
-        get_option("tinytable_format_num_zero", default = FALSE)
-
-    col_def$formatter <- "money"
-    col_def$formatterParams <- list(
-        decimal = num_mark_dec,
-        thousand = num_mark_big,
-        precision = digits %||% 2,
-        symbol = "",
-        symbolAfter = FALSE
-    )
-
-    return(col_def)
-}
-
-#' Add boolean formatter to column definition
-#' @param col_def Column definition
-#' @param args Formatting arguments
-#' @return Updated column definition
-#' @keywords internal
-#' @noRd
-tabulator_format_boolean <- function(col_def, args) {
-    bool <- args$bool %||% get_option("tinytable_format_bool", default = NULL)
-
-    if (!is.null(bool) && is.function(bool)) {
-        col_def$formatter <- "plaintext"
-    } else {
-        col_def$formatter <- "tickCross"
-    }
-
-    return(col_def)
-}
-
-#' Add date formatter to column definition
-#' @param col_def Column definition
-#' @param col_type Column data type
-#' @param args Formatting arguments
-#' @return Updated column definition
-#' @keywords internal
-#' @noRd
-tabulator_format_date <- function(col_def, col_type, args) {
-    date <- args$date %||% get_option("tinytable_format_date", default = NULL)
-
-    col_def$formatter <- "datetime"
-    col_def$sorter <- "datetime"
-
-    if (col_type == "Date") {
-        input_format <- "yyyy-MM-dd"
-    } else {
-        input_format <- "yyyy-MM-dd HH:mm:ss"
-    }
-
-    output_format <- date %||%
-        if (col_type == "Date") "M/d/yyyy" else "M/d/yyyy HH:mm:ss"
-
-    col_def$formatterParams <- list(
-        inputFormat = input_format,
-        outputFormat = output_format,
-        invalidPlaceholder = ""
-    )
-
-    col_def$sorterParams <- list(
-        format = input_format,
-        alignEmptyValues = "bottom"
-    )
-
-    return(col_def)
-}
-
-
-# =============================================================================
-# TABULATOR COLUMN PROCESSING
-# =============================================================================
-
-#' Process all column operations (formatting, styling, conversion)
-#' @param x tinytable object
-#' @return Modified tinytable object
-#' @keywords internal
-#' @noRd
+# -----------------------------------------------------------------------------
+# one function to build the columns, applying
+# 1) base spec, 2) lazy-format overrides, 3) style overrides, 4) write JSON
+# -----------------------------------------------------------------------------
 tabulator_apply_columns <- function(x) {
-    if (length(x@tabulator_columns) == 0) {
-        return(x)
-    }
+    stopifnot(!is.null(x@names), length(x@names) > 0)
 
-    columns_list <- x@tabulator_columns
+    # 1) base column specs
+    columns <- lapply(seq_along(x@data), function(j) {
+        col_name <- x@names[j]
+        field <- tabulator_clean_column_name(col_name)
+        ctype <- class(x@data[[j]])[1]
 
-    # Apply formatters from lazy_format operations
+        col_def <- list(title = col_name, field = field)
+
+        if (ctype %in% TAB_FORM) {
+            # pick the registry key
+            key <- if (ctype %in% TAB_NUM) "numeric" else ctype
+            formatter_fun <- tabulator_column_registry[[key]]
+            if (!is.null(formatter_fun)) {
+                col_def <- formatter_fun(col_def, x, j, args = list())
+            }
+        }
+
+        col_def
+    })
+    names(columns) <- vapply(columns, `[[`, character(1), "title")
+
+    # 2) lazy-format to per-column overrides (digits/date/marks/etc.)
     if (length(x@lazy_format) > 0) {
+        # build a map: title -> merged formatter col_def
         for (l in x@lazy_format) {
-            if (!is.null(l$date_format)) {
-                x <- tabulator_apply_date_formatting(x, l)
-            }
-            if (tabulator_has_numeric_formatting(l)) {
-                x <- tabulator_apply_numeric_formatting(x, l)
+            js <- if (is.null(l$j)) seq_along(x@data) else sanitize_j(l$j, x)
+            for (j in js) {
+                col_name <- x@names[j]
+                ctype <- class(x@data[[j]])[1]
+                if (!(ctype %in% TAB_FORM)) next
+
+                key <- if (ctype %in% TAB_NUM) "numeric" else ctype
+                f <- tabulator_column_registry[[key]]
+                if (is.null(f)) next
+
+                # args from lazy_format
+                args <- list(
+                    digits       = l$digits,
+                    num_fmt      = l$num_fmt,
+                    num_mark_big = l$num_mark_big,
+                    num_mark_dec = l$num_mark_dec,
+                    num_zero     = l$num_zero,
+                    date         = l$date_format,
+                    bool         = l$bool
+                )
+                columns[[col_name]] <- f(columns[[col_name]], x, j, args)
             }
         }
     }
 
-    # Apply any column formatters (from lazy_format or plot_tt)
-    if (length(x@lazy_format) > 0 || length(x@tabulator_column_formatters) > 0) {
-        x <- tabulator_update_columns_with_formatters(x)
-        columns_list <- x@tabulator_columns  # Update local copy
-    }
-
-    # Apply column styles
+    # 3) column-level styles (hozAlign, vertAlign, …)
     if (length(x@tabulator_column_styles) > 0) {
-        for (i in seq_along(columns_list)) {
-            col_title <- columns_list[[i]][["title"]]
-            if (col_title %in% names(x@tabulator_column_styles)) {
-                style_obj <- x@tabulator_column_styles[[col_title]]
-                if (!is.null(style_obj$hozAlign)) {
-                    columns_list[[i]][["hozAlign"]] <- style_obj$hozAlign
-                }
-                if (!is.null(style_obj$vertAlign)) {
-                    columns_list[[i]][["vertAlign"]] <- style_obj$vertAlign
-                }
-            }
+        for (nm in names(x@tabulator_column_styles)) {
+            if (!nm %in% names(columns)) next
+            st <- x@tabulator_column_styles[[nm]]
+            if (!is.null(st$hozAlign)) columns[[nm]]$hozAlign <- st$hozAlign
+            if (!is.null(st$vertAlign)) columns[[nm]]$vertAlign <- st$vertAlign
         }
     }
 
-    # Save the final columns_list back to the object
-    x@tabulator_columns <- columns_list
+    # 3.5) apply column formatters from plot_tt and other sources
+    if (length(x@tabulator_column_formatters) > 0) {
+        for (nm in names(x@tabulator_column_formatters)) {
+            if (!nm %in% names(columns)) next
+            fmt <- x@tabulator_column_formatters[[nm]]
+            if (!is.null(fmt$formatter)) columns[[nm]]$formatter <- fmt$formatter
+            if (!is.null(fmt$formatterParams)) columns[[nm]]$formatterParams <- fmt$formatterParams
+            if (!is.null(fmt$sorter)) columns[[nm]]$sorter <- fmt$sorter
+            if (!is.null(fmt$sorterParams)) columns[[nm]]$sorterParams <- fmt$sorterParams
+        }
+    }
 
-    # Convert columns to JSON and replace in template
+    # 4) persist back and inject JSON
+    x@tabulator_columns <- unname(columns)
+
     columns_json <- df_to_json(x@tabulator_columns)
+    x@table_string <- gsub("$tinytable_TABULATOR_COLUMNS", columns_json, x@table_string, fixed = TRUE)
+    x@table_string <- gsub("columns: \\[.*?\\]", paste0("columns: ", columns_json), x@table_string)
 
-    # Replace both patterns - placeholder and existing columns array
-    x@table_string <- gsub(
-        "\\$tinytable_TABULATOR_COLUMNS",
-        columns_json,
-        x@table_string,
-        fixed = TRUE
-    )
-    x@table_string <- gsub(
-        "columns: \\[.*?\\]",
-        paste0("columns: ", columns_json),
-        x@table_string
-    )
-
-    return(x)
-}
-
-#' Apply date formatting to columns
-#' @param x tinytable object
-#' @param l lazy_format operation
-#' @return Modified tinytable object
-#' @keywords internal
-#' @noRd
-tabulator_apply_date_formatting <- function(x, l) {
-    if (is.null(l$j)) {
-        # Apply to all date columns when j is NULL
-        j_clean <- seq_along(x@data)
-    } else {
-        j_clean <- sanitize_j(l$j, x)
-    }
-
-    for (col_idx in j_clean) {
-        col_name <- x@names[col_idx]
-        col_data <- x@data[[col_idx]]
-
-        if (inherits(col_data, c("Date", "POSIXct", "POSIXlt"))) {
-            formatter_js <- format_tabulator_column(
-                x,
-                j = col_idx,
-                date = l$date_format
-            )
-            if (!is.null(formatter_js)) {
-                x@tabulator_column_formatters[[col_name]] <- formatter_js
-            }
-        }
-    }
-
-    return(x)
-}
-
-#' Check if lazy_format has numeric formatting
-#' @param l lazy_format operation
-#' @return TRUE if numeric formatting is present
-#' @keywords internal
-#' @noRd
-tabulator_has_numeric_formatting <- function(l) {
-    !is.null(l$digits) || !is.null(l$num_mark_big) || !is.null(l$num_suffix)
-}
-
-#' Apply numeric formatting to columns
-#' @param x tinytable object
-#' @param l lazy_format operation
-#' @return Modified tinytable object
-#' @keywords internal
-#' @noRd
-tabulator_apply_numeric_formatting <- function(x, l) {
-    if (is.null(l$j)) {
-        # Apply to all numeric columns when j is NULL
-        j_clean <- seq_along(x@data)
-    } else {
-        j_clean <- sanitize_j(l$j, x)
-    }
-
-    for (col_idx in j_clean) {
-        col_name <- x@names[col_idx]
-        col_data <- x@data[[col_idx]]
-
-        if (inherits(col_data, c("integer", "numeric", "double"))) {
-            formatter_js <- format_tabulator_column(
-                x,
-                j = col_idx,
-                digits = l$digits,
-                num_fmt = l$num_fmt,
-                num_zero = l$num_zero,
-                num_suffix = l$num_suffix,
-                num_mark_big = l$num_mark_big,
-                num_mark_dec = l$num_mark_dec
-            )
-            if (!is.null(formatter_js)) {
-                x@tabulator_column_formatters[[col_name]] <- formatter_js
-            }
-        }
-    }
-
-    return(x)
-}
-
-#' Update columns with formatters
-#' @param x tinytable object
-#' @return Modified tinytable object
-#' @keywords internal
-#' @noRd
-tabulator_update_columns_with_formatters <- function(x) {
-    columns_list <- x@tabulator_columns
-
-    for (i in seq_along(columns_list)) {
-        col_title <- columns_list[[i]][["title"]]
-        if (col_title %in% names(x@tabulator_column_formatters)) {
-            # Use the stored formatter list directly (no JSON parsing needed)
-            formatter_obj <- x@tabulator_column_formatters[[col_title]]
-            columns_list[[i]][["formatter"]] <- formatter_obj[["formatter"]]
-            if (!is.null(formatter_obj[["formatterParams"]])) {
-                columns_list[[i]][["formatterParams"]] <- formatter_obj[[
-                    "formatterParams"
-                ]]
-            }
-            if (!is.null(formatter_obj[["sorter"]])) {
-                columns_list[[i]][["sorter"]] <- formatter_obj[["sorter"]]
-            }
-            if (!is.null(formatter_obj[["sorterParams"]])) {
-                columns_list[[i]][["sorterParams"]] <- formatter_obj[[
-                    "sorterParams"
-                ]]
-            }
-        }
-    }
-
-    x@tabulator_columns <- columns_list
-    return(x)
-}
-
-
-# =============================================================================
-# TABULATOR COLUMN HANDLING
-# =============================================================================
-
-#' Finalize columns placeholder cleanup
-#' @param x tinytable object
-#' @return Modified tinytable object
-#' @keywords internal
-#' @noRd
-tabulator_finalize_columns_placeholder <- function(x) {
-    # Replace the columns placeholder only if it hasn't been replaced yet
-    # This ensures replacement happens for cases without formatting/styling
-    if (
-        length(x@tabulator_columns) > 0 &&
-            grepl("$tinytable_TABULATOR_COLUMNS", x@table_string, fixed = TRUE)
-    ) {
-        columns <- x@tabulator_columns
-        columns_json <- if (is.list(columns) && !is.null(columns$json_string)) {
-            columns$json_string
-        } else if (is.list(columns)) {
-            df_to_json(columns)
-        } else {
-            columns
-        }
-        x@table_string <- gsub(
-            "$tinytable_TABULATOR_COLUMNS",
-            columns_json,
-            x@table_string,
-            fixed = TRUE
-        )
-    }
-    return(x)
+    x
 }

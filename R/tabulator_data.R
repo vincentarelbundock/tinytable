@@ -22,12 +22,15 @@ tabulator_clean_data <- function(x) {
         original_col <- x@data[[i]]
         col_type <- class(original_col)[1]
 
-        if (col_type %in% TABULATOR_NUMERIC_TYPES) {
+        if (col_type %in% TAB_NUM) {
             # Use raw data for numeric columns (Tabulator formatters will handle display)
             data_clean[[col_name]] <- original_col
-        } else if (col_type %in% TABULATOR_DATE_TYPES) {
-            # Use raw data for date columns (formatters will handle display)
-            data_clean[[col_name]] <- original_col
+        } else if (col_type == "Date") {
+            # Convert Date to ISO string for Tabulator datetime parsing
+            data_clean[[col_name]] <- format(original_col, "%Y-%m-%d")
+        } else if (col_type %in% c("POSIXct", "POSIXlt")) {
+            # Convert POSIXct/POSIXlt to ISO string for Tabulator datetime parsing
+            data_clean[[col_name]] <- format(original_col, "%Y-%m-%dT%H:%M:%S")
         } else if (col_type == "logical") {
             # For logical columns, use formatted data if bool formatting is applied
             if (isTRUE(x@tabulator_format_bool)) {
@@ -56,6 +59,9 @@ tabulator_clean_data <- function(x) {
     # Convert to data frame
     data_clean <- as.data.frame(data_clean, stringsAsFactors = FALSE)
 
+    # Add stable row index for styling (1-based, matching R's row numbering)
+    data_clean$`_tinytable_row_index` <- seq_len(nrow(data_clean))
+
     # Clean column names (replace dots and spaces with underscores)
     names(data_clean) <- tabulator_clean_column_name(names(data_clean))
 
@@ -63,16 +69,6 @@ tabulator_clean_data <- function(x) {
     for (i in seq_along(data_clean)) {
         if (is.character(data_clean[[i]])) {
             data_clean[[i]] <- gsub('"', "'", data_clean[[i]])
-        }
-    }
-
-    # Convert dates to ISO strings for Tabulator datetime parsing
-    for (i in seq_along(data_clean)) {
-        col_data <- data_clean[[i]]
-        if (inherits(col_data, "Date")) {
-            data_clean[[i]] <- format(col_data, "%Y-%m-%d")
-        } else if (inherits(col_data, c("POSIXct", "POSIXlt"))) {
-            data_clean[[i]] <- format(col_data, "%Y-%m-%dT%H:%M:%S")
         }
     }
 

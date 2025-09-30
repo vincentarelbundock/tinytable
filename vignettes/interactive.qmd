@@ -7,8 +7,22 @@ options(tinytable_html_engine = "tabulator")
 # Interactive tables
 
 ::: {.callout-warning}
-## Experimental Feature
+## Experimental and Evolving Feature
 The Tabulator.js integration is experimental and the API may change in future versions. Please report any issues on [GitHub](https://github.com/vincentarelbundock/tinytable/issues).
+:::
+
+::: {.callout-warning}
+## Version Requirement
+This vignette was compiled using `tinytable` version `{r} packageVersion("tinytable")`. Some features shown here may not be available in the CRAN version of `tinytable`.
+
+Get the development version at:
+
+```r
+library(remotes)
+install_github("vincentarelbundock/tinytable")
+```
+
+Make sure you restart `R` for the install to take effect.
 :::
 
 The `tinytable` package supports creating interactive tables using [the Tabulator.js library.](https://tabulator.info/) Tabulator is a powerful JavaScript library that provides features like 
@@ -67,10 +81,33 @@ We also set `search=TRUE` to include a filtering box. Try typing the letters "vi
 ```{r}
 tt(iris) |> theme_html(
   engine = "tabulator",
-  tabulator_pagination = c(5, 10, 50), 
+  tabulator_pagination = c(5, 10, 50),
   tabulator_search = "bottom")
 ```
 
+### Column Search
+
+For more granular filtering, use `tabulator_search = "column"` to add header filters to each column. The filter type is automatically selected based on the column's data type:
+
+- **Numeric columns**: Number input with >= comparison
+- **Text columns**: Text input with substring matching
+- **Logical columns**: Tristate tickCross filter (true/false/all)
+- **Date columns**: Text input for date filtering
+
+```{r}
+dat <- data.frame(
+  Name = c("Alice", "Bob", "Charlie", "David", "Eve"),
+  Age = c(25, 30, 35, 28, 32),
+  Salary = c(50000.5, 65000.75, 72000.0, 55000.25, 68000.5),
+  Active = c(TRUE, FALSE, TRUE, TRUE, FALSE),
+  StartDate = as.Date(c("2020-01-15", "2019-06-20", "2021-03-10", "2020-09-05", "2018-11-30"))
+)
+
+tt(dat) |>
+  theme_html(engine = "tabulator", tabulator_search = "column")
+```
+
+Try filtering by age (e.g., type "30" in the Age column), searching for names containing "a", or filtering by the Active status.
 
 ## Format
 
@@ -101,47 +138,40 @@ luxon_formats <- data.frame(
   check.names = FALSE
 )
 
-tt(luxon_formats)
+tt(luxon_formats) |> theme_html(engine = "tabulator")
 ```
 
 ## Style
 
-Support for `style_tt()` is very limited in interactive tables. For now, only the `align` and `alignv` arguments of that function are supported.
+The `style_tt()` function supports comprehensive styling for Tabulator tables, including bold, italic, color, background, fontsize, and more. Styles are applied with cell-level precision and persist across sorting and pagination. Here's an example that applies a gradient color scale to a column, dynamically adjusting text color for readability:
 
 ```{r}
-tt(dat) |> style_tt(align = "r")
+set.seed(48103)
+iris_shuffle <- iris[sample(1:150, 150),]
+
+gradient <- function(x, palette = "Inferno", n = 256) {
+    pal <- hcl.colors(n, palette)
+    idx <- as.integer(cut(x, breaks = n, labels = FALSE, include.lowest = TRUE))
+    pal[idx]
+}
+
+tt(iris_shuffle) |>
+    theme_html(engine = "tabulator", tabulator_pagination = c(10, 50, 150)) |>
+    style_tt(
+        i = 1:nrow(iris_shuffle),
+        j = 1,
+        align = "c",
+        color = ifelse(iris_shuffle[[1]] < quantile(iris_shuffle[[1]], .8), "white", "black"),
+        background = gradient(iris_shuffle[[1]]))
 ```
 
-## Style sheets
-
-Tabulator ships with multiple complete CSS style sheets. The default in `tinytable` is Bootstrap 5, but you can customize the appearance using the `theme_html()` function (when available). Alternatives include `"default"`, `"simple"`, `"midnight"`, `"modern"`, `"site"`, `"site_dark"`, `"bootstrap3"`, `"bootstrap4"`, `"bootstrap5"`, `"semanticui"`, `"bulma"`, and `"materialize"`.
-
-The syntax looks like this:
+Note: Column-wide alignment (`align` and `alignv`) is supported, but row-specific alignment (using `i` with alignment arguments) is not currently available.
 
 ```{r}
-#| eval: false
-tt(iris) |> theme_html(tabulator_stylesheet = "semanticui")
+tt(dat) |> 
+  theme_html(engine = "tabulator") |>
+  style_tt(align = "r")
 ```
-
-::: {.callout-warning}
-To use a theme, the HTML file must load a style sheet *globally* in the document. Unfortunately, this means that `tinytable` cannot apply a `Tabulator` style sheet to a single table in documents with multiple tables. The style that applies is always the last one loaded in the document.
-:::
-
-Here are some screenshots of different stylesheets.
-
-![bootstrap5](figures/tabulator_stylesheet_bootstrap5.png)
-
-![semanticui](figures/tabulator_stylesheet_semanticui.png)
-
-![bulma](figures/tabulator_stylesheet_bulma)
-
-![modern](figures/tabulator_stylesheet_modern.png)
-
-![simple](figures/tabulator_stylesheet_simple.png)
-
-![default](figures/tabulator_stylesheet_default.png)
-
-![midnight](figures/tabulator_stylesheet_midnight.png)
 
 ## CSS
 
@@ -154,11 +184,48 @@ $TINYTABLE_ID .tabulator-header .tabulator-col {
   color: white;
 }
 "
-tt(dat) |> theme_html(engine = "tabulator", tabulator_css_rule = css_rule)
+tt(dat) |> theme_html(engine = "tabulator", tabulator_css_rule = css_rule, 
+  tabulator_pagination = 10)
 ```
 
 
-## Options and columns
+
+## Plots and images
+
+The `plot_tt()` function supports JavaScript-based inline plots in Tabulator tables. Built-in plot types include histograms, density plots, sparklines, and progress bars.
+
+```{r}
+set.seed(123)
+dat <- data.frame(
+  Variable = c("mpg", "hp", "qsec"),
+  Histogram = "",
+  Density = "",
+  Bar = "",
+  Line = ""
+)
+
+# Prepare plot data
+histogram_data <- list(rnorm(50, mean = 20), rnorm(50, mean = 50), rnorm(50, mean = 35))
+density_data <- list(rnorm(100, mean = 20), rnorm(100, mean = 50), rnorm(100, mean = 35))
+bar_data <- list(25, 150, 45)
+line_data <- lapply(1:3, function(x) data.frame(x = 1:10, y = rnorm(10)))
+
+tt(dat) |>
+  theme_html(engine = "tabulator") |>
+  plot_tt(j = 2, fun = "histogram", data = histogram_data, color = "purple") |>
+  plot_tt(j = 3, fun = "density", data = density_data, color = "darkred") |>
+  plot_tt(j = 4, fun = "bar", data = bar_data, color = "steelblue") |>
+  plot_tt(j = 5, fun = "line", data = line_data, color = "darkgreen")
+```
+
+All plots are rendered client-side using JavaScript, which means:
+
+- No PNG generation needed
+- Better performance and smaller file sizes
+- Native integration with Tabulator's sorting and filtering
+
+
+## Tabulator options and formatters
 
 The `theme_html()` function accepts `tabulator_options` and `tabulator_columns` arguments for advanced customization of Tabulator tables.
 
@@ -207,7 +274,36 @@ tt(head(iris, 25)) |> theme_html(tabulator_options = opts)
 ```
 
 
+## Style sheets
 
+Tabulator ships with multiple complete CSS style sheets. The default in `tinytable` is Bootstrap 5, but you can customize the appearance using the `theme_html()` function (when available). Alternatives include `"default"`, `"simple"`, `"midnight"`, `"modern"`, `"site"`, `"site_dark"`, `"bootstrap3"`, `"bootstrap4"`, `"bootstrap5"`, `"semanticui"`, `"bulma"`, and `"materialize"`.
+
+The syntax looks like this:
+
+```{r}
+#| eval: false
+tt(iris) |> theme_html(tabulator_stylesheet = "semanticui")
+```
+
+::: {.callout-warning}
+To use a theme, the HTML file must load a style sheet *globally* in the document. Unfortunately, this means that `tinytable` cannot apply a `Tabulator` style sheet to a single table in documents with multiple tables. The style that applies is always the last one loaded in the document.
+:::
+
+Here are some screenshots of different stylesheets.
+
+![bootstrap5](figures/tabulator_stylesheet_bootstrap5.png)
+
+![semanticui](figures/tabulator_stylesheet_semanticui.png)
+
+![bulma](figures/tabulator_stylesheet_bulma)
+
+![modern](figures/tabulator_stylesheet_modern.png)
+
+![simple](figures/tabulator_stylesheet_simple.png)
+
+![default](figures/tabulator_stylesheet_default.png)
+
+![midnight](figures/tabulator_stylesheet_midnight.png)
 
 
 ```{r}

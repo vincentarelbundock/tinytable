@@ -19,21 +19,24 @@
 
     <!-- Luxon for date handling -->
     <script src="https://cdn.jsdelivr.net/npm/luxon@3/build/global/luxon.min.js"></script>
-    
+
     <!-- Tabulator JS -->
     <script src="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/js/tabulator.min.js"></script>
+
+    <!-- TinyTable custom formatters -->
+    $tinytable_TINYTABLE_JS
+
     <script>
       (function() {
-        const { DateTime } = luxon;
-
-        const table_$tinytable_TABLE_ID = new Tabulator("#$tinytable_TABLE_ID", {
-          dependencies: { DateTime },
+        const table_$tinytable_TABLE_ID = TinyTable.createTabulator("#$tinytable_TABLE_ID", {
           data: $tinytable_TABULATOR_DATA,
           columns: $tinytable_TABULATOR_COLUMNS,
           $tinytable_TABULATOR_OPTIONS
         });
 
         $tinytable_TABULATOR_SEARCH_LISTENER
+
+        $tinytable_TABULATOR_POST_INIT
       })();
     </script>
 

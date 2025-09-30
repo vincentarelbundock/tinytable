@@ -21,8 +21,18 @@ df_to_json <- function(data) {
       # Recursively handle nested lists
       return(list_to_json(value))
     } else if (length(value) == 1) {
+      # Check if this is a raw JSON array or object string (for sparkline data)
+      value_str <- as.character(value)
+      if (grepl("^\\[.*\\]$", value_str) || grepl("^\\{.*\\}$", value_str)) {
+        # This looks like JSON - don't quote it
+        return(value_str)
+      }
+      # Check if this is a numeric string (from coercion)
+      if (!is.na(suppressWarnings(as.numeric(value_str)))) {
+        return(value_str)
+      }
       # Single string value
-      escaped_value <- gsub('"', '\\"', as.character(value))
+      escaped_value <- gsub('"', '\\"', value_str)
       return(paste0('"', escaped_value, '"'))
     } else {
       # Vector - convert to array
@@ -49,8 +59,15 @@ df_to_json <- function(data) {
     }
 
     pairs <- sapply(names(lst), function(name) {
-      value_json <- value_to_json(lst[[name]])
-      paste0('"', name, '":', value_json)
+      # Special handling for formatter field - don't quote custom function names
+      if (name == "formatter" && is.character(lst[[name]]) &&
+          grepl("^tinytable_", lst[[name]])) {
+        # Custom formatter - output as unquoted function reference
+        paste0('"', name, '":', lst[[name]])
+      } else {
+        value_json <- value_to_json(lst[[name]])
+        paste0('"', name, '":', value_json)
+      }
     })
 
     return(paste0("{", paste(pairs, collapse = ","), "}"))
