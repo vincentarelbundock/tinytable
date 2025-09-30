@@ -7,7 +7,6 @@ TAB_FORM <- c(TAB_NUM, "logical", TAB_DATE)
 
 # small helpers
 `%||%` <- function(a, b) if (is.null(a)) b else a
-col_type1 <- function(x) class(x)[1]
 merge_lists <- function(x, y) { # shallow merge; rhs wins
     x[names(y)] <- y
     x
@@ -90,7 +89,7 @@ tabulator_apply_columns <- function(x) {
     columns <- lapply(seq_along(x@data), function(j) {
         col_name <- x@names[j]
         field <- tabulator_clean_column_name(col_name)
-        ctype <- col_type1(x@data[[j]])
+        ctype <- class(x@data[[j]])[1]
 
         col_def <- list(title = col_name, field = field)
 
@@ -114,7 +113,7 @@ tabulator_apply_columns <- function(x) {
             js <- if (is.null(l$j)) seq_along(x@data) else sanitize_j(l$j, x)
             for (j in js) {
                 col_name <- x@names[j]
-                ctype <- col_type1(x@data[[j]])
+                ctype <- class(x@data[[j]])[1]
                 if (!(ctype %in% TAB_FORM)) next
 
                 key <- if (ctype %in% TAB_NUM) "numeric" else ctype
