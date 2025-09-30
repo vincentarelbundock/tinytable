@@ -224,6 +224,26 @@ All plots are rendered client-side using JavaScript, which means:
 - Better performance and smaller file sizes
 - Native integration with Tabulator's sorting and filtering
 
+### Images
+
+The `plot_tt()` function also supports inserting images into Tabulator tables using the `images` parameter:
+
+```{r}
+dat <- data.frame(
+  Species = c("Spider", "Squirrel"),
+  Image = ""
+)
+img <- c(
+  "figures/spider.png",
+  "figures/squirrel.png"
+)
+tt(dat) |>
+  theme_html(engine = "tabulator") |>
+  plot_tt(j = 2, images = img, height = 3)
+```
+
+Images can be local file paths (relative or absolute) or URLs. The `height` parameter controls the image height in em units.
+
 
 ## Tabulator options and formatters
 

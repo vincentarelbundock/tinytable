@@ -210,6 +210,7 @@ plot_tt_lazy <- function(
   out <- x@data_body
 
   # Handle Tabulator plots with JavaScript formatters
+  # Note: images use the standard HTML path below, which works for tabulator too
   is_tabulator <- isTRUE(x@output == "html" && x@html_engine == "tabulator")
   if (is_tabulator && !is.null(data)) {
     return(plot_tt_tabulator(
