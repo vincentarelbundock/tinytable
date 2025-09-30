@@ -53,8 +53,5 @@ setMethod(
       fixed = TRUE
     )
 
-    # Final cleanup - handle custom columns or basic columns
-    x <- tabulator_finalize_columns_placeholder(x)
-
     return(x)
   })

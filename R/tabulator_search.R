@@ -88,12 +88,12 @@ tabulator_apply_column_search <- function(x) {
         if (is.numeric(col_data)) {
           # Use number filter for numeric columns with min/max operators
           x@tabulator_columns[[i]][["headerFilter"]] <- "number"
-          x@tabulator_columns[[i]][["headerFilterPlaceholder"]] <- "Filter..."
+          x@tabulator_columns[[i]][["headerFilterPlaceholder"]] <- ""
           x@tabulator_columns[[i]][["headerFilterFunc"]] <- ">="
         } else if (inherits(col_data, c("Date", "POSIXct", "POSIXlt"))) {
           # Use input filter for dates (could be enhanced with date picker)
           x@tabulator_columns[[i]][["headerFilter"]] <- "input"
-          x@tabulator_columns[[i]][["headerFilterPlaceholder"]] <- "Filter..."
+          x@tabulator_columns[[i]][["headerFilterPlaceholder"]] <- ""
         } else if (is.logical(col_data)) {
           # Use select filter for logical columns
           x@tabulator_columns[[i]][["headerFilter"]] <- "tickCross"
@@ -102,15 +102,20 @@ tabulator_apply_column_search <- function(x) {
         } else {
           # Use input filter for text columns
           x@tabulator_columns[[i]][["headerFilter"]] <- "input"
-          x@tabulator_columns[[i]][["headerFilterPlaceholder"]] <- "Filter..."
+          x@tabulator_columns[[i]][["headerFilterPlaceholder"]] <- ""
         }
       } else {
         # Default to input filter if we can't determine the type
         x@tabulator_columns[[i]][["headerFilter"]] <- "input"
-        x@tabulator_columns[[i]][["headerFilterPlaceholder"]] <- "Filter..."
+        x@tabulator_columns[[i]][["headerFilterPlaceholder"]] <- ""
       }
     }
   }
+
+  # Re-serialize columns to JSON after adding search filters
+  columns_json <- df_to_json(x@tabulator_columns)
+  x@table_string <- gsub("$tinytable_TABULATOR_COLUMNS", columns_json, x@table_string, fixed = TRUE)
+  x@table_string <- gsub("columns: \\[.*?\\]", paste0("columns: ", columns_json), x@table_string)
 
   return(x)
 }

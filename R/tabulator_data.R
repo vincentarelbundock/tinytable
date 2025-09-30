@@ -22,10 +22,10 @@ tabulator_clean_data <- function(x) {
         original_col <- x@data[[i]]
         col_type <- class(original_col)[1]
 
-        if (col_type %in% TABULATOR_NUMERIC_TYPES) {
+        if (col_type %in% TAB_NUM) {
             # Use raw data for numeric columns (Tabulator formatters will handle display)
             data_clean[[col_name]] <- original_col
-        } else if (col_type %in% TABULATOR_DATE_TYPES) {
+        } else if (col_type %in% TAB_DATE) {
             # Use raw data for date columns (formatters will handle display)
             data_clean[[col_name]] <- original_col
         } else if (col_type == "logical") {

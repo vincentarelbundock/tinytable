@@ -7,8 +7,20 @@ options(tinytable_html_engine = "tabulator")
 # Interactive tables
 
 ::: {.callout-warning}
-## Experimental Feature
+## Experimental and Evolving Feature
 The Tabulator.js integration is experimental and the API may change in future versions. Please report any issues on [GitHub](https://github.com/vincentarelbundock/tinytable/issues).
+:::
+
+::: {.callout-warning}
+## Required version
+This vignette was compiled using `tinytable` version `{r} packageVersion("tinytable")`.
+
+Get the development version at:
+
+```r
+library(remotes)
+install_github("vincentarelbundock/tinytable")
+```
 :::
 
 The `tinytable` package supports creating interactive tables using [the Tabulator.js library.](https://tabulator.info/) Tabulator is a powerful JavaScript library that provides features like 
@@ -124,7 +136,7 @@ luxon_formats <- data.frame(
   check.names = FALSE
 )
 
-tt(luxon_formats)
+tt(luxon_formats) |> theme_html(engine = "tabulator")
 ```
 
 ## Style
@@ -132,26 +144,31 @@ tt(luxon_formats)
 The `style_tt()` function supports comprehensive styling for Tabulator tables, including bold, italic, color, background, fontsize, and more. Styles are applied with cell-level precision and persist across sorting and pagination. Here's an example that applies a gradient color scale to a column, dynamically adjusting text color for readability:
 
 ```{r}
+set.seed(48103)
+iris_shuffle <- iris[sample(1:150, 150),]
+
 gradient <- function(x, palette = "Inferno", n = 256) {
     pal <- hcl.colors(n, palette)
     idx <- as.integer(cut(x, breaks = n, labels = FALSE, include.lowest = TRUE))
     pal[idx]
 }
 
-tt(iris) |>
+tt(iris_shuffle) |>
     theme_html(engine = "tabulator", tabulator_pagination = c(10, 50, 150)) |>
     style_tt(
-        i = 1:nrow(iris),
+        i = 1:nrow(iris_shuffle),
         j = 1,
         align = "c",
-        color = ifelse(iris[[1]] < quantile(iris[[1]], .8), "white", "black"),
-        background = gradient(iris[[1]]))
+        color = ifelse(iris_shuffle[[1]] < quantile(iris_shuffle[[1]], .8), "white", "black"),
+        background = gradient(iris_shuffle[[1]]))
 ```
 
 Note: Column-wide alignment (`align` and `alignv`) is supported, but row-specific alignment (using `i` with alignment arguments) is not currently available.
 
 ```{r}
-tt(dat) |> style_tt(align = "r")
+tt(dat) |> 
+  theme_html(engine = "tabulator", tabulator_pagination = 10) |>
+  style_tt(align = "r")
 ```
 
 ## CSS
@@ -165,7 +182,8 @@ $TINYTABLE_ID .tabulator-header .tabulator-col {
   color: white;
 }
 "
-tt(dat) |> theme_html(engine = "tabulator", tabulator_css_rule = css_rule)
+tt(dat) |> theme_html(engine = "tabulator", tabulator_css_rule = css_rule, 
+  tabulator_pagination = 10)
 ```
 
 
