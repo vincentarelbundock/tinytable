@@ -623,10 +623,7 @@ Integer vector, the column indices where images are to be inserted. If <code>NUL
 <p><code>“density”</code>: Creates density plots from numeric vectors. Accepts <code>color</code> argument.</p>
 </li>
 <li>
-<p><code>“bar”</code>: Creates horizontal bar charts from single numeric values. Accepts <code>color</code> and <code>xlim</code> arguments.</p>
-</li>
-<li>
-<p><code>“barpct”</code>: Creates horizontal percentage bar charts from single numeric values between 0 and 1. Accepts <code>color</code> and <code>background</code> arguments.</p>
+<p><code>“bar”</code>: Creates horizontal bar charts from single numeric values. Accepts <code>color</code> (single value, or length-2 vector for bar and background colors in static formats) and <code>xlim</code> arguments.</p>
 </li>
 <li>
 <p><code>“line”</code>: Creates line plots from data frames with <code>x</code> and <code>y</code> columns. Accepts <code>color</code> and <code>xlim</code> arguments.</p>
@@ -666,7 +663,7 @@ a list of data frames or vectors to be used by the plotting functions in <code>f
 <code id="color">color</code>
 </td>
 <td>
-string Name of color to use for inline plots (passed to the <code>col</code> argument base <code>graphics</code> plots in <code>R</code>).
+string Name of color to use for inline plots (passed to the <code>col</code> argument base <code>graphics</code> plots in <code>R</code>). For bar plots in static output formats (PNG, PDF, etc.), can be a vector of length 2: c(bar_color, background_color) to show progress against a maximum. Note: Tabulator format only uses the first color.
 </td>
 </tr>
 <tr>
@@ -674,7 +671,7 @@ string Name of color to use for inline plots (passed to the <code>col</code> arg
 <code id="xlim">xlim</code>
 </td>
 <td>
-Numeric vector of length 2.
+Numeric vector of length 2. Controls the range of bar plots.
 </td>
 </tr>
 <tr>
@@ -748,39 +745,44 @@ Extra arguments are passed to the function in <code>fun</code>. Important: Custo
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinytable"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Built-in plot types</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> <span class="fu">list</span>(mtcars<span class="sc">$</span>mpg, mtcars<span class="sc">$</span>hp, mtcars<span class="sc">$</span>qsec)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Variables =</span> <span class="fu">c</span>(<span class="st">"mpg"</span>, <span class="st">"hp"</span>, <span class="st">"qsec"</span>),</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">Histogram =</span> <span class="st">""</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">Density =</span> <span class="st">""</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">Bar =</span> <span class="st">""</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">BarPct =</span> <span class="st">""</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">Line =</span> <span class="st">""</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Bar plots with single and dual colors</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Metric =</span> <span class="fu">c</span>(<span class="st">"Sales"</span>, <span class="st">"Conversion"</span>, <span class="st">"Growth"</span>, <span class="st">"Efficiency"</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Value =</span> <span class="fu">c</span>(<span class="dv">75</span>, <span class="dv">45</span>, <span class="dv">92</span>, <span class="dv">38</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">Percentage =</span> <span class="fu">c</span>(<span class="fl">0.75</span>, <span class="fl">0.45</span>, <span class="fl">0.92</span>, <span class="fl">0.38</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat) <span class="sc">|&gt;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_tt</span>(<span class="at">j =</span> <span class="dv">2</span>, <span class="at">fun =</span> <span class="st">"bar"</span>, <span class="at">data =</span> <span class="fu">as.list</span>(dat<span class="sc">$</span>Value), <span class="at">color =</span> <span class="st">"darkorange"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_tt</span>(<span class="at">j =</span> <span class="dv">3</span>, <span class="at">fun =</span> <span class="st">"bar"</span>, <span class="at">data =</span> <span class="fu">as.list</span>(dat<span class="sc">$</span>Percentage),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="fu">c</span>(<span class="st">"steelblue"</span>, <span class="st">"lightgrey"</span>), <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>))</span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Random data for sparklines</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>lines <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, \(x) <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">y =</span> <span class="fu">rnorm</span>(<span class="dv">10</span>)))</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Built-in plot types</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>plot_data <span class="ot">&lt;-</span> <span class="fu">list</span>(mtcars<span class="sc">$</span>mpg, mtcars<span class="sc">$</span>hp, mtcars<span class="sc">$</span>qsec)</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Percentage data (values between 0 and 1)</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>pct_data <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="fl">0.65</span>, <span class="fl">0.82</span>, <span class="fl">0.41</span>)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat) <span class="sc">|&gt;</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_tt</span>(<span class="at">j =</span> <span class="dv">2</span>, <span class="at">fun =</span> <span class="st">"histogram"</span>, <span class="at">data =</span> plot_data) <span class="sc">|&gt;</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_tt</span>(<span class="at">j =</span> <span class="dv">3</span>, <span class="at">fun =</span> <span class="st">"density"</span>, <span class="at">data =</span> plot_data, <span class="at">color =</span> <span class="st">"darkgreen"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_tt</span>(<span class="at">j =</span> <span class="dv">4</span>, <span class="at">fun =</span> <span class="st">"bar"</span>, <span class="at">data =</span> <span class="fu">list</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">6</span>), <span class="at">color =</span> <span class="st">"orange"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_tt</span>(<span class="at">j =</span> <span class="dv">5</span>, <span class="at">fun =</span> <span class="st">"barpct"</span>, <span class="at">data =</span> pct_data, <span class="at">color =</span> <span class="st">"steelblue"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_tt</span>(<span class="at">j =</span> <span class="dv">6</span>, <span class="at">fun =</span> <span class="st">"line"</span>, <span class="at">data =</span> lines, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(<span class="at">j =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>, <span class="at">align =</span> <span class="st">"c"</span>)</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom function example (must have ... argument)</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>custom_hist <span class="ot">&lt;-</span> <span class="cf">function</span>(d, ...) {</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>() <span class="fu">hist</span>(d, <span class="at">axes =</span> <span class="cn">FALSE</span>, <span class="at">ann =</span> <span class="cn">FALSE</span>, <span class="at">col =</span> <span class="st">"lightblue"</span>)</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">Variables =</span> <span class="fu">c</span>(<span class="st">"mpg"</span>, <span class="st">"hp"</span>, <span class="st">"qsec"</span>),</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">Histogram =</span> <span class="st">""</span>,</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">Density =</span> <span class="st">""</span>,</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">Line =</span> <span class="st">""</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Random data for sparklines</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>lines <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, \(x) <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>, <span class="at">y =</span> <span class="fu">rnorm</span>(<span class="dv">10</span>)))</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat) <span class="sc">|&gt;</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_tt</span>(<span class="at">j =</span> <span class="dv">2</span>, <span class="at">fun =</span> <span class="st">"histogram"</span>, <span class="at">data =</span> plot_data) <span class="sc">|&gt;</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_tt</span>(<span class="at">j =</span> <span class="dv">3</span>, <span class="at">fun =</span> <span class="st">"density"</span>, <span class="at">data =</span> plot_data, <span class="at">color =</span> <span class="st">"darkgreen"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_tt</span>(<span class="at">j =</span> <span class="dv">4</span>, <span class="at">fun =</span> <span class="st">"line"</span>, <span class="at">data =</span> lines, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(<span class="at">j =</span> <span class="dv">2</span><span class="sc">:</span><span class="dv">4</span>, <span class="at">align =</span> <span class="st">"c"</span>)</span>
 <span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(<span class="fu">data.frame</span>(<span class="at">Variables =</span> <span class="st">"mpg"</span>, <span class="at">Histogram =</span> <span class="st">""</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_tt</span>(<span class="at">j =</span> <span class="dv">2</span>, <span class="at">fun =</span> custom_hist, <span class="at">data =</span> <span class="fu">list</span>(mtcars<span class="sc">$</span>mpg))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom function example (must have ... argument)</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>custom_hist <span class="ot">&lt;-</span> <span class="cf">function</span>(d, ...) {</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  <span class="cf">function</span>() <span class="fu">hist</span>(d, <span class="at">axes =</span> <span class="cn">FALSE</span>, <span class="at">ann =</span> <span class="cn">FALSE</span>, <span class="at">col =</span> <span class="st">"lightblue"</span>)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(<span class="fu">data.frame</span>(<span class="at">Variables =</span> <span class="st">"mpg"</span>, <span class="at">Histogram =</span> <span class="st">""</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_tt</span>(<span class="at">j =</span> <span class="dv">2</span>, <span class="at">fun =</span> custom_hist, <span class="at">data =</span> <span class="fu">list</span>(mtcars<span class="sc">$</span>mpg))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 
 

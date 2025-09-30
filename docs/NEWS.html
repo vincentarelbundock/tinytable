@@ -514,6 +514,7 @@ window.Quarto = {
   <ul>
   <li><a href="#news" id="toc-news" class="nav-link active" data-scroll-target="#news">News</a>
   <ul class="collapse">
+  <li><a href="#development" id="toc-development" class="nav-link" data-scroll-target="#development">Development</a></li>
   <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section">0.14.0</a></li>
   <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">0.13.0</a></li>
   <li><a href="#section-2" id="toc-section-2" class="nav-link" data-scroll-target="#section-2">0.12.0</a></li>
@@ -556,6 +557,27 @@ window.Quarto = {
 
 <section id="news" class="level1">
 <h1>News</h1>
+<section id="development" class="level2">
+<h2 class="anchored" data-anchor-id="development">Development</h2>
+<p>New features:</p>
+<ul>
+<li><code>style_tt()</code> now supports comprehensive styling for Tabulator tables including bold, italic, color, background, fontsize, and more. Cell-specific styles persist across sorting and pagination operations.</li>
+<li><code>theme_html(tabulator_search = "column")</code> adds header filters to each column in Tabulator tables, allowing per-column searching.</li>
+<li><code>theme_striped()</code> now supports Tabulator tables with alternating row background colors.</li>
+<li><code>plot_tt()</code> now supports Tabulator tables with JavaScript-based rendering for built-in plot types (<code>bar</code>, <code>barpct</code>, <code>histogram</code>, <code>line</code>, <code>density</code>).</li>
+<li><code>plot_tt()</code> now supports images in Tabulator tables via the <code>images</code> parameter.</li>
+<li><code>theme_html(tabulator_css_rule = ...)</code> now appends CSS rules instead of overwriting them, allowing multiple calls to combine styles.</li>
+<li><code>plot_tt()</code> bar plots now accept <code>color</code> as a length-2 vector (<code>c(bar_color, background_color)</code>) to show progress bars with backgrounds in static formats (PNG, PDF, LaTeX). Use <code>xlim</code> to control the range. Note: Tabulator format uses only the first color.</li>
+</ul>
+<p>Changes:</p>
+<ul>
+<li><code>plot_tt(fun = "barpct")</code> is deprecated but still supported for backward compatibility. Use <code>fun = "bar"</code> with <code>xlim = c(0, 1)</code> and a two-color vector instead.</li>
+</ul>
+<p>Bugs:</p>
+<ul>
+<li>Issue in Typst when calling <code>style_tt()</code> with both a <code>rowspan</code> and a <code>line</code>. Thanks to <a href="https://github.com/eringrand"><span class="citation" data-cites="eringrand">@eringrand</span></a> for reporting Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/592">#592</a>.</li>
+</ul>
+</section>
 <section id="section" class="level2">
 <h2 class="anchored" data-anchor-id="section">0.14.0</h2>
 <p>Breaking changes:</p>

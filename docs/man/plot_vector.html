@@ -586,10 +586,7 @@ Output format. One of "html", "latex", "typst", "markdown", etc.
 <p><code>“density”</code>: Creates density plots from numeric vectors. Accepts <code>color</code> argument.</p>
 </li>
 <li>
-<p><code>“bar”</code>: Creates horizontal bar charts from single numeric values. Accepts <code>color</code> and <code>xlim</code> arguments.</p>
-</li>
-<li>
-<p><code>“barpct”</code>: Creates horizontal percentage bar charts from single numeric values between 0 and 1. Accepts <code>color</code> and <code>background</code> arguments.</p>
+<p><code>“bar”</code>: Creates horizontal bar charts from single numeric values. Accepts <code>color</code> (single value, or length-2 vector for bar and background colors in static formats) and <code>xlim</code> arguments.</p>
 </li>
 <li>
 <p><code>“line”</code>: Creates line plots from data frames with <code>x</code> and <code>y</code> columns. Accepts <code>color</code> and <code>xlim</code> arguments.</p>
@@ -629,7 +626,7 @@ a list of data frames or vectors to be used by the plotting functions in <code>f
 <code id="color">color</code>
 </td>
 <td>
-string Name of color to use for inline plots (passed to the <code>col</code> argument base <code>graphics</code> plots in <code>R</code>).
+string Name of color to use for inline plots (passed to the <code>col</code> argument base <code>graphics</code> plots in <code>R</code>). For bar plots in static output formats (PNG, PDF, etc.), can be a vector of length 2: c(bar_color, background_color) to show progress against a maximum. Note: Tabulator format only uses the first color.
 </td>
 </tr>
 <tr>
@@ -637,7 +634,7 @@ string Name of color to use for inline plots (passed to the <code>col</code> arg
 <code id="xlim">xlim</code>
 </td>
 <td>
-Numeric vector of length 2.
+Numeric vector of length 2. Controls the range of bar plots.
 </td>
 </tr>
 <tr>
