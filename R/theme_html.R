@@ -52,6 +52,16 @@ theme_html <- function(
   assert_choice(tabulator_search, c("top", "bottom", "column"), null.ok = TRUE)
   sanity_tabulator_css_rule(tabulator_css_rule)
   sanity_tabulator_columns(tabulator_columns)
+  
+  message()
+
+if (!isTRUE(portable) && isTRUE(Sys.info()["sysname"] == "Windows")) {
+  portable <- TRUE
+  warning("On Windows, `tinytable` must embed images in the HTML file directly. Set  `portable=TRUE` explicitly to silence this warning.",
+    call. = FALSE
+  )
+}
+
 
   if (!is.null(engine)) {
     x@html_engine <- engine
