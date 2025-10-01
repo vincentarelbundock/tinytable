@@ -213,10 +213,16 @@ plot_tt_lazy <- function(
   # Note: images use the standard HTML path below, which works for tabulator too
   is_tabulator <- isTRUE(x@output == "html" && x@html_engine == "tabulator")
   if (is_tabulator && !is.null(data)) {
-    return(plot_tt_tabulator(
+    result <- plot_tt_tabulator(
       x, i = i, j = j, fun = fun, data = data,
       color = color, xlim = xlim, ...
-    ))
+    )
+    # If plot_tt_tabulator returns NULL, it means we should fall back to PNG rendering
+    # (e.g., for custom functions). Otherwise, return the result.
+    if (!is.null(result)) {
+      return(result)
+    }
+    # Fall through to PNG rendering below
   }
 
   is_html <- isTRUE(x@output %in% c("html", "bootstrap", "tabulator"))
@@ -492,14 +498,10 @@ plot_tt_tabulator <- function(
   }
 
   if (is.null(plot_type)) {
-    # For custom functions, fall back to PNG rendering
-    warning(
-      "Custom plotting functions are not yet supported with Tabulator. ",
-      "Built-in plot types (histogram, density, bar, barpct, line) will use JavaScript rendering. ",
-      "Custom functions will fall back to PNG images.",
-      call. = FALSE
-    )
-    return(x)
+    # For custom functions, we cannot use JavaScript formatters
+    # Signal to continue with standard PNG rendering by returning NULL
+    # This will cause plot_tt_lazy to skip the tabulator path and use PNG
+    return(NULL)
   }
 
   # Handle the case where i is NA (from sanitize_i when i was NULL)

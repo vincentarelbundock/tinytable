@@ -224,6 +224,33 @@ All plots are rendered client-side using JavaScript, which means:
 - Better performance and smaller file sizes
 - Native integration with Tabulator's sorting and filtering
 
+### Custom plots
+
+```{r}
+percent_bar <- function(d, ...) {
+    fun = function() {
+        lbl <- sprintf("%.1f%%", 100 * d)
+        op <- par(mar = c(0, 0, 0, 0))
+        on.exit(par(op), add = TRUE)
+        plot.new()
+        plot.window(xlim = c(0, 1), ylim = c(0, 1), xaxs = "i", yaxs = "i")
+        rect(0, 0.1, d, 1, col = "lightgrey", border = NA)
+        text(0.5, 0.5, lbl, cex = 15)
+    }
+}
+
+dat <- data.frame(
+    City = c("Montreal", "Vancouver", "Toronto"),
+    Fun = "")
+
+tt(dat) |>
+    theme_html(engine = "tabulator") |>
+    plot_tt(
+        j = 2,
+        fun = percent_bar, data = list(0.90, 0.50, 0.10),
+        height = 2)
+```
+
 ### Images
 
 The `plot_tt()` function also supports inserting images into Tabulator tables using the `images` parameter:
