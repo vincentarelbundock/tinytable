@@ -57,7 +57,7 @@ theme_html <- function(
 
 if (!isTRUE(portable) && isTRUE(Sys.info()["sysname"] == "Windows")) {
   portable <- TRUE
-  warning("On Windows, `tinytable` must embed images in the HTML file directly. Set  `portable=TRUE` explicitly to silence this warning.",
+  warning("On Windows, `tinytable` must embed images in the HTML file directly. Set  `theme_html(portable=TRUE)` explicitly to silence this warning.",
     call. = FALSE
   )
 }
