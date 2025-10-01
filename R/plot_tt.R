@@ -258,8 +258,15 @@ plot_tt_lazy <- function(
       dir.create(path_assets)
     }
 
+    # Rank hack: prepend zero-padded rank to filename to allow sorting based on
+    # file names in interactive tables like tabulator
+    last_values <- sapply(data, plot_data_rank)
+    ranks <- rank(last_values, ties.method = "first")
+    n_digits <- nchar(as.character(length(data)))
+    zero_padded_ranks <- sprintf(paste0("%0", n_digits, "d"), ranks)
+
     for (idx in seq_along(data)) {
-      fn <- paste0(get_id(), ".png")
+      fn <- paste0("tinytable_", zero_padded_ranks[idx], "_", get_id(), ".png")
       fn_full <- file.path(path_assets, fn)
       if (is_portable) {
         # For portable HTML, store the full path for base64 encoding
@@ -398,6 +405,20 @@ plot_tt_lazy <- function(
   }
 
   return(x)
+}
+
+plot_data_rank <- function(x) {
+  if (is.list(x) || is.data.frame(x)) {
+    if (is.data.frame(x) && "y" %in% names(x)) {
+      utils::tail(x$y, n = 1)
+    } else if (is.list(x)) {
+      utils::tail(unlist(x), n = 1)
+    } else {
+      utils::tail(x, n = 1)
+    }
+  } else {
+    utils::tail(x, n = 1)
+  }
 }
 
 tiny_histogram <- function(d, color = "black", ...) {
