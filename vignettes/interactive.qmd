@@ -226,29 +226,36 @@ All plots are rendered client-side using JavaScript, which means:
 
 ### Custom plots
 
+As with [other output formats](https://vincentarelbundock.github.io/tinytable/vignettes/plot.html), we can use custom plotting functions and insert them in interactive table cells:
+
 ```{r}
-percent_bar <- function(d, ...) {
-    fun = function() {
-        lbl <- sprintf("%.1f%%", 100 * d)
-        op <- par(mar = c(0, 0, 0, 0))
-        on.exit(par(op), add = TRUE)
-        plot.new()
-        plot.window(xlim = c(0, 1), ylim = c(0, 1), xaxs = "i", yaxs = "i")
-        rect(0, 0.1, d, 1, col = "lightgrey", border = NA)
-        text(0.5, 0.5, lbl, cex = 15)
-    }
+library(ggplot2)
+
+bar <- function(d, ...) {
+  d <- data.frame(xmin = 0, xmax = d, ymin = 0, ymax = 1)
+  ggplot(d, aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax)) + 
+    geom_rect(fill = "lightblue") +
+    annotate("text", x = .5, y = .5, label = sprintf("%.0f%%", 100 * d$xmax), size = 12) +
+    scale_x_continuous(expand = c(0, 0), limits = c(0, 1)) +
+    scale_y_continuous(expand = c(0, 0), limits = c(0, 1)) +
+    coord_fixed(expand = FALSE) +
+    theme_void()
 }
 
 dat <- data.frame(
-    City = c("Montreal", "Vancouver", "Toronto"),
-    Fun = "")
+  City = c("Montreal", "Vancouver", "Toronto"),
+  Fun = ""
+)
 
 tt(dat) |>
-    theme_html(engine = "tabulator") |>
-    plot_tt(
-        j = 2,
-        fun = percent_bar, data = list(0.90, 0.50, 0.10),
-        height = 2)
+  theme_html(engine = "tabulator") |>
+  style_tt(alignv = "m") |>
+  plot_tt(
+    j = 2,
+    fun = bar,
+    data = list(0.90, 0.50, 0.10),
+    height = 2
+  )
 ```
 
 ### Images
@@ -266,7 +273,8 @@ img <- c(
 )
 tt(dat) |>
   theme_html(engine = "tabulator") |>
-  plot_tt(j = 2, images = img, height = 3)
+  plot_tt(j = 2, images = img, height = 3)  |>
+  print("html")
 ```
 
 Images can be local file paths (relative or absolute) or URLs. The `height` parameter controls the image height in em units.
