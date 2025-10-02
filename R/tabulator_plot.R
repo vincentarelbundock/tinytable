@@ -39,6 +39,7 @@ tabulator_plot_formatter <- function(
       height = 30,
       strokeWidth = 1.5
     )
+    formatter_config$sorter <- "tinytable_sparkline_sorter"
     return(list(
       config = formatter_config,
       data = y_values,
@@ -78,7 +79,8 @@ tabulator_plot_formatter <- function(
           color = bar_color,
           width = 120,
           height = 30
-        )
+        ),
+        sorter = "tinytable_histogram_sorter"
       ),
       data = as.numeric(data),
       requires_custom_js = TRUE
@@ -101,6 +103,7 @@ tabulator_plot_formatter <- function(
       height = 30,
       strokeWidth = 1.5
     )
+    formatter_config$sorter <- "tinytable_density_sorter"
     return(list(
       config = formatter_config,
       data = y_values,

@@ -59,10 +59,10 @@ df_to_json <- function(data) {
     }
 
     pairs <- sapply(names(lst), function(name) {
-      # Special handling for formatter field - don't quote custom function names
-      if (name == "formatter" && is.character(lst[[name]]) &&
+      # Special handling for formatter and sorter fields - don't quote custom function names
+      if ((name == "formatter" || name == "sorter") && is.character(lst[[name]]) &&
           grepl("^tinytable_", lst[[name]])) {
-        # Custom formatter - output as unquoted function reference
+        # Custom formatter/sorter - output as unquoted function reference
         paste0('"', name, '":', lst[[name]])
       } else {
         value_json <- value_to_json(lst[[name]])
