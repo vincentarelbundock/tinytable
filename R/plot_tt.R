@@ -268,6 +268,7 @@ plot_tt_lazy <- function(
     for (idx in seq_along(data)) {
       fn <- paste0("tinytable_", zero_padded_ranks[idx], "_", get_id(), ".png")
       fn_full <- file.path(path_assets, fn)
+      fn_full <- normalizePath(fn_full, mustWork = FALSE)
       if (is_portable) {
         # For portable HTML, store the full path for base64 encoding
         images[idx] <- fn_full

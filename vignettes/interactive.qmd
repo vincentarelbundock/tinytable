@@ -1,7 +1,6 @@
 ```{r}
 #| include: false
 library(tinytable)
-options(tinytable_html_engine = "tabulator")
 ```
 
 # Interactive tables
@@ -37,13 +36,15 @@ The `tinytable` package supports creating interactive tables using [the Tabulato
 
 ## Drawing, printing, and saving
 
-To create an interactive table, use `output = "tabulator"` when printing your table:
+To create an interactive table, use the `theme_html(engine="tabulator")` function:
 
 ```{r}
 #| eval: false
 library(tinytable)
 dat <- head(iris)
-tt(dat) |> print("tabulator")
+tt(dat) |> 
+  theme_html(engine = "tabulator") |> 
+  print("html")
 ```
 
 To save the table to file, we can use the `save_tt()` function. One issue to consider, however, is that `tinytable` supports two types of HTML output: `tabulator` and `bootstrap`. To select the default HTML engine, users can call the `theme_html()` function:
@@ -173,23 +174,6 @@ tt(dat) |>
   style_tt(align = "r")
 ```
 
-## CSS
-
-For more advanced styling, you can add custom CSS rules using the `tabulator_css_rule` argument in `theme_html()`. The CSS rule must include at least one `$TINYTABLE_ID` placeholder, which gets replaced with the unique table identifier to ensure styles only apply to that specific table.
-
-```{r}
-css_rule <- "
-$TINYTABLE_ID .tabulator-header .tabulator-col {
-  background-color: black;
-  color: white;
-}
-"
-tt(dat) |> theme_html(engine = "tabulator", tabulator_css_rule = css_rule, 
-  tabulator_pagination = 10)
-```
-
-
-
 ## Plots and images
 
 The `plot_tt()` function supports JavaScript-based inline plots in Tabulator tables. Built-in plot types include histograms, density plots, sparklines, and progress bars.
@@ -238,7 +222,6 @@ bar <- function(d, ...) {
     annotate("text", x = .5, y = .5, label = sprintf("%.0f%%", 100 * d$xmax), size = 12) +
     scale_x_continuous(expand = c(0, 0), limits = c(0, 1)) +
     scale_y_continuous(expand = c(0, 0), limits = c(0, 1)) +
-    coord_fixed(expand = FALSE) +
     theme_void()
 }
 
@@ -254,8 +237,7 @@ tt(dat) |>
     j = 2,
     fun = bar,
     data = list(0.90, 0.50, 0.10),
-    height = 2
-  )
+    height = 2)
 ```
 
 ### Images
@@ -273,11 +255,25 @@ img <- c(
 )
 tt(dat) |>
   theme_html(engine = "tabulator") |>
-  plot_tt(j = 2, images = img, height = 3)  |>
-  print("html")
+  plot_tt(j = 2, images = img, height = 3)
 ```
 
 Images can be local file paths (relative or absolute) or URLs. The `height` parameter controls the image height in em units.
+
+## CSS
+
+For more advanced styling, you can add custom CSS rules using the `tabulator_css_rule` argument in `theme_html()`. The CSS rule must include at least one `$TINYTABLE_ID` placeholder, which gets replaced with the unique table identifier to ensure styles only apply to that specific table.
+
+```{r}
+css_rule <- "
+$TINYTABLE_ID .tabulator-header .tabulator-col {
+  background-color: black;
+  color: white;
+}
+"
+tt(dat) |> theme_html(engine = "tabulator", tabulator_css_rule = css_rule, 
+  tabulator_pagination = 10)
+```
 
 
 ## Tabulator options and formatters
