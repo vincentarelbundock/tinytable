@@ -225,27 +225,10 @@ function tinytable_histogram(cell, p = {}) {
   return canvas;
 }
 
-// Custom sorter for sparkline/line plots - sorts by last value
-function tinytable_sparkline_sorter(a, b, aRow, bRow, column, dir, sorterParams) {
-  const aVal = Array.isArray(a) ? a[a.length - 1] : parseFloat(a);
-  const bVal = Array.isArray(b) ? b[b.length - 1] : parseFloat(b);
+// Unified sorter that uses hidden rank field
+function tinytable_rank_sorter(a, b, aRow, bRow, column, dir, sorterParams) {
+  const rankField = sorterParams.rankField;
+  const aVal = aRow.getData()[rankField] || 0;
+  const bVal = bRow.getData()[rankField] || 0;
   return aVal - bVal;
-}
-
-// Custom sorter for histogram plots - sorts by mean
-function tinytable_histogram_sorter(a, b, aRow, bRow, column, dir, sorterParams) {
-  const aArr = Array.isArray(a) ? a : [a];
-  const bArr = Array.isArray(b) ? b : [b];
-  const aMean = aArr.reduce((sum, val) => sum + val, 0) / aArr.length;
-  const bMean = bArr.reduce((sum, val) => sum + val, 0) / bArr.length;
-  return aMean - bMean;
-}
-
-// Custom sorter for density plots - sorts by mean (of density y-values)
-function tinytable_density_sorter(a, b, aRow, bRow, column, dir, sorterParams) {
-  const aArr = Array.isArray(a) ? a : [a];
-  const bArr = Array.isArray(b) ? b : [b];
-  const aMean = aArr.reduce((sum, val) => sum + val, 0) / aArr.length;
-  const bMean = bArr.reduce((sum, val) => sum + val, 0) / bArr.length;
-  return aMean - bMean;
 }
