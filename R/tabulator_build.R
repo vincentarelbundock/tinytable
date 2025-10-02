@@ -66,10 +66,10 @@ setMethod(
     # Leave columns placeholder for finalize_tabulator.R to handle
     # (Custom columns and formatting are handled there)
 
-    # Add default CDN (bootstrap5)
+    # Add default CDN (base Tabulator CSS + tinytable theme)
     template <- gsub(
       "$tinytable_TABULATOR_CDN",
-      '<link href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/scss/tabulator_tinytable.min.css" rel="stylesheet">',
+      '<link href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/tabulator.min.css" rel="stylesheet">\n    <link href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/scss/tabulator_tinytable.min.css" rel="stylesheet">',
       template,
       fixed = TRUE
     )

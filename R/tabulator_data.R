@@ -56,6 +56,16 @@ tabulator_clean_data <- function(x) {
         }
     }
 
+    # Add any additional columns from data_body that aren't in data (e.g., rank columns)
+    if (nrow(x@data_body) == nrow(x@data)) {
+        body_cols <- names(x@data_body)
+        data_cols <- names(x@data)
+        extra_cols <- setdiff(body_cols, data_cols)
+        for (col_name in extra_cols) {
+            data_clean[[col_name]] <- x@data_body[[col_name]]
+        }
+    }
+
     # Convert to data frame
     data_clean <- as.data.frame(data_clean, stringsAsFactors = FALSE)
 

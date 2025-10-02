@@ -396,11 +396,41 @@ plot_tt_lazy <- function(
   x@data_body <- out
 
   # Mark columns with HTML content for HTML formatter in Tabulator
+  # For custom functions with PNG images, also add rank fields for sorting
   if (isTRUE(x@html_engine == "tabulator")) {
+    # Handle the case where i is NA (from sanitize_i when i was NULL)
+    if (all(is.na(i)) && isTRUE(attr(i, "null"))) {
+      i_body <- attr(i, "body")
+    } else {
+      i_body <- i
+    }
+
     for (col_idx in j) {
       col_name <- x@names[col_idx]
       if (!is.null(col_name) && !(col_name %in% names(x@tabulator_column_formatters))) {
         x@tabulator_column_formatters[[col_name]] <- list(formatter = "html")
+
+        # Add rank fields for sorting (custom functions use PNG, but still need sorting)
+        if (!is.null(data)) {
+          rank_col_name <- paste0("rank_", col_name)
+
+          # Get data for this column
+          col_data_idx <- 1
+          if (length(j) > 1) {
+            col_data_idx <- which(j == col_idx)
+          }
+
+          for (row_idx in seq_along(i_body)) {
+            data_idx <- (col_data_idx - 1) * length(i_body) + row_idx
+            plot_data <- data[[data_idx]]
+            sort_value <- plot_data_rank(plot_data)
+            x@data_body[i_body[row_idx], rank_col_name] <- sort_value
+          }
+
+          # Configure sorter to use rank field
+          x@tabulator_column_formatters[[col_name]]$sorter <- "tinytable_rank_sorter"
+          x@tabulator_column_formatters[[col_name]]$sorterParams <- list(rankField = rank_col_name)
+        }
       }
     }
   }
@@ -560,6 +590,9 @@ plot_tt_tabulator <- function(
         xlim = xlim
       )
 
+      # Calculate sort value for this data
+      sort_value <- plot_data_rank(plot_data)
+
       # Store the formatted data in the cell
       if (plot_type %in% c("line", "density", "histogram")) {
         # For sparkline and histogram, store as JSON array string
@@ -570,8 +603,16 @@ plot_tt_tabulator <- function(
         x@data_body[i_body[row_idx], col_idx] <- formatter_info$data
       }
 
+      # Store rank value in a hidden column for sorting
+      # Don't use leading underscore as R converts it to X_rank_
+      rank_col_name <- paste0("rank_", col_name)
+      x@data_body[i_body[row_idx], rank_col_name] <- sort_value
+
       # Store the formatter configuration in tabulator_column_formatters (once per column)
       if (is.null(x@tabulator_column_formatters[[col_name]])) {
+        # Configure column to sort by the hidden rank field using custom sorter
+        formatter_info$config$sorter <- "tinytable_rank_sorter"
+        formatter_info$config$sorterParams <- list(rankField = rank_col_name)
         x@tabulator_column_formatters[[col_name]] <- formatter_info$config
       }
 

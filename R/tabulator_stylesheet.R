@@ -64,9 +64,9 @@ tabulator_stylesheet <- function(x, stylesheet) {
         }
     }
 
-    # Replace the CSS link in the table string
+    # Replace the CSS links in the table string (both base Tabulator CSS and tinytable theme)
     x@table_string <- gsub(
-        '<link href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/scss/tabulator_tinytable.min.css" rel="stylesheet">',
+        '<link href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/tabulator.min.css" rel="stylesheet">\n    <link href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/scss/tabulator_tinytable.min.css" rel="stylesheet">',
         css_link,
         x@table_string,
         fixed = TRUE

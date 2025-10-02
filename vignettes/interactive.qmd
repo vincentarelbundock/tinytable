@@ -174,6 +174,20 @@ tt(dat) |>
   style_tt(align = "r")
 ```
 
+### CSS
+
+For more advanced styling, you can add custom CSS rules using the `tabulator_css_rule` argument in `theme_html()`. The CSS rule must include at least one `$TINYTABLE_ID` placeholder, which gets replaced with the unique table identifier to ensure styles only apply to that specific table.
+
+```{r}
+css_rule <- "
+$TINYTABLE_ID .tabulator-header .tabulator-col {
+  background-color: black;
+  color: white;
+}
+"
+tt(dat) |> theme_html(engine = "tabulator", tabulator_css_rule = css_rule)
+```
+
 ## Plots and images
 
 The `plot_tt()` function supports JavaScript-based inline plots in Tabulator tables. Built-in plot types include histograms, density plots, sparklines, and progress bars.
@@ -259,21 +273,6 @@ tt(dat) |>
 ```
 
 Images can be local file paths (relative or absolute) or URLs. The `height` parameter controls the image height in em units.
-
-## CSS
-
-For more advanced styling, you can add custom CSS rules using the `tabulator_css_rule` argument in `theme_html()`. The CSS rule must include at least one `$TINYTABLE_ID` placeholder, which gets replaced with the unique table identifier to ensure styles only apply to that specific table.
-
-```{r}
-css_rule <- "
-$TINYTABLE_ID .tabulator-header .tabulator-col {
-  background-color: black;
-  color: white;
-}
-"
-tt(dat) |> theme_html(engine = "tabulator", tabulator_css_rule = css_rule, 
-  tabulator_pagination = 10)
-```
 
 
 ## Tabulator options and formatters
