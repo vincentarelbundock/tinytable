@@ -343,7 +343,7 @@ assert_length <- function(
   msg <- sprintf(
     "`%s` must be one of these lengths: %s",
     name,
-    paste(len, collapse = ", ")
+    paste(unique(len), collapse = ", ")
   )
   if (!length(x) %in% len) {
     stop(msg, call. = FALSE)
