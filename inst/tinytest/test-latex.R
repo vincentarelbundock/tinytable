@@ -266,6 +266,15 @@ expect_snapshot_print(
   label = "latex-heatmaps.tex"
 )
 
+# NA values in background styling
+set.seed(48103)
+bg <- sample(c(NA, "green", "orange"), 6 * 5, replace = TRUE)
+expect_snapshot_print(
+  tt(head(iris)) |>
+    style_tt(i = 1:6, j = 1:5, background = bg),
+  label = "latex-background_na_values.tex"
+)
+
 # Borders
 expect_snapshot_print(
   tt(x, theme = "empty") |>
