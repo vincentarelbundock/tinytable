@@ -82,8 +82,6 @@ req_df$current_vol = sprintf("%.2fM", req_df$current_vol / 1000000)
 # Remove Currency and Ticker columns (no longer needed)
 req_df = req_df[, !colnames(req_df) %in% c("Currency", "Ticker")]
 
-# Calculate table width (use fixed width for cross-platform compatibility)
-table_width = 1496
 
 # Set up column names with HTML formatting
 req_df = setNames(req_df, c(
@@ -101,7 +99,7 @@ req_df = setNames(req_df, c(
 ))
 
 # Relative column width
-w = c(2.5, 2, 1.3, 1, 2, 1, 1, 2, 1.3, 1, 2)
+w = c(3.5, 1.5, 1.3, 1, 2, 1, 1, 2, 1.3, 1, 2)
 
 # Create caption and notes
 title = style_vector("Top AI Stock Performance", smallcap = TRUE, fontsize = 1.4)
