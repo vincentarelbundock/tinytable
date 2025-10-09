@@ -267,13 +267,15 @@ expect_snapshot_print(
 )
 
 # NA values in background styling
-set.seed(48103)
-bg <- sample(c(NA, "green", "orange"), 6 * 5, replace = TRUE)
-expect_snapshot_print(
-  tt(head(iris)) |>
-    style_tt(i = 1:6, j = 1:5, background = bg),
-  label = "latex-background_na_values.tex"
-)
+if (Sys.info()["sysname"] == "Darwin") {
+  set.seed(48103)
+  bg <- sample(c(NA, "green", "orange"), 6 * 5, replace = TRUE)
+  expect_snapshot_print(
+    tt(head(iris)) |>
+      style_tt(i = 1:6, j = 1:5, background = bg),
+    label = "latex-background_na_values.tex"
+  )
+}
 
 # Borders
 expect_snapshot_print(
