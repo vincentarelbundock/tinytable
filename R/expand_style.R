@@ -1,59 +1,67 @@
-last_df <- function(x, bycols = c("i", "j")) {
-  # Fast path: if all rows are unique by (i,j), no aggregation needed
-  key <- paste(x[[bycols[1]]], x[[bycols[2]]], sep = "_")
-  if (!anyDuplicated(key)) {
-    return(x)
-  }
+last_df = function(x, bycols = c("i", "j")) {
+  # build key once
+  key = paste(x[[bycols[1]]], x[[bycols[2]]], sep = "_")
+  if (!anyDuplicated(key)) return(x)
 
-  # Use data.table-style aggregation for speed
-  # Split by grouping columns
-  bycols_list <- as.list(x[, bycols, drop = FALSE])
-  groups <- split(seq_len(nrow(x)), bycols_list)
+  # split into unique vs duplicated groups
+  dup_mask = duplicated(key) | duplicated(key, fromLast = TRUE)
+  x_unique = x[!dup_mask, , drop = FALSE]
+  x_dup    = x[ dup_mask, , drop = FALSE]
 
-  # Pre-allocate result
-  result_list <- vector("list", length(groups))
+  # group only the duplicated rows
+  bycols_list = as.list(x_dup[, bycols, drop = FALSE])
+  groups = split(seq_len(nrow(x_dup)), bycols_list)
 
-  # Determine column types once
-  col_names <- names(x)
-  is_grouping <- col_names %in% bycols
+  # cache column info
+  col_names = names(x_dup)
+  is_grouping = col_names %in% bycols
 
+  # aggregate only duplicated groups
+  result_list = vector("list", length(groups))
   for (g_idx in seq_along(groups)) {
-    idx <- groups[[g_idx]]
+    idx = groups[[g_idx]]
 
-    if (length(idx) == 1) {
-      # Single row, just copy it
-      result_list[[g_idx]] <- x[idx, , drop = FALSE]
+    if (length(idx) == 1L) {
+      # safety: copy as-is (should be rare in dup-only subset)
+      result_list[[g_idx]] = x_dup[idx, , drop = FALSE]
     } else {
-      # Multiple rows, aggregate
-      group_data <- x[idx, , drop = FALSE]
-      result_row <- group_data[1, , drop = FALSE]  # Template
+      group_data = x_dup[idx, , drop = FALSE]
+      result_row = group_data[1, , drop = FALSE]  # template keeps classes/levels
 
-      # Vectorized aggregation for non-grouping columns
+      # aggregate non-grouping columns
       for (col_idx in which(!is_grouping)) {
-        col <- col_names[col_idx]
-        values <- group_data[[col]]
+        col = col_names[col_idx]
+        values = group_data[[col]]
 
-        # Skip if values is empty
-        if (length(values) == 0) {
-          next
-        }
+        if (length(values) == 0L) next
 
         if (is.logical(values)) {
-          result_row[[col]] <- any(values, na.rm = TRUE)
+          result_row[[col]] = any(values, na.rm = TRUE)
         } else if (is.numeric(values)) {
-          result_row[[col]] <- max(values, na.rm = TRUE)
+          mx = suppressWarnings(max(values, na.rm = TRUE))
+          # if all NA, keep last value (NA) to avoid -Inf
+          if (is.infinite(mx) && mx < 0) {
+            result_row[[col]] = values[length(values)]
+          } else {
+            result_row[[col]] = mx
+          }
         } else {
-          # For other types: last non-NA value, or just last
-          non_na <- values[!is.na(values)]
-          result_row[[col]] <- if (length(non_na) > 0) non_na[length(non_na)] else values[length(values)]
+          # character/factor/list: last non-NA if available, else last
+          non_na = values[!is.na(values)]
+          result_row[[col]] = if (length(non_na) > 0L) non_na[length(non_na)] else values[length(values)]
         }
       }
 
-      result_list[[g_idx]] <- result_row
+      result_list[[g_idx]] = result_row
     }
   }
 
-  do.call(rbind, result_list)
+  x_dup_agg = do.call(rbind, result_list)
+
+  # recombine untouched uniques with processed duplicates
+  out = rbind(x_unique, x_dup_agg)
+  rownames(out) = NULL
+  out
 }
 
 
