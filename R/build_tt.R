@@ -96,10 +96,6 @@ build_tt <- function(x, output = NULL) {
   # insert group rows into body
   x <- rbind_body_groupi(x)
 
-  # apply theme_*() before style_tt()
-  lazy_style <- x@lazy_style
-  x@lazy_style <- list()
-
   # pre-process: theme_*() calls that need formatting conditional on @output
   # this is useful after rbind() because we now have the final indices and headers
   for (p in x@lazy_prepare) {
@@ -108,27 +104,6 @@ build_tt <- function(x, output = NULL) {
       x <- p(x)
     }
   }
-
-  # apply theme_*() before style_tt()
-  x@lazy_style <- c(x@lazy_style, lazy_style)
-
-  for (p in x@lazy_style) {
-    p[["x"]] <- x
-    x <- eval(p)
-  }
-
-  # Fix colspan that exceeds column count after lazy styles are evaluated
-  if (nrow(x@style) > 0) {
-    end <- x@style$j + x@style$colspan - 1
-    x@style$colspan <- ifelse(
-      !is.na(end) & end > x@ncol,
-      x@style$colspan - (end - x@ncol),
-      x@style$colspan)
-  }
-
-  # apply styling AFTER formatting/escaping to avoid escaping the style brackets
-  x <- style_notes(x)
-  x <- style_caption(x)
 
   # plots and images
   for (l in x@lazy_plot) {
@@ -150,6 +125,28 @@ build_tt <- function(x, output = NULL) {
     # Apply group_eval_j once with all groups
     x <- group_eval_j(x, j = seq_len(ncol(x)), ihead = ihead)
   }
+
+  # apply style_tt() and theme_*() after all group operations
+  lazy_style <- x@lazy_style
+  x@lazy_style <- list()
+
+  for (p in lazy_style) {
+    p[["x"]] <- x
+    x <- eval(p)
+  }
+
+  # Fix colspan that exceeds column count after lazy styles are evaluated
+  if (nrow(x@style) > 0) {
+    end <- x@style$j + x@style$colspan - 1
+    x@style$colspan <- ifelse(
+      !is.na(end) & end > x@ncol,
+      x@style$colspan - (end - x@ncol),
+      x@style$colspan)
+  }
+
+  # apply styling AFTER formatting/escaping to avoid escaping the style brackets
+  x <- style_notes(x)
+  x <- style_caption(x)
 
   x <- style_eval(x)
 
