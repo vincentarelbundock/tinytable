@@ -12,9 +12,10 @@ last_df = function(x, bycols = c("i", "j")) {
   bycols_list = as.list(x_dup[, bycols, drop = FALSE])
   groups = split(seq_len(nrow(x_dup)), bycols_list)
 
-  # cache column info
+  # identify non-grouping columns
   col_names = names(x_dup)
   is_grouping = col_names %in% bycols
+  data_cols = which(!is_grouping)
 
   # aggregate only duplicated groups
   result_list = vector("list", length(groups))
@@ -22,34 +23,18 @@ last_df = function(x, bycols = c("i", "j")) {
     idx = groups[[g_idx]]
 
     if (length(idx) == 1L) {
-      # safety: copy as-is (should be rare in dup-only subset)
+      # single row: copy as-is
       result_list[[g_idx]] = x_dup[idx, , drop = FALSE]
     } else {
       group_data = x_dup[idx, , drop = FALSE]
       result_row = group_data[1, , drop = FALSE]  # template keeps classes/levels
 
-      # aggregate non-grouping columns
-      for (col_idx in which(!is_grouping)) {
-        col = col_names[col_idx]
-        values = group_data[[col]]
-
+      # aggregate all columns: last non-NA wins
+      for (col_idx in data_cols) {
+        values = group_data[[col_idx]]
         if (length(values) == 0L) next
-
-        if (is.logical(values)) {
-          result_row[[col]] = any(values, na.rm = TRUE)
-        } else if (is.numeric(values)) {
-          mx = suppressWarnings(max(values, na.rm = TRUE))
-          # if all NA, keep last value (NA) to avoid -Inf
-          if (is.infinite(mx) && mx < 0) {
-            result_row[[col]] = values[length(values)]
-          } else {
-            result_row[[col]] = mx
-          }
-        } else {
-          # character/factor/list: last non-NA if available, else last
-          non_na = values[!is.na(values)]
-          result_row[[col]] = if (length(non_na) > 0L) non_na[length(non_na)] else values[length(values)]
-        }
+        non_na = values[!is.na(values)]
+        result_row[[col_idx]] = if (length(non_na) > 0L) non_na[length(non_na)] else values[length(values)]
       }
 
       result_list[[g_idx]] = result_row
@@ -121,7 +106,7 @@ expand_other <- function(x, rect, styles) {
     # Keep only relevant columns, unique rows, and rows with a concrete value for this property
     cols <- c("i", "j", p)
     cols <- unique(intersect(cols, names(styles)))
-    sub <- unique(styles[, cols, drop = FALSE])
+    sub <- styles[, cols, drop = FALSE]
     sub <- sub[!is.na(sub[[p]]), , drop = FALSE]
 
     if (nrow(sub) == 0) next
@@ -182,11 +167,7 @@ expand_other <- function(x, rect, styles) {
     missing_cols <- setdiff(expected_cols, names(style_other))
     if (length(missing_cols) > 0) {
       for (col in missing_cols) {
-        if (col %in% c("bold", "italic", "underline", "strikeout", "monospace", "smallcap")) {
-          style_other[[col]] <- FALSE
-        } else {
-          style_other[[col]] <- NA
-        }
+        style_other[[col]] <- NA
       }
     }
 

@@ -10,12 +10,12 @@ apply_notes_caption_styling <- function(
   i,
   color = NULL,
   fontsize = NULL,
-  bold = FALSE,
-  italic = FALSE,
-  monospace = FALSE,
-  smallcap = FALSE,
-  strikeout = FALSE,
-  underline = FALSE
+  bold = NULL,
+  italic = NULL,
+  monospace = NULL,
+  smallcap = NULL,
+  strikeout = NULL,
+  underline = NULL
 ) {
   style_params <- list(
     color = color,
@@ -121,12 +121,12 @@ style_tt_lazy <- function(
   x,
   i = NULL,
   j = NULL,
-  bold = FALSE,
-  italic = FALSE,
-  monospace = FALSE,
-  smallcap = FALSE,
-  underline = FALSE,
-  strikeout = FALSE,
+  bold = NULL,
+  italic = NULL,
+  monospace = NULL,
+  smallcap = NULL,
+  underline = NULL,
+  strikeout = NULL,
   color = NULL,
   background = NULL,
   fontsize = NULL,
@@ -259,12 +259,12 @@ style_tt_lazy <- function(
     settings[["alignv"]] <- if (is.null(alignv)) NA else alignv
     settings[["line_color"]] <- if (is.null(line)) NA else line_color
     settings[["line_width"]] <- if (is.null(line)) NA else line_width
-    settings[["bold"]] <- bold
-    settings[["italic"]] <- italic
-    settings[["monospace"]] <- monospace
-    settings[["smallcap"]] <- smallcap
-    settings[["strikeout"]] <- strikeout
-    settings[["underline"]] <- underline
+    settings[["bold"]] <- if (is.null(bold)) NA else bold
+    settings[["italic"]] <- if (is.null(italic)) NA else italic
+    settings[["monospace"]] <- if (is.null(monospace)) NA else monospace
+    settings[["smallcap"]] <- if (is.null(smallcap)) NA else smallcap
+    settings[["strikeout"]] <- if (is.null(strikeout)) NA else strikeout
+    settings[["underline"]] <- if (is.null(underline)) NA else underline
     settings[["indent"]] <- if (is.null(indent)) NA else as.vector(indent)
     settings[["colspan"]] <- if (is.null(colspan)) NA else colspan
     settings[["rowspan"]] <- if (is.null(rowspan)) NA else rowspan
@@ -385,12 +385,12 @@ assert_style_tt <- function(
   assert_character(background, null.ok = TRUE)
   assert_character(color, null.ok = TRUE)
   assert_numeric(fontsize, null.ok = TRUE)
-  assert_logical(bold)
-  assert_logical(italic)
-  assert_logical(monospace)
-  assert_logical(smallcap)
-  assert_logical(underline)
-  assert_logical(strikeout)
+  assert_logical(bold, null.ok = TRUE)
+  assert_logical(italic, null.ok = TRUE)
+  assert_logical(monospace, null.ok = TRUE)
+  assert_logical(smallcap, null.ok = TRUE)
+  assert_logical(underline, null.ok = TRUE)
+  assert_logical(strikeout, null.ok = TRUE)
   assert_string(line, null.ok = TRUE)
   assert_string(line_color, null.ok = FALSE) # black default
   assert_numeric(line_width, len = 1, lower = 0, null.ok = FALSE) # 0.1 default
@@ -425,36 +425,36 @@ assert_style_tt <- function(
     assert_length(color, len = 1, null.ok = TRUE)
     assert_length(background, len = 1, null.ok = TRUE)
     assert_length(fontsize, len = 1, null.ok = TRUE)
-    assert_length(bold, len = 1)
-    assert_length(italic, len = 1)
-    assert_length(monospace, len = 1)
-    assert_length(smallcap, len = 1)
-    assert_length(underline, len = 1)
-    assert_length(strikeout, len = 1)
+    assert_length(bold, len = 1, null.ok = TRUE)
+    assert_length(italic, len = 1, null.ok = TRUE)
+    assert_length(monospace, len = 1, null.ok = TRUE)
+    assert_length(smallcap, len = 1, null.ok = TRUE)
+    assert_length(underline, len = 1, null.ok = TRUE)
+    assert_length(strikeout, len = 1, null.ok = TRUE)
 
     # 1 or #rows
   } else if (!inull && jnull) {
     assert_length(color, len = c(1, length(ival)), null.ok = TRUE)
     assert_length(background, len = c(1, length(ival)), null.ok = TRUE)
     assert_length(fontsize, len = c(1, length(ival)), null.ok = TRUE)
-    assert_length(bold, len = c(1, length(ival)))
-    assert_length(italic, len = c(1, length(ival)))
-    assert_length(monospace, len = c(1, length(ival)))
-    assert_length(smallcap, len = c(1, length(ival)))
-    assert_length(underline, len = c(1, length(ival)))
-    assert_length(strikeout, len = c(1, length(ival)))
+    assert_length(bold, len = c(1, length(ival)), null.ok = TRUE)
+    assert_length(italic, len = c(1, length(ival)), null.ok = TRUE)
+    assert_length(monospace, len = c(1, length(ival)), null.ok = TRUE)
+    assert_length(smallcap, len = c(1, length(ival)), null.ok = TRUE)
+    assert_length(underline, len = c(1, length(ival)), null.ok = TRUE)
+    assert_length(strikeout, len = c(1, length(ival)), null.ok = TRUE)
 
     # 1 or #cols
   } else if (inull && !jnull) {
     assert_length(color, len = c(1, length(jval)), null.ok = TRUE)
     assert_length(background, len = c(1, length(jval)), null.ok = TRUE)
     assert_length(fontsize, len = c(1, length(jval)), null.ok = TRUE)
-    assert_length(bold, len = c(1, length(jval)))
-    assert_length(italic, len = c(1, length(jval)))
-    assert_length(monospace, len = c(1, length(jval)))
-    assert_length(smallcap, len = c(1, length(jval)))
-    assert_length(underline, len = c(1, length(jval)))
-    assert_length(strikeout, len = c(1, length(jval)))
+    assert_length(bold, len = c(1, length(jval)), null.ok = TRUE)
+    assert_length(italic, len = c(1, length(jval)), null.ok = TRUE)
+    assert_length(monospace, len = c(1, length(jval)), null.ok = TRUE)
+    assert_length(smallcap, len = c(1, length(jval)), null.ok = TRUE)
+    assert_length(underline, len = c(1, length(jval)), null.ok = TRUE)
+    assert_length(strikeout, len = c(1, length(jval)), null.ok = TRUE)
 
     # 1 or #cells
   } else if (!inull && !jnull) {
@@ -473,12 +473,12 @@ assert_style_tt <- function(
       len = c(1, length(ival) * length(jval)),
       null.ok = TRUE
     )
-    assert_length(bold, len = c(1, length(ival) * length(jval)))
-    assert_length(italic, len = c(1, length(ival) * length(jval)))
-    assert_length(monospace, len = c(1, length(ival) * length(jval)))
-    assert_length(smallcap, len = c(1, length(ival) * length(jval)))
-    assert_length(underline, len = c(1, length(ival) * length(jval)))
-    assert_length(strikeout, len = c(1, length(ival) * length(jval)))
+    assert_length(bold, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
+    assert_length(italic, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
+    assert_length(monospace, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
+    assert_length(smallcap, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
+    assert_length(underline, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
+    assert_length(strikeout, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
   }
 }
 # =============================================================================
@@ -645,12 +645,12 @@ style_tt <- function(
   x,
   i = NULL,
   j = NULL,
-  bold = FALSE,
-  italic = FALSE,
-  monospace = FALSE,
-  smallcap = FALSE,
-  underline = FALSE,
-  strikeout = FALSE,
+  bold = NULL,
+  italic = NULL,
+  monospace = NULL,
+  smallcap = NULL,
+  underline = NULL,
+  strikeout = NULL,
   color = NULL,
   background = NULL,
   fontsize = NULL,

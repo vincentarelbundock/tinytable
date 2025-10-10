@@ -16,6 +16,10 @@ Changes:
 
 * `plot_tt(fun = "barpct")` is deprecated but still supported for backward compatibility. Use `fun = "bar"` with `xlim = c(0, 1)` and a two-color vector instead.
 
+Internal changes:
+
+* Refactored `style_tt()` logical parameter handling: defaults changed from `FALSE` to `NULL`, with `NULL` values stored as `NA` in the style dataframe. Simplified `expand_style()` to use consistent "last non-NA wins" logic for all style properties including logical ones.
+
 Bugs:
 
 * Issue in Typst when calling `style_tt()` with both a `rowspan` and a `line`. Thanks to @eringrand for reporting Issue #592.
