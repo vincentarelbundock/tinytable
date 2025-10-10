@@ -199,108 +199,218 @@ setMethod(
     # Collect all styles per cell first, then consolidate
     cell_styles <- list()
 
-    # Process line styles - consolidate first, then generate CSS once per cell
+    # Process line styles - vectorized approach
     if (!is.null(lines) && nrow(lines) > 0) {
-      # Group line entries by cell (i, j) to consolidate before CSS generation
-      cells_with_lines <- split(lines, paste(lines$i, lines$j, sep = "_"))
+      # Use interaction() for compact cell keys
+      lines$cell_key <- interaction(lines$i, lines$j, drop = TRUE)
 
-      for (cell_key in names(cells_with_lines)) {
-        cell_lines <- cells_with_lines[[cell_key]]
+      # Precompute direction booleans once (vectorized regex)
+      has_t <- grepl("t", lines$line)
+      has_r <- grepl("r", lines$line)
+      has_b <- grepl("b", lines$line)
+      has_l <- grepl("l", lines$line)
 
-        # Consolidate line properties for this cell based on all line entries
-        consolidated_params <- list(
-          border_top = 0, border_right = 0, border_bottom = 0, border_left = 0,
-          color_top = "black", color_right = "black", color_bottom = "black", color_left = "black",
-          width_top = 0.1, width_right = 0.1, width_bottom = 0.1, width_left = 0.1,
-          trim_top_left = 0, trim_top_right = 0, trim_bottom_left = 0, trim_bottom_right = 0,
-          trim_left_top = 0, trim_left_bottom = 0, trim_right_top = 0, trim_right_bottom = 0
+      # Precompute trim booleans once
+      lines$line_trim <- ifelse(is.na(lines$line_trim), "", lines$line_trim)
+      trim_l <- grepl("l", lines$line_trim)
+      trim_r <- grepl("r", lines$line_trim)
+
+      # Normalize colors once: build a map for unique line_color -> hex
+      unique_colors <- unique(lines$line_color[!is.na(lines$line_color)])
+      if (length(unique_colors) > 0) {
+        color_map <- setNames(
+          sapply(unique_colors, standardize_colors, format = "hex", USE.NAMES = FALSE),
+          unique_colors
+        )
+      } else {
+        color_map <- character(0)
+      }
+
+      # Map colors to hex (fallback to "black")
+      lines$color_hex <- ifelse(
+        !is.na(lines$line_color) & lines$line_color %in% names(color_map),
+        color_map[lines$line_color],
+        "black"
+      )
+
+      # Default widths
+      lines$line_width <- ifelse(is.na(lines$line_width), 0.1, lines$line_width)
+
+      # Aggregate per direction using tapply per cell_key
+      cells_unique <- levels(lines$cell_key)
+
+      # Helper to aggregate border flags (any TRUE)
+      agg_any <- function(x, cell_key, has_dir) {
+        tapply(has_dir, cell_key, any, default = FALSE)[cells_unique]
+      }
+
+      # Helper to aggregate widths (max)
+      agg_max_width <- function(x, cell_key, has_dir, width) {
+        tapply(
+          ifelse(has_dir, width, NA),
+          cell_key,
+          function(v) if (all(is.na(v))) 0.1 else max(v, na.rm = TRUE),
+          default = 0.1
+        )[cells_unique]
+      }
+
+      # Helper to aggregate colors (first non-default)
+      agg_first_color <- function(x, cell_key, has_dir, color) {
+        tapply(
+          ifelse(has_dir, color, NA_character_),
+          cell_key,
+          function(v) {
+            v <- v[!is.na(v)]
+            if (length(v) > 0) v[1] else "black"
+          },
+          default = "black"
+        )[cells_unique]
+      }
+
+      # Aggregate border flags
+      border_top <- agg_any(lines, lines$cell_key, has_t)
+      border_right <- agg_any(lines, lines$cell_key, has_r)
+      border_bottom <- agg_any(lines, lines$cell_key, has_b)
+      border_left <- agg_any(lines, lines$cell_key, has_l)
+
+      # Aggregate widths
+      width_top <- agg_max_width(lines, lines$cell_key, has_t, lines$line_width)
+      width_right <- agg_max_width(lines, lines$cell_key, has_r, lines$line_width)
+      width_bottom <- agg_max_width(lines, lines$cell_key, has_b, lines$line_width)
+      width_left <- agg_max_width(lines, lines$cell_key, has_l, lines$line_width)
+
+      # Aggregate colors
+      color_top <- agg_first_color(lines, lines$cell_key, has_t, lines$color_hex)
+      color_right <- agg_first_color(lines, lines$cell_key, has_r, lines$color_hex)
+      color_bottom <- agg_first_color(lines, lines$cell_key, has_b, lines$color_hex)
+      color_left <- agg_first_color(lines, lines$cell_key, has_l, lines$color_hex)
+
+      # Aggregate trim flags (any TRUE, multiply by 3 at end)
+      trim_top_left <- tapply(trim_l & has_t, lines$cell_key, any, default = FALSE)[cells_unique] * 3
+      trim_top_right <- tapply(trim_r & has_t, lines$cell_key, any, default = FALSE)[cells_unique] * 3
+      trim_bottom_left <- tapply(trim_l & has_b, lines$cell_key, any, default = FALSE)[cells_unique] * 3
+      trim_bottom_right <- tapply(trim_r & has_b, lines$cell_key, any, default = FALSE)[cells_unique] * 3
+      trim_left_top <- tapply(trim_l & has_l, lines$cell_key, any, default = FALSE)[cells_unique] * 3
+      trim_left_bottom <- tapply(trim_l & has_l, lines$cell_key, any, default = FALSE)[cells_unique] * 3
+      trim_right_top <- tapply(trim_r & has_r, lines$cell_key, any, default = FALSE)[cells_unique] * 3
+      trim_right_bottom <- tapply(trim_r & has_r, lines$cell_key, any, default = FALSE)[cells_unique] * 3
+
+      # Get first (i,j) per cell_key
+      first_idx <- match(cells_unique, lines$cell_key)
+      cell_i <- lines$i[first_idx]
+      cell_j <- lines$j[first_idx]
+
+      # Filter to cells with at least one border
+      has_border_mask <- border_top | border_right | border_bottom | border_left
+
+      if (any(has_border_mask)) {
+        # Build consolidated data.frame
+        line_params <- data.frame(
+          i = cell_i[has_border_mask],
+          j = cell_j[has_border_mask],
+          border_top = as.integer(border_top[has_border_mask]),
+          border_right = as.integer(border_right[has_border_mask]),
+          border_bottom = as.integer(border_bottom[has_border_mask]),
+          border_left = as.integer(border_left[has_border_mask]),
+          color_top = color_top[has_border_mask],
+          color_right = color_right[has_border_mask],
+          color_bottom = color_bottom[has_border_mask],
+          color_left = color_left[has_border_mask],
+          width_top = width_top[has_border_mask],
+          width_right = width_right[has_border_mask],
+          width_bottom = width_bottom[has_border_mask],
+          width_left = width_left[has_border_mask],
+          trim_top_left = trim_top_left[has_border_mask],
+          trim_top_right = trim_top_right[has_border_mask],
+          trim_bottom_left = trim_bottom_left[has_border_mask],
+          trim_bottom_right = trim_bottom_right[has_border_mask],
+          trim_left_top = trim_left_top[has_border_mask],
+          trim_left_bottom = trim_left_bottom[has_border_mask],
+          trim_right_top = trim_right_top[has_border_mask],
+          trim_right_bottom = trim_right_bottom[has_border_mask],
+          stringsAsFactors = FALSE
         )
 
-        for (row in seq_len(nrow(cell_lines))) {
-          line_entry <- cell_lines[row, , drop = FALSE]
-          line_val <- line_entry$line
-          line_width_val <- if ("line_width" %in% names(line_entry)) line_entry$line_width else 0.1
-          line_color_val <- if ("line_color" %in% names(line_entry)) line_entry$line_color else "black"
-          line_trim_val <- if ("line_trim" %in% names(line_entry)) line_entry$line_trim else ""
+        # Call line_to_css() once per cell via mapply (vectorized)
+        css_results <- mapply(
+          line_to_css,
+          border_top = line_params$border_top,
+          border_right = line_params$border_right,
+          border_bottom = line_params$border_bottom,
+          border_left = line_params$border_left,
+          color_top = line_params$color_top,
+          color_right = line_params$color_right,
+          color_bottom = line_params$color_bottom,
+          color_left = line_params$color_left,
+          width_top = line_params$width_top,
+          width_right = line_params$width_right,
+          width_bottom = line_params$width_bottom,
+          width_left = line_params$width_left,
+          trim_top_left = line_params$trim_top_left,
+          trim_top_right = line_params$trim_top_right,
+          trim_bottom_left = line_params$trim_bottom_left,
+          trim_bottom_right = line_params$trim_bottom_right,
+          trim_left_top = line_params$trim_left_top,
+          trim_left_bottom = line_params$trim_left_bottom,
+          trim_right_top = line_params$trim_right_top,
+          trim_right_bottom = line_params$trim_right_bottom,
+          SIMPLIFY = TRUE,
+          USE.NAMES = FALSE
+        )
 
-          # Set border flags for directions present in line value
-          if (grepl("t", line_val)) {
-            consolidated_params$border_top <- 1
-            consolidated_params$color_top <- if (!is.na(line_color_val)) standardize_colors(line_color_val, "hex") else "black"
-            consolidated_params$width_top <- if (!is.na(line_width_val)) line_width_val else 0.1
-          }
-          if (grepl("r", line_val)) {
-            consolidated_params$border_right <- 1
-            consolidated_params$color_right <- if (!is.na(line_color_val)) standardize_colors(line_color_val, "hex") else "black"
-            consolidated_params$width_right <- if (!is.na(line_width_val)) line_width_val else 0.1
-          }
-          if (grepl("b", line_val)) {
-            consolidated_params$border_bottom <- 1
-            consolidated_params$color_bottom <- if (!is.na(line_color_val)) standardize_colors(line_color_val, "hex") else "black"
-            consolidated_params$width_bottom <- if (!is.na(line_width_val)) line_width_val else 0.1
-          }
-          if (grepl("l", line_val)) {
-            consolidated_params$border_left <- 1
-            consolidated_params$color_left <- if (!is.na(line_color_val)) standardize_colors(line_color_val, "hex") else "black"
-            consolidated_params$width_left <- if (!is.na(line_width_val)) line_width_val else 0.1
-          }
-
-          # Handle trimming
-          if (!is.na(line_trim_val) && nzchar(line_trim_val)) {
-            trim_pct <- 3  # Default trim percentage
-            if (grepl("l", line_trim_val)) {
-              if (grepl("t", line_val)) consolidated_params$trim_top_left <- trim_pct
-              if (grepl("b", line_val)) consolidated_params$trim_bottom_left <- trim_pct
-              if (grepl("l", line_val)) {
-                consolidated_params$trim_left_top <- trim_pct
-                consolidated_params$trim_left_bottom <- trim_pct
-              }
-            }
-            if (grepl("r", line_trim_val)) {
-              if (grepl("t", line_val)) consolidated_params$trim_top_right <- trim_pct
-              if (grepl("b", line_val)) consolidated_params$trim_bottom_right <- trim_pct
-              if (grepl("r", line_val)) {
-                consolidated_params$trim_right_top <- trim_pct
-                consolidated_params$trim_right_bottom <- trim_pct
-              }
-            }
-          }
-        }
-
-        # Now call line_to_css() once with consolidated parameters
-        if (any(c(consolidated_params$border_top, consolidated_params$border_right,
-                  consolidated_params$border_bottom, consolidated_params$border_left) == 1)) {
-
-          consolidated_css <- do.call(line_to_css, consolidated_params)
-
-          if (nzchar(consolidated_css)) {
-            first_entry <- cell_lines[1, , drop = FALSE]
+        # Filter non-empty CSS and build cell_styles list
+        has_css <- nzchar(css_results)
+        if (any(has_css)) {
+          for (idx in which(has_css)) {
+            cell_key <- paste(line_params$i[idx], line_params$j[idx], sep = "_")
             cell_styles[[cell_key]] <- list(
-              i = first_entry$i,
-              j = first_entry$j,
+              i = line_params$i[idx],
+              j = line_params$j[idx],
               css = "",
               css_before = "",
               css_after = "",
               has_border = TRUE,
-              consolidated_line_css = consolidated_css
+              consolidated_line_css = css_results[idx]
             )
           }
         }
       }
     }
 
-    # Process other styles - create CSS entries immediately
+    # Process other styles - vectorized
     if (!is.null(other) && nrow(other) > 0) {
+      # Vectorize style_to_css over all rows
+      css_rules <- character(nrow(other))
       for (row in seq_len(nrow(other))) {
-        css_rule <- style_to_css(other[row, , drop = FALSE])
+        css_rules[row] <- style_to_css(other[row, , drop = FALSE])
+      }
 
-        if (nzchar(css_rule)) {
-          cell_key <- paste(other[row, "i"], other[row, "j"], sep = "_")
+      # Filter to non-empty CSS
+      has_css <- nzchar(css_rules)
+      if (any(has_css)) {
+        other_with_css <- other[has_css, , drop = FALSE]
+        css_rules <- css_rules[has_css]
+
+        # Keep only last non-empty CSS per (i,j) by reversing, deduplicating, then reversing again
+        cell_keys <- paste(other_with_css$i, other_with_css$j, sep = "_")
+        # Reverse order to keep last occurrence
+        rev_idx <- seq(nrow(other_with_css), 1)
+        unique_idx <- !duplicated(cell_keys[rev_idx])
+        # Get back to original order
+        final_idx <- rev(rev_idx[unique_idx])
+
+        other_final <- other_with_css[final_idx, , drop = FALSE]
+        css_final <- css_rules[final_idx]
+        cell_keys_final <- cell_keys[final_idx]
+
+        # Build cell_styles entries
+        for (idx in seq_along(css_final)) {
+          cell_key <- cell_keys_final[idx]
 
           if (is.null(cell_styles[[cell_key]])) {
             cell_styles[[cell_key]] <- list(
-              i = other[row, "i"],
-              j = other[row, "j"],
+              i = other_final$i[idx],
+              j = other_final$j[idx],
               css = "",
               css_before = "",
               css_after = "",
@@ -308,68 +418,75 @@ setMethod(
             )
           }
 
-          cell_styles[[cell_key]]$css <- css_rule
+          cell_styles[[cell_key]]$css <- css_final[idx]
         }
       }
     }
 
-    # Now consolidate styles for each cell
-    css_entries <- list()
-    for (cell_key in names(cell_styles)) {
-      cell_data <- cell_styles[[cell_key]]
-
-      # Process consolidated line CSS if it exists
-      css_parts <- c()
-      if (!is.null(cell_data$consolidated_line_css) && nzchar(cell_data$consolidated_line_css)) {
-        css_parts <- c(css_parts, cell_data$consolidated_line_css)
-      }
-      if (nzchar(cell_data$css)) {
-        css_parts <- c(css_parts, cell_data$css)
-      }
-
-      merged_css <- if (length(css_parts) > 0) paste(css_parts, collapse = "; ") else ""
-
-      if (nzchar(merged_css)) {
-        css_entries[[cell_key]] <- list(
-          i = cell_data$i,
-          j = cell_data$j,
-          css_rule = merged_css,
-          has_border = cell_data$has_border
-        )
-      }
-    }
-
-
-    if (length(css_entries) == 0) {
+    # Early exit if no styles
+    if (length(cell_styles) == 0) {
       return(x)
     }
 
-    # Group css_entries by their CSS rules to eliminate duplicates
-    css_groups <- list()
+    # Convert cell_styles list to data.frame for vectorized operations
+    n_cells <- length(cell_styles)
+    css_df <- data.frame(
+      i = integer(n_cells),
+      j = integer(n_cells),
+      line_css = character(n_cells),
+      other_css = character(n_cells),
+      has_border = logical(n_cells),
+      stringsAsFactors = FALSE
+    )
 
-    for (cell_key in names(css_entries)) {
-      entry_data <- css_entries[[cell_key]]
-      has_border <- entry_data$has_border
+    idx <- 1
+    for (cell_key in names(cell_styles)) {
+      cell_data <- cell_styles[[cell_key]]
+      css_df$i[idx] <- cell_data$i
+      css_df$j[idx] <- cell_data$j
+      css_df$line_css[idx] <- if (!is.null(cell_data$consolidated_line_css)) cell_data$consolidated_line_css else ""
+      css_df$other_css[idx] <- cell_data$css
+      css_df$has_border[idx] <- cell_data$has_border
+      idx <- idx + 1
+    }
 
-      # Get CSS rule - now both borders and other styles use css_rule
-      css_rule <- entry_data$css_rule
+    # Merge line_css and other_css
+    has_line <- nzchar(css_df$line_css)
+    has_other <- nzchar(css_df$other_css)
 
-      if (!nzchar(css_rule)) next
+    css_df$merged_css <- ifelse(
+      has_line & has_other,
+      paste(css_df$line_css, css_df$other_css, sep = "; "),
+      ifelse(has_line, css_df$line_css, css_df$other_css)
+    )
 
-      # Create a key that includes both the CSS rule and border status
-      group_key <- paste(css_rule, has_border, sep = "|")
+    # Filter to non-empty CSS
+    css_df <- css_df[nzchar(css_df$merged_css), , drop = FALSE]
 
-      if (is.null(css_groups[[group_key]])) {
-        css_groups[[group_key]] <- list(
-          css_rule = css_rule,
-          has_border = has_border,
-          cells = list()
-        )
-      }
+    if (nrow(css_df) == 0) {
+      return(x)
+    }
 
-      css_groups[[group_key]]$cells <- c(
-        css_groups[[group_key]]$cells,
-        list(list(i = entry_data$i, j = entry_data$j))
+    # Group by CSS rule and border status using interaction
+    css_df$group_key <- interaction(css_df$merged_css, css_df$has_border, drop = TRUE)
+
+    # For each group, collect cells
+    group_levels <- levels(css_df$group_key)
+    css_groups <- vector("list", length(group_levels))
+    names(css_groups) <- group_levels
+
+    for (g_idx in seq_along(group_levels)) {
+      group_mask <- css_df$group_key == group_levels[g_idx]
+      group_rows <- css_df[group_mask, , drop = FALSE]
+
+      css_groups[[g_idx]] <- list(
+        css_rule = group_rows$merged_css[1],
+        has_border = group_rows$has_border[1],
+        cells = lapply(seq_len(nrow(group_rows)), function(r) {
+          list(i = group_rows$i[r], j = group_rows$j[r])
+        }),
+        first_j = group_rows$j[1],
+        first_i = group_rows$i[1]
       )
     }
 
@@ -377,15 +494,9 @@ setMethod(
     # Sort groups by the first cell's coordinates to ensure deterministic ordering
     group_keys_sorted <- names(css_groups)
     if (length(group_keys_sorted) > 0) {
-      first_cells <- sapply(group_keys_sorted, function(gk) {
-        cells <- css_groups[[gk]]$cells
-        if (length(cells) > 0) {
-          paste(cells[[1]]$j, cells[[1]]$i, sep = "_")
-        } else {
-          "999_999"
-        }
-      })
-      group_keys_sorted <- group_keys_sorted[order(first_cells)]
+      # Use precomputed first_j and first_i for efficient sorting
+      sort_keys <- sapply(css_groups, function(g) g$first_j * 10000 + g$first_i, USE.NAMES = FALSE)
+      group_keys_sorted <- group_keys_sorted[order(sort_keys)]
     }
 
     for (group_key in group_keys_sorted) {

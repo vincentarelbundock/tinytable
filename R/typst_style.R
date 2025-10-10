@@ -116,7 +116,23 @@ typst_hlines <- function(x, lin) {
     return(x)
   }
 
-  tmp <- split(lin, list(lin$i, lin$line, lin$line_color, lin$line_width))
+  # Normalize colors once before splitting
+  unique_line_colors <- unique(lin$line_color[!is.na(lin$line_color)])
+  if (length(unique_line_colors) > 0) {
+    line_color_map <- setNames(
+      sapply(unique_line_colors, standardize_colors, format = "typst", USE.NAMES = FALSE),
+      unique_line_colors
+    )
+    lin$line_color_mapped <- ifelse(
+      !is.na(lin$line_color) & lin$line_color %in% names(line_color_map),
+      line_color_map[lin$line_color],
+      "black"
+    )
+  } else {
+    lin$line_color_mapped <- "black"
+  }
+
+  tmp <- split(lin, list(lin$i, lin$line, lin$line_color_mapped, lin$line_width))
   tmp <- Filter(function(x) nrow(x) > 0, tmp)
   tmp <- lapply(tmp, function(k) {
     xmin <- typst_split_chunks(k$j)$min
@@ -124,11 +140,7 @@ typst_hlines <- function(x, lin) {
     ymin <- k$i[1]
     ymax <- k$i[1] + 1
     line <- k$line[1]
-    color <- if (is.na(k$line_color[1])) {
-      "black"
-    } else {
-      standardize_colors(k$line_color[1], format = "typst")
-    }
+    color <- k$line_color_mapped[1]
     width <- if (is.na(k$line_width[1])) 0.1 else k$line_width[1]
     width <- sprintf("%sem", width)
     out <- ""
@@ -207,31 +219,53 @@ process_typst_other_styles <- function(x, other) {
   # Map alignments to Typst format
   other <- typst_map_alignments(other)
 
-  # Generate CSS for each cell
+  # Normalize colors once
+  unique_colors <- c(
+    unique(other$color[!is.na(other$color)]),
+    unique(other$background[!is.na(other$background)])
+  )
+  unique_colors <- unique(unique_colors)
+  if (length(unique_colors) > 0) {
+    color_map <- setNames(
+      sapply(unique_colors, standardize_colors, format = "typst", USE.NAMES = FALSE),
+      unique_colors
+    )
+  } else {
+    color_map <- character(0)
+  }
+
+  # Generate CSS for each cell - vectorize where possible
   css <- rep("", nrow(other))
 
+  # Process boolean styles (vectorized)
+  is_bold <- !is.na(other$bold) & other$bold
+  is_italic <- !is.na(other$italic) & other$italic
+  is_underline <- !is.na(other$underline) & other$underline
+  is_strikeout <- !is.na(other$strikeout) & other$strikeout
+  is_monospace <- !is.na(other$monospace) & other$monospace
+
   for (row in seq_len(nrow(other))) {
-    if (isTRUE(other[row, "bold"])) {
+    if (is_bold[row]) {
       css[row] <- typst_insert_field(css[row], "bold", "true")
     }
-    if (isTRUE(other[row, "italic"])) {
+    if (is_italic[row]) {
       css[row] <- typst_insert_field(css[row], "italic", "true")
     }
-    if (isTRUE(other[row, "underline"])) {
+    if (is_underline[row]) {
       css[row] <- typst_insert_field(css[row], "underline", "true")
     }
-    if (isTRUE(other[row, "strikeout"])) {
+    if (is_strikeout[row]) {
       css[row] <- typst_insert_field(css[row], "strikeout", "true")
     }
-    if (isTRUE(other[row, "monospace"])) {
+    if (is_monospace[row]) {
       css[row] <- typst_insert_field(css[row], "mono", "true")
     }
     if (!is.na(other[row, "color"])) {
-      color_value <- standardize_colors(other[row, "color"], format = "typst")
+      color_value <- color_map[other[row, "color"]]
       css[row] <- typst_insert_field(css[row], "color", color_value)
     }
     if (!is.na(other[row, "background"])) {
-      bg_value <- standardize_colors(other[row, "background"], format = "typst")
+      bg_value <- color_map[other[row, "background"]]
       css[row] <- typst_insert_field(css[row], "background", bg_value)
     }
     if (!is.na(other[row, "fontsize"])) {
@@ -289,7 +323,23 @@ typst_vlines <- function(x, lin) {
     return(x)
   }
 
-  lin <- split(lin, list(lin$j, lin$line, lin$line_color, lin$line_width))
+  # Normalize colors once before splitting
+  unique_line_colors <- unique(lin$line_color[!is.na(lin$line_color)])
+  if (length(unique_line_colors) > 0) {
+    line_color_map <- setNames(
+      sapply(unique_line_colors, standardize_colors, format = "typst", USE.NAMES = FALSE),
+      unique_line_colors
+    )
+    lin$line_color_mapped <- ifelse(
+      !is.na(lin$line_color) & lin$line_color %in% names(line_color_map),
+      line_color_map[lin$line_color],
+      "black"
+    )
+  } else {
+    lin$line_color_mapped <- "black"
+  }
+
+  lin <- split(lin, list(lin$j, lin$line, lin$line_color_mapped, lin$line_width))
   lin <- Filter(function(x) nrow(x) > 0, lin)
   lin <- lapply(lin, function(k) {
     ymin <- typst_split_chunks(k$i)$min
@@ -297,11 +347,7 @@ typst_vlines <- function(x, lin) {
     xmin <- k$j[1]
     xmax <- xmin + 1
     line <- k$line[1]
-    color <- if (is.na(k$line_color[1])) {
-      "black"
-    } else {
-      standardize_colors(k$line_color[1], format = "typst")
-    }
+    color <- k$line_color_mapped[1]
     width <- if (is.na(k$line_width[1])) 0.1 else k$line_width[1]
     width <- sprintf("%sem", width)
     out <- ""

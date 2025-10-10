@@ -328,12 +328,25 @@ process_tabularray_lines <- function(x, lines) {
   # Adjust i values for header offset
   lines$i <- lines$i + x@nhead
 
-  # Define color preambles for all line colors
-  for (i in seq_len(nrow(lines))) {
-    if (!is.na(lines$line_color[i])) {
-      line_color <- standardize_colors(lines$line_color[i], format = "tabularray")
-      x <- define_color_preamble(x, line_color)
+  # Normalize colors once and define preambles
+  unique_line_colors <- unique(lines$line_color[!is.na(lines$line_color)])
+  if (length(unique_line_colors) > 0) {
+    line_color_map <- setNames(
+      sapply(unique_line_colors, standardize_colors, format = "tabularray", USE.NAMES = FALSE),
+      unique_line_colors
+    )
+    # Define color preambles once
+    for (col in line_color_map) {
+      x <- define_color_preamble(x, col)
     }
+    # Map colors in lines dataframe
+    lines$line_color_mapped <- ifelse(
+      !is.na(lines$line_color) & lines$line_color %in% names(line_color_map),
+      line_color_map[lines$line_color],
+      "black"
+    )
+  } else {
+    lines$line_color_mapped <- "black"
   }
 
   # Process horizontal lines
@@ -376,7 +389,66 @@ process_tabularray_other_styles <- function(x, other) {
   # Prepare d-columns (special case)
   x <- prepare_dcolumn(x, other)
 
-  # Apply styling to each row
+  # Normalize color map once
+  unique_colors <- c(
+    unique(other$color[!is.na(other$color)]),
+    unique(other$background[!is.na(other$background)])
+  )
+  unique_colors <- unique(unique_colors)
+  if (length(unique_colors) > 0) {
+    color_map <- setNames(
+      sapply(unique_colors, standardize_colors, format = "tabularray", USE.NAMES = FALSE),
+      unique_colors
+    )
+    # Define color preambles once
+    for (col in color_map) {
+      x <- define_color_preamble(x, col)
+    }
+  } else {
+    color_map <- character(0)
+  }
+
+  # Vectorize style building per row
+  font_cmds <- character(nrow(other))
+  cmd_strs <- character(nrow(other))
+  font_sets <- character(nrow(other))
+  span_strs <- character(nrow(other))
+
+  for (row in seq_len(nrow(other))) {
+    # Build style commands
+    text_style <- style_text(other[row, ])
+    font_cmds[row] <- text_style$font
+    cmd_strs[row] <- text_style$cmd
+
+    # Style colors using precomputed map
+    cmd <- cmd_strs[row]
+    col <- other$color[row]
+    if (!is.na(col) && col %in% names(color_map)) {
+      col_mapped <- color_map[col]
+      if (grepl("^#", col_mapped)) {
+        col_mapped <- sub("^#", "c", col_mapped)
+      }
+      cmd <- sprintf("%s, fg=%s", cmd, col_mapped)
+    }
+
+    bg <- other$background[row]
+    if (!is.na(bg) && bg %in% names(color_map)) {
+      bg_mapped <- color_map[bg]
+      if (grepl("^#", bg_mapped)) {
+        bg_mapped <- sub("^#", "c", bg_mapped)
+      }
+      cmd <- sprintf("%s, bg=%s", cmd, bg_mapped)
+    }
+    cmd_strs[row] <- cmd
+
+    # Style fonts
+    font_sets[row] <- style_fonts("", other[row, ])
+
+    # Style spans
+    span_strs[row] <- style_spans("", other[row, ])
+  }
+
+  # Apply styling to record grid (still need loop for NA expansion)
   for (row in seq_len(nrow(other))) {
     # Find matching cells in record grid
     idx_i <- other$i[row]
@@ -389,22 +461,14 @@ process_tabularray_other_styles <- function(x, other) {
     }
     idx <- rec$i %in% idx_i & rec$j %in% idx_j
 
-    # Build style commands
-    text_style <- style_text(other[row, ])
-    font_cmd <- text_style$font
-    cmd <- text_style$cmd
-
-    # Style colors
-    color_result <- style_colors(cmd, other[row, ], x)
-    cmd <- color_result$cmd
-    x <- color_result$x
-
     # Add font styling if present
+    font_cmd <- font_cmds[row]
     if (trimws(font_cmd) != "") {
       set[idx] <- sprintf("%s font=%s, ", set[idx], font_cmd)
     }
 
     # Format command string for remaining cmd styles
+    cmd <- cmd_strs[row]
     if (grepl("^,", cmd)) {
       tmp <- "%s, %s, "
     } else {
@@ -414,11 +478,11 @@ process_tabularray_other_styles <- function(x, other) {
       set[idx] <- sprintf(tmp, set[idx], cmd)
     }
 
-    # Style fonts
-    set[idx] <- style_fonts(set[idx], other[row, ])
+    # Add font settings
+    set[idx] <- paste0(set[idx], font_sets[row])
 
-    # Style spans
-    span[idx] <- style_spans(span[idx], other[row, ])
+    # Add spans
+    span[idx] <- paste0(span[idx], span_strs[row])
   }
 
   # Clean style strings
@@ -457,55 +521,36 @@ process_tabularray_other_styles <- function(x, other) {
 #' @keywords internal
 #' @noRd
 process_horizontal_lines <- function(x, hlines) {
-  # Create line specifications for each entry
-  horizontal_specs <- lapply(seq_len(nrow(hlines)), function(idx) {
-    entry <- hlines[idx, ]
+  # Vectorize line specification building
+  # Use precomputed line_color_mapped
+  line_colors <- ifelse(
+    grepl("^#", hlines$line_color_mapped),
+    sub("^#", "c", hlines$line_color_mapped),
+    hlines$line_color_mapped
+  )
 
-    # Create line specification with trimming
-    line_color <- if (!is.na(entry$line_color)) {
-      standardize_colors(entry$line_color, format = "tabularray")
-    } else {
-      "black"
-    }
+  line_widths <- ifelse(is.na(hlines$line_width), 0.1, hlines$line_width)
+  line_specs <- sprintf("solid, %s, %sem", line_colors, line_widths)
 
-    if (grepl("^#", line_color)) {
-      line_color <- sub("^#", "c", line_color)
-    }
+  # Add trimming vectorized
+  has_trim <- !is.na(hlines$line_trim) & nzchar(hlines$line_trim)
+  trim_l <- has_trim & grepl("l", hlines$line_trim)
+  trim_r <- has_trim & grepl("r", hlines$line_trim)
 
-    line_width <- if (!is.na(entry$line_width)) entry$line_width else 0.1
-    line_spec <- sprintf("solid, %s, %sem", line_color, line_width)
+  line_specs <- ifelse(trim_l, paste0(line_specs, ", l=-0.5"), line_specs)
+  line_specs <- ifelse(trim_r, paste0(line_specs, ", r=-0.5"), line_specs)
 
-    # Add trimming if specified
-    if (!is.na(entry$line_trim)) {
-      if (grepl("l", entry$line_trim)) {
-        line_spec <- paste0(line_spec, ", l=-0.5")
-      }
-      if (grepl("r", entry$line_trim)) {
-        line_spec <- paste0(line_spec, ", r=-0.5")
-      }
-    }
+  # Adjust row index based on line type (vectorized)
+  rows <- ifelse(grepl("b", hlines$line), hlines$i + 1, hlines$i)
 
-    # Adjust row index based on line type
-    rows <- entry$i
-    if (grepl("b", entry$line)) {
-      rows <- rows + 1
-    }
-
-    return(data.frame(
-      i = rows,
-      j = entry$j,
-      lin = line_spec,
-      line = entry$line,
-      stringsAsFactors = FALSE
-    ))
-  })
-
-  # Combine all specifications
-  if (length(horizontal_specs) > 0) {
-    horizontal <- do.call(rbind, horizontal_specs)
-  } else {
-    return(x)
-  }
+  # Build horizontal dataframe
+  horizontal <- data.frame(
+    i = rows,
+    j = hlines$j,
+    lin = line_specs,
+    line = hlines$line,
+    stringsAsFactors = FALSE
+  )
 
   spec <- by(horizontal, list(horizontal$i, horizontal$lin), function(k) {
     ival <- latex_range_string(k$i)
@@ -536,74 +581,57 @@ process_horizontal_lines <- function(x, hlines) {
 #' @keywords internal
 #' @noRd
 process_vertical_lines <- function(x, vlines) {
-  # Create line specifications for each entry
-  vertical_specs <- lapply(seq_len(nrow(vlines)), function(idx) {
-    entry <- vlines[idx, ]
+  # Vectorize line specification building
+  # Use precomputed line_color_mapped
+  line_colors <- ifelse(
+    grepl("^#", vlines$line_color_mapped),
+    sub("^#", "c", vlines$line_color_mapped),
+    vlines$line_color_mapped
+  )
 
-    # Create line specification with trimming
-    line_color <- if (!is.na(entry$line_color)) {
-      standardize_colors(entry$line_color, format = "tabularray")
-    } else {
-      "black"
+  line_widths <- ifelse(is.na(vlines$line_width), 0.1, vlines$line_width)
+  line_specs <- sprintf("solid, %s, %sem", line_colors, line_widths)
+
+  # Add trimming vectorized
+  has_trim <- !is.na(vlines$line_trim) & nzchar(vlines$line_trim)
+  trim_l <- has_trim & grepl("l", vlines$line_trim)
+  trim_r <- has_trim & grepl("r", vlines$line_trim)
+
+  line_specs <- ifelse(trim_l, paste0(line_specs, ", l=-0.5"), line_specs)
+  line_specs <- ifelse(trim_r, paste0(line_specs, ", r=-0.5"), line_specs)
+
+  # Adjust column index based on line type (vectorized)
+  col_idx <- ifelse(grepl("r", vlines$line), vlines$j + 1, vlines$j)
+
+  # Build vertical dataframe
+  vertical <- data.frame(
+    i = vlines$i,
+    j = col_idx,
+    lin = line_specs,
+    line = vlines$line,
+    stringsAsFactors = FALSE
+  )
+
+  spec <- by(vertical, list(vertical$lin), function(k) {
+    ival <- latex_range_string(k$i)
+    jval <- latex_range_string(k$j)
+    lin_val <- k$lin[1]
+    # Skip invalid line specifications
+    if (is.na(lin_val) || lin_val == "" || ival == "" || jval == "") {
+      return(NULL)
     }
-
-    if (grepl("^#", line_color)) {
-      line_color <- sub("^#", "c", line_color)
-    }
-
-    line_width <- if (!is.na(entry$line_width)) entry$line_width else 0.1
-    line_spec <- sprintf("solid, %s, %sem", line_color, line_width)
-
-    # Add trimming if specified
-    if (!is.na(entry$line_trim)) {
-      if (grepl("l", entry$line_trim)) {
-        line_spec <- paste0(line_spec, ", l=-0.5")
-      }
-      if (grepl("r", entry$line_trim)) {
-        line_spec <- paste0(line_spec, ", r=-0.5")
-      }
-    }
-
-    # Adjust column index based on line type
-    col_idx <- entry$j
-    if (grepl("r", entry$line)) {
-      col_idx <- col_idx + 1
-    }
-
-    return(data.frame(
-      i = entry$i,
-      j = col_idx,
-      lin = line_spec,
-      line = entry$line,
-      stringsAsFactors = FALSE
-    ))
+    sprintf("vline{%s}={%s}{%s}", jval, ival, lin_val)
   })
+  spec <- unique(as.vector(unlist(spec)))
+  # Remove any NULL or NA entries
+  spec <- spec[!is.na(spec) & spec != "NULL"]
 
-  # Combine all specifications
-  if (length(vertical_specs) > 0) {
-    vertical <- do.call(rbind, vertical_specs)
-
-    spec <- by(vertical, list(vertical$lin), function(k) {
-      ival <- latex_range_string(k$i)
-      jval <- latex_range_string(k$j)
-      lin_val <- k$lin[1]
-      # Skip invalid line specifications
-      if (is.na(lin_val) || lin_val == "" || ival == "" || jval == "") {
-        return(NULL)
-      }
-      sprintf("vline{%s}={%s}{%s}", jval, ival, lin_val)
-    })
-    spec <- unique(as.vector(unlist(spec)))
-    # Remove any NULL or NA entries
-    spec <- spec[!is.na(spec) & spec != "NULL"]
-
-    for (s in spec) {
-      x@table_string <- insert_tabularray_content(
-        x@table_string,
-        content = s,
-        type = "inner"
-      )
-    }
+  for (s in spec) {
+    x@table_string <- insert_tabularray_content(
+      x@table_string,
+      content = s,
+      type = "inner"
+    )
   }
 
   return(x)
