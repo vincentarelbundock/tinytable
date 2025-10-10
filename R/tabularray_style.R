@@ -650,9 +650,11 @@ setMethod(
       other <- other[has_style, , drop = FALSE]
     }
 
-    # Lines still use old expand_style for now
-    sty <- expand_style(x)
-    lines <- sty$lines
+    # Use populated @style_lines from build_tt()
+    lines <- x@style_lines
+    if (nrow(lines) == 0) {
+      lines <- NULL
+    }
 
     # Process lines using the expanded data
     x <- process_tabularray_lines(x, lines)

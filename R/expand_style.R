@@ -39,66 +39,56 @@ apply_style_to_rect = function(style_other, style_row) {
 }
 
 
-expand_lines <- function(x, rect, styles) {
-  # Extract line-related properties
-  line_props <- names(styles)[grepl("^line", names(styles))]
-  if (length(line_props) == 0) {
-    return(NULL)
-  }
-  idx <- grepl("^line|^i$|^j$", names(styles))
-  lines <- styles[!is.na(styles$line), idx, drop = FALSE]
-
-  if (nrow(lines) == 0) {
-    return(NULL)
-  }
-
-  # Expand NA i/j for lines, similar to expand_other
-  line_list <- list()
-
-  for (r in seq_len(nrow(lines))) {
-    cols <- names(lines)
-    if (is.na(lines[r, "i"]) && is.na(lines[r, "j"])) {
-      cols_expand <- setdiff(cols, c("i", "j"))
-    } else if (is.na(lines[r, "i"])) {
-      cols_expand <- setdiff(cols, "i")
-    } else if (is.na(lines[r, "j"])) {
-      cols_expand <- setdiff(cols, "j")
-    } else {
-      cols_expand <- cols
-    }
-    rect_line <- merge(rect, lines[r, cols_expand, drop = FALSE], all = TRUE, sort = FALSE)
-    # Only remove rows where i or j are NA (essential columns), not other columns like line_trim
-    rect_line <- rect_line[!is.na(rect_line$i) & !is.na(rect_line$j), , drop = FALSE]
-    if (nrow(rect_line) > 0) {
-      line_list <- c(line_list, list(rect_line))
-    }
+#' Append line style entry to the style_lines dataframe
+#' @param style_lines Dataframe accumulating line entries
+#' @param style_row Single row from @style dataframe
+#' @param rect Full rectangular grid of (i,j) cells
+#' @return Modified style_lines dataframe with new entries appended
+#' @keywords internal
+#' @noRd
+append_lines_to_rect = function(style_lines, style_row, rect) {
+  # Skip if no line property
+  if (is.na(style_row$line)) {
+    return(style_lines)
   }
 
-  if (length(line_list) > 0) {
-    out <- do.call(rbind, line_list)
-    return(out)
+  # Determine which cells this line entry applies to
+  if (is.na(style_row$i) && is.na(style_row$j)) {
+    # Apply to all cells
+    i_vals <- unique(rect$i)
+    j_vals <- unique(rect$j)
+  } else if (is.na(style_row$i)) {
+    # Apply to all rows in these columns
+    i_vals <- unique(rect$i)
+    j_vals <- style_row$j
+  } else if (is.na(style_row$j)) {
+    # Apply to all columns in these rows
+    i_vals <- style_row$i
+    j_vals <- unique(rect$j)
   } else {
-    return(NULL)
+    # Specific cells
+    i_vals <- style_row$i
+    j_vals <- style_row$j
+  }
+
+  # Create new entries for all matching (i,j) combinations
+  new_entries <- expand.grid(i = i_vals, j = j_vals, stringsAsFactors = FALSE)
+
+  # Add line properties
+  new_entries$line <- style_row$line
+  new_entries$line_color <- if ("line_color" %in% names(style_row)) style_row$line_color else NA
+  new_entries$line_width <- if ("line_width" %in% names(style_row)) style_row$line_width else NA
+  new_entries$line_trim <- if ("line_trim" %in% names(style_row)) style_row$line_trim else NA
+
+  # Append to style_lines
+  if (nrow(style_lines) == 0) {
+    return(new_entries)
+  } else {
+    return(rbind(style_lines, new_entries))
   }
 }
 
-expand_style <- function(x) {
-  # NOTE: This function now only handles line styles.
-  # Other styles (bold, italic, color, etc.) are handled via @style_other in build_tt()
 
-  # 1) Full rectangle of cells
-  iseq <- seq_len(nrow(x))
-  iseq <- c(-1 * 0:(x@nhead - 1), iseq)
-  jseq <- seq_len(ncol(x))
-  rect <- expand.grid(i = iseq, j = jseq)
-
-  styles <- x@style
-  if (is.null(styles) || !nrow(styles)) {
-    return(list(lines = NULL, other = NULL))
-  }
-
-  # Only expand line styles
-  style_lines <- expand_lines(x, rect, styles)
-
-  list(lines = style_lines, other = NULL)
-}
+# NOTE: expand_lines() and expand_style() have been removed.
+# Line styles are now handled via @style_lines in build_tt()
+# Other styles are handled via @style_other in build_tt()

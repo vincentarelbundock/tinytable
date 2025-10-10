@@ -573,6 +573,10 @@ window.Quarto = {
 <ul>
 <li><code>plot_tt(fun = "barpct")</code> is deprecated but still supported for backward compatibility. Use <code>fun = "bar"</code> with <code>xlim = c(0, 1)</code> and a two-color vector instead.</li>
 </ul>
+<p>Internal changes:</p>
+<ul>
+<li>Refactored <code>style_tt()</code> logical parameter handling: defaults changed from <code>FALSE</code> to <code>NULL</code>, with <code>NULL</code> values stored as <code>NA</code> in the style dataframe. Simplified <code>expand_style()</code> to use consistent “last non-NA wins” logic for all style properties including logical ones.</li>
+</ul>
 <p>Bugs:</p>
 <ul>
 <li>Issue in Typst when calling <code>style_tt()</code> with both a <code>rowspan</code> and a <code>line</code>. Thanks to <a href="https://github.com/eringrand"><span class="citation" data-cites="eringrand">@eringrand</span></a> for reporting Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/592">#592</a>.</li>

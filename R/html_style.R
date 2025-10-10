@@ -161,9 +161,11 @@ setMethod(
       other <- other[has_style, , drop = FALSE]
     }
 
-    # Lines still use old expand_style for now
-    sty <- expand_style(x)
-    lines <- sty$lines
+    # Use populated @style_lines from build_tt()
+    lines <- x@style_lines
+    if (nrow(lines) == 0) {
+      lines <- NULL
+    }
 
 
     # rowspan/colspan spans first
@@ -198,9 +200,9 @@ setMethod(
     cell_styles <- list()
 
     # Process line styles - consolidate first, then generate CSS once per cell
-    if (!is.null(sty$lines) && nrow(sty$lines) > 0) {
+    if (!is.null(lines) && nrow(lines) > 0) {
       # Group line entries by cell (i, j) to consolidate before CSS generation
-      cells_with_lines <- split(sty$lines, paste(sty$lines$i, sty$lines$j, sep = "_"))
+      cells_with_lines <- split(lines, paste(lines$i, lines$j, sep = "_"))
 
       for (cell_key in names(cells_with_lines)) {
         cell_lines <- cells_with_lines[[cell_key]]
@@ -372,7 +374,21 @@ setMethod(
     }
 
     # Generate CSS rules for each unique group
-    for (group_key in names(css_groups)) {
+    # Sort groups by the first cell's coordinates to ensure deterministic ordering
+    group_keys_sorted <- names(css_groups)
+    if (length(group_keys_sorted) > 0) {
+      first_cells <- sapply(group_keys_sorted, function(gk) {
+        cells <- css_groups[[gk]]$cells
+        if (length(cells) > 0) {
+          paste(cells[[1]]$j, cells[[1]]$i, sep = "_")
+        } else {
+          "999_999"
+        }
+      })
+      group_keys_sorted <- group_keys_sorted[order(first_cells)]
+    }
+
+    for (group_key in group_keys_sorted) {
       group_data <- css_groups[[group_key]]
       css_rule <- group_data$css_rule
       has_border <- group_data$has_border

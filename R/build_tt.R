@@ -156,12 +156,21 @@ build_tt <- function(x, output = NULL) {
   x <- style_notes(x)
   x <- style_caption(x)
 
-  # Populate @style_other by applying each entry from @style sequentially
+  # Populate @style_other and @style_lines by applying each entry from @style sequentially
   # This must happen before build_eval() for backends (like Grid) that apply styles during build
+  x@style_lines <- data.frame()  # Initialize empty line dataframe
+
   for (idx in seq_len(nrow(x@style))) {
     style_row <- x@style[idx, , drop = FALSE]
+    # Apply non-line styles (overwrites)
     x@style_other <- apply_style_to_rect(x@style_other, style_row)
+    # Apply line styles (appends)
+    x@style_lines <- append_lines_to_rect(x@style_lines, style_row, rect)
   }
+
+  # Sort style_other for consistent ordering (j first, then i within each j)
+  # This ensures test snapshots are deterministic
+  x@style_other <- x@style_other[order(x@style_other$j, x@style_other$i), ]
 
   # draw the table
   x <- build_eval(x)
