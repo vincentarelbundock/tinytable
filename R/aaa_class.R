@@ -51,6 +51,7 @@ setClass(
     latex_preamble = "logical",
     latex_engine = "character",
     style = "data.frame",
+    style_other = "data.frame",
     style_caption = "list",
     style_notes = "list",
     table_string = "character",
@@ -150,6 +151,7 @@ setMethod(
     .Object@output <- "tinytable"
     .Object@output_dir <- getwd()
     .Object@style <- data.frame()
+    .Object@style_other <- data.frame()
     .Object@tabularray_inner <- character()
     .Object@tabularray_outer <- character()
     .Object@tabulator_column_formatters <- list()

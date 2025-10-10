@@ -6,13 +6,15 @@ style_eval_grid <- function(x) {
 
 
 prepare_grid_style <- function(x) {
-  sty <- x@style
+  # Use populated @style_other from build_tt()
+  sty <- x@style_other
 
   # Return early if no styles
   if (nrow(sty) == 0) {
     return(sty)
   }
 
+  # Select only the columns needed for grid styling
   sty <- sty[, c(
     "i",
     "j",
@@ -26,51 +28,13 @@ prepare_grid_style <- function(x) {
     "background",
     "colspan",
     "rowspan"
-  )]
-  styrows <- lapply(seq_len(nrow(sty)), function(i) sty[i, , drop = FALSE])
+  ), drop = FALSE]
 
-  for (idx in seq_along(styrows)) {
-    sr <- styrows[[idx]]
-
-    # Check if table has column names (header row exists)
-    has_header <- length(colnames(x)) > 0 && any(nzchar(colnames(x)))
-
-    if (is.na(sr$i) && is.na(sr$j)) {
-      if (has_header) {
-        cells <- expand.grid(i = c(0, seq_len(nrow(x))), j = seq_len(ncol(x)))
-      } else {
-        cells <- expand.grid(i = seq_len(nrow(x)), j = seq_len(ncol(x)))
-      }
-    } else if (is.na(sr$j)) {
-      cells <- expand.grid(i = sr$i, j = seq_len(ncol(x)))
-    } else if (is.na(sr$i)) {
-      if (has_header) {
-        cells <- expand.grid(i = c(0, seq_len(nrow(x))), j = sr$j)
-      } else {
-        cells <- expand.grid(i = seq_len(nrow(x)), j = sr$j)
-      }
-    } else {
-      cells <- sr[, c("i", "j")]
-    }
-    sr$i <- sr$j <- NULL
-    styrows[[idx]] <- merge(cells, sr)
-  }
-
-  grid_style_last <- function(k) {
-    if (all(is.na(k))) {
-      return(NA)
-    }
-    # NA are sometimes logical, so don't use } else if {
-    if (is.logical(k)) {
-      return(any(k))
-    }
-    return(unname(utils::tail(stats::na.omit(k), 1)))
-  }
-
-  sty <- do.call(rbind, styrows)
-  sty <- split(sty, list(sty$i, sty$j), drop = TRUE)
-  sty <- lapply(sty, function(z) data.frame(lapply(z, grid_style_last)))
-  sty <- do.call(rbind, sty)
+  # Filter to only cells that have actual styles
+  has_style <- rowSums(!is.na(sty[, c("bold", "italic", "strikeout", "underline",
+                                       "smallcap", "indent", "color", "background",
+                                       "colspan", "rowspan"), drop = FALSE])) > 0
+  sty <- sty[has_style, , drop = FALSE]
 
   return(sty)
 }

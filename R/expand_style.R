@@ -1,52 +1,41 @@
-last_df = function(x, bycols = c("i", "j")) {
-  # build key once
-  key = paste(x[[bycols[1]]], x[[bycols[2]]], sep = "_")
-  if (!anyDuplicated(key)) return(x)
+#' Apply a single style entry to the rectangular style dataframe
+#' @param style_other Rectangular dataframe with all cells
+#' @param style_row Single row from @style dataframe
+#' @return Modified style_other dataframe
+#' @keywords internal
+#' @noRd
+apply_style_to_rect = function(style_other, style_row) {
+  # Determine which cells this entry applies to
+  if (is.na(style_row$i)) {
+    # Apply to all rows
+    i_vals <- unique(style_other$i)
+  } else {
+    i_vals <- style_row$i
+  }
 
-  # split into unique vs duplicated groups
-  dup_mask = duplicated(key) | duplicated(key, fromLast = TRUE)
-  x_unique = x[!dup_mask, , drop = FALSE]
-  x_dup    = x[ dup_mask, , drop = FALSE]
+  if (is.na(style_row$j)) {
+    # Apply to all columns
+    j_vals <- unique(style_other$j)
+  } else {
+    j_vals <- style_row$j
+  }
 
-  # group only the duplicated rows
-  bycols_list = as.list(x_dup[, bycols, drop = FALSE])
-  groups = split(seq_len(nrow(x_dup)), bycols_list)
+  # Find matching rows in style_other
+  mask <- style_other$i %in% i_vals & style_other$j %in% j_vals
 
-  # identify non-grouping columns
-  col_names = names(x_dup)
-  is_grouping = col_names %in% bycols
-  data_cols = which(!is_grouping)
+  # Overwrite non-NA values from style_row
+  style_props <- c("bold", "italic", "underline", "strikeout",
+                   "monospace", "smallcap", "align", "alignv",
+                   "color", "background", "fontsize", "indent",
+                   "html_css", "colspan", "rowspan")
 
-  # aggregate only duplicated groups
-  result_list = vector("list", length(groups))
-  for (g_idx in seq_along(groups)) {
-    idx = groups[[g_idx]]
-
-    if (length(idx) == 1L) {
-      # single row: copy as-is
-      result_list[[g_idx]] = x_dup[idx, , drop = FALSE]
-    } else {
-      group_data = x_dup[idx, , drop = FALSE]
-      result_row = group_data[1, , drop = FALSE]  # template keeps classes/levels
-
-      # aggregate all columns: last non-NA wins
-      for (col_idx in data_cols) {
-        values = group_data[[col_idx]]
-        if (length(values) == 0L) next
-        non_na = values[!is.na(values)]
-        result_row[[col_idx]] = if (length(non_na) > 0L) non_na[length(non_na)] else values[length(values)]
-      }
-
-      result_list[[g_idx]] = result_row
+  for (prop in style_props) {
+    if (prop %in% names(style_row) && !is.na(style_row[[prop]])) {
+      style_other[[prop]][mask] <- style_row[[prop]]
     }
   }
 
-  x_dup_agg = do.call(rbind, result_list)
-
-  # recombine untouched uniques with processed duplicates
-  out = rbind(x_unique, x_dup_agg)
-  rownames(out) = NULL
-  out
+  return(style_other)
 }
 
 
@@ -93,91 +82,10 @@ expand_lines <- function(x, rect, styles) {
   }
 }
 
-expand_other <- function(x, rect, styles) {
-  # Extract non-line properties
-  other_props <- names(styles)[!grepl("^line", names(styles)) & !names(styles) %in% c("i", "j")]
-  if (length(other_props) == 0) {
-    return(NULL)
-  }
-
-  style_list <- list()
-
-  for (p in other_props) {
-    # Keep only relevant columns, unique rows, and rows with a concrete value for this property
-    cols <- c("i", "j", p)
-    cols <- unique(intersect(cols, names(styles)))
-    sub <- styles[, cols, drop = FALSE]
-    sub <- sub[!is.na(sub[[p]]), , drop = FALSE]
-
-    if (nrow(sub) == 0) next
-
-    # Expand NA i/j
-    row_style <- list()
-
-    for (r in seq_len(nrow(sub))) {
-      if (is.na(sub[r, "i"]) && is.na(sub[r, "j"])) {
-        cols_expand <- setdiff(cols, c("i", "j"))
-      } else if (is.na(sub[r, "i"])) {
-        cols_expand <- setdiff(cols, "i")
-      } else if (is.na(sub[r, "j"])) {
-        cols_expand <- setdiff(cols, "j")
-      } else {
-        cols_expand <- cols
-      }
-      rect_p <- merge(rect, sub[r, cols_expand, drop = FALSE], all = TRUE, sort = FALSE)
-      # Don't use na.omit - it removes column-specific styles (i=NA, j=specific)
-      # Only remove rows where both i and j are NA, which shouldn't happen
-      rect_p <- rect_p[!(is.na(rect_p$i) & is.na(rect_p$j)), , drop = FALSE]
-      row_style <- c(row_style, list(rect_p))
-    }
-    out <- do.call(rbind, row_style)
-
-    # Last style wins for non-line properties
-    out <- last_df(unique(out))
-    style_list[[p]] <- out
-  }
-
-  # Merge all other styles efficiently
-  if (length(style_list) > 0) {
-    # Instead of using Reduce(merge), collect all unique (i,j) pairs first
-    # Then add columns from each style_list element
-    all_cells <- unique(do.call(rbind, lapply(style_list, function(x) x[, c("i", "j"), drop = FALSE])))
-
-    # Start with the (i,j) base
-    style_other <- all_cells
-
-    # Add each style property column
-    for (p in names(style_list)) {
-      prop_data <- style_list[[p]]
-      # Create a merge key
-      style_other_key <- paste(style_other$i, style_other$j, sep = "_")
-      prop_key <- paste(prop_data$i, prop_data$j, sep = "_")
-
-      # Match and assign values
-      match_idx <- match(style_other_key, prop_key)
-      style_other[[p]] <- prop_data[[p]][match_idx]
-    }
-
-    # Ensure all expected style columns exist in style_other
-    # Include ALL columns that style_tt_lazy creates to ensure rbind compatibility
-    expected_cols <- c(
-      "bold", "italic", "underline", "strikeout", "monospace", "smallcap",
-      "align", "alignv", "color", "background", "fontsize", "indent", "html_css",
-      "colspan", "rowspan", "line", "line_color", "line_width", "line_trim")
-    missing_cols <- setdiff(expected_cols, names(style_other))
-    if (length(missing_cols) > 0) {
-      for (col in missing_cols) {
-        style_other[[col]] <- NA
-      }
-    }
-
-    return(style_other)
-  } else {
-    NULL
-  }
-}
-
 expand_style <- function(x) {
+  # NOTE: This function now only handles line styles.
+  # Other styles (bold, italic, color, etc.) are handled via @style_other in build_tt()
+
   # 1) Full rectangle of cells
   iseq <- seq_len(nrow(x))
   iseq <- c(-1 * 0:(x@nhead - 1), iseq)
@@ -189,10 +97,8 @@ expand_style <- function(x) {
     return(list(lines = NULL, other = NULL))
   }
 
-
-  # Use separate functions for lines and other properties
+  # Only expand line styles
   style_lines <- expand_lines(x, rect, styles)
-  style_other <- expand_other(x, rect, styles)
 
-  list(lines = style_lines, other = style_other)
+  list(lines = style_lines, other = NULL)
 }

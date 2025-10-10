@@ -149,9 +149,21 @@ setMethod(
     # CSS rule will be handled by finalize() via template substitution
     # Removed duplicate html_setting call that was causing CSS duplication
 
+    # Use populated @style_other from build_tt()
+    other <- x@style_other
+
+    # Filter to only cells that have actual styles (at least one non-NA value)
+    if (nrow(other) > 0) {
+      has_style <- rowSums(!is.na(other[, c("bold", "italic", "underline", "strikeout",
+                                             "monospace", "smallcap", "align", "alignv",
+                                             "color", "background", "fontsize", "indent",
+                                             "html_css", "colspan", "rowspan"), drop = FALSE])) > 0
+      other <- other[has_style, , drop = FALSE]
+    }
+
+    # Lines still use old expand_style for now
     sty <- expand_style(x)
     lines <- sty$lines
-    other <- sty$other
 
 
     # rowspan/colspan spans first

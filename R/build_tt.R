@@ -114,17 +114,25 @@ build_tt <- function(x, output = NULL) {
   # add footnote markers just after formatting, otherwise appending converts to string
   x <- footnote_markers(x)
 
-  # draw the table
-  x <- build_eval(x)
+  # Create rectangular style dataframe with one row per cell
+  # This happens after row group operations so we have the final row structure
+  iseq <- seq_len(nrow(x))
+  iseq <- c(-1 * 0:(x@nhead - 1), iseq)  # include headers
+  jseq <- seq_len(ncol(x))
+  rect <- expand.grid(i = iseq, j = jseq)
 
-  # groups require the table to be drawn first, expecially group_tabularray_col() and friends
-  # Handle column groups from @group_data_j
-  if (nrow(x@group_data_j) > 0) {
-    # Calculate ihead for the group headers - start from -1 for the top header row
-    ihead <- -1
-    # Apply group_eval_j once with all groups
-    x <- group_eval_j(x, j = seq_len(ncol(x)), ihead = ihead)
+  # Initialize all style columns with NA
+  style_cols <- c(
+    "bold", "italic", "underline", "strikeout", "monospace", "smallcap",
+    "align", "alignv", "color", "background", "fontsize", "indent",
+    "html_css", "colspan", "rowspan"
+  )
+
+  for (col in style_cols) {
+    rect[[col]] <- NA
   }
+
+  x@style_other <- rect
 
   # apply style_tt() and theme_*() after all group operations
   lazy_style <- x@lazy_style
@@ -147,6 +155,25 @@ build_tt <- function(x, output = NULL) {
   # apply styling AFTER formatting/escaping to avoid escaping the style brackets
   x <- style_notes(x)
   x <- style_caption(x)
+
+  # Populate @style_other by applying each entry from @style sequentially
+  # This must happen before build_eval() for backends (like Grid) that apply styles during build
+  for (idx in seq_len(nrow(x@style))) {
+    style_row <- x@style[idx, , drop = FALSE]
+    x@style_other <- apply_style_to_rect(x@style_other, style_row)
+  }
+
+  # draw the table
+  x <- build_eval(x)
+
+  # groups require the table to be drawn first, expecially group_tabularray_col() and friends
+  # Handle column groups from @group_data_j
+  if (nrow(x@group_data_j) > 0) {
+    # Calculate ihead for the group headers - start from -1 for the top header row
+    ihead <- -1
+    # Apply group_eval_j once with all groups
+    x <- group_eval_j(x, j = seq_len(ncol(x)), ihead = ihead)
+  }
 
   x <- style_eval(x)
 

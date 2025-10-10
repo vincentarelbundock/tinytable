@@ -638,11 +638,21 @@ setMethod(
     indent = 0,
     ...
   ) {
-    # Use expand_style like html_style.R
+    # Use populated @style_other from build_tt()
+    other <- x@style_other
+
+    # Filter to only cells that have actual styles
+    if (nrow(other) > 0) {
+      has_style <- rowSums(!is.na(other[, c("bold", "italic", "underline", "strikeout",
+                                             "monospace", "smallcap", "align", "alignv",
+                                             "color", "background", "fontsize", "indent",
+                                             "colspan", "rowspan"), drop = FALSE])) > 0
+      other <- other[has_style, , drop = FALSE]
+    }
+
+    # Lines still use old expand_style for now
     sty <- expand_style(x)
     lines <- sty$lines
-    other <- sty$other
-
 
     # Process lines using the expanded data
     x <- process_tabularray_lines(x, lines)

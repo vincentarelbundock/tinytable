@@ -38,8 +38,16 @@ setMethod(
 tabulator_apply_styles <- function(x) {
   if (nrow(x@style) == 0) return(x)
 
-  # Expand all styles once (like html_style.R does)
-  sty <- expand_style(x)
+  # Use populated @style_other from build_tt()
+  other <- x@style_other
+
+  # Filter to only cells that have actual styles
+  if (nrow(other) > 0) {
+    has_style <- rowSums(!is.na(other[, c("bold", "italic", "underline", "strikeout",
+                                           "monospace", "smallcap", "align", "alignv",
+                                           "color", "background", "fontsize", "indent"), drop = FALSE])) > 0
+    other <- other[has_style, , drop = FALSE]
+  }
 
   # Precompute field names once (dots/spaces -> underscores)
   field_names <- tabulator_clean_column_name(x@names)
@@ -56,18 +64,18 @@ tabulator_apply_styles <- function(x) {
   # This avoids calling style_to_css() thousands of times
   style_groups <- list()  # style_signature -> list of cells
 
-  if (!is.null(sty$other) && nrow(sty$other) > 0) {
+  if (!is.null(other) && nrow(other) > 0) {
     # Create a signature for each unique style combination
     style_cols <- c("bold", "italic", "monospace", "underline", "strikeout",
                     "color", "background", "fontsize", "align", "alignv", "indent")
 
     # Vectorized signature creation: build signatures for all rows at once
     sig_matrix <- sapply(style_cols, function(col) {
-      if (col %in% names(sty$other)) {
-        vals <- sty$other[[col]]
+      if (col %in% names(other)) {
+        vals <- other[[col]]
         ifelse(is.na(vals), "NA", as.character(vals))
       } else {
-        rep("NA", nrow(sty$other))
+        rep("NA", nrow(other))
       }
     })
 
@@ -75,15 +83,15 @@ tabulator_apply_styles <- function(x) {
     signatures <- apply(sig_matrix, 1, function(row) paste(row, collapse = "|"))
 
     # Group by signature
-    for (row_idx in seq_len(nrow(sty$other))) {
+    for (row_idx in seq_len(nrow(other))) {
       signature <- signatures[row_idx]
-      i <- sty$other$i[row_idx]
-      j <- sty$other$j[row_idx]
+      i <- other$i[row_idx]
+      j <- other$j[row_idx]
 
       if (is.null(style_groups[[signature]])) {
         style_groups[[signature]] <- list(
           css = NULL,  # Will compute once
-          row = sty$other[row_idx, , drop = FALSE],
+          row = other[row_idx, , drop = FALSE],
           cells = list()
         )
       }
