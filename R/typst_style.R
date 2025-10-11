@@ -135,8 +135,61 @@ typst_hlines <- function(x, lin) {
   tmp <- split(lin, list(lin$i, lin$line, lin$line_color_mapped, lin$line_width))
   tmp <- Filter(function(x) nrow(x) > 0, tmp)
   tmp <- lapply(tmp, function(k) {
-    xmin <- typst_split_chunks(k$j)$min
-    xmax <- typst_split_chunks(k$j)$max
+    # Split chunks based on consecutive columns AND line_trim boundaries
+    # line_trim marks group boundaries - split chunks at these points
+    chunks <- typst_split_chunks(k$j)
+
+    # Further split chunks based on line_trim markers
+    # line_trim="l" or "lr" means start of a new group
+    # line_trim="r" or "lr" means end of current group
+    final_chunks <- list()
+    for (chunk_idx in seq_len(nrow(chunks))) {
+      chunk_start <- chunks$min[chunk_idx]
+      chunk_end <- chunks$max[chunk_idx]
+      chunk_cols <- chunk_start:(chunk_end - 1)  # -1 because max is exclusive
+
+      # Find trim boundaries within this chunk
+      chunk_rows <- k[k$j %in% chunk_cols, , drop = FALSE]
+      chunk_rows <- chunk_rows[order(chunk_rows$j), ]
+
+      # Split on line_trim boundaries
+      current_start <- chunk_start
+      for (i in seq_len(nrow(chunk_rows))) {
+        trim_val <- chunk_rows$line_trim[i]
+        col_val <- chunk_rows$j[i]
+
+        # Check if this is a boundary
+        if (!is.na(trim_val)) {
+          if (grepl("r", trim_val)) {
+            # End of current segment
+            final_chunks <- c(final_chunks, list(c(min = current_start, max = col_val + 1)))
+            # Next segment starts after this column
+            if (i < nrow(chunk_rows)) {
+              current_start <- col_val + 1
+            }
+          } else if (grepl("l", trim_val) && col_val > current_start) {
+            # Start of new segment (close previous if any)
+            if (col_val > current_start) {
+              final_chunks <- c(final_chunks, list(c(min = current_start, max = col_val)))
+            }
+            current_start <- col_val
+          }
+        }
+
+        # If last column in chunk, close the segment
+        if (i == nrow(chunk_rows) && col_val + 1 >= chunk_end) {
+          if (current_start < chunk_end) {
+            final_chunks <- c(final_chunks, list(c(min = current_start, max = chunk_end)))
+          }
+        }
+      }
+    }
+
+    # If no trim markers found, use original chunks
+    if (length(final_chunks) == 0) {
+      final_chunks <- lapply(seq_len(nrow(chunks)), function(i) c(min = chunks$min[i], max = chunks$max[i]))
+    }
+
     ymin <- k$i[1]
     ymax <- k$i[1] + 1
     line <- k$line[1]
@@ -144,15 +197,19 @@ typst_hlines <- function(x, lin) {
     width <- if (is.na(k$line_width[1])) 0.1 else k$line_width[1]
     width <- sprintf("%sem", width)
     out <- ""
-    if (grepl("t", line)) {
-      tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %s + %s),"
-      tmp <- sprintf(tmp, ymin, xmin, xmax, width, color)
-      out <- paste(out, tmp)
-    }
-    if (grepl("b", line)) {
-      tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %s + %s),"
-      tmp <- sprintf(tmp, ymax, xmin, xmax, width, color)
-      out <- paste(out, tmp)
+
+    # Generate hlines for each chunk
+    for (chunk in final_chunks) {
+      if (grepl("t", line)) {
+        tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %s + %s),"
+        tmp <- sprintf(tmp, ymin, chunk["min"], chunk["max"], width, color)
+        out <- paste(out, tmp)
+      }
+      if (grepl("b", line)) {
+        tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %s + %s),"
+        tmp <- sprintf(tmp, ymax, chunk["min"], chunk["max"], width, color)
+        out <- paste(out, tmp)
+      }
     }
     return(out)
   })
