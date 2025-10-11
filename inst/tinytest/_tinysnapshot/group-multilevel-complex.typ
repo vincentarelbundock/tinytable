@@ -58,14 +58,8 @@ block[ // start block
       let style = get-style(x, y)
       if style != none and "background" in style { style.background }
     },
- table.hline(y: 1, start: 0, end: 6, stroke: 0.05em + black),
- table.hline(y: 2, start: 0, end: 1, stroke: 0.05em + black),
- table.hline(y: 2, start: 0, end: 2, stroke: 0.05em + black),
- table.hline(y: 2, start: 1, end: 3, stroke: 0.05em + black),
- table.hline(y: 2, start: 2, end: 4, stroke: 0.05em + black),
- table.hline(y: 2, start: 3, end: 5, stroke: 0.05em + black),
- table.hline(y: 2, start: 4, end: 6, stroke: 0.05em + black),
- table.hline(y: 2, start: 5, end: 6, stroke: 0.05em + black),
+ table.hline(y: 1, start: 0, end: 3, stroke: 0.05em + black), table.hline(y: 1, start: 3, end: 5, stroke: 0.05em + black), table.hline(y: 1, start: 5, end: 6, stroke: 0.05em + black),
+ table.hline(y: 2, start: 0, end: 1, stroke: 0.05em + black), table.hline(y: 2, start: 0, end: 2, stroke: 0.05em + black), table.hline(y: 2, start: 2, end: 2, stroke: 0.05em + black), table.hline(y: 2, start: 1, end: 2, stroke: 0.05em + black), table.hline(y: 2, start: 2, end: 2, stroke: 0.05em + black), table.hline(y: 2, start: 2, end: 3, stroke: 0.05em + black), table.hline(y: 2, start: 3, end: 3, stroke: 0.05em + black), table.hline(y: 2, start: 2, end: 3, stroke: 0.05em + black), table.hline(y: 2, start: 3, end: 3, stroke: 0.05em + black), table.hline(y: 2, start: 3, end: 4, stroke: 0.05em + black), table.hline(y: 2, start: 3, end: 5, stroke: 0.05em + black), table.hline(y: 2, start: 5, end: 5, stroke: 0.05em + black), table.hline(y: 2, start: 4, end: 5, stroke: 0.05em + black), table.hline(y: 2, start: 5, end: 5, stroke: 0.05em + black), table.hline(y: 2, start: 5, end: 6, stroke: 0.05em + black), table.hline(y: 2, start: 5, end: 6, stroke: 0.05em + black),
  table.hline(y: 3, start: 0, end: 6, stroke: 0.05em + black),
  table.hline(y: 4, start: 0, end: 6, stroke: 0.1em + black),
  table.hline(y: 0, start: 0, end: 6, stroke: 0.1em + black),
@@ -74,8 +68,8 @@ block[ // start block
     // tinytable header start
     table.header(
       repeat: true,
-table.cell(stroke: (bottom: .05em + black), colspan: 3, align: center)[A], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[B], [C],
-table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[X], [Y], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[Z], [W],
+table.cell(colspan: 3, align: center)[A], table.cell(colspan: 2, align: center)[B], [C],
+table.cell(colspan: 2, align: center)[X], [Y], table.cell(colspan: 2, align: center)[Z], [W],
 [1], [2], [1], [1], [2], [W],
     ),
     // tinytable header end

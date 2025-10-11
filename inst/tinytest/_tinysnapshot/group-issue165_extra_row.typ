@@ -61,7 +61,7 @@ block[ // start block
       let style = get-style(x, y)
       if style != none and "background" in style { style.background }
     },
- table.hline(y: 1, start: 0, end: 4, stroke: 0.05em + black),
+ table.hline(y: 1, start: 0, end: 2, stroke: 0.05em + black), table.hline(y: 1, start: 2, end: 4, stroke: 0.05em + black),
  table.hline(y: 2, start: 0, end: 4, stroke: 0.05em + black),
  table.hline(y: 7, start: 0, end: 4, stroke: 0.1em + black),
  table.hline(y: 0, start: 0, end: 4, stroke: 0.1em + black),
@@ -70,7 +70,7 @@ block[ // start block
     // tinytable header start
     table.header(
       repeat: true,
-table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[foo], table.cell(stroke: (bottom: .05em + black), colspan: 2, align: center)[bar],
+table.cell(colspan: 2, align: center)[foo], table.cell(colspan: 2, align: center)[bar],
 [mpg], [cyl], [disp], [hp],
     ),
     // tinytable header end
