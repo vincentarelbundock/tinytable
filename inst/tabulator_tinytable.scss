@@ -327,15 +327,20 @@ $rangeHeaderTextHighlightBackground: $black !default; //header text color when h
 					}
 				}
 
-				select{
-					background-color: $white;
-					border: 1px solid $headerBorderColor;
-					box-shadow: none;
-					color: $headerTextColor;
-					padding: 2px 6px;
-					-webkit-appearance: none;
-					appearance: none;
+			select{
+				background-color: transparent !important;
+				border: 1px solid $headerBorderColor;
+				box-shadow: none;
+				color: $headerTextColor;
+				padding: 2px 6px;
+				-webkit-appearance: none;
+				appearance: none;
+				&:focus,
+				&:active,
+				&:hover{
+					background-color: transparent !important;
 				}
+			}
 			}
 			
 			//styling child elements for sortable columns
@@ -688,11 +693,8 @@ $rangeHeaderTextHighlightBackground: $black !default; //header text color when h
 			flex:1;
 			
 			text-align: left;
-			
 			color: $footerTextColor;
-			font-family:inherit;
-			font-weight:inherit;
-			font-size:inherit;
+			font-weight: normal;
 		}
 		
 		//pagination container element
@@ -704,6 +706,13 @@ $rangeHeaderTextHighlightBackground: $black !default; //header text color when h
 			
 			border:1px solid $footerBorderColor;
 			border-radius:3px;
+			font-family: inherit;
+			label{
+				font-weight: normal;
+			}
+			select{
+				font-family: inherit;
+			}
 		}
 		
 		.tabulator-pages{
@@ -716,6 +725,7 @@ $rangeHeaderTextHighlightBackground: $black !default; //header text color when h
 			color: $black;
 			margin:0 2px;
 			padding:2px 5px;
+			font-family: inherit;
 			
 			border:1px solid $footerBorderColor;
 			border-radius:3px;
