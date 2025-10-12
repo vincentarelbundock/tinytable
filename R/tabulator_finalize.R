@@ -71,5 +71,23 @@ setMethod(
       fixed = TRUE
     )
 
+    # Handle custom script inclusion
+    if (!is.null(x@html_script)) {
+      x@table_string <- gsub(
+        "$tinytable_SCRIPT",
+        x@html_script,
+        x@table_string,
+        fixed = TRUE
+      )
+    } else {
+      # Remove placeholder if no script is provided
+      x@table_string <- lines_drop(
+        x@table_string,
+        "\\$tinytable_SCRIPT",
+        fixed = FALSE,
+        unique = FALSE
+      )
+    }
+
     return(x)
   })

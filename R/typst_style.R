@@ -119,7 +119,7 @@ typst_hlines <- function(x, lin) {
   # Normalize colors once before splitting
   unique_line_colors <- unique(lin$line_color[!is.na(lin$line_color)])
   if (length(unique_line_colors) > 0) {
-    line_color_map <- setNames(
+    line_color_map <- stats::setNames(
       sapply(unique_line_colors, standardize_colors, format = "typst", USE.NAMES = FALSE),
       unique_line_colors
     )
@@ -283,7 +283,7 @@ process_typst_other_styles <- function(x, other) {
   )
   unique_colors <- unique(unique_colors)
   if (length(unique_colors) > 0) {
-    color_map <- setNames(
+    color_map <- stats::setNames(
       sapply(unique_colors, standardize_colors, format = "typst", USE.NAMES = FALSE),
       unique_colors
     )
@@ -383,7 +383,7 @@ typst_vlines <- function(x, lin) {
   # Normalize colors once before splitting
   unique_line_colors <- unique(lin$line_color[!is.na(lin$line_color)])
   if (length(unique_line_colors) > 0) {
-    line_color_map <- setNames(
+    line_color_map <- stats::setNames(
       sapply(unique_line_colors, standardize_colors, format = "typst", USE.NAMES = FALSE),
       unique_line_colors
     )

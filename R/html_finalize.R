@@ -90,6 +90,24 @@ setMethod(
       fixed = TRUE
     )
 
+    # Handle custom script inclusion
+    if (!is.null(x@html_script)) {
+      out <- sub(
+        "$tinytable_SCRIPT",
+        x@html_script,
+        out,
+        fixed = TRUE
+      )
+    } else {
+      # Remove placeholder if no script is provided
+      out <- lines_drop(
+        out,
+        "\\$tinytable_SCRIPT",
+        fixed = FALSE,
+        unique = FALSE
+      )
+    }
+
     if (isTRUE(getOption("knitr.in.progress"))) {
       # Rmarkdown and Quarto load their own html, which we probably don't want to override
       out <- lines_drop(

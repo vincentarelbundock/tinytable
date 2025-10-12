@@ -11,6 +11,7 @@ New features:
 * `plot_tt()` now supports images in Tabulator tables via the `images` parameter.
 * `theme_html(tabulator_css_rule = ...)` now appends CSS rules instead of overwriting them, allowing multiple calls to combine styles.
 * `plot_tt()` bar plots now accept `color` as a length-2 vector (`c(bar_color, background_color)`) to show progress bars with backgrounds in static formats (PNG, PDF, LaTeX). Use `xlim` to control the range. Note: Tabulator format uses only the first color.
+* `theme_html(script = ...)` allows users to inject custom JavaScript code or script tags into HTML output. Useful for loading external JavaScript libraries like Plotly, D3, etc.
 
 Changes:
 

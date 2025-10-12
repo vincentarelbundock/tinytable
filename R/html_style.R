@@ -218,7 +218,7 @@ setMethod(
       # Normalize colors once: build a map for unique line_color -> hex
       unique_colors <- unique(lines$line_color[!is.na(lines$line_color)])
       if (length(unique_colors) > 0) {
-        color_map <- setNames(
+        color_map <- stats::setNames(
           sapply(unique_colors, standardize_colors, format = "hex", USE.NAMES = FALSE),
           unique_colors
         )

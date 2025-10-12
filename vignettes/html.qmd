@@ -206,6 +206,138 @@ tmp[1, 1] <- paste(fa("r-project"), "for statistics")
 tt(tmp)
 ```
 
+## JS Plotting Libraries: Plotly, D3, etc.
+
+[Plotly](https://plotly.com/javascript/) is a popular JavaScript library for creating interactive charts and visualizations. We can embed Plotly plots directly in `tinytable` HTML tables by combining two features:
+
+1. **Loading the Plotly library**: Use `theme_html(script = ...)` to load the Plotly JavaScript library from a CDN
+2. **Embedding plot code in cells**: Insert raw HTML and JavaScript code directly into table cells
+
+This approach works with any JavaScript library - Plotly is just one example. The `script` parameter in `theme_html()` injects custom JavaScript into the HTML output, making external libraries available to code embedded in table cells.
+
+Here's a complete example showing histograms, density plots, and line plots (sparklines) embedded in a table:
+
+```{r, eval = knitr::is_html_output()}
+# Prepare data
+plot_data <- list(mtcars$mpg, mtcars$hp, mtcars$qsec)
+
+# Random data for line plots (sparklines)
+lines <- lapply(1:3, \(x) data.frame(x = 1:10, y = rnorm(10)))
+
+# Okabe-Ito color palette (colorblind-friendly)
+okabe_ito <- palette.colors(palette = "Okabe-Ito")
+
+# Helper function to create inline Plotly code for a histogram
+create_histogram <- function(data, color = okabe_ito[2]) {
+  id <- paste0("plot_", sprintf("%08x", as.integer(runif(1) * 1e8)))
+  data_json <- paste0("[", paste(data, collapse = ","), "]")
+  sprintf('<div id="%s"></div>
+<script>
+  Plotly.newPlot("%s", [{
+    x: %s,
+    type: "histogram",
+    marker: {color: "%s"}
+  }], {
+    showlegend: false,
+    margin: {l: 0, r: 0, t: 0, b: 0},
+    xaxis: {visible: false},
+    yaxis: {visible: false},
+    height: 50,
+    width: 150
+  }, {displayModeBar: false});
+</script>', id, id, data_json, color)
+}
+
+# Helper function to create inline Plotly code for a density plot
+create_density <- function(data, color = okabe_ito[4]) {
+  id <- paste0("plot_", sprintf("%08x", as.integer(runif(1) * 1e8)))
+  # Compute density using R
+  dens <- density(data, n = 100)
+  x_json <- paste0("[", paste(round(dens$x, 3), collapse = ","), "]")
+  y_json <- paste0("[", paste(round(dens$y, 5), collapse = ","), "]")
+  # Convert hex to rgba with 0.3 opacity
+  rgb_vals <- col2rgb(color)
+  fillcolor <- sprintf("rgba(%d, %d, %d, 0.3)", rgb_vals[1], rgb_vals[2], rgb_vals[3])
+  sprintf('<div id="%s"></div>
+<script>
+  Plotly.newPlot("%s", [{
+    x: %s,
+    y: %s,
+    type: "scatter",
+    mode: "lines",
+    fill: "tozeroy",
+    line: {color: "%s", width: 1.5},
+    fillcolor: "%s"
+  }], {
+    showlegend: false,
+    margin: {l: 0, r: 0, t: 0, b: 0},
+    xaxis: {visible: false},
+    yaxis: {visible: false},
+    height: 50,
+    width: 150
+  }, {displayModeBar: false});
+</script>', id, id, x_json, y_json, color, fillcolor)
+}
+
+# Helper function to create inline Plotly code for a line plot
+create_line <- function(data, color = okabe_ito[6]) {
+  id <- paste0("plot_", sprintf("%08x", as.integer(runif(1) * 1e8)))
+  x_json <- paste0("[", paste(data$x, collapse = ","), "]")
+  y_json <- paste0("[", paste(data$y, collapse = ","), "]")
+  sprintf('<div id="%s"></div>
+<script>
+  Plotly.newPlot("%s", [{
+    x: %s,
+    y: %s,
+    type: "scatter",
+    mode: "lines",
+    line: {color: "%s"}
+  }], {
+    showlegend: false,
+    margin: {l: 0, r: 0, t: 0, b: 0},
+    xaxis: {visible: false},
+    yaxis: {visible: false},
+    height: 50,
+    width: 150
+  }, {displayModeBar: false});
+</script>', id, id, x_json, y_json, color)
+}
+
+# Create data frame with inline Plotly code in each cell
+dat <- data.frame(
+  Variables = c("mpg", "hp", "qsec"),
+  Histogram = c(
+    create_histogram(plot_data[[1]]),
+    create_histogram(plot_data[[2]]),
+    create_histogram(plot_data[[3]])
+  ),
+  Density = c(
+    create_density(plot_data[[1]]),
+    create_density(plot_data[[2]]),
+    create_density(plot_data[[3]])
+  ),
+  Line = c(
+    create_line(lines[[1]]),
+    create_line(lines[[2]]),
+    create_line(lines[[3]])
+  )
+)
+
+# Create table - only load Plotly library via theme_html(script = ...)
+tt(dat, width = 1) |>
+  theme_html(script = '<script src="https://cdn.plot.ly/plotly-3.1.0.min.js" charset="utf-8"></script>') |>
+  style_tt(j = 2:4, align = "c")
+```
+
+The key pattern here is:
+
+1. Load the external library once using `theme_html(script = "<script src='...'></script>")`
+2. Create helper functions that generate HTML/JavaScript code for each plot
+3. Use these functions to populate table cells with raw HTML/JavaScript
+4. Each plot gets a unique ID so multiple plots can coexist in the same table
+
+This approach works for any JavaScript visualization library (D3.js, Chart.js, etc.) or custom JavaScript code you want to include in your tables.
+
 ## Miscellaneous
 
 * [Relative widths tables: `table-layout: fixed` vs `auto`.](https://github.com/vincentarelbundock/tinytable/issues/305)

@@ -331,7 +331,7 @@ process_tabularray_lines <- function(x, lines) {
   # Normalize colors once and define preambles
   unique_line_colors <- unique(lines$line_color[!is.na(lines$line_color)])
   if (length(unique_line_colors) > 0) {
-    line_color_map <- setNames(
+    line_color_map <- stats::setNames(
       sapply(unique_line_colors, standardize_colors, format = "tabularray", USE.NAMES = FALSE),
       unique_line_colors
     )
@@ -396,7 +396,7 @@ process_tabularray_other_styles <- function(x, other) {
   )
   unique_colors <- unique(unique_colors)
   if (length(unique_colors) > 0) {
-    color_map <- setNames(
+    color_map <- stats::setNames(
       sapply(unique_colors, standardize_colors, format = "tabularray", USE.NAMES = FALSE),
       unique_colors
     )

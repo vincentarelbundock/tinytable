@@ -6,6 +6,7 @@
 #' @param class String. HTML table class.
 #' @param css Character vector. CSS style declarations.
 #' @param css_rule String. Complete CSS rules.
+#' @param script String. Custom JavaScript code or script tags to inject into the HTML output. Useful for loading external JavaScript libraries like Plotly, D3, etc.
 #' @param portable Logical. Sets whether to create portable HTML output with embedded Javascript, CSS, and base64-encoded images.
 #' @param tabulator_stylesheet Character string. CSS stylesheet theme for Tabulator.js tables.
 #'   Default is "bootstrap5". Available options: "default", "simple", "midnight", "modern",
@@ -29,6 +30,18 @@
 #' @param tabulator_columns Custom column definitions.
 #' @param ... Additional arguments are ignored.
 #'
+#' @examples
+#' \dontrun{
+#' # Load an external JavaScript library
+#' library(tinytable)
+#' x <- tt(mtcars[1:5, 1:5])
+#' x <- theme_html(x, script = '<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>')
+#'
+#' # Add custom inline JavaScript
+#' x <- tt(mtcars[1:5, 1:5])
+#' x <- theme_html(x, script = '<script>console.log("Table loaded");</script>')
+#' }
+#'
 #' @export
 theme_html <- function(
     x,
@@ -38,6 +51,7 @@ theme_html <- function(
     class = get_option("tinytable_html_class", default = NULL),
     css = get_option("tinytable_html_css", default = NULL),
     css_rule = get_option("tinytable_html_css_rule", default = NULL),
+    script = get_option("tinytable_html_script", default = NULL),
     portable = get_option("tinytable_html_portable"),
     tabulator_columns = get_option("tinytable_html_tabulator_columns"),
     tabulator_css_rule = get_option("tinytable_html_tabulator_css_rule"),
@@ -70,6 +84,11 @@ theme_html <- function(
   if (!is.null(css_rule)) {
     assert_string(css_rule)
     x@html_css_rule <- css_rule
+  }
+
+  if (!is.null(script)) {
+    assert_string(script)
+    x@html_script <- script
   }
 
   if (!is.null(class)) {

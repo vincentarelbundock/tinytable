@@ -18,6 +18,7 @@ setClass(
     body = "character",
     html_class = "character",
     html_css_rule = "NULLorCharacter",
+    html_script = "NULLorCharacter",
     caption = "NULLorCharacter",
     css = "data.frame",
     data = "data.frame",
@@ -104,6 +105,7 @@ setMethod(
 
     # Default to NULL - framework CSS will be loaded externally
     .Object@html_css_rule <- NULL
+    .Object@html_script <- NULL
 
     # dynamic
     .Object@nrow <- nrow(.Object@data)
