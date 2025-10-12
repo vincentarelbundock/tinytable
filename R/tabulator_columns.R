@@ -17,6 +17,15 @@ merge_lists <- function(x, y) { # shallow merge; rhs wins
 # Each entry returns a list(title/field/formatter/params/…),
 # given (col_def, x, j, args).
 # -----------------------------------------------------------------------------
+tabulator_tickcross_params <- function() {
+    list(
+        allowEmpty = TRUE,
+        allowTruthy = TRUE,
+        tickElement = "<i class='fa-solid fa-check'></i>",
+        crossElement = "<i class='fa-solid fa-xmark'></i>"
+    )
+}
+
 tabulator_column_registry <- list(
     numeric = function(col_def, x, j, args) {
         digits <- args$digits %||% get_option("tinytable_format_digits")
@@ -38,9 +47,16 @@ tabulator_column_registry <- list(
     },
     logical = function(col_def, x, j, args) {
         bool_fun <- args$bool %||% get_option("tinytable_format_bool")
-        merge_lists(col_def, list(
-            formatter = if (!is.null(bool_fun) && is.function(bool_fun)) "plaintext" else "tickCross"
-        ))
+        if (!is.null(bool_fun) && is.function(bool_fun)) {
+            merge_lists(col_def, list(
+                formatter = "plaintext"
+            ))
+        } else {
+            merge_lists(col_def, list(
+                formatter = "tickCross",
+                formatterParams = tabulator_tickcross_params()
+            ))
+        }
     },
     Date = function(col_def, x, j, args) {
         fmt_out <- args$date %||% get_option("tinytable_format_date") %||% "M/d/yyyy"

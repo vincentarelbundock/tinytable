@@ -1,3 +1,14 @@
+tabulator_css_cdn <- "https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/tabulator.min.css"
+tinytable_tabulator_theme_cdn <- "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tabulator_tinytable.min.css"
+fontawesome_css_cdn <- "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"
+
+tabulator_default_css_block <- sprintf(
+  '<link href="%s" rel="stylesheet">\n    <link href="%s" rel="stylesheet">\n    <link href="%s" rel="stylesheet">',
+  tabulator_css_cdn,
+  tinytable_tabulator_theme_cdn,
+  fontawesome_css_cdn
+)
+
 setMethod(
   f = "build_eval",
   signature = "tinytable_tabulator",
@@ -69,7 +80,7 @@ setMethod(
     # Add default CDN (base Tabulator CSS + tinytable theme)
     template <- gsub(
       "$tinytable_TABULATOR_CDN",
-      '<link href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/tabulator.min.css" rel="stylesheet">\n    <link href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/scss/tabulator_tinytable.min.css" rel="stylesheet">',
+      tabulator_default_css_block,
       template,
       fixed = TRUE
     )

@@ -195,6 +195,7 @@ $rangeHeaderTextHighlightBackground: $black !default; //header text color when h
 					box-sizing:border-box;
 					width: 100%;
 					
+					font-weight: normal;
 					white-space: nowrap;
 					overflow: hidden;
 					text-overflow: ellipsis;
@@ -265,10 +266,31 @@ $rangeHeaderTextHighlightBackground: $black !default; //header text color when h
 				margin-top:2px;
 				width:100%;
 				text-align: center;
+
+				.tabulator-tick,
+				.tabulator-tick-cross{
+					color: $black !important;
+					border-color: $black !important;
+					background-color: transparent !important;
+					text-shadow: none !important;
+				}
+
+				.tabulator-tick::before,
+				.tabulator-tick::after,
+				.tabulator-tick-cross::before,
+				.tabulator-tick-cross::after{
+					color: $black !important;
+					border-color: $black !important;
+				}
 				
 				//styling adjustment for inbuilt editors
 				textarea{
 					height:auto !important;
+					background-color: $white;
+					border: 1px solid $headerBorderColor;
+					box-shadow: none;
+					color: $headerTextColor;
+					padding: 2px 6px;
 				}
 				
 				svg{
@@ -276,10 +298,43 @@ $rangeHeaderTextHighlightBackground: $black !default; //header text color when h
 				}
 				
 				input{
+					background-color: $white;
+					border: 1px solid $headerBorderColor;
+					box-shadow: none;
+					color: $headerTextColor;
+					padding: 2px 6px;
+					-webkit-appearance: none;
+					appearance: none;
+
+					&:focus{
+						border-color: $sortArrowActive;
+						outline: none;
+					}
+
 					&::-ms-clear {
 						width : 0;
 						height: 0;
 					}
+
+					&[type="checkbox"]{
+						-webkit-appearance: checkbox;
+						appearance: checkbox;
+						width: auto;
+						height: auto;
+						padding: 0;
+						margin: 5px auto 0 auto;
+						display: inline-block;
+					}
+				}
+
+				select{
+					background-color: $white;
+					border: 1px solid $headerBorderColor;
+					box-shadow: none;
+					color: $headerTextColor;
+					padding: 2px 6px;
+					-webkit-appearance: none;
+					appearance: none;
 				}
 			}
 			
@@ -904,6 +959,22 @@ $rangeHeaderTextHighlightBackground: $black !default; //header text color when h
 		overflow:hidden;
 		text-overflow:ellipsis;
 		outline:none;
+
+		.tabulator-tick,
+		.tabulator-tick-cross{
+			color: $black !important;
+			border-color: $black !important;
+			background-color: transparent !important;
+			text-shadow: none !important;
+		}
+		
+		.tabulator-tick::before,
+		.tabulator-tick::after,
+		.tabulator-tick-cross::before,
+		.tabulator-tick-cross::after{
+			color: $black !important;
+			border-color: $black !important;
+		}
 		
 		&.tabulator-row-header{
 			border-right: none;
@@ -1350,4 +1421,3 @@ $rangeHeaderTextHighlightBackground: $black !default; //header text color when h
 	}
 	
 }
-

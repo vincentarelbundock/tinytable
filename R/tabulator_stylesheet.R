@@ -2,9 +2,22 @@
 # TABULATOR STYLESHEET HANDLING
 # =============================================================================
 
+# Tabulator CDN locations
+tinytable_tabulator_theme_cdn <- "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tabulator_tinytable.min.css"
+tabulator_cdn_base <- "https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/"
+tabulator_css_cdn <- "https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/tabulator.min.css"
+fontawesome_css_cdn <- "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"
+
+tabulator_default_css_block <- sprintf(
+    '<link href="%s" rel="stylesheet">\n    <link href="%s" rel="stylesheet">\n    <link href="%s" rel="stylesheet">',
+    tabulator_css_cdn,
+    tinytable_tabulator_theme_cdn,
+    fontawesome_css_cdn
+)
+
 # Tabulator theme mapping
-TABULATOR_THEMES <- list(
-    tinytable = "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/scss/tabulator_tinytable.min.css",
+tabulator_themes <- list(
+    tinytable = tinytable_tabulator_theme_cdn,
     tabulator = "tabulator.min.css",
     simple = "tabulator_simple.min.css",
     midnight = "tabulator_midnight.min.css",
@@ -19,11 +32,8 @@ TABULATOR_THEMES <- list(
     materialize = "tabulator_materialize.min.css"
 )
 
-# Tabulator CDN base URL
-TABULATOR_CDN_BASE <- "https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/"
-
 # Default tabulator theme
-TABULATOR_DEFAULT_THEME <- TABULATOR_THEMES[["tinytable"]]
+tabulator_default_theme <- tabulator_themes[["tinytable"]]
 
 #' Helper function to handle stylesheet theme selection
 #' @param x tinytable object
@@ -33,15 +43,20 @@ TABULATOR_DEFAULT_THEME <- TABULATOR_THEMES[["tinytable"]]
 #' @noRd
 tabulator_stylesheet <- function(x, stylesheet) {
     if (identical(stylesheet, "tinytable")) {
-        stylesheet <- TABULATOR_THEMES[["tinytable"]]
+        stylesheet <- tabulator_themes[["tinytable"]]
     }
 
     # Check if it's a custom URL
     if (startsWith(stylesheet, "http")) {
-        css_link <- sprintf('<link href="%s" rel="stylesheet">', stylesheet)
+        css_link <- sprintf(
+            '<link href="%s" rel="stylesheet">\n    <link href="%s" rel="stylesheet">\n    <link href="%s" rel="stylesheet">',
+            tabulator_css_cdn,
+            stylesheet,
+            fontawesome_css_cdn
+        )
     } else {
         # Validate theme choice
-        valid_themes <- names(TABULATOR_THEMES)
+        valid_themes <- names(tabulator_themes)
         valid_themes <- c("tinytable", sort(setdiff(valid_themes, "tinytable")))
 
         if (!stylesheet %in% valid_themes) {
@@ -53,20 +68,22 @@ tabulator_stylesheet <- function(x, stylesheet) {
                 ". Or provide a custom CDN URL starting with 'http'. Using the default `tinytable` theme.",
                 call. = FALSE
             )
-            css_link <- sprintf('<link href="%s" rel="stylesheet">', TABULATOR_DEFAULT_THEME)
+            css_link <- tabulator_default_css_block
         } else {
-            css_file <- TABULATOR_THEMES[[stylesheet]]
+            css_file <- tabulator_themes[[stylesheet]]
             css_link <- sprintf(
-                '<link href="%s%s" rel="stylesheet">',
-                TABULATOR_CDN_BASE,
-                css_file
+                '<link href="%s" rel="stylesheet">\n    <link href="%s%s" rel="stylesheet">\n    <link href="%s" rel="stylesheet">',
+                tabulator_css_cdn,
+                tabulator_cdn_base,
+                css_file,
+                fontawesome_css_cdn
             )
         }
     }
 
     # Replace the CSS links in the table string (both base Tabulator CSS and tinytable theme)
     x@table_string <- gsub(
-        '<link href="https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/tabulator.min.css" rel="stylesheet">\n    <link href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/scss/tabulator_tinytable.min.css" rel="stylesheet">',
+        tabulator_default_css_block,
         css_link,
         x@table_string,
         fixed = TRUE

@@ -84,7 +84,10 @@ tabulator_apply_column_search <- function(x) {
         } else if (is.logical(col_data)) {
           # Use select filter for logical columns
           x@tabulator_columns[[i]][["headerFilter"]] <- "tickCross"
-          x@tabulator_columns[[i]][["headerFilterParams"]] <- list(tristate = TRUE)
+          x@tabulator_columns[[i]][["headerFilterParams"]] <- c(
+            tabulator_tickcross_params(),
+            list(tristate = TRUE)
+          )
           x@tabulator_columns[[i]][["headerFilterPlaceholder"]] <- "All"
         } else {
           # Use input filter for text columns
