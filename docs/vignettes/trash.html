@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>customization – tinytable</title>
+<title>trash – tinytable</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -55,7 +55,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -511,18 +531,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#customization" id="toc-customization" class="nav-link active" data-scroll-target="#customization">Customization</a>
-  <ul class="collapse">
-  <li><a href="#methods-to-support-non-data-frame-objects" id="toc-methods-to-support-non-data-frame-objects" class="nav-link" data-scroll-target="#methods-to-support-non-data-frame-objects">Methods to support non-data frame objects</a></li>
-  <li><a href="#shiny" id="toc-shiny" class="nav-link" data-scroll-target="#shiny">Shiny</a></li>
-  </ul></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
@@ -530,28 +540,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="customization" class="level1">
-<h1>Customization</h1>
-<p>This section covers customization options for <code>tinytable</code>. For format-specific customization, see:</p>
-<ul>
-<li><a href="../vignettes/html.html">HTML customization</a> - Bootstrap, CSS subclasses, custom CSS rules</li>
-<li><a href="../vignettes/latex.html">LaTeX/PDF customization</a> - Tabularray features and styling</li>
-</ul>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tinytable_tt_digits =</span> <span class="dv">3</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<section id="methods-to-support-non-data-frame-objects" class="level2">
-<h2 class="anchored" data-anchor-id="methods-to-support-non-data-frame-objects">Methods to support non-data frame objects</h2>
-<p>The <code>tt()</code> function is a “generic” that can dispatch an object to an appropriate method based on the class of that object. The <code>tinytable</code> supplies methods for <code>data.frame</code>, <code>data.table</code>, and <code>tibble</code>. But users can define new method to automatically create tables for whatever object they like.</p>
-<p>For example, let’s say we fit a linear regression model (class <code>lm</code>) and extract the results using the <code>tidy()</code> function from the <code>broom</code> package. We can create a table from the results as follows:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(broom)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> <span class="fu">factor</span>(cyl), <span class="at">data =</span> mtcars)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">tidy</span>(mod)</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(results)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Thing =</span> <span class="st">"qwerty"</span>, <span class="at">Citation =</span> <span class="st">"@Lovelace1842"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(k) <span class="sc">|&gt;</span> <span class="fu">format_tt</span>(<span class="at">quarto =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -559,19 +551,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_dp9h0f5rwxpb2fg8y3xo = TinyTable.createTableFunctions("tinytable_dp9h0f5rwxpb2fg8y3xo");
+      const tableFns_cm1wosh5ndg5cusz1fye = TinyTable.createTableFunctions("tinytable_cm1wosh5ndg5cusz1fye");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 }, { i: '4', j: 5 } ], css_id: 'tinytable_css_wk5sce0nknpkg2oi7rna',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_sdq3x6f90gcwt24ygqch',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '1', j: 2 } ], css_id: 'tinytable_css_bz341v5l5u14n5eav0jk',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 } ], css_id: 'tinytable_css_omj53arvfygcz03ybntu',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_dp9h0f5rwxpb2fg8y3xo.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_cm1wosh5ndg5cusz1fye.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -580,242 +572,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_dp9h0f5rwxpb2fg8y3xo td.tinytable_css_wk5sce0nknpkg2oi7rna, #tinytable_dp9h0f5rwxpb2fg8y3xo th.tinytable_css_wk5sce0nknpkg2oi7rna {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    #tinytable_dp9h0f5rwxpb2fg8y3xo td.tinytable_css_sdq3x6f90gcwt24ygqch, #tinytable_dp9h0f5rwxpb2fg8y3xo th.tinytable_css_sdq3x6f90gcwt24ygqch {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_cm1wosh5ndg5cusz1fye td.tinytable_css_bz341v5l5u14n5eav0jk, #tinytable_cm1wosh5ndg5cusz1fye th.tinytable_css_bz341v5l5u14n5eav0jk {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_cm1wosh5ndg5cusz1fye td.tinytable_css_omj53arvfygcz03ybntu, #tinytable_cm1wosh5ndg5cusz1fye th.tinytable_css_omj53arvfygcz03ybntu {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_dp9h0f5rwxpb2fg8y3xo" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
-        
-        <thead>
-              <tr>
-                <th scope="col" data-row="0" data-col="1">term</th>
-                <th scope="col" data-row="0" data-col="2">estimate</th>
-                <th scope="col" data-row="0" data-col="3">std.error</th>
-                <th scope="col" data-row="0" data-col="4">statistic</th>
-                <th scope="col" data-row="0" data-col="5">p.value</th>
-              </tr>
-        </thead>
-        
-        <tbody>
-                <tr>
-                  <td data-row="1" data-col="1">(Intercept)</td>
-                  <td data-row="1" data-col="2">28.65</td>
-                  <td data-row="1" data-col="3">1.5878</td>
-                  <td data-row="1" data-col="4">18.04</td>
-                  <td data-row="1" data-col="5">0.0000000000000000592</td>
-                </tr>
-                <tr>
-                  <td data-row="2" data-col="1">hp</td>
-                  <td data-row="2" data-col="2">-0.024</td>
-                  <td data-row="2" data-col="3">0.0154</td>
-                  <td data-row="2" data-col="4">-1.56</td>
-                  <td data-row="2" data-col="5">0.1299540446968084351</td>
-                </tr>
-                <tr>
-                  <td data-row="3" data-col="1">factor(cyl)6</td>
-                  <td data-row="3" data-col="2">-5.968</td>
-                  <td data-row="3" data-col="3">1.6393</td>
-                  <td data-row="3" data-col="4">-3.64</td>
-                  <td data-row="3" data-col="5">0.0010920888649549852</td>
-                </tr>
-                <tr>
-                  <td data-row="4" data-col="1">factor(cyl)8</td>
-                  <td data-row="4" data-col="2">-8.521</td>
-                  <td data-row="4" data-col="3">2.3261</td>
-                  <td data-row="4" data-col="4">-3.66</td>
-                  <td data-row="4" data-col="5">0.0010286170048313355</td>
-                </tr>
-        </tbody>
-      </table>
+      
+<table id="tinytable_cm1wosh5ndg5cusz1fye" class="tinytable caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" scope="col" data-row="0" data-col="1">Thing</th>
+<th data-quarto-table-cell-role="th" scope="col" data-row="0" data-col="2">Citation</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-row="1" data-col="1">qwerty</td>
+<td data-row="1" data-col="2"><span class="citation" data-cites="Lovelace1842">Lovelace (<a href="#ref-Lovelace1842" role="doc-biblioref">1842</a>)</span></td>
+</tr>
+</tbody>
+</table>
+
     </div>
 <!-- hack to avoid NA insertion in last line -->
 </div>
 </div>
-<p>Alternatively, we can create an S3 method for the <code>lm</code> class, and then pass any model we fit to that class to automatically obtain a nice table.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>tt.lm <span class="ot">&lt;-</span> <span class="cf">function</span>(x, ...) {</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  results <span class="ot">&lt;-</span> broom<span class="sc">::</span><span class="fu">tidy</span>(x)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">&lt;-</span> <span class="fu">tt</span>(results, ...)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  out <span class="ot">&lt;-</span> <span class="fu">format_tt</span>(out, <span class="at">j =</span> <span class="st">"p.value"</span>, <span class="at">escape =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">fn =</span> \(p) <span class="fu">format.pval</span>(p, <span class="at">digits =</span> <span class="dv">1</span>))</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(out)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(mpg <span class="sc">~</span> hp, <span class="at">data =</span> mtcars) <span class="sc">|&gt;</span> <span class="fu">tt</span>(<span class="at">digits =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<!-- preamble start -->
 
-    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
 
-    <script>
-      // Create table-specific functions using external factory
-      const tableFns_64e7ctgt1jpcxkbwbdfz = TinyTable.createTableFunctions("tinytable_64e7ctgt1jpcxkbwbdfz");
-      // tinytable span after
-      window.addEventListener('load', function () {
-          var cellsToStyle = [
-            // tinytable style arrays after
-          { positions: [ { i: '2', j: 1 }, { i: '2', j: 2 }, { i: '2', j: 3 }, { i: '2', j: 4 }, { i: '2', j: 5 } ], css_id: 'tinytable_css_gyetsoz198g2lmn1zb4s',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_axppxr0roj6cypwckiq3',}, 
-          ];
 
-          // Loop over the arrays to style the cells
-          cellsToStyle.forEach(function (group) {
-              group.positions.forEach(function (cell) {
-                  tableFns_64e7ctgt1jpcxkbwbdfz.styleCell(cell.i, cell.j, group.css_id);
-              });
-          });
-      });
-    </script>
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
-    <style>
-    /* tinytable css entries after */
-    #tinytable_64e7ctgt1jpcxkbwbdfz td.tinytable_css_gyetsoz198g2lmn1zb4s, #tinytable_64e7ctgt1jpcxkbwbdfz th.tinytable_css_gyetsoz198g2lmn1zb4s {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    #tinytable_64e7ctgt1jpcxkbwbdfz td.tinytable_css_axppxr0roj6cypwckiq3, #tinytable_64e7ctgt1jpcxkbwbdfz th.tinytable_css_axppxr0roj6cypwckiq3 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    </style>
-    <div class="container">
-      <table class="tinytable" id="tinytable_64e7ctgt1jpcxkbwbdfz" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
-        
-        <thead>
-              <tr>
-                <th scope="col" data-row="0" data-col="1">term</th>
-                <th scope="col" data-row="0" data-col="2">estimate</th>
-                <th scope="col" data-row="0" data-col="3">std.error</th>
-                <th scope="col" data-row="0" data-col="4">statistic</th>
-                <th scope="col" data-row="0" data-col="5">p.value</th>
-              </tr>
-        </thead>
-        
-        <tbody>
-                <tr>
-                  <td data-row="1" data-col="1">(Intercept)</td>
-                  <td data-row="1" data-col="2">30.1</td>
-                  <td data-row="1" data-col="3">1.63</td>
-                  <td data-row="1" data-col="4">18</td>
-                  <td data-row="1" data-col="5">&lt;2e-16</td>
-                </tr>
-                <tr>
-                  <td data-row="2" data-col="1">hp</td>
-                  <td data-row="2" data-col="2">-0.07</td>
-                  <td data-row="2" data-col="3">0.01</td>
-                  <td data-row="2" data-col="4">-7</td>
-                  <td data-row="2" data-col="5">2e-07</td>
-                </tr>
-        </tbody>
-      </table>
-    </div>
-<!-- hack to avoid NA insertion in last line -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Lovelace1842" class="csl-entry" role="listitem">
+Lovelace, Augusta Ada. 1842. <span>“Sketch of the Analytical Engine Invented by Charles Babbage, by LF Menabrea, Officer of the Military Engineers, with Notes Upon the Memoir by the Translator.”</span> <em>Taylor’s Scientific Memoirs</em> 3: 666–731.
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lm</span>(mpg <span class="sc">~</span> hp <span class="sc">+</span> <span class="fu">factor</span>(cyl), <span class="at">data =</span> mtcars) <span class="sc">|&gt;</span> <span class="fu">tt</span>(<span class="at">digits =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<!-- preamble start -->
-
-    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
-
-    <script>
-      // Create table-specific functions using external factory
-      const tableFns_rrzupk6m90goxbrgcbsv = TinyTable.createTableFunctions("tinytable_rrzupk6m90goxbrgcbsv");
-      // tinytable span after
-      window.addEventListener('load', function () {
-          var cellsToStyle = [
-            // tinytable style arrays after
-          { positions: [ { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 }, { i: '4', j: 5 } ], css_id: 'tinytable_css_p8avd2yka6m02lfehyn4',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_zhthpfvisudf2mg72v6d',}, 
-          ];
-
-          // Loop over the arrays to style the cells
-          cellsToStyle.forEach(function (group) {
-              group.positions.forEach(function (cell) {
-                  tableFns_rrzupk6m90goxbrgcbsv.styleCell(cell.i, cell.j, group.css_id);
-              });
-          });
-      });
-    </script>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
-    <style>
-    /* tinytable css entries after */
-    #tinytable_rrzupk6m90goxbrgcbsv td.tinytable_css_p8avd2yka6m02lfehyn4, #tinytable_rrzupk6m90goxbrgcbsv th.tinytable_css_p8avd2yka6m02lfehyn4 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    #tinytable_rrzupk6m90goxbrgcbsv td.tinytable_css_zhthpfvisudf2mg72v6d, #tinytable_rrzupk6m90goxbrgcbsv th.tinytable_css_zhthpfvisudf2mg72v6d {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    </style>
-    <div class="container">
-      <table class="tinytable" id="tinytable_rrzupk6m90goxbrgcbsv" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
-        
-        <thead>
-              <tr>
-                <th scope="col" data-row="0" data-col="1">term</th>
-                <th scope="col" data-row="0" data-col="2">estimate</th>
-                <th scope="col" data-row="0" data-col="3">std.error</th>
-                <th scope="col" data-row="0" data-col="4">statistic</th>
-                <th scope="col" data-row="0" data-col="5">p.value</th>
-              </tr>
-        </thead>
-        
-        <tbody>
-                <tr>
-                  <td data-row="1" data-col="1">(Intercept)</td>
-                  <td data-row="1" data-col="2">28.65</td>
-                  <td data-row="1" data-col="3">1.59</td>
-                  <td data-row="1" data-col="4">18</td>
-                  <td data-row="1" data-col="5">&lt;2e-16</td>
-                </tr>
-                <tr>
-                  <td data-row="2" data-col="1">hp</td>
-                  <td data-row="2" data-col="2">-0.02</td>
-                  <td data-row="2" data-col="3">0.02</td>
-                  <td data-row="2" data-col="4">-2</td>
-                  <td data-row="2" data-col="5">0.130</td>
-                </tr>
-                <tr>
-                  <td data-row="3" data-col="1">factor(cyl)6</td>
-                  <td data-row="3" data-col="2">-5.97</td>
-                  <td data-row="3" data-col="3">1.64</td>
-                  <td data-row="3" data-col="4">-4</td>
-                  <td data-row="3" data-col="5">0.001</td>
-                </tr>
-                <tr>
-                  <td data-row="4" data-col="1">factor(cyl)8</td>
-                  <td data-row="4" data-col="2">-8.52</td>
-                  <td data-row="4" data-col="3">2.33</td>
-                  <td data-row="4" data-col="4">-4</td>
-                  <td data-row="4" data-col="5">0.001</td>
-                </tr>
-        </tbody>
-      </table>
-    </div>
-<!-- hack to avoid NA insertion in last line -->
-</div>
-</div>
-</section>
-<section id="shiny" class="level2">
-<h2 class="anchored" data-anchor-id="shiny">Shiny</h2>
-<p><code>tinytable</code> is a great complement to Shiny for displaying HTML tables in a web app. The styling in a <code>tinytable</code> is applied by JavaScript functions and CSS. Thus, to ensure that this styling is preserved in a Shiny app, one strategy is to bake the entire page, save it in a temporary file, and load it using the <code>includeHTML</code> function from the <code>shiny</code> package. This approach is illustrated in this minimal example:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"shiny"</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(<span class="st">"tinytable"</span>)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>fn <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">tempfile</span>(), <span class="st">".html"</span>)</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">tt</span>(mtcars[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]) <span class="sc">|&gt;</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">style_tt</span>(<span class="at">i =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">color =</span> <span class="st">"orange"</span>, <span class="at">background =</span> <span class="st">"black"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">save_tt</span>(fn)</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">ui =</span> <span class="fu">fluidPage</span>(</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fluidRow</span>(<span class="fu">column</span>(</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>      <span class="dv">12</span>, <span class="fu">h1</span>(<span class="st">"This is test of tinytable"</span>),</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>      shiny<span class="sc">::</span><span class="fu">includeHTML</span>(fn)</span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    ))</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  ),</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">server =</span> <span class="cf">function</span>(input, output) {</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-
-
-</section>
-</section>
-
-</main> <!-- /main -->
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
   window.document.addEventListener("DOMContentLoaded", function (event) {
     const icon = "";
