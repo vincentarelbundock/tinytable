@@ -42,7 +42,14 @@ grid_colspan <- function(x) {
         colspan <- colspan_rows[idx, "colspan"]
 
         # Calculate target line: header_sep_line + row_idx (rows are consecutive after header separator)
-        target_line <- header_sep_line + row_idx
+        if (row_idx > 0) {
+            target_line <- header_sep_line + row_idx
+        } else if (row_idx == 0) {
+            target_line <- header_sep_line + row_idx - 1
+        } else {
+            # group_tt(j) are always spanned
+            next
+        }
 
         if (
             target_line <= length(table_lines) &&

@@ -166,6 +166,38 @@ tab <- tt(head(iris)[1:3, 1:3]) |>
   theme_markdown(hline = TRUE, vline = FALSE)
 expect_snapshot_print(tab, label = "markdown-theme_empty_hline_only")
 
+
+# Issue #605
+cap <- "Issue #605 lm1 and lm2 span 2 and p is in twice in colnames."
+out <- data.frame(
+  Parameter = c(
+    "grp (2)", "grp (3)", "Days × grp (2)", "Days × grp (3)",
+    "Days"
+  ),
+  `Coefficient (CI)` = c(
+    "-4.31 (-15.95,  7.32)", "-1.31 (-13.47, 10.84)", "",
+    "", "10.44 (  8.84, 12.03)"
+  ),
+  p = c(" 0.465", " 0.831", "", "", "<0.001"),
+  `Coefficient (CI)` = c(
+    " 0.32 (-22.56, 23.20)", " 3.77 (-19.72, 27.26)",
+    "-1.01 ( -5.35,  3.32)", "-1.11 ( -5.53,  3.31)",
+    "11.23 (  7.87, 14.60)"
+  ),
+  p = c(" 0.978", " 0.752", " 0.645", " 0.621", "<0.001"),
+  check.names = FALSE
+)
+final <- tt(out, caption = cap)
+final <- group_tt(
+  final,
+  i = list(Groups = 1L, Interactions = 3L, Controls = 5L),
+  j = list(lm1 = 2:3, lm2 = 4:5)
+)
+final <- style_tt(final, i = "~groupi", j = 1, indent = 2)
+expect_snapshot_print(tab, label = "markdown-issue605")
+
+
+
 # restore
 options(tinytable_print_output = NULL)
 
@@ -177,3 +209,4 @@ tab <- tt(tab, digits = 2) |>
   style_tt(i = c(1, 3, 5), j = 1, colspan = 2)
 expect_snapshot_print(tab, "colrowspan-markdown_multiple")
 options(tinytable_print_output = NULL)
+
