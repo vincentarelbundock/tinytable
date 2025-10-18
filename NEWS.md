@@ -1,6 +1,6 @@
 # News
 
-## Development
+## 0.15.0
 
 New features:
 
