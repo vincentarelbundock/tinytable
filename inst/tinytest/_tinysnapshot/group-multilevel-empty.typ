@@ -70,7 +70,7 @@ block[ // start block
       repeat: true,
 table.cell(colspan: 3, align: center)[A], [ ],
 [ ], table.cell(colspan: 2, align: center)[B], [D],
-[C], [C], [B], [E],
+[C], [C], [ ], [E],
     ),
     // tinytable header end
 

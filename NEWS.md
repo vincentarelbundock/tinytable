@@ -24,6 +24,7 @@ Internal changes:
 Bugs:
 
 * Issue in Typst when calling `style_tt()` with both a `rowspan` and a `line`. Thanks to @eringrand for reporting Issue #592.
+* `group_tt(j = "_")` (and other single-character delimiters) now errors when column names contain differing numbers of delimiters, preventing malformed spanning headers.
 
 ## 0.14.0
 

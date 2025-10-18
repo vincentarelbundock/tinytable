@@ -17,6 +17,22 @@ j_delim_to_named_list <- function(x, j) {
 
   # Split each column name by the delimiter to get all levels
   split_names <- strsplit(grouped_cols, j, fixed = TRUE)
+  split_lengths <- lengths(split_names)
+
+  if (length(unique(split_lengths)) > 1) {
+    delim_counts <- split_lengths - 1
+    details <- paste(
+      sprintf("%s (%d)", grouped_cols, delim_counts),
+      collapse = ", "
+    )
+    stop(
+      sprintf(
+        "Each column name must have the same number of delimiters. Got: %s.",
+        details
+      ),
+      call. = FALSE
+    )
+  }
   max_levels <- max(lengths(split_names))
 
   # Build the nested grouping structure from the outermost level down

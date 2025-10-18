@@ -204,28 +204,27 @@ expect_snapshot_print(t[["latex"]], "group-multilevel-basic.tex")
 expect_snapshot_print(t[["html"]], "group-multilevel-basic.html")
 expect_snapshot_print(t[["typst"]], "group-multilevel-basic.typ")
 
-# Test complex multi-level structure with mixed levels
-tab <- data.frame(
+# Mixed-level delimiter structure should error
+tab_mixed_levels <- data.frame(
   A_X_1 = 1,
   A_X_2 = 2,
   A_Y_1 = 3,
   B_Z_1 = 4,
   B_Z_2 = 5,
   C_W = 6
-) |>
-  tt() |>
-  group_tt(j = "_")
-t <- expect_table(tab)
-expect_snapshot_print(t[["markdown"]], "group-multilevel-complex.md")
-expect_snapshot_print(t[["latex"]], "group-multilevel-complex.tex")
-expect_snapshot_print(t[["html"]], "group-multilevel-complex.html")
-expect_snapshot_print(t[["typst"]], "group-multilevel-complex.typ")
+)
+expect_error(
+  tab_mixed_levels |> tt() |> group_tt(j = "_"),
+  "Each column name must have the same number of delimiters.",
+  fixed = TRUE
+)
 
-# Test multi-level structure with empty fields
+# Test multi-level structure with empty fields.
+# The trailing space in "A_B_ " preserves the delimiter count.
 tab <- data.frame(
   "A__C" = 1,
   "A_B_C" = 2,
-  "A_B_" = 3,
+  "A_B_ " = 3,
   "_D_E" = 4,
   check.names = FALSE
 ) |>
