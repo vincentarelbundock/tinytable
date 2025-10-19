@@ -110,6 +110,18 @@ tab@output <- "markdown"
 expect_snapshot_print(tab, "group-delim-x-delim.md")
 
 
+
+# bug: same number of delimiters
+dat <- data.frame(
+  "A__D" = rnorm(3),
+  "A_B_D" = rnorm(3),
+  "A_B_" = rnorm(3),
+  "_C_E" = rnorm(3),
+  check.names = FALSE
+)
+tt(dat) |> group_tt(j = "_")
+
+
 # Issue #466: group_tt without delimiter returns a valid table
 tab <- tt(data.frame(Aid = 1, Aa1 = 2, Aa2 = "3", Bb1 = 4, Bb2 = 5, BC = 5)) |>
   group_tt(j = "_")
