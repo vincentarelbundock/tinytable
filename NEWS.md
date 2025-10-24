@@ -1,5 +1,11 @@
 # News
 
+## 0.15.0.1
+
+Bugs:
+
+* Fixed spurious Windows portable HTML warning when using `height` parameter with non-HTML output formats (Issue #608).
+
 ## 0.15.0
 
 New features:
