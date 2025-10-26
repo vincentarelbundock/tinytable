@@ -92,9 +92,11 @@ print.tinytable <- function(
   dir <- getOption("tinytable_tempdir", default = tempdir())
   dir <- sub("\\/$", "", dir)
 
-  if (output == "html") {
+  if (identical(output, "html")) {
     x@output_dir <- dir
+    x@html_portable <- TRUE
   }
+
 
   x <- build_tt(x, output = output)
 

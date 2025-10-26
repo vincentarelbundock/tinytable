@@ -67,20 +67,6 @@ theme_html <- function(
   sanity_tabulator_css_rule(tabulator_css_rule)
   sanity_tabulator_columns(tabulator_columns)
 
-  # Defer portable warning check until finalization when output format is known
-  if (isTRUE(Sys.info()["sysname"] == "Windows")) {
-    fn_portable_warning <- function(table) {
-      if (!isTRUE(table@html_portable)) {
-        warning("On Windows, `tinytable` should embed images in the HTML file directly. Set  `theme_html(portable=TRUE)` explicitly to silence this warning.",
-          call. = FALSE
-        )
-      }
-      return(table)
-    }
-    x <- build_finalize(x, fn_portable_warning, output = "html")
-  }
-
-
   if (!is.null(engine)) {
     x@html_engine <- engine
     if (engine == "bootstrap" && is.null(class) && identical(x@html_class, "tinytable")) {
@@ -104,9 +90,6 @@ theme_html <- function(
 
   if (!is.null(portable)) {
     assert_flag(portable)
-    if (isTRUE(portable)) {
-      assert_dependency("base64enc")
-    }
     x@html_portable <- portable
   }
 
