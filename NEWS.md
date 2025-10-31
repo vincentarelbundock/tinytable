@@ -1,10 +1,14 @@
 # News
 
-## 0.15.0.2
+## 0.15.1
 
 Bugs:
 
 * `style_tt()` with a logical matrix containing all `FALSE` values no longer throws an error (Issue #609, thanks to @EinMaulwurf).
+
+Misc:
+
+* Skip a few tests on CRAN.
 
 ## 0.15.0.1
 
