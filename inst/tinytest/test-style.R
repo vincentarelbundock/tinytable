@@ -96,3 +96,18 @@ expect_snapshot_print(t[["html"]], "style-align_partial.html")
 expect_snapshot_print(t[["latex"]], "style-align_partial.tex")
 expect_snapshot_print(t[["typst"]], "style-align_partial.typ")
 expect_snapshot_print(t[["markdown"]], "style-align_partial.md")
+
+
+# logical matrix with all FALSE values should not error
+testdata <- data.frame(
+  names = c('a', 'b', 'c', 'd', 'e'),
+  values1 = c(1, 2, 3, 4, 5),
+  values2 = c(6, 7, 8, 9, 10)
+)
+testdata_override <- matrix(FALSE, nrow = nrow(testdata), ncol = ncol(testdata))
+result <- testdata |>
+  tt() |>
+  style_tt(i = testdata_override, background = "red") |>
+  save_tt("html")
+expect_true(is.character(result))
+expect_true(nchar(result) > 0)

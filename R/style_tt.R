@@ -322,17 +322,22 @@ style_tt_lazy <- function(
   if (!is.matrix(i) || !is.logical(i)) {
     settings <- process_align_argument(x, settings, align)
   } else {
-    settings$align <- NA_character_
+    if (nrow(settings) > 0) {
+      settings$align <- NA_character_
+    }
   }
 
   # sort column: important for bind
   cols <- unique(c("i", "j", sort(colnames(settings))))
   settings <- settings[, cols, drop = FALSE]
 
-  if (nrow(out@style) == 0) {
-    out@style <- settings
-  } else {
-    out@style <- rbind(out@style, settings)
+  # Only add settings if there are rows to add
+  if (nrow(settings) > 0) {
+    if (nrow(out@style) == 0) {
+      out@style <- settings
+    } else {
+      out@style <- rbind(out@style, settings)
+    }
   }
 
   if (is.function(finalize)) {
