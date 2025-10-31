@@ -5,6 +5,15 @@
 j_delim_to_named_list <- function(x, j) {
   nm <- x@names
 
+  # Preprocess column names: add space at start/end if they start/end with delimiter
+  for (i in seq_along(nm)) {
+    # Check if ends with delimiter
+    # Do not check if starts with delimiter, because we sometimes want empty groups in the top header
+    if (endsWith(nm[i], j)) {
+      nm[i] <- paste0(nm[i], " ")
+    }
+  }
+
   # Find which columns contain the delimiter
   indices <- grepl(j, nm, fixed = TRUE)
 
