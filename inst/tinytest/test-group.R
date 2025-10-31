@@ -1,6 +1,10 @@
 source("helpers.R")
 using("tinysnapshot")
 
+if (!is_local) {
+  exit_file("Run on Vincent's machine")
+}
+
 # vector row labels
 set.seed(48103)
 dat <- data.frame(

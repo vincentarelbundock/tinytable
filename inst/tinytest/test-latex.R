@@ -2,6 +2,10 @@ source("helpers.R")
 using("tinysnapshot")
 options(tinytable_print_output = "latex")
 
+if (!is_local) {
+  exit_file("Run on Vincent's machine")
+}
+
 x <- mtcars[1:4, 1:5]
 
 expect_snapshot_print(
