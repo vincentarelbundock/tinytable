@@ -5,20 +5,12 @@
 Bugs:
 
 * `style_tt()` with a logical matrix containing all `FALSE` values no longer throws an error (Issue #609, thanks to @EinMaulwurf).
+* Fixed spurious Windows portable HTML warning when using `height` parameter with non-HTML output formats (Issue #608).
 
 Misc:
 
 * Skip a few tests on CRAN.
-
-## 0.15.0.1
-
-Misc:
-
 * `print(tab, "html")` always base 64 encodes images. This is useful because it makes files more portable when viewed in IDEs, and because it simplifies path handling in temporary directories across operating systems.
-
-Bugs:
-
-* Fixed spurious Windows portable HTML warning when using `height` parameter with non-HTML output formats (Issue #608).
 
 ## 0.15.0
 
