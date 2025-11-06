@@ -12,7 +12,6 @@ Bugs:
 
 * `style_tt()` with a logical matrix containing all `FALSE` values no longer throws an error (Issue #609, thanks to @EinMaulwurf).
 * Fixed spurious Windows portable HTML warning when using `height` parameter with non-HTML output formats (Issue #608).
-* Tabulator HTML output now preserves special characters in column names like question marks (thanks to @etiennebacher for the report).
 
 Misc:
 
