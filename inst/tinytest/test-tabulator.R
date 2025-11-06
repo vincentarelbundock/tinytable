@@ -10,6 +10,13 @@ expect_true(is.character(out))
 expect_true(grepl("tabulator", out))
 expect_true(grepl("Sepal.Length", out))
 
+# Preserve special characters in column names
+special_dat <- data.frame(`hello\\?` = 1, check.names = FALSE)
+tab <- tt(special_dat)
+out <- save_tt(tab, "html")
+expect_true(grepl('"hello_\\?"', out))
+expect_false(grepl('"hello__"', out))
+
 # Data with multiple types
 dat <- data.frame(
   city = c("Montréal", "Toronto", "Vancouver"),

@@ -67,7 +67,11 @@ tabulator_clean_data <- function(x) {
     }
 
     # Convert to data frame
-    data_clean <- as.data.frame(data_clean, stringsAsFactors = FALSE)
+    data_clean <- as.data.frame(
+        data_clean,
+        stringsAsFactors = FALSE,
+        check.names = FALSE
+    )
 
     # Add stable row index for styling (1-based, matching R's row numbering)
     data_clean$`_tinytable_row_index` <- seq_len(nrow(data_clean))
