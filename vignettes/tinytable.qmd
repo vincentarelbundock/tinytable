@@ -245,6 +245,13 @@ rbind(a, b)
 rbind(a, b) |> format_tt(replace = "")
 ```
 
+::: {.callout-warning}
+`format_tt()` and `style_tt()` run only after `rbind()`/`rbind2()` finish combining the raw
+tables. If headers are inserted or column types differ, the joint data is coerced to
+character first, so rounding and styling operate on strings. Apply `format_tt()` to the raw
+data frame before calling `tt()`, or reapply formatting/styling after binding.
+:::
+
 The `rbind2()` S4 method is slightly more flexible than `rbind()`, as it supports arguments `headers` and `use_names`.
 
 Omit `y` header:
@@ -302,4 +309,3 @@ mtcars[1:2, 1:2] |>
   tt() |>
   setNames(c("a", "b"))
 ```
-

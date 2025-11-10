@@ -22,7 +22,7 @@
 Combine \code{tinytable} objects by rows (vertically)
 }
 \details{
-\code{format_tt()} calls applied to \code{x} or \code{y} are evaluated before binding, to allow distinct formatting for each panel.
+Transformations recorded via \code{format_tt()} and \code{style_tt()} are evaluated at the very end of the rendering pipeline, after \code{rbind2()} has combined the tables. When headers are inserted or columns differ in type, the combined data is first coerced to character, so subsequent formatting/styling works on strings. Apply \code{format_tt()} directly to raw data frames before calling \code{tt()}, or re-run the formatting/styling steps on the combined table to preserve rounding and other rules.
 
 Calls to other \code{tinytable} functions such as \code{style_tt()} or \code{group_tt()} are ignored when applied to \code{x} or \code{y}. These functions should be applied to the final table instead.
 
@@ -58,5 +58,11 @@ rbind2(x, y, headers = FALSE)
 
 # bind by position rather than column names
 rbind2(x, y, use_names = FALSE)
+
+# `iris` example with pre-tt() formatting
+dat <- iris[1:3, 1:4]
+a <- format_tt(dat, i = 1:3, digits = 1) |> tt()
+b <- format_tt(dat, i = 1:3, digits = 2) |> tt()
+rbind2(a, b)
 
 }

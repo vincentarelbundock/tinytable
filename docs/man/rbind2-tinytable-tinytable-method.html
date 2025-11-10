@@ -594,7 +594,7 @@ Additional arguments are ignored.
 </section>
 <section id="details" class="level3">
 <h3 class="anchored" data-anchor-id="details">Details</h3>
-<p><code>format_tt()</code> calls applied to <code>x</code> or <code>y</code> are evaluated before binding, to allow distinct formatting for each panel.</p>
+<p>Transformations recorded via <code>format_tt()</code> and <code>style_tt()</code> are evaluated at the very end of the rendering pipeline, after <code>rbind2()</code> has combined the tables. When headers are inserted or columns differ in type, the combined data is first coerced to character, so subsequent formatting/styling works on strings. Apply <code>format_tt()</code> directly to raw data frames before calling <code>tt()</code>, or re-run the formatting/styling steps on the combined table to preserve rounding and other rules.</p>
 <p>Calls to other <code>tinytable</code> functions such as <code>style_tt()</code> or <code>group_tt()</code> are ignored when applied to <code>x</code> or <code>y</code>. These functions should be applied to the final table instead.</p>
 <p>Information in these S4 slots is carried over from <code>x</code> to the combined table:</p>
 <ul>
@@ -637,19 +637,19 @@ Additional arguments are ignored.
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_v6sg909slutpzoy2lmx4 = TinyTable.createTableFunctions("tinytable_v6sg909slutpzoy2lmx4");
+      const tableFns_bwf5j6bqdtv31kab9pgc = TinyTable.createTableFunctions("tinytable_bwf5j6bqdtv31kab9pgc");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 4 }, { i: '6', j: 5 } ], css_id: 'tinytable_css_f25p1rpbij90zxdpnhdv',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_b96y3q3r6ujbpd2nbgti',}, 
+          { positions: [ { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 4 }, { i: '6', j: 5 } ], css_id: 'tinytable_css_uwr42zb9xccfezvdshqn',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_r223nmpbm38y0s4a04re',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_v6sg909slutpzoy2lmx4.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_bwf5j6bqdtv31kab9pgc.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -658,11 +658,11 @@ Additional arguments are ignored.
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_v6sg909slutpzoy2lmx4 td.tinytable_css_f25p1rpbij90zxdpnhdv, #tinytable_v6sg909slutpzoy2lmx4 th.tinytable_css_f25p1rpbij90zxdpnhdv {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    #tinytable_v6sg909slutpzoy2lmx4 td.tinytable_css_b96y3q3r6ujbpd2nbgti, #tinytable_v6sg909slutpzoy2lmx4 th.tinytable_css_b96y3q3r6ujbpd2nbgti {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_bwf5j6bqdtv31kab9pgc td.tinytable_css_uwr42zb9xccfezvdshqn, #tinytable_bwf5j6bqdtv31kab9pgc th.tinytable_css_uwr42zb9xccfezvdshqn {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_bwf5j6bqdtv31kab9pgc td.tinytable_css_r223nmpbm38y0s4a04re, #tinytable_bwf5j6bqdtv31kab9pgc th.tinytable_css_r223nmpbm38y0s4a04re {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_v6sg909slutpzoy2lmx4" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_bwf5j6bqdtv31kab9pgc" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <caption>Combine two tiny tables.</caption>
         <thead>
               <tr>
@@ -730,19 +730,19 @@ Additional arguments are ignored.
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_219tdbbm1i4v1m8pysiz = TinyTable.createTableFunctions("tinytable_219tdbbm1i4v1m8pysiz");
+      const tableFns_owozdgv9q49s14fj1n57 = TinyTable.createTableFunctions("tinytable_owozdgv9q49s14fj1n57");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 4 }, { i: '6', j: 5 } ], css_id: 'tinytable_css_2ragjir9jhx8vyv3ea99',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_yiet4d3fhianox7v9v3r',}, 
+          { positions: [ { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 }, { i: '6', j: 4 }, { i: '6', j: 5 } ], css_id: 'tinytable_css_6gsvfu3pn5tto89s1rs4',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_j84wjp68tpq1p62lnkmy',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_219tdbbm1i4v1m8pysiz.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_owozdgv9q49s14fj1n57.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -751,11 +751,11 @@ Additional arguments are ignored.
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_219tdbbm1i4v1m8pysiz td.tinytable_css_2ragjir9jhx8vyv3ea99, #tinytable_219tdbbm1i4v1m8pysiz th.tinytable_css_2ragjir9jhx8vyv3ea99 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    #tinytable_219tdbbm1i4v1m8pysiz td.tinytable_css_yiet4d3fhianox7v9v3r, #tinytable_219tdbbm1i4v1m8pysiz th.tinytable_css_yiet4d3fhianox7v9v3r {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_owozdgv9q49s14fj1n57 td.tinytable_css_6gsvfu3pn5tto89s1rs4, #tinytable_owozdgv9q49s14fj1n57 th.tinytable_css_6gsvfu3pn5tto89s1rs4 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_owozdgv9q49s14fj1n57 td.tinytable_css_j84wjp68tpq1p62lnkmy, #tinytable_owozdgv9q49s14fj1n57 th.tinytable_css_j84wjp68tpq1p62lnkmy {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_219tdbbm1i4v1m8pysiz" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_owozdgv9q49s14fj1n57" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <caption>Combine two tiny tables.</caption>
         <thead>
               <tr>
@@ -824,19 +824,19 @@ Additional arguments are ignored.
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_k72dhrkfzz82hj64jwop = TinyTable.createTableFunctions("tinytable_k72dhrkfzz82hj64jwop");
+      const tableFns_1jiugs2ylykjltikrqds = TinyTable.createTableFunctions("tinytable_1jiugs2ylykjltikrqds");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '5', j: 1 }, { i: '5', j: 2 }, { i: '5', j: 3 }, { i: '5', j: 4 }, { i: '5', j: 5 } ], css_id: 'tinytable_css_vc4g76potjppblxjjc4x',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_a36g30a133cat8unz8g8',}, 
+          { positions: [ { i: '5', j: 1 }, { i: '5', j: 2 }, { i: '5', j: 3 }, { i: '5', j: 4 }, { i: '5', j: 5 } ], css_id: 'tinytable_css_3n01xk4e3nczzd5jzq43',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_wqct36nhmtllxgeh8ah6',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_k72dhrkfzz82hj64jwop.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_1jiugs2ylykjltikrqds.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -845,11 +845,11 @@ Additional arguments are ignored.
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_k72dhrkfzz82hj64jwop td.tinytable_css_vc4g76potjppblxjjc4x, #tinytable_k72dhrkfzz82hj64jwop th.tinytable_css_vc4g76potjppblxjjc4x {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    #tinytable_k72dhrkfzz82hj64jwop td.tinytable_css_a36g30a133cat8unz8g8, #tinytable_k72dhrkfzz82hj64jwop th.tinytable_css_a36g30a133cat8unz8g8 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_1jiugs2ylykjltikrqds td.tinytable_css_3n01xk4e3nczzd5jzq43, #tinytable_1jiugs2ylykjltikrqds th.tinytable_css_3n01xk4e3nczzd5jzq43 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_1jiugs2ylykjltikrqds td.tinytable_css_wqct36nhmtllxgeh8ah6, #tinytable_1jiugs2ylykjltikrqds th.tinytable_css_wqct36nhmtllxgeh8ah6 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_k72dhrkfzz82hj64jwop" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_1jiugs2ylykjltikrqds" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <caption>Combine two tiny tables.</caption>
         <thead>
               <tr>
@@ -911,19 +911,19 @@ Additional arguments are ignored.
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_dimjx1uel5xtel58gihx = TinyTable.createTableFunctions("tinytable_dimjx1uel5xtel58gihx");
+      const tableFns_9jz9ix7e9v22mudm4zgw = TinyTable.createTableFunctions("tinytable_9jz9ix7e9v22mudm4zgw");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 } ], css_id: 'tinytable_css_imirr01v06din9frm83g',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_e8t5pj5d6dxcz10vk0bl',}, 
+          { positions: [ { i: '6', j: 1 }, { i: '6', j: 2 }, { i: '6', j: 3 } ], css_id: 'tinytable_css_p5vg4n9pwf8kv7tw83zf',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_7lkbvhhlilk17703qwl1',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_dimjx1uel5xtel58gihx.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_9jz9ix7e9v22mudm4zgw.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -932,11 +932,11 @@ Additional arguments are ignored.
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_dimjx1uel5xtel58gihx td.tinytable_css_imirr01v06din9frm83g, #tinytable_dimjx1uel5xtel58gihx th.tinytable_css_imirr01v06din9frm83g {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    #tinytable_dimjx1uel5xtel58gihx td.tinytable_css_e8t5pj5d6dxcz10vk0bl, #tinytable_dimjx1uel5xtel58gihx th.tinytable_css_e8t5pj5d6dxcz10vk0bl {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_9jz9ix7e9v22mudm4zgw td.tinytable_css_p5vg4n9pwf8kv7tw83zf, #tinytable_9jz9ix7e9v22mudm4zgw th.tinytable_css_p5vg4n9pwf8kv7tw83zf {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_9jz9ix7e9v22mudm4zgw td.tinytable_css_7lkbvhhlilk17703qwl1, #tinytable_9jz9ix7e9v22mudm4zgw th.tinytable_css_7lkbvhhlilk17703qwl1 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_dimjx1uel5xtel58gihx" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_9jz9ix7e9v22mudm4zgw" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <caption>Combine two tiny tables.</caption>
         <thead>
               <tr>
@@ -976,6 +976,102 @@ Additional arguments are ignored.
                   <td data-row="6" data-col="1">0</td>
                   <td data-row="6" data-col="2">0</td>
                   <td data-row="6" data-col="3">3</td>
+                </tr>
+        </tbody>
+      </table>
+    </div>
+<!-- hack to avoid NA insertion in last line -->
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># `iris` example with pre-tt() formatting</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dat <span class="ot">&lt;-</span> iris[<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> <span class="fu">format_tt</span>(dat, <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">digits =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> <span class="fu">tt</span>()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>b <span class="ot">&lt;-</span> <span class="fu">format_tt</span>(dat, <span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">digits =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span> <span class="fu">tt</span>()</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rbind2</span>(a, b)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<!-- preamble start -->
+
+    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+
+    <script>
+      // Create table-specific functions using external factory
+      const tableFns_zhee7iai4t7x7v3ilfxe = TinyTable.createTableFunctions("tinytable_zhee7iai4t7x7v3ilfxe");
+      // tinytable span after
+      window.addEventListener('load', function () {
+          var cellsToStyle = [
+            // tinytable style arrays after
+          { positions: [ { i: '7', j: 1 }, { i: '7', j: 2 }, { i: '7', j: 3 }, { i: '7', j: 4 } ], css_id: 'tinytable_css_gfxowrtfp25rdr4ceu3o',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 } ], css_id: 'tinytable_css_jm591mrogf9id6cakqra',}, 
+          ];
+
+          // Loop over the arrays to style the cells
+          cellsToStyle.forEach(function (group) {
+              group.positions.forEach(function (cell) {
+                  tableFns_zhee7iai4t7x7v3ilfxe.styleCell(cell.i, cell.j, group.css_id);
+              });
+          });
+      });
+    </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
+    <style>
+    /* tinytable css entries after */
+    #tinytable_zhee7iai4t7x7v3ilfxe td.tinytable_css_gfxowrtfp25rdr4ceu3o, #tinytable_zhee7iai4t7x7v3ilfxe th.tinytable_css_gfxowrtfp25rdr4ceu3o {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.1em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_zhee7iai4t7x7v3ilfxe td.tinytable_css_jm591mrogf9id6cakqra, #tinytable_zhee7iai4t7x7v3ilfxe th.tinytable_css_jm591mrogf9id6cakqra {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: black; --line-color-left: black; --line-color-right: black; --line-color-top: black; --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    </style>
+    <div class="container">
+      <table class="tinytable" id="tinytable_zhee7iai4t7x7v3ilfxe" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+        
+        <thead>
+              <tr>
+                <th scope="col" data-row="0" data-col="1">Sepal.Length</th>
+                <th scope="col" data-row="0" data-col="2">Sepal.Width</th>
+                <th scope="col" data-row="0" data-col="3">Petal.Length</th>
+                <th scope="col" data-row="0" data-col="4">Petal.Width</th>
+              </tr>
+        </thead>
+        
+        <tbody>
+                <tr>
+                  <td data-row="1" data-col="1">5</td>
+                  <td data-row="1" data-col="2">4</td>
+                  <td data-row="1" data-col="3">1</td>
+                  <td data-row="1" data-col="4">0.2</td>
+                </tr>
+                <tr>
+                  <td data-row="2" data-col="1">5</td>
+                  <td data-row="2" data-col="2">3</td>
+                  <td data-row="2" data-col="3">1</td>
+                  <td data-row="2" data-col="4">0.2</td>
+                </tr>
+                <tr>
+                  <td data-row="3" data-col="1">5</td>
+                  <td data-row="3" data-col="2">3</td>
+                  <td data-row="3" data-col="3">1</td>
+                  <td data-row="3" data-col="4">0.2</td>
+                </tr>
+                <tr>
+                  <td data-row="4" data-col="1">Sepal.Length</td>
+                  <td data-row="4" data-col="2">Sepal.Width</td>
+                  <td data-row="4" data-col="3">Petal.Length</td>
+                  <td data-row="4" data-col="4">Petal.Width</td>
+                </tr>
+                <tr>
+                  <td data-row="5" data-col="1">5.1</td>
+                  <td data-row="5" data-col="2">3.5</td>
+                  <td data-row="5" data-col="3">1.4</td>
+                  <td data-row="5" data-col="4">0.2</td>
+                </tr>
+                <tr>
+                  <td data-row="6" data-col="1">4.9</td>
+                  <td data-row="6" data-col="2">3</td>
+                  <td data-row="6" data-col="3">1.4</td>
+                  <td data-row="6" data-col="4">0.2</td>
+                </tr>
+                <tr>
+                  <td data-row="7" data-col="1">4.7</td>
+                  <td data-row="7" data-col="2">3.2</td>
+                  <td data-row="7" data-col="3">1.3</td>
+                  <td data-row="7" data-col="4">0.2</td>
                 </tr>
         </tbody>
       </table>

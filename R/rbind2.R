@@ -1,7 +1,7 @@
 #' Combine `tinytable` objects by rows (vertically)
 #'
 #' @details
-#' `format_tt()` calls applied to `x` or `y` are evaluated before binding, to allow distinct formatting for each panel.
+#' Transformations recorded via `format_tt()` and `style_tt()` are evaluated at the very end of the rendering pipeline, after `rbind2()` has combined the tables. When headers are inserted or columns differ in type, the combined data is first coerced to character, so subsequent formatting/styling works on strings. Apply `format_tt()` directly to raw data frames before calling `tt()`, or re-run the formatting/styling steps on the combined table to preserve rounding and other rules.
 #'
 #' Calls to other `tinytable` functions such as `style_tt()` or `group_tt()` are ignored when applied to `x` or `y`. These functions should be applied to the final table instead.
 #'
@@ -41,6 +41,12 @@
 #'
 #' # bind by position rather than column names
 #' rbind2(x, y, use_names = FALSE)
+#'
+#' # `iris` example with pre-tt() formatting
+#' dat <- iris[1:3, 1:4]
+#' a <- format_tt(dat, i = 1:3, digits = 1) |> tt()
+#' b <- format_tt(dat, i = 1:3, digits = 2) |> tt()
+#' rbind2(a, b)
 #'
 #' @importFrom methods rbind2
 #' @export
