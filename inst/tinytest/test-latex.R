@@ -20,6 +20,13 @@ expect_snapshot_print(
   label = "latex-nohead.tex"
 )
 
+# Issue #613: caption with tabular latex theme
+expect_snapshot_print(
+  tt(x, caption = "Tabular caption example.") |>
+    theme_latex(environment = "tabular"),
+  label = "latex-tabular_caption.tex"
+)
+
 # Align
 expect_snapshot_print(
   tt(x) |> style_tt(j = 1:5, align = "ccllr"),

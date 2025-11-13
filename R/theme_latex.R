@@ -31,6 +31,19 @@ handle_latex_environment <- function(x, environment, environment_table) {
           regex_end = "tabularray inner close"
         )
 
+        # reinsert caption for plain tabular tables
+        table_env <- "\\\\begin\\{table\\}"
+        if (length(table@caption) > 0 && grepl(table_env, table_string, perl = TRUE)) {
+          cap <- sprintf("\\caption{%s}", table@caption[1])
+          table_string <- lines_insert(
+            table_string,
+            new = cap,
+            regex = table_env,
+            position = "after",
+            perl = TRUE
+          )
+        }
+
         # Convert tabularray syntax to tabular
         table_string <- gsub("cmidrule\\[(.*?)\\]", "cmidrule(\\1)", table_string)
         table_string <- gsub("\\\\toprule|\\\\midrule|\\\\bottomrule", "\\\\hline", table_string)
