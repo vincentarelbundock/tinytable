@@ -7,6 +7,7 @@ Bugs:
 * Tabulator HTML output now preserves special characters in column names like question marks (Issue #611, thanks to @etiennebacher).
 * Document `rbind2()` limitations around `format_tt()`/`style_tt()` and string coercion when stacking tables (Issue #612, thanks to @alexploner).
 * `theme_latex(environment = "tabular")` now preserves captions (Issue #613, thanks to @brueckmann).
+* LaTeX tables again respect automatic wrapping when spanning horizontal cells by propagating `tt(width = ...)` across merged columns (Issue #614, thanks to @bastienchassagnol).
 
 ## 0.15.1
 

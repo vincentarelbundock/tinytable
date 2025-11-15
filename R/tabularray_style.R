@@ -18,7 +18,7 @@ map_alignv_values <- function(sty) {
 style_text <- function(sty_row) {
   font <- ""
   cmd <- ""
-  
+
   # Use descriptive font commands for tabularray font key
   if (isTRUE(sty_row$bold)) {
     font <- paste0(font, "\\bfseries")
@@ -32,7 +32,7 @@ style_text <- function(sty_row) {
   if (isTRUE(sty_row$smallcap)) {
     font <- paste0(font, "\\scshape")
   }
-  
+
   # Keep underline and strikeout as cmd since they need special macros
   if (isTRUE(sty_row$underline)) {
     cmd <- paste0(cmd, "\\tinytableTabularrayUnderline")
@@ -40,7 +40,7 @@ style_text <- function(sty_row) {
   if (isTRUE(sty_row$strikeout)) {
     cmd <- paste0(cmd, "\\tinytableTabularrayStrikeout")
   }
-  
+
   return(list(font = font, cmd = cmd))
 }
 
@@ -140,7 +140,7 @@ clean_style_strings <- function(k) {
 
     # Split by comma and remove duplicates
     parts <- trimws(strsplit(style_string, ",")[[1]])
-    parts <- parts[parts != ""]  # Remove empty parts
+    parts <- parts[parts != ""] # Remove empty parts
     unique_parts <- unique(parts)
 
     # Rejoin with proper spacing
@@ -258,8 +258,7 @@ tabularray_cells <- function(x, rec) {
     rec[
       (rec$span != "" | rec$set != "") &
         !rec$complete_row &
-        !rec$complete_column,
-      ,
+        !rec$complete_column, ,
       drop = FALSE
     ]
   )
@@ -446,6 +445,10 @@ process_tabularray_other_styles <- function(x, other) {
 
     # Style spans
     span_strs[row] <- style_spans("", other[row, ])
+    if (length(x@width) == ncol(x) && !is.na(other[row, "colspan"])) {
+      w <- sum(x@width[other$j[row]:(other[row, "j"] + other[row, "colspan"] - 1)])
+      font_sets[row] <- paste(font_sets[row], sprintf("wd=%s\\linewidth,", w))
+    }
   }
 
   # Apply styling to record grid (still need loop for NA expansion)
@@ -645,36 +648,36 @@ setMethod(
   f = "style_eval",
   signature = "tinytable_tabularray",
   definition = function(
-    x,
-    i = NULL,
-    j = NULL,
-    bold = FALSE,
-    italic = FALSE,
-    monospace = FALSE,
-    underline = FALSE,
-    strikeout = FALSE,
-    color = NULL,
-    background = NULL,
-    fontsize = NULL,
-    align = NULL,
-    alignv = NULL,
-    line = NULL,
-    line_color = "black",
-    line_width = 0.1,
-    colspan = NULL,
-    rowspan = NULL,
-    indent = 0,
-    ...
-  ) {
+      x,
+      i = NULL,
+      j = NULL,
+      bold = FALSE,
+      italic = FALSE,
+      monospace = FALSE,
+      underline = FALSE,
+      strikeout = FALSE,
+      color = NULL,
+      background = NULL,
+      fontsize = NULL,
+      align = NULL,
+      alignv = NULL,
+      line = NULL,
+      line_color = "black",
+      line_width = 0.1,
+      colspan = NULL,
+      rowspan = NULL,
+      indent = 0,
+      ...) {
     # Use populated @style_other from build_tt()
     other <- x@style_other
 
     # Filter to only cells that have actual styles
     if (nrow(other) > 0) {
-      has_style <- rowSums(!is.na(other[, c("bold", "italic", "underline", "strikeout",
-                                             "monospace", "smallcap", "align", "alignv",
-                                             "color", "background", "fontsize", "indent",
-                                             "colspan", "rowspan"), drop = FALSE])) > 0
+      has_style <- rowSums(!is.na(other[, c(
+        "bold", "italic", "underline", "strikeout",
+        "monospace", "smallcap", "align", "alignv",
+        "color", "background", "fontsize", "indent",
+        "colspan", "rowspan"), drop = FALSE])) > 0
       other <- other[has_style, , drop = FALSE]
     }
 
@@ -691,15 +694,13 @@ setMethod(
     x <- process_tabularray_other_styles(x, other)
 
     return(x)
-  }
-)
+  })
 
 insert_tabularray_content <- function(x, content = NULL, type = "body") {
   out <- x
 
   out <- strsplit(out, "\n")[[1]]
-  comment <- switch(
-    type,
+  comment <- switch(type,
     "body" = "% tabularray inner close",
     "outer" = "% tabularray outer close",
     "inner" = "% tabularray inner close"
