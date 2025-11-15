@@ -163,7 +163,7 @@ going through a text-only intermediate format.
 }
 
 \examples{
-\dontshow{if (knitr::is_html_output()) withAutoprint(\{ # examplesIf}
+\dontshow{if (knitr::is_html_output()) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 \dontshow{\}) # examplesIf}
 if (knitr::is_html_output()) options(tinytable_print_output = "html")
 
