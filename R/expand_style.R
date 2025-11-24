@@ -4,7 +4,7 @@
 #' @return Modified style_other dataframe
 #' @keywords internal
 #' @noRd
-apply_style_to_rect = function(style_other, style_row) {
+apply_style_to_rect <- function(style_other, style_row) {
   # Determine which cells this entry applies to
   if (is.na(style_row$i)) {
     # Apply to all rows
@@ -46,7 +46,7 @@ apply_style_to_rect = function(style_other, style_row) {
 #' @return Modified style_lines dataframe with new entries appended
 #' @keywords internal
 #' @noRd
-append_lines_to_rect = function(style_lines, style_row, rect) {
+append_lines_to_rect <- function(style_lines, style_row, rect) {
   # Skip if no line property
   if (is.na(style_row$line)) {
     return(style_lines)

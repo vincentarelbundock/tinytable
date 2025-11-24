@@ -1,5 +1,5 @@
 #' @exportS3Method xfun::record_print
-record_print.tinytable = function(x, ...) {
+record_print.tinytable <- function(x, ...) {
   if (!isTRUE(check_dependency("litedown"))) {
     return(x)
   }

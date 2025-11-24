@@ -25,7 +25,7 @@ grid_colspan <- function(x) {
     table_lines <- strsplit(x@table_string, "\\n")[[1]]
 
     # Find the header separator line (+=====+) as reference point
-    header_sep_line <- which(grepl("^\\+={2,}", table_lines))
+    header_sep_line <- grep("^\\+={2,}", table_lines)
     if (length(header_sep_line) == 0) {
         # No header separator found, try to find any separator line starting with +
         header_sep_line <- which(grepl("^\\+-", table_lines))[1]

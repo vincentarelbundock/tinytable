@@ -260,7 +260,7 @@ tabulator_is_column_alignment <- function(style_row) {
   other_fields <- c("bold", "italic", "monospace", "underline", "strikeout",
                     "color", "background", "fontsize", "indent")
   has_other_styles <- any(sapply(other_fields, function(f) {
-    if (f %in% names(style_row)) !is.na(style_row[[f]]) && style_row[[f]] != FALSE
+    if (f %in% names(style_row)) !is.na(style_row[[f]]) && style_row[[f]]
     else FALSE
   }))
 

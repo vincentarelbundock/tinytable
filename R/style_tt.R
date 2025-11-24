@@ -45,7 +45,7 @@ process_logical_matrix_input <- function(x, i, j) {
     stop("When `i` is a logical matrix, `j` must be NULL.", call. = FALSE)
   }
 
-  settings <- which(i == TRUE, arr.ind = TRUE)
+  settings <- which(i, arr.ind = TRUE)
   settings <- stats::setNames(data.frame(settings), c("i", "j"))
   return(settings)
 }
