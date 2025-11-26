@@ -23,6 +23,10 @@ Misc:
 
 ## 0.15.0
 
+Breaking chnage:
+
+* Order of operations changed. `group_tt()` are now applied before `style_tt()` and `format_tt()`
+
 New features:
 
 * `style_tt()` now supports comprehensive styling for Tabulator tables including bold, italic, color, background, fontsize, and more. Cell-specific styles persist across sorting and pagination operations.
