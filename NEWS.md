@@ -23,7 +23,7 @@ Misc:
 
 ## 0.15.0
 
-Breaking chnage:
+Breaking change:
 
 * Order of operations changed. `group_tt()` are now applied before `style_tt()` and `format_tt()`
 
