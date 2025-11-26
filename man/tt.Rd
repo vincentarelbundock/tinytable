@@ -211,8 +211,8 @@ For more details on Quarto table processing: https://quarto.org/docs/authoring/t
 
 When building tables, tinytable applies operations in this specific order:
 \enumerate{
-\item \code{format_tt()}: Number and string formatting operations are applied first to ensure all data is properly formatted before any other operations.
 \item \code{group_tt()}: Row and column grouping operations are applied to insert group headers and modify table structure.
+\item \code{format_tt()}: Number and string formatting operations are applied first to ensure all data is properly formatted before any other operations.
 \item \code{theme} argument in \code{tt()}: The theme specified in the theme argument is applied immediately when creating the table object.
 \item \verb{theme_*()} with delayed execution via \code{build_prepare()}: Theme functions that need to be applied after the table structure is finalized (such as those that depend on final row/column indices) are executed at this stage. Examples include \code{theme_default()} which applies default borders after groups are inserted. Internally, \code{build_prepare()} allows calling \code{style_tt()} with full knowledge of the output format and access to internal slots like \code{x@output}.
 \item \code{style_tt()} and \verb{theme_*()} with immediate execution: Direct styling calls and theme functions without delayed execution are applied in the order they appear in the code.
