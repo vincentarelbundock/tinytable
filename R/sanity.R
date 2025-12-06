@@ -153,31 +153,9 @@ sanitize_output <- function(x, output) {
 infer_output <- function(x) {
   output <- x@output
   
-  # If output is already set to a specific format, respect it
-  if (!is.null(output) && !identical(output, "tinytable")) {
-    return(output)
-  } else {
-    # Only do inference when output is NULL or "tinytable"
-    has_viewer <- interactive() && !is.null(getOption("viewer"))
-    out <- if (has_viewer) "html" else "markdown"
-  }
-
-  # Environmental overrides only apply when we're doing inference (not explicit output)
-  if (isTRUE(check_dependency("litedown"))) {
-    fmt <- tryCatch(litedown::get_context("format"), error = function(e) NULL)
-    if (identical(fmt, "latex")) {
-      return("latex")
-    } else if (identical(fmt, "markdown")) {
-      return("markdown")
-    } else if (identical(fmt, "commonmark")) {
-      return("markdown")
-    } else if (identical(fmt, "html")) {
-      return("html")
-    }
-  }
-
+  # before return because sometimes `modelsummary` sets the output explicitly
+  # and we still need to insert the preamble
   if (isTRUE(check_dependency("knitr"))) {
-
     pandoc_to <- knitr::pandoc_to()
     if (isTRUE(pandoc_to %in% c("latex", "beamer"))) {
       if (isTRUE(x@latex_preamble)) {
@@ -211,7 +189,30 @@ infer_output <- function(x) {
       out <- "markdown"
     }
   }
-  
+
+  # If output is already set to a specific format, respect it
+  if (!is.null(output) && !identical(output, "tinytable")) {
+    return(output)
+  } else {
+    # Only do inference when output is NULL or "tinytable"
+    has_viewer <- interactive() && !is.null(getOption("viewer"))
+    out <- if (has_viewer) "html" else "markdown"
+  }
+
+  # Environmental overrides only apply when we're doing inference (not explicit output)
+  if (isTRUE(check_dependency("litedown"))) {
+    fmt <- tryCatch(litedown::get_context("format"), error = function(e) NULL)
+    if (identical(fmt, "latex")) {
+      return("latex")
+    } else if (identical(fmt, "markdown")) {
+      return("markdown")
+    } else if (identical(fmt, "commonmark")) {
+      return("markdown")
+    } else if (identical(fmt, "html")) {
+      return("html")
+    }
+  }
+
   return(out)
 }
 

@@ -34,6 +34,7 @@ knit_print.tinytable <- function(
     x,
     output = get_option("tinytable_print_output", default = NULL),
     ...) {
+
   # lazy styles get evaluated here, at the very end
   x <- build_tt(x, output = output)
   out <- x@table_string
