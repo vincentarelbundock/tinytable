@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -40,10 +40,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-a14e345711173c227b21482e2eb4cc70.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-f16cd255ecb5ae9510f6a112aa2ee9ab.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-844055827233f04c379a533407fb8019.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-8498537ff65c2aaf2c3c0819ff511eee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -561,10 +561,21 @@ window.Quarto = {
 <h1>News</h1>
 <section id="development" class="level2">
 <h2 class="anchored" data-anchor-id="development">Development</h2>
+<p>New features:</p>
+<ul>
+<li><code>theme_html(css_rule)</code> now accepts shortcut strings “tinytable” (default) or “dark” for built-in themes</li>
+<li><code>theme_html(css_rule)</code> can now load CSS from local file paths or external URLs (http/https ending in .css)</li>
+<li>New dark theme stylesheet available via <code>theme_html(css_rule = "dark")</code> optimized for dark background websites</li>
+<li>Added CSS variables (<code>--tt-text-color</code>, <code>--tt-line-color</code>, <code>--tt-border-color</code>, etc.) for easier customization</li>
+<li>CSS variables are now used consistently for HTML output with tinytable engine, even with custom stylesheets</li>
+</ul>
 <p>Bugs:</p>
 <ul>
 <li>Tabulator HTML output now preserves special characters in column names like question marks (Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/611">#611</a>, thanks to <a href="https://github.com/etiennebacher"><span class="citation" data-cites="etiennebacher">@etiennebacher</span></a>).</li>
 <li>Document <code>rbind2()</code> limitations around <code>format_tt()</code>/<code>style_tt()</code> and string coercion when stacking tables (Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/612">#612</a>, thanks to <a href="https://github.com/alexploner"><span class="citation" data-cites="alexploner">@alexploner</span></a>).</li>
+<li><code>theme_latex(environment = "tabular")</code> now preserves captions (Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/613">#613</a>, thanks to <a href="https://github.com/brueckmann"><span class="citation" data-cites="brueckmann">@brueckmann</span></a>).</li>
+<li>LaTeX tables again respect automatic wrapping when spanning horizontal cells by propagating <code>tt(width = ...)</code> across merged columns (Issue <a href="https://github.com/vincentarelbundock/tinytable/issues/614">#614</a>, thanks to <a href="https://github.com/bastienchassagnol"><span class="citation" data-cites="bastienchassagnol">@bastienchassagnol</span></a>).</li>
+<li><code>theme_html(css_rule)</code> is respected with <code>portable=TRUE</code></li>
 </ul>
 </section>
 <section id="section" class="level2">
@@ -582,6 +593,10 @@ window.Quarto = {
 </section>
 <section id="section-1" class="level2">
 <h2 class="anchored" data-anchor-id="section-1">0.15.0</h2>
+<p>Breaking change:</p>
+<ul>
+<li>Order of operations changed. <code>group_tt()</code> are now applied before <code>style_tt()</code> and <code>format_tt()</code></li>
+</ul>
 <p>New features:</p>
 <ul>
 <li><code>style_tt()</code> now supports comprehensive styling for Tabulator tables including bold, italic, color, background, fontsize, and more. Cell-specific styles persist across sorting and pagination operations.</li>

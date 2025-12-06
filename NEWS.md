@@ -17,6 +17,7 @@ Bugs:
 * `theme_latex(environment = "tabular")` now preserves captions (Issue #613, thanks to @brueckmann).
 * LaTeX tables again respect automatic wrapping when spanning horizontal cells by propagating `tt(width = ...)` across merged columns (Issue #614, thanks to @bastienchassagnol).
 * `theme_html(css_rule)` is respected with `portable=TRUE`
+* `modelsummary` Issue 931: LaTeX preamble not automatically added. Thanks to @resulumit
 
 ## 0.15.1
 

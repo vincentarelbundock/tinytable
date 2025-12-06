@@ -150,8 +150,35 @@ sanitize_output <- function(x, output) {
   return(x)
 }
 
+
+insert_latex_preamble <- function(x) {
+  if (isTRUE(check_dependency("knitr"))) {
+    pandoc_to <- knitr::pandoc_to()
+    if (isTRUE(pandoc_to %in% c("latex", "beamer"))) {
+      if (isTRUE(x@latex_preamble)) {
+        usepackage_latex("float")
+        usepackage_latex(
+          "tabularray",
+          extra_lines = c(
+            "\\usepackage[normalem]{ulem}",
+            "\\usepackage{graphicx}",
+            "\\usepackage{rotating}",
+            "\\UseTblrLibrary{siunitx}",
+            "\\NewTableCommand{\\tinytableDefineColor}[3]{\\definecolor{#1}{#2}{#3}}",
+            "\\newcommand{\\tinytableTabularrayUnderline}[1]{\\underline{#1}}",
+            "\\newcommand{\\tinytableTabularrayStrikeout}[1]{\\sout{#1}}"
+          )
+        )
+      }
+    }
+  }
+}
+
+
 infer_output <- function(x) {
   output <- x@output
+
+  insert_latex_preamble(x)
   
   # If output is already set to a specific format, respect it
   if (!is.null(output) && !identical(output, "tinytable")) {
@@ -180,21 +207,6 @@ infer_output <- function(x) {
 
     pandoc_to <- knitr::pandoc_to()
     if (isTRUE(pandoc_to %in% c("latex", "beamer"))) {
-      if (isTRUE(x@latex_preamble)) {
-        usepackage_latex("float")
-        usepackage_latex(
-          "tabularray",
-          extra_lines = c(
-            "\\usepackage[normalem]{ulem}",
-            "\\usepackage{graphicx}",
-            "\\usepackage{rotating}",
-            "\\UseTblrLibrary{siunitx}",
-            "\\NewTableCommand{\\tinytableDefineColor}[3]{\\definecolor{#1}{#2}{#3}}",
-            "\\newcommand{\\tinytableTabularrayUnderline}[1]{\\underline{#1}}",
-            "\\newcommand{\\tinytableTabularrayStrikeout}[1]{\\sout{#1}}"
-          )
-        )
-      }
       out <- "latex"
     } else if (isTRUE(pandoc_to %in% c("html", "revealjs"))) {
       out <- "html"
