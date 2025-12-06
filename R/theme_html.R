@@ -5,7 +5,11 @@
 #' @param j Column indices.
 #' @param class String. HTML table class.
 #' @param css Character vector. CSS style declarations.
-#' @param css_rule String. Complete CSS rules.
+#' @param css_rule String. CSS rules to customize table styling. Can be one of:
+#'   - Shortcut strings: "tinytable" (default) or "dark" for dark theme
+#'   - A file path to a local CSS file (e.g., "custom.css" or "path/to/styles.css")
+#'   - A URL to an external stylesheet (must start with http/https and end with .css)
+#'   - Inline CSS content as a string
 #' @param script String. Custom JavaScript code or script tags to inject into the HTML output. Useful for loading external JavaScript libraries like Plotly, D3, etc.
 #' @param portable Logical. Sets whether to create portable HTML output with embedded Javascript, CSS, and base64-encoded images.
 #' @param tabulator_stylesheet Character string. CSS stylesheet theme for Tabulator.js tables.
@@ -76,6 +80,12 @@ theme_html <- function(
 
   if (!is.null(css_rule)) {
     assert_string(css_rule)
+    # Handle shortcut strings
+    if (css_rule == "tinytable") {
+      css_rule <- "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css"
+    } else if (css_rule == "dark") {
+      css_rule <- "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable_dark.css"
+    }
     x@html_css_rule <- css_rule
   }
 

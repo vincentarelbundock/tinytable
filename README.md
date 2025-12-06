@@ -135,7 +135,7 @@ tt(x,
 
 ## Tutorial
 
-The `tinytable` 0.15.1.4 tutorial will take you much further. It is
+The `tinytable` 0.15.1.5 tutorial will take you much further. It is
 available in HTML and PDF formats at:
 <https://vincentarelbundock.github.io/tinytable/>
 

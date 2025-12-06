@@ -3,6 +3,22 @@
 # CSS Utility Layer
 # =============================================================================
 
+#' Get default line color for HTML output
+#'
+#' Returns CSS variable reference for HTML tinytable engine,
+#' otherwise returns "black". When using custom CSS with the tinytable
+#' engine, users should define --tt-line-color in their CSS.
+#'
+#' @param x A tinytable object
+#' @return Character string: "var(--tt-line-color)" or "black"
+#' @keywords internal
+#' @noRd
+get_default_line_color <- function(x) {
+  use_css_var <- identical(x@output, "html") &&
+                 identical(x@html_engine, "tinytable")
+  if (use_css_var) "var(--tt-line-color)" else "black"
+}
+
 style_to_css <- function(row) {
   out <- character()
 
@@ -139,13 +155,17 @@ setMethod(
     align = NULL,
     alignv = NULL,
     line = NULL,
-    line_color = "black",
+    line_color = NULL,
     line_width = 0.1,
     colspan = NULL,
     rowspan = NULL,
     indent = 0,
     ...
   ) {
+    # Set default line color based on context
+    if (is.null(line_color)) {
+      line_color <- get_default_line_color(x)
+    }
     # CSS rule will be handled by finalize() via template substitution
     # Removed duplicate html_setting call that was causing CSS duplication
 
@@ -226,11 +246,15 @@ setMethod(
         color_map <- character(0)
       }
 
-      # Map colors to hex (fallback to "black")
+      # Map colors to hex (preserve CSS variables, fallback to "black")
       lines$color_hex <- ifelse(
         !is.na(lines$line_color) & lines$line_color %in% names(color_map),
         color_map[lines$line_color],
-        "black"
+        ifelse(
+          !is.na(lines$line_color) & grepl("^var\\(", lines$line_color),
+          lines$line_color,  # preserve CSS variable references
+          "black"
+        )
       )
 
       # Default widths
@@ -255,15 +279,16 @@ setMethod(
       }
 
       # Helper to aggregate colors (first non-default)
-      agg_first_color <- function(x, cell_key, has_dir, color) {
+      agg_first_color <- function(x_obj, cell_key, has_dir, color) {
+        default_color <- get_default_line_color(x)
         tapply(
           ifelse(has_dir, color, NA_character_),
           cell_key,
           function(v) {
             v <- v[!is.na(v)]
-            if (length(v) > 0) v[1] else "black"
+            if (length(v) > 0) v[1] else default_color
           },
-          default = "black"
+          default = default_color
         )[cells_unique]
       }
 

@@ -2,6 +2,14 @@
 
 ## Development
 
+New features:
+
+* `theme_html(css_rule)` now accepts shortcut strings "tinytable" (default) or "dark" for built-in themes
+* `theme_html(css_rule)` can now load CSS from local file paths or external URLs (http/https ending in .css)
+* New dark theme stylesheet available via `theme_html(css_rule = "dark")` optimized for dark background websites
+* Added CSS variables (`--tt-text-color`, `--tt-line-color`, `--tt-border-color`, etc.) for easier customization
+* CSS variables are now used consistently for HTML output with tinytable engine, even with custom stylesheets
+
 Bugs:
 
 * Tabulator HTML output now preserves special characters in column names like question marks (Issue #611, thanks to @etiennebacher).

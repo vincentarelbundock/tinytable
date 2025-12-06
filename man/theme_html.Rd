@@ -38,7 +38,13 @@ theme_html(
 
 \item{css}{Character vector. CSS style declarations.}
 
-\item{css_rule}{String. Complete CSS rules.}
+\item{css_rule}{String. CSS rules to customize table styling. Can be one of:
+\itemize{
+\item Shortcut strings: "tinytable" (default) or "dark" for dark theme
+\item A file path to a local CSS file (e.g., "custom.css" or "path/to/styles.css")
+\item A URL to an external stylesheet (must start with http/https and end with .css)
+\item Inline CSS content as a string
+}}
 
 \item{script}{String. Custom JavaScript code or script tags to inject into the HTML output. Useful for loading external JavaScript libraries like Plotly, D3, etc.}
 

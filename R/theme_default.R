@@ -14,7 +14,8 @@ theme_default <- function(x, ...) {
     if (identical(x@output, "html") && identical(x@html_engine, "tabulator")) {
       return(x)
     }
-    col <- "black"
+    # Use CSS variable when default tinytable.css is loaded, otherwise "black"
+    col <- get_default_line_color(x)
     # top
     x <- style_tt(
       x,

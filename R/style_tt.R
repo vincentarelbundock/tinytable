@@ -136,13 +136,22 @@ style_tt_lazy <- function(
   rowspan = NULL,
   indent = NULL,
   line = NULL,
-  line_color = "black",
+  line_color = NULL,
   line_width = 0.1,
   line_trim = NULL,
   finalize = NULL,
   ...) {
 
   out <- x
+
+  # Set default line_color if NULL
+  if (is.null(line_color) && !is.null(line)) {
+    if (identical(x@output, "html") && identical(x@html_engine, "tinytable")) {
+      line_color <- "var(--tt-line-color)"
+    } else {
+      line_color <- "black"
+    }
+  }
 
   if ("tabularray_inner" %in% ...names()) {
     x <- theme_latex(inner = ...get("tabularray_inner"))
@@ -397,7 +406,7 @@ assert_style_tt <- function(
   assert_logical(underline, null.ok = TRUE)
   assert_logical(strikeout, null.ok = TRUE)
   assert_string(line, null.ok = TRUE)
-  assert_string(line_color, null.ok = FALSE) # black default
+  assert_string(line_color, null.ok = TRUE) # default determined by output format
   assert_numeric(line_width, len = 1, lower = 0, null.ok = FALSE) # 0.1 default
   assert_choice(line_trim, c("l", "r", "lr"), null.ok = TRUE)
 
@@ -665,7 +674,7 @@ style_tt <- function(
   rowspan = NULL,
   indent = NULL,
   line = NULL,
-  line_color = "black",
+  line_color = NULL,
   line_width = 0.1,
   line_trim = NULL,
   finalize = NULL,

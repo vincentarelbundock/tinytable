@@ -1,3 +1,25 @@
+# Process css_rule: detect file paths, URLs, or inline CSS
+process_css_rule <- function(css_rule) {
+  if (is.null(css_rule)) {
+    return(list(type = "none", content = NULL))
+  }
+
+  # Check if it's a URL (starts with http/https and ends with .css)
+  if (grepl("^https?://.*\\.css$", css_rule, ignore.case = TRUE)) {
+    return(list(type = "url", content = css_rule))
+  }
+
+  # Check if it's a local file path
+  if (file.exists(css_rule)) {
+    css_content <- readLines(css_rule, warn = FALSE)
+    css_content <- paste(css_content, collapse = "\n")
+    return(list(type = "file", content = css_content))
+  }
+
+  # Otherwise, treat as inline CSS content
+  return(list(type = "inline", content = css_rule))
+}
+
 setMethod(
   f = "finalize",
   signature = "tinytable_html",
@@ -19,7 +41,15 @@ setMethod(
     if (isTRUE(x@html_portable)) {
       # If custom css_rule is provided, use it exclusively (even in portable mode)
       if (!is.null(x@html_css_rule)) {
-        css_content <- x@html_css_rule
+        css_processed <- process_css_rule(x@html_css_rule)
+        if (css_processed$type == "url") {
+          # For URLs, use link tag
+          css_content <- NULL
+          css_include <- sprintf('<link rel="stylesheet" href="%s">', css_processed$content)
+        } else {
+          # For files or inline CSS, use the content
+          css_content <- css_processed$content
+        }
       } else {
         # For portable HTML, inline the CSS content from the file
         css_file_path <- system.file("tinytable.css", package = "tinytable")
@@ -52,8 +82,15 @@ setMethod(
         "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css"
       )
     } else {
-      # Use inline CSS from css_rule
-      css_include <- paste0("<style>\n", x@html_css_rule, "\n</style>")
+      # Process css_rule (could be file path, URL, or inline CSS)
+      css_processed <- process_css_rule(x@html_css_rule)
+      if (css_processed$type == "url") {
+        # For URLs, use link tag
+        css_include <- sprintf('<link rel="stylesheet" href="%s">', css_processed$content)
+      } else {
+        # For files or inline CSS, use style tag with content
+        css_include <- paste0("<style>\n", css_processed$content, "\n</style>")
+      }
     }
 
     out <- sub(
