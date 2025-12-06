@@ -263,7 +263,7 @@ notes <- list(
   "*" = "Hello world", 
   "a" = "Bacon ipsum dolor amet kevin t-bone porchetta.")
 tt(head(iris), 
-   width = .5,
+   width = .8,
    caption = "This is a Caption Example.", 
    notes = notes) |>
   style_tt(2, 2, background = "pink", rowspan = 2, colspan = 2, 
