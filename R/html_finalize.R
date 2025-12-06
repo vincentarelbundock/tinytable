@@ -17,11 +17,26 @@ setMethod(
 
     # Handle CSS inclusion - portable vs external
     if (isTRUE(x@html_portable)) {
-      # For portable HTML, inline the CSS content from the file
-      css_file_path <- system.file("tinytable.css", package = "tinytable")
-      if (file.exists(css_file_path)) {
-        css_content <- readLines(css_file_path, warn = FALSE)
-        css_content <- paste(css_content, collapse = "\n")
+      # If custom css_rule is provided, use it exclusively (even in portable mode)
+      if (!is.null(x@html_css_rule)) {
+        css_content <- x@html_css_rule
+      } else {
+        # For portable HTML, inline the CSS content from the file
+        css_file_path <- system.file("tinytable.css", package = "tinytable")
+        if (file.exists(css_file_path)) {
+          css_content <- readLines(css_file_path, warn = FALSE)
+          css_content <- paste(css_content, collapse = "\n")
+        } else {
+          # Fallback to external if file not found
+          css_include <- sprintf(
+            '<link rel="stylesheet" href="%s">',
+            "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css"
+          )
+          css_content <- NULL
+        }
+      }
+
+      if (!is.null(css_content)) {
         css_include <- paste0("<style>\n", css_content, "\n</style>")
 
         # Also include Bootstrap CSS via external link if using bootstrap engine
@@ -29,12 +44,6 @@ setMethod(
           bootstrap_css_link <- '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">'
           css_include <- paste(bootstrap_css_link, css_include, sep = "\n")
         }
-      } else {
-        # Fallback to external if file not found
-        css_include <- sprintf(
-          '<link rel="stylesheet" href="%s">',
-          "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css"
-        )
       }
     } else if (is.null(x@html_css_rule)) {
       # Use external CSS file
