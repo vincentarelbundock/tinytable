@@ -121,11 +121,6 @@ tt.default <- function(
       assert_dependency("data.table")
       data.table::setDF(x)
     } else {
-      # Copy data.table objects before conversion to avoid triggering internal operations
-      if (inherits(x, "data.table")) {
-        assert_dependency("data.table")
-        x <- data.table::copy(x)
-      }
       x <- as.data.frame(x, check.names = FALSE)
       colnames(x) <- cn
     }
