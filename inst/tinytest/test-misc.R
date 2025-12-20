@@ -1,4 +1,5 @@
 source("helpers.R")
+exit_file("data.table error on devel 2025-12-20")
 
 if (isTRUE(requiet("marginaleffects"))) {
   mod <- lm(mpg ~ hp * qsec, mtcars)
