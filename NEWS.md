@@ -1,5 +1,9 @@
 # News
 
+## Development
+
+* `pkgdown_print.tinytable()` method for better integration with pkgdown documentation websites
+
 ## 0.15.2
 
 New features:

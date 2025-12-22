@@ -64,6 +64,30 @@ knit_print.tinytable <- function(
   return(out)
 }
 
+#' Print a tinytable object in pkgdown
+#'
+#' @param x A tinytable object
+#' @param visible Whether the object is visible
+#' @keywords internal
+#' @return HTML output for pkgdown examples
+#' @export
+pkgdown_print.tinytable <- function(x, visible = TRUE) {
+  if (!visible) {
+    return(invisible())
+  }
+
+  # Build table with HTML output for pkgdown
+  x <- build_tt(x, output = "html")
+  out <- x@table_string
+
+  # Return as browsable HTML (similar to knit_print pattern)
+  htmlText <- paste(enc2utf8(out), collapse = " ")
+  attr(htmlText, "html") <- TRUE
+  attr(htmlText, "browsable_html") <- TRUE
+  class(htmlText) <- c("html", "character")
+  htmlText
+}
+
 #' Print, display, or convert a tinytable object
 #'
 #' This function is called automatically by `R` whenever a `tinytable` object is anprinted to the console or in an HTML viewer pane.
