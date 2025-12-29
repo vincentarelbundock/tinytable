@@ -37,7 +37,7 @@ theme_tt <- function(x, theme, ...) {
 
 
   if (identical(theme, "default")) {
-    x <- theme_default(x)
+    x <- theme_tinytable(x)
   } else if (identical(theme, "grid")) {
     x <- theme_grid(x)
   } else if (identical(theme, "revealjs")) {

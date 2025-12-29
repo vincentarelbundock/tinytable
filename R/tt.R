@@ -190,7 +190,7 @@ tt.default <- function(
   )
 
   if (is.null(theme)) {
-    out <- theme_default(out)
+    out <- theme_tinytable(out)
   } else if (is.function(theme)) {
     out <- theme(out)
   } else if (is.character(theme)) {

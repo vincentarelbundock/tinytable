@@ -2,6 +2,7 @@
 
 ## Development
 
+* `theme_default()` is renamed to `theme_tinytable()`. `theme_default()` is now deprecated and will show a warning when called. Issue #607.
 * `pkgdown_print.tinytable()` method for better integration with pkgdown documentation websites
 * LaTeX: Fix Windows path issue where backslashes and absolute paths in `\includegraphics` caused compilation failures. Now uses relative paths with forward slashes on all platforms (Issue #620, thanks to @morganwkelly and @resulumit).
 

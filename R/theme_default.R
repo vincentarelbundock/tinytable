@@ -4,7 +4,7 @@
 #' @param ... Additional arguments are ignored.
 #' @return A modified `tinytable` object.
 #' @export
-theme_default <- function(x, ...) {
+theme_tinytable <- function(x, ...) {
   # run this after rbind_body_groupi()
   # Placement for LaTeX and Typst
   x <- theme_latex(x, placement = get_option("tinytable_latex_placement", default = NULL))
@@ -46,4 +46,22 @@ theme_default <- function(x, ...) {
   x <- build_prepare(x, fn)
 
   return(x)
+}
+
+
+#' Deprecated: Use theme_tinytable() instead
+#'
+#' @description
+#' `theme_default()` has been renamed to `theme_tinytable()`. This function is
+#' deprecated and will be removed in a future version.
+#'
+#' @inheritParams theme_tinytable
+#' @return A modified `tinytable` object.
+#' @export
+theme_default <- function(x, ...) {
+  warning(
+    "`theme_default()` is deprecated. Please use `theme_tinytable()` instead.",
+    call. = FALSE
+  )
+  theme_tinytable(x, ...)
 }

@@ -50,6 +50,10 @@ expect_true(grepl("rowhead=1", tab))
 expect_warning(theme_tt(tt(head(iris)), "striped"), pattern = "deprecated")
 
 
+# theme_default() deprecation warning
+expect_warning(theme_default(tt(head(iris))), pattern = "deprecated")
+
+
 # Issue #531: style_tt() overrides triped theme
 iris_dt <- do.call(rbind, by(iris, ~Species, head, 2))
 cap <- "Stripes override purple and teal, but not yellow."

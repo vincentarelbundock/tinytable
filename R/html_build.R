@@ -222,7 +222,7 @@ setMethod(
           is.function(x@theme[[1]]) ||
           isTRUE("default" %in% x@theme[[1]])
       ) {
-        x <- theme_default(x)
+        x <- theme_tinytable(x)
       }
     }
 
