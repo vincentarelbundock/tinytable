@@ -129,6 +129,9 @@ This function formats the columns of a data frame based on the column type (logi
 It allows various formatting options like significant digits, decimal points, and scientific notation.
 It also includes custom formatting for date and boolean values.
 If this function is applied several times to the same cell, the last transformation is retained and the previous calls are ignored, except for the \code{escape} argument which can be applied to previously transformed data.
+Each call to \code{format_tt()} is recorded and later replayed sequentially at render time, so later calls operate on the output of earlier ones.
+Arguments are executed in a fixed order inside each call (see code below), so combining features such as \code{linebreak}, \code{escape}, \code{markdown}, etc. in a single call may produce surprising results.
+Chain multiple calls when you need finer control (e.g., \code{format_tt(escape = TRUE) |> format_tt(linebreak = "<br>")}), keeping in mind that the second call will see the already-escaped text.
 }
 \section{Global options}{
 
