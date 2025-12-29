@@ -1,7 +1,7 @@
 #' Theme for a void table
 #'
 #' This function calls styles and formatting applied to a `tinytable` object up to that point in the pipeline.
-#' @inheritParams theme_default
+#' @inheritParams theme_tinytable
 #' @export
 theme_empty <- function(x, ...) {
   x@lazy_format <- list()

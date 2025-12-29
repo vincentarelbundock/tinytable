@@ -54,7 +54,7 @@ Users can also define their own themes to apply consistent visual tweaks to tabl
 theme_vincent <- function(x, ...) {
   out <- x |> 
     style_tt(color = "teal") |>
-    theme_default()
+    theme_tinytable()
   out@caption <- "Always use the same caption."
   out@width <- .5
   return(out)
@@ -106,7 +106,7 @@ tt(x) |>
 
 ## Combining themes
 
-Themes are just functions that apply a set of transformations to a `tinytable` object. This means that users can combine themes to create new looks. For example, when we call `tt(x)` without specifying the `theme` argument, the `theme_default()` is applied automatically.
+Themes are just functions that apply a set of transformations to a `tinytable` object. This means that users can combine themes to create new looks. For example, when we call `tt(x)` without specifying the `theme` argument, the `theme_tinytable()` is applied automatically.
 
 ```{r}
 x <- head(iris, 3)
