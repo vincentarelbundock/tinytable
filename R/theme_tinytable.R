@@ -22,7 +22,7 @@ theme_tinytable <- function(x, ...) {
       i = -x@nhead + 1,
       line = "t",
       line_color = col,
-      line_width = 0.10
+      line_width = 0.08
     )
     # middle
     if (length(x@names) > 0) {
@@ -40,7 +40,7 @@ theme_tinytable <- function(x, ...) {
       i = nrow(x),
       line = "b",
       line_color = col,
-      line_width = 0.10
+      line_width = 0.08
     )
   }
   x <- build_prepare(x, fn)

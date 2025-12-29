@@ -61,8 +61,8 @@ block[ // start block
 
  table.hline(y: 2, start: 1, end: 3, stroke: 0.05em + rgb("#FF0000")),
  table.hline(y: 3, start: 1, end: 3, stroke: 0.05em + rgb("#FF0000")),
- table.hline(y: 6, start: 0, end: 5, stroke: 0.1em + black),
- table.hline(y: 0, start: 0, end: 5, stroke: 0.1em + black),
+ table.hline(y: 6, start: 0, end: 5, stroke: 0.08em + black),
+ table.hline(y: 0, start: 0, end: 5, stroke: 0.08em + black),
  table.vline(x: 1, start: 2, end: 4, stroke: 0.05em + rgb("#FF0000")),
  table.vline(x: 2, start: 2, end: 4, stroke: 0.05em + rgb("#FF0000")),
  table.vline(x: 2, start: 2, end: 4, stroke: 0.05em + rgb("#FF0000")),
