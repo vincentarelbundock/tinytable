@@ -236,7 +236,11 @@ plot_tt_lazy <- function(
   if (!is.null(images)) {
     # quarto requires relative links or url
     # print("html") must be run from a tempdir on linux, so we need absolute paths
-    if (!is_quarto) {
+    # LaTeX requires relative paths with forward slashes
+    if (isTRUE(x@output == "latex")) {
+      # For LaTeX: convert backslashes to forward slashes for cross-platform compatibility
+      images <- gsub("\\\\", "/", images)
+    } else if (!is_quarto) {
       images <- normalizePath(images, mustWork = FALSE)
     }
   }
@@ -248,8 +252,8 @@ plot_tt_lazy <- function(
     # path_assets directory stores dynamically generated plots
     if (is_portable) {
       path_assets <- tempdir()
-      # quarto requires relative paths from the project folder
-    } else if (is_quarto) {
+      # quarto and LaTeX require relative paths from the project folder
+    } else if (is_quarto || isTRUE(x@output == "latex")) {
       path_assets <- assets
     } else {
       path_assets <- file.path(x@output_dir, assets)
@@ -268,12 +272,17 @@ plot_tt_lazy <- function(
     for (idx in seq_along(data)) {
       fn <- paste0("tinytable_", zero_padded_ranks[idx], "_", get_id(), ".png")
       fn_full <- file.path(path_assets, fn)
-      fn_full <- normalizePath(fn_full, mustWork = FALSE)
-      if (is_portable) {
-        # For portable HTML, store the full path for base64 encoding
-        images[idx] <- fn_full
+
+      # For LaTeX output: use relative paths with forward slashes (portable across all platforms)
+      # For other outputs: use normalized absolute paths
+      if (isTRUE(x@output == "latex")) {
+        # Keep relative path and convert backslashes to forward slashes for LaTeX
+        # fn_full is used for saving the file (OS-native path)
+        # images[idx] is used in \includegraphics (needs forward slashes)
+        images[idx] <- gsub("\\\\", "/", fn_full)
       } else {
-        # For regular HTML/save_tt/print, store the full path for proper file access
+        # For HTML/other formats, normalize to absolute paths for proper file access
+        fn_full <- normalizePath(fn_full, mustWork = FALSE)
         images[idx] <- fn_full
       }
 
