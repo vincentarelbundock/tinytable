@@ -6,6 +6,7 @@
 * `pkgdown_print.tinytable()` method for better integration with pkgdown documentation websites
 * LaTeX: Fix Windows path issue where backslashes and absolute paths in `\includegraphics` caused compilation failures. Now uses relative paths with forward slashes on all platforms (Issue #620, thanks to @morganwkelly and @resulumit).
 * Default `line_width` for themes now match LaTeX `booktabs` standards: \toprule: 0.08 em \midrule: 0.05 em \bottomrule: 0.08 em \cmidrule: 0.03 em
+* LaTeX: `style_tt()` now merges multiple font options (e.g., `bold = TRUE`, `fontsize = ...`) into a single `font=` directive so all requested styles take effect. Thanks to @ujtwr for Issue #626.
 
 ## 0.15.2
 

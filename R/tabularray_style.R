@@ -76,13 +76,16 @@ style_colors <- function(cmd, sty_row, x) {
 #' Style fonts for tabularray
 #' @keywords internal
 #' @noRd
-style_fonts <- function(set, sty_row) {
+style_fonts <- function(sty_row) {
+  set <- ""
+  font_cmd <- ""
+
   # Font size
   fontsize <- sty_row$fontsize
   if (!is.na(as.numeric(fontsize))) {
-    set <- sprintf(
-      "%s font=\\fontsize{%sem}{%sem}\\selectfont,",
-      set,
+    font_cmd <- sprintf(
+      "%s\\fontsize{%sem}{%sem}\\selectfont",
+      font_cmd,
       fontsize,
       fontsize + 0.3
     )
@@ -106,7 +109,7 @@ style_fonts <- function(set, sty_row) {
     set <- sprintf("%s preto={\\hspace{%sem}},", set, indent)
   }
 
-  return(set)
+  return(list(font = font_cmd, set = set))
 }
 
 #' Style spans for tabularray
@@ -441,7 +444,9 @@ process_tabularray_other_styles <- function(x, other) {
     cmd_strs[row] <- cmd
 
     # Style fonts
-    font_sets[row] <- style_fonts("", other[row, ])
+    font_details <- style_fonts(other[row, ])
+    font_cmds[row] <- paste0(font_cmds[row], font_details$font)
+    font_sets[row] <- font_details$set
 
     # Style spans
     span_strs[row] <- style_spans("", other[row, ])

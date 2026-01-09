@@ -65,6 +65,17 @@ expect_snapshot_print(
   label = "latex-cell_color.tex"
 )
 
+# Combined font styling in LaTeX
+font_dat <- data.frame(
+  col_a = c("a", "b", "c"),
+  col_b = c("d", "e", "f")
+)
+expect_snapshot_print(
+  tt(font_dat) |>
+    style_tt(i = 0, bold = TRUE, fontsize = 0.85),
+  label = "latex-font_combined.tex"
+)
+
 # Lazy style: group after style is respected
 a <- tt(mtcars[1:4, 1:4]) |>
   style_tt(color = "orange", background = "black") |>
