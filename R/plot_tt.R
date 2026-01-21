@@ -273,9 +273,9 @@ plot_tt_lazy <- function(
       fn <- paste0("tinytable_", zero_padded_ranks[idx], "_", get_id(), ".png")
       fn_full <- file.path(path_assets, fn)
 
-      # For LaTeX output: use relative paths with forward slashes (portable across all platforms)
+      # For LaTeX and Typst output: use relative paths with forward slashes (portable across all platforms)
       # For other outputs: use normalized absolute paths
-      if (isTRUE(x@output == "latex")) {
+      if (isTRUE(x@output == "latex" | x@output == "typst")) {
         # Keep relative path and convert backslashes to forward slashes for LaTeX
         # fn_full is used for saving the file (OS-native path)
         # images[idx] is used in \includegraphics (needs forward slashes)
