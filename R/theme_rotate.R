@@ -148,15 +148,36 @@ rotate_cells_lazy <- function(x, i, j, angle, output) {
   format_fn <- switch(
     output,
     html = function(vec, ...) {
-      ifelse(
-        is.na(vec),
-        vec,
-        sprintf(
-          "<div style=\"display: flex; align-items: center; justify-content: center; width: 100%%; height: 100%%; transform: rotate(%sdeg); transform-origin: center center; white-space: nowrap; line-height: 1;\">%s</div>",
-          angle,
-          vec
+      # Use writing-mode for 90/270 degrees (proper layout), transform for other angles
+      if (angle == 90) {
+        ifelse(
+          is.na(vec),
+          vec,
+          sprintf(
+            "<span class=\"tinytable-rotate-cell\" style=\"writing-mode: vertical-rl; transform: rotate(180deg); white-space: nowrap;\">%s</span>",
+            vec
+          )
         )
-      )
+      } else if (angle == 270) {
+        ifelse(
+          is.na(vec),
+          vec,
+          sprintf(
+            "<span class=\"tinytable-rotate-cell\" style=\"writing-mode: vertical-rl; white-space: nowrap;\">%s</span>",
+            vec
+          )
+        )
+      } else {
+        ifelse(
+          is.na(vec),
+          vec,
+          sprintf(
+            "<div class=\"tinytable-rotate-cell\" style=\"display: flex; align-items: center; justify-content: center; width: 100%%; transform: rotate(%sdeg); transform-origin: center center; white-space: nowrap; line-height: 1;\">%s</div>",
+            angle,
+            vec
+          )
+        )
+      }
     },
     latex = function(vec, ...) {
       ifelse(is.na(vec), vec, sprintf("\\\\rotatebox{%s}{%s}", angle, vec))
@@ -184,7 +205,8 @@ rotate_cells_lazy <- function(x, i, j, angle, output) {
 
 add_html_rotate_class <- function(table) {
   table_id <- sprintf("tinytable_%s", table@id)
-  pattern <- sprintf('(<[^>]*id="%s"[^>]*class=")([^"]*)(")', table_id)
+  # Try pattern where class comes before id
+  pattern <- sprintf('(<[^>]*class=")([^"]*)("[^>]*id="%s")', table_id)
   if (grepl(pattern, table@table_string, perl = TRUE)) {
     table@table_string <- sub(
       pattern,
@@ -193,13 +215,25 @@ add_html_rotate_class <- function(table) {
       perl = TRUE
     )
   } else {
-    pattern <- sprintf('(<[^>]*id="%s")', table_id)
-    table@table_string <- sub(
-      pattern,
-      "\\1 class=\"tinytable-rotate-cells\"",
-      table@table_string,
-      perl = TRUE
-    )
+    # Try pattern where id comes before class
+    pattern <- sprintf('(<[^>]*id="%s"[^>]*class=")([^"]*)(")', table_id)
+    if (grepl(pattern, table@table_string, perl = TRUE)) {
+      table@table_string <- sub(
+        pattern,
+        "\\1\\2 tinytable-rotate-cells\\3",
+        table@table_string,
+        perl = TRUE
+      )
+    } else {
+      # No class attribute found, add one after the id
+      pattern <- sprintf('(<[^>]*id="%s")', table_id)
+      table@table_string <- sub(
+        pattern,
+        "\\1 class=\"tinytable-rotate-cells\"",
+        table@table_string,
+        perl = TRUE
+      )
+    }
   }
   return(table)
 }
