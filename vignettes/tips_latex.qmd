@@ -215,6 +215,16 @@ tt(x) |>
   print(output = "latex")
 ```
 
+### Resize
+
+Use `resize_direction = "down"` to scale tables that are wider than the available line width.
+
+```{r}
+tmp <- cbind(head(mtcars), head(mtcars))
+tt(tmp) |>
+  theme_latex(resize_direction = "down", placement = "H")
+```
+
 ### Rotate
 
 ```{r}
