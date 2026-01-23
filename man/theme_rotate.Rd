@@ -2,7 +2,7 @@
 % Please edit documentation in R/theme_rotate.R
 \name{theme_rotate}
 \alias{theme_rotate}
-\title{Rotate table theme (LaTeX and Typst only)}
+\title{Rotate table theme (LaTeX, Typst, and HTML)}
 \usage{
 theme_rotate(
   x,
@@ -21,5 +21,5 @@ theme_rotate(
 A modified \code{tinytable} object.
 }
 \description{
-Rotate table theme (LaTeX and Typst only)
+Rotate table theme (LaTeX, Typst, and HTML)
 }

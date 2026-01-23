@@ -36,6 +36,12 @@ tab <- data.frame(Math = c("$\\alpha$", "$a_{it}$", "$e^{i\\pi} + 1 = 0$")) |>
   save_tt("html")
 expect_inherits(tab, "character")
 
+# HTML rotation
+tab <- tt(head(mtcars)) |>
+  theme_rotate(angle = 45) |>
+  save_tt("html")
+expect_true(grepl("rotate\(45deg\)", tab))
+
 
 # Issue #460: rowhead is not inserted in LaTeX
 tmp <- rbind(mtcars, mtcars)[, 1:6]
@@ -64,4 +70,5 @@ t = tab <- tt(iris_dt, theme = "empty", caption = cap) |>
   style_tt(i = 5:6, j = 1, background = "#FDE333")
 expect_snapshot_print(
   print_html(tab),
-  "theme-issue531_style_colors_override_stripes.html")
+  "theme-issue531_style_colors_override_stripes.html"
+)
