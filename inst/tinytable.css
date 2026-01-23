@@ -19,6 +19,7 @@
     /* Spacing */
     --tt-cell-padding: .5rem;
     --tt-cell-padding-sm: calc(var(--tt-cell-padding) / 2);
+    --tt-rotate-padding: 1rem;
     --tt-table-margin: .5rem 0;
     --tt-caption-padding: .5rem 0;
     --tt-footnote-padding: .2rem .5rem;
@@ -192,6 +193,22 @@
     z-index: 2;
 }
 
+/* Scoped layering for rotated cell content */
+.tinytable-rotate-cells :is(td, th)[class*="tinytable_css_"]::before,
+.tinytable-rotate-cells :is(td, th)[class*="tinytable_css_"]::after {
+    z-index: 0;
+}
+
+.tinytable-rotate-cells :is(td, th)[class*="tinytable_css_"] > * {
+    position: relative;
+    z-index: 1;
+}
+
+.tinytable-rotate-cells .tinytable-rotate-cell {
+    padding-block: var(--tt-rotate-padding);
+}
+
+
 /* ========================================================================
  * Container and Layout Components
  * ======================================================================== */
@@ -244,4 +261,3 @@
 .tinytable tfoot tr:nth-child(n+2) td {
     line-height: var(--tt-line-height-footnote-tight);
 }
-
