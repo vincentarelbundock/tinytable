@@ -7,6 +7,8 @@
 theme_rotate(
   x,
   angle = get_option("tinytable_rotate_angle", default = 90),
+  i = NULL,
+  j = NULL,
   ...
 )
 }
@@ -15,11 +17,19 @@ theme_rotate(
 
 \item{angle}{Numeric. Rotation angle in degrees (0-360).}
 
+\item{i}{Row indices for rotating cell content. When \\code{i} and \\code{j} are both \\code{NULL}, the
+entire table is rotated.}
+
+\item{j}{Column indices for rotating cell content. When \\code{i} and \\code{j} are both \\code{NULL}, the
+entire table is rotated.}
+
 \item{...}{Additional arguments (ignored).}
 }
 \value{
 A modified \code{tinytable} object.
 }
 \description{
-Rotate table theme (LaTeX, Typst, and HTML)
+Rotate table theme (LaTeX, Typst, and HTML). Use \\code{i} and \\code{j} to rotate
+cell content instead of the entire table (HTML applies rotation inside the cell
+to keep borders intact).
 }
