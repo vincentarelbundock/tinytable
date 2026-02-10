@@ -40,7 +40,7 @@ expect_inherits(tab, "character")
 tab <- tt(head(mtcars)) |>
   theme_rotate(angle = 45) |>
   save_tt("html")
-expect_true(grepl("rotate\(45deg\)", tab))
+expect_true(grepl("rotate\\(45deg\\)", tab))
 
 
 # Issue #460: rowhead is not inserted in LaTeX
