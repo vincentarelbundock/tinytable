@@ -1,6 +1,6 @@
 # News
 
-## Development
+## 0.16.0
 
 * `theme_default()` is renamed to `theme_tinytable()`. `theme_default()` is now deprecated and will show a warning when called. Issue #607.
 * `pkgdown_print.tinytable()` method for better integration with pkgdown documentation websites
