@@ -5,6 +5,9 @@ options("width" = 200) # for diff printout readability
 options("tinytable_print_output" = NULL)
 options("tinytable_html_engine" = NULL)
 
+# Stabilize collation-dependent ordering in snapshot tests.
+try(Sys.setlocale("LC_COLLATE", "C"), silent = TRUE)
+
 # common formatting options
 options(tinytable_format_bool = function(x) tools::toTitleCase(tolower(x)))
 options(tinytable_format_replace = "")
