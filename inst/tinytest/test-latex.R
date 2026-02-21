@@ -270,13 +270,13 @@ expect_snapshot_print(
 )
 
 # Heatmaps
-fs <- seq(.1, 2, length.out = 20)
+fs <- seq(0.1, 2, length.out = 20)
 k <- data.frame(matrix(fs, ncol = 5))
 colnames(k) <- NULL
 bg <- hcl.colors(20, "Inferno")
 fg <- ifelse(as.matrix(k) < 1.7, tail(bg, 1), head(bg, 1))
 expect_snapshot_print(
-  (tt(k, width = .7, theme = "empty") |>
+  (tt(k, width = 0.7, theme = "empty") |>
     style_tt(j = 1:5, align = "ccccc") |>
     style_tt(
       i = 1:4,

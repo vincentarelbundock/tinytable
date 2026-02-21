@@ -22,7 +22,7 @@ expect_snapshot_print(tab, "i_j-format_tt_i_01")
 
 cormat <- data.frame(cor(mtcars[1:5]))
 tab <- tt(cormat, digits = 2) |>
-  style_tt(i = abs(cormat) > .8, background = "black", color = "white")
+  style_tt(i = abs(cormat) > 0.8, background = "black", color = "white")
 expect_equal(dim(tab), c(5, 5))
 
 
