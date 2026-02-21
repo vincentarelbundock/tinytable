@@ -132,7 +132,7 @@ typst_header <- function(x, out) {
 
   # Add group headers (first call first = top of table)
   if (nrow(x@group_data_j) > 0) {
-    for (row_idx in 1:nrow(x@group_data_j)) {
+    for (row_idx in seq_len(nrow(x@group_data_j))) {
       group_row <- as.character(x@group_data_j[row_idx, ])
       header_line <- typst_build_group_header(group_row)
       if (!is.null(header_line)) {

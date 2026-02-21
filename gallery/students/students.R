@@ -132,13 +132,13 @@ tab <- tt(tabla_final,
   style_tt(i = 0, smallcap = TRUE) |>
   style_tt(i = "groupj", smallcap = TRUE) |>
   # style: horizontal rules
-  style_tt(i = 1, line = "t", line_color = "black", line_width = .15) |>
-  style_tt(i = c(2:4, 8), line = "t", line_color = "white", line_width = .05) |>
-  style_tt(i = c(5:7, 9:10), line = "t", line_color = "black", line_width = .05) |>
+  style_tt(i = 1, line = "t", line_color = "black", line_width = 0.15) |>
+  style_tt(i = c(2:4, 8), line = "t", line_color = "white", line_width = 0.05) |>
+  style_tt(i = c(5:7, 9:10), line = "t", line_color = "black", line_width = 0.05) |>
   # style: colors
-  style_tt(i = 1:nrow(tabla_final), j = 3, color = ue$fg, background = ue$bg, bold = TRUE) |>
-  style_tt(i = 1:nrow(tabla_final), j = 7, color = alu$fg, background = alu$bg, bold = TRUE) |>
-  style_tt(i = 1:nrow(tabla_final), j = 11, color = pd$fg, background = pd$bg, bold = TRUE)
+  style_tt(i = seq_len(nrow(tabla_final)), j = 3, color = ue$fg, background = ue$bg, bold = TRUE) |>
+  style_tt(i = seq_len(nrow(tabla_final)), j = 7, color = alu$fg, background = alu$bg, bold = TRUE) |>
+  style_tt(i = seq_len(nrow(tabla_final)), j = 11, color = pd$fg, background = pd$bg, bold = TRUE)
 
 # save_tt(tab, "students.html")
 print(tab, "html")

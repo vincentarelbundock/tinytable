@@ -132,7 +132,7 @@ expect_snapshot_print(tab, label = "typst-issue323_group_tt_style_tt.typ")
 
 # Frame
 tab <- tt(mtcars[1:5, 1:5]) |>
-  style_tt(2:3, 2:3, line_color = "red", line = "tblr", line_width = .05)
+  style_tt(2:3, 2:3, line_color = "red", line = "tblr", line_width = 0.05)
 tab@output <- "typst"
 expect_snapshot_print(tab, label = "typst-tblr.typ")
 
@@ -215,9 +215,9 @@ tab <- tt(table) |>
   style_tt(i = c(3, 8, 13), j = 2, rowspan = 3, alignv = "m") |>
   style_tt(i = 0, line = "tblr") |>
   style_tt(j = 1, line = "l") |>
-  style_tt(j = 2, i = 1:nrow(table), alignv = "m", line = "lt") |>
-  style_tt(j = 3:length(table), i = 1:nrow(table), line = "r") |>
-  style_tt(j = 4:length(table), i = 1:nrow(table), line = "t") |>
+  style_tt(j = 2, i = seq_len(nrow(table)), alignv = "m", line = "lt") |>
+  style_tt(j = 3:length(table), i = seq_len(nrow(table)), line = "r") |>
+  style_tt(j = 4:length(table), i = seq_len(nrow(table)), line = "t") |>
   style_tt(j = 3, i = c(1, 2, 3, 6, 7, 8, 11, 12, 13, 16), line = "t") |>
   style_tt(
     i = seq(1, nrow(table), by = 5),
@@ -227,7 +227,7 @@ tab <- tt(table) |>
     alignv = "m",
     line = "lt"
   ) |>
-  style_tt(i = nrow(table), j = 1:length(table), line = "b") |>
+  style_tt(i = nrow(table), j = seq_along(table), line = "b") |>
   format_tt(linebreak = "\n", replace = "", output = "typst")
 expect_snapshot_print(tab, label = "typst-issue592.typ")
 

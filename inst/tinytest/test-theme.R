@@ -4,7 +4,7 @@ using("tinysnapshot")
 # Bug: \begin{table}[H][H]
 options(tinytable_latex_placement = "H")
 x <- mtcars[1:4, 1:4]
-tab <- tt(x) |> theme_latex(resize_width = .9, resize_direction = "down")
+tab <- tt(x) |> theme_latex(resize_width = 0.9, resize_direction = "down")
 tab@output <- "latex"
 expect_snapshot_print(tab, label = "theme-placement_options_no_doubling")
 options(tinytable_latex_placement = "H")
@@ -46,7 +46,7 @@ expect_true(grepl("rotate\\(45deg\\)", tab))
 # Issue #460: rowhead is not inserted in LaTeX
 tmp <- rbind(mtcars, mtcars)[, 1:6]
 cap <- "A long 80\\% width table with repeating headers."
-tab <- tt(tmp, width = .8, caption = cap) |>
+tab <- tt(tmp, width = 0.8, caption = cap) |>
   theme_latex(multipage = TRUE, rowhead = 1) |>
   save_tt("latex")
 expect_true(grepl("rowhead=1", tab))

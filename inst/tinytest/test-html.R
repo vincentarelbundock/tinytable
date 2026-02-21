@@ -52,7 +52,7 @@ colnames(k) <- NULL
 bg <- hcl.colors(20, "Inferno")
 fg <- ifelse(as.matrix(k) < 17, tail(bg, 1), head(bg, 1))
 fs <- 1:20
-tab <- tt(k, width = .5, theme = "empty") |>
+tab <- tt(k, width = 0.5, theme = "empty") |>
   style_tt(
     i = 1:4,
     j = 1:5,

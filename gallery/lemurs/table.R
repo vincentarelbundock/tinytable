@@ -58,7 +58,7 @@ tab <- tt(lem_table,
     width_plot = 800) |>
   # alignment: vertical + horizontal
   style_tt(j = 1, alignv = "m") |>
-  style_tt(i = 1:nrow(lem_table), j = 3:4, align = "c", alignv = "m") |>
+  style_tt(i = seq_len(nrow(lem_table)), j = 3:4, align = "c", alignv = "m") |>
   style_tt(i = "colnames", alignv = "t", align = "l")
 
 # save_tt(tab, "lemurs.html", overwrite = TRUE)

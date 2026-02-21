@@ -8,8 +8,8 @@ training <- transform(
   training,
   `Earnings Before` = re75 / 1000,
   `Earnings After` = re78 / 1000,
-  Treatment = ifelse(treat == TRUE, 'Treatment', 'Control'),
-  Married = ifelse(married == TRUE, 'Yes', 'No')
+  Treatment = ifelse(treat, 'Treatment', 'Control'),
+  Married = ifelse(married, 'Yes', 'No')
 )
 cols <- c(
   "Earnings Before",

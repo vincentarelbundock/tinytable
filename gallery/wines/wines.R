@@ -61,7 +61,7 @@ tab <- tt(tbl,
   format_tt("notes", markdown = TRUE) |>
   style_tt(align = "c", alignv = "m") |>
   style_tt(i = 0, line = "b", line_width = 0.2) |>
-  style_tt(i = 1:nrow(tbl), j = 9, color = "burgundy", bold = TRUE, fontsize = 1.5) |>
+  style_tt(i = seq_len(nrow(tbl)), j = 9, color = "burgundy", bold = TRUE, fontsize = 1.5) |>
   plot_tt(i = 0, j = 2:9, images = header_icons, height = 3) |>
   plot_tt(j = 1, images = df$bottle_image, height = 4)
 
