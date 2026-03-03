@@ -111,23 +111,6 @@ style_string_typst <- function(n, styles) {
   return(out)
 }
 
-style_notes <- function(x) {
-  fun <- switch(x@output,
-    "typst" = style_string_typst,
-    "html" = style_string_html,
-    "latex" = style_string_latex,
-    function(k, ...) identity(k)
-  )
-  for (i in seq_along(x@notes)) {
-    if (length(x@notes[[i]]) == 3 && "text" %in% names(x@notes[[i]])) {
-      x@notes[[i]][["text"]] <- fun(x@notes[[i]][["text"]], x@style_notes)
-    } else {
-      x@notes[[i]] <- fun(x@notes[[i]], x@style_notes)
-    }
-  }
-  return(x)
-}
-
 style_string_markdown <- function(n, styles) {
   out <- n
   if (isTRUE(styles[["bold"]])) {
