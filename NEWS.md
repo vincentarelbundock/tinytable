@@ -1,5 +1,9 @@
 # News
 
+## Development
+
+* Upgrade to MathJax 4. Thanks to @ASKurz for report #636.
+
 ## 0.16.0
 
 * `theme_default()` is renamed to `theme_tinytable()`. `theme_default()` is now deprecated and will show a warning when called. Issue #607.
