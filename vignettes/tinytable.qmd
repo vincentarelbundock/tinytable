@@ -244,11 +244,11 @@ tt(dat) |>
 tt(dat) |>
   style_tt(i = Species == "versicolor", color = "darkorange") |>
   group_tt(i = Species) |>
-  subset(select = -Species)
+  subset(select = -Sepal.Width)
 ```
 
 ::: {.callout-important}
-Unlike most `tinytable` operations, `subset()` is applied eagerly---it modifies the table immediately rather than deferring work to build time. For best results, call `subset()` as the **last step** in the pipeline. Calls to `style_tt()`, `format_tt()`, and `group_tt()` that appear *before* `subset()` will have their column indices automatically remapped to account for removed columns.
+Unlike most `tinytable` operations, `subset()` is applied eagerly---it modifies the table immediately rather than deferring work to build time. For more predictable results, call `subset()` as the **last step** in the pipeline. Calls to `style_tt()`, `format_tt()`, and `group_tt()` that appear *before* `subset()` will have their column indices automatically remapped to account for removed columns.
 :::
 
 
