@@ -26,6 +26,24 @@ tt(head(iris))
 ```
 ````
 
+One exception to this injunction is when rendering a Quarto document to LaTeX using `theme_latex(multipage = TRUE, rowhead = 1)`. In that case, one must *avoid* using the Quarto chunk option, because these options trigger Quarto post-processing that will conflict with the `longtblr` environment used to split long tables across multiple pages. The alternative is to use to refer to tables using the `outer` argument in `tabularray` syntax:
+
+```{r}
+#| eval: false
+tt(iris) |>
+  theme_latex(
+    multipage = TRUE, 
+    rowhead = 1,
+    outer = "caption={Example table.}, label={tbl-ex-multipage}")
+```
+
+Unfortunately, this approach means that the standard Quarto cross-reference syntax will no longer work, so users must use LaTeX syntax directly instead:
+
+```latex
+\autoref{tbl-ex-multipage}
+Table \ref{tbl-ex-multipage}
+```
+
 ### Custom crossref styles
 
 In `Quarto`, it is possible to create a custom crossref type for things like appendix tables. One challenge, is that LaTeX will not allow users to nest a `tblr` environment, inside a `table` environment, inside the new environment that `Quarto` creates for the crossref. Therefore, when rendering a table to LaTeX/PDF, it is important to drop the `\begin{table}` environment. This can be done using the `theme_latex()` function.
