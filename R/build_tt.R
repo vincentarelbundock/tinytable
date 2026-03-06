@@ -90,9 +90,6 @@ build_tt <- function(x, output = NULL) {
     x <- eval(l)
   }
 
-  # apply lazy subset operations before inserting group rows
-  x <- subset_lazy(x)
-
   # insert group rows into body
   x <- rbind_body_groupi(x)
 

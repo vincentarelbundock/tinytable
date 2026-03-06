@@ -2,6 +2,7 @@
 
 ## Development
 
+* `group_tt(j)` after `subset()` now places column spans at the correct positions. Thanks to @OliveJy for report #638.
 * Upgrade to MathJax 4. Thanks to @ASKurz for report #636.
 
 ## 0.16.0

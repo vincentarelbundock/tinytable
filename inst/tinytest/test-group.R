@@ -282,3 +282,17 @@ expect_snapshot_print(t[["markdown"]], "group-nse.md")
 expect_snapshot_print(t[["latex"]], "group-nse.tex")
 expect_snapshot_print(t[["html"]], "group-nse.html")
 expect_snapshot_print(t[["typst"]], "group-nse.typ")
+
+# Issue #638: group_tt(j) after subset() placed column spans at wrong positions
+dat <- mtcars[1:5, ] |>
+  setNames(c("A", "B", "C", "D", "E", "F", "G", "H", "Total", "X", "Y"))
+tab <- dat |>
+  tt() |>
+  group_tt(i = list("grp" = 3)) |>
+  subset(select = -A) |>
+  group_tt(j = list("AAA" = 3:4, "BBB" = 5:6))
+t <- expect_table(tab)
+expect_snapshot_print(t[["markdown"]], "group-subset_j-638.md")
+expect_snapshot_print(t[["latex"]], "group-subset_j-638.tex")
+expect_snapshot_print(t[["html"]], "group-subset_j-638.html")
+expect_snapshot_print(t[["typst"]], "group-subset_j-638.typ")

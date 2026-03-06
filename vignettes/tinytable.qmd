@@ -230,7 +230,7 @@ tt(dat) |>
   subset(select = -Species)
 ```
 
-Or 
+Or
 
 ```{r}
 tt(dat) |>
@@ -238,8 +238,17 @@ tt(dat) |>
   subset(select = c(Sepal.Length, Sepal.Width))
 ```
 
-::: {.callout-warning}
-The `subset()` method works in simple use-cases does not always adjust all the internal indices used for styling and grouping. For complex tables, it is safer to select columns and rows before calling `tt()`, and to supply vector indices to the various styling and grouping functions, rather than relying on column names.
+`subset()` can also be combined with `group_tt()` and `style_tt()`. In this example, we use `Species` for conditional styling and row grouping---both of which reference the original columns---and then call `subset()` last to drop the `Species` column:
+
+```{r}
+tt(dat) |>
+  style_tt(i = Species == "versicolor", color = "darkorange") |>
+  group_tt(j = list("AAA" = 1:2, "BBB" = 3:4)) |>
+  subset(select = -Sepal.Width)
+```
+
+::: {.callout-important}
+Unlike most `tinytable` operations, `subset()` is applied eagerly---it modifies the table immediately rather than deferring work to build time. For more predictable results, call `subset()` as the **last step** in the pipeline. Calls to `style_tt()`, `format_tt()`, and `group_tt()` that appear *before* `subset()` will have their column indices automatically remapped to account for removed columns.
 :::
 
 
