@@ -36,11 +36,41 @@ tab <- data.frame(Math = c("$\\alpha$", "$a_{it}$", "$e^{i\\pi} + 1 = 0$")) |>
   save_tt("html")
 expect_inherits(tab, "character")
 
-# HTML rotation
+# HTML: always cell-level rotation (no whole-table rotation)
 tab <- tt(head(mtcars)) |>
   theme_rotate(angle = 45) |>
   save_tt("html")
-expect_true(grepl("rotate\\(45deg\\)", tab))
+expect_true(grepl("inline-block.*rotate\\(45deg\\)", tab))
+
+# HTML: specific cells
+tab <- tt(head(mtcars)) |>
+  theme_rotate(i = 0, j = 1, angle = 45) |>
+  save_tt("html")
+expect_true(grepl("inline-block.*rotate\\(45deg\\)", tab))
+
+# LaTeX: whole-table rotation when no i/j
+tab <- tt(head(mtcars)) |>
+  theme_rotate(angle = 45) |>
+  save_tt("latex")
+expect_true(grepl("\\\\rotatebox\\{45\\}", tab))
+
+# LaTeX: cell-level rotation with i/j
+tab <- tt(head(mtcars)) |>
+  theme_rotate(i = 1, j = 1, angle = 45) |>
+  save_tt("latex")
+expect_true(grepl("\\\\rotatebox\\{45\\}", tab))
+
+# Typst: whole-table rotation when no i/j
+tab <- tt(head(mtcars)) |>
+  theme_rotate(angle = 45) |>
+  save_tt("typst")
+expect_true(grepl("#rotate\\(-45deg, reflow: true", tab))
+
+# Typst: cell-level rotation with i/j
+tab <- tt(head(mtcars)) |>
+  theme_rotate(i = 1, j = 1, angle = 45) |>
+  save_tt("typst")
+expect_true(grepl("#rotate\\(-45deg", tab))
 
 
 # Issue #460: rowhead is not inserted in LaTeX

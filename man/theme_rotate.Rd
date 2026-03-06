@@ -2,11 +2,13 @@
 % Please edit documentation in R/theme_rotate.R
 \name{theme_rotate}
 \alias{theme_rotate}
-\title{Rotate table theme (LaTeX, Typst, and HTML)}
+\title{Rotate table or cell content}
 \usage{
 theme_rotate(
   x,
   angle = get_option("tinytable_rotate_angle", default = 90),
+  i = NULL,
+  j = NULL,
   ...
 )
 }
@@ -15,11 +17,19 @@ theme_rotate(
 
 \item{angle}{Numeric. Rotation angle in degrees (0-360).}
 
+\item{i}{Row indices for cell rotation. When \code{NULL} (and \code{j} is also \code{NULL}),
+rotates the entire table in LaTeX/Typst or all cells in HTML.}
+
+\item{j}{Column indices for cell rotation. When \code{NULL} (and \code{i} is also \code{NULL}),
+rotates the entire table in LaTeX/Typst or all cells in HTML.}
+
 \item{...}{Additional arguments (ignored).}
 }
 \value{
 A modified \code{tinytable} object.
 }
 \description{
-Rotate table theme (LaTeX, Typst, and HTML)
+In HTML, rotation is always applied to cell content (not the whole table) to
+keep borders intact. In LaTeX and Typst, when \code{i} and \code{j} are both \code{NULL},
+the entire table is rotated; otherwise cell content is rotated.
 }

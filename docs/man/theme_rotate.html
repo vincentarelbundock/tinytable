@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.26">
+<meta name="generator" content="quarto-1.8.24">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -40,10 +40,10 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ac1a48248070c8bfbae4244efd7728e4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-f16cd255ecb5ae9510f6a112aa2ee9ab.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-d615d97255b200630a23498c3b1f6ee7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-8498537ff65c2aaf2c3c0819ff511eee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -190,6 +190,10 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+      <a href="../index.html" class="sidebar-logo-link">
+      </a>
+      </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
@@ -479,7 +483,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#rotate-table-theme-latex-typst-and-html" id="toc-rotate-table-theme-latex-typst-and-html" class="nav-link active" data-scroll-target="#rotate-table-theme-latex-typst-and-html">Rotate table theme (LaTeX, Typst, and HTML)</a>
+  <li><a href="#rotate-table-or-cell-content" id="toc-rotate-table-or-cell-content" class="nav-link active" data-scroll-target="#rotate-table-or-cell-content">Rotate table or cell content</a>
   <ul class="collapse">
   <li><a href="#description" id="toc-description" class="nav-link" data-scroll-target="#description">Description</a></li>
   <li><a href="#usage" id="toc-usage" class="nav-link" data-scroll-target="#usage">Usage</a></li>
@@ -495,17 +499,19 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="rotate-table-theme-latex-typst-and-html" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="rotate-table-theme-latex-typst-and-html">Rotate table theme (LaTeX, Typst, and HTML)</h2>
+<section id="rotate-table-or-cell-content" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="rotate-table-or-cell-content">Rotate table or cell content</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>Rotate table theme (LaTeX, Typst, and HTML)</p>
+<p>In HTML, rotation is always applied to cell content (not the whole table) to keep borders intact. In LaTeX and Typst, when <code>i</code> and <code>j</code> are both <code>NULL</code>, the entire table is rotated; otherwise cell content is rotated.</p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
 <pre><code class="language-R">theme_rotate(
   x,
   angle = get_option("tinytable_rotate_angle", default = 90),
+  i = NULL,
+  j = NULL,
   ...
 )
 </code></pre>
@@ -527,6 +533,22 @@ A <code>tinytable</code> object.
 </td>
 <td>
 Numeric. Rotation angle in degrees (0-360).
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="i">i</code>
+</td>
+<td>
+Row indices for cell rotation. When <code>NULL</code> (and <code>j</code> is also <code>NULL</code>), rotates the entire table in LaTeX/Typst or all cells in HTML.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="j">j</code>
+</td>
+<td>
+Column indices for cell rotation. When <code>NULL</code> (and <code>i</code> is also <code>NULL</code>), rotates the entire table in LaTeX/Typst or all cells in HTML.
 </td>
 </tr>
 <tr>

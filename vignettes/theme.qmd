@@ -132,6 +132,62 @@ Or use the `theme` argument to get the same effect.
 tt(x, theme = "empty") |> theme_striped()
 ```
 
+## Rotate
+
+The `theme_rotate()` function rotates cell content or entire tables. In HTML output, rotation is always applied inside cells (using an inner `<div>`) so that borders and lines remain intact. In LaTeX and Typst, when no `i` or `j` indices are specified, the entire table is rotated; otherwise, individual cell content is rotated.
+
+To rotate the entire table (LaTeX and Typst only), call `theme_rotate()` without `i` or `j`:
+
+::: {.content-visible when-format="pdf"}
+```{r}
+tt(x) |> theme_rotate(angle = 90)
+```
+:::
+::: {.content-visible when-format="typst"}
+```{r}
+tt(x) |> theme_rotate(angle = 90)
+```
+:::
+
+::: {.content-visible unless-format="pdf"}
+```r
+tt(x) |> theme_rotate(angle = 90)
+```
+
+*Note: Whole-table rotation is only supported in LaTeX and Typst output.*
+:::
+
+Rotate all column headers by 45 degrees:
+
+```{r}
+tt(x) |> theme_rotate(i = 0, angle = 45)
+```
+
+Rotate specific cells by 90 degrees:
+
+```{r}
+tt(x) |> theme_rotate(i = 1:2, j = 1, angle = 90)
+```
+
+You can call `theme_rotate()` multiple times to apply different rotations to different parts of the table:
+
+```{r}
+tt(x) |>
+  theme_rotate(i = 0, angle = 45) |>
+  theme_rotate(i = 1:4, j = 1, angle = 90)
+```
+
+Cell rotation and `colspan` can be useful together.
+
+```{r}
+x <- iris[, c("Species", "Petal.Length", "Petal.Width")]
+x <- do.call(rbind, by(x, x$Species, head, n = 2))
+tt(x) |>
+  style_tt(i = c(1, 3, 5), j = 1, rowspan = 2, alignv = "m") |>
+  style_tt(i = c(2, 4), line = "b", line_width = .05) |>
+  theme_rotate(j = 1, angle = 90)
+```
+
 ## User-written themes
 
 This section provides a few user-written themes that can be used to extend the functionality of `tinytable`. These themes are not included in the package by default, but they can be easily added to your workflow. If you would like your own custom theme to appear here, please open an issue on the [tinytable GitHub repository](https://github.com/vincentarelbundock/tinytable/issues) or submit a pull request.
