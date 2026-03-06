@@ -111,59 +111,6 @@ tt(x, notes = list(
 ))
 ```
 
-
-## Captions and cross-references
-
-In Quarto, one should always  specify captions cross-references using chunk options, and should *not* use the `caption` argument. This is because Quarto automatically post-processes tables, and may introduce conflict with the captions inserted by `tinytable`. For example:
-
-````{verbatim}
-@tbl-blah shows that...
-
-```{r}
-#| label: tbl-blah
-#| tbl-cap: "Blah blah blah"
-library(tinytable)
-tt(mtcars[1:4, 1:4])
-```
-````
-
-```{r, include=FALSE}
-# knitr adds this by default, I guess, which duplicates [H][H]
-options(tinytable_latex_placement = NULL)
-```
-
-And here is the rendered version of the code chunk above:
-
-@tbl-blah shows that...
-
-```{r}
-#| label: tbl-blah
-#| tbl-cap: "Blah blah blah"
-library(tinytable)
-tt(mtcars[1:4, 1:4])
-```
-
-One exception to the injunction above is when rendering a Quarto document to LaTeX using `theme_latex(multipage = TRUE, rowhead = 1)`. In that case, one must *avoid* using the Quarto chunk option, because these options trigger Quarto post-processing that will conflict with the `longtblr` environment used to split long tables across multiple pages.
-
-The alternative is to use to refer to tables using standard LaTeX syntax: `\ref{tbl-ex-multipage}`. Then, use the `caption` argument in `tt()` to specify both the label and the caption:
-
-```{r}
-#| eval: false
-tt(iris, caption = "Example table.\\label{tbl-ex-multipage}") |>
-  theme_latex(multipage = TRUE, rowhead = 1)
-```
-
-For standalone tables in any format (i.e., outside Quarto), you can use the `caption` argument like so:
-
-```{r, eval=FALSE}
-tt(x, caption = "Blah blah.\\label{tbl-blah}")
-```
-
-```{r, include=FALSE}
-# knitr adds this by default, I guess, which duplicates [H][H]
-options(tinytable_latex_placement = "H")
-```
-
 ## Output formats
 
 `tinytable` can produce tables in HTML, Word, Markdown, LaTeX, Typst, PDF, or PNG format. An appropriate output format for printing is automatically selected based on (1) whether the function is called interactively, (2) is called within RStudio, and (3) the output format of the Rmarkdown or Quarto document, if applicable. Alternatively, users can specify the print format in `print()` or by setting a global option:
@@ -290,6 +237,10 @@ tt(dat) |>
   style_tt(Species == "versicolor", background = "pink") |>
   subset(select = c(Sepal.Length, Sepal.Width))
 ```
+
+::: {.callout-warning}
+The `subset()` method works in simple use-cases does not always adjust all the internal indices used for styling and grouping. For complex tables, it is safer to select columns and rows before calling `tt()`, and to supply vector indices to the various styling and grouping functions, rather than relying on column names.
+:::
 
 
 ## Rename columns
