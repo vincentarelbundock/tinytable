@@ -6,6 +6,7 @@
 * `group_tt(j)` after `subset()` now places column spans at the correct positions. Thanks to @OliveJy for report #638.
 * Upgrade to MathJax 4. Thanks to @ASKurz for report #636.
 * MathJax fonts no longer inherit from the global font. Thanks to ASKurz for Issue #641.
+* `theme_typst(multipage)`: new argument to control whether tables can break across pages. Default is `FALSE` so tables stay on one page. Thanks to @statzhero for feature request #642.
 
 ## 0.16.0
 

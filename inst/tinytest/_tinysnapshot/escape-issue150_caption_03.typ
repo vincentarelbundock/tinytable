@@ -1,4 +1,4 @@
-#show figure: set block(breakable: true)
+#show figure: set block(breakable: false)
 #figure( // start preamble figure
   caption: text([banana\_fish \$100 & \<b\>bold\<\/b\>]),
   kind: "tinytable",
