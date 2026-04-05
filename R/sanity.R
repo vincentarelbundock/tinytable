@@ -270,6 +270,27 @@ assert_choice <- function(
   stop(msg, call. = FALSE)
 }
 
+
+assert_subset <- function(
+  x,
+  choice,
+  null.ok = FALSE,
+  name = as.character(substitute(x))
+) {
+  if (is.null(x) && isTRUE(null.ok)) {
+    return(TRUE)
+  }
+  if (is.character(x) && length(x) >= 1 && all(x %in% choice)) {
+    return(TRUE)
+  }
+  msg <- sprintf(
+    "`%s` must be a subset of: %s",
+    name,
+    paste(choice, collapse = ", ")
+  )
+  stop(msg, call. = FALSE)
+}
+
 check_string <- function(x, null.ok = FALSE, len = NULL) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(invisible(TRUE))

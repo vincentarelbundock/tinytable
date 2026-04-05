@@ -125,7 +125,7 @@ tt_format(
 
 \item{linebreak}{NULL or a single string. If it is a string, replaces that string with appropriate line break sequences depending on the output format (HTML: \verb{<br>}, LaTeX: \verb{\\\\\\\\}, Typst: \verb{\\\\ }). Markdown output is excluded from line break replacement.}
 
-\item{output}{Apply formatting only if the \code{tt()} object is rendered in the specified format. One of "latex", "html", "typst", or "markdown". If \code{NULL} (default), apply formatting regardless of the output format.}
+\item{output}{Apply formatting only if the \code{tt()} object is rendered in the specified format. A character vector of one or more of "latex", "html", "typst", or "markdown". If \code{NULL} (default), apply formatting regardless of the output format.}
 }
 \value{
 A data frame with formatted columns.

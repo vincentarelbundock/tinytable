@@ -40,7 +40,7 @@
 #' @param quarto Logical. Enable Quarto data processing and wrap cell content in a `data-qmd` span (HTML) or `\QuartoMarkdownBase64{}` macro (LaTeX). See warnings in the Global Options section below.
 #' @param sprintf String passed to the `?sprintf` function to format numbers or interpolate strings with a user-defined pattern (similar to the `glue` package, but using Base R).
 #' @param linebreak NULL or a single string. If it is a string, replaces that string with appropriate line break sequences depending on the output format (HTML: `<br>`, LaTeX: `\\\\`, Typst: `\\ `). Markdown output is excluded from line break replacement.
-#' @param output Apply formatting only if the `tt()` object is rendered in the specified format. One of "latex", "html", "typst", or "markdown". If `NULL` (default), apply formatting regardless of the output format.
+#' @param output Apply formatting only if the `tt()` object is rendered in the specified format. A character vector of one or more of "latex", "html", "typst", or "markdown". If `NULL` (default), apply formatting regardless of the output format.
 #' @inheritParams tt
 #' @inheritParams style_tt
 #' @template global_options
@@ -141,7 +141,7 @@ format_tt <- function(
   assert_flag(markdown)
   assert_flag(quarto)
   assert_function(fn, null.ok = TRUE)
-  assert_choice(output, c("latex", "html", "typst", "markdown"), null.ok = TRUE)
+  assert_subset(output, c("latex", "html", "typst", "markdown"), null.ok = TRUE)
   assert_string(sprintf, null.ok = TRUE)
   assert_string(linebreak, null.ok = TRUE)
   replace <- sanitize_replace(replace)
