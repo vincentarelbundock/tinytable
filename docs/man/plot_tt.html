@@ -558,6 +558,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   images = NULL,
   sprintf = "%s",
   assets = "tinytable_assets",
+  output = NULL,
   ...
 )
 
@@ -575,6 +576,7 @@ tt_plot(
   images = NULL,
   sprintf = "%s",
   assets = "tinytable_assets",
+  output = NULL,
   ...
 )
 </code></pre>
@@ -720,6 +722,14 @@ Character string, a sprintf format string to format the generated cell content. 
 </td>
 <td>
 Path to the directory where generated assets are stored. This path is relative to the location where a table is saved.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="output">output</code>
+</td>
+<td>
+Apply plot insertion only when the table is rendered in the specified format. One of "latex", "html", "typst", or "markdown". If <code>NULL</code> (default), plots are inserted regardless of the output format.
 </td>
 </tr>
 <tr>

@@ -537,6 +537,7 @@ assert_style_tt <- function(
 #' @param line_width Width of the line in em units (default: 0.1).
 #' @param line_trim String specifying line trimming. Acceptable values: "l" (left), "r" (right), "lr" (both sides). When specified, shortens the lines by 0.8pt on the specified side(s). Default: NULL (no trimming).
 #' @param finalize A function applied to the table object at the very end of table-building, for post-processing. For example, the function could use regular expressions to add LaTeX commands to the text version of the table hosted in `x@table_string`, or it could programmatically change the caption in `x@caption`.
+#' @param output Apply styling only when the table is rendered in the specified format. One of "latex", "html", "typst", or "markdown". If `NULL` (default), styling is applied regardless of the output format.
 #' @param ... extra arguments are ignored
 #' @return An object of class `tt` representing the table.
 #' @template limitations_word_markdown
@@ -672,10 +673,13 @@ style_tt <- function(
   line_width = 0.1,
   line_trim = NULL,
   finalize = NULL,
+  output = NULL,
   ...
 ) {
 
   
+  assert_choice(output, c("latex", "html", "typst", "markdown"), null.ok = TRUE)
+
   # non-standard evaluation before anything else
   tmp <- nse_i_j(x, i_expr = substitute(i), j_expr = substitute(j), pf = parent.frame())
   list2env(tmp, environment())
@@ -709,6 +713,7 @@ style_tt <- function(
     finalize = finalize)
   obj <- c(obj, list(...))
   obj <- as.call(obj)
+  attr(obj, "output") <- output
 
   x@lazy_style <- c(x@lazy_style, list(obj))
   return(x)

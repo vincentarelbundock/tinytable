@@ -86,8 +86,11 @@ build_tt <- function(x, output = NULL) {
 
   # format each component individually, including groups before inserting them into the body
   for (l in x@lazy_format) {
-    l[["x"]] <- x
-    x <- eval(l)
+    o <- attr(l, "output")
+    if (is.null(o) || x@output %in% o) {
+      l[["x"]] <- x
+      x <- eval(l)
+    }
   }
 
   # insert group rows into body
@@ -104,8 +107,11 @@ build_tt <- function(x, output = NULL) {
 
   # plots and images
   for (l in x@lazy_plot) {
-    l[["x"]] <- x
-    x <- eval(l)
+    o <- attr(l, "output")
+    if (is.null(o) || x@output %in% o) {
+      l[["x"]] <- x
+      x <- eval(l)
+    }
   }
 
   # add footnote markers just after formatting, otherwise appending converts to string
@@ -136,8 +142,11 @@ build_tt <- function(x, output = NULL) {
   x@lazy_style <- list()
 
   for (p in lazy_style) {
-    p[["x"]] <- x
-    x <- eval(p)
+    o <- attr(p, "output")
+    if (is.null(o) || x@output %in% o) {
+      p[["x"]] <- x
+      x <- eval(p)
+    }
   }
 
   # Fix colspan that exceeds column count after lazy styles are evaluated

@@ -177,6 +177,7 @@ format_tt <- function(
       linebreak = linebreak,
       output = output
     )
+    attr(cal, "output") <- output
     out@lazy_format <- c(out@lazy_format, list(cal))
   } else {
     out <- format_tt_lazy(
@@ -236,12 +237,6 @@ format_tt_lazy <- function(
     x <- as.data.frame(x, check.names = FALSE)
   } else {
     x_is_tibble <- FALSE
-  }
-
-  if (inherits(x, "tinytable") && !is.null(output)) {
-    if (!identical(x@output, output)) {
-      return(x)
-    }
   }
 
   # important for tabulator

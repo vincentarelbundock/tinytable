@@ -19,6 +19,7 @@ plot_tt(
   images = NULL,
   sprintf = "\%s",
   assets = "tinytable_assets",
+  output = NULL,
   ...
 )
 
@@ -36,6 +37,7 @@ tt_plot(
   images = NULL,
   sprintf = "\%s",
   assets = "tinytable_assets",
+  output = NULL,
   ...
 )
 }
@@ -83,6 +85,8 @@ images will be inserted in all columns.}
 \item{sprintf}{Character string, a sprintf format string to format the generated cell content. Default is "\%s" which displays the content as-is. Use this to wrap images or plots in custom markup.}
 
 \item{assets}{Path to the directory where generated assets are stored. This path is relative to the location where a table is saved.}
+
+\item{output}{Apply plot insertion only when the table is rendered in the specified format. One of "latex", "html", "typst", or "markdown". If \code{NULL} (default), plots are inserted regardless of the output format.}
 
 \item{...}{Extra arguments are passed to the function in \code{fun}. Important: Custom plotting functions must always have \code{...} as an argument.}
 }

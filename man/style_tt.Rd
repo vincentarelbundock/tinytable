@@ -28,6 +28,7 @@ style_tt(
   line_width = 0.1,
   line_trim = NULL,
   finalize = NULL,
+  output = NULL,
   ...
 )
 
@@ -54,6 +55,7 @@ tt_style(
   line_width = 0.1,
   line_trim = NULL,
   finalize = NULL,
+  output = NULL,
   ...
 )
 }
@@ -126,6 +128,8 @@ tt_style(
 \item{line_trim}{String specifying line trimming. Acceptable values: "l" (left), "r" (right), "lr" (both sides). When specified, shortens the lines by 0.8pt on the specified side(s). Default: NULL (no trimming).}
 
 \item{finalize}{A function applied to the table object at the very end of table-building, for post-processing. For example, the function could use regular expressions to add LaTeX commands to the text version of the table hosted in \code{x@table_string}, or it could programmatically change the caption in \code{x@caption}.}
+
+\item{output}{Apply styling only when the table is rendered in the specified format. One of "latex", "html", "typst", or "markdown". If \code{NULL} (default), styling is applied regardless of the output format.}
 
 \item{...}{extra arguments are ignored}
 }

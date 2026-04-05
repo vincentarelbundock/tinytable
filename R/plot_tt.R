@@ -28,6 +28,7 @@
 #' @param images Character vector, the paths to the images to be inserted. Paths are relative to the main table file or Quarto (Rmarkdown) document.
 #' @param sprintf Character string, a sprintf format string to format the generated cell content. Default is "%s" which displays the content as-is. Use this to wrap images or plots in custom markup.
 #' @param assets Path to the directory where generated assets are stored. This path is relative to the location where a table is saved.
+#' @param output Apply plot insertion only when the table is rendered in the specified format. One of "latex", "html", "typst", or "markdown". If `NULL` (default), plots are inserted regardless of the output format.
 #' @param ... Extra arguments are passed to the function in `fun`. Important: Custom plotting functions must always have `...` as an argument.
 #'
 #' @return A modified tinytable object with images or plots inserted.
@@ -91,7 +92,10 @@ plot_tt <- function(
     images = NULL,
     sprintf = "%s",
     assets = "tinytable_assets",
+    output = NULL,
     ...) {
+  assert_choice(output, c("latex", "html", "typst", "markdown"), null.ok = TRUE)
+
   # non-standard evaluation before anything else
   tmp <- nse_i_j(x, i_expr = substitute(i), j_expr = substitute(j), pf = parent.frame())
   list2env(tmp, environment())
@@ -186,6 +190,7 @@ plot_tt <- function(
   )
   cal <- c(cal, list(...))
   cal <- do.call(call, cal)
+  attr(cal, "output") <- output
 
   x@lazy_plot <- c(x@lazy_plot, list(cal))
 

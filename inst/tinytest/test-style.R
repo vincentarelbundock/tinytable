@@ -111,3 +111,14 @@ result <- testdata |>
   save_tt("html")
 expect_true(is.character(result))
 expect_true(nchar(result) > 0)
+
+
+# Issue #647: Conditional styling with output argument
+tab <- data.frame(A = 1:2, B = 3:4) |>
+  tt() |>
+  style_tt(bold = TRUE, output = "typst") |>
+  style_tt(italic = TRUE, output = "html")
+t <- expect_table(tab, formats = c("html", "typst", "latex"))
+expect_snapshot_print(t[["html"]], "style-output_conditional.html")
+expect_snapshot_print(t[["typst"]], "style-output_conditional.typ")
+expect_snapshot_print(t[["latex"]], "style-output_conditional.tex")
