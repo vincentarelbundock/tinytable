@@ -13,8 +13,12 @@
 #'   - Numeric vector: Row indices where the styling should be applied. Can be a single value or a vector.
 #'   - String: Table components to format "caption", "colnames", "groupi" (row group labels), "~groupi" (non-group rows), "groupj" (column group labels), "notes".
 #'   - If both the `i` and `j` are omitted (default: NULL), formatting is applied to all table elements, including caption, notes, and group labels.
-#' @param digits Number of significant digits or decimal places.
-#' @param num_fmt The format for numeric values; one of 'significant', 'significant_cell', 'decimal', or 'scientific'.
+#' @param digits Number of significant digits or decimal places, depending on the `num_fmt` argument.
+#'   - `num_fmt = "significant"` (default): `digits` is the minimum number of significant digits. Formatting is applied column-wise, so the smallest value in the column determines the decimal representation for the whole column.
+#'   - `num_fmt = "significant_cell"`: same as `"significant"`, but formatting is applied cell-by-cell. Each cell displays exactly `digits` significant figures, regardless of other values in the column.
+#'   - `num_fmt = "decimal"`: `digits` is the number of decimal places (digits after the decimal point) for all values.
+#'   - `num_fmt = "scientific"`: `digits` is the number of decimal places in the mantissa of scientific notation (e.g., `digits = 2` gives `1.23e+04`).
+#' @param num_fmt The format for numeric values; one of 'significant', 'significant_cell', 'decimal', or 'scientific'. See the `digits` argument for details on how each format interprets the `digits` value.
 #' @param num_zero Logical; if TRUE, trailing zeros are kept in "decimal" format (but not in "significant" format).
 #' @param num_mark_big Character to use as a thousands separator.
 #' @param num_mark_dec Decimal mark character. Default is the global option 'OutDec'.

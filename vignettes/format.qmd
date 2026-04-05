@@ -87,7 +87,14 @@ format_tt(dat, digits = 1, num_suffix = TRUE)
 
 ## Significant digits and decimals
 
-By default, `format_tt()` formats numbers to ensure that the smallest value in a vector (column) has at least a certain number of significant digits. For example,
+The `digits` argument controls the number of digits displayed, but its meaning depends on `num_fmt`:
+
+- `"significant"` (default): `digits` sets the minimum number of *significant figures*. Formatting is column-wise: the smallest value determines the representation for the whole column.
+- `"significant_cell"`: same as `"significant"`, but applied *per cell*. Each cell shows exactly `digits` significant figures.
+- `"decimal"`: `digits` is the number of *decimal places* (digits after the decimal point) for all values.
+- `"scientific"`: `digits` is the number of decimal places in the mantissa (e.g., `digits = 2` gives `1.23e+04`).
+
+By default, `format_tt()` uses `num_fmt = "significant"`, which formats numbers to ensure that the smallest value in a vector (column) has at least a certain number of significant digits. For example,
 
 ```{r}
 k <- data.frame(x = c(0.000123456789, 12.4356789))
@@ -100,6 +107,14 @@ We can alter this behavior to ensure to round significant digits on a per-cell b
 tt(k) |> format_tt(digits = 2, num_fmt = "significant_cell")
 ```
 
+To display a fixed number of decimal places instead:
+
+```{r}
+tt(k) |> format_tt(digits = 2, num_fmt = "decimal")
+```
+
+### Global options and `tt()`
+
 The numeric formatting options in `format_tt()` can also be controlled using global options:
 
 ```{r}
@@ -110,6 +125,22 @@ tt(k)
 
 ```{r, include = FALSE}
 options("tinytable_tt_digits" = NULL)
+options("tinytable_format_num_fmt" = NULL)
+```
+
+Note that when `tt(x, digits = N)` is called, it invokes `format_tt(x, digits = N)` internally, passing only `digits` explicitly. All other `format_tt()` arguments (like `num_fmt` or `replace`) use their default values, which can be overridden by global options. When `digits` is `NULL` (the default), `format_tt()` is *not* called at all, so `tinytable_format_*` options only take effect when `digits` is set:
+
+```{r}
+options("tinytable_format_num_fmt" = "scientific")
+
+# digits is NULL (default): format_tt() is not called, option has no effect
+tt(k)
+
+# digits is set: format_tt() is called, picks up the global num_fmt option
+tt(k, digits = 2)
+```
+
+```{r, include = FALSE}
 options("tinytable_format_num_fmt" = NULL)
 ```
 

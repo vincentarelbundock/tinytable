@@ -31,9 +31,15 @@ format_vector(
 
 \item{output}{Output format. One of "html", "latex", "typst", "markdown", etc.}
 
-\item{digits}{Number of significant digits or decimal places.}
+\item{digits}{Number of significant digits or decimal places, depending on the \code{num_fmt} argument.
+\itemize{
+\item \code{num_fmt = "significant"} (default): \code{digits} is the minimum number of significant digits. Formatting is applied column-wise, so the smallest value in the column determines the decimal representation for the whole column.
+\item \code{num_fmt = "significant_cell"}: same as \code{"significant"}, but formatting is applied cell-by-cell. Each cell displays exactly \code{digits} significant figures, regardless of other values in the column.
+\item \code{num_fmt = "decimal"}: \code{digits} is the number of decimal places (digits after the decimal point) for all values.
+\item \code{num_fmt = "scientific"}: \code{digits} is the number of decimal places in the mantissa of scientific notation (e.g., \code{digits = 2} gives \code{1.23e+04}).
+}}
 
-\item{num_fmt}{The format for numeric values; one of 'significant', 'significant_cell', 'decimal', or 'scientific'.}
+\item{num_fmt}{The format for numeric values; one of 'significant', 'significant_cell', 'decimal', or 'scientific'. See the \code{digits} argument for details on how each format interprets the \code{digits} value.}
 
 \item{num_zero}{Logical; if TRUE, trailing zeros are kept in "decimal" format (but not in "significant" format).}
 

@@ -26,7 +26,7 @@ tt(x, ...)
 
 \item{...}{Additional arguments are ignored}
 
-\item{digits}{Number of significant digits to keep for numeric variables. When \code{digits} is an integer, \code{tt()} calls \code{format_tt(x, digits = digits)} before proceeding to draw the table. Note that this will apply all default argument values of \code{format_tt()}, such as replacing \code{NA} by "". Users who need more control can use the \code{format_tt()} function instead.}
+\item{digits}{Number of significant digits to keep for numeric variables. When \code{digits} is an integer, \code{tt()} calls \code{format_tt(x, digits = digits)} before proceeding to draw the table. Note that only the \code{digits} argument is passed explicitly; all other \code{format_tt()} arguments use their default values, which can be influenced by global options (e.g., \code{options(tinytable_format_num_fmt = "decimal")}). When \code{digits} is \code{NULL} (the default), \code{format_tt()} is not called at all, so global \verb{tinytable_format_*} options have no effect unless the user calls \code{format_tt()} explicitly. Users who need more control can use the \code{format_tt()} function instead.}
 
 \item{caption}{A string that will be used as the caption of the table. This argument should \emph{not} be used in Quarto or Rmarkdown documents. In that context, please use the appropriate chunk options.}
 
