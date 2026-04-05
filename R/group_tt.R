@@ -219,7 +219,6 @@ add_group_line_styling_simple <- function(x, j) {
           j = group_cols,
           line = "b",
           line_width = 0.03,
-          line_color = "black",
           line_trim = line_trim_spec
         )
       }
