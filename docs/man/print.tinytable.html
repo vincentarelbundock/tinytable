@@ -528,7 +528,37 @@ A data frame, data table, or tibble to be rendered as a table.
 <code id="output">output</code>
 </td>
 <td>
-<p>format in which a Tiny Table is printed: <code>NULL</code> or one of <code>“latex”</code>, <code>“markdown”</code>, <code>“html”</code>, <code>“typst”</code>, <code>“dataframe”</code>, <code>“tabulator”</code>. If <code>NULL</code>, the output is chosen based on these rules:</p>
+<p>Format in which a Tiny Table is printed. One of:</p>
+<ul>
+<li>
+<p><code>NULL</code>: automatically chosen based on context (see below).</p>
+</li>
+<li>
+<p><code>“html”</code>: HTML table. In interactive mode, displayed in the viewer pane.</p>
+</li>
+<li>
+<p><code>“latex”</code>: LaTeX table using tabularray.</p>
+</li>
+<li>
+<p><code>“markdown”</code>: plain text markdown table.</p>
+</li>
+<li>
+<p><code>“typst”</code>: Typst table.</p>
+</li>
+<li>
+<p><code>“dataframe”</code>: formatted data frame.</p>
+</li>
+<li>
+<p><code>“tabulator”</code>: interactive HTML table using Tabulator.js.</p>
+</li>
+<li>
+<p><code>“knitr”</code>: PNG screenshot via <code>webshot2</code>, returned through <code>knitr::include_graphics()</code>. Useful for embedding styled tables in Rmarkdown or Quarto documents. Requires the <code>webshot2</code> package.</p>
+</li>
+<li>
+<p><code>“raster”</code>: PNG screenshot via <code>webshot2</code>, drawn on the graphics device via <code>grid::grid.raster()</code>. Useful for pkgdown <code style="white-space: pre;"><span class="citation" data-cites="examples">@examples</span></code> and README files, where the plot is captured as an image. Requires the <code>webshot2</code> and <code>png</code> packages. For README.Rmd files rendered with <code>rmarkdown::render()</code>, set <code>knitr::opts_chunk$set(fig.path = “man/figures/README-”)</code> in a setup chunk so that pkgdown copies the images correctly.</p>
+</li>
+</ul>
+<p>When <code>output</code> is <code>NULL</code>, the format is chosen automatically:</p>
 <ul>
 <li>
 <p>When called from a script in non-interactive mode, the default is "markdown" (<code>interactive() == FALSE</code>).</p>

@@ -34,6 +34,25 @@ knit_print.tinytable <- function(
     x,
     output = get_option("tinytable_print_output", default = NULL),
     ...) {
+  if (identical(output, "knitr")) {
+    assert_dependency("webshot2")
+    assert_dependency("knitr")
+    tmp <- tempfile(fileext = ".png")
+    save_tt(x, tmp, overwrite = TRUE)
+    return(knitr::include_graphics(tmp))
+  }
+
+  if (identical(output, "raster")) {
+    assert_dependency("webshot2")
+    assert_dependency("png")
+    tmp <- tempfile(fileext = ".png")
+    save_tt(x, tmp, overwrite = TRUE)
+    img <- png::readPNG(tmp)
+    grid::grid.newpage()
+    grid::grid.raster(img)
+    return(invisible(x))
+  }
+
   # lazy styles get evaluated here, at the very end
   x <- build_tt(x, output = output)
   out <- x@table_string
@@ -93,7 +112,18 @@ pkgdown_print.tinytable <- function(x, visible = TRUE) {
 #' This function is called automatically by `R` whenever a `tinytable` object is anprinted to the console or in an HTML viewer pane.
 #'
 #' @inheritParams tt
-#' @param output format in which a Tiny Table is printed: `NULL` or one of `"latex"`, `"markdown"`, `"html"`, `"typst"`, `"dataframe"`, `"tabulator"`. If `NULL`, the output is chosen based on these rules:
+#' @param output Format in which a Tiny Table is printed. One of:
+#' + `NULL`: automatically chosen based on context (see below).
+#' + `"html"`: HTML table. In interactive mode, displayed in the viewer pane.
+#' + `"latex"`: LaTeX table using tabularray.
+#' + `"markdown"`: plain text markdown table.
+#' + `"typst"`: Typst table.
+#' + `"dataframe"`: formatted data frame.
+#' + `"tabulator"`: interactive HTML table using Tabulator.js.
+#' + `"knitr"`: PNG screenshot via `webshot2`, returned through `knitr::include_graphics()`. Useful for embedding styled tables in Rmarkdown or Quarto documents. Requires the `webshot2` package.
+#' + `"raster"`: PNG screenshot via `webshot2`, drawn on the graphics device via `grid::grid.raster()`. Useful for pkgdown `@examples` and README files, where the plot is captured as an image. Requires the `webshot2` and `png` packages. For README.Rmd files rendered with `rmarkdown::render()`, set `knitr::opts_chunk$set(fig.path = "man/figures/README-")` in a setup chunk so that pkgdown copies the images correctly.
+#'
+#' When `output` is `NULL`, the format is chosen automatically:
 #' + When called from a script in non-interactive mode, the default is "markdown" (`interactive() == FALSE`).
 #' + When called interactively in RStudio, the default is to display an HTML table in the viewer pane.
 #' + When called interactively in another development environment, the default is "markdown".
@@ -111,6 +141,26 @@ print.tinytable <- function(
     output = get_option("tinytable_print_output", default = NULL),
     ...) {
   x <- sanitize_output(x, output)
+
+  if (identical(output, "knitr")) {
+    assert_dependency("webshot2")
+    assert_dependency("knitr")
+    tmp <- tempfile(fileext = ".png")
+    save_tt(x, tmp, overwrite = TRUE)
+    return(knitr::include_graphics(tmp))
+  }
+
+  if (identical(output, "raster")) {
+    assert_dependency("webshot2")
+    assert_dependency("png")
+    tmp <- tempfile(fileext = ".png")
+    save_tt(x, tmp, overwrite = TRUE)
+    img <- png::readPNG(tmp)
+    grid::grid.newpage()
+    grid::grid.raster(img)
+    return(invisible(x))
+  }
+
   output <- infer_output(x)
 
   dir <- getOption("tinytable_tempdir", default = tempdir())

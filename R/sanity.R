@@ -142,7 +142,9 @@ sanitize_output <- function(x, output) {
       "html",
       "typst",
       "dataframe",
-      "markdown"
+      "markdown",
+      "knitr",
+      "raster"
     )
   )
   

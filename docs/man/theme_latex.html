@@ -519,6 +519,7 @@ ul.task-list li input[type="checkbox"] {
   rowhead = get_option("tinytable_latex_rowhead", 0L),
   rowfoot = get_option("tinytable_latex_rowfoot", 0L),
   resize_width = get_option("tinytable_latex_resize_width", 1),
+  resize_height = get_option("tinytable_latex_resize_height", default = NULL),
   resize_direction = get_option("tinytable_latex_resize_direction", default = NULL),
   placement = get_option("tinytable_latex_placement", NULL),
   preamble = NULL,
@@ -619,19 +620,27 @@ Numeric value between 0.01 and 1.0 specifying the target width as a fraction of 
 </tr>
 <tr>
 <td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="resize_height">resize_height</code>
+</td>
+<td>
+Numeric value between 0.01 and 1.0 specifying the target height as a fraction of <code style="white-space: pre;">\textheight</code> when resizing tables. When specified (and <code>resize_direction</code> is set), the table height is controlled instead of its width. If both <code>resize_width</code> and <code>resize_height</code> are specified, <code>resize_height</code> takes precedence (width scales proportionally). Default is controlled by <code>tinytable_latex_resize_height</code> option.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
 <code id="resize_direction">resize_direction</code>
 </td>
 <td>
 <p>Character string specifying how to resize tables that are too wide or too narrow. Options are:</p>
 <ul>
 <li>
-<p><code>“down”</code> - Only shrink tables wider than <code style="white-space: pre;">\linewidth</code></p>
+<p><code>“down”</code> - Only shrink tables wider than <code style="white-space: pre;">\linewidth</code> (or taller than <code style="white-space: pre;">\textheight</code> when <code>resize_height</code> is set)</p>
 </li>
 <li>
-<p><code>“up”</code> - Only expand tables narrower than <code style="white-space: pre;">\linewidth</code></p>
+<p><code>“up”</code> - Only expand tables narrower than <code style="white-space: pre;">\linewidth</code> (or shorter than <code style="white-space: pre;">\textheight</code> when <code>resize_height</code> is set)</p>
 </li>
 <li>
-<p><code>“both”</code> - Resize all tables to exactly <code style="white-space: pre;">resize_width * \linewidth</code></p>
+<p><code>“both”</code> - Resize all tables to exactly <code style="white-space: pre;">resize_width * \linewidth</code> (or <code style="white-space: pre;">resize_height * \textheight</code>)</p>
 </li>
 </ul>
 Default is controlled by <code>tinytable_latex_resize_direction</code> option.
@@ -690,7 +699,7 @@ Additional arguments (currently unused).
 </li>
 </ul>
 <p><strong>Multipage Tables:</strong> When <code>multipage = TRUE</code> or when <code>rowhead</code>/<code>rowfoot</code> are specified, the function automatically switches to <code>longtblr</code> environment and disables the table wrapper. This allows tables to break across pages while maintaining headers and footers.</p>
-<p><strong>Resizing:</strong> The resize functionality uses LaTeX’s <code style="white-space: pre;">\resizebox</code> command to automatically adjust table width based on content and page constraints. This is particularly useful for tables with many columns.</p>
+<p><strong>Resizing:</strong> The resize functionality uses LaTeX’s <code style="white-space: pre;">\resizebox</code> command to automatically adjust table dimensions based on content and page constraints. Use <code>resize_width</code> to control width (fraction of <code style="white-space: pre;">\linewidth</code>) or <code>resize_height</code> to control height (fraction of <code style="white-space: pre;">\textheight</code>). When <code>resize_height</code> is specified, the table is scaled to fit the target height with width adjusting proportionally.</p>
 <p><strong>Tabularray Options:</strong> Inner and outer options directly control tabularray formatting. Inner options affect cell content and spacing, while outer options control the table’s relationship with surrounding text.</p>
 </section>
 <section id="value" class="level3">

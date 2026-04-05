@@ -9,7 +9,20 @@
 \arguments{
 \item{x}{A data frame, data table, or tibble to be rendered as a table.}
 
-\item{output}{format in which a Tiny Table is printed: \code{NULL} or one of \code{"latex"}, \code{"markdown"}, \code{"html"}, \code{"typst"}, \code{"dataframe"}, \code{"tabulator"}. If \code{NULL}, the output is chosen based on these rules:
+\item{output}{Format in which a Tiny Table is printed. One of:
+\itemize{
+\item \code{NULL}: automatically chosen based on context (see below).
+\item \code{"html"}: HTML table. In interactive mode, displayed in the viewer pane.
+\item \code{"latex"}: LaTeX table using tabularray.
+\item \code{"markdown"}: plain text markdown table.
+\item \code{"typst"}: Typst table.
+\item \code{"dataframe"}: formatted data frame.
+\item \code{"tabulator"}: interactive HTML table using Tabulator.js.
+\item \code{"knitr"}: PNG screenshot via \code{webshot2}, returned through \code{knitr::include_graphics()}. Useful for embedding styled tables in Rmarkdown or Quarto documents. Requires the \code{webshot2} package.
+\item \code{"raster"}: PNG screenshot via \code{webshot2}, drawn on the graphics device via \code{grid::grid.raster()}. Useful for pkgdown \verb{@examples} and README files, where the plot is captured as an image. Requires the \code{webshot2} and \code{png} packages. For README.Rmd files rendered with \code{rmarkdown::render()}, set \code{knitr::opts_chunk$set(fig.path = "man/figures/README-")} in a setup chunk so that pkgdown copies the images correctly.
+}
+
+When \code{output} is \code{NULL}, the format is chosen automatically:
 \itemize{
 \item When called from a script in non-interactive mode, the default is "markdown" (\code{interactive() == FALSE}).
 \item When called interactively in RStudio, the default is to display an HTML table in the viewer pane.

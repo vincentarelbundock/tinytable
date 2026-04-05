@@ -2,6 +2,9 @@
 
 ## Development
 
+* `print(output = "knitr")`: new output format that renders tables as PNG screenshots via `webshot2` and returns them through `knitr::include_graphics()`. Useful for embedding styled tables in Rmarkdown or Quarto documents.
+* `print(output = "raster")`: new output format that renders tables as PNG screenshots and draws them on the graphics device via `grid::grid.raster()`. Useful for embedding styled tables in pkgdown examples. Requires the `webshot2` and `png` packages.
+* Thanks to @friendly for feature request #624.
 * `theme_latex(resize_height)`: new argument to resize tables vertically (as a fraction of `\textheight`), complementing the existing `resize_width`. Thanks to @bkmcavoybickford for feature request #646.
 * `theme_rotate()` now supports `i` and `j` arguments for cell-level content rotation. In HTML, rotation is always applied inside cells to keep borders intact. Can be called multiple times with different targets.
 * `group_tt(j)` after `subset()` now places column spans at the correct positions. Thanks to @OliveJy for report #638.
