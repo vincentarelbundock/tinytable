@@ -14,6 +14,7 @@ theme_latex(
   rowhead = get_option("tinytable_latex_rowhead", 0L),
   rowfoot = get_option("tinytable_latex_rowfoot", 0L),
   resize_width = get_option("tinytable_latex_resize_width", 1),
+  resize_height = get_option("tinytable_latex_resize_height", default = NULL),
   resize_direction = get_option("tinytable_latex_resize_direction", default = NULL),
   placement = get_option("tinytable_latex_placement", NULL),
   preamble = NULL,
@@ -65,12 +66,18 @@ by \code{tinytable_latex_rowfoot} option.}
 as a fraction of \verb{\\\\linewidth} when resizing tables. Only used when \code{resize_direction}
 is specified. Default is controlled by \code{tinytable_latex_resize_width} option.}
 
+\item{resize_height}{Numeric value between 0.01 and 1.0 specifying the target height
+as a fraction of \verb{\\\\textheight} when resizing tables. When specified (and \code{resize_direction}
+is set), the table height is controlled instead of its width. If both \code{resize_width}
+and \code{resize_height} are specified, \code{resize_height} takes precedence (width scales
+proportionally). Default is controlled by \code{tinytable_latex_resize_height} option.}
+
 \item{resize_direction}{Character string specifying how to resize tables that are
 too wide or too narrow. Options are:
 \itemize{
-\item \code{"down"} - Only shrink tables wider than \verb{\\\\linewidth}
-\item \code{"up"} - Only expand tables narrower than \verb{\\\\linewidth}
-\item \code{"both"} - Resize all tables to exactly \verb{resize_width * \\\\linewidth}
+\item \code{"down"} - Only shrink tables wider than \verb{\\\\linewidth} (or taller than \verb{\\\\textheight} when \code{resize_height} is set)
+\item \code{"up"} - Only expand tables narrower than \verb{\\\\linewidth} (or shorter than \verb{\\\\textheight} when \code{resize_height} is set)
+\item \code{"both"} - Resize all tables to exactly \verb{resize_width * \\\\linewidth} (or \verb{resize_height * \\\\textheight})
 }
 
 Default is controlled by \code{tinytable_latex_resize_direction} option.}
@@ -114,8 +121,10 @@ This allows tables to break across pages while maintaining headers and footers.
 
 \strong{Resizing:}
 The resize functionality uses LaTeX's \verb{\\\\resizebox} command to automatically
-adjust table width based on content and page constraints. This is particularly
-useful for tables with many columns.
+adjust table dimensions based on content and page constraints. Use \code{resize_width}
+to control width (fraction of \verb{\\\\linewidth}) or \code{resize_height} to control height
+(fraction of \verb{\\\\textheight}). When \code{resize_height} is specified, the table is scaled
+to fit the target height with width adjusting proportionally.
 
 \strong{Tabularray Options:}
 Inner and outer options directly control tabularray formatting. Inner options

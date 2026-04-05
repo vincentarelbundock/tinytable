@@ -2,6 +2,7 @@
 
 ## Development
 
+* `theme_latex(resize_height)`: new argument to resize tables vertically (as a fraction of `\textheight`), complementing the existing `resize_width`. Thanks to @bkmcavoybickford for feature request #646.
 * `theme_rotate()` now supports `i` and `j` arguments for cell-level content rotation. In HTML, rotation is always applied inside cells to keep borders intact. Can be called multiple times with different targets.
 * `group_tt(j)` after `subset()` now places column spans at the correct positions. Thanks to @OliveJy for report #638.
 * Upgrade to MathJax 4. Thanks to @ASKurz for report #636.
