@@ -121,11 +121,16 @@ handle_latex_environment_table <- function(x, environment_table) {
 #' @param resize_width Numeric value between 0.01 and 1.0 specifying the target width
 #'   as a fraction of `\\linewidth` when resizing tables. Only used when `resize_direction`
 #'   is specified. Default is controlled by `tinytable_latex_resize_width` option.
+#' @param resize_height Numeric value between 0.01 and 1.0 specifying the target height
+#'   as a fraction of `\\textheight` when resizing tables. When specified (and `resize_direction`
+#'   is set), the table height is controlled instead of its width. If both `resize_width`
+#'   and `resize_height` are specified, `resize_height` takes precedence (width scales
+#'   proportionally). Default is controlled by `tinytable_latex_resize_height` option.
 #' @param resize_direction Character string specifying how to resize tables that are
 #'   too wide or too narrow. Options are:
-#'   - `"down"` - Only shrink tables wider than `\\linewidth`
-#'   - `"up"` - Only expand tables narrower than `\\linewidth`
-#'   - `"both"` - Resize all tables to exactly `resize_width * \\linewidth`
+#'   - `"down"` - Only shrink tables wider than `\\linewidth` (or taller than `\\textheight` when `resize_height` is set)
+#'   - `"up"` - Only expand tables narrower than `\\linewidth` (or shorter than `\\textheight` when `resize_height` is set)
+#'   - `"both"` - Resize all tables to exactly `resize_width * \\linewidth` (or `resize_height * \\textheight`)
 #'
 #'   Default is controlled by `tinytable_latex_resize_direction` option.
 #' @param placement Character string specifying LaTeX float placement options for the
@@ -156,8 +161,10 @@ handle_latex_environment_table <- function(x, environment_table) {
 #'
 #' **Resizing:**
 #' The resize functionality uses LaTeX's `\\resizebox` command to automatically
-#' adjust table width based on content and page constraints. This is particularly
-#' useful for tables with many columns.
+#' adjust table dimensions based on content and page constraints. Use `resize_width`
+#' to control width (fraction of `\\linewidth`) or `resize_height` to control height
+#' (fraction of `\\textheight`). When `resize_height` is specified, the table is scaled
+#' to fit the target height with width adjusting proportionally.
 #'
 #' **Tabularray Options:**
 #' Inner and outer options directly control tabularray formatting. Inner options
@@ -177,6 +184,7 @@ theme_latex <- function(x,
                         rowhead = get_option("tinytable_latex_rowhead", 0L),
                         rowfoot = get_option("tinytable_latex_rowfoot", 0L),
                         resize_width = get_option("tinytable_latex_resize_width", 1),
+                        resize_height = get_option("tinytable_latex_resize_height", default = NULL),
                         resize_direction = get_option("tinytable_latex_resize_direction", default = NULL),
                         placement = get_option("tinytable_latex_placement", NULL),
                         preamble = NULL,
@@ -189,6 +197,7 @@ theme_latex <- function(x,
   assert_integerish(rowfoot, lower = 0, len = 1)
   assert_choice(environment, c("tblr", "talltblr", "longtblr", "tabular"), null.ok = TRUE)
   assert_numeric(resize_width, len = 1, lower = 0.01, upper = 1)
+  assert_numeric(resize_height, len = 1, lower = 0.01, upper = 1, null.ok = TRUE)
   assert_choice(resize_direction, c("down", "up", "both"), null.ok = TRUE)
   assert_string(placement, null.ok = TRUE)
   assert_flag(preamble, null.ok = TRUE)
@@ -239,18 +248,36 @@ theme_latex <- function(x,
     fn <- function(table) {
       tab <- table@table_string
 
-      if (resize_direction == "both") {
-        new <- sprintf("\\resizebox{%s\\linewidth}{!}{", resize_width)
-      } else if (resize_direction == "down") {
-        new <- sprintf(
-          "\\resizebox{\\ifdim\\width>\\linewidth %s\\linewidth\\else\\width\\fi}{!}{",
-          resize_width
-        )
-      } else if (resize_direction == "up") {
-        new <- sprintf(
-          "\\resizebox{\\ifdim\\width<\\linewidth %s\\linewidth\\else\\width\\fi}{!}{",
-          resize_width
-        )
+      if (!is.null(resize_height)) {
+        # Height-based resizing: scale height, width proportional
+        if (resize_direction == "both") {
+          new <- sprintf("\\resizebox{!}{%s\\textheight}{", resize_height)
+        } else if (resize_direction == "down") {
+          new <- sprintf(
+            "\\resizebox{!}{\\ifdim\\totalheight>\\textheight %s\\textheight\\else\\totalheight\\fi}{",
+            resize_height
+          )
+        } else if (resize_direction == "up") {
+          new <- sprintf(
+            "\\resizebox{!}{\\ifdim\\totalheight<\\textheight %s\\textheight\\else\\totalheight\\fi}{",
+            resize_height
+          )
+        }
+      } else {
+        # Width-based resizing: scale width, height proportional
+        if (resize_direction == "both") {
+          new <- sprintf("\\resizebox{%s\\linewidth}{!}{", resize_width)
+        } else if (resize_direction == "down") {
+          new <- sprintf(
+            "\\resizebox{\\ifdim\\width>\\linewidth %s\\linewidth\\else\\width\\fi}{!}{",
+            resize_width
+          )
+        } else if (resize_direction == "up") {
+          new <- sprintf(
+            "\\resizebox{\\ifdim\\width<\\linewidth %s\\linewidth\\else\\width\\fi}{!}{",
+            resize_width
+          )
+        }
       }
 
       reg <- "\\\\begin\\{tblr\\}|\\\\begin\\{talltblr\\}"
