@@ -144,8 +144,14 @@ style_tt_lazy <- function(
 
   out <- x
 
-  # Default line_color resolution is deferred to build time (when x@output is known).
-  # Store NULL as-is; it will be resolved in build_tt() via resolve_default_line_colors().
+  # Set default line_color if NULL
+  if (is.null(line_color) && !is.null(line)) {
+    if (identical(x@output, "html") && identical(x@html_engine, "tinytable")) {
+      line_color <- "var(--tt-line-color)"
+    } else {
+      line_color <- "black"
+    }
+  }
 
   if ("tabularray_inner" %in% ...names()) {
     x <- theme_latex(inner = ...get("tabularray_inner"))
@@ -260,7 +266,7 @@ style_tt_lazy <- function(
     settings[["fontsize"]] <- if (is.null(fontsize)) NA else as.vector(fontsize)
     settings[["align"]] <- if (is.null(alignv)) NA else align
     settings[["alignv"]] <- if (is.null(alignv)) NA else alignv
-    settings[["line_color"]] <- if (is.null(line)) NA else if (is.null(line_color)) NA_character_ else line_color
+    settings[["line_color"]] <- if (is.null(line)) NA else line_color
     settings[["line_width"]] <- if (is.null(line)) NA else line_width
     settings[["bold"]] <- if (is.null(bold)) NA else bold
     settings[["italic"]] <- if (is.null(italic)) NA else italic

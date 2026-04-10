@@ -174,15 +174,6 @@ build_tt <- function(x, output = NULL) {
     x@style_lines <- append_lines_to_rect(x@style_lines, style_row, rect)
   }
 
-  # Resolve default line colors now that x@output is known
-  if (nrow(x@style_lines) > 0) {
-    na_color <- is.na(x@style_lines$line_color)
-    if (any(na_color)) {
-      default_color <- get_default_line_color(x)
-      x@style_lines$line_color[na_color] <- default_color
-    }
-  }
-
   # Sort style_other for consistent ordering (j first, then i within each j)
   # This ensures test snapshots are deterministic
   x@style_other <- x@style_other[order(x@style_other$j, x@style_other$i), ]
