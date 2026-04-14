@@ -5,13 +5,16 @@ if (!is_local) {
 }
 
 x <- cbind(mtcars[1, ], mtcars[1, ])
-dest_dir <- tempdir()
+dest_dir <- file.path(tempdir(), "tt-pdf-test")
+dir.create(dest_dir, showWarnings = FALSE)
 dest_pdf <- file.path(dest_dir, "out.pdf")
 dest_log <- file.path(dest_dir, "somelog.log")
 
-tt(x) |>
-  theme_latex(resize_direction = "down") |>
-  save_tt(dest_pdf, overwrite = TRUE)
+suppressWarnings(
+  tt(x) |>
+    theme_latex(resize_direction = "down") |>
+    save_tt(dest_pdf, overwrite = TRUE)
+)
 
 # logfiles are automatically deleted
 expect_equal(
@@ -22,9 +25,11 @@ expect_equal(
 # logfiles that exist before call to tinytex are left untouched
 cat("some content", file = dest_log)
 
-tt(x) |>
-  theme_latex(resize_direction = "down") |>
-  save_tt(dest_pdf, overwrite = TRUE)
+suppressWarnings(
+  tt(x) |>
+    theme_latex(resize_direction = "down") |>
+    save_tt(dest_pdf, overwrite = TRUE)
+)
 
 expect_true("somelog.log" %in% list.files(dest_dir))
 
