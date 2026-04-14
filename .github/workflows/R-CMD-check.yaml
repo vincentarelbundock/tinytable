@@ -47,10 +47,27 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::rcmdcheck
+          extra-packages: any::rcmdcheck, any::tinytest, any::pkgload
           needs: check
 
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
+          args: 'c("--no-manual","--no-tests","--as-cran")'
           build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+
+      - name: Install scrutin (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/vincentarelbundock/scrutin/releases/latest/download/scrutin-installer.sh | sh
+          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+
+      - name: Install scrutin (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          irm https://github.com/vincentarelbundock/scrutin/releases/latest/download/scrutin-installer.ps1 | iex
+          Add-Content -Path $env:GITHUB_PATH -Value "$env:USERPROFILE\.cargo\bin"
+
+      - name: Run tests with scrutin
+        run: scrutin -r github --set run.tool=tinytest
