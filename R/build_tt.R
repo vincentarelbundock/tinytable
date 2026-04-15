@@ -181,7 +181,7 @@ build_tt <- function(x, output = NULL) {
   # draw the table
   x <- build_eval(x)
 
-  # groups require the table to be drawn first, expecially group_tabularray_col() and friends
+  # groups require the table to be drawn first, especially group_tabularray_col() and friends
   # Handle column groups from @group_data_j
   if (nrow(x@group_data_j) > 0) {
     # Calculate ihead for the group headers - start from -1 for the top header row

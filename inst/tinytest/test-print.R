@@ -23,7 +23,7 @@ expect_equivalent(x@output, "typst")
 options("tinytable_print_output" = NULL)
 
 # print(output = "knitr"): returns knitr::include_graphics() with a valid PNG
-if (requiet("webshot2") && requiet("knitr")) {
+if (is_local && requiet("webshot2") && requiet("knitr")) {
   tab_styled <- tt(mtcars[1:4, 1:5]) |> style_tt(background = "lightblue", i = 1:2)
   out <- print(tab_styled, output = "knitr")
   expect_inherits(out, "knit_asis")
@@ -33,7 +33,7 @@ if (requiet("webshot2") && requiet("knitr")) {
 }
 
 # print(output = "raster"): draws on graphics device
-if (requiet("webshot2") && requiet("png")) {
+if (is_local && requiet("webshot2") && requiet("png")) {
   tab_styled <- tt(mtcars[1:4, 1:5]) |> style_tt(background = "lightblue", i = 1:2)
   tmp_plot <- tempfile(fileext = ".png")
   grDevices::png(tmp_plot, width = 800, height = 400)
