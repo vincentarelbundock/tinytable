@@ -30,8 +30,8 @@ install: document  ## install
 installdep: document  ## install with Suggests
 	Rscript -e "devtools::install(dependencies = TRUE)"
 
-test: install ## test
-	Rscript -e "library(tinytable);tinytest::run_test_dir()"
+test: ## test
+	scrutin -r plain
 
 website: ## render vignettes and website
 	rm -rf _quarto
