@@ -191,3 +191,28 @@ vlines:
 | `fg`       | rule color name                                               | None          |
 | `abovepos` | crossing or trimming position at the above side               | `0`           |
 | `belowpos` | crossing or trimming position at the below side               | `0`           |
+
+## Notes on localisation of multipage tables
+
+When you use `theme_latex(multipage = TRUE)` and a table breaks across multiple pages, `tabularray` will automatically insert continuation banners to indicate that the table is continuing on the next page. By default, these banners are in English: “Continued on next page” at the bottom of a page and “Continued” at the top of the next. If you want to change these phrases, you can use `\DeclareTblrTemplate` to override the default templates for `contfoot-text` and `conthead-text`. For example, if you are writing a document in Danish, you might want to use the following declarations:
+
+```latex
+\DeclareTblrTemplate{contfoot-text}{default}{Fortsættes på næste side}
+\DeclareTblrTemplate{conthead-text}{default}{(Fortsat)}
+```
+
+The first declaration sets the footnote-style text when the table continues later; the second sets the head text on continuation pages. Replace the Danish examples with wording appropriate for your document.
+
+**Quarto** (PDF): add the declarations via `include-in-header`, for example:
+
+````yaml
+---
+title: "Example"
+format:
+  pdf:
+    include-in-header:
+      - text: |
+          \DeclareTblrTemplate{contfoot-text}{default}{Fortsættes på næste side}
+          \DeclareTblrTemplate{conthead-text}{default}{(Fortsat)}
+---
+````
