@@ -2,6 +2,7 @@
 
 ## Development
 
+* RStudio inline display now works for unsaved R Markdown and Quarto documents. Thanks to @gglee4ai for report #650.
 * `style_tt()`, `format_tt()`, and `plot_tt()` gain an `output` argument to apply styling conditionally based on the output format (e.g., `output = "typst"`). Thanks to @andrewheiss for the suggestion in Issue #647.
 * `print(output = "knitr")`: new output format that renders tables as PNG screenshots via `webshot2` and returns them through `knitr::include_graphics()`. Useful for embedding styled tables in Rmarkdown or Quarto documents.
 * `print(output = "raster")`: new output format that renders tables as PNG screenshots and draws them on the graphics device via `grid::grid.raster()`. Useful for embedding styled tables in pkgdown examples. Requires the `webshot2` and `png` packages.

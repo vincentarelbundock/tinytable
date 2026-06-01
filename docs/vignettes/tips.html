@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.8.26">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -75,10 +75,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-f16cd255ecb5ae9510f6a112aa2ee9ab.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ac1a48248070c8bfbae4244efd7728e4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-8498537ff65c2aaf2c3c0819ff511eee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d615d97255b200630a23498c3b1f6ee7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -225,10 +225,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
-      <a href="../index.html" class="sidebar-logo-link">
-      </a>
-      </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
@@ -574,21 +570,18 @@ MathJax = {
 <p>The code below produces a regression table with group labels but misaligned horizontal rule.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#! warning: false</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'modelsummary' was built under R version 4.5.2</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="fu">factor</span>(cyl) <span class="sc">+</span> hp <span class="sc">+</span> wt <span class="sc">-</span> <span class="dv">1</span>, <span class="at">data =</span> mtcars)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(mod) <span class="sc">|&gt;</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_tt</span>(</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">i =</span> <span class="fu">list</span>(</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Cylinders"</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Others"</span> <span class="ot">=</span> <span class="dv">7</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modelsummary)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tinytable)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> <span class="fu">factor</span>(cyl) <span class="sc">+</span> hp <span class="sc">+</span> wt <span class="sc">-</span> <span class="dv">1</span>, <span class="at">data =</span> mtcars)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(mod) <span class="sc">|&gt;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_tt</span>(</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">i =</span> <span class="fu">list</span>(</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Cylinders"</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Others"</span> <span class="ot">=</span> <span class="dv">7</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -596,27 +589,27 @@ MathJax = {
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_x62c3sub6bzm20tu3xyu = TinyTable.createTableFunctions("tinytable_x62c3sub6bzm20tu3xyu");
+      const tableFns_2xa7vmoq7dqs9s9jt9e1 = TinyTable.createTableFunctions("tinytable_2xa7vmoq7dqs9s9jt9e1");
       // tinytable span after
-      window.addEventListener('load', function () { tableFns_x62c3sub6bzm20tu3xyu.spanCell(8, 1, 1, 2) })
-      window.addEventListener('load', function () { tableFns_x62c3sub6bzm20tu3xyu.spanCell(1, 1, 1, 2) })
+      window.addEventListener('load', function () { tableFns_2xa7vmoq7dqs9s9jt9e1.spanCell(8, 1, 1, 2) })
+      window.addEventListener('load', function () { tableFns_2xa7vmoq7dqs9s9jt9e1.spanCell(1, 1, 1, 2) })
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '19', j: 2 } ], css_id: 'tinytable_css_zt5dhlwbiokyrxtneows',}, 
-          { positions: [ { i: '10', j: 2 } ], css_id: 'tinytable_css_mfo28epf8ftl1grc7pyi',}, 
-          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '15', j: 2 }, { i: '16', j: 2 }, { i: '17', j: 2 }, { i: '18', j: 2 } ], css_id: 'tinytable_css_i64a5fuuogrk3daaxm9r',}, 
-          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_63iq27momsk6lz4n0npw',}, 
-          { positions: [ { i: '19', j: 1 } ], css_id: 'tinytable_css_hw4u7soa9db1ppfptdgz',}, 
-          { positions: [ { i: '10', j: 1 } ], css_id: 'tinytable_css_n431f2kbvhtjfxrylrel',}, 
-          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 }, { i: '15', j: 1 }, { i: '16', j: 1 }, { i: '17', j: 1 }, { i: '18', j: 1 } ], css_id: 'tinytable_css_efrbuadmtkr07smv5ex0',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_c4wb7mqgg583bx9l9sxa',}, 
+          { positions: [ { i: '19', j: 2 } ], css_id: 'tinytable_css_gz5u4yu5o5id9y4ww4yy',}, 
+          { positions: [ { i: '10', j: 2 } ], css_id: 'tinytable_css_w4pcfq4pqvjrbaj5d486',}, 
+          { positions: [ { i: '1', j: 2 }, { i: '2', j: 2 }, { i: '3', j: 2 }, { i: '4', j: 2 }, { i: '5', j: 2 }, { i: '6', j: 2 }, { i: '7', j: 2 }, { i: '8', j: 2 }, { i: '9', j: 2 }, { i: '11', j: 2 }, { i: '12', j: 2 }, { i: '13', j: 2 }, { i: '14', j: 2 }, { i: '15', j: 2 }, { i: '16', j: 2 }, { i: '17', j: 2 }, { i: '18', j: 2 } ], css_id: 'tinytable_css_188yk35tucnmyjijf5ip',}, 
+          { positions: [ { i: '0', j: 2 } ], css_id: 'tinytable_css_8v56c2cchfuos1cb7tek',}, 
+          { positions: [ { i: '19', j: 1 } ], css_id: 'tinytable_css_clqir8vtzuo3iqfk0m71',}, 
+          { positions: [ { i: '10', j: 1 } ], css_id: 'tinytable_css_oypuz50f61ssr720bhwb',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '2', j: 1 }, { i: '3', j: 1 }, { i: '4', j: 1 }, { i: '5', j: 1 }, { i: '6', j: 1 }, { i: '7', j: 1 }, { i: '8', j: 1 }, { i: '9', j: 1 }, { i: '11', j: 1 }, { i: '12', j: 1 }, { i: '13', j: 1 }, { i: '14', j: 1 }, { i: '15', j: 1 }, { i: '16', j: 1 }, { i: '17', j: 1 }, { i: '18', j: 1 } ], css_id: 'tinytable_css_quzdpppfi26l7e161sdw',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_10zaa9spqtyydumwd14d',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_x62c3sub6bzm20tu3xyu.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_2xa7vmoq7dqs9s9jt9e1.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -625,17 +618,17 @@ MathJax = {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_x62c3sub6bzm20tu3xyu td.tinytable_css_zt5dhlwbiokyrxtneows, #tinytable_x62c3sub6bzm20tu3xyu th.tinytable_css_zt5dhlwbiokyrxtneows {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_x62c3sub6bzm20tu3xyu td.tinytable_css_mfo28epf8ftl1grc7pyi, #tinytable_x62c3sub6bzm20tu3xyu th.tinytable_css_mfo28epf8ftl1grc7pyi {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_x62c3sub6bzm20tu3xyu td.tinytable_css_i64a5fuuogrk3daaxm9r, #tinytable_x62c3sub6bzm20tu3xyu th.tinytable_css_i64a5fuuogrk3daaxm9r { text-align: center }
-    #tinytable_x62c3sub6bzm20tu3xyu td.tinytable_css_63iq27momsk6lz4n0npw, #tinytable_x62c3sub6bzm20tu3xyu th.tinytable_css_63iq27momsk6lz4n0npw {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
-    #tinytable_x62c3sub6bzm20tu3xyu td.tinytable_css_hw4u7soa9db1ppfptdgz, #tinytable_x62c3sub6bzm20tu3xyu th.tinytable_css_hw4u7soa9db1ppfptdgz {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_x62c3sub6bzm20tu3xyu td.tinytable_css_n431f2kbvhtjfxrylrel, #tinytable_x62c3sub6bzm20tu3xyu th.tinytable_css_n431f2kbvhtjfxrylrel {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
-    #tinytable_x62c3sub6bzm20tu3xyu td.tinytable_css_efrbuadmtkr07smv5ex0, #tinytable_x62c3sub6bzm20tu3xyu th.tinytable_css_efrbuadmtkr07smv5ex0 { text-align: left }
-    #tinytable_x62c3sub6bzm20tu3xyu td.tinytable_css_c4wb7mqgg583bx9l9sxa, #tinytable_x62c3sub6bzm20tu3xyu th.tinytable_css_c4wb7mqgg583bx9l9sxa {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_2xa7vmoq7dqs9s9jt9e1 td.tinytable_css_gz5u4yu5o5id9y4ww4yy, #tinytable_2xa7vmoq7dqs9s9jt9e1 th.tinytable_css_gz5u4yu5o5id9y4ww4yy {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_2xa7vmoq7dqs9s9jt9e1 td.tinytable_css_w4pcfq4pqvjrbaj5d486, #tinytable_2xa7vmoq7dqs9s9jt9e1 th.tinytable_css_w4pcfq4pqvjrbaj5d486 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_2xa7vmoq7dqs9s9jt9e1 td.tinytable_css_188yk35tucnmyjijf5ip, #tinytable_2xa7vmoq7dqs9s9jt9e1 th.tinytable_css_188yk35tucnmyjijf5ip { text-align: center }
+    #tinytable_2xa7vmoq7dqs9s9jt9e1 td.tinytable_css_8v56c2cchfuos1cb7tek, #tinytable_2xa7vmoq7dqs9s9jt9e1 th.tinytable_css_8v56c2cchfuos1cb7tek {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: center }
+    #tinytable_2xa7vmoq7dqs9s9jt9e1 td.tinytable_css_clqir8vtzuo3iqfk0m71, #tinytable_2xa7vmoq7dqs9s9jt9e1 th.tinytable_css_clqir8vtzuo3iqfk0m71 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_2xa7vmoq7dqs9s9jt9e1 td.tinytable_css_oypuz50f61ssr720bhwb, #tinytable_2xa7vmoq7dqs9s9jt9e1 th.tinytable_css_oypuz50f61ssr720bhwb {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
+    #tinytable_2xa7vmoq7dqs9s9jt9e1 td.tinytable_css_quzdpppfi26l7e161sdw, #tinytable_2xa7vmoq7dqs9s9jt9e1 th.tinytable_css_quzdpppfi26l7e161sdw { text-align: left }
+    #tinytable_2xa7vmoq7dqs9s9jt9e1 td.tinytable_css_10zaa9spqtyydumwd14d, #tinytable_2xa7vmoq7dqs9s9jt9e1 th.tinytable_css_10zaa9spqtyydumwd14d {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%; ; text-align: left }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_x62c3sub6bzm20tu3xyu" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_2xa7vmoq7dqs9s9jt9e1" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -729,15 +722,15 @@ MathJax = {
 </div>
 <p>To fix this, we can strip the lines and add them back in the correct position.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(mod) <span class="sc">|&gt;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_empty</span>() <span class="sc">|&gt;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_tt</span>(</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">i =</span> <span class="fu">list</span>(</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Cylinders"</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Others"</span> <span class="ot">=</span> <span class="dv">7</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">style_tt</span>(<span class="at">i =</span> <span class="dv">12</span>, <span class="at">line =</span> <span class="st">"b"</span>, <span class="at">line_width =</span> .<span class="dv">05</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">modelsummary</span>(mod) <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_empty</span>() <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_tt</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">i =</span> <span class="fu">list</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Cylinders"</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">"Others"</span> <span class="ot">=</span> <span class="dv">7</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">style_tt</span>(<span class="at">i =</span> <span class="dv">12</span>, <span class="at">line =</span> <span class="st">"b"</span>, <span class="at">line_width =</span> .<span class="dv">05</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <!-- preamble start -->
 
@@ -745,20 +738,20 @@ MathJax = {
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_63qe1nu3aw9ywywug1i9 = TinyTable.createTableFunctions("tinytable_63qe1nu3aw9ywywug1i9");
+      const tableFns_slndiuqgpu82txwdnacc = TinyTable.createTableFunctions("tinytable_slndiuqgpu82txwdnacc");
       // tinytable span after
-      window.addEventListener('load', function () { tableFns_63qe1nu3aw9ywywug1i9.spanCell(8, 1, 1, 2) })
-      window.addEventListener('load', function () { tableFns_63qe1nu3aw9ywywug1i9.spanCell(1, 1, 1, 2) })
+      window.addEventListener('load', function () { tableFns_slndiuqgpu82txwdnacc.spanCell(8, 1, 1, 2) })
+      window.addEventListener('load', function () { tableFns_slndiuqgpu82txwdnacc.spanCell(1, 1, 1, 2) })
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '12', j: 1 }, { i: '12', j: 2 } ], css_id: 'tinytable_css_sva0oe7k1zu7szazxwy0',}, 
+          { positions: [ { i: '12', j: 1 }, { i: '12', j: 2 } ], css_id: 'tinytable_css_ddvot6t6rbya0abr0ihh',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_63qe1nu3aw9ywywug1i9.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_slndiuqgpu82txwdnacc.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -767,10 +760,10 @@ MathJax = {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_63qe1nu3aw9ywywug1i9 td.tinytable_css_sva0oe7k1zu7szazxwy0, #tinytable_63qe1nu3aw9ywywug1i9 th.tinytable_css_sva0oe7k1zu7szazxwy0 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_slndiuqgpu82txwdnacc td.tinytable_css_ddvot6t6rbya0abr0ihh, #tinytable_slndiuqgpu82txwdnacc th.tinytable_css_ddvot6t6rbya0abr0ihh {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_63qe1nu3aw9ywywug1i9" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_slndiuqgpu82txwdnacc" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>

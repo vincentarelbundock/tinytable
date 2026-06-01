@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.8.26">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -73,10 +73,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-f16cd255ecb5ae9510f6a112aa2ee9ab.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-ac1a48248070c8bfbae4244efd7728e4.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-8498537ff65c2aaf2c3c0819ff511eee.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d615d97255b200630a23498c3b1f6ee7.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -223,10 +223,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header">
-      <a href="../index.html" class="sidebar-logo-link">
-      </a>
-      </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item sidebar-item-section">
@@ -527,6 +523,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#preamble" id="toc-preamble" class="nav-link" data-scroll-target="#preamble">Preamble</a></li>
   <li><a href="#introduction-to-tabularray" id="toc-introduction-to-tabularray" class="nav-link" data-scroll-target="#introduction-to-tabularray">Introduction to <code>tabularray</code></a></li>
   <li><a href="#tabularray-keys" id="toc-tabularray-keys" class="nav-link" data-scroll-target="#tabularray-keys"><code>tabularray</code> keys</a></li>
+  <li><a href="#notes-on-localisation-of-multipage-tables" id="toc-notes-on-localisation-of-multipage-tables" class="nav-link" data-scroll-target="#notes-on-localisation-of-multipage-tables">Notes on localisation of multipage tables</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -1061,6 +1058,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tr>
 </tbody>
 </table>
+</section>
+<section id="notes-on-localisation-of-multipage-tables" class="level2">
+<h2 class="anchored" data-anchor-id="notes-on-localisation-of-multipage-tables">Notes on localisation of multipage tables</h2>
+<p>When you use <code>theme_latex(multipage = TRUE)</code> and a table breaks across multiple pages, <code>tabularray</code> will automatically insert continuation banners to indicate that the table is continuing on the next page. By default, these banners are in English: “Continued on next page” at the bottom of a page and “Continued” at the top of the next. If you want to change these phrases, you can use <code>\DeclareTblrTemplate</code> to override the default templates for <code>contfoot-text</code> and <code>conthead-text</code>. For example, if you are writing a document in Danish, you might want to use the following declarations:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode latex code-with-copy"><code class="sourceCode latex"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">\DeclareTblrTemplate</span>{contfoot-text}{default}{Fortsættes på næste side}</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">\DeclareTblrTemplate</span>{conthead-text}{default}{(Fortsat)}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The first declaration sets the footnote-style text when the table continues later; the second sets the head text on continuation pages. Replace the Danish examples with wording appropriate for your document.</p>
+<p><strong>Quarto</strong> (PDF): add the declarations via <code>include-in-header</code>, for example:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">"Example"</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">format</span><span class="kw">:</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">pdf</span><span class="kw">:</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">include-in-header</span><span class="kw">:</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="kw">      - </span><span class="fu">text</span><span class="kw">:</span><span class="at"> </span><span class="ch">|</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>          \DeclareTblrTemplate{contfoot-text}{default}{Fortsættes på næste side}</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>          \DeclareTblrTemplate{conthead-text}{default}{(Fortsat)}</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 </section>
