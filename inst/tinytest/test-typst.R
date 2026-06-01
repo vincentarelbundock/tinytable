@@ -184,6 +184,26 @@ tab <- df |>
 expect_true(is.character(tab) && nchar(tab) > 0)
 
 
+# Typst resizing follows theme_latex() API
+tab <- tt(mtcars[1:4, 1:5]) |>
+  theme_typst(resize_width = 0.8, resize_direction = "down") |>
+  save_tt("typst")
+expect_true(grepl("#layout(size => {", tab, fixed = TRUE))
+expect_true(grepl("let target-width = size.width * 0.8", tab, fixed = TRUE))
+expect_true(grepl("if body-size.width > target-width", tab, fixed = TRUE))
+expect_true(grepl("scale(x: factor, y: factor, reflow: true, body)", tab, fixed = TRUE))
+
+tab <- tt(mtcars[1:4, 1:5]) |>
+  theme_typst(resize_height = 0.6, resize_direction = "up") |>
+  save_tt("typst")
+expect_true(grepl("let target-height = size.height * 0.6", tab, fixed = TRUE))
+expect_true(grepl("if body-size.height < target-height", tab, fixed = TRUE))
+
+expect_error(
+  theme_typst(tt(mtcars[1:4, 1:5]), resize_direction = "sideways"),
+  "resize_direction"
+)
+
 
 # Issue #592
 table <- data.frame(

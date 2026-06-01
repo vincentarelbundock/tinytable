@@ -10,6 +10,9 @@ theme_typst(
   figure = get_option("tinytable_typst_figure", default = TRUE),
   portable = get_option("tinytable_typst_portable", default = NULL),
   align_figure = get_option("tinytable_typst_align_figure", NULL),
+  resize_width = get_option("tinytable_typst_resize_width", 1),
+  resize_height = get_option("tinytable_typst_resize_height", default = NULL),
+  resize_direction = get_option("tinytable_typst_resize_direction", default = NULL),
   ...
 )
 }
@@ -24,6 +27,18 @@ theme_typst(
 
 \item{align_figure}{Character string indicating horizontal alignment: "l", "c", or "r".
 Defaults to \code{get_option("tinytable_theme_placement_horizontal", NULL)}. When NULL, uses default center alignment.}
+
+\item{resize_width}{Numeric value between 0.01 and 1.0 specifying the target width
+as a fraction of the available Typst layout width when resize_direction is
+specified.}
+
+\item{resize_height}{Numeric value between 0.01 and 1.0 specifying the target
+height as a fraction of the available Typst layout height. When specified,
+height controls the scaling and width scales proportionally.}
+
+\item{resize_direction}{Character string specifying how to resize tables. Options
+are: "down" to shrink oversized tables, "up" to expand undersized tables,
+and "both" to always scale to the target size.}
 
 \item{...}{Additional arguments.}
 }
