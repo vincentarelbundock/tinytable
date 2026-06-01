@@ -48,6 +48,7 @@ setClass(
     output_dir = "character",
     placement = "NULLorCharacter",
     html_portable = "logical",
+    typst_portable = "logical",
     html_engine = "character",
     latex_preamble = "logical",
     latex_engine = "character",
@@ -142,6 +143,7 @@ setMethod(
     .Object@html_class <- "tinytable"
     .Object@html_engine <- "tinytable"
     .Object@html_portable <- FALSE
+    .Object@typst_portable <- FALSE
     .Object@index_body <- numeric(0)
     .Object@latex_engine <- "xelatex"
     .Object@latex_preamble <- TRUE

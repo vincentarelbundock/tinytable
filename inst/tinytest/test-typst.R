@@ -85,6 +85,27 @@ colnames(k) <- NULL
 k <- tt(k)
 expect_snapshot_print(k, label = "typst-no_headers.typ")
 
+# Portable images
+if (requiet("base64enc")) {
+  img <- tempfile(fileext = ".png")
+  grDevices::png(img, width = 20, height = 20)
+  graphics::par(mar = c(0, 0, 0, 0))
+  graphics::plot.new()
+  graphics::rect(0, 0, 1, 1, col = "black", border = NA)
+  grDevices::dev.off()
+
+  tab <- tt(data.frame(x = "")) |>
+    plot_tt(j = 1, images = img) |>
+    theme_typst(portable = TRUE) |>
+    save_tt("typst")
+
+  expect_true(grepl("#image(bytes(", tab, fixed = TRUE))
+  expect_true(grepl("data:image/png;base64,", tab, fixed = TRUE))
+  expect_false(grepl(img, tab, fixed = TRUE))
+
+  unlink(img)
+}
+
 # Group rows
 dat <- mtcars[1:9, 1:8]
 dat <- tt(dat) |>

@@ -231,11 +231,12 @@ plot_tt_lazy <- function(
   }
 
   is_html <- isTRUE(x@output %in% c("html", "bootstrap", "tabulator"))
+  is_typst_portable <- isTRUE(x@output == "typst" && x@typst_portable)
   is_quarto <- isTRUE(check_dependency("knitr")) && !is.null(knitr::pandoc_to())
 
   # paths are tricky in Quarto HTML (website vs single file)
   is_portable <- is_html && (isTRUE(x@html_portable) || is_quarto)
-  if (is_portable) assert_dependency("base64enc")
+  if (is_portable || is_typst_portable) assert_dependency("base64enc")
 
   # Normalize user-provided image paths to full paths
   if (!is.null(images)) {
@@ -255,7 +256,7 @@ plot_tt_lazy <- function(
     images <- NULL
 
     # path_assets directory stores dynamically generated plots
-    if (is_portable) {
+    if (is_portable || is_typst_portable) {
       path_assets <- tempdir()
       # quarto and LaTeX require relative paths from the project folder
     } else if (is_quarto || isTRUE(x@output == "latex")) {
@@ -354,8 +355,12 @@ plot_tt_lazy <- function(
     cell <- "![](%s){ height=%s }"
     cell <- base::sprintf(cell, images, format_markup_num(height * 16))
   } else if (isTRUE(x@output == "typst")) {
-    cell <- '#image("%s", height: %sem)'
-    cell <- base::sprintf(cell, images, format_markup_num(height))
+    if (is_typst_portable) {
+      cell <- encode_typst(images, height, width_plot, height_plot)
+    } else {
+      cell <- '#image("%s", height: %sem)'
+      cell <- base::sprintf(cell, images, format_markup_num(height))
+    }
   } else if (isTRUE(x@output == "dataframe")) {
     cell <- "%s"
     cell <- base::sprintf(cell, images)

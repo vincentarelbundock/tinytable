@@ -3,6 +3,7 @@
 #' @param x A `tinytable` object.
 #' @param multipage Logical. When `TRUE`, emits a Typst show rule that allows figures to break across pages. When `FALSE` (default), tables are kept on a single page. When `NULL`, no show rule is emitted.
 #' @param figure Logical, whether to wrap the table in a Typst figure environment and block.
+#' @param portable Logical. Sets whether to create portable Typst output with base64-encoded local images embedded directly in the Typst code. Remote image URLs are not downloaded.
 #' @param align_figure Character string indicating horizontal alignment: "l", "c", or "r".
 #'   Defaults to `get_option("tinytable_theme_placement_horizontal", NULL)`. When NULL, uses default center alignment.
 #' @param ... Additional arguments.
@@ -11,10 +12,16 @@
 theme_typst <- function(x,
                         multipage = get_option("tinytable_typst_multipage", default = FALSE),
                         figure = get_option("tinytable_typst_figure", default = TRUE),
+                        portable = get_option("tinytable_typst_portable", default = NULL),
                         align_figure = get_option("tinytable_typst_align_figure", NULL), ...) {
   assert_flag(multipage, null.ok = TRUE)
   assert_flag(figure)
+  assert_flag(portable, null.ok = TRUE)
   assert_choice(align_figure, c("l", "c", "r"), null.ok = TRUE)
+
+  if (!is.null(portable)) {
+    x@typst_portable <- portable
+  }
 
   fn <- function(table) {
     tab <- table@table_string

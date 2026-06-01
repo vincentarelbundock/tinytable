@@ -8,6 +8,7 @@ theme_typst(
   x,
   multipage = get_option("tinytable_typst_multipage", default = FALSE),
   figure = get_option("tinytable_typst_figure", default = TRUE),
+  portable = get_option("tinytable_typst_portable", default = NULL),
   align_figure = get_option("tinytable_typst_align_figure", NULL),
   ...
 )
@@ -18,6 +19,8 @@ theme_typst(
 \item{multipage}{Logical. When \code{TRUE}, emits a Typst show rule that allows figures to break across pages. When \code{FALSE} (default), tables are kept on a single page. When \code{NULL}, no show rule is emitted.}
 
 \item{figure}{Logical, whether to wrap the table in a Typst figure environment and block.}
+
+\item{portable}{Logical. Sets whether to create portable Typst output with base64-encoded local images embedded directly in the Typst code. Remote image URLs are not downloaded.}
 
 \item{align_figure}{Character string indicating horizontal alignment: "l", "c", or "r".
 Defaults to \code{get_option("tinytable_theme_placement_horizontal", NULL)}. When NULL, uses default center alignment.}

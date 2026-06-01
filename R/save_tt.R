@@ -6,8 +6,8 @@
 #' @param output String or file path.
 #' + If `output` is "markdown", "latex", "html", "typst", or "tabulator", the table is returned in a string as an `R` object.
 #' + If `output` is a valid file path, the table is saved to file. The supported extensions are: .docx, .html, .png, .pdf, .tex, .typ, and .md (with aliases .txt, .Rmd and .qmd).
-#' + If the global option `tinytable_html_portable` is `TRUE`,
-#' the images are included in the HTML as base64 encoded string instead of link to a local file.
+#' + If `theme_html(portable = TRUE)` or `theme_typst(portable = TRUE)` is used,
+#' images are included as base64 encoded strings instead of links to local files.
 #' @param overwrite A logical value indicating whether to overwrite an existing file.
 #' @return A string with the table when `output` is a format, and the file path when `output` is a valid path.
 #' @template dependencies

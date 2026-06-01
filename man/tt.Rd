@@ -83,7 +83,7 @@ The \code{tt} function renders a table in different formats with various styling
 \itemize{
 \item \code{.pdf} output requires a full LaTeX installation on the local computer.
 \item \code{.png} output requires the \code{webshot2} package.
-\item \code{.html} self-contained files require the \code{base64enc} package.
+\item \code{.html} self-contained files and \code{theme_typst(portable = TRUE)} require the \code{base64enc} package.
 }
 }
 

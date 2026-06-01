@@ -24,8 +24,8 @@ tt_save(
 \itemize{
 \item If \code{output} is "markdown", "latex", "html", "typst", or "tabulator", the table is returned in a string as an \code{R} object.
 \item If \code{output} is a valid file path, the table is saved to file. The supported extensions are: .docx, .html, .png, .pdf, .tex, .typ, and .md (with aliases .txt, .Rmd and .qmd).
-\item If the global option \code{tinytable_html_portable} is \code{TRUE},
-the images are included in the HTML as base64 encoded string instead of link to a local file.
+\item If \code{theme_html(portable = TRUE)} or \code{theme_typst(portable = TRUE)} is used,
+images are included as base64 encoded strings instead of links to local files.
 }}
 
 \item{overwrite}{A logical value indicating whether to overwrite an existing file.}
@@ -41,7 +41,7 @@ This function saves an object of class tinytable to a specified file and format,
 \itemize{
 \item \code{.pdf} output requires a full LaTeX installation on the local computer.
 \item \code{.png} output requires the \code{webshot2} package.
-\item \code{.html} self-contained files require the \code{base64enc} package.
+\item \code{.html} self-contained files and \code{theme_typst(portable = TRUE)} require the \code{base64enc} package.
 }
 }
 

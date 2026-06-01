@@ -2,6 +2,7 @@
 
 ## Development
 
+* `theme_typst(portable = TRUE)` embeds local images directly in generated Typst code using base64 data, avoiding external image paths. Thanks to @jnnkB for the suggestion in Issue #652.
 * RStudio inline display now works for unsaved R Markdown and Quarto documents. Thanks to @gglee4ai for report #650.
 * `style_tt()`, `format_tt()`, and `plot_tt()` gain an `output` argument to apply styling conditionally based on the output format (e.g., `output = "typst"`). Thanks to @andrewheiss for the suggestion in Issue #647.
 * `print(output = "knitr")`: new output format that renders tables as PNG screenshots via `webshot2` and returns them through `knitr::include_graphics()`. Useful for embedding styled tables in Rmarkdown or Quarto documents.
