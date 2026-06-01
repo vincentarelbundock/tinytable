@@ -91,9 +91,9 @@ theme_revealjs <- function(
   fontsize = get_option("tinytable_revealjs_fontsize", default = 0.8),
   fontsize_caption = get_option("tinytable_revealjs_fontsize_caption", default = 1)) {
   if (css == "light") {
-    css <- sprintf(css_light, fontsize, fontsize_caption)
+    css <- sprintf(css_light, format_markup_num(fontsize), fontsize_caption)
   } else if (css == "dark") {
-    css <- sprintf(css_dark, fontsize, fontsize_caption)
+    css <- sprintf(css_dark, format_markup_num(fontsize), fontsize_caption)
   }
   x <- theme_html(x, engine = "tinytable", css_rule = css)
   return(x)

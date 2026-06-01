@@ -333,11 +333,11 @@ plot_tt_lazy <- function(
 
   if (isTRUE(x@output == "latex")) {
     cell <- "\\includegraphics[height=%sem]{%s}"
-    cell <- base::sprintf(cell, height, images)
+    cell <- base::sprintf(cell, format_markup_num(height), images)
   } else if (is_portable) {
     http <- grepl("^http", trimws(images))
     images[!http] <- encode(images[!http])
-    cell <- base::sprintf('<img src="%s" style="height: %sem;">', images, height)
+    cell <- base::sprintf('<img src="%s" style="height: %sem;">', images, format_markup_num(height))
   } else if (is_html) {
     # Convert relative paths to absolute paths for save_tt/print
     http <- grepl("^http", trimws(images))
@@ -349,13 +349,13 @@ plot_tt_lazy <- function(
         }
       }
     }
-    cell <- base::sprintf('<img src="%s" style="height: %sem;">', images, height)
+    cell <- base::sprintf('<img src="%s" style="height: %sem;">', images, format_markup_num(height))
   } else if (isTRUE(x@output == "markdown")) {
     cell <- "![](%s){ height=%s }"
-    cell <- base::sprintf(cell, images, height * 16)
+    cell <- base::sprintf(cell, images, format_markup_num(height * 16))
   } else if (isTRUE(x@output == "typst")) {
     cell <- '#image("%s", height: %sem)'
-    cell <- base::sprintf(cell, images, height)
+    cell <- base::sprintf(cell, images, format_markup_num(height))
   } else if (isTRUE(x@output == "dataframe")) {
     cell <- "%s"
     cell <- base::sprintf(cell, images)

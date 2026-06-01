@@ -195,7 +195,7 @@ typst_hlines <- function(x, lin) {
     line <- k$line[1]
     color <- k$line_color_mapped[1]
     width <- if (is.na(k$line_width[1])) 0.1 else k$line_width[1]
-    width <- sprintf("%sem", width)
+    width <- format_markup_unit(width, "em")
     out <- ""
 
     # Generate hlines for each chunk
@@ -326,7 +326,7 @@ process_typst_other_styles <- function(x, other) {
       css[row] <- typst_insert_field(css[row], "background", bg_value)
     }
     if (!is.na(other[row, "fontsize"])) {
-      css[row] <- typst_insert_field(css[row], "fontsize", paste0(other[row, "fontsize"], "em"))
+      css[row] <- typst_insert_field(css[row], "fontsize", format_markup_unit(other[row, "fontsize"], "em"))
     }
     # Handle alignment (combining horizontal and vertical if both present)
     align_h <- other[row, "align"]
@@ -339,7 +339,7 @@ process_typst_other_styles <- function(x, other) {
       css[row] <- typst_insert_field(css[row], "align", combined_align)
     }
     if (!is.na(other[row, "indent"]) && other[row, "indent"] > 0) {
-      css[row] <- typst_insert_field(css[row], "indent", paste0(other[row, "indent"], "em"))
+      css[row] <- typst_insert_field(css[row], "indent", format_markup_unit(other[row, "indent"], "em"))
     }
   }
 
@@ -406,7 +406,7 @@ typst_vlines <- function(x, lin) {
     line <- k$line[1]
     color <- k$line_color_mapped[1]
     width <- if (is.na(k$line_width[1])) 0.1 else k$line_width[1]
-    width <- sprintf("%sem", width)
+    width <- format_markup_unit(width, "em")
     out <- ""
     if (grepl("l", line)) {
       tmp <- "table.vline(x: %s, start: %s, end: %s, stroke: %s + %s),"

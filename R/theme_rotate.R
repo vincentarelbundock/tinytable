@@ -45,7 +45,7 @@ theme_rotate <- function(
 
 rotate_latex_table <- function(x, angle) {
   fn <- function(table) {
-    rot <- sprintf("\\begin{table}\n\\rotatebox{%s}{", angle)
+    rot <- sprintf("\\begin{table}\n\\rotatebox{%s}{", format_markup_num(angle))
     table@table_string <- sub(
       "\\begin{table}",
       rot,
@@ -65,7 +65,7 @@ rotate_latex_table <- function(x, angle) {
 
 rotate_typst_table <- function(x, angle) {
   fn <- function(table) {
-    rot <- sprintf("#rotate(-%sdeg, reflow: true, [\n  #figure(", angle)
+    rot <- sprintf("#rotate(%sdeg, reflow: true, [\n  #figure(", format_markup_num(-angle))
     table@table_string <- sub(
       "#figure(",
       rot,
@@ -150,7 +150,7 @@ rotate_cells_lazy_html <- function(x, i, j, angle) {
         vec,
         sprintf(
           '<div style="display: inline-block; transform: rotate(%sdeg); transform-origin: center center; white-space: nowrap; margin: %s 0;">%s</div>',
-          angle,
+          format_markup_num(angle),
           pad,
           vec
         )
@@ -164,7 +164,7 @@ rotate_cells_lazy_latex <- function(x, i, j, angle) {
   if (!identical(x@output, "latex")) return(x)
   s <- rotate_cells_setup(x, i, j)
   format_fn <- function(vec, ...) {
-    ifelse(is.na(vec), vec, sprintf("\\rotatebox{%s}{%s}", angle, vec))
+    ifelse(is.na(vec), vec, sprintf("\\rotatebox{%s}{%s}", format_markup_num(angle), vec))
   }
   apply_format(x, i = s$i, j = s$j, format_fn = format_fn, components = s$components, original_data = FALSE)
 }
@@ -176,7 +176,7 @@ rotate_cells_lazy_typst <- function(x, i, j, angle) {
     ifelse(
       is.na(vec),
       vec,
-      sprintf("#rotate(%sdeg, reflow: true, [%s])", -angle, vec)
+      sprintf("#rotate(%sdeg, reflow: true, [%s])", format_markup_num(-angle), vec)
     )
   }
   apply_format(x, i = s$i, j = s$j, format_fn = format_fn, components = s$components, original_data = FALSE)

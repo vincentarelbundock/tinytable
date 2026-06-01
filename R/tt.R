@@ -210,16 +210,16 @@ tt.default <- function(
     # LaTeX tabularray: use height/2 as rowsep
     out <- theme_latex(
       out,
-      inner = sprintf("rowsep={%sem}", height / 2)
+      inner = sprintf("rowsep={%s}", format_markup_unit(height / 2, "em"))
     )
 
     # HTML: use CSS padding for row height
     out <- theme_html(
       out,
       css = sprintf(
-        "padding-top: %sem; padding-bottom: %sem;",
-        height / 2,
-        height / 2
+        "padding-top: %s; padding-bottom: %s;",
+        format_markup_unit(height / 2, "em"),
+        format_markup_unit(height / 2, "em")
       )
     )
 
@@ -228,7 +228,7 @@ tt.default <- function(
       if (!is.null(table@height)) {
         table@table_string <- gsub(
           "rows: auto,",
-          sprintf("rows: %sem,", table@height),
+          sprintf("rows: %s,", format_markup_unit(table@height, "em")),
           table@table_string
         )
       }
@@ -240,7 +240,7 @@ tt.default <- function(
   # HTML: add column width styles if multiple widths specified
   if (!is.null(width) && length(width) > 1) {
     for (j in seq_len(ncol(x))) {
-      css <- sprintf("width: %s%%;", width[j] / sum(width) * 100)
+      css <- sprintf("width: %s;", format_markup_unit(width[j] / sum(width) * 100, "%"))
       out <- theme_html(out, j = j, css = css)
     }
   }

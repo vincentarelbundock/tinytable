@@ -123,7 +123,7 @@ html_groupj_html <- function(x, j_list, ihead) {
       # Sum the widths of the columns this header spans
       spanned_cols <- j_combined[[k]]
       total_width <- sum(x@width[spanned_cols]) / sum(x@width) * 100
-      width_style <- sprintf(' style="width: %s%%;"', round(total_width, 2))
+      width_style <- sprintf(' style="width: %s;"', format_markup_unit(round(total_width, 2), "%"))
     }
 
     sprintf(

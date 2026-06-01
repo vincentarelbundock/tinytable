@@ -83,11 +83,12 @@ style_fonts <- function(sty_row) {
   # Font size
   fontsize <- sty_row$fontsize
   if (!is.na(as.numeric(fontsize))) {
+    fontsize <- as.numeric(fontsize)
     font_cmd <- sprintf(
       "%s\\fontsize{%sem}{%sem}\\selectfont",
       font_cmd,
-      fontsize,
-      fontsize + 0.3
+      format_markup_num(fontsize),
+      format_markup_num(fontsize + 0.3)
     )
   }
 
@@ -106,7 +107,7 @@ style_fonts <- function(sty_row) {
   # Indentation
   indent <- sty_row$indent
   if (isTRUE(indent > 0)) {
-    set <- sprintf("%s preto={\\hspace{%sem}},", set, indent)
+    set <- sprintf("%s preto={\\hspace{%sem}},", set, format_markup_num(indent))
   }
 
   return(list(font = font_cmd, set = set))
@@ -452,7 +453,7 @@ process_tabularray_other_styles <- function(x, other) {
     span_strs[row] <- style_spans("", other[row, ])
     if (length(x@width) == ncol(x) && !is.na(other[row, "colspan"])) {
       w <- sum(x@width[other$j[row]:(other[row, "j"] + other[row, "colspan"] - 1)])
-      font_sets[row] <- paste(font_sets[row], sprintf("wd=%s\\linewidth,", w))
+      font_sets[row] <- paste(font_sets[row], sprintf("wd=%s\\linewidth,", format_markup_num(w)))
     }
   }
 
@@ -538,7 +539,7 @@ process_horizontal_lines <- function(x, hlines) {
   )
 
   line_widths <- ifelse(is.na(hlines$line_width), 0.1, hlines$line_width)
-  line_specs <- sprintf("solid, %s, %sem", line_colors, line_widths)
+  line_specs <- sprintf("solid, %s, %sem", line_colors, format_markup_num(line_widths))
 
   # Add trimming vectorized
   has_trim <- !is.na(hlines$line_trim) & nzchar(hlines$line_trim)
@@ -598,7 +599,7 @@ process_vertical_lines <- function(x, vlines) {
   )
 
   line_widths <- ifelse(is.na(vlines$line_width), 0.1, vlines$line_width)
-  line_specs <- sprintf("solid, %s, %sem", line_colors, line_widths)
+  line_specs <- sprintf("solid, %s, %sem", line_colors, format_markup_num(line_widths))
 
   # Add trimming vectorized
   has_trim <- !is.na(vlines$line_trim) & nzchar(vlines$line_trim)

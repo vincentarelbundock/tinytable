@@ -112,8 +112,8 @@ setMethod(
       template <- sub(
         "width: auto;",
         sprintf(
-          "table-layout: fixed; width: %s%% !important;",
-          round(x@width * 100)
+          "table-layout: fixed; width: %s !important;",
+          format_markup_unit(round(x@width * 100), "%")
         ),
         template,
         fixed = TRUE
@@ -122,8 +122,8 @@ setMethod(
       template <- sub(
         "width: auto;",
         sprintf(
-          "table-layout: fixed; width: %s%%;",
-          round(sum(x@width) * 100)
+          "table-layout: fixed; width: %s;",
+          format_markup_unit(round(sum(x@width) * 100), "%")
         ),
         template,
         fixed = TRUE
