@@ -120,7 +120,7 @@ tabulator_layout_options <- function(
     layout_opts <- sprintf(
       "    layout: '%s',\n    height: '%sem'",
       tabulator_layout,
-      total_height
+      format_markup_num(total_height)
     )
   } else {
     layout_opts <- sprintf("  layout: '%s'", tabulator_layout)

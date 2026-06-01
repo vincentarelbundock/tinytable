@@ -22,6 +22,22 @@ get_option <- function(x, default = NULL) {
   getOption(x, default = default)
 }
 
+format_markup_num <- function(x) {
+  out <- format(
+    x,
+    scientific = FALSE,
+    trim = TRUE,
+    digits = 15,
+    decimal.mark = ".",
+    drop0trailing = TRUE
+  )
+  sub("^-0$", "0", out)
+}
+
+format_markup_unit <- function(x, unit) {
+  paste0(format_markup_num(x), unit)
+}
+
 ttempdir <- function() {
   d <- tempdir()
   d <- file.path(d, "tinytable")

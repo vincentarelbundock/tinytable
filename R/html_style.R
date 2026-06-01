@@ -51,8 +51,8 @@ style_to_css <- function(row) {
     out <- c(out, paste0("text-align: ", row$align))
   }
   if (!is.na(row$alignv))    out <- c(out, paste0("vertical-align: ", row$alignv))
-  if (!is.na(row$fontsize))  out <- c(out, paste0("font-size: ", row$fontsize, "em"))
-  if (!is.na(row$indent))    out <- c(out, paste0("padding-left: ", row$indent, "em"))
+  if (!is.na(row$fontsize))  out <- c(out, paste0("font-size: ", format_markup_unit(row$fontsize, "em")))
+  if (!is.na(row$indent))    out <- c(out, paste0("padding-left: ", format_markup_unit(row$indent, "em")))
   if (!is.na(row$color)) {
     out <- c(out, paste0("color: ", standardize_colors(row$color, "hex")))
   }
@@ -97,6 +97,19 @@ line_to_css <- function(
   trim_right_top = 0,
   trim_right_bottom = 0
 ) {
+  width_bottom <- format_markup_num(width_bottom)
+  width_left <- format_markup_num(width_left)
+  width_right <- format_markup_num(width_right)
+  width_top <- format_markup_num(width_top)
+  trim_bottom_left <- format_markup_num(trim_bottom_left)
+  trim_bottom_right <- format_markup_num(trim_bottom_right)
+  trim_left_bottom <- format_markup_num(trim_left_bottom)
+  trim_left_top <- format_markup_num(trim_left_top)
+  trim_right_bottom <- format_markup_num(trim_right_bottom)
+  trim_right_top <- format_markup_num(trim_right_top)
+  trim_top_left <- format_markup_num(trim_top_left)
+  trim_top_right <- format_markup_num(trim_top_right)
+
   out <- sprintf('
     position: relative;
     --border-bottom: %s;

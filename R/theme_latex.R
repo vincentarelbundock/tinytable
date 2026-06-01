@@ -251,31 +251,31 @@ theme_latex <- function(x,
       if (!is.null(resize_height)) {
         # Height-based resizing: scale height, width proportional
         if (resize_direction == "both") {
-          new <- sprintf("\\resizebox{!}{%s\\textheight}{", resize_height)
+          new <- sprintf("\\resizebox{!}{%s\\textheight}{", format_markup_num(resize_height))
         } else if (resize_direction == "down") {
           new <- sprintf(
             "\\resizebox{!}{\\ifdim\\totalheight>\\textheight %s\\textheight\\else\\totalheight\\fi}{",
-            resize_height
+            format_markup_num(resize_height)
           )
         } else if (resize_direction == "up") {
           new <- sprintf(
             "\\resizebox{!}{\\ifdim\\totalheight<\\textheight %s\\textheight\\else\\totalheight\\fi}{",
-            resize_height
+            format_markup_num(resize_height)
           )
         }
       } else {
         # Width-based resizing: scale width, height proportional
         if (resize_direction == "both") {
-          new <- sprintf("\\resizebox{%s\\linewidth}{!}{", resize_width)
+          new <- sprintf("\\resizebox{%s\\linewidth}{!}{", format_markup_num(resize_width))
         } else if (resize_direction == "down") {
           new <- sprintf(
             "\\resizebox{\\ifdim\\width>\\linewidth %s\\linewidth\\else\\width\\fi}{!}{",
-            resize_width
+            format_markup_num(resize_width)
           )
         } else if (resize_direction == "up") {
           new <- sprintf(
             "\\resizebox{\\ifdim\\width<\\linewidth %s\\linewidth\\else\\width\\fi}{!}{",
-            resize_width
+            format_markup_num(resize_width)
           )
         }
       }

@@ -9,7 +9,7 @@ style_string_html <- function(n, styles) {
     css_props <- c(css_props, paste0("color:", styles[["color"]]))
   }
   if (!is.null(styles[["fontsize"]])) {
-    css_props <- c(css_props, paste0("font-size:", styles[["fontsize"]], "em"))
+    css_props <- c(css_props, paste0("font-size:", format_markup_unit(styles[["fontsize"]], "em")))
   }
 
   # Apply CSS properties as a single span if any exist
@@ -60,10 +60,11 @@ style_string_latex <- function(n, styles) {
     n <- sprintf("\\textcolor{%s}{%s}", styles[["color"]], n)
   }
   if (!is.null(styles[["fontsize"]])) {
+    fs <- format_markup_num(styles[["fontsize"]])
     n <- sprintf(
       "{\\fontsize{%sem}{%sem}\\selectfont %s}",
-      styles[["fontsize"]],
-      styles[["fontsize"]],
+      fs,
+      fs,
       n
     )
   }
@@ -85,7 +86,7 @@ style_string_typst <- function(n, styles) {
     # not sure how to do this
   }
   if (!is.null(styles[["fontsize"]])) {
-    fs <- sprintf("size: %sem", styles[["fontsize"]])
+    fs <- sprintf("size: %s", format_markup_unit(styles[["fontsize"]], "em"))
     sty <- c(sty, fs)
   }
   if (!is.null(styles[["color"]])) {

@@ -59,11 +59,11 @@ setMethod(
       tabularray_cols <- rep("Q[]", ncol(x))
     } else if (length(x@width) == 1) {
       tabularray_cols <- rep("X[]", ncol(x))
-      spec <- sprintf("width={%s\\linewidth},", round(x@width, 4))
+      spec <- sprintf("width={%s\\linewidth},", format_markup_num(round(x@width, 4)))
       out <- insert_tabularray_content(out, content = spec, type = "inner")
     } else if (length(x@width) > 1) {
-      tabularray_cols <- sprintf("X[%s]", x@width)
-      spec <- sprintf("width={%s\\linewidth},", round(sum(x@width), 4))
+      tabularray_cols <- sprintf("X[%s]", format_markup_num(x@width))
+      spec <- sprintf("width={%s\\linewidth},", format_markup_num(round(sum(x@width), 4)))
       out <- insert_tabularray_content(out, content = spec, type = "inner")
     }
 
