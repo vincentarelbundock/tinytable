@@ -192,6 +192,10 @@ infer_output <- function(x) {
   }
 
   # Environmental overrides only apply when we're doing inference (not explicit output)
+  if (!is.null(getOption("calepin", default = NULL))) {
+    return("typst")
+  }
+
   if (isTRUE(check_dependency("litedown"))) {
     fmt <- tryCatch(litedown::get_context("format"), error = function(e) NULL)
     if (identical(fmt, "latex")) {
