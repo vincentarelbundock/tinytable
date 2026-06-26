@@ -46,7 +46,7 @@ typst_resize_table <- function(table_string, resize_width, resize_height, resize
 #' @param figure Logical, whether to wrap the table in a Typst figure environment and block.
 #' @param portable Logical. Sets whether to create portable Typst output with base64-encoded local images embedded directly in the Typst code. Remote image URLs are not downloaded.
 #' @param align_figure Character string indicating horizontal alignment: "l", "c", or "r".
-#'   Defaults to `get_option("tinytable_theme_placement_horizontal", NULL)`. When NULL, uses default center alignment.
+#'   Defaults to `get_option("tinytable_typst_align_figure", NULL)`. When NULL, no figure-level alignment is emitted.
 #' @param resize_width Numeric value between 0.01 and 1.0 specifying the target width
 #'   as a fraction of the available Typst layout width when resize_direction is
 #'   specified.
@@ -108,11 +108,24 @@ theme_typst <- function(x,
   if (!is.null(align_figure)) {
     fn <- function(table) {
       tab <- table@table_string
-      if (align_figure == "l") {
-        tab <- sub("#align(center,", "#align(left,", tab, fixed = TRUE)
-      } else if (align_figure == "r") {
-        tab <- sub("#align(center,", "#align(right,", tab, fixed = TRUE)
-      }
+      figure_align <- switch(
+        align_figure,
+        "l" = "left",
+        "c" = "center",
+        "r" = "right"
+      )
+      tab <- sub(
+        "// tinytable align-figure before",
+        sprintf("#align(%s, [", figure_align),
+        tab,
+        fixed = TRUE
+      )
+      tab <- sub(
+        "// tinytable align-figure after",
+        "]) // end align",
+        tab,
+        fixed = TRUE
+      )
       table@table_string <- tab
       return(table)
     }

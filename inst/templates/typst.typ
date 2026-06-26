@@ -40,7 +40,7 @@
     tmp
   }
 
-  #align(center, [
+  // tinytable align-figure before
 
   #table( // tinytable table start
     stroke: none,
@@ -67,7 +67,7 @@
 
   ) // end table
 
-  ]) // end align
+  // tinytable align-figure after
 
 ] // end block
 ) // end figure

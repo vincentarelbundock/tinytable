@@ -43,7 +43,7 @@ block[ // start block
     tmp
   }
 
-  #align(center, [
+  // tinytable align-figure before
 
   #table( // tinytable table start
     column-gutter: 5pt,
@@ -81,7 +81,7 @@ table.cell(colspan: 3, align: center)[A], [ ],
 
   ) // end table
 
-  ]) // end align
+  // tinytable align-figure after
 
 ] // end block
 ) // end figure 

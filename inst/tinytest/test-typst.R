@@ -184,6 +184,22 @@ tab <- df |>
 expect_true(is.character(tab) && nchar(tab) > 0)
 
 
+# Figure alignment is opt-in for Typst output
+tab <- tt(mtcars[1:4, 1:5]) |>
+  save_tt("typst")
+expect_false(grepl("#align(", tab, fixed = TRUE))
+
+tab <- tt(mtcars[1:4, 1:5]) |>
+  theme_typst(align_figure = "c") |>
+  save_tt("typst")
+expect_true(grepl("#align(center,", tab, fixed = TRUE))
+
+tab <- tt(mtcars[1:4, 1:5]) |>
+  theme_typst(align_figure = "r") |>
+  save_tt("typst")
+expect_true(grepl("#align(right,", tab, fixed = TRUE))
+
+
 # Typst resizing follows theme_latex() API
 tab <- tt(mtcars[1:4, 1:5]) |>
   theme_typst(resize_width = 0.8, resize_direction = "down") |>

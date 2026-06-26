@@ -8,7 +8,7 @@ theme_tinytable <- function(x, ...) {
   # run this after rbind_body_groupi()
   # Placement for LaTeX and Typst
   x <- theme_latex(x, placement = get_option("tinytable_latex_placement", default = NULL))
-  x <- theme_typst(x, align_figure = get_option("tinytable_typst_align_figure", "c"))
+  x <- theme_typst(x)
 
   fn <- function(x) {
     if (identical(x@output, "html") && identical(x@html_engine, "tabulator")) {

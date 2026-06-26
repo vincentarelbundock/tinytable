@@ -41,7 +41,7 @@ block[ // start block
     tmp
   }
 
-  #align(center, [
+  // tinytable align-figure before
 
   #table( // tinytable table start
     columns: (auto, auto, auto, auto, auto, auto, auto, auto, auto, auto, auto),
@@ -107,7 +107,7 @@ table.cell(colspan: 11)[1],
 
   ) // end table
 
-  ]) // end align
+  // tinytable align-figure after
 
 ] // end block
 ) // end figure 

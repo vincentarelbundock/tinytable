@@ -26,7 +26,7 @@ theme_typst(
 \item{portable}{Logical. Sets whether to create portable Typst output with base64-encoded local images embedded directly in the Typst code. Remote image URLs are not downloaded.}
 
 \item{align_figure}{Character string indicating horizontal alignment: "l", "c", or "r".
-Defaults to \code{get_option("tinytable_theme_placement_horizontal", NULL)}. When NULL, uses default center alignment.}
+Defaults to \code{get_option("tinytable_typst_align_figure", NULL)}. When NULL, no figure-level alignment is emitted.}
 
 \item{resize_width}{Numeric value between 0.01 and 1.0 specifying the target width
 as a fraction of the available Typst layout width when resize_direction is
