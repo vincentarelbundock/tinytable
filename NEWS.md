@@ -1,5 +1,9 @@
 # News
 
+## Development
+
+* Performance improvements to `style_tt()`. Thanks to @EinMaulwurf for PR #663.
+
 ## 0.17.0
 
 * `theme_typst()` no longer emits figure-level center alignment by default. Typst tables now use the document's default alignment unless `align_figure` or the `tinytable_typst_align_figure` option is set.
