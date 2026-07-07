@@ -63,20 +63,23 @@ typst_clean_css <- function(css) {
   align_h_set <- !is.na(other$align)
   align_v_set <- !is.na(other$alignv)
 
-  parts <- vector("list", n)
-  for (k in seq_len(n)) parts[[k]] <- character(0)
+  css <- character(n)
 
   # scalar emission: same string for every matching cell
   add_scalar <- function(mask, key, val) {
     if (!any(mask)) return()
+    idx <- which(mask)
     fragment <- sprintf("%s: %s", key, val)
-    for (k in which(mask)) parts[[k]] <<- c(parts[[k]], fragment)
+    sep <- ifelse(nzchar(css[idx]), ", ", "")
+    css[idx] <<- paste0(css[idx], sep, fragment)
   }
   # vector emission: val is parallel to `other`; only used where mask is TRUE
   add_vec <- function(mask, key, val) {
     if (!any(mask)) return()
-    fragment <- sprintf("%s: %s", key, val)
-    for (k in which(mask)) parts[[k]] <<- c(parts[[k]], fragment[k])
+    idx <- which(mask)
+    fragment <- sprintf("%s: %s", key, val[idx])
+    sep <- ifelse(nzchar(css[idx]), ", ", "")
+    css[idx] <<- paste0(css[idx], sep, fragment)
   }
 
   add_scalar(bold, "bold", "true")
@@ -86,19 +89,23 @@ typst_clean_css <- function(css) {
   add_scalar(monospace, "mono", "true")
 
   if (any(color_set)) {
-    cv <- ifelse(color_set, color_map[other$color], "")
+    cv <- character(n)
+    cv[color_set] <- color_map[other$color[color_set]]
     add_vec(color_set, "color", cv)
   }
   if (any(bg_set)) {
-    bv <- ifelse(bg_set, color_map[other$background], "")
+    bv <- character(n)
+    bv[bg_set] <- color_map[other$background[bg_set]]
     add_vec(bg_set, "background", bv)
   }
   if (any(fs_set)) {
-    fv <- ifelse(fs_set,
-                 vapply(other$fontsize,
-                        function(x) if (is.na(x)) "" else format_markup_unit(x, "em"),
-                        character(1)),
-                 "")
+    fv <- character(n)
+    fv[fs_set] <- vapply(
+      other$fontsize[fs_set],
+      format_markup_unit,
+      character(1),
+      "em"
+    )
     add_vec(fs_set, "fontsize", fv)
   }
 
@@ -113,20 +120,19 @@ typst_clean_css <- function(css) {
   }
 
   if (any(indent_set)) {
-    iv <- ifelse(indent_set,
-                 vapply(other$indent,
-                        function(x) if (is.na(x)) "" else format_markup_unit(x, "em"),
-                        character(1)),
-                 "")
+    iv <- character(n)
+    iv[indent_set] <- vapply(
+      other$indent[indent_set],
+      format_markup_unit,
+      character(1),
+      "em"
+    )
     add_vec(indent_set, "indent", iv)
   }
 
   # Each cell becomes a comma-separated list with a trailing comma, matching
   # the original typst_insert_field() + typst_clean_css() output format.
-  vapply(parts, function(p) {
-    s <- paste(p, collapse = ", ")
-    if (nchar(s) > 0) paste0(s, ",") else s
-  }, character(1))
+  ifelse(nzchar(css), paste0(css, ","), css)
 }
 
 #' Apply Typst styles and generate style-dict/array
@@ -140,30 +146,31 @@ typst_apply_styles <- function(x, rec) {
     return(x)
   }
 
-  # Get unique styles
-  uni <- split(rec, rec$css)
+  # Get unique styles. split(rec, rec$css) sorted by CSS value; preserve that
+  # order without copying one data frame per style group.
+  style_keys <- sort(unique(rec$css))
+  style_idx <- match(rec$css, style_keys)
 
   # Create style-array (unique styles)
-  style_array_entries <- sapply(uni, function(x) {
-    style_str <- x$css[1]
-    sprintf("(%s),", style_str)
-  })
+  style_array_entries <- sprintf("(%s),", style_keys)
 
   # Create style-dict (cell positions -> style array indices) using vectorized
   # sprintf instead of growing a vector inside a for loop. Each unique style
   # group can produce many cell-position keys, so we pre-allocate a list and
   # unlist() once.
-  style_dict_list <- vector("list", length(uni))
-  for (style_idx in seq_along(uni)) {
-    cells <- uni[[style_idx]]
-    style_dict_list[[style_idx]] <- sprintf('"%s_%s": %s', cells$i, cells$j, style_idx - 1)
+  style_dict_list <- vector("list", length(style_keys))
+  style_key_list <- vector("list", length(style_keys))
+  for (idx in seq_along(style_keys)) {
+    rows <- which(style_idx == idx)
+    style_key_list[[idx]] <- sprintf("%s_%s", rec$i[rows], rec$j[rows])
+    style_dict_list[[idx]] <- sprintf('"%s_%s": %s', rec$i[rows], rec$j[rows], idx - 1)
   }
   style_dict_entries <- unlist(style_dict_list, use.names = FALSE)
+  style_dict_keys <- unlist(style_key_list, use.names = FALSE)
 
   # Remove duplicate keys (keep last occurrence for each coordinate)
   if (length(style_dict_entries) > 0) {
-    keys <- gsub('"([^"]+)":\\s*\\d+', '\\1', style_dict_entries)
-    style_dict_entries <- style_dict_entries[!duplicated(keys, fromLast = TRUE)]
+    style_dict_entries <- style_dict_entries[!duplicated(style_dict_keys, fromLast = TRUE)]
   }
 
   # Insert style-dict entries as single line
@@ -520,13 +527,11 @@ setMethod(
     # Use populated @style_other from build_tt()
     other <- x@style_other
 
-    # Filter to only cells that have actual styles
-    if (nrow(other) > 0) {
-      has_style <- rowSums(!is.na(other[, c("bold", "italic", "underline", "strikeout",
-                                             "monospace", "smallcap", "align", "alignv",
-                                             "color", "background", "fontsize", "indent"), drop = FALSE])) > 0
-      other <- other[has_style, , drop = FALSE]
-    }
+    other <- filter_style_other(other, c(
+      "bold", "italic", "underline", "strikeout",
+      "monospace", "smallcap", "align", "alignv",
+      "color", "background", "fontsize", "indent"
+    ))
 
     # Use populated @style_lines from build_tt()
     lines <- x@style_lines

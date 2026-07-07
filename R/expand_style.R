@@ -92,7 +92,7 @@ append_lines_to_rect <- function(style_lines, style_row, rect) {
 #' Resolve all entries of @style into the rectangular @style_other grid and
 #' the line list @style_lines in a single batched pass.
 #'
-#' This is functionally equivalent to (and produces byte-identical output as)
+#' This is functionally equivalent to (and produces value-identical output as)
 #' the per-row loop:
 #'   for (idx in seq_len(nrow(x@style))) {
 #'     style_other <- apply_style_to_rect(style_other, x@style[idx,])
@@ -120,7 +120,11 @@ resolve_styles_batch <- function(style_other, style_df) {
     stringsAsFactors = FALSE
   )
   if (n == 0) {
-    return(list(other = style_other, lines = empty_lines))
+    return(list(
+      other = style_other,
+      lines = empty_lines,
+      has_style = rep(FALSE, nrow(style_other))
+    ))
   }
 
   style_props <- c("bold", "italic", "underline", "strikeout",
@@ -134,13 +138,37 @@ resolve_styles_batch <- function(style_other, style_df) {
   uniq_i <- unique(so_i)
   uniq_j <- unique(so_j)
 
-  # Build a (i,j) -> linear index map for style_other using a single match() call
-  keys_other <- paste(so_i, "\001", so_j, sep = "")
+  idx_matrix <- matrix(
+    NA_integer_,
+    nrow = length(uniq_i),
+    ncol = length(uniq_j),
+    dimnames = list(as.character(uniq_i), as.character(uniq_j))
+  )
+  idx_matrix[cbind(match(so_i, uniq_i), match(so_j, uniq_j))] <- seq_along(so_i)
 
   sd_i <- style_df$i
   sd_j <- style_df$j
   i_na <- is.na(sd_i)
   j_na <- is.na(sd_j)
+
+  target_i <- vector("list", n)
+  target_j <- vector("list", n)
+  target_idx <- vector("list", n)
+  for (k in seq_len(n)) {
+    target_i[[k]] <- if (i_na[k]) uniq_i else sd_i[k]
+    target_j[[k]] <- if (j_na[k]) uniq_j else sd_j[k]
+
+    i_pos <- if (i_na[k]) seq_along(uniq_i) else match(sd_i[k], uniq_i)
+    j_pos <- if (j_na[k]) seq_along(uniq_j) else match(sd_j[k], uniq_j)
+    if (anyNA(i_pos) || anyNA(j_pos)) {
+      target_idx[[k]] <- integer(0)
+    } else {
+      idx <- as.vector(idx_matrix[i_pos, j_pos, drop = FALSE])
+      target_idx[[k]] <- idx[!is.na(idx)]
+    }
+  }
+
+  has_style <- rep(FALSE, nrow(style_other))
 
   # For each property, walk style rows that have a non-NA value, in order,
   # and write directly into style_other at the matching linear indices.
@@ -151,22 +179,11 @@ resolve_styles_batch <- function(style_other, style_df) {
     has <- which(!is.na(vals))
     if (length(has) == 0L) next
     for (k in has) {
-      ri <- if (i_na[k]) uniq_i else sd_i[k]
-      rj <- if (j_na[k]) uniq_j else sd_j[k]
-      # Build cartesian-product keys; reuse key format above for match()
-      if (length(ri) == 1L && length(rj) == 1L) {
-        tgt_keys <- paste(ri, "\001", rj, sep = "")
-      } else {
-        tgt_keys <- paste(
-          rep(ri, times = length(rj)),
-          "\001",
-          rep(rj, each = length(ri)),
-          sep = ""
-        )
+      idx <- target_idx[[k]]
+      if (length(idx)) {
+        style_other[[prop]][idx] <- vals[[k]]
+        has_style[idx] <- TRUE
       }
-      idx <- match(tgt_keys, keys_other)
-      idx <- idx[!is.na(idx)]
-      if (length(idx)) style_other[[prop]][idx] <- vals[[k]]
     }
   }
 
@@ -181,8 +198,8 @@ resolve_styles_batch <- function(style_other, style_df) {
     line_entries <- vector("list", length(has_line))
     for (kp in seq_along(has_line)) {
       k <- has_line[kp]
-      ri <- if (i_na[k]) uniq_i else sd_i[k]
-      rj <- if (j_na[k]) uniq_j else sd_j[k]
+      ri <- target_i[[k]]
+      rj <- target_j[[k]]
       # cartesian product (preserves append_lines_to_rect ordering)
       line_entries[[kp]] <- data.frame(
         i = rep(ri, times = length(rj)),
@@ -199,7 +216,34 @@ resolve_styles_batch <- function(style_other, style_df) {
     style_lines <- empty_lines
   }
 
-  list(other = style_other, lines = style_lines)
+  list(other = style_other, lines = style_lines, has_style = has_style)
+}
+
+
+#' Filter a rectangular @style_other grid to rows relevant for a backend
+#' @keywords internal
+#' @noRd
+filter_style_other <- function(style_other, style_cols) {
+  if (is.null(style_other) || nrow(style_other) == 0) {
+    return(style_other)
+  }
+
+  style_cols <- intersect(style_cols, names(style_other))
+  if (length(style_cols) == 0L) {
+    return(style_other[0, , drop = FALSE])
+  }
+
+  has_style <- attr(style_other, "has_style", exact = TRUE)
+  if (!is.null(has_style) && length(has_style) == nrow(style_other)) {
+    style_other <- style_other[has_style, , drop = FALSE]
+  }
+
+  if (nrow(style_other) == 0) {
+    return(style_other)
+  }
+
+  has_backend_style <- rowSums(!is.na(style_other[, style_cols, drop = FALSE])) > 0
+  style_other[has_backend_style, , drop = FALSE]
 }
 
 

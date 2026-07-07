@@ -170,12 +170,15 @@ build_tt <- function(x, output = NULL) {
   # resolver in resolve_styles_batch() is dramatically faster because it does
   # not rescan the entire rectangular grid for every style_tt() entry.
   resolved <- resolve_styles_batch(x@style_other, x@style)
+  has_style <- resolved$has_style
   x@style_other <- resolved$other
   x@style_lines <- resolved$lines
 
   # Sort style_other for consistent ordering (j first, then i within each j)
   # This ensures test snapshots are deterministic
-  x@style_other <- x@style_other[order(x@style_other$j, x@style_other$i), ]
+  ord <- order(x@style_other$j, x@style_other$i)
+  x@style_other <- x@style_other[ord, ]
+  attr(x@style_other, "has_style") <- has_style[ord]
 
   # draw the table
   x <- build_eval(x)
