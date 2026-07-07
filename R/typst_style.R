@@ -34,6 +34,101 @@ typst_clean_css <- function(css) {
   return(css)
 }
 
+#' Vectorized CSS builder for the typst style-array
+#'
+#' Replaces the per-cell for-loop that called typst_insert_field() (which does
+#' regex sub() on a growing string per property) with a single pass that builds
+#' each cell's "key: value, key: value, ..." string directly. Output is
+#' byte-identical to the concatenation of sequential typst_insert_field()
+#' calls followed by typst_clean_css().
+#'
+#' @param other Filtered @style_other data frame (only rows with at least one style)
+#' @param color_map Named character vector mapping original color names to typst rgb() strings
+#' @return Character vector of css strings (one per row of `other`), un-trimmed
+#' @keywords internal
+#' @noRd
+.typst_build_css_vectorized <- function(other, color_map) {
+  n <- nrow(other)
+  if (n == 0) return(character(0))
+
+  bold        <- !is.na(other$bold)       & other$bold
+  italic      <- !is.na(other$italic)     & other$italic
+  underline   <- !is.na(other$underline)  & other$underline
+  strikeout   <- !is.na(other$strikeout)  & other$strikeout
+  monospace   <- !is.na(other$monospace)  & other$monospace
+  color_set   <- !is.na(other$color)
+  bg_set      <- !is.na(other$background)
+  fs_set      <- !is.na(other$fontsize)
+  indent_set  <- !is.na(other$indent)     & other$indent > 0
+  align_h_set <- !is.na(other$align)
+  align_v_set <- !is.na(other$alignv)
+
+  parts <- vector("list", n)
+  for (k in seq_len(n)) parts[[k]] <- character(0)
+
+  # scalar emission: same string for every matching cell
+  add_scalar <- function(mask, key, val) {
+    if (!any(mask)) return()
+    fragment <- sprintf("%s: %s", key, val)
+    for (k in which(mask)) parts[[k]] <<- c(parts[[k]], fragment)
+  }
+  # vector emission: val is parallel to `other`; only used where mask is TRUE
+  add_vec <- function(mask, key, val) {
+    if (!any(mask)) return()
+    fragment <- sprintf("%s: %s", key, val)
+    for (k in which(mask)) parts[[k]] <<- c(parts[[k]], fragment[k])
+  }
+
+  add_scalar(bold, "bold", "true")
+  add_scalar(italic, "italic", "true")
+  add_scalar(underline, "underline", "true")
+  add_scalar(strikeout, "strikeout", "true")
+  add_scalar(monospace, "mono", "true")
+
+  if (any(color_set)) {
+    cv <- ifelse(color_set, color_map[other$color], "")
+    add_vec(color_set, "color", cv)
+  }
+  if (any(bg_set)) {
+    bv <- ifelse(bg_set, color_map[other$background], "")
+    add_vec(bg_set, "background", bv)
+  }
+  if (any(fs_set)) {
+    fv <- ifelse(fs_set,
+                 vapply(other$fontsize,
+                        function(x) if (is.na(x)) "" else format_markup_unit(x, "em"),
+                        character(1)),
+                 "")
+    add_vec(fs_set, "fontsize", fv)
+  }
+
+  if (any(align_h_set) || any(align_v_set)) {
+    ah <- ifelse(is.na(other$align),  "", other$align)
+    av <- ifelse(is.na(other$alignv), "", other$alignv)
+    combined <- ifelse(nchar(ah) > 0 & nchar(av) > 0,
+                       paste(ah, av, sep = " + "),
+                       paste0(ah, av))
+    mask <- align_h_set | align_v_set
+    add_vec(mask, "align", combined)
+  }
+
+  if (any(indent_set)) {
+    iv <- ifelse(indent_set,
+                 vapply(other$indent,
+                        function(x) if (is.na(x)) "" else format_markup_unit(x, "em"),
+                        character(1)),
+                 "")
+    add_vec(indent_set, "indent", iv)
+  }
+
+  # Each cell becomes a comma-separated list with a trailing comma, matching
+  # the original typst_insert_field() + typst_clean_css() output format.
+  vapply(parts, function(p) {
+    s <- paste(p, collapse = ", ")
+    if (nchar(s) > 0) paste0(s, ",") else s
+  }, character(1))
+}
+
 #' Apply Typst styles and generate style-dict/array
 #' @keywords internal
 #' @noRd
@@ -54,13 +149,16 @@ typst_apply_styles <- function(x, rec) {
     sprintf("(%s),", style_str)
   })
 
-  # Create style-dict (cell positions -> style array indices)
-  style_dict_entries <- character(0)
+  # Create style-dict (cell positions -> style array indices) using vectorized
+  # sprintf instead of growing a vector inside a for loop. Each unique style
+  # group can produce many cell-position keys, so we pre-allocate a list and
+  # unlist() once.
+  style_dict_list <- vector("list", length(uni))
   for (style_idx in seq_along(uni)) {
     cells <- uni[[style_idx]]
-    entry <- sprintf('"%s_%s": %s', cells$i, cells$j, style_idx - 1)
-    style_dict_entries <- c(style_dict_entries, entry)
+    style_dict_list[[style_idx]] <- sprintf('"%s_%s": %s', cells$i, cells$j, style_idx - 1)
   }
+  style_dict_entries <- unlist(style_dict_list, use.names = FALSE)
 
   # Remove duplicate keys (keep last occurrence for each coordinate)
   if (length(style_dict_entries) > 0) {
@@ -291,57 +389,15 @@ process_typst_other_styles <- function(x, other) {
     color_map <- character(0)
   }
 
-  # Generate CSS for each cell - vectorize where possible
-  css <- rep("", nrow(other))
-
-  # Process boolean styles (vectorized)
-  is_bold <- !is.na(other$bold) & other$bold
-  is_italic <- !is.na(other$italic) & other$italic
-  is_underline <- !is.na(other$underline) & other$underline
-  is_strikeout <- !is.na(other$strikeout) & other$strikeout
-  is_monospace <- !is.na(other$monospace) & other$monospace
-
-  for (row in seq_len(nrow(other))) {
-    if (is_bold[row]) {
-      css[row] <- typst_insert_field(css[row], "bold", "true")
-    }
-    if (is_italic[row]) {
-      css[row] <- typst_insert_field(css[row], "italic", "true")
-    }
-    if (is_underline[row]) {
-      css[row] <- typst_insert_field(css[row], "underline", "true")
-    }
-    if (is_strikeout[row]) {
-      css[row] <- typst_insert_field(css[row], "strikeout", "true")
-    }
-    if (is_monospace[row]) {
-      css[row] <- typst_insert_field(css[row], "mono", "true")
-    }
-    if (!is.na(other[row, "color"])) {
-      color_value <- color_map[other[row, "color"]]
-      css[row] <- typst_insert_field(css[row], "color", color_value)
-    }
-    if (!is.na(other[row, "background"])) {
-      bg_value <- color_map[other[row, "background"]]
-      css[row] <- typst_insert_field(css[row], "background", bg_value)
-    }
-    if (!is.na(other[row, "fontsize"])) {
-      css[row] <- typst_insert_field(css[row], "fontsize", format_markup_unit(other[row, "fontsize"], "em"))
-    }
-    # Handle alignment (combining horizontal and vertical if both present)
-    align_h <- other[row, "align"]
-    align_v <- other[row, "alignv"]
-    if (!is.na(align_h) || !is.na(align_v)) {
-      align_parts <- character(0)
-      if (!is.na(align_h)) align_parts <- c(align_parts, align_h)
-      if (!is.na(align_v)) align_parts <- c(align_parts, align_v)
-      combined_align <- paste(align_parts, collapse = " + ")
-      css[row] <- typst_insert_field(css[row], "align", combined_align)
-    }
-    if (!is.na(other[row, "indent"]) && other[row, "indent"] > 0) {
-      css[row] <- typst_insert_field(css[row], "indent", format_markup_unit(other[row, "indent"], "em"))
-    }
-  }
+  # Generate CSS for each cell. The reference implementation builds one cell
+  # at a time by repeatedly calling typst_insert_field(), which uses regex
+  # sub() on a growing string. The vectorized version below produces an
+  # identical result but is much faster on tables with many styled cells
+  # (heat-map backgrounds, per-cell alignment, etc.). The output strings are
+  # joined with ", " and given a trailing comma to match the original
+  # typst_insert_field() format exactly (typst_clean_css() collapses runs
+  # of commas and trims whitespace, so byte-identical output is achievable).
+  css <- .typst_build_css_vectorized(other, color_map)
 
   # Clean CSS and add to data frame
   other$css <- sapply(css, typst_clean_css)

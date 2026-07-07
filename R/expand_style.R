@@ -89,6 +89,120 @@ append_lines_to_rect <- function(style_lines, style_row, rect) {
 }
 
 
+#' Resolve all entries of @style into the rectangular @style_other grid and
+#' the line list @style_lines in a single batched pass.
+#'
+#' This is functionally equivalent to (and produces byte-identical output as)
+#' the per-row loop:
+#'   for (idx in seq_len(nrow(x@style))) {
+#'     style_other <- apply_style_to_rect(style_other, x@style[idx,])
+#'     style_lines <- append_lines_to_rect(style_lines, x@style[idx,], rect)
+#'   }
+#' but is O(N + cells) instead of O(N * cells * props) by avoiding the per-row
+#' full-rect mask scan. The naive loop becomes the dominant bottleneck once a
+#' table accumulates more than a few hundred style_tt() entries (which is
+#' common when styling individual cells for heat-map-like effects, alternating
+#' row backgrounds, or per-column alignment).
+#'
+#' @param style_other Rectangular dataframe of (i, j, <props>) initialized with NAs
+#' @param style_df @style data frame (one row per style_tt setting entry)
+#' @return list(other=, lines=) with the populated data frames
+#' @keywords internal
+#' @noRd
+resolve_styles_batch <- function(style_other, style_df) {
+  n <- nrow(style_df)
+  empty_lines <- data.frame(
+    i = integer(0), j = integer(0),
+    line = character(0),
+    line_color = character(0),
+    line_width = numeric(0),
+    line_trim = character(0),
+    stringsAsFactors = FALSE
+  )
+  if (n == 0) {
+    return(list(other = style_other, lines = empty_lines))
+  }
+
+  style_props <- c("bold", "italic", "underline", "strikeout",
+                   "monospace", "smallcap", "align", "alignv",
+                   "color", "background", "fontsize", "indent",
+                   "html_css", "colspan", "rowspan")
+
+  # Unique i and j present in style_other (used when i or j is NA meaning "all")
+  so_i <- style_other$i
+  so_j <- style_other$j
+  uniq_i <- unique(so_i)
+  uniq_j <- unique(so_j)
+
+  # Build a (i,j) -> linear index map for style_other using a single match() call
+  keys_other <- paste(so_i, "\001", so_j, sep = "")
+
+  sd_i <- style_df$i
+  sd_j <- style_df$j
+  i_na <- is.na(sd_i)
+  j_na <- is.na(sd_j)
+
+  # For each property, walk style rows that have a non-NA value, in order,
+  # and write directly into style_other at the matching linear indices.
+  # "Last write wins" semantics is preserved by iterating in source order.
+  for (prop in style_props) {
+    if (!prop %in% names(style_df)) next
+    vals <- style_df[[prop]]
+    has <- which(!is.na(vals))
+    if (length(has) == 0L) next
+    for (k in has) {
+      ri <- if (i_na[k]) uniq_i else sd_i[k]
+      rj <- if (j_na[k]) uniq_j else sd_j[k]
+      # Build cartesian-product keys; reuse key format above for match()
+      if (length(ri) == 1L && length(rj) == 1L) {
+        tgt_keys <- paste(ri, "\001", rj, sep = "")
+      } else {
+        tgt_keys <- paste(
+          rep(ri, times = length(rj)),
+          "\001",
+          rep(rj, each = length(ri)),
+          sep = ""
+        )
+      }
+      idx <- match(tgt_keys, keys_other)
+      idx <- idx[!is.na(idx)]
+      if (length(idx)) style_other[[prop]][idx] <- vals[[k]]
+    }
+  }
+
+  # Lines are additive: expand every style_df row that has a non-NA `line`
+  # into one entry per (i, j) cell, then rbind() once at the end.
+  has_line <- which(!is.na(style_df$line))
+  if (length(has_line)) {
+    line_color_col <- if ("line_color" %in% names(style_df)) style_df$line_color else rep(NA_character_, n)
+    line_width_col <- if ("line_width" %in% names(style_df)) style_df$line_width else rep(NA_real_, n)
+    line_trim_col  <- if ("line_trim"  %in% names(style_df)) style_df$line_trim  else rep(NA_character_, n)
+
+    line_entries <- vector("list", length(has_line))
+    for (kp in seq_along(has_line)) {
+      k <- has_line[kp]
+      ri <- if (i_na[k]) uniq_i else sd_i[k]
+      rj <- if (j_na[k]) uniq_j else sd_j[k]
+      # cartesian product (preserves append_lines_to_rect ordering)
+      line_entries[[kp]] <- data.frame(
+        i = rep(ri, times = length(rj)),
+        j = rep(rj, each  = length(ri)),
+        line = style_df$line[k],
+        line_color = line_color_col[k],
+        line_width = line_width_col[k],
+        line_trim  = line_trim_col[k],
+        stringsAsFactors = FALSE
+      )
+    }
+    style_lines <- do.call(rbind, line_entries)
+  } else {
+    style_lines <- empty_lines
+  }
+
+  list(other = style_other, lines = style_lines)
+}
+
+
 # NOTE: expand_lines() and expand_style() have been removed.
 # Line styles are now handled via @style_lines in build_tt()
 # Other styles are handled via @style_other in build_tt()
