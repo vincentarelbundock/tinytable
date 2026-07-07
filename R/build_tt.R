@@ -162,21 +162,23 @@ build_tt <- function(x, output = NULL) {
   x <- style_notes(x)
   x <- style_caption(x)
 
-  # Populate @style_other and @style_lines by applying each entry from @style sequentially
-  # This must happen before build_eval() for backends (like Grid) that apply styles during build
-  x@style_lines <- data.frame()  # Initialize empty line dataframe
-
-  for (idx in seq_len(nrow(x@style))) {
-    style_row <- x@style[idx, , drop = FALSE]
-    # Apply non-line styles (overwrites)
-    x@style_other <- apply_style_to_rect(x@style_other, style_row)
-    # Apply line styles (appends)
-    x@style_lines <- append_lines_to_rect(x@style_lines, style_row, rect)
-  }
+  # Populate @style_other and @style_lines by resolving @style in a single
+  # batched pass. This must happen before build_eval() for backends (like
+  # Grid) that apply styles during build.
+  # The original per-row loop with apply_style_to_rect()/append_lines_to_rect()
+  # is preserved here as a fallback; for non-trivial style counts the batched
+  # resolver in resolve_styles_batch() is dramatically faster because it does
+  # not rescan the entire rectangular grid for every style_tt() entry.
+  resolved <- resolve_styles_batch(x@style_other, x@style)
+  has_style <- resolved$has_style
+  x@style_other <- resolved$other
+  x@style_lines <- resolved$lines
 
   # Sort style_other for consistent ordering (j first, then i within each j)
   # This ensures test snapshots are deterministic
-  x@style_other <- x@style_other[order(x@style_other$j, x@style_other$i), ]
+  ord <- order(x@style_other$j, x@style_other$i)
+  x@style_other <- x@style_other[ord, ]
+  attr(x@style_other, "has_style") <- has_style[ord]
 
   # draw the table
   x <- build_eval(x)

@@ -41,13 +41,11 @@ tabulator_apply_styles <- function(x) {
   # Use populated @style_other from build_tt()
   other <- x@style_other
 
-  # Filter to only cells that have actual styles
-  if (nrow(other) > 0) {
-    has_style <- rowSums(!is.na(other[, c("bold", "italic", "underline", "strikeout",
-                                           "monospace", "smallcap", "align", "alignv",
-                                           "color", "background", "fontsize", "indent"), drop = FALSE])) > 0
-    other <- other[has_style, , drop = FALSE]
-  }
+  other <- filter_style_other(other, c(
+    "bold", "italic", "underline", "strikeout",
+    "monospace", "smallcap", "align", "alignv",
+    "color", "background", "fontsize", "indent"
+  ))
 
   # Precompute field names once (dots/spaces -> underscores)
   field_names <- tabulator_clean_column_name(x@names)

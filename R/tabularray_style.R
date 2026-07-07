@@ -677,15 +677,12 @@ setMethod(
     # Use populated @style_other from build_tt()
     other <- x@style_other
 
-    # Filter to only cells that have actual styles
-    if (nrow(other) > 0) {
-      has_style <- rowSums(!is.na(other[, c(
-        "bold", "italic", "underline", "strikeout",
-        "monospace", "smallcap", "align", "alignv",
-        "color", "background", "fontsize", "indent",
-        "colspan", "rowspan"), drop = FALSE])) > 0
-      other <- other[has_style, , drop = FALSE]
-    }
+    other <- filter_style_other(other, c(
+      "bold", "italic", "underline", "strikeout",
+      "monospace", "smallcap", "align", "alignv",
+      "color", "background", "fontsize", "indent",
+      "colspan", "rowspan"
+    ))
 
     # Use populated @style_lines from build_tt()
     lines <- x@style_lines

@@ -2,6 +2,10 @@
 
 ## Development
 
+* Performance improvements to `style_tt()`. Thanks to @EinMaulwurf for PR #663.
+
+## 0.17.0
+
 * `theme_typst()` no longer emits figure-level center alignment by default. Typst tables now use the document's default alignment unless `align_figure` or the `tinytable_typst_align_figure` option is set.
 * `theme_typst()` gains `resize_width`, `resize_height`, and `resize_direction` arguments to resize wide or tall Typst tables, paralleling `theme_latex()`. Thanks to @tomasrei for feature request #657.
 * `theme_typst(portable = TRUE)` embeds local images directly in generated Typst code using base64 data, avoiding external image paths. Thanks to @jnnkB for the suggestion in Issue #652.
