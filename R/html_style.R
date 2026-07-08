@@ -201,11 +201,18 @@ setMethod(
 
     # rowspan/colspan spans first
     if (!is.null(other) && nrow(other) > 0 && any(c("rowspan", "colspan") %in% names(other))) {
+      # Hold the table as a character vector for the whole loop so we only
+      # split/collapse `@table_string` once instead of once per span.
+      # See tt_save_audit.md §4.2.
+      span_lines <- NULL
       for (row in seq_len(nrow(other))) {
         rowspan <- if ("rowspan" %in% names(other) && !is.na(other$rowspan[row])) other$rowspan[row] else 1
         colspan <- if ("colspan" %in% names(other) && !is.na(other$colspan[row])) other$colspan[row] else 1
         # Skip JavaScript spans for column group headers (negative i) since HTML already handles them via colspan
         if ((rowspan > 1 || colspan > 1) && other$i[row] >= 0) {
+          if (is.null(span_lines)) {
+            span_lines <- table_string_lines(x)
+          }
           # Use the factory function approach instead of individual function names
           listener <- "      window.addEventListener('load', function () { tableFns_%s.spanCell(%s, %s, %s, %s) })"
           listener <- sprintf(
@@ -216,13 +223,16 @@ setMethod(
             rowspan,
             colspan
           )
-          x@table_string <- lines_insert(
-            x@table_string,
+          span_lines <- lines_insert_vec(
+            span_lines,
             listener,
             "tinytable span after",
             "after"
           )
         }
+      }
+      if (!is.null(span_lines)) {
+        table_string_lines(x) <- span_lines
       }
     }
 
@@ -535,6 +545,11 @@ setMethod(
       group_keys_sorted <- group_keys_sorted[order(sort_keys)]
     }
 
+    # Hold the table as a character vector for the whole loop so we only
+    # split/collapse `@table_string` once instead of twice per style group.
+    # Same edits, same order as before. See tt_save_audit.md §4.2.
+    style_lines <- if (length(group_keys_sorted) > 0) table_string_lines(x) else NULL
+
     for (group_key in group_keys_sorted) {
       group_data <- css_groups[[group_key]]
       css_rule <- group_data$css_rule
@@ -561,8 +576,8 @@ setMethod(
         "}, "
       )
       arr <- paste(arr, collapse = "")
-      x@table_string <- lines_insert(
-        x@table_string,
+      style_lines <- lines_insert_vec(
+        style_lines,
         arr,
         "tinytable style arrays after",
         "after"
@@ -574,12 +589,16 @@ setMethod(
         "    #%s td.%s, #%s th.%s { %s }",
         table_id, id_css, table_id, id_css, css_rule
       )
-      x@table_string <- lines_insert(
-        x@table_string,
+      style_lines <- lines_insert_vec(
+        style_lines,
         entry,
         "tinytable css entries after",
         "after"
       )
+    }
+
+    if (!is.null(style_lines)) {
+      table_string_lines(x) <- style_lines
     }
 
 

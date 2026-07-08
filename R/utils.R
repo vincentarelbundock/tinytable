@@ -49,24 +49,39 @@ ttempdir <- function() {
   return(d)
 }
 
-lines_drop_consecutive_empty <- function(x) {
-  lines <- strsplit(x, "\n")[[1]]
+# Line helpers operate in two layers:
+#   - `*_vec()` take and return a character vector of lines (no splitting /
+#     collapsing). These are the cheap primitives meant to be reused many
+#     times while a table string is held in its split form.
+#   - the original string-based `lines_*()` are thin wrappers that split once,
+#     delegate to the `*_vec()` primitive and collapse back once. Behaviour is
+#     byte-for-byte identical to the previous inline implementations.
+#
+# Holding a table as a character vector across a whole build phase (see
+# `table_string_lines<-`) lets the hot backends call the `*_vec()` primitives
+# in a loop without re-`strsplit()`-ing and re-`paste()`-ing the *entire,
+# growing* table string on every single insertion. See tt_save_audit.md §4.2.
+
+lines_drop_consecutive_empty_vec <- function(lines) {
   tmp <- rle(lines)
   tmp$lengths[trimws(tmp$values) == ""] <- 1
-  lines <- inverse.rle(tmp)
-  x <- paste0(lines, collapse = "\n")
-  return(x)
+  inverse.rle(tmp)
 }
 
-lines_drop <- function(
-    old,
+lines_drop_consecutive_empty <- function(x) {
+  lines <- strsplit(x, "\n")[[1]]
+  lines <- lines_drop_consecutive_empty_vec(lines)
+  paste0(lines, collapse = "\n")
+}
+
+lines_drop_vec <- function(
+    lines,
     regex,
     position = "equal",
     fixed = FALSE,
     unique = TRUE,
     perl = FALSE) {
   assert_choice(position, c("equal", "before", "after", "all"))
-  lines <- strsplit(old, "\n")[[1]]
   idx <- grep(regex, lines, fixed = fixed, perl = perl)
   if (isTRUE(unique) && length(idx) > 1 && position != "all") {
     stop(
@@ -85,12 +100,24 @@ lines_drop <- function(
       lines <- lines[!seq_along(lines) %in% idx]
     }
   }
-  out <- paste(lines, collapse = "\n")
-  return(out)
+  lines
 }
 
-lines_drop_between <- function(text, regex_start, regex_end, fixed = FALSE, perl = FALSE) {
-  lines <- strsplit(text, "\n")[[1]]
+lines_drop <- function(
+    old,
+    regex,
+    position = "equal",
+    fixed = FALSE,
+    unique = TRUE,
+    perl = FALSE) {
+  lines <- strsplit(old, "\n")[[1]]
+  lines <- lines_drop_vec(
+    lines, regex, position = position, fixed = fixed, unique = unique, perl = perl
+  )
+  paste(lines, collapse = "\n")
+}
+
+lines_drop_between_vec <- function(lines, regex_start, regex_end, fixed = FALSE, perl = FALSE) {
   idx_start <- grep(regex_start, lines, fixed = fixed, perl = perl)
   idx_end <- grep(regex_end, lines, fixed = fixed, perl = perl)
   if (length(idx_start) != 1) {
@@ -102,17 +129,20 @@ lines_drop_between <- function(text, regex_start, regex_end, fixed = FALSE, perl
   if (idx_start >= idx_end) {
     stop("`regex_start` matches a line after `regex_end`.", call. = FALSE)
   }
-  lines_to_keep <- c(1:(idx_start - 1), (idx_end + 1):length(lines))
-  output <- lines[lines_to_keep]
-  out <- paste(output, collapse = "\n")
-  return(out)
+  keep <- c(1:(idx_start - 1), (idx_end + 1):length(lines))
+  lines[keep]
 }
 
-lines_insert <- function(old, new, regex, position = c("before", "after"),
-                         fixed = FALSE, perl = FALSE, occurrence = 1L,
-                         require_unique = FALSE) {
+lines_drop_between <- function(text, regex_start, regex_end, fixed = FALSE, perl = FALSE) {
+  lines <- strsplit(text, "\n")[[1]]
+  lines <- lines_drop_between_vec(lines, regex_start, regex_end, fixed = fixed, perl = perl)
+  paste(lines, collapse = "\n")
+}
+
+lines_insert_vec <- function(lines, new, regex, position = c("before", "after"),
+                             fixed = FALSE, perl = FALSE, occurrence = 1L,
+                             require_unique = FALSE) {
   position <- match.arg(position)
-  lines <- strsplit(old, "\n", fixed = TRUE)[[1]]
   hits <- grep(regex, lines, fixed = fixed, perl = perl)
 
   if (length(hits) == 0L || anyNA(hits)) stop("`regex` did not match.", call. = FALSE)
@@ -121,8 +151,29 @@ lines_insert <- function(old, new, regex, position = c("before", "after"),
 
   idx <- hits[occurrence]
   after <- if (position == "before") idx - 1L else idx
-  out <- append(lines, values = new, after = after)
-  paste(out, collapse = "\n")
+  # Split `new` into its constituent lines so that the returned vector always
+  # mirrors the fully-split state that the string-based helpers would reach
+  # after a collapse + re-split. This is what keeps a chain of `*_vec()` calls
+  # byte-for-byte identical to the equivalent chain of string round-trips:
+  # multi-line inserts must NOT stay lumped into a single element, otherwise a
+  # later marker lookup could match the whole block instead of a single line
+  # (e.g. the Typst footer template embeds its own "// tinytable notes after"
+  # marker). strsplit("") yields character(0); preserve the original
+  # empty-insert behaviour by mapping that back to a single blank line.
+  new <- unlist(strsplit(new, "\n", fixed = TRUE), use.names = FALSE)
+  if (length(new) == 0L) new <- ""
+  append(lines, values = new, after = after)
+}
+
+lines_insert <- function(old, new, regex, position = c("before", "after"),
+                         fixed = FALSE, perl = FALSE, occurrence = 1L,
+                         require_unique = FALSE) {
+  lines <- strsplit(old, "\n", fixed = TRUE)[[1]]
+  lines <- lines_insert_vec(
+    lines, new, regex, position = position, fixed = fixed, perl = perl,
+    occurrence = occurrence, require_unique = require_unique
+  )
+  paste(lines, collapse = "\n")
 }
 
 

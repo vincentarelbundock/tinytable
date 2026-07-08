@@ -184,7 +184,6 @@ typst_notes <- function(x, out) {
       // tinytable notes after
     ),
     "
-  out <- lines_insert(out, ft, "tinytable footer after", "after")
 
   # Process each note
   notes <- rev(x@notes)
@@ -196,12 +195,17 @@ typst_notes <- function(x, out) {
 
   notes <- sapply(notes, function(n) if (is.list(n)) n$text else n)
 
+  # Split once, splice the footer and every note via the cheap `*_vec()`
+  # primitive, then collapse once. Same edits, same order as before - only the
+  # redundant per-note strsplit()/paste() of the whole table is removed.
+  # See tt_save_audit.md §4.2.
+  ll <- strsplit(out, "\n", fixed = TRUE)[[1]]
+  ll <- lines_insert_vec(ll, ft, "tinytable footer after", "after")
   for (k in seq_along(notes)) {
     note_text <- typst_note(notes[k], lab[k], ncol(x))
-    out <- lines_insert(out, note_text, "tinytable notes after", "after")
+    ll <- lines_insert_vec(ll, note_text, "tinytable notes after", "after")
   }
-
-  out
+  paste(ll, collapse = "\n")
 }
 
 # Helper function to format a single note

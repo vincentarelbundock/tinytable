@@ -173,28 +173,37 @@ typst_apply_styles <- function(x, rec) {
     style_dict_entries <- style_dict_entries[!duplicated(style_dict_keys, fromLast = TRUE)]
   }
 
-  # Insert style-dict entries as single line
-  if (length(style_dict_entries) > 0) {
-    combined_dict <- paste0(
-      "    ",
-      paste(style_dict_entries, collapse = ", ")
-    )
-    x@table_string <- lines_insert(
-      x@table_string,
-      combined_dict,
-      "tinytable style-dict after",
-      "after"
-    )
-  }
+  # Splice the style-dict and style-array entries in a single split/collapse
+  # pass over `@table_string` instead of one round-trip per entry. The exact
+  # same edits are applied in the exact same order, so output is unchanged;
+  # only the redundant per-entry `strsplit()`/`paste()` is removed.
+  # See tt_save_audit.md §4.2.
+  if (length(style_dict_entries) > 0 || length(style_array_entries) > 0) {
+    ll <- table_string_lines(x)
 
-  # Insert style-array entries
-  for (entry in rev(style_array_entries)) {
-    x@table_string <- lines_insert(
-      x@table_string,
-      paste0("    ", entry),
-      "tinytable cell style after",
-      "after"
-    )
+    if (length(style_dict_entries) > 0) {
+      combined_dict <- paste0(
+        "    ",
+        paste(style_dict_entries, collapse = ", ")
+      )
+      ll <- lines_insert_vec(
+        ll,
+        combined_dict,
+        "tinytable style-dict after",
+        "after"
+      )
+    }
+
+    for (entry in rev(style_array_entries)) {
+      ll <- lines_insert_vec(
+        ll,
+        paste0("    ", entry),
+        "tinytable cell style after",
+        "after"
+      )
+    }
+
+    table_string_lines(x) <- ll
   }
 
   return(x)
@@ -318,13 +327,19 @@ typst_hlines <- function(x, lin) {
     }
     return(out)
   })
-  for (l in tmp) {
-    x@table_string <- lines_insert(
-      x@table_string,
-      l,
+  # All chunks share the same "tinytable lines before" anchor and are spliced
+  # in forward order, so inserting them as a single joined block is identical
+  # to the previous per-chunk loop but avoids re-splitting the whole table
+  # string for every chunk. See tt_save_audit.md §4.2.
+  if (length(tmp) > 0) {
+    ll <- table_string_lines(x)
+    ll <- lines_insert_vec(
+      ll,
+      paste(tmp, collapse = "\n"),
       "tinytable lines before",
       "before"
     )
+    table_string_lines(x) <- ll
   }
   return(x)
 }
@@ -483,13 +498,15 @@ typst_vlines <- function(x, lin) {
     }
     return(out)
   })
-  for (l in lin) {
-    x@table_string <- lines_insert(
-      x@table_string,
-      l,
+  if (length(lin) > 0) {
+    ll <- table_string_lines(x)
+    ll <- lines_insert_vec(
+      ll,
+      paste(lin, collapse = "\n"),
       "tinytable lines before",
       "before"
     )
+    table_string_lines(x) <- ll
   }
   return(x)
 }
