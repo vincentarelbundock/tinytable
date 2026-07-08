@@ -340,14 +340,12 @@ style_tt_lazy <- function(
   cols <- unique(c("i", "j", sort(colnames(settings))))
   settings <- settings[, cols, drop = FALSE]
 
-  # Only add settings if there are rows to add
-  if (nrow(settings) > 0) {
-    if (nrow(out@style) == 0) {
-      out@style <- settings
-    } else {
-      out@style <- rbind(out@style, settings)
-    }
-  }
+  # Expose this call's settings frame in @style. build_tt() collects the
+  # per-call frames and rbind()s them once at the end of the lazy loop, instead
+  # of growing @style with an incremental rbind() on every style_tt() call.
+  # That per-call rbind() was O(N^2) and dominated the lazy-style evaluation
+  # phase on tables with many style_tt() calls (e.g. per-cell heat-maps).
+  out@style <- settings
 
   if (is.function(finalize)) {
     out@lazy_finalize <- c(out@lazy_finalize, list(finalize))

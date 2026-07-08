@@ -137,17 +137,26 @@ build_tt <- function(x, output = NULL) {
 
   x@style_other <- rect
 
-  # apply style_tt() and theme_*() after all group operations
+  # apply style_tt() and theme_*() after all group operations.
+  # style_tt_lazy() exposes only the current call's settings frame in @style;
+  # collect those frames here and rbind() them once. This replaces the previous
+  # pattern where every style_tt() call grew @style with an incremental rbind(),
+  # an O(N^2) cost that dominated on tables with many style_tt() calls.
   lazy_style <- x@lazy_style
   x@lazy_style <- list()
 
-  for (p in lazy_style) {
+  style_frames <- vector("list", length(lazy_style))
+  for (k in seq_along(lazy_style)) {
+    p <- lazy_style[[k]]
     o <- attr(p, "output")
     if (is.null(o) || x@output %in% o) {
       p[["x"]] <- x
       x <- eval(p)
+      if (nrow(x@style) > 0L) style_frames[[k]] <- x@style
     }
   }
+  style_frames <- style_frames[!vapply(style_frames, is.null, logical(1))]
+  x@style <- if (length(style_frames)) do.call(rbind, style_frames) else data.frame()
 
   # Fix colspan that exceeds column count after lazy styles are evaluated
   if (nrow(x@style) > 0) {
