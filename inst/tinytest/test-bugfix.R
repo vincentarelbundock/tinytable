@@ -58,3 +58,36 @@ local({
   expect_true(grepl("1,23", typst, fixed = TRUE))
   expect_true(grepl("1,23", tabulator, fixed = TRUE))
 })
+
+
+# Regression test: typst_hlines/typst_vlines used to emit fragmented chains of
+# table.hline()/table.vline() segments covering the same span whenever
+# theme_tinytable() and the user declared the same line (or any line was
+# declared twice with identical properties). This produced redundant, ugly
+# output and slowed down rendering. The fix deduplicates cell-level entries
+# inside the typst line processors.
+
+# Case 1: user re-declares the theme's middle "below colnames" line.
+# Before the fix this produced 6 fragmented hline segments at y=1.
+tab <- tt(mtcars[1:5, 1:5]) |>
+  style_tt(i = 0, line = "b", line_color = "black", line_width = 0.05)
+out <- save_tt(tab, "typst")
+hlines <- strsplit(out, "\n", fixed = TRUE)[[1]]
+hlines <- hlines[grepl("table.hline", hlines, fixed = TRUE)]
+middle <- hlines[grepl("y: 1,", hlines, fixed = TRUE)]
+expect_true(length(middle) >= 1)
+# The whole row should contain exactly one table.hline(y: 1, ...) segment
+n_middle_segments <- lengths(regmatches(middle, gregexpr("table[.]hline", middle)))
+expect_true(n_middle_segments == 1)
+
+# Case 2: user adds the same line twice -> should still produce a single segment
+tab <- tt(mtcars[1:5, 1:5]) |>
+  style_tt(i = 2, line = "b", line_color = "pink") |>
+  style_tt(i = 2, line = "b", line_color = "pink")
+out <- save_tt(tab, "typst")
+hlines <- strsplit(out, "\n", fixed = TRUE)[[1]]
+hlines <- hlines[grepl("table.hline", hlines, fixed = TRUE)]
+dup <- hlines[grepl("y: 3,", hlines, fixed = TRUE)]
+expect_true(length(dup) >= 1)
+n_dup_segments <- lengths(regmatches(dup, gregexpr("table[.]hline", dup)))
+expect_true(n_dup_segments == 1)

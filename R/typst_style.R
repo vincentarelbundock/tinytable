@@ -240,6 +240,14 @@ typst_hlines <- function(x, lin) {
   tmp <- split(lin, list(lin$i, lin$line, lin$line_color_mapped, lin$line_width))
   tmp <- Filter(function(x) nrow(x) > 0, tmp)
   tmp <- lapply(tmp, function(k) {
+    # Drop duplicate cell-level entries. These arise routinely whenever
+    # theme_tinytable() and a user style_tt() declare the same line (same
+    # i, j, line, color, width, trim). Without deduplication,
+    # typst_split_chunks() sees phantom breaks in diff(x) != 1 and emits a
+    # chain of fragmented table.hline()/table.vline() segments that cover
+    # the same span as a single line. See test-typst-line-dedup.R.
+    k <- k[!duplicated(k), , drop = FALSE]
+
     # Split chunks based on consecutive columns AND line_trim boundaries
     # line_trim marks group boundaries - split chunks at these points
     chunks <- typst_split_chunks(k$j)
@@ -462,6 +470,8 @@ typst_vlines <- function(x, lin) {
   lin <- split(lin, list(lin$j, lin$line, lin$line_color_mapped, lin$line_width))
   lin <- Filter(function(x) nrow(x) > 0, lin)
   lin <- lapply(lin, function(k) {
+    # Drop duplicate cell-level entries; see typst_hlines() for rationale.
+    k <- k[!duplicated(k), , drop = FALSE]
     ymin <- typst_split_chunks(k$i)$min
     ymax <- typst_split_chunks(k$i)$max
     xmin <- k$j[1]
