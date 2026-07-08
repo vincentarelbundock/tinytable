@@ -198,8 +198,10 @@ resolve_styles_batch <- function(style_other, style_df) {
     line_entries <- vector("list", length(has_line))
     for (kp in seq_along(has_line)) {
       k <- has_line[kp]
-      ri <- target_i[[k]]
-      rj <- target_j[[k]]
+      # Issue #664: unname targets before creating data.frame() to avoid
+      # "row names contain missing values" when grouping order leaves NA names.
+      ri <- as.integer(unname(target_i[[k]]))
+      rj <- as.integer(unname(target_j[[k]]))
       # cartesian product (preserves append_lines_to_rect ordering)
       line_entries[[kp]] <- data.frame(
         i = rep(ri, times = length(rj)),
@@ -208,7 +210,8 @@ resolve_styles_batch <- function(style_other, style_df) {
         line_color = line_color_col[k],
         line_width = line_width_col[k],
         line_trim  = line_trim_col[k],
-        stringsAsFactors = FALSE
+        stringsAsFactors = FALSE,
+        row.names = NULL
       )
     }
     style_lines <- do.call(rbind, line_entries)
