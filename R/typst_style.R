@@ -187,11 +187,13 @@ typst_apply_styles <- function(x, rec) {
     )
   }
 
-  # Insert style-array entries
-  for (entry in rev(style_array_entries)) {
+  # Insert all style-array entries in one pass over the table string. The old
+  # loop inserted rev(style_array_entries) after the same marker, which
+  # produced style_array_entries order in the final output.
+  if (length(style_array_entries) > 0) {
     x@table_string <- lines_insert(
       x@table_string,
-      paste0("    ", entry),
+      paste0("    ", style_array_entries, collapse = "\n"),
       "tinytable cell style after",
       "after"
     )
@@ -318,10 +320,10 @@ typst_hlines <- function(x, lin) {
     }
     return(out)
   })
-  for (l in tmp) {
+  if (length(tmp) > 0) {
     x@table_string <- lines_insert(
       x@table_string,
-      l,
+      paste(unlist(tmp, use.names = FALSE), collapse = "\n"),
       "tinytable lines before",
       "before"
     )
@@ -483,10 +485,10 @@ typst_vlines <- function(x, lin) {
     }
     return(out)
   })
-  for (l in lin) {
+  if (length(lin) > 0) {
     x@table_string <- lines_insert(
       x@table_string,
-      l,
+      paste(unlist(lin, use.names = FALSE), collapse = "\n"),
       "tinytable lines before",
       "before"
     )

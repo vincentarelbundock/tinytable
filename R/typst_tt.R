@@ -196,9 +196,20 @@ typst_notes <- function(x, out) {
 
   notes <- sapply(notes, function(n) if (is.list(n)) n$text else n)
 
-  for (k in seq_along(notes)) {
-    note_text <- typst_note(notes[k], lab[k], ncol(x))
-    out <- lines_insert(out, note_text, "tinytable notes after", "after")
+  note_text <- vapply(
+    seq_along(notes),
+    function(k) typst_note(notes[k], lab[k], ncol(x)),
+    character(1)
+  )
+  if (length(note_text) > 0) {
+    # Repeated insertion after one marker reverses the input, so reverse the
+    # batch to preserve the existing byte-for-byte output order.
+    out <- lines_insert(
+      out,
+      paste(rev(note_text), collapse = "\n"),
+      "tinytable notes after",
+      "after"
+    )
   }
 
   out
