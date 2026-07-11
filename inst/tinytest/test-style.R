@@ -89,6 +89,27 @@ expect_snapshot_print(t[["typst"]], "style-smallcap.typ")
 expect_snapshot_print(t[["markdown"]], "style-smallcap.md")
 
 
+# Caption and notes styles must not duplicate the preceding cell style frame
+tab <- tt(
+    data.frame(a = 1:2),
+    caption = "Caption",
+    notes = "Note") |>
+    style_tt(i = 1, line = "b", line_color = "red", line_width = 0.123) |>
+    style_tt(i = "caption", bold = TRUE) |>
+    style_tt(i = "notes", italic = TRUE)
+tab <- tinytable:::build_tt(tab, output = "typst")
+user_lines <- tab@style_lines[
+    tab@style_lines$line_color == "red" & tab@style_lines$line_width == 0.123,
+    ,
+    drop = FALSE]
+expect_equal(nrow(user_lines), 1L)
+line_matches <- gregexpr(
+    'stroke: 0.123em + rgb("#FF0000")',
+    tab@table_string,
+    fixed = TRUE)[[1]]
+expect_equal(sum(line_matches > 0L), 1L)
+
+
 # partial align
 tab <- tt(mtcars[1:5, 1:6]) |> style_tt(j = c(2, 4), align = "cr")
 t <- expect_table(tab)

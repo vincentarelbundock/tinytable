@@ -143,6 +143,10 @@ style_tt_lazy <- function(
   ...) {
 
   out <- x
+  # Each lazy call exposes only its own settings frame for build_tt() to
+  # collect. In particular, notes and caption styling return early below and
+  # must not expose the preceding call's frame again.
+  out@style <- data.frame()
 
   # Set default line_color if NULL
   if (is.null(line_color) && !is.null(line)) {
@@ -340,14 +344,12 @@ style_tt_lazy <- function(
   cols <- unique(c("i", "j", sort(colnames(settings))))
   settings <- settings[, cols, drop = FALSE]
 
-  # Only add settings if there are rows to add
-  if (nrow(settings) > 0) {
-    if (nrow(out@style) == 0) {
-      out@style <- settings
-    } else {
-      out@style <- rbind(out@style, settings)
-    }
-  }
+  # Expose this call's settings frame in @style. build_tt() collects the
+  # per-call frames and rbind()s them once at the end of the lazy loop, instead
+  # of growing @style with an incremental rbind() on every style_tt() call.
+  # That per-call rbind() was O(N^2) and dominated the lazy-style evaluation
+  # phase on tables with many style_tt() calls (e.g. per-cell heat-maps).
+  out@style <- settings
 
   if (is.function(finalize)) {
     out@lazy_finalize <- c(out@lazy_finalize, list(finalize))
@@ -549,7 +551,6 @@ assert_style_tt <- function(
 #' @template limitations_word_markdown
 #' @export
 #' @examplesIf knitr::is_html_output()
-#' @examples
 #' if (knitr::is_html_output()) options(tinytable_print_output = "html")
 #'
 #' library(tinytable)
@@ -724,6 +725,4 @@ style_tt <- function(
   x@lazy_style <- c(x@lazy_style, list(obj))
   return(x)
 }
-
-
 
