@@ -4,6 +4,7 @@
 
 * Performance improvements to `style_tt()`. Thanks to @EinMaulwurf for PR #663.
 * Fix grouped tables with row and column grouping order dependence introduced in the recent style-resolution refactor. Thanks to @EinMaulwurf for Issue #664.
+* Simpler spanning rows in Typst. Thanks to @EinMaulwurf for Issue #665.
 
 ## 0.17.0
 
