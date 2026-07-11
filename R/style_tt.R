@@ -143,6 +143,10 @@ style_tt_lazy <- function(
   ...) {
 
   out <- x
+  # Each lazy call exposes only its own settings frame for build_tt() to
+  # collect. In particular, notes and caption styling return early below and
+  # must not expose the preceding call's frame again.
+  out@style <- data.frame()
 
   # Set default line_color if NULL
   if (is.null(line_color) && !is.null(line)) {
@@ -547,7 +551,6 @@ assert_style_tt <- function(
 #' @template limitations_word_markdown
 #' @export
 #' @examplesIf knitr::is_html_output()
-#' @examples
 #' if (knitr::is_html_output()) options(tinytable_print_output = "html")
 #'
 #' library(tinytable)
@@ -722,6 +725,4 @@ style_tt <- function(
   x@lazy_style <- c(x@lazy_style, list(obj))
   return(x)
 }
-
-
 
