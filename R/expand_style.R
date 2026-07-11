@@ -94,10 +94,12 @@ append_lines_to_rect <- function(style_lines, style_row, rect) {
 #'
 #' This is functionally equivalent to (and produces value-identical output as)
 #' the per-row loop:
+#' ```r
 #'   for (idx in seq_len(nrow(x@style))) {
 #'     style_other <- apply_style_to_rect(style_other, x@style[idx,])
 #'     style_lines <- append_lines_to_rect(style_lines, x@style[idx,], rect)
 #'   }
+#' ```
 #' but is O(N + cells) instead of O(N * cells * props) by avoiding the per-row
 #' full-rect mask scan. The naive loop becomes the dominant bottleneck once a
 #' table accumulates more than a few hundred style_tt() entries (which is

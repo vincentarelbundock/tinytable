@@ -167,6 +167,7 @@ going through a text-only intermediate format.
 }
 
 \examples{
+\dontshow{if (knitr::is_html_output()) withAutoprint(\{ # examplesIf}
 if (knitr::is_html_output()) options(tinytable_print_output = "html")
 
 library(tinytable)
@@ -272,5 +273,5 @@ tt(head(iris),
     alignv = "m", align = "c", line = "tblr") |>
   style_tt("colnames", italic = TRUE) |>
   style_tt("caption", smallcap = TRUE)
-
+\dontshow{\}) # examplesIf}
 }
