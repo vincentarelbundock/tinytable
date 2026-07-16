@@ -146,12 +146,17 @@ setMethod(
       )
     } else {
       # Remove placeholder if no script is provided
-      out <- lines_drop(
-        out,
-        "\\$tinytable_SCRIPT",
-        fixed = FALSE,
-        unique = FALSE
-      )
+      marker <- "    $tinytable_SCRIPT\n"
+      if (grepl(marker, out, fixed = TRUE)) {
+        out <- sub(marker, "", out, fixed = TRUE)
+      } else {
+        out <- lines_drop(
+          out,
+          "$tinytable_SCRIPT",
+          fixed = TRUE,
+          unique = FALSE
+        )
+      }
     }
 
     if (isTRUE(getOption("knitr.in.progress"))) {

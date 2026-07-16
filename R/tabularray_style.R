@@ -411,64 +411,79 @@ process_tabularray_other_styles <- function(x, other) {
     color_map <- character(0)
   }
 
-  # Vectorize style building per row
-  font_cmds <- character(nrow(other))
-  cmd_strs <- character(nrow(other))
-  font_sets <- character(nrow(other))
-  span_strs <- character(nrow(other))
+  # Build style strings directly from columns. `other` is the filtered
+  # rectangular style grid, so each row already represents one concrete cell;
+  # extracting one-row data frames and rescanning `rec` is unnecessary.
+  yes <- function(z) !is.na(z) & z
+  font_cmds <- paste0(
+    ifelse(yes(other$bold), "\\bfseries", ""),
+    ifelse(yes(other$italic), "\\itshape", ""),
+    ifelse(yes(other$monospace), "\\ttfamily", ""),
+    ifelse(yes(other$smallcap), "\\scshape", "")
+  )
+  cmd_strs <- paste0(
+    ifelse(yes(other$underline), "\\tinytableTabularrayUnderline", ""),
+    ifelse(yes(other$strikeout), "\\tinytableTabularrayStrikeout", "")
+  )
 
-  for (row in seq_len(nrow(other))) {
-    # Build style commands
-    text_style <- style_text(other[row, ])
-    font_cmds[row] <- text_style$font
-    cmd_strs[row] <- text_style$cmd
+  col_idx <- which(!is.na(other$color) & other$color %in% names(color_map))
+  if (length(col_idx)) {
+    mapped <- unname(color_map[other$color[col_idx]])
+    mapped <- sub("^#", "c", mapped)
+    cmd_strs[col_idx] <- sprintf("%s, fg=%s", cmd_strs[col_idx], mapped)
+  }
+  bg_idx <- which(!is.na(other$background) & other$background %in% names(color_map))
+  if (length(bg_idx)) {
+    mapped <- unname(color_map[other$background[bg_idx]])
+    mapped <- sub("^#", "c", mapped)
+    cmd_strs[bg_idx] <- sprintf("%s, bg=%s", cmd_strs[bg_idx], mapped)
+  }
 
-    # Style colors using precomputed map
-    cmd <- cmd_strs[row]
-    col <- other$color[row]
-    if (!is.na(col) && col %in% names(color_map)) {
-      col_mapped <- color_map[col]
-      if (grepl("^#", col_mapped)) {
-        col_mapped <- sub("^#", "c", col_mapped)
-      }
-      cmd <- sprintf("%s, fg=%s", cmd, col_mapped)
-    }
+  font_sets <- rep("", nrow(other))
+  fontsize <- suppressWarnings(as.numeric(other$fontsize))
+  idx <- which(!is.na(fontsize))
+  if (length(idx)) {
+    font_cmds[idx] <- sprintf(
+      "%s\\fontsize{%sem}{%sem}\\selectfont",
+      font_cmds[idx],
+      format_markup_num(fontsize[idx]),
+      format_markup_num(fontsize[idx] + 0.3)
+    )
+  }
+  idx <- which(!is.na(other$align) & !grepl("d", other$align))
+  font_sets[idx] <- sprintf("%s, halign=%s,", font_sets[idx], other$align[idx])
+  idx <- which(!is.na(other$alignv))
+  font_sets[idx] <- sprintf("%s, valign=%s,", font_sets[idx], other$alignv[idx])
+  idx <- which(!is.na(other$indent) & other$indent > 0)
+  if (length(idx)) {
+    font_sets[idx] <- sprintf(
+      "%s preto={\\hspace{%sem}},",
+      font_sets[idx],
+      format_markup_num(other$indent[idx])
+    )
+  }
 
-    bg <- other$background[row]
-    if (!is.na(bg) && bg %in% names(color_map)) {
-      bg_mapped <- color_map[bg]
-      if (grepl("^#", bg_mapped)) {
-        bg_mapped <- sub("^#", "c", bg_mapped)
-      }
-      cmd <- sprintf("%s, bg=%s", cmd, bg_mapped)
-    }
-    cmd_strs[row] <- cmd
-
-    # Style fonts
-    font_details <- style_fonts(other[row, ])
-    font_cmds[row] <- paste0(font_cmds[row], font_details$font)
-    font_sets[row] <- font_details$set
-
-    # Style spans
-    span_strs[row] <- style_spans("", other[row, ])
-    if (length(x@width) == ncol(x) && !is.na(other[row, "colspan"])) {
-      w <- sum(x@width[other$j[row]:(other[row, "j"] + other[row, "colspan"] - 1)])
+  span_strs <- rep("", nrow(other))
+  idx <- which(!is.na(other$colspan))
+  span_strs[idx] <- paste0(span_strs[idx], "c=", other$colspan[idx], ",")
+  idx <- which(!is.na(other$rowspan))
+  span_strs[idx] <- paste0(span_strs[idx], "r=", other$rowspan[idx], ",")
+  if (length(x@width) == ncol(x)) {
+    for (row in which(!is.na(other$colspan))) {
+      cols <- other$j[row]:(other$j[row] + other$colspan[row] - 1)
+      w <- sum(x@width[cols])
       font_sets[row] <- paste(font_sets[row], sprintf("wd=%s\\linewidth,", format_markup_num(w)))
     }
   }
 
-  # Apply styling to record grid (still need loop for NA expansion)
-  for (row in seq_len(nrow(other))) {
-    # Find matching cells in record grid
-    idx_i <- other$i[row]
-    if (is.na(idx_i)) {
-      idx_i <- unique(rec$i)
-    }
-    idx_j <- other$j[row]
-    if (is.na(idx_j)) {
-      idx_j <- unique(rec$j)
-    }
-    idx <- rec$i %in% idx_i & rec$j %in% idx_j
+  n_i <- x@nrow + x@nhead
+  target_idx <- other$i + (other$j - 1L) * n_i
+  valid_target <- !is.na(target_idx) & target_idx >= 1L & target_idx <= nrow(rec)
+
+  # Preserve append semantics defensively if duplicate coordinates ever reach
+  # this function, while avoiding a full-grid logical scan for every row.
+  for (row in which(valid_target)) {
+    idx <- target_idx[row]
 
     # Add font styling if present
     font_cmd <- font_cmds[row]
@@ -494,26 +509,27 @@ process_tabularray_other_styles <- function(x, other) {
     span[idx] <- paste0(span[idx], span_strs[row])
   }
 
-  # Clean style strings
-  rec$set <- clean_style_strings(set)
-  rec$span <- clean_style_strings(span)
+  # Only styled cells need the comparatively expensive split/dedup cleanup.
+  used <- unique(target_idx[valid_target])
+  set[used] <- clean_style_strings(set[used])
+  span[used] <- clean_style_strings(span[used])
+  rec$set <- set
+  rec$span <- span
 
   # Mark complete rows and columns
   all_i <- seq_len(x@nrow + x@nhead)
   all_j <- seq_len(x@ncol)
 
-  rec <- do.call(
-    rbind,
-    by(rec, list(rec$j, rec$set, rec$span), function(k) {
-      transform(k, complete_column = all(all_i %in% k$i))
-    })
-  )
-  rec <- do.call(
-    rbind,
-    by(rec, list(rec$i, rec$set, rec$span), function(k) {
-      transform(k, complete_row = all(all_j %in% k$j))
-    })
-  )
+  # rec contains one row per (i, j), so a style group covers a complete column
+  # or row exactly when its group size equals the corresponding dimension.
+  # This replaces two by()/transform()/rbind() cycles over the full grid.
+  col_group <- interaction(rec$j, rec$set, rec$span, drop = TRUE)
+  col_size <- tabulate(as.integer(col_group))
+  rec$complete_column <- col_size[as.integer(col_group)] == length(all_i)
+
+  row_group <- interaction(rec$i, rec$set, rec$span, drop = TRUE)
+  row_size <- tabulate(as.integer(row_group))
+  rec$complete_row <- row_size[as.integer(row_group)] == length(all_j)
 
   # Generate tabularray specifications
   x <- tabularray_columns(x, rec)

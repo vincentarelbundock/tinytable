@@ -50,12 +50,23 @@ ttempdir <- function() {
 }
 
 lines_drop_consecutive_empty <- function(x) {
-  lines <- strsplit(x, "\n")[[1]]
-  tmp <- rle(lines)
-  tmp$lengths[trimws(tmp$values) == ""] <- 1
-  lines <- inverse.rle(tmp)
-  x <- paste0(lines, collapse = "\n")
-  return(x)
+  if (!nzchar(x)) {
+    return(x)
+  }
+
+  # strsplit() drops one terminal delimiter; mirror that behavior before
+  # collapsing runs. The regex matches repeated *identical* whitespace-only
+  # lines, which is the exact behavior of the former rle(lines) implementation,
+  # without allocating and rejoining every line in large rendered tables.
+  if (endsWith(x, "\n")) {
+    x <- substr(x, 1L, nchar(x) - 1L)
+  }
+  gsub(
+    "(?m)^([ \\t\\r]*)(?:\\n\\1)+(?=\\n|$)",
+    "\\1",
+    x,
+    perl = TRUE
+  )
 }
 
 lines_drop <- function(
@@ -123,6 +134,41 @@ lines_insert <- function(old, new, regex, position = c("before", "after"),
   after <- if (position == "before") idx - 1L else idx
   out <- append(lines, values = new, after = after)
   paste(out, collapse = "\n")
+}
+
+# Fast path for inserting content after several unique fixed-text marker lines.
+# Character offsets are resolved first and the output is assembled once.
+lines_insert_after_fixed <- function(old, markers, values) {
+  stopifnot(length(markers) == length(values))
+  marker_pos <- vapply(
+    markers,
+    function(marker) regexpr(marker, old, fixed = TRUE)[1L],
+    integer(1)
+  )
+  if (any(marker_pos < 1L)) {
+    stop("`marker` did not match.", call. = FALSE)
+  }
+
+  line_end <- vapply(seq_along(marker_pos), function(k) {
+    suffix <- substring(old, marker_pos[k])
+    rel <- regexpr("\n", suffix, fixed = TRUE)[1L]
+    if (rel < 0L) nchar(old) else marker_pos[k] + rel - 1L
+  }, integer(1))
+  ord <- order(line_end)
+  line_end <- line_end[ord]
+  values <- values[ord]
+
+  pieces <- character(length(line_end) * 2L + 1L)
+  start <- 1L
+  p <- 1L
+  for (k in seq_along(line_end)) {
+    pieces[p] <- substr(old, start, line_end[k])
+    pieces[p + 1L] <- paste0(values[k], "\n")
+    start <- line_end[k] + 1L
+    p <- p + 2L
+  }
+  pieces[p] <- substr(old, start, nchar(old))
+  paste0(pieces, collapse = "")
 }
 
 

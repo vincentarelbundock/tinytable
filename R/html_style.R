@@ -74,6 +74,74 @@ style_to_css <- function(row) {
   return(out)
 }
 
+# Vectorized counterpart used by the HTML backend. Keeping the property order
+# identical to style_to_css() preserves byte-for-byte CSS output while avoiding
+# one-row data-frame extraction and S3 dispatch for every styled cell.
+styles_to_css <- function(x) {
+  n <- nrow(x)
+  if (n == 0L) {
+    return(character())
+  }
+
+  css <- matrix("", nrow = n, ncol = 12L)
+  css[which(x$bold %in% TRUE), 1L] <- "font-weight: bold"
+  css[which(x$italic %in% TRUE), 2L] <- "font-style: italic"
+  css[which(x$monospace %in% TRUE), 3L] <- "font-family: monospace"
+  css[which(x$smallcap %in% TRUE), 4L] <- "font-variant: small-caps"
+
+  align <- x$align
+  align[align == "l" & !is.na(align)] <- "left"
+  align[align == "c" & !is.na(align)] <- "center"
+  align[align == "d" & !is.na(align)] <- "center"
+  align[align == "r" & !is.na(align)] <- "right"
+  idx <- which(!is.na(align))
+  css[idx, 5L] <- paste0("text-align: ", align[idx])
+
+  alignv <- x$alignv
+  alignv[alignv == "t" & !is.na(alignv)] <- "top"
+  alignv[alignv == "b" & !is.na(alignv)] <- "bottom"
+  alignv[alignv == "m" & !is.na(alignv)] <- "middle"
+  idx <- which(!is.na(alignv))
+  css[idx, 6L] <- paste0("vertical-align: ", alignv[idx])
+
+  idx <- which(!is.na(x$fontsize))
+  css[idx, 7L] <- paste0("font-size: ", format_markup_unit(x$fontsize[idx], "em"))
+  idx <- which(!is.na(x$indent))
+  css[idx, 8L] <- paste0("padding-left: ", format_markup_unit(x$indent[idx], "em"))
+
+  map_colors <- function(values) {
+    out <- rep(NA_character_, length(values))
+    vals <- unique(values[!is.na(values)])
+    if (length(vals)) {
+      mapped <- stats::setNames(
+        vapply(vals, standardize_colors, character(1), format = "hex"),
+        vals
+      )
+      idx <- which(!is.na(values))
+      out[idx] <- unname(mapped[values[idx]])
+    }
+    out
+  }
+  color <- map_colors(x$color)
+  idx <- which(!is.na(color))
+  css[idx, 9L] <- paste0("color: ", color[idx])
+  background <- map_colors(x$background)
+  idx <- which(!is.na(background))
+  css[idx, 10L] <- paste0("background-color: ", background[idx])
+
+  idx <- which(!is.na(x$html_css))
+  css[idx, 11L] <- x$html_css[idx]
+  decorations <- paste(
+    ifelse(x$underline %in% TRUE, "underline", ""),
+    ifelse(x$strikeout %in% TRUE, "line-through", "")
+  )
+  decorations <- trimws(decorations)
+  idx <- which(nzchar(decorations))
+  css[idx, 12L] <- paste0("text-decoration: ", decorations[idx])
+
+  apply(css, 1L, function(z) paste(z[nzchar(z)], collapse = "; "))
+}
+
 
 line_to_css <- function(
   border_top = 0,
@@ -419,11 +487,7 @@ setMethod(
 
     # Process other styles - vectorized
     if (!is.null(other) && nrow(other) > 0) {
-      # Vectorize style_to_css over all rows
-      css_rules <- character(nrow(other))
-      for (row in seq_len(nrow(other))) {
-        css_rules[row] <- style_to_css(other[row, , drop = FALSE])
-      }
+      css_rules <- styles_to_css(other)
 
       # Filter to non-empty CSS
       has_css <- nzchar(css_rules)
@@ -479,16 +543,15 @@ setMethod(
       stringsAsFactors = FALSE
     )
 
-    idx <- 1
-    for (cell_key in names(cell_styles)) {
-      cell_data <- cell_styles[[cell_key]]
-      css_df$i[idx] <- cell_data$i
-      css_df$j[idx] <- cell_data$j
-      css_df$line_css[idx] <- if (!is.null(cell_data$consolidated_line_css)) cell_data$consolidated_line_css else ""
-      css_df$other_css[idx] <- cell_data$css
-      css_df$has_border[idx] <- cell_data$has_border
-      idx <- idx + 1
-    }
+    css_df$i <- vapply(cell_styles, `[[`, numeric(1), "i")
+    css_df$j <- vapply(cell_styles, `[[`, numeric(1), "j")
+    css_df$line_css <- vapply(
+      cell_styles,
+      function(z) z$consolidated_line_css %||% "",
+      character(1)
+    )
+    css_df$other_css <- vapply(cell_styles, `[[`, character(1), "css")
+    css_df$has_border <- vapply(cell_styles, `[[`, logical(1), "has_border")
 
     # Merge line_css and other_css
     has_line <- nzchar(css_df$line_css)
@@ -539,9 +602,9 @@ setMethod(
       group_keys_sorted <- group_keys_sorted[order(sort_keys)]
     }
 
-    style_arrays <- character(0)
-    css_entries <- character(0)
-    for (group_key in group_keys_sorted) {
+    style_arrays <- css_entries <- character(length(group_keys_sorted))
+    for (group_idx in seq_along(group_keys_sorted)) {
+      group_key <- group_keys_sorted[group_idx]
       group_data <- css_groups[[group_key]]
       css_rule <- group_data$css_rule
       has_border <- group_data$has_border
@@ -567,7 +630,7 @@ setMethod(
         "}, "
       )
       arr <- paste(arr, collapse = "")
-      style_arrays <- c(style_arrays, arr)
+      style_arrays[group_idx] <- arr
 
       # Generate CSS entry - scoped to table ID to prevent CSS cascade conflicts
       table_id <- paste0("tinytable_", x@id)
@@ -575,21 +638,17 @@ setMethod(
         "    #%s td.%s, #%s th.%s { %s }",
         table_id, id_css, table_id, id_css, css_rule
       )
-      css_entries <- c(css_entries, entry)
+      css_entries[group_idx] <- entry
     }
 
     if (length(style_arrays) > 0) {
-      x@table_string <- lines_insert(
+      x@table_string <- lines_insert_after_fixed(
         x@table_string,
-        paste(rev(style_arrays), collapse = "\n"),
-        "tinytable style arrays after",
-        "after"
-      )
-      x@table_string <- lines_insert(
-        x@table_string,
-        paste(rev(css_entries), collapse = "\n"),
-        "tinytable css entries after",
-        "after"
+        c("tinytable style arrays after", "tinytable css entries after"),
+        c(
+          paste(rev(style_arrays), collapse = "\n"),
+          paste(rev(css_entries), collapse = "\n")
+        )
       )
     }
 

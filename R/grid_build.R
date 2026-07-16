@@ -211,17 +211,25 @@ adjust_group_widths <- function(x, width_cols) {
 calculate_column_widths <- function(tab, x, header, width_cols) {
   colspan_info <- extract_colspan_info(x)
 
-  # Calculate basic widths excluding colspan cells
-  for (j in seq_len(ncol(tab))) {
-    cell_widths <- character(0)
-    for (i in seq_len(nrow(tab))) {
-      if (!is_colspan_cell(i, j, colspan_info, header)) {
-        cell_widths <- c(cell_widths, tab[i, j])
-      }
+  # Mark colspan cells once instead of rescanning colspan_info for every cell.
+  # Rows in colspan_info use body indices; tab includes the header when present.
+  excluded <- matrix(FALSE, nrow = nrow(tab), ncol = ncol(tab))
+  if (!is.null(colspan_info)) {
+    tab_i <- colspan_info$i + as.integer(header)
+    tab_j <- colspan_info$j
+    valid <- !is.na(tab_i) & !is.na(tab_j) &
+      tab_i > 0L & tab_i <= nrow(tab) & tab_j > 0L & tab_j <= ncol(tab)
+    if (any(valid)) {
+      excluded[cbind(tab_i[valid], tab_j[valid])] <- TRUE
     }
+  }
 
-    if (length(cell_widths) > 0) {
-      width_cols[j] <- max(ansi_nchar(cell_widths))
+  # Calculate basic widths excluding colspan cells. ansi_nchar() is vectorized,
+  # so this avoids growing cell_widths in the former nested row loop.
+  for (j in seq_len(ncol(tab))) {
+    keep <- !excluded[, j]
+    if (any(keep)) {
+      width_cols[j] <- max(ansi_nchar(tab[keep, j]))
     } else {
       width_cols[j] <- max(ansi_nchar(tab[, j]))
     }
@@ -249,8 +257,7 @@ calculate_column_widths <- function(tab, x, header, width_cols) {
 pad_table_cells <- function(tab, width_cols) {
   for (j in seq_len(ncol(tab))) {
     nc <- ansi_nchar(tab[, j])
-    pad <- width_cols[j] - nc
-    pad <- sapply(pad, function(k) strrep(" ", max(0, k)))
+    pad <- strrep(" ", pmax.int(0L, width_cols[j] - nc))
     tab[, j] <- paste0(tab[, j], pad)
   }
   return(tab)
@@ -291,10 +298,19 @@ format_table_rows <- function(tab, x, header, width_cols) {
     group_rows <- group_rows + 1 # Header adds one row at the top
   }
 
+  spanning_rows <- logical(nrow(tab))
+  candidates <- intersect(group_rows, seq_len(nrow(tab)))
+  for (row_idx in candidates) {
+    row_data <- tab[row_idx, ]
+    spanning_rows[row_idx] <-
+      ansi_nchar(trimws(row_data[1])) > 0 &&
+      all(trimws(row_data[-1]) == "")
+  }
+
   for (row_idx in seq_len(nrow(tab))) {
     row_data <- tab[row_idx, ]
 
-    if (is_spanning_group_row(row_idx, row_data, group_rows)) {
+    if (spanning_rows[row_idx]) {
       # This is a colspan row - create a single spanning cell
       total_width <- sum(width_cols) + length(width_cols) - 1
       content_width <- ansi_nchar(row_data[1])
@@ -507,18 +523,18 @@ grid_hlines <- function(x) {
   lines <- strsplit(out, split = "\\n")[[1]]
   if (length(lines) > 1) {
     corner_char <- "+"
-    for (idlines in length(lines):2) {
-      if (
-        !startsWith(lines[idlines - 1], corner_char) &&
-          !startsWith(lines[idlines], corner_char) &&
-          lines[idlines] != ""
-      ) {
-        lines <- c(
-          lines[1:(idlines - 1)],
-          rule_line,
-          lines[idlines:length(lines)]
-        )
-      }
+    add_before <- c(
+      FALSE,
+      !startsWith(lines[-length(lines)], corner_char) &
+        !startsWith(lines[-1L], corner_char) &
+        lines[-1L] != ""
+    )
+    if (any(add_before)) {
+      end_pos <- cumsum(1L + add_before)
+      expanded <- character(length(lines) + sum(add_before))
+      expanded[end_pos] <- lines
+      expanded[end_pos[add_before] - 1L] <- rule_line
+      lines <- expanded
     }
   }
   x@table_string <- paste(lines, collapse = "\n")
