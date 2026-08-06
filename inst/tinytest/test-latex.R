@@ -382,6 +382,14 @@ tab3 <- head(mtcars, 1) |>
 expect_equal(lengths(gregexpr("\\{table", tab3)), 2)
 expect_equal(lengths(gregexpr("\\{talltblr", tab3)), 2)
 
+# rowhead combined with environment = "longtblr" (previously errored)
+tab4 <- head(mtcars, 5) |>
+  tt() |>
+  theme_latex(environment = "longtblr", rowhead = 2) |>
+  save_tt("latex")
+expect_true(grepl("rowhead=2", tab4, fixed = TRUE))
+expect_true(grepl("longtblr", tab4, fixed = TRUE))
+
 
 
 options(tinytable_print_output = NULL)

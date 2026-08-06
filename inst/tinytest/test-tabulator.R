@@ -126,5 +126,12 @@ out <- save_tt(tab, "html")
 expect_true(grepl("fitColumns", out))
 expect_true(grepl("200px", out))
 
+# Single styled cell builds without error and emits the color
+tab <- tt(mtcars[1:3, 1:2]) |>
+  theme_html(engine = "tabulator") |>
+  style_tt(i = 2, j = 1, color = "red")
+out <- save_tt(tab, "html")
+expect_true(grepl("color: #FF0000", out, fixed = TRUE))
+
 # Reset global option
 options(tinytable_html_engine = NULL)

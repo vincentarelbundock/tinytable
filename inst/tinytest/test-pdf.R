@@ -45,3 +45,19 @@ tt(x, caption = cap, notes = not, width = .5) |>
 
 # Clean slate
 suppressWarnings(invisible(file.remove(list.files(dest_dir))))
+
+# save_tt() with a relative sub-directory path
+wd <- getwd()
+rel_root <- tempfile("tt-pdf-rel")
+dir.create(file.path(rel_root, "sub"), recursive = TRUE)
+setwd(rel_root)
+res <- tryCatch(
+  suppressWarnings(
+    save_tt(tt(mtcars[1:2, 1:3]), "sub/out.pdf", overwrite = TRUE)
+  ),
+  error = function(e) e,
+  finally = setwd(wd)
+)
+expect_false(inherits(res, "error"))
+expect_true(file.exists(file.path(rel_root, "sub", "out.pdf")))
+unlink(rel_root, recursive = TRUE)

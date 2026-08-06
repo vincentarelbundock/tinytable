@@ -355,3 +355,12 @@ expect_warning(
   tt(head(iris)) |> group_tt(j = list("A" = c(1, 3))),
   pattern = "not contiguous"
 )
+
+# Duplicate column-group labels (documented example in ?group_tt)
+tab <- tt(mtcars[1:3, 1:6]) |>
+  group_tt(j = list("Hello" = 1:2, "World" = 3:4, "Hello" = 5:6))
+md <- save_tt(tab, "markdown")
+expect_equal(unname(lengths(gregexpr("Hello", md, fixed = TRUE))), 2)
+expect_true(grepl("World", md, fixed = TRUE))
+htm <- strip_random(save_tt(tab, "html"))
+expect_equal(unname(lengths(gregexpr("Hello", htm, fixed = TRUE))), 2)
