@@ -285,24 +285,14 @@ tabulator_apply_column_alignment <- function(x, style_row) {
 
     # Map align values
     if (!is.na(style_row$align)) {
-      tabulator_align <- switch(style_row$align,
-        "l" = "left",
-        "c" = "center",
-        "r" = "right",
-        style_row$align
-      )
-      x@tabulator_column_styles[[col_name]]$hozAlign <- tabulator_align
+      x@tabulator_column_styles[[col_name]]$hozAlign <-
+        map_align(style_row$align, "tabulator")
     }
 
-    # Map alignv values
+    # Map alignv values (Tabulator vertAlign uses the CSS top/middle/bottom values)
     if (!is.na(style_row$alignv)) {
-      tabulator_alignv <- switch(style_row$alignv,
-        "t" = "top",
-        "m" = "middle",
-        "b" = "bottom",
-        style_row$alignv
-      )
-      x@tabulator_column_styles[[col_name]]$vertAlign <- tabulator_alignv
+      x@tabulator_column_styles[[col_name]]$vertAlign <-
+        map_alignv(style_row$alignv, "css")
     }
   }
 

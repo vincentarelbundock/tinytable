@@ -2,16 +2,6 @@
 # HELPER FUNCTIONS
 # =============================================================================
 
-#' Map alignv values to tabularray format
-#' @keywords internal
-#' @noRd
-map_alignv_values <- function(sty) {
-  sty$alignv[which(sty$alignv == "b")] <- "f"
-  sty$alignv[which(sty$alignv == "t")] <- "h"
-  sty$alignv[which(sty$alignv == "m")] <- "m"
-  return(sty)
-}
-
 #' Clean style strings
 #' @keywords internal
 #' @noRd
@@ -256,7 +246,7 @@ process_tabularray_other_styles <- function(x, other) {
 
   # Adjust i values for header offset and map alignv values
   other$i <- other$i + x@nhead
-  other <- map_alignv_values(other)
+  other$alignv <- map_alignv(other$alignv, "tabularray")
 
   # Create record grid
   rec <- expand.grid(

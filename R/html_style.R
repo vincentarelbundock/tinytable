@@ -22,25 +22,8 @@ get_default_line_color <- function(x) {
 style_to_css <- function(row) {
   out <- character()
 
-  if (!is.na(row$align)) {
-    row$align <- switch(
-      row$align,
-      l = "left",
-      c = "center",
-      d = "center",
-      r = "right",
-      row$align
-    )
-  }
-  if (!is.na(row$alignv)) {
-    row$alignv <- switch(
-      row$alignv,
-      t = "top",
-      b = "bottom",
-      m = "middle",
-      row$alignv
-    )
-  }
+  row$align <- map_align(row$align, "css")
+  row$alignv <- map_alignv(row$alignv, "css")
 
   # simple properties
   if (isTRUE(row$bold))      out <- c(out, "font-weight: bold")
@@ -89,18 +72,11 @@ styles_to_css <- function(x) {
   css[which(x$monospace %in% TRUE), 3L] <- "font-family: monospace"
   css[which(x$smallcap %in% TRUE), 4L] <- "font-variant: small-caps"
 
-  align <- x$align
-  align[align == "l" & !is.na(align)] <- "left"
-  align[align == "c" & !is.na(align)] <- "center"
-  align[align == "d" & !is.na(align)] <- "center"
-  align[align == "r" & !is.na(align)] <- "right"
+  align <- map_align(x$align, "css")
   idx <- which(!is.na(align))
   css[idx, 5L] <- paste0("text-align: ", align[idx])
 
-  alignv <- x$alignv
-  alignv[alignv == "t" & !is.na(alignv)] <- "top"
-  alignv[alignv == "b" & !is.na(alignv)] <- "bottom"
-  alignv[alignv == "m" & !is.na(alignv)] <- "middle"
+  alignv <- map_alignv(x$alignv, "css")
   idx <- which(!is.na(alignv))
   css[idx, 6L] <- paste0("vertical-align: ", alignv[idx])
 

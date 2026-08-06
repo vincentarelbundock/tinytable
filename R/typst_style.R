@@ -1,19 +1,3 @@
-#' Map alignment values to Typst equivalents
-#' @keywords internal
-#' @noRd
-typst_map_alignments <- function(sty) {
-  sty$align[which(sty$align == "l")] <- "left"
-  sty$align[which(sty$align == "c")] <- "center"
-  sty$align[which(sty$align == "d")] <- "center"
-  sty$align[which(sty$align == "r")] <- "right"
-
-  sty$alignv[which(sty$alignv == "t")] <- "top"
-  sty$alignv[which(sty$alignv == "m")] <- "horizon"
-  sty$alignv[which(sty$alignv == "b")] <- "bottom"
-
-  return(sty)
-}
-
 #' Clean Typst style string
 #' @keywords internal
 #' @noRd
@@ -379,7 +363,8 @@ process_typst_other_styles <- function(x, other) {
   }
 
   # Map alignments to Typst format
-  other <- typst_map_alignments(other)
+  other$align <- map_align(other$align, "typst")
+  other$alignv <- map_alignv(other$alignv, "typst")
 
   # Normalize colors once
   unique_colors <- c(
