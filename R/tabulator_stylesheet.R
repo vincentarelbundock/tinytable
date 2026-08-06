@@ -2,18 +2,7 @@
 # TABULATOR STYLESHEET HANDLING
 # =============================================================================
 
-# Tabulator CDN locations
-tinytable_tabulator_theme_cdn <- "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tabulator_tinytable.min.css"
-tabulator_cdn_base <- "https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/"
-tabulator_css_cdn <- "https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/tabulator.min.css"
-fontawesome_css_cdn <- "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"
-
-tabulator_default_css_block <- sprintf(
-    '<link href="%s" rel="stylesheet">\n    <link href="%s" rel="stylesheet">\n    <link href="%s" rel="stylesheet">',
-    tabulator_css_cdn,
-    tinytable_tabulator_theme_cdn,
-    fontawesome_css_cdn
-)
+# CDN URLs and the default CSS block are defined once in R/tabulator_build.R
 
 # Tabulator theme mapping
 tabulator_themes <- list(

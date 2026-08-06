@@ -11,10 +11,57 @@ merge_lists <- function(x, y) { # shallow merge; rhs wins
     x
 }
 
+# Translate an R strptime format string to Luxon tokens for Tabulator's
+# datetime formatter (outputFormat). Known %-tokens are mapped; literal ASCII
+# letters are wrapped in single quotes so Luxon does not interpret them as
+# tokens; other characters (separators, spaces, ...) pass through as-is.
+# Strings without any % token (e.g. an already-Luxon "M/d/yyyy") are returned
+# unchanged.
+strptime_to_luxon <- function(fmt) {
+    if (!is.character(fmt) || length(fmt) != 1 || !grepl("%", fmt, fixed = TRUE)) {
+        return(fmt)
+    }
+    map <- c(
+        "Y" = "yyyy", "y" = "yy", "m" = "MM", "d" = "dd", "e" = "d",
+        "H" = "HH", "I" = "hh", "M" = "mm", "S" = "ss", "p" = "a",
+        "B" = "MMMM", "b" = "MMM", "A" = "cccc", "a" = "ccc", "j" = "ooo"
+    )
+    chars <- strsplit(fmt, "", fixed = TRUE)[[1]]
+    out <- character(0)
+    i <- 1
+    n <- length(chars)
+    while (i <= n) {
+        if (chars[i] == "%" && i < n) {
+            token <- chars[i + 1]
+            if (token == "%") {
+                out <- c(out, "%")
+            } else if (token %in% names(map)) {
+                out <- c(out, map[[token]])
+            } else {
+                # unknown token: pass through untranslated
+                out <- c(out, "%", token)
+            }
+            i <- i + 2
+        } else if (grepl("[A-Za-z]", chars[i])) {
+            # quote runs of literal letters so Luxon treats them as text
+            run <- i
+            while (run < n && grepl("[A-Za-z]", chars[run + 1])) {
+                run <- run + 1
+            }
+            out <- c(out, "'", chars[i:run], "'")
+            i <- run + 1
+        } else {
+            out <- c(out, chars[i])
+            i <- i + 1
+        }
+    }
+    paste(out, collapse = "")
+}
+
 # -----------------------------------------------------------------------------
 # single formatter registry (data-driven)
 # Each entry returns a list(title/field/formatter/params/…),
-# given (col_def, x, j, args).
+# given (col_def, args).
 # -----------------------------------------------------------------------------
 tabulator_tickcross_params <- function() {
     list(
@@ -26,12 +73,13 @@ tabulator_tickcross_params <- function() {
 }
 
 tabulator_column_registry <- list(
-    numeric = function(col_def, x, j, args) {
+    numeric = function(col_def, args) {
         digits <- args$digits %||% get_option("tinytable_format_digits")
-        num_fmt <- args$num_fmt %||% get_option("tinytable_format_num_fmt", "significant")
         thousand <- args$num_mark_big %||% get_option("tinytable_format_num_mark_big", "")
         decimal <- args$num_mark_dec %||% get_option("tinytable_format_num_mark_dec", get_option("OutDec", "."))
-        # num_zero   <- args$num_zero    %||% get_option("tinytable_format_num_zero", FALSE)  # keep if needed
+        # Note: Tabulator's `money` formatter only supports a fixed number of
+        # decimal places (`precision`), so `num_fmt` ("significant",
+        # "scientific", ...) and `num_zero` are not honored client-side.
 
         merge_lists(col_def, list(
             formatter = "money",
@@ -44,7 +92,7 @@ tabulator_column_registry <- list(
             )
         ))
     },
-    logical = function(col_def, x, j, args) {
+    logical = function(col_def, args) {
         bool_fun <- args$bool %||% get_option("tinytable_format_bool")
         if (!is.null(bool_fun) && is.function(bool_fun)) {
             merge_lists(col_def, list(
@@ -57,8 +105,8 @@ tabulator_column_registry <- list(
             ))
         }
     },
-    Date = function(col_def, x, j, args) {
-        fmt_out <- args$date %||% get_option("tinytable_format_date") %||% "M/d/yyyy"
+    Date = function(col_def, args) {
+        fmt_out <- strptime_to_luxon(args$date %||% get_option("tinytable_format_date") %||% "M/d/yyyy")
         merge_lists(col_def, list(
             formatter = "datetime",
             sorter = "datetime",
@@ -73,8 +121,8 @@ tabulator_column_registry <- list(
             )
         ))
     },
-    POSIXct = function(col_def, x, j, args) {
-        fmt_out <- args$date %||% get_option("tinytable_format_date") %||% "M/d/yyyy HH:mm:ss"
+    POSIXct = function(col_def, args) {
+        fmt_out <- strptime_to_luxon(args$date %||% get_option("tinytable_format_date") %||% "M/d/yyyy HH:mm:ss")
         merge_lists(col_def, list(
             formatter = "datetime",
             sorter = "datetime",
@@ -89,8 +137,8 @@ tabulator_column_registry <- list(
             )
         ))
     },
-    POSIXlt = function(col_def, x, j, args) {
-        tabulator_column_registry$POSIXct(col_def, x, j, args)
+    POSIXlt = function(col_def, args) {
+        tabulator_column_registry$POSIXct(col_def, args)
     })
 
 # -----------------------------------------------------------------------------
@@ -140,7 +188,7 @@ tabulator_apply_columns <- function(x) {
             key <- if (ctype %in% TAB_NUM) "numeric" else ctype
             formatter_fun <- tabulator_column_registry[[key]]
             if (!is.null(formatter_fun)) {
-                col_def <- formatter_fun(col_def, x, j, args = list())
+                col_def <- formatter_fun(col_def, args = list())
             }
         }
 
@@ -172,7 +220,7 @@ tabulator_apply_columns <- function(x) {
                     date         = l$date_format,
                     bool         = l$bool
                 )
-                columns[[col_name]] <- f(columns[[col_name]], x, j, args)
+                columns[[col_name]] <- f(columns[[col_name]], args)
             }
         }
     }

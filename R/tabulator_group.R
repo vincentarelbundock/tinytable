@@ -5,7 +5,11 @@ setMethod(
   f = "group_eval_j",
   signature = "tinytable_tabulator",
   definition = function(x, i = NULL, j = NULL, ...) {
-    # Stub implementation - return identity for now
+    # Column group headers are not implemented for the tabulator engine
+    warning(
+      "group_tt(j = ...) column groups are not supported by the tabulator engine and will be ignored.",
+      call. = FALSE
+    )
     return(x)
   }
 )

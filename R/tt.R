@@ -30,6 +30,7 @@
 #' @param colnames `TRUE`, `FALSE`, or "label". If "label", use the `attr(x$col,"label")` attribute if available and fall back on column names otherwise.
 #' @param rownames Logical. If `TRUE`, rownames are included as the first column
 #' @param escape Logical. If `TRUE`, escape special characters in the table. Equivalent to `format_tt(tt(x), escape = TRUE)`.
+#' @param engine Character string specifying the HTML engine: "tinytable", "bootstrap", or "tabulator". Equivalent to `theme_html(tt(x), engine = engine)`. When `NULL` (the default), the `tinytable_html_engine` global option is honored by `theme_html()`.
 #' @param ... Additional arguments are ignored
 #' @return An object of class `tt` representing the table.
 #'
@@ -93,6 +94,7 @@ tt.default <- function(
     colnames = get_option("tinytable_tt_colnames", default = TRUE),
     rownames = get_option("tinytable_tt_rownames", default = FALSE),
     escape = get_option("tinytable_tt_escape", default = FALSE),
+    engine = NULL,
     ...) {
   # sanity checks
   assert_string(caption, null.ok = TRUE)
@@ -198,6 +200,12 @@ tt.default <- function(
       }
     }
     out <- theme_dictionary[[theme]](out)
+  }
+
+  # explicit engine choice delegates to theme_html(), which validates the
+  # value and sets @html_engine (plus the bootstrap class swap)
+  if (!is.null(engine)) {
+    out <- theme_html(out, engine = engine)
   }
 
   if (isTRUE(escape)) {

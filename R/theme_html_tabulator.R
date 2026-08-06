@@ -34,6 +34,11 @@ sanity_tabulator_columns <- function(tabulator_columns) {
   }
 }
 
+# Returns a list with:
+# - options: the pagination options string for the Tabulator constructor
+# - sizes: the resolved numeric page-size vector (first element is the active
+#   page size), or NULL when pagination is disabled/unset. The layout helper
+#   uses sizes[1] to compute the table height from *visible* rows.
 tabulator_pagination_options <- function(tabulator_pagination, nrow) {
   # NULL
   pagination_opts <- ""
@@ -99,19 +104,22 @@ tabulator_pagination_options <- function(tabulator_pagination, nrow) {
     }
   }
 
-  return(pagination_opts)
+  return(list(
+    options = pagination_opts,
+    sizes = if (is.numeric(tabulator_pagination)) tabulator_pagination else NULL
+  ))
 }
 
 tabulator_layout_options <- function(
     tabulator_layout,
     x,
-    tabulator_pagination) {
+    page_sizes) {
   # Build layout options
   if (!is.null(x@height)) {
     # Calculate total height: height per row * number of visible rows + header space
-    if (is.numeric(tabulator_pagination) && !isFALSE(tabulator_pagination)) {
+    if (is.numeric(page_sizes) && length(page_sizes) > 0) {
       # Use pagination size for number of visible rows
-      visible_rows <- tabulator_pagination[1]
+      visible_rows <- page_sizes[1]
     } else {
       # Use actual number of rows when no pagination
       visible_rows <- nrow(x)
@@ -150,15 +158,24 @@ theme_html_tabulator <- function(
     )
   )
 
+  if (identical(tabulator_search, "column") && is.character(tabulator_columns)) {
+    stop(
+      "`tabulator_search = 'column'` is not supported when `tabulator_columns` is supplied as a JSON string. ",
+      "Provide `tabulator_columns` as a list of column definitions instead.",
+      call. = FALSE
+    )
+  }
+
   if (!is.null(tabulator_search)) {
     x@tabulator_search <- tabulator_search
   }
 
-  pagination_opts <- tabulator_pagination_options(tabulator_pagination, nrow(x))
+  pagination <- tabulator_pagination_options(tabulator_pagination, nrow(x))
+  pagination_opts <- pagination$options
   layout_opts <- tabulator_layout_options(
     tabulator_layout,
     x,
-    tabulator_pagination
+    pagination$sizes
   )
 
   # Build options string based on whether pagination options exist
@@ -215,6 +232,10 @@ theme_html_tabulator <- function(
         # Convert to a temporary list structure that indicates it's a JSON string
         table@tabulator_columns <- list(json_string = tabulator_columns)
       } else {
+        # Mark list-form definitions as user-supplied so that finalize
+        # serializes them verbatim instead of regenerating column
+        # definitions from the data
+        attr(tabulator_columns, "user_defined") <- TRUE
         table@tabulator_columns <- tabulator_columns
       }
     }

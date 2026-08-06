@@ -18,9 +18,10 @@ tabulator_plot_formatter <- function(
 
   formatter_config <- list()
 
-  # Handle color as single value or length-2 vector
+  # Only the foreground color is used: the sparkline/histogram formatters in
+  # inst/tinytable.js do not support a background color, so the second element
+  # of `plot_tt(color = c(fg, bg))` is ignored by the tabulator engine.
   bar_color <- color[1]
-  bg_color <- if (length(color) == 2) color[2] else NULL
 
   if (plot_type == "line") {
     # Use custom SVG sparkline formatter
