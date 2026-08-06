@@ -106,9 +106,7 @@ style_grid_body <- function(x) {
         wipe$j <= ncol(x@data_body),
     ]
     if (nrow(wipe) > 0) {
-      for (idx_wipe in seq_len(nrow(wipe))) {
-        x@data_body[wipe$i[idx_wipe], wipe$j[idx_wipe]] <- ""
-      }
+      x@data_body[cbind(wipe$i, wipe$j)] <- ""
     }
   }
 

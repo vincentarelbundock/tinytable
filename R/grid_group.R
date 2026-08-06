@@ -37,8 +37,7 @@ group_grid_col <- function(x, j, ...) {
         header_matrix <- t(matrix(labels))
         header_formatted <- build_eval(header_matrix, cw_grouped)
         header_lines <- strsplit(header_formatted, split = "\\n")[[1]]
-        header_lines <- header_lines[header_lines != "\\n"]
-        header_lines <- header_lines[!header_lines %in% c("\\n", "")]
+        header_lines <- header_lines[header_lines != ""]
         header_line <- header_lines[2]
 
         # Store header line for this group row
@@ -49,7 +48,7 @@ group_grid_col <- function(x, j, ...) {
     # Insert all header lines into the table
     if (length(all_header_lines) > 0) {
       z <- strsplit(tab, split = "\\n")[[1]]
-      z <- z[!z %in% c("\\n", "")]
+      z <- z[z != ""]
 
       # Determine insertion position based on grid_hline setting
       header_lines_to_insert <- unlist(all_header_lines)

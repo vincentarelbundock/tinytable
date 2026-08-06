@@ -6,7 +6,7 @@
 \usage{
 theme_markdown(
   x,
-  ansi = FALSE,
+  ansi = NULL,
   style = NULL,
   vline = NULL,
   hline = NULL,
@@ -17,7 +17,7 @@ theme_markdown(
 \arguments{
 \item{x}{A \code{tinytable} object.}
 
-\item{ansi}{Logical. If TRUE, enables ANSI color codes for grid styling. Default is FALSE.}
+\item{ansi}{Logical. If TRUE, enables ANSI color codes for grid styling; if FALSE, disables them. Default is NULL (no change; ANSI is disabled unless previously enabled).}
 
 \item{style}{Character. Markdown style format. Can be "grid" or "gfm". Default is NULL.}
 
