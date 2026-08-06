@@ -1,7 +1,7 @@
 #' Markdown theme with optional ANSI color support and grid customization
 #'
 #' @param x A `tinytable` object.
-#' @param ansi Logical. If TRUE, enables ANSI color codes for grid styling. Default is FALSE.
+#' @param ansi Logical. If TRUE, enables ANSI color codes for grid styling; if FALSE, disables them. Default is NULL (no change; ANSI is disabled unless previously enabled).
 #' @param style Character. Markdown style format. Can be "grid" or "gfm". Default is NULL.
 #' @param hline Logical. Enable/disable horizontal lines. Default is TRUE.
 #' @param hline_header Logical. Enable/disable the special header separator line below column names. Default is TRUE.
@@ -17,23 +17,21 @@
 #' correctly in basic text editors or older terminals.
 #' @export
 theme_markdown <- function(x,
-                           ansi = FALSE,
+                           ansi = NULL,
                            style = NULL,
                            vline = NULL,
                            hline = NULL,
                            hline_header = NULL,
                            ...) {
   # Validate logical arguments
-  assert_flag(ansi)
+  assert_flag(ansi, null.ok = TRUE)
   assert_choice(style, c("grid", "gfm"), null.ok = TRUE)
   assert_flag(vline, null.ok = TRUE)
   assert_flag(hline, null.ok = TRUE)
   assert_flag(hline_header, null.ok = TRUE)
 
   # Set the ansi slot based on the argument
-  if (isTRUE(ansi)) {
-    x@ansi <- ansi
-  }
+  if (is.logical(ansi)) x@ansi <- ansi
 
   # Set the markdown style slot if provided
   if (!is.null(style)) {

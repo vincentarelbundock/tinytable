@@ -5,18 +5,8 @@
 #' Create a grid line with specified character
 #' @keywords internal
 #' @noRd
-grid_create_line <- function(
-    width_cols,
-    char = "-",
-    corner_char = "+",
-    x = NULL) {
-  # Always use "+" for corner characters
-  corner_char <- "+"
-
-  line_sep <- lapply(width_cols, function(k) strrep(char, k))
-  line_sep <- paste(line_sep, collapse = corner_char)
-  line_sep <- paste0(corner_char, line_sep, corner_char)
-  return(line_sep)
+grid_create_line <- function(width_cols, char = "-") {
+  paste0("+", paste(strrep(char, width_cols), collapse = "+"), "+")
 }
 
 
@@ -125,7 +115,8 @@ adjust_group_widths <- function(x, width_cols) {
       for (span_idx in seq_len(nrow(spans))) {
         group_cols <- spans$start[span_idx]:spans$end[span_idx]
         g_len <- ansi_nchar(spans$label[span_idx]) + 2
-        c_len <- sum(width_cols[group_cols])
+        # Space available to the spanning cell includes absorbed separators
+        c_len <- sum(width_cols[group_cols]) + length(group_cols) - 1
 
         if (g_len > c_len) {
           width_cols[group_cols] <- width_cols[group_cols] +
@@ -290,66 +281,26 @@ assemble_table_string <- function(body, header, width_cols, x = NULL) {
     hline_header_char <- "="
   }
 
-  # Create rule lines only if enabled
+  # Create rule lines only if enabled; NULL parts drop out of c() below
   rule_head <- if (!is.null(hline_header_char)) {
-    grid_create_line(width_cols, hline_header_char, x = x)
+    grid_create_line(width_cols, hline_header_char)
   } else {
     NULL
   }
 
   rule_line <- if (!is.null(hline_char)) {
-    grid_create_line(width_cols, hline_char, x = x)
+    grid_create_line(width_cols, hline_char)
   } else {
     NULL
   }
 
-  if (header) {
-    tab_parts <- list("\n")
-
-    # Top border
-    if (!is.null(rule_line)) {
-      tab_parts <- append(tab_parts, rule_line)
-    }
-
-    # Header row
-    tab_parts <- append(tab_parts, body[1])
-
-    # Header separator
-    if (!is.null(rule_head)) {
-      tab_parts <- append(tab_parts, rule_head)
-    }
-
-    # Body rows
-    if (length(body) > 1) {
-      tab_parts <- append(tab_parts, body[2:length(body)])
-    }
-
-    # Bottom border
-    if (!is.null(rule_line)) {
-      tab_parts <- append(tab_parts, rule_line)
-    }
-
-    tab_parts <- append(tab_parts, "\n")
-    tab <- unlist(tab_parts)
-  } else {
-    tab_parts <- list("\n")
-
-    # Top border
-    if (!is.null(rule_line)) {
-      tab_parts <- append(tab_parts, rule_line)
-    }
-
-    # Body rows
-    tab_parts <- append(tab_parts, body)
-
-    # Bottom border
-    if (!is.null(rule_line)) {
-      tab_parts <- append(tab_parts, rule_line)
-    }
-
-    tab_parts <- append(tab_parts, "\n")
-    tab <- unlist(tab_parts)
-  }
+  tab <- c(
+    "\n",
+    rule_line,
+    if (header) c(body[1], rule_head, body[-1]) else body,
+    rule_line,
+    "\n"
+  )
 
   return(paste(tab, collapse = "\n"))
 }
@@ -435,7 +386,7 @@ grid_hlines <- function(x) {
     return(x)
   }
 
-  rule_line <- grid_create_line(x@width_cols, "-", x = x)
+  rule_line <- grid_create_line(x@width_cols, "-")
   out <- x@table_string
   lines <- strsplit(out, split = "\\n")[[1]]
   if (length(lines) > 1) {

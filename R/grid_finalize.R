@@ -2,54 +2,53 @@ grid_notes_caption <- function(x) {
   out <- x@table_string
 
   # notes
-  for (i in seq_along(x@notes)) {
+  if (length(x@notes) > 0) {
     lines <- strsplit(out, split = "\\n")[[1]]
-    target <- max(ansi_nchar(lines)) - 4
-    no <- x@notes[[i]]
-    if (is.list(no)) {
-      txt <- no$text
-    } else {
-      txt <- no
-    }
-    if (isTRUE(names(x@notes)[i] != "")) {
-      txt <- sprintf("^%s^ %s", names(x@notes)[i], txt)
-    }
-    txt <- ansi_strwrap(txt, width = target)
-    txt <- ansi_pad(txt, target)
-    txt <- sprintf("| %s |", txt)
+    table_width <- max(ansi_nchar(lines))
+    target <- table_width - 4
 
-    # Find the correct insertion point for notes
-    plus_lines <- grep("^+", lines)
-    if (length(plus_lines) >= 2) {
-      # Multiple border lines - use the last one (bottom border)
-      idx <- utils::tail(plus_lines, 1)
-    } else if (length(plus_lines) == 1) {
-      # Only one border line (likely header separator with hline=FALSE)
-      # Insert at the end of the table instead
-      idx <- length(lines)
-    } else {
-      # No border lines - append at the end
-      idx <- length(lines)
-    }
-
-    if (idx <= length(lines) && idx %in% plus_lines) {
-      # We found a border line - replace it and add notes
-      bot <- lines[idx]
-      bot <- gsub("-", "=", bot)
-      lines[idx] <- bot
-      out <- c(lines, txt, bot)
-    } else {
-      # Append at the end with proper borders
-      # Create a border line based on the table width
-      if (length(lines) > 0) {
-        table_width <- max(ansi_nchar(lines))
-        border_line <- paste0("+", strrep("=", table_width - 2), "+")
-      } else {
-        border_line <- "+===+"
+    # Wrap all notes first so the box can widen when a note cannot wrap
+    # down to the table width (e.g. very narrow tables or unbreakable words).
+    note_lines <- vector("list", length(x@notes))
+    for (i in seq_along(x@notes)) {
+      no <- x@notes[[i]]
+      txt <- if (is.list(no)) no$text else no
+      if (isTRUE(names(x@notes)[i] != "")) {
+        txt <- sprintf("^%s^ %s", names(x@notes)[i], txt)
       }
-      out <- c(lines, border_line, txt, border_line)
+      note_lines[[i]] <- ansi_strwrap(txt, width = target)
     }
-    out <- paste(out, collapse = "\n")
+    box_width <- max(table_width, ansi_nchar(unlist(note_lines)) + 4)
+
+    plus_lines <- grep("^\\+", lines)
+    if (length(plus_lines) >= 2) {
+      # Bottom border present: convert it into the top of the notes box,
+      # widening it when the notes are wider than the table.
+      idx <- utils::tail(plus_lines, 1)
+      bot <- gsub("-", "=", lines[idx])
+      if (box_width > table_width) {
+        bot <- paste0(
+          sub("\\+$", "", bot),
+          strrep("=", box_width - table_width),
+          "+"
+        )
+      }
+      lines[idx] <- bot
+    } else {
+      # No bottom border (e.g. hline = FALSE): open a new box after the table
+      bot <- paste0("+", strrep("=", box_width - 2), "+")
+      while (length(lines) > 0 && lines[length(lines)] == "") {
+        lines <- lines[-length(lines)]
+      }
+      lines <- c(lines, bot)
+    }
+
+    # Each note gets its own box segment, closed by a border line
+    for (i in seq_along(note_lines)) {
+      txt <- sprintf("| %s |", ansi_pad(note_lines[[i]], box_width - 4))
+      lines <- c(lines, txt, bot)
+    }
+    out <- paste(lines, collapse = "\n")
   }
 
   # caption
