@@ -1,6 +1,3 @@
-tabulator_js_cdn <- "https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/js/tabulator.min.js"
-tinytable_tabulator_theme_cdn <- "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tabulator_tinytable.min.css"
-
 setMethod(
   f = "finalize",
   signature = "tinytable_tabulator",
@@ -10,12 +7,13 @@ setMethod(
       x <- tabulator_stylesheet(x, x@tabulator_stylesheet)
     }
 
-    # Check if custom columns are provided
-    has_custom_columns <- is.list(x@tabulator_columns) && !is.null(x@tabulator_columns$json_string)
-
-    if (has_custom_columns) {
-      # Use custom JSON directly
+    # Inject column definitions
+    if (is.list(x@tabulator_columns) && !is.null(x@tabulator_columns$json_string)) {
+      # User-supplied JSON string: inject verbatim
       x@table_string <- tabulator_replace_columns_json(x@table_string, x@tabulator_columns$json_string)
+    } else if (isTRUE(attr(x@tabulator_columns, "user_defined"))) {
+      # User-supplied list of column definitions: serialize and inject as-is
+      x@table_string <- tabulator_replace_columns_json(x@table_string, df_to_json(x@tabulator_columns))
     } else {
       # Process columns (formatting, styling, conversion) only for basic columns
       x <- tabulator_apply_columns(x)
@@ -30,22 +28,13 @@ setMethod(
     # Apply custom CSS
     x <- tabulator_apply_css(x)
 
-    # Apply post-initialization JavaScript
-    if (nchar(x@tabulator_post_init) > 0) {
-        x@table_string <- gsub(
-            "$tinytable_TABULATOR_POST_INIT",
-            x@tabulator_post_init,
-            x@table_string,
-            fixed = TRUE
-        )
-    } else {
-        x@table_string <- gsub(
-            "$tinytable_TABULATOR_POST_INIT",
-            "",
-            x@table_string,
-            fixed = TRUE
-        )
-    }
+    # Apply post-initialization JavaScript (placeholder is removed when empty)
+    x@table_string <- gsub(
+      "$tinytable_TABULATOR_POST_INIT",
+      x@tabulator_post_init,
+      x@table_string,
+      fixed = TRUE
+    )
 
     # Clean up JS markers (formatters are now in inst/tinytable.js)
     x@tabulator_options <- gsub("\n// NEEDS_HISTOGRAM_JS", "", x@tabulator_options, fixed = TRUE)
@@ -86,7 +75,7 @@ setMethod(
       }
     } else {
       # External link (will work when package is installed)
-      js_tag <- '<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>'
+      js_tag <- sprintf('<script src="%s"></script>', tinytable_js_cdn)
     }
 
     x@table_string <- gsub(

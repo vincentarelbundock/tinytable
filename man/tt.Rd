@@ -18,6 +18,7 @@ tt(x, ...)
   colnames = get_option("tinytable_tt_colnames", default = TRUE),
   rownames = get_option("tinytable_tt_rownames", default = FALSE),
   escape = get_option("tinytable_tt_escape", default = FALSE),
+  engine = NULL,
   ...
 )
 }
@@ -57,6 +58,8 @@ tt(x, ...)
 \item{rownames}{Logical. If \code{TRUE}, rownames are included as the first column}
 
 \item{escape}{Logical. If \code{TRUE}, escape special characters in the table. Equivalent to \code{format_tt(tt(x), escape = TRUE)}.}
+
+\item{engine}{Character string specifying the HTML engine: "tinytable", "bootstrap", or "tabulator". Equivalent to \code{theme_html(tt(x), engine = engine)}. When \code{NULL} (the default), the \code{tinytable_html_engine} global option is honored by \code{theme_html()}.}
 }
 \value{
 An object of class \code{tt} representing the table.

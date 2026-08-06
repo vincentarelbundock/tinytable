@@ -62,7 +62,9 @@ tabulator_apply_styles <- function(x) {
                     "color", "background", "fontsize", "align", "alignv", "indent")
 
     # Vectorized signature creation: build signatures for all rows at once
-    sig_matrix <- sapply(style_cols, function(col) {
+    # (do.call(paste) keeps this robust when nrow(other) == 1, where
+    # sapply() would collapse to a vector and apply() would fail)
+    sig_cols <- lapply(style_cols, function(col) {
       if (col %in% names(other)) {
         vals <- other[[col]]
         ifelse(is.na(vals), "NA", as.character(vals))
@@ -70,9 +72,7 @@ tabulator_apply_styles <- function(x) {
         rep("NA", nrow(other))
       }
     })
-
-    # Create signatures by pasting columns
-    signatures <- apply(sig_matrix, 1, function(row) paste(row, collapse = "|"))
+    signatures <- do.call(paste, c(sig_cols, list(sep = "|")))
 
     # Group by signature
     for (row_idx in seq_len(nrow(other))) {

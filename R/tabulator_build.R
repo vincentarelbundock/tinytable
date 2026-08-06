@@ -1,5 +1,18 @@
-tabulator_css_cdn <- "https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/tabulator.min.css"
+# =============================================================================
+# TABULATOR CDN CONSTANTS
+#
+# Single source of truth for every CDN URL and the default CSS <link> block
+# used by the tabulator engine. `tabulator_stylesheet()` swaps stylesheets by
+# exact-match replacement of `tabulator_default_css_block`, so these must not
+# be redefined elsewhere: drift between copies would silently break that
+# replacement. The Tabulator version is also referenced in
+# inst/templates/tabulator.html.
+# =============================================================================
+tabulator_js_cdn <- "https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/js/tabulator.min.js"
+tabulator_cdn_base <- "https://cdn.jsdelivr.net/npm/tabulator-tables@6.3/dist/css/"
+tabulator_css_cdn <- paste0(tabulator_cdn_base, "tabulator.min.css")
 tinytable_tabulator_theme_cdn <- "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tabulator_tinytable.min.css"
+tinytable_js_cdn <- "https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"
 fontawesome_css_cdn <- "https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.2/css/all.min.css"
 
 tabulator_default_css_block <- sprintf(

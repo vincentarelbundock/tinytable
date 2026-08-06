@@ -45,8 +45,9 @@ tabulator_search_listener <- function(search_id, columns_json) {
         }
     '
 
-  # Replace placeholders
+  # Replace placeholders (escape backslashes: gsub replacements are not literal)
   js <- gsub("SEARCH_ID", search_id, js, fixed = TRUE)
+  columns_json <- gsub("\\", "\\\\", columns_json, fixed = TRUE)
   js <- gsub("COLUMNS_JSON", columns_json, js, fixed = TRUE)
 
   return(js)
@@ -59,6 +60,16 @@ tabulator_search_listener <- function(search_id, columns_json) {
 #' @noRd
 tabulator_apply_column_search <- function(x) {
   x <- clean_search_placeholders(x)
+
+  # Column definitions supplied as a JSON string cannot be augmented with
+  # header filters (we would have to parse arbitrary JavaScript)
+  if (is.list(x@tabulator_columns) && !is.null(x@tabulator_columns$json_string)) {
+    stop(
+      "`tabulator_search = 'column'` is not supported when `tabulator_columns` is supplied as a JSON string. ",
+      "Provide `tabulator_columns` as a list of column definitions instead.",
+      call. = FALSE
+    )
+  }
 
   # Add headerFilter to each column definition based on data type
   if (length(x@tabulator_columns) > 0) {
@@ -131,10 +142,17 @@ tabulator_apply_search <- function(x) {
 
   # Get columns JSON directly from the S4 object
   if (length(x@tabulator_columns) == 0) {
+    x <- clean_search_placeholders(x)
     return(x)
   }
 
-  columns_json <- df_to_json(x@tabulator_columns)
+  # Column definitions supplied as a JSON string are a JavaScript array
+  # already: use them verbatim so the listener can map over `col.field`
+  if (!is.null(x@tabulator_columns$json_string)) {
+    columns_json <- x@tabulator_columns$json_string
+  } else {
+    columns_json <- df_to_json(x@tabulator_columns)
+  }
 
   # Determine search position
   search_position <- x@tabulator_search
