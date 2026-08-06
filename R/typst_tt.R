@@ -275,49 +275,40 @@ typst_insert <- function(x, content = NULL, type = "body") {
 
 # Helper function to build Typst group header from group row data
 typst_build_group_header <- function(group_row) {
+  spans <- parse_group_spans(group_row)
+
   header_parts <- character(0)
-  i <- 1
+  pos <- 1
 
-  while (i <= length(group_row)) {
-    current_label <- group_row[i]
-
-    # Skip NA (ungrouped) columns
-    if (is.na(current_label)) {
-      header_parts <- c(header_parts, "[ ]")
-      i <- i + 1
-      next
+  emit_empty_until <- function(parts, from, to) {
+    if (to >= from) {
+      parts <- c(parts, rep("[ ]", to - from + 1))
     }
+    parts
+  }
 
-    # Find the span for this label
-    span_start <- i
-    if (trimws(current_label) != "") {
-      i <- i + 1 # Move past the current label
-      # Continue through empty strings (continuation of span)
-      while (i <= length(group_row) && !is.na(group_row[i]) && trimws(group_row[i]) == "") {
-        i <- i + 1
-      }
-    } else {
-      # Empty label, just add empty cell
-      header_parts <- c(header_parts, "[ ]")
-      i <- i + 1
-      next
-    }
+  for (span_idx in seq_len(nrow(spans))) {
+    # Empty cells for uncovered columns before this span
+    header_parts <- emit_empty_until(header_parts, pos, spans$start[span_idx] - 1)
 
-    span_length <- i - span_start
-
+    span_length <- spans$end[span_idx] - spans$start[span_idx] + 1
     if (span_length > 1) {
       # Multi-column span - use table.cell with colspan
       # Note: bottom stroke is handled by style system via add_group_line_styling_simple()
       header_parts <- c(header_parts, sprintf(
         "table.cell(colspan: %s, align: center)[%s]",
         span_length,
-        current_label
+        spans$label[span_idx]
       ))
     } else {
       # Single column - just centered content
-      header_parts <- c(header_parts, sprintf("[%s]", current_label))
+      header_parts <- c(header_parts, sprintf("[%s]", spans$label[span_idx]))
     }
+    pos <- spans$end[span_idx] + 1
   }
+
+  # Trailing uncovered columns
+  header_parts <- emit_empty_until(header_parts, pos, length(group_row))
 
   if (length(header_parts) > 0) {
     paste0(paste(header_parts, collapse = ", "), ",")

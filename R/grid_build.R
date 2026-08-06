@@ -110,53 +110,6 @@ adjust_colspan_widths <- function(tab, width_cols, colspan_info, header) {
   return(width_cols)
 }
 
-#' Find column spans in a group row
-#' @keywords internal
-#' @noRd
-find_column_spans <- function(group_row) {
-  spans <- list()
-  current_pos <- 1
-
-  while (current_pos <= length(group_row)) {
-    current_label <- group_row[current_pos]
-
-    # Skip NA (ungrouped) columns
-    if (is.na(current_label)) {
-      current_pos <- current_pos + 1
-      next
-    }
-
-    span_start <- current_pos
-
-    # Find the end of this span
-    if (trimws(current_label) != "") {
-      current_pos <- current_pos + 1
-    }
-
-    # Skip consecutive empty strings
-    while (
-      current_pos <= length(group_row) &&
-        !is.na(group_row[current_pos]) &&
-        trimws(group_row[current_pos]) == ""
-    ) {
-      current_pos <- current_pos + 1
-    }
-
-    span_end <- current_pos - 1
-
-    # Only add non-empty labels
-    if (trimws(current_label) != "") {
-      spans[[length(spans) + 1]] <- list(
-        label = current_label,
-        start = span_start,
-        end = span_end
-      )
-    }
-  }
-
-  return(spans)
-}
-
 #' Adjust column widths for group headers
 #' @keywords internal
 #' @noRd
@@ -166,12 +119,12 @@ adjust_group_widths <- function(x, width_cols) {
     # Process each header row to extract column spans
     for (row_idx in seq_len(nrow(x@group_data_j))) {
       group_row <- as.character(x@group_data_j[row_idx, ])
-      spans <- find_column_spans(group_row)
+      spans <- parse_group_spans(group_row)
 
       # Adjust widths for each span
-      for (span in spans) {
-        group_cols <- span$start:span$end
-        g_len <- ansi_nchar(span$label) + 2
+      for (span_idx in seq_len(nrow(spans))) {
+        group_cols <- spans$start[span_idx]:spans$end[span_idx]
+        g_len <- ansi_nchar(spans$label[span_idx]) + 2
         c_len <- sum(width_cols[group_cols])
 
         if (g_len > c_len) {
@@ -474,31 +427,6 @@ build_eval_grid <- function(x, width_cols = NULL, ...) {
 # =============================================================================
 # AUXILIARY FUNCTIONS
 # =============================================================================
-
-empty_cells <- function(lst) {
-  # Find the largest number in the list
-  max_num <- max(unlist(lst))
-
-  # Create the full range from 1 to the largest number
-  full_range <- 1:max_num
-
-  # Find missing numbers (holes)
-  missing_nums <- setdiff(full_range, unlist(lst))
-
-  if (length(missing_nums) == 0) {
-    return(lst)
-  }
-
-  # Create new elements for missing numbers
-  new_elements <- split(missing_nums, cumsum(c(1, diff(missing_nums) != 1)))
-
-  # Name the new elements with empty strings and merge with original list
-  names(new_elements) <- rep(" ", length(new_elements))
-  filled_list <- c(lst, new_elements)
-
-  # Sort the list by the minimum number in each element
-  filled_list[order(sapply(filled_list, min))]
-}
 
 # insert horizontal rules everywhere (important for word)
 grid_hlines <- function(x) {

@@ -236,6 +236,62 @@ rbind_nocol <- function(...) {
 }
 
 
+#' Parse a column-group header row into spans.
+#'
+#' Canonical span parser shared by all backends. `group_row` is a character
+#' vector where `NA` means "no group" and `""` (or whitespace-only) means
+#' "continuation of the preceding label". A non-empty label starts a span;
+#' following empty strings extend it; `NA` or a new non-empty label closes it.
+#' Empty strings with no open label (e.g. at the start of the row or after an
+#' `NA`) belong to no span and are skipped.
+#'
+#' @param group_row Character vector (one element per table column).
+#' @return A `data.frame` with columns `label` (raw, untrimmed), `start`, and
+#'   `end`, one row per span, in column order. Duplicate labels are preserved.
+#' @keywords internal
+#' @noRd
+parse_group_spans <- function(group_row) {
+  labels <- character(0)
+  starts <- integer(0)
+  ends <- integer(0)
+
+  pos <- 1L
+  n <- length(group_row)
+  while (pos <= n) {
+    current_label <- group_row[pos]
+
+    # NA = ungrouped column: no span
+    if (is.na(current_label)) {
+      pos <- pos + 1L
+      next
+    }
+
+    span_start <- pos
+    pos <- pos + 1L
+
+    # Consume continuation cells (empty strings) following this position
+    while (pos <= n && !is.na(group_row[pos]) && trimws(group_row[pos]) == "") {
+      pos <- pos + 1L
+    }
+
+    # Only record spans that start with a non-empty label; orphan empty
+    # strings (no preceding label) are skipped along with their run.
+    if (trimws(current_label) != "") {
+      labels <- c(labels, current_label)
+      starts <- c(starts, span_start)
+      ends <- c(ends, pos - 1L)
+    }
+  }
+
+  data.frame(
+    label = labels,
+    start = starts,
+    end = ends,
+    stringsAsFactors = FALSE
+  )
+}
+
+
 percent_sum_100 <- function(x, digits = 0) {
   stopifnot(is.numeric(x), all(is.finite(x)), all(x >= 0))
   s <- sum(x)

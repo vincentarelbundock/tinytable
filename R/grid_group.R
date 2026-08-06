@@ -16,44 +16,25 @@ group_grid_col <- function(x, j, ...) {
     for (group_row_idx in nrow(x@group_data_j):1) {
       group_row <- as.character(x@group_data_j[group_row_idx, ])
 
-      # Convert to the old format that empty_cells expects
-      j_list <- list()
-      i <- 1
-      while (i <= length(group_row)) {
-        current_label <- group_row[i]
+      spans <- parse_group_spans(group_row)
 
-        # Skip NA (ungrouped) columns
-        if (is.na(current_label)) {
-          i <- i + 1
-          next
+      if (nrow(spans) > 0) {
+        # Positional cells: labelled spans plus " "-labelled runs filling the
+        # holes up to the last spanned column (duplicate labels preserved)
+        runs <- Map(seq.int, spans$start, spans$end)
+        labels <- spans$label
+        missing_nums <- setdiff(seq_len(max(spans$end)), unlist(runs))
+        if (length(missing_nums) > 0) {
+          holes <- split(missing_nums, cumsum(c(1, diff(missing_nums) != 1)))
+          runs <- c(runs, unname(holes))
+          labels <- c(labels, rep(" ", length(holes)))
         }
+        idx <- order(vapply(runs, min, numeric(1)))
+        runs <- runs[idx]
+        labels <- labels[idx]
 
-        span_start <- i
-
-        # Find the end of this span
-        if (trimws(current_label) != "") {
-          i <- i + 1 # Move past the current label
-          # Continue through empty strings (continuation of span)
-          while (
-            i <= length(group_row) &&
-              !is.na(group_row[i]) &&
-              trimws(group_row[i]) == ""
-          ) {
-            i <- i + 1
-          }
-          span_end <- i - 1
-
-          # Add to j_list if non-empty label
-          j_list[[current_label]] <- span_start:span_end
-        } else {
-          i <- i + 1
-        }
-      }
-
-      if (length(j_list) > 0) {
-        header <- empty_cells(j_list)
-        cw_grouped <- sapply(header, function(k) sum(cw[k]) + length(cw[k]) - 1)
-        header_matrix <- t(matrix(names(cw_grouped)))
+        cw_grouped <- sapply(runs, function(k) sum(cw[k]) + length(cw[k]) - 1)
+        header_matrix <- t(matrix(labels))
         header_formatted <- build_eval(header_matrix, cw_grouped)
         header_lines <- strsplit(header_formatted, split = "\\n")[[1]]
         header_lines <- header_lines[header_lines != "\\n"]

@@ -97,70 +97,16 @@ latex_range_string <- function(x) {
     paste(parts, collapse = ",")
 }
 
-#' Find consecutive spans in group data
-#' @keywords internal
-#' @noRd
-find_consecutive_spans <- function(group_row) {
-    spans <- list()
-    i <- 1
-
-    while (i <= length(group_row)) {
-        current_label <- group_row[i]
-        span_start <- i
-
-        # Skip NA (ungrouped) columns
-        if (is.na(current_label)) {
-            i <- i + 1
-            next
-        }
-
-        # Find the end of this span
-        # Only continue while we see empty strings - stop at any non-empty label (even if same)
-        if (trimws(current_label) != "") {
-            i <- i + 1 # Move past the current label
-            # Continue only through empty strings
-            while (
-                i <= length(group_row) &&
-                    !is.na(group_row[i]) &&
-                    trimws(group_row[i]) == ""
-            ) {
-                i <- i + 1
-            }
-        } else {
-            while (
-                i <= length(group_row) &&
-                    !is.na(group_row[i]) &&
-                    trimws(group_row[i]) == ""
-            ) {
-                i <- i + 1
-            }
-        }
-        span_end <- i - 1
-
-        # Only add non-empty labels
-        if (trimws(current_label) != "") {
-            spans[[length(spans) + 1]] <- list(
-                label = current_label,
-                start = span_start,
-                end = span_end,
-                length = span_end - span_start + 1
-            )
-        }
-    }
-
-    return(spans)
-}
-
 #' Build tabularray header row from group data
 #' @keywords internal
 #' @noRd
 build_tabularray_header <- function(group_row, ncols) {
     header <- rep("", ncols)
 
-    spans <- find_consecutive_spans(group_row)
+    spans <- parse_group_spans(group_row)
 
-    for (span in spans) {
-        header[span$start] <- span$label
+    for (span_idx in seq_len(nrow(spans))) {
+        header[spans$start[span_idx]] <- spans$label[span_idx]
     }
 
     header_line <- paste(header, collapse = " & ")

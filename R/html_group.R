@@ -19,7 +19,6 @@ html_groupj <- function(x, j, ihead, ...) {
   }
 
   all_groupj_rows <- list()
-  all_styling_tasks <- list()
 
   # Process each row in @group_data_j separately (from last to first to maintain proper order)
   for (groupj_idx in nrow(x@group_data_j):1) {
@@ -29,28 +28,12 @@ html_groupj <- function(x, j, ihead, ...) {
     current_ihead <- ihead - (nrow(x@group_data_j) - groupj_idx)
 
     # Convert group row to column spans
-    j_list <- html_groupj_span(groupj)
+    spans <- parse_group_spans(groupj)
 
-    if (length(j_list) > 0) {
+    if (nrow(spans) > 0) {
       # Create HTML for this group row
-      group_html <- html_groupj_html(x, j_list, current_ihead)
+      group_html <- html_groupj_html(x, spans, current_ihead)
       all_groupj_rows[[groupj_idx]] <- group_html
-
-      # Store styling tasks for later application (maintain original order)
-      if (x@nhead > 1) {
-        # Create j_combined for styling (same as in groupj_html_html)
-        miss <- as.list(setdiff(seq_len(ncol(x)), unlist(j_list)))
-        miss <- stats::setNames(miss, rep(" ", length(miss)))
-        j_combined <- c(j_list, miss)
-        max_col <- sapply(j_combined, max)
-        idx <- order(max_col)
-        j_combined <- j_combined[idx]
-
-        all_styling_tasks[[length(all_styling_tasks) + 1]] <- list(
-          ihead = current_ihead,
-          j_combined = j_combined
-        )
-      }
     }
   }
 
@@ -62,66 +45,32 @@ html_groupj <- function(x, j, ihead, ...) {
 }
 
 
-# Helper function to parse a group row into column spans
-html_groupj_span <- function(groupj) {
-  j_list <- list()
-  i <- 1
-
-  while (i <= length(groupj)) {
-    current_label <- groupj[i]
-
-    # Skip NA (ungrouped) columns
-    if (is.na(current_label)) {
-      i <- i + 1
-      next
-    }
-
-    span_start <- i
-
-    # Find the end of this span
-    if (trimws(current_label) != "") {
-      i <- i + 1 # Move past the current label
-      # Continue through empty strings (continuation of span)
-      while (
-        i <= length(groupj) &&
-          !is.na(groupj[i]) &&
-          trimws(groupj[i]) == ""
-      ) {
-        i <- i + 1
-      }
-      span_end <- i - 1
-
-      # Add to j_list if non-empty label
-      j_list[[current_label]] <- span_start:span_end
-    } else {
-      i <- i + 1
-    }
+# Helper function to create HTML for a group row
+# `spans` is the data.frame returned by parse_group_spans(): label/start/end,
+# positional so duplicate labels are preserved.
+html_groupj_html <- function(x, spans, ihead) {
+  # Add missing columns as empty single-column groups
+  covered <- unlist(Map(seq.int, spans$start, spans$end))
+  miss <- setdiff(seq_len(ncol(x)), covered)
+  if (length(miss) > 0) {
+    spans <- rbind(
+      spans,
+      data.frame(label = " ", start = miss, end = miss, stringsAsFactors = FALSE)
+    )
   }
 
-  j_list
-}
-
-# Helper function to create HTML for a group row
-html_groupj_html <- function(x, j_list, ihead) {
-  # Add missing columns as empty groups
-  miss <- as.list(setdiff(seq_len(ncol(x)), unlist(j_list)))
-  miss <- stats::setNames(miss, rep(" ", length(miss)))
-  j_combined <- c(j_list, miss)
-
   # Sort by column position
-  max_col <- sapply(j_combined, max)
-  idx <- order(max_col)
-  j_combined <- j_combined[idx]
+  spans <- spans[order(spans$end), , drop = FALSE]
 
   # Generate HTML for each group
-  jstring <- lapply(seq_along(names(j_combined)), function(k) {
-    colspan_val <- max(j_combined[[k]]) - min(j_combined[[k]]) + 1
+  jstring <- lapply(seq_len(nrow(spans)), function(k) {
+    colspan_val <- spans$end[k] - spans$start[k] + 1
 
     # Calculate width style if x@width has multiple values (individual column widths)
     width_style <- ""
     if (length(x@width) > 1 && colspan_val > 1) {
       # Sum the widths of the columns this header spans
-      spanned_cols <- j_combined[[k]]
+      spanned_cols <- spans$start[k]:spans$end[k]
       total_width <- sum(x@width[spanned_cols]) / sum(x@width) * 100
       width_style <- sprintf(' style="width: %s;"', format_markup_unit(round(total_width, 2), "%"))
     }
@@ -130,9 +79,9 @@ html_groupj_html <- function(x, j_list, ihead) {
       '<th scope="col" align="center" colspan=%s data-row="%d" data-col="%d"%s>%s</th>',
       colspan_val,
       ihead,
-      min(j_combined[[k]]), # Use the first column of the span, not the loop index
+      spans$start[k], # Use the first column of the span, not the loop index
       width_style,
-      names(j_combined)[k]
+      spans$label[k]
     )
   })
 

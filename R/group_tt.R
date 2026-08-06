@@ -180,87 +180,41 @@ add_group_line_styling_simple <- function(x, j) {
     # All groups (including the newly added one) are now stored in @group_data_j
     # So we can reconstruct all of them from stored data
     group_row_data <- as.character(x@group_data_j[group_idx, ])
-    current_j <- parse_group_row_spans(group_row_data)
+    spans <- parse_group_spans(group_row_data)
 
-    # Add lines for each named group
-    for (idx in seq_along(current_j)) {
-      group_name <- names(current_j)[idx]
-      group_cols <- current_j[[idx]]
+    # Add lines for each group span (duplicate labels each get their own line)
+    for (idx in seq_len(nrow(spans))) {
+      group_cols <- spans$start[idx]:spans$end[idx]
 
-      # Only add lines for non-empty group names
-      if (!is.null(group_name) && trimws(group_name) != "") {
-        # Determine trimming based on column positions
-        trim_left <- min(group_cols) > 1
-        trim_right <- max(group_cols) < ncol(x)
+      # Determine trimming based on column positions
+      trim_left <- min(group_cols) > 1
+      trim_right <- max(group_cols) < ncol(x)
 
-        # Build trim specification
-        line_trim_spec <- ""
-        if (trim_left && trim_right) {
-          line_trim_spec <- "lr"
-        } else if (trim_left) {
-          line_trim_spec <- "l"
-        } else if (trim_right) {
-          line_trim_spec <- "r"
-        } else {
-          line_trim_spec <- NULL  # No trimming
-        }
-
-        x <- style_tt(
-          x,
-          i = table_row_i,
-          j = group_cols,
-          line = "b",
-          line_width = 0.03,
-          line_color = "black",
-          line_trim = line_trim_spec
-        )
+      # Build trim specification
+      line_trim_spec <- ""
+      if (trim_left && trim_right) {
+        line_trim_spec <- "lr"
+      } else if (trim_left) {
+        line_trim_spec <- "l"
+      } else if (trim_right) {
+        line_trim_spec <- "r"
+      } else {
+        line_trim_spec <- NULL  # No trimming
       }
+
+      x <- style_tt(
+        x,
+        i = table_row_i,
+        j = group_cols,
+        line = "b",
+        line_width = 0.03,
+        line_color = "black",
+        line_trim = line_trim_spec
+      )
     }
   }
 
   return(x)
-}
-
-
-#' Parse a group row into column spans (similar to bootstrap_groupj_span)
-#' @keywords internal
-#' @noRd
-parse_group_row_spans <- function(group_row) {
-  j_list <- list()
-  i <- 1
-
-  while (i <= length(group_row)) {
-    current_label <- group_row[i]
-
-    # Skip NA (ungrouped) columns
-    if (is.na(current_label)) {
-      i <- i + 1
-      next
-    }
-
-    span_start <- i
-
-    # Find the end of this span
-    if (trimws(current_label) != "") {
-      i <- i + 1 # Move past the current label
-      # Continue through empty strings (continuation of span)
-      while (
-        i <= length(group_row) &&
-          !is.na(group_row[i]) &&
-          trimws(group_row[i]) == ""
-      ) {
-        i <- i + 1
-      }
-      span_end <- i - 1
-
-      # Add to j_list if non-empty label
-      j_list[[current_label]] <- span_start:span_end
-    } else {
-      i <- i + 1
-    }
-  }
-
-  j_list
 }
 
 #' Process delimiter-based column grouping
