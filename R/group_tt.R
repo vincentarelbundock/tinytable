@@ -14,16 +14,21 @@ handle_deprecated_args <- function(...) {
   }
 }
 
-#' Process matrix insertion for row grouping
+#' Process row-group insertion (named list `i`, or integer `i` with matrix `j`)
+#'
+#' `j = NULL` triggers list-to-matrix conversion in `group_tt_ij_k()`; a
+#' matrix `j` is inserted as-is at the positions in `i`. Repeated calls
+#' append to `@group_data_i` so row groups can be stacked.
 #' @keywords internal
 #' @noRd
-progress_group_matrix <- function(x, i, j) {
+process_group_i <- function(x, i, j = NULL) {
   k <- group_tt_ij_k(x, i, j)
   converted_from_list <- k[[3]]
 
-  # Calculate indices and update table
+  # Calculate indices and update table. Positions are sorted (ascending) by
+  # group_tt_ij_k(), so each insertion shifts subsequent positions by one row.
   positions <- k[[1]]
-  idx <- positions + cumsum(rep(1, length(positions))) - 1
+  idx <- positions + seq_along(positions) - 1
   x@nrow <- x@nrow + length(positions)
 
   # Create group data frame
@@ -34,45 +39,6 @@ progress_group_matrix <- function(x, i, j) {
   if (length(positions) > 1 && nrow(group_df) == 1) {
     group_df <- group_df[rep(1, length(positions)), , drop = FALSE]
   }
-
-  # Set column names to match the table
-  if (ncol(group_df) == ncol(x@data)) {
-    colnames(group_df) <- colnames(x@data)
-  }
-
-  # Add to existing group data or create new
-  if (nrow(x@group_data_i) == 0) {
-    x@group_data_i <- group_df
-    x@group_index_i <- idx
-  } else {
-    msg <- "Only one group row insertion is allowed at a time with `group_tt(i=...)`."
-    stop(msg, call. = FALSE)
-  }
-
-  # Apply styling for matrix insertion
-  if (converted_from_list) {
-    x <- style_tt(x, i = idx, j = 1, colspan = ncol(x))
-  }
-
-  return(x)
-}
-
-#' Process row grouping with list input
-#' @keywords internal
-#' @noRd
-process_group_i <- function(x, i, j) {
-  # Convert list to matrix insertion format for row grouping
-  k <- group_tt_ij_k(x, i, NULL) # Pass NULL for j to trigger list conversion
-  converted_from_list <- k[[3]]
-
-  # Calculate indices and update table
-  positions <- k[[1]]
-  idx <- positions + cumsum(rep(1, length(positions))) - 1
-  x@nrow <- x@nrow + length(positions)
-
-  # Create group data frame
-  group_matrix <- k[[2]]
-  group_df <- as.data.frame(group_matrix, stringsAsFactors = FALSE)
 
   # Set column names to match the table
   if (ncol(group_df) == ncol(x@data)) {
@@ -162,8 +128,10 @@ process_group_j <- function(x, j) {
 #' @keywords internal
 #' @noRd
 add_group_line_styling_simple <- function(x, j) {
-  # Sanitize j to get proper indices (same as what was passed to group_tt)
-  j <- sanitize_group_index(j, hi = ncol(x), orientation = "column")
+  # Sanitize j to get proper indices (same as what was passed to group_tt).
+  # process_group_j() already warned about non-contiguous spans, so silence
+  # the duplicate warning here.
+  j <- sanitize_group_index(j, hi = ncol(x), orientation = "column", warn = FALSE)
 
   # The newly added group will be at row -1 in the final HTML structure
   # (since bootstrap processes groups from last to first, the last group ends up at -1)
@@ -354,19 +322,33 @@ group_tt <- function(
     stop("At least one of `i` or `j` must be specified.", call. = FALSE)
   }
 
-  if (isTRUE(check_atomic_vector(i)) && !is.list(i) && length(i) > 1 && is.null(j)) {
-    i <- sanitize_group_vec2list(i)
+  # Atomic vector `i` supplies one label per row: convert to named-list form.
+  # This works regardless of `j`, so row labels can be combined with column
+  # spans in a single call. Character and factor vectors are always labels;
+  # other vectors (e.g., numeric columns selected via NSE) are treated as
+  # labels only when they supply one label per row.
+  if (!is.null(i) && !is.list(i) && isTRUE(check_atomic_vector(i)) && !isTRUE(check_matrix(j))) {
+    if (is.character(i) || is.factor(i) || length(i) == nrow(x)) {
+      if (anyNA(i)) {
+        stop("`i` must not contain missing values (`NA` group labels).", call. = FALSE)
+      }
+      i <- sanitize_group_vec2list(i)
+    } else {
+      stop(
+        "`i` must be a vector of row labels (one per row), a named list of positions, or a vector of row positions combined with a character matrix `j`.",
+        call. = FALSE
+      )
+    }
   }
 
   # matrix insertion case
-  if ((isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) ||
-    (is.list(i) && is.null(j))) {
-    return(progress_group_matrix(x, i, j))
+  if (isTRUE(check_integerish(i)) && isTRUE(check_matrix(j))) {
+    return(process_group_i(x, i, j))
   }
 
-  # row grouping when i is a list (but j is also provided)
-  if (is.list(i) && !is.null(j)) {
-    x <- process_group_i(x, i, j)
+  # row grouping when i is (or has been converted to) a named list
+  if (is.list(i)) {
+    x <- process_group_i(x, i, NULL)
   }
 
   # delimiter-based column grouping

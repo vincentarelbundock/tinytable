@@ -296,3 +296,62 @@ expect_snapshot_print(t[["markdown"]], "group-subset_j-638.md")
 expect_snapshot_print(t[["latex"]], "group-subset_j-638.tex")
 expect_snapshot_print(t[["html"]], "group-subset_j-638.html")
 expect_snapshot_print(t[["typst"]], "group-subset_j-638.typ")
+
+
+# Unsorted list positions place labels identically to sorted input
+x1 <- tt(mtcars[1:8, 1:3]) |> group_tt(i = list("B" = 5, "A" = 2))
+x2 <- tt(mtcars[1:8, 1:3]) |> group_tt(i = list("A" = 2, "B" = 5))
+expect_equal(unname(x1@group_index_i), c(2, 6))
+expect_identical(save_tt(x1, "markdown"), save_tt(x2, "markdown"))
+md <- strsplit(save_tt(x1, "markdown"), "\n")[[1]]
+expect_true(min(grep("^\\| A", md)) < min(grep("^\\| B", md)))
+
+# Character vector `i` combined with `j` keeps both row groups and column span
+dat <- data.frame(x1 = 1:4, x2 = 5:8)
+tab <- tt(dat) |> group_tt(i = c("g1", "g1", "g2", "g2"), j = list("span" = 1:2))
+expect_equal(nrow(tab@group_data_i), 2)
+expect_equal(nrow(tab@group_data_j), 1)
+md <- save_tt(tab, "markdown")
+expect_true(grepl("g1", md) && grepl("g2", md) && grepl("span", md))
+
+# Documented i = list("label" = 0) inserts the label in the first row (synonym for 1)
+t0 <- tt(head(iris, 3)) |> group_tt(i = list("first" = 0))
+t1 <- tt(head(iris, 3)) |> group_tt(i = list("first" = 1))
+expect_equal(unname(t0@group_index_i), 1)
+expect_identical(save_tt(t0, "markdown"), save_tt(t1, "markdown"))
+expect_false(grepl("NA", save_tt(t0, "markdown")))
+
+# Stacked pure-i group_tt() calls work and match the i+j path
+t1 <- tt(mtcars[1:8, 1:3]) |>
+  group_tt(i = list("A" = 2)) |>
+  group_tt(i = list("B" = 5))
+t2 <- tt(mtcars[1:8, 1:3]) |>
+  group_tt(i = list("A" = 2), j = list("g" = 1:2)) |>
+  group_tt(i = list("B" = 5), j = list("h" = 1:2))
+expect_equal(unname(t1@group_index_i), c(2, 5))
+expect_equal(unname(t1@group_index_i), unname(t2@group_index_i))
+expect_identical(t1@group_data_i, t2@group_data_i)
+
+# Bare numeric `i` without a matrix `j` errors informatively
+expect_error(
+  tt(head(iris)) |> group_tt(i = c(2, 4)),
+  pattern = "named list"
+)
+
+# Length-1 character `i` creates a single group covering the whole table
+tab <- tt(head(iris, 3)) |> group_tt(i = "only")
+expect_equal(nrow(tab@group_data_i), 1)
+expect_equal(unname(tab@group_index_i), 1)
+expect_true(grepl("only", save_tt(tab, "markdown")))
+
+# NA labels in vector `i` produce a clear error message
+expect_error(
+  tt(head(iris, 4)) |> group_tt(i = c("a", "a", NA, "b")),
+  pattern = "missing values"
+)
+
+# Non-contiguous column spans warn instead of silently swallowing columns
+expect_warning(
+  tt(head(iris)) |> group_tt(j = list("A" = c(1, 3))),
+  pattern = "not contiguous"
+)

@@ -63,19 +63,24 @@ expect_snapshot_print(
   "group_matrix-multiple_positions_multiple_rows.html"
 )
 
-# Matrix insertion at edge positions (combines position 1 and last position)
-expect_error(
-  tt(head(iris, 4)) |>
-    group_tt(
-      i = 1,
-      j = matrix(c("Header", "Row", "At", "Top", "Position"), nrow = 1)
-    ) |>
-    group_tt(
-      i = 6,
-      j = matrix(c("Footer", "Row", "At", "Bottom", "Position"), nrow = 1)
-    ),
-  pattern = "Only one group row"
-)
+# Stacked matrix insertions at edge positions (position 1 and last position)
+# used to error with "Only one group row insertion is allowed at a time"
+tab <- tt(head(iris, 4)) |>
+  group_tt(
+    i = 1,
+    j = matrix(c("Header", "Row", "At", "Top", "Position"), nrow = 1)
+  ) |>
+  group_tt(
+    i = 6,
+    j = matrix(c("Footer", "Row", "At", "Bottom", "Position"), nrow = 1)
+  )
+expect_inherits(tab, "tinytable")
+expect_equal(tab@group_index_i, c(1, 6))
+md <- strsplit(save_tt(tab, "markdown"), "\n")[[1]]
+expect_true(any(grepl("Header", md)))
+expect_true(any(grepl("Footer", md)))
+expect_true(min(grep("Header", md)) < min(grep("5.1", md, fixed = TRUE)))
+expect_true(max(grep("Footer", md)) > max(grep("4.6", md, fixed = TRUE)))
 
 # Matrix with single column reshape and styling combined
 rowmat <- matrix(c("A", "B", "C", "D", "E"))

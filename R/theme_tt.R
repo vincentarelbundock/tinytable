@@ -36,20 +36,14 @@ theme_tt <- function(x, theme, ...) {
   )
 
 
-  if (identical(theme, "default")) {
-    x <- theme_tinytable(x)
-  } else if (identical(theme, "grid")) {
-    x <- theme_grid(x)
-  } else if (identical(theme, "revealjs")) {
-    x <- theme_revealjs(x, ...)
-  } else if (identical(theme, "striped")) {
-    x <- theme_striped(x)
-  } else if (identical(theme, "empty")) {
-    x <- theme_empty(x)
-  } else if (identical(theme, "void")) {
-    x <- theme_empty(x)
-  } else if (identical(theme, "rotate")) {
-    x <- theme_rotate(x, ...)
+  # "void" is a legacy alias for "empty"
+  if (identical(theme, "void")) {
+    theme <- "empty"
+  }
+
+  # dispatch through the same dictionary used by tt(theme = ...)
+  if (isTRUE(check_string(theme)) && theme %in% names(theme_dictionary)) {
+    x <- theme_dictionary[[theme]](x, ...)
   } else {
     legacy <- c(
       "bootstrap" = "theme_html(x, engine = \"bootstrap\", class = ...)",

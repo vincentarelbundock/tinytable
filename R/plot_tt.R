@@ -116,14 +116,6 @@ plot_tt <- function(
   assert_list(data, len = len, null.ok = TRUE)
   assert_character(images, len = len, null.ok = TRUE)
 
-  if (!is.null(images) && length(images) != len) {
-    msg <- base::sprintf(
-      "`images` must match the dimensions of `i` and `j`: length %s.",
-      len
-    )
-    stop(msg, call. = FALSE)
-  }
-
   if (!is.null(fun) && !is.null(images)) {
     stop("`fun` and `images` cannot be used together.", call. = FALSE)
   }
@@ -147,7 +139,7 @@ plot_tt <- function(
     fun <- rep(list(tiny_line), length(data))
   } else if (identical(fun, "bar")) {
     for (idx in seq_along(data)) {
-      assert_numeric(data[[idx]], len = 1, name = "data[[1]]")
+      assert_numeric(data[[idx]], len = 1, name = base::sprintf("data[[%d]]", idx))
     }
     if (is.null(xlim)) {
       xlim <- c(0, max(unlist(data)))
@@ -155,7 +147,7 @@ plot_tt <- function(
     fun <- rep(list(tiny_bar), length(data))
   } else if (identical(fun, "barpct")) {
     for (idx in seq_along(data)) {
-      assert_numeric(data[[idx]], len = 1, name = "data[[1]]")
+      assert_numeric(data[[idx]], len = 1, name = base::sprintf("data[[%d]]", idx))
       if (!all(data[[idx]] >= 0 & data[[idx]] <= 1, na.rm = TRUE)) {
         stop("Data for 'barpct' must be between 0 and 1 (percentages).", call. = FALSE)
       }
@@ -272,7 +264,13 @@ plot_tt_lazy <- function(
       path_assets <- file.path(x@output_dir, assets)
     }
     if (!dir.exists(path_assets)) {
-      dir.create(path_assets)
+      dir.create(path_assets, recursive = TRUE, showWarnings = FALSE)
+      if (!dir.exists(path_assets)) {
+        stop(
+          base::sprintf("Unable to create the assets directory: %s", path_assets),
+          call. = FALSE
+        )
+      }
     }
 
     # Rank hack: prepend zero-padded rank to filename to allow sorting based on
@@ -324,12 +322,7 @@ plot_tt_lazy <- function(
 
         # base R
       } else if (is.function(p)) {
-        grDevices::png(fn_full, width = width_plot, height = height_plot)
-        op <- graphics::par()
-        graphics::par(mar = c(0, 0, 0, 0))
-        p()
-        graphics::par(mar = op$mar)
-        grDevices::dev.off()
+        render_base_plot(p, fn_full, width_plot, height_plot)
 
         # sanity check
       } else {
@@ -383,40 +376,26 @@ plot_tt_lazy <- function(
     if (is.null(x@names) || length(x@names) == 0) {
       stop("Cannot insert images into header: table has no column names.", call. = FALSE)
     }
-    header_indices <- which(i == 0)
-    body_indices <- which(i > 0)
 
-    # Insert into column headers
+    # Fill column-major, matching the body-only path (`out[i, j] <- cell`):
+    # the same `data`/`images` vector maps to the same cells whether or not
+    # `i` includes the header row (0).
     cell_idx <- 1
-    for (idx in header_indices) {
-      for (j_val in j) {
-        if (j_val <= length(x@names)) {
-          x@names[j_val] <- cell[cell_idx]
+    for (j_val in j) {
+      for (i_val in i) {
+        if (i_val == 0) {
+          if (j_val <= length(x@names)) {
+            x@names[j_val] <- cell[cell_idx]
+          }
+        } else {
+          out[i_val, j_val] <- cell[cell_idx]
         }
         cell_idx <- cell_idx + 1
       }
     }
-
-    # Insert into body rows
-    if (length(body_indices) > 0) {
-      body_i <- i[body_indices]
-      for (i_val in body_i) {
-        for (j_val in j) {plot_tt
-          out[i_val, j_val] <- cell[cell_idx]
-          cell_idx <- cell_idx + 1
-        }
-      }
-    }
   } else {
     # Original behavior: insert into data body
-    # Handle the case where i is NA (from sanitize_i when i was NULL)
-    if (all(is.na(i)) && isTRUE(attr(i, "null"))) {
-      # Use the body rows from the attributes
-      i_body <- attr(i, "body")
-      out[i_body, j] <- cell
-    } else {
-      out[i, j] <- cell
-    }
+    out[resolve_i_body(i), j] <- cell
   }
 
   x@data_body <- out
@@ -424,12 +403,7 @@ plot_tt_lazy <- function(
   # Mark columns with HTML content for HTML formatter in Tabulator
   # For custom functions with PNG images, also add rank fields for sorting
   if (isTRUE(x@html_engine == "tabulator")) {
-    # Handle the case where i is NA (from sanitize_i when i was NULL)
-    if (all(is.na(i)) && isTRUE(attr(i, "null"))) {
-      i_body <- attr(i, "body")
-    } else {
-      i_body <- i
-    }
+    i_body <- resolve_i_body(i)
 
     for (col_idx in j) {
       col_name <- x@names[col_idx]
@@ -438,30 +412,71 @@ plot_tt_lazy <- function(
 
         # Add rank fields for sorting (custom functions use PNG, but still need sorting)
         if (!is.null(data)) {
-          rank_col_name <- paste0("rank_", col_name)
-
-          # Get data for this column
-          col_data_idx <- 1
-          if (length(j) > 1) {
-            col_data_idx <- which(j == col_idx)
-          }
-
-          for (row_idx in seq_along(i_body)) {
-            data_idx <- (col_data_idx - 1) * length(i_body) + row_idx
-            plot_data <- data[[data_idx]]
-            sort_value <- plot_data_rank(plot_data)
-            x@data_body[i_body[row_idx], rank_col_name] <- sort_value
-          }
-
-          # Configure sorter to use rank field
-          x@tabulator_column_formatters[[col_name]]$sorter <- "tinytable_rank_sorter"
-          x@tabulator_column_formatters[[col_name]]$sorterParams <- list(rankField = rank_col_name)
+          x <- tabulator_add_rank_fields(x, col_name, col_idx, j, i_body, data)
         }
       }
     }
   }
 
   return(x)
+}
+
+#' Resolve body row indices from a sanitized `i`
+#'
+#' `sanitize_i()` returns `NA` with a "null" attribute when `i` was `NULL`;
+#' in that case the body rows are stored in the "body" attribute.
+#' @keywords internal
+#' @noRd
+resolve_i_body <- function(i) {
+  if (all(is.na(i)) && isTRUE(attr(i, "null"))) {
+    attr(i, "body")
+  } else {
+    i
+  }
+}
+
+#' Write hidden rank fields and sorter configuration for a Tabulator plot column
+#'
+#' The `data` list is ordered column-major over the `i_body` x `j` grid;
+#' `plot_data_rank()` extracts a sortable scalar per cell. The rank values are
+#' stored in a hidden `rank_<column>` field (no leading underscore: R converts
+#' it to `X_rank_`) used by the custom `tinytable_rank_sorter`.
+#' @keywords internal
+#' @noRd
+tabulator_add_rank_fields <- function(x, col_name, col_idx, j, i_body, data) {
+  rank_col_name <- paste0("rank_", col_name)
+
+  # Get data for this column
+  col_data_idx <- 1
+  if (length(j) > 1) {
+    col_data_idx <- which(j == col_idx)
+  }
+
+  for (row_idx in seq_along(i_body)) {
+    data_idx <- (col_data_idx - 1) * length(i_body) + row_idx
+    sort_value <- plot_data_rank(data[[data_idx]])
+    x@data_body[i_body[row_idx], rank_col_name] <- sort_value
+  }
+
+  # Configure sorter to use rank field
+  x@tabulator_column_formatters[[col_name]]$sorter <- "tinytable_rank_sorter"
+  x@tabulator_column_formatters[[col_name]]$sorterParams <- list(rankField = rank_col_name)
+
+  return(x)
+}
+
+#' Render a base R plot function to a PNG file
+#'
+#' The device is closed via `on.exit()` so an error in the user's plot
+#' function does not leak an open graphics device.
+#' @keywords internal
+#' @noRd
+render_base_plot <- function(p, path, width, height) {
+  grDevices::png(path, width = width, height = height)
+  on.exit(grDevices::dev.off(), add = TRUE)
+  graphics::par(mar = c(0, 0, 0, 0))
+  p()
+  invisible(NULL)
 }
 
 plot_data_rank <- function(x) {
@@ -583,12 +598,7 @@ plot_tt_tabulator <- function(
   }
 
   # Handle the case where i is NA (from sanitize_i when i was NULL)
-  if (all(is.na(i)) && isTRUE(attr(i, "null"))) {
-    # Use the body rows from the attributes
-    i_body <- attr(i, "body")
-  } else {
-    i_body <- i
-  }
+  i_body <- resolve_i_body(i)
 
   # Track which custom JS has been marked as needed
   needs_histogram <- FALSE
@@ -616,9 +626,6 @@ plot_tt_tabulator <- function(
         xlim = xlim
       )
 
-      # Calculate sort value for this data
-      sort_value <- plot_data_rank(plot_data)
-
       # Store the formatted data in the cell
       if (plot_type %in% c("line", "density", "histogram")) {
         # For sparkline and histogram, store as JSON array string
@@ -631,16 +638,8 @@ plot_tt_tabulator <- function(
         x@data_body[i_body[row_idx], col_idx] <- formatter_info$data
       }
 
-      # Store rank value in a hidden column for sorting
-      # Don't use leading underscore as R converts it to X_rank_
-      rank_col_name <- paste0("rank_", col_name)
-      x@data_body[i_body[row_idx], rank_col_name] <- sort_value
-
       # Store the formatter configuration in tabulator_column_formatters (once per column)
       if (is.null(x@tabulator_column_formatters[[col_name]])) {
-        # Configure column to sort by the hidden rank field using custom sorter
-        formatter_info$config$sorter <- "tinytable_rank_sorter"
-        formatter_info$config$sorterParams <- list(rankField = rank_col_name)
         x@tabulator_column_formatters[[col_name]] <- formatter_info$config
       }
 
@@ -653,6 +652,9 @@ plot_tt_tabulator <- function(
         }
       }
     }
+
+    # Hidden rank fields + sorter configuration for this column
+    x <- tabulator_add_rank_fields(x, col_name, col_idx, j, i_body, data)
   }
 
   # Add markers for needed custom JS (once total)

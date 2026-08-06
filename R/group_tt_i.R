@@ -10,15 +10,15 @@ group_tt_ij_k <- function(x, i, j) {
     positions <- unlist(i)
     labels <- names(i)
 
-    if (is.null(labels) || any(labels == "")) {
-      stop("All list entries must have names for group labels.", call. = FALSE)
+    if (is.null(labels) || anyNA(labels) || any(labels == "")) {
+      stop(
+        "All list entries must have (non-missing) names for group labels.",
+        call. = FALSE
+      )
     }
 
-    # Create matrix with labels repeated in all columns
-    matrix_data <- matrix("", nrow = length(labels), ncol = ncol(x))
-    for (k in seq_len(ncol(x))) {
-      matrix_data[, k] <- labels
-    }
+    # Create matrix with labels repeated in all columns (recycled by column)
+    matrix_data <- matrix(labels, nrow = length(labels), ncol = ncol(x))
 
     # Convert to matrix insertion format
     i <- positions
@@ -74,6 +74,20 @@ group_tt_ij_k <- function(x, i, j) {
   matrix_rows <- nrow(j)
   if (length(i) == 1 && matrix_rows > 1) {
     i <- rep(i, matrix_rows)
+  }
+
+  # Position 0 is a documented synonym for the first row after the header
+  i[i == 0] <- 1
+
+  # The insertion-offset arithmetic in process_group_i() assumes ascending
+  # positions: stable-sort positions (and their matrix rows) so unsorted
+  # input, e.g. list("B" = 5, "A" = 2), is placed correctly
+  if (length(i) > 1) {
+    ord <- order(i)
+    i <- i[ord]
+    if (is.matrix(j) && nrow(j) == length(i)) {
+      j <- j[ord, , drop = FALSE]
+    }
   }
 
   list(i, j, converted_from_list)
