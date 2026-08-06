@@ -12,122 +12,6 @@ map_alignv_values <- function(sty) {
   return(sty)
 }
 
-#' Build LaTeX style commands for text style
-#' @keywords internal
-#' @noRd
-style_text <- function(sty_row) {
-  font <- ""
-  cmd <- ""
-
-  # Use descriptive font commands for tabularray font key
-  if (isTRUE(sty_row$bold)) {
-    font <- paste0(font, "\\bfseries")
-  }
-  if (isTRUE(sty_row$italic)) {
-    font <- paste0(font, "\\itshape")
-  }
-  if (isTRUE(sty_row$monospace)) {
-    font <- paste0(font, "\\ttfamily")
-  }
-  if (isTRUE(sty_row$smallcap)) {
-    font <- paste0(font, "\\scshape")
-  }
-
-  # Keep underline and strikeout as cmd since they need special macros
-  if (isTRUE(sty_row$underline)) {
-    cmd <- paste0(cmd, "\\tinytableTabularrayUnderline")
-  }
-  if (isTRUE(sty_row$strikeout)) {
-    cmd <- paste0(cmd, "\\tinytableTabularrayStrikeout")
-  }
-
-  return(list(font = font, cmd = cmd))
-}
-
-#' Style colors for tabularray
-#' @keywords internal
-#' @noRd
-style_colors <- function(cmd, sty_row, x) {
-  # Text color
-  col <- sty_row$color
-  if (!is.na(col)) {
-    col <- standardize_colors(col, format = "tabularray")
-    x <- define_color_preamble(x, col)
-    if (grepl("^#", col)) {
-      col <- sub("^#", "c", col)
-    }
-    cmd <- sprintf("%s, fg=%s", cmd, col)
-  }
-
-  # Background color
-  bg <- sty_row$background
-  if (!is.na(bg)) {
-    bg <- standardize_colors(bg, format = "tabularray")
-    x <- define_color_preamble(x, bg)
-    if (grepl("^#", bg)) {
-      bg <- sub("^#", "c", bg)
-    }
-    cmd <- sprintf("%s, bg=%s", cmd, bg)
-  }
-
-  return(list(cmd = cmd, x = x))
-}
-
-#' Style fonts for tabularray
-#' @keywords internal
-#' @noRd
-style_fonts <- function(sty_row) {
-  set <- ""
-  font_cmd <- ""
-
-  # Font size
-  fontsize <- sty_row$fontsize
-  if (!is.na(as.numeric(fontsize))) {
-    fontsize <- as.numeric(fontsize)
-    font_cmd <- sprintf(
-      "%s\\fontsize{%sem}{%sem}\\selectfont",
-      font_cmd,
-      format_markup_num(fontsize),
-      format_markup_num(fontsize + 0.3)
-    )
-  }
-
-  # Horizontal alignment
-  halign <- sty_row$align
-  if (!is.na(halign) && !grepl("d", halign)) {
-    set <- sprintf("%s, halign=%s,", set, halign)
-  }
-
-  # Vertical alignment
-  alignv <- sty_row$alignv
-  if (!is.na(alignv)) {
-    set <- sprintf("%s, valign=%s,", set, alignv)
-  }
-
-  # Indentation
-  indent <- sty_row$indent
-  if (isTRUE(indent > 0)) {
-    set <- sprintf("%s preto={\\hspace{%sem}},", set, format_markup_num(indent))
-  }
-
-  return(list(font = font_cmd, set = set))
-}
-
-#' Style spans for tabularray
-#' @keywords internal
-#' @noRd
-style_spans <- function(span, sty_row) {
-  if ("colspan" %in% names(sty_row) && !is.na(sty_row$colspan)) {
-    span <- paste0(span, "c=", sty_row$colspan, ",")
-  }
-  if ("rowspan" %in% names(sty_row) && !is.na(sty_row$rowspan)) {
-    span <- paste0(span, "r=", sty_row$rowspan, ",")
-  }
-  return(span)
-}
-
-# style_lines function removed - line processing now handled directly in tabularray_hlines
-
 #' Clean style strings
 #' @keywords internal
 #' @noRd
@@ -190,9 +74,6 @@ prepare_dcolumn <- function(x, sty) {
 #' @keywords internal
 #' @noRd
 tabularray_columns <- function(x, rec) {
-  all_i <- seq_len(x@nrow + x@nhead)
-  all_j <- seq_len(x@ncol)
-
   # Complete columns (first because of d-column)
   cols <- unique(
     rec[
@@ -222,8 +103,6 @@ tabularray_columns <- function(x, rec) {
 #' @keywords internal
 #' @noRd
 tabularray_rows <- function(x, rec) {
-  all_j <- seq_len(x@ncol)
-
   # Complete rows
   rows <- unique(
     rec[
@@ -255,8 +134,6 @@ tabularray_rows <- function(x, rec) {
 #' @keywords internal
 #' @noRd
 tabularray_cells <- function(x, rec) {
-  all_j <- seq_len(x@ncol)
-
   # Individual cells
   cells <- unique(
     rec[
@@ -300,7 +177,7 @@ tabularray_cells <- function(x, rec) {
 #' Apply tabularray specifications
 #' @keywords internal
 #' @noRd
-apply_tabularray_specs <- function(x, sty) {
+apply_tabularray_specs <- function(x) {
   for (spec in unique(stats::na.omit(x@tabularray_inner))) {
     x@table_string <- insert_tabularray_content(
       x@table_string,
@@ -373,7 +250,7 @@ process_tabularray_lines <- function(x, lines) {
 process_tabularray_other_styles <- function(x, other) {
   if (is.null(other) || nrow(other) == 0) {
     # Apply tabularray specifications even if no other styles
-    x <- apply_tabularray_specs(x, NULL)
+    x <- apply_tabularray_specs(x)
     return(x)
   }
 
@@ -537,7 +414,7 @@ process_tabularray_other_styles <- function(x, other) {
   x <- tabularray_cells(x, rec)
 
   # Apply tabularray specifications
-  x <- apply_tabularray_specs(x, other)
+  x <- apply_tabularray_specs(x)
 
   return(x)
 }
@@ -714,15 +591,3 @@ setMethod(
 
     return(x)
   })
-
-## not longer used, but took a while to collect and might be useful in the future
-# out <- list(
-#   rows_keys = c("halign", "valign", "ht", "bg", "fg", "font", "mode", "cmd", "abovesep", "belowsep", "rowsep", "preto", "appto", "indent"),
-#   columns_keys = c("halign", "valign", "wd", "co", "bg", "fg", "font", "mode", "cmd", "leftsep", "rightsep", "colsep", "preto", "appto", "indent"),
-#   hborders_keys = c("pagebreak", "abovespace", "belowspace"),
-#   vborders_keys = c("leftspace", "rightspace"),
-#   cells_keys = c("halign", "valign", "wd", "bg", "fg", "font", "mode", "cmd", "preto", "appto"),
-#   outer_specs_keys = c("baseline", "long", "tall", "expand"),
-#   inner_specs_keys = c("rulesep", "hlines", "vline", "hline", "vlines", "stretch", "abovesep", "belowsep", "rowsep", "leftsep", "rightsep", "colsep", "hspan", "vspan", "baseline"),
-#   span = c("r", "c")
-# )

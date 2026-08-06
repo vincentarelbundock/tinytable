@@ -266,16 +266,12 @@ format_tt_lazy <- function(
     if (is.factor(x)) {
       x <- as.character(x)
     }
-    ori <- out <- x <- data.frame(tinytable = x, stringsAsFactors = FALSE)
+    x <- data.frame(tinytable = x, stringsAsFactors = FALSE)
     j <- 1
   } else if (is.data.frame(x)) {
     atomic_vector <- FALSE
-    ori <- out <- x
   } else if (inherits(x, "tinytable")) {
     atomic_vector <- FALSE
-    # if no other format_tt() call has been applied, we ctan have numeric values
-    out <- x@data_body
-    ori <- x@data
   } else {
     stop(
       "`x` must be a `tinytable` object, a data frame, or an atomic vector.",
@@ -349,26 +345,14 @@ format_tt_lazy <- function(
   # Custom functions overwrite all the other formatting, but is before markdown
   # before escaping
   if (is.function(fn)) {
-    if (!is.null(components)) {
-      # Use apply_format for component-specific formatting
-      x <- apply_format(
-        x = x,
-        i = i,
-        j = j,
-        format_fn = format_vector_custom,
-        components = components,
-        fn = fn
-      )
-    } else {
-      # Original behavior for cell-specific formatting
-      for (col in j) {
-        tmp <- tryCatch(
-          format_vector_custom(ori[i, col, drop = TRUE], fn),
-          error = function(e) NULL
-        )
-        out[i, col] <- if (length(tmp) > 0) tmp else out[i, col]
-      }
-    }
+    x <- apply_format(
+      x = x,
+      i = i,
+      j = j,
+      format_fn = format_vector_custom,
+      components = components,
+      fn = fn
+    )
   }
 
   # close to last

@@ -218,8 +218,6 @@ print.tinytable <- function(
     } else {
       cat(tab, "\n")
     }
-  } else {
-    return(x@data_body)
   }
 
   return(invisible(x))

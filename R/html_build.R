@@ -228,29 +228,3 @@ setMethod(
 
     return(x)
   })
-
-html_setting <- function(x, new, component = "row") {
-  att <- attributes(x)
-  out <- strsplit(x, "\n")[[1]]
-  if (component == "row") {
-    idx <- grep("tinytable rows before this", out)
-  } else if (component == "column") {
-    idx <- grep("tinytable columns before this", out)
-  } else if (component == "cell") {
-    idx <- utils::tail(grep("</script>", out, fixed = TRUE), 1)
-    # idx <- grep("tinytable cells before this", out)
-  } else if (component == "css") {
-    idx <- grep("</style>", out, fixed = TRUE)
-  } else if (component == "newrows") {
-    idx <- grep("tinytable new rows before this", out)
-  }
-  out <- c(
-    out[1:(idx - 1)],
-    new,
-    out[idx:length(out)]
-  )
-  out <- paste(out, collapse = "\n")
-  attributes(out) <- att
-  class(out) <- class(x)
-  return(out)
-}

@@ -492,20 +492,10 @@ setMethod(
       # Filter to non-empty CSS
       has_css <- nzchar(css_rules)
       if (any(has_css)) {
-        other_with_css <- other[has_css, , drop = FALSE]
-        css_rules <- css_rules[has_css]
-
-        # Keep only last non-empty CSS per (i,j) by reversing, deduplicating, then reversing again
-        cell_keys <- paste(other_with_css$i, other_with_css$j, sep = "_")
-        # Reverse order to keep last occurrence
-        rev_idx <- seq(nrow(other_with_css), 1)
-        unique_idx <- !duplicated(cell_keys[rev_idx])
-        # Get back to original order
-        final_idx <- rev(rev_idx[unique_idx])
-
-        other_final <- other_with_css[final_idx, , drop = FALSE]
-        css_final <- css_rules[final_idx]
-        cell_keys_final <- cell_keys[final_idx]
+        other_final <- other[has_css, , drop = FALSE]
+        css_final <- css_rules[has_css]
+        # (i,j) keys are unique: @style_other has one row per cell
+        cell_keys_final <- paste(other_final$i, other_final$j, sep = "_")
 
         # Build cell_styles entries
         for (idx in seq_along(css_final)) {

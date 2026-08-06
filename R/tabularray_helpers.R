@@ -156,21 +156,15 @@ find_consecutive_spans <- function(group_row) {
 #' @noRd
 build_tabularray_header <- function(group_row, ncols) {
     header <- rep("", ncols)
-    cmidrules <- character(0)
 
     spans <- find_consecutive_spans(group_row)
 
     for (span in spans) {
         header[span$start] <- span$label
-        cmidrules <- NULL
-        # cmidrules <- c(
-        #     cmidrules,
-        #     sprintf("\\cmidrule[lr]{%s-%s}", span$start, span$end)
-        # )
     }
 
     header_line <- paste(header, collapse = " & ")
-    header_line <- paste(header_line, "\\\\", paste(cmidrules, collapse = ""))
+    header_line <- paste(header_line, "\\\\", "")
 
     return(header_line)
 }

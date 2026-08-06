@@ -174,7 +174,7 @@ lines_insert_after_fixed <- function(old, markers, values) {
 
 rbind_nocol <- function(...) {
   dflist <- list(...)
-  out <- lapply(list(...), function(k) stats::setNames(k, seq_len(ncol(k))))
+  out <- lapply(dflist, function(k) stats::setNames(k, seq_len(ncol(k))))
   do.call(rbind, out)
 }
 

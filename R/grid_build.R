@@ -263,16 +263,6 @@ pad_table_cells <- function(tab, width_cols) {
   return(tab)
 }
 
-#' Check if row should be formatted as a spanning group row
-#' @keywords internal
-#' @noRd
-is_spanning_group_row <- function(row_idx, row_data, group_rows) {
-  is_group_row <- row_idx %in% group_rows
-  has_content <- ansi_nchar(trimws(row_data[1])) > 0
-  others_empty <- all(trimws(row_data[-1]) == "")
-  return(is_group_row && has_content && others_empty)
-}
-
 #' Format table rows with proper separators
 #' @keywords internal
 #' @noRd
@@ -430,7 +420,6 @@ build_eval_grid <- function(x, width_cols = NULL, ...) {
   # Apply text styling before padding (for non-matrix formats)
   if (!is_matrix && inherits(x, "tinytable") && nrow(x@style) > 0) {
     x <- style_grid_body(x)
-    x <- style_grid_group(x)
     tab <- x@data_body
   }
 

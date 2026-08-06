@@ -28,10 +28,6 @@ strip_random_sequential <- function(x, stem = "tinytable_css_") {
 }
 strip_random <- function(x) {
   for (stem in c(
-    "insertSpanRow",
-    "spanCell_",
-    "styleCell_",
-    "styleHeaderCell_",
     "tableFns_",
     "tinytable_(?!css)",
     "tinytable_css_",

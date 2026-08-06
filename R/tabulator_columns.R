@@ -6,7 +6,6 @@ TAB_DATE <- c("Date", "POSIXct", "POSIXlt")
 TAB_FORM <- c(TAB_NUM, "logical", TAB_DATE)
 
 # small helpers
-`%||%` <- function(a, b) if (is.null(a)) b else a
 merge_lists <- function(x, y) { # shallow merge; rhs wins
     x[names(y)] <- y
     x

@@ -169,14 +169,6 @@ add_group_line_styling_simple <- function(x, j) {
   # (since bootstrap processes groups from last to first, the last group ends up at -1)
   group_row_i <- -1
 
-  # Clear existing styling for all header rows since the row positions will shift
-  if (nrow(x@style) > 0) {
-    existing_header_mask <- x@style$i < 0 & !is.na(x@style$i)
-    if (any(existing_header_mask, na.rm = TRUE)) {
-      x@style <- x@style[!existing_header_mask, ]
-    }
-  }
-
   # Re-style all group rows (both existing and new) based on final HTML structure
   # Most recent group (last in @group_data_j) goes to row -1, previous groups go to -2, -3, etc.
   for (group_idx in nrow(x@group_data_j):1) {

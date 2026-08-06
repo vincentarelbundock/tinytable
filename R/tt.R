@@ -94,8 +94,6 @@ tt.default <- function(
     rownames = get_option("tinytable_tt_rownames", default = FALSE),
     escape = get_option("tinytable_tt_escape", default = FALSE),
     ...) {
-  dots <- list(...)
-
   # sanity checks
   assert_string(caption, null.ok = TRUE)
   assert_integerish(digits, len = 1, null.ok = TRUE)

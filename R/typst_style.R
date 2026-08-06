@@ -14,16 +14,6 @@ typst_map_alignments <- function(sty) {
   return(sty)
 }
 
-#' Insert field into Typst style string
-#' @keywords internal
-#' @noRd
-typst_insert_field <- function(x, name = "bold", value = "true") {
-  old <- sprintf("%s: [^,]*,", name)
-  new <- sprintf("%s: %s,", name, value)
-  out <- ifelse(grepl(old, x), sub(old, new, x), sprintf("%s, %s", x, new))
-  return(out)
-}
-
 #' Clean Typst style string
 #' @keywords internal
 #' @noRd

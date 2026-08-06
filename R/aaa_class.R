@@ -20,7 +20,6 @@ setClass(
     html_css_rule = "NULLorCharacter",
     html_script = "NULLorCharacter",
     caption = "NULLorCharacter",
-    css = "data.frame",
     data = "data.frame",
     data_body = "data.frame",
     grid_hline = "logical",
@@ -37,7 +36,6 @@ setClass(
     lazy_plot = "list",
     lazy_prepare = "list",
     lazy_style = "list",
-    lazy_subset = "ANY",
     markdown_style = "character",
     names = "NULLorCharacter",
     ncol = "numeric",
@@ -133,7 +131,6 @@ setMethod(
 
     # empty
     .Object@ansi <- FALSE
-    .Object@css <- data.frame(i = NA, j = NA, html = NA, id = NA)
     .Object@grid_hline <- TRUE
     .Object@grid_hline_header <- TRUE
     .Object@grid_vline <- TRUE
@@ -151,7 +148,6 @@ setMethod(
     .Object@lazy_format <- list()
     .Object@lazy_plot <- list()
     .Object@lazy_prepare <- list()
-    .Object@lazy_subset <- NULL
     .Object@markdown_style <- "grid"
     .Object@output <- "tinytable"
     .Object@output_dir <- getwd()

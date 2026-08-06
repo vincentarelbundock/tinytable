@@ -359,17 +359,6 @@ check_function <- function(x, null.ok = FALSE) {
   return(FALSE)
 }
 
-assert_function <- function(
-  x,
-  null.ok = FALSE,
-  name = as.character(substitute(x))
-) {
-  msg <- sprintf("`%s` must be a function.", name)
-  if (!isTRUE(check_function(x, null.ok = null.ok))) {
-    stop(msg, call. = FALSE)
-  }
-}
-
 assert_length <- function(
   x,
   len = 1,
@@ -481,16 +470,6 @@ assert_integerish <- function(
   }
 }
 
-check_null <- function(x) {
-  is.null(x)
-}
-
-assert_null <- function(x, name = as.character(substitute(x))) {
-  if (!isTRUE(check_null(x))) {
-    stop(sprintf("%s should be NULL.", name), call. = FALSE)
-  }
-}
-
 check_numeric <- function(
   x,
   len = NULL,
@@ -596,32 +575,6 @@ check_matrix <- function(
     return(FALSE)
   }
   return(TRUE)
-}
-
-assert_matrix <- function(
-  x,
-  min_rows = 0,
-  min_cols = 0,
-  null.ok = FALSE,
-  name = as.character(substitute(x))
-) {
-  if (is.null(x) && isTRUE(null.ok)) {
-    return(invisible(TRUE))
-  }
-  msg <- sprintf("`%s` must be a matrix.", name)
-  if (!is.matrix(x)) {
-    stop(msg, call. = FALSE)
-  }
-  msg <- sprintf("Number of rows in `%s` must be at least `%s`", name, min_rows)
-  if (nrow(x) < min_rows) {
-    stop(msg, call. = FALSE)
-  }
-  msg <- sprintf(
-    "Number of columns in `%s` must be at least `%s`",
-    name,
-    min_cols
-  )
-  if (ncol(x) < min_cols) stop(msg, call. = FALSE)
 }
 
 check_character <- function(
@@ -795,41 +748,3 @@ sanity_num_mark <- function(digits, num_mark_big, num_mark_dec) {
   }
 }
 
-check_true <- function(x, null.ok = FALSE) {
-  if (is.null(x) && isTRUE(null.ok)) {
-    return(TRUE)
-  }
-  if (isTRUE(x)) {
-    return(TRUE)
-  }
-  return(FALSE)
-}
-
-assert_true <- function(
-  x,
-  null.ok = FALSE,
-  name = as.character(substitute(x))
-) {
-  msg <- sprintf("`%s` must be a logical true.", name)
-  if (!isTRUE(check_true(x, null.ok = null.ok))) {
-    stop(msg, call. = FALSE)
-  }
-}
-
-assert_number <- function(
-  x,
-  lower = NULL,
-  upper = NULL,
-  null.ok = FALSE,
-  name = as.character(substitute(x))
-) {
-  # Use assert_numeric with len = 1 to ensure single number
-  assert_numeric(
-    x,
-    len = 1,
-    lower = lower,
-    upper = upper,
-    null.ok = null.ok,
-    name = name
-  )
-}

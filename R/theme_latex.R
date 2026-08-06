@@ -1,16 +1,9 @@
-handle_latex_environment <- function(x, environment, environment_table) {
+handle_latex_environment <- function(x, environment) {
   if (!is.null(environment)) {
     fn <- function(table) {
       table_string <- table@table_string
 
-      # Define all possible environments
-      from_env <- "tblr"
-      assert_choice(environment, c("tblr", "talltblr", "longtblr", "table", "tabular"))
-
-      # If no environment found, return unchanged
-      if (is.null(from_env)) {
-        return(table)
-      }
+      assert_choice(environment, c("tblr", "talltblr", "longtblr", "tabular"))
 
       # Switch the environment
       table_string <- gsub("\\{tblr\\}(\\[.*?\\])?", sprintf("{%s}\\1", environment), table_string)
@@ -225,7 +218,7 @@ theme_latex <- function(x,
   }
 
   # Handle environment using separate helper function
-  x <- handle_latex_environment(x, environment, environment_table)
+  x <- handle_latex_environment(x, environment)
 
   # Handle environment_table using separate helper function
   x <- handle_latex_environment_table(x, environment_table)
@@ -239,7 +232,7 @@ theme_latex <- function(x,
       x@tabularray_inner <- c(x@tabularray_inner, sprintf("rowfoot=%s", rowfoot))
     }
     # Apply both environment and environment_table changes for multipage
-    x <- handle_latex_environment(x, "longtblr", FALSE)
+    x <- handle_latex_environment(x, "longtblr")
     x <- handle_latex_environment_table(x, FALSE)
   }
 
