@@ -2,6 +2,15 @@
 # HELPER FUNCTIONS
 # =============================================================================
 
+# Style arguments evaluated eagerly in style_tt() and forwarded to the lazy
+# call. Keep in sync with the formals of style_tt() and style_tt_lazy().
+# (i and j are excluded: they go through non-standard evaluation.)
+STYLE_TT_ARGS <- c(
+  "bold", "italic", "monospace", "smallcap", "underline", "strikeout",
+  "color", "background", "fontsize", "align", "alignv", "colspan", "rowspan",
+  "indent", "line", "line_color", "line_width", "line_trim", "finalize"
+)
+
 #' Apply styling to notes or caption
 #' @keywords internal
 #' @noRd
@@ -57,18 +66,22 @@ process_regular_input <- function(x, i, j) {
   ival <- sanitize_i(i, x, calling_function = "style_tt")
   jval <- sanitize_j(j, x)
 
+  # Style values recycle over cells in USER-specified order, matching the
+  # behavior of `i`: style_tt(j = c(3, 1), background = c("red", "blue"))
+  # puts red on column 3 and blue on column 1. sanitize_j() returns positions
+  # in column order for character `j`, so restore the user's order here.
+  if (is.character(j) && length(j) > 1) {
+    jval <- match(j, colnames(x))
+  }
+
   # Handle empty index case - return empty settings dataframe with proper structure
   if (length(ival) == 0) {
     return(data.frame(i = integer(0), j = integer(0)))
   }
 
-  # Create settings grid
+  # Create settings grid. expand.grid() varies `i` fastest, so rows follow the
+  # user-specified `j` order (important for recycling style value vectors).
   settings <- expand.grid(i = ival, j = jval)
-
-  # Order may be important for recycling
-  if (is.null(i) && !is.null(j)) {
-    settings <- settings[order(settings$i, settings$j), ]
-  }
 
   return(settings)
 }
@@ -78,10 +91,14 @@ process_regular_input <- function(x, i, j) {
 #' @keywords internal
 #' @noRd
 process_align_argument <- function(x, settings, align) {
+  # Empty selection (e.g., i = integer(0)): nothing to style, and assigning
+  # any column to a 0-row frame would fail with a replacement-length error.
+  if (nrow(settings) == 0) {
+    return(settings)
+  }
+
   if (is.null(align)) {
-    if (nrow(settings) > 0) {
-      settings[["align"]] <- NA_character_
-    }
+    settings[["align"]] <- NA_character_
     return(settings)
   }
 
@@ -163,27 +180,29 @@ style_tt_lazy <- function(
     }
   }
 
+  # Deprecated argument shims. These must mutate `out`, which is the object
+  # returned to build_tt(); changes made to `x` after `out <- x` would be lost.
   if ("tabularray_inner" %in% ...names()) {
-    x <- theme_latex(inner = ...get("tabularray_inner"))
+    out <- theme_latex(out, inner = ...get("tabularray_inner"))
     warning("The `tabularray_inner` argument is deprecated. Use `theme_latex(x, inner = ...)` instead.",
       call. = FALSE
     )
   }
   if ("tabularray_outer" %in% ...names()) {
-    x <- theme_latex(outer = ...get("tabularray_outer"))
+    out <- theme_latex(out, outer = ...get("tabularray_outer"))
     warning("The `tabularray_outer` argument is deprecated. Use `theme_latex(x, outer = ...)` instead.",
       call. = FALSE
     )
   }
   if ("html_class" %in% ...names()) {
-    x <- theme_html(x, class = ...get("html_class"))
+    out <- theme_html(out, class = ...get("html_class"))
     warning(
       "The `html_class` argument is deprecated. Use `theme_html(x, class = ...)` instead.",
       call. = FALSE
     )
   }
   if ("html_css_rule" %in% ...names()) {
-    x <- theme_html(x, css_rule = ...get("html_css_rule"))
+    out <- theme_html(out, css_rule = ...get("html_css_rule"))
     warning("The `html_css_rule` argument is deprecated. Use `theme_html(x, css_rule = ...)` instead.",
       call. = FALSE
     )
@@ -256,10 +275,9 @@ style_tt_lazy <- function(
 
   sanity_align(align, i)
 
-  # Process inputs and create settings
-  if (
-  is.matrix(i) && is.logical(i) && nrow(i) == nrow(x) && ncol(i) == ncol(x)
-) {
+  # Process inputs and create settings.
+  # Logical-matrix `i` dimensions were validated in assert_style_tt().
+  if (is.matrix(i) && is.logical(i)) {
     settings <- process_logical_matrix_input(x, i, j)
   } else {
     settings <- process_regular_input(x, i, j)
@@ -267,26 +285,16 @@ style_tt_lazy <- function(
 
   # Build complete settings - skip if no rows to style
   if (nrow(settings) > 0) {
-    settings[["color"]] <- if (is.null(color)) NA else as.vector(color)
-    settings[["background"]] <- if (is.null(background)) {
-      NA
-    } else {
-        as.vector(background)
-      }
-    settings[["fontsize"]] <- if (is.null(fontsize)) NA else as.vector(fontsize)
-    settings[["align"]] <- if (is.null(alignv)) NA else align
+    # Cell-style columns: NA when unset, otherwise the user value recycled over
+    # the settings rows. STYLE_PROPS is the canonical property vector defined
+    # in style_maps.R; align, alignv, and html_css need special handling below.
+    for (prop in setdiff(STYLE_PROPS, c("align", "alignv", "html_css"))) {
+      value <- get(prop, inherits = FALSE)
+      settings[[prop]] <- if (is.null(value)) NA else as.vector(value)
+    }
     settings[["alignv"]] <- if (is.null(alignv)) NA else alignv
     settings[["line_color"]] <- if (is.null(line)) NA else line_color
     settings[["line_width"]] <- if (is.null(line)) NA else line_width
-    settings[["bold"]] <- if (is.null(bold)) NA else bold
-    settings[["italic"]] <- if (is.null(italic)) NA else italic
-    settings[["monospace"]] <- if (is.null(monospace)) NA else monospace
-    settings[["smallcap"]] <- if (is.null(smallcap)) NA else smallcap
-    settings[["strikeout"]] <- if (is.null(strikeout)) NA else strikeout
-    settings[["underline"]] <- if (is.null(underline)) NA else underline
-    settings[["indent"]] <- if (is.null(indent)) NA else as.vector(indent)
-    settings[["colspan"]] <- if (is.null(colspan)) NA else colspan
-    settings[["rowspan"]] <- if (is.null(rowspan)) NA else rowspan
     settings[["html_css"]] <- if (!is.null(html_css)) {
       html_css
     } else {
@@ -295,16 +303,23 @@ style_tt_lazy <- function(
     # Always create tabularray column for consistency
     settings[["tabularray"]] <- ""
 
-    # Expand compound line directions like "tblr" into separate entries
+    # Expand compound line directions like "tblr" into separate entries.
+    # Only the first copy keeps the non-line properties (background, color,
+    # etc.); the extra copies carry line-relevant columns only, so other
+    # properties are not resolved multiple times per cell.
     if (!is.null(line) && nchar(line) > 1) {
       line_chars <- strsplit(line, "")[[1]]
-      # Create multiple rows for each line direction
-      expanded_settings <- do.call(rbind, lapply(line_chars, function(direction) {
-        new_settings <- settings
-        new_settings[["line"]] <- direction
-        new_settings
-      }))
-      settings <- expanded_settings
+      line_only <- settings
+      for (prop in setdiff(colnames(line_only), c("i", "j", "line_color", "line_width", "tabularray"))) {
+        line_only[[prop]] <- NA
+      }
+      expanded_settings <- vector("list", length(line_chars))
+      for (k in seq_along(line_chars)) {
+        new_settings <- if (k == 1) settings else line_only
+        new_settings[["line"]] <- line_chars[k]
+        expanded_settings[[k]] <- new_settings
+      }
+      settings <- do.call(rbind, expanded_settings)
     } else {
       settings[["line"]] <- if (is.null(line)) NA else line
     }
@@ -341,6 +356,9 @@ style_tt_lazy <- function(
   if (!is.matrix(i) || !is.logical(i)) {
     settings <- process_align_argument(x, settings, align)
   } else {
+    if (!is.null(align)) {
+      warning("`align` is not supported when `i` is a logical matrix; it is ignored.", call. = FALSE)
+    }
     if (nrow(settings) > 0) {
       settings$align <- NA_character_
     }
@@ -442,65 +460,46 @@ assert_style_tt <- function(
   inull <- isTRUE(attr(ival, "null"))
   jnull <- isTRUE(attr(jval, "null"))
 
-  # 1
-  if (inull && jnull) {
-    assert_length(color, len = 1, null.ok = TRUE)
-    assert_length(background, len = 1, null.ok = TRUE)
-    assert_length(fontsize, len = 1, null.ok = TRUE)
-    assert_length(bold, len = 1, null.ok = TRUE)
-    assert_length(italic, len = 1, null.ok = TRUE)
-    assert_length(monospace, len = 1, null.ok = TRUE)
-    assert_length(smallcap, len = 1, null.ok = TRUE)
-    assert_length(underline, len = 1, null.ok = TRUE)
-    assert_length(strikeout, len = 1, null.ok = TRUE)
-
-    # 1 or #rows
+  # Valid recycling lengths for style value vectors
+  if (is.matrix(ival) && is.logical(ival)) {
+    # Logical-matrix selection: dimensions must match the table exactly,
+    # otherwise TRUE cells would be silently coerced to garbage indices.
+    if (nrow(ival) != nrow(x) || ncol(ival) != ncol(x)) {
+      msg <- sprintf(
+        "When `i` is a logical matrix, its dimensions must match the table: %s rows and %s columns (received %s by %s).",
+        nrow(x), ncol(x), nrow(ival), ncol(ival)
+      )
+      stop(msg, call. = FALSE)
+    }
+    # One settings row per TRUE cell, filled in column-major order
+    len <- c(1, sum(ival))
+  } else if (inull && jnull) {
+    # 1
+    len <- 1
   } else if (!inull && jnull) {
-    assert_length(color, len = c(1, length(ival)), null.ok = TRUE)
-    assert_length(background, len = c(1, length(ival)), null.ok = TRUE)
-    assert_length(fontsize, len = c(1, length(ival)), null.ok = TRUE)
-    assert_length(bold, len = c(1, length(ival)), null.ok = TRUE)
-    assert_length(italic, len = c(1, length(ival)), null.ok = TRUE)
-    assert_length(monospace, len = c(1, length(ival)), null.ok = TRUE)
-    assert_length(smallcap, len = c(1, length(ival)), null.ok = TRUE)
-    assert_length(underline, len = c(1, length(ival)), null.ok = TRUE)
-    assert_length(strikeout, len = c(1, length(ival)), null.ok = TRUE)
-
-    # 1 or #cols
+    # 1 or #rows
+    len <- c(1, length(ival))
   } else if (inull && !jnull) {
-    assert_length(color, len = c(1, length(jval)), null.ok = TRUE)
-    assert_length(background, len = c(1, length(jval)), null.ok = TRUE)
-    assert_length(fontsize, len = c(1, length(jval)), null.ok = TRUE)
-    assert_length(bold, len = c(1, length(jval)), null.ok = TRUE)
-    assert_length(italic, len = c(1, length(jval)), null.ok = TRUE)
-    assert_length(monospace, len = c(1, length(jval)), null.ok = TRUE)
-    assert_length(smallcap, len = c(1, length(jval)), null.ok = TRUE)
-    assert_length(underline, len = c(1, length(jval)), null.ok = TRUE)
-    assert_length(strikeout, len = c(1, length(jval)), null.ok = TRUE)
-
+    # 1 or #cols
+    len <- c(1, length(jval))
+  } else {
     # 1 or #cells
-  } else if (!inull && !jnull) {
-    assert_length(
-      color,
-      len = c(1, length(ival) * length(jval)),
-      null.ok = TRUE
-    )
-    assert_length(
-      background,
-      len = c(1, length(ival) * length(jval)),
-      null.ok = TRUE
-    )
-    assert_length(
-      fontsize,
-      len = c(1, length(ival) * length(jval)),
-      null.ok = TRUE
-    )
-    assert_length(bold, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
-    assert_length(italic, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
-    assert_length(monospace, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
-    assert_length(smallcap, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
-    assert_length(underline, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
-    assert_length(strikeout, len = c(1, length(ival) * length(jval)), null.ok = TRUE)
+    len <- c(1, length(ival) * length(jval))
+  }
+
+  recycled_props <- list(
+    color = color,
+    background = background,
+    fontsize = fontsize,
+    bold = bold,
+    italic = italic,
+    monospace = monospace,
+    smallcap = smallcap,
+    underline = underline,
+    strikeout = strikeout
+  )
+  for (nm in names(recycled_props)) {
+    assert_length(recycled_props[[nm]], len = len, null.ok = TRUE, name = nm)
   }
 }
 # =============================================================================
@@ -511,6 +510,8 @@ assert_style_tt <- function(
 #'
 #' @details
 #' This function applies styling to a table created by `tt()`. It allows customization of text style (bold, italic, monospace), text and background colors, font size, cell width, text alignment, column span, and indentation. The function also supports passing native instructions to LaTeX (tabularray) and HTML (bootstrap) formats.
+#'
+#' Vector values for style arguments (e.g., `color`, `background`, `fontsize`) are recycled over the selected cells in the order specified by the user in `i` and `j`, with `i` varying fastest. For example, `style_tt(x, j = c(3, 1), background = c("red", "blue"))` colors column 3 red and column 1 blue. When `i` is a logical matrix, values are recycled over the `TRUE` cells in column-major order.
 #'
 #' @param x A table object created by `tt()`.
 #' @param i Numeric vector, logical matrix, string, or unquoted expression.
@@ -697,34 +698,12 @@ style_tt <- function(
   tmp <- nse_i_j(x, i_expr = substitute(i), j_expr = substitute(j), pf = parent.frame())
   list2env(tmp, environment())
 
-  obj <- match.call()
-
   # evaluate arguments immediately, except i and j, to avoid scoping issues
-  obj <- list(
-    style_tt_lazy,
-    x = quote(x),
-    i = i,
-    j = j,
-    bold = bold,
-    italic = italic,
-    monospace = monospace,
-    smallcap = smallcap,
-    underline = underline,
-    strikeout = strikeout,
-    color = color,
-    background = background,
-    fontsize = fontsize,
-    align = align,
-    alignv = alignv,
-    colspan = colspan,
-    rowspan = rowspan,
-    indent = indent,
-    line = line,
-    line_color = line_color,
-    line_width = line_width,
-    line_trim = line_trim,
-    finalize = finalize)
-  obj <- c(obj, list(...))
+  obj <- c(
+    list(style_tt_lazy, x = quote(x), i = i, j = j),
+    mget(STYLE_TT_ARGS, envir = environment()),
+    list(...)
+  )
   obj <- as.call(obj)
   attr(obj, "output") <- output
 

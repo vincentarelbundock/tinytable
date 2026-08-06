@@ -143,3 +143,98 @@ t <- expect_table(tab, formats = c("html", "typst", "latex"))
 expect_snapshot_print(t[["html"]], "style-output_conditional.html")
 expect_snapshot_print(t[["typst"]], "style-output_conditional.typ")
 expect_snapshot_print(t[["latex"]], "style-output_conditional.tex")
+
+
+# Deprecated shims must warn AND take effect (tabularray_inner/outer,
+# html_class, html_css_rule). Regression: `theme_latex()` was called without
+# `x`, and html shim results were discarded.
+tab <- style_tt(tt(mtcars[1:3, 1:3]), tabularray_inner = "rowsep=8pt")
+expect_warning(build_tt(tab, "latex"), pattern = "tabularray_inner")
+b <- suppressWarnings(build_tt(tab, "latex"))
+expect_true(grepl("rowsep=8pt", b@table_string, fixed = TRUE))
+
+tab <- style_tt(tt(mtcars[1:3, 1:3]), tabularray_outer = "baseline=T")
+expect_warning(build_tt(tab, "latex"), pattern = "tabularray_outer")
+b <- suppressWarnings(build_tt(tab, "latex"))
+expect_true(grepl("baseline=T", b@table_string, fixed = TRUE))
+
+tab <- style_tt(tt(mtcars[1:3, 1:3]), html_class = "table-dark-x")
+expect_warning(build_tt(tab, "html"), pattern = "html_class")
+b <- suppressWarnings(build_tt(tab, "html"))
+expect_true(grepl("table-dark-x", b@table_string, fixed = TRUE))
+
+tab <- style_tt(tt(mtcars[1:3, 1:3]), html_css_rule = ".mystyle { color: pink; }")
+expect_warning(build_tt(tab, "html"), pattern = "html_css_rule")
+b <- suppressWarnings(build_tt(tab, "html"))
+expect_true(grepl(".mystyle { color: pink; }", b@table_string, fixed = TRUE))
+
+
+# Empty row selection with align must be a silent no-op, not a build error
+# Regression: "replacement has 1 row, data has 0"
+tab <- style_tt(tt(mtcars[1:3, 1:3]), i = integer(0), align = "c")
+b <- build_tt(tab, "html")
+expect_inherits(b, "tinytable")
+
+
+# Logical-matrix `i` with per-cell style vectors: values recycle over TRUE
+# cells in column-major order (which(i, arr.ind = TRUE))
+d <- data.frame(a = 1:3, b = 4:6)
+m <- matrix(FALSE, 3, 2)
+m[2, 1] <- TRUE
+m[1, 2] <- TRUE
+b <- build_tt(style_tt(tt(d), i = m, color = c("red", "blue")), "html")
+sty <- b@style[!is.na(b@style$color), ]
+expect_equal(nrow(sty), 2)
+expect_equal(sty$color[sty$i == 2 & sty$j == 1], "red")
+expect_equal(sty$color[sty$i == 1 & sty$j == 2], "blue")
+
+# length-1 values still recycle over all TRUE cells
+b <- build_tt(style_tt(tt(d), i = m, color = "green"), "html")
+sty <- b@style[!is.na(b@style$color), ]
+expect_equal(sty$color[sty$i == 2 & sty$j == 1], "green")
+expect_equal(sty$color[sty$i == 1 & sty$j == 2], "green")
+
+# wrong vector length errors informatively (valid lengths: 1 or #TRUE cells)
+expect_error(
+  build_tt(style_tt(tt(d), i = m, color = c("a", "b", "c")), "html"),
+  pattern = "one of these lengths: 1, 2"
+)
+
+# logical matrix with wrong dimensions must error, not degrade silently
+m2 <- matrix(TRUE, 2, 2)
+expect_error(
+  build_tt(style_tt(tt(d), i = m2, bold = TRUE), "html"),
+  pattern = "dimensions must match"
+)
+
+# align is ignored (with a warning) when `i` is a logical matrix
+expect_warning(
+  build_tt(style_tt(tt(d), i = m, align = "r"), "html"),
+  pattern = "logical matrix"
+)
+
+
+# Value-to-column mapping honors USER-specified `j` order, consistent with `i`
+# Regression: j = c(3, 1) used to sort and put the first value on column 1
+d3 <- data.frame(a = 1:2, b = 3:4, c = 5:6)
+b <- build_tt(style_tt(tt(d3), j = c(3, 1), background = c("red", "blue")), "html")
+sty <- b@style[!is.na(b@style$background), ]
+expect_true(all(sty$background[sty$j == 3] == "red"))
+expect_true(all(sty$background[sty$j == 1] == "blue"))
+
+# character `j` also honors user order
+b <- build_tt(style_tt(tt(d3), j = c("c", "a"), background = c("red", "blue")), "html")
+sty <- b@style[!is.na(b@style$background), ]
+expect_true(all(sty$background[sty$j == 3] == "red"))
+expect_true(all(sty$background[sty$j == 1] == "blue"))
+
+# `i` user-order behavior is unchanged
+b <- build_tt(style_tt(tt(d3), i = c(2, 1), j = 1, background = c("red", "blue")), "html")
+sty <- b@style[!is.na(b@style$background), ]
+expect_true(all(sty$background[sty$i == 2] == "red"))
+expect_true(all(sty$background[sty$i == 1] == "blue"))
+
+# Compound line directions do not duplicate non-line properties in @style
+b <- build_tt(style_tt(tt(d3, theme = "empty"), i = 1, j = 1, line = "tb", background = "red"), "html")
+expect_equal(sum(!is.na(b@style$background)), 1)
+expect_equal(sum(!is.na(b@style$line)), 2)
