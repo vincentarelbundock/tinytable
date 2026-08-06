@@ -20,7 +20,6 @@ setMethod(
     # placement
     if (length(x@placement) == 1) {
       assert_string(x@placement)
-      # dollar sign to avoid [H][H] when we style multiple times
       template <- sub(
         "\\\\begin\\{table\\}",
         sprintf("\\\\begin{table}[%s]\n", x@placement),

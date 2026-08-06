@@ -213,15 +213,22 @@ theme_latex <- function(x,
   if (!is.null(outer)) x@tabularray_outer <- c(x@tabularray_outer, outer)
 
   # environment switch
-  if (!is.null(environment) && (rowhead >= 1 || rowfoot >= 1)) {
+  if (!is.null(environment) && environment != "longtblr" && (rowhead >= 1 || rowfoot >= 1)) {
     stop("When using multipage functionality (rowhead or rowfoot >= 1), the environment must be 'longtblr'.", call. = FALSE)
+  }
+
+  # rowhead/rowfoot imply a multipage (longtblr) table
+  if (rowhead >= 1 || rowfoot >= 1) {
+    multipage <- TRUE
+  }
+
+  # a longtblr can span multiple pages, so it cannot be resized as a single box
+  if (!is.null(resize_direction) && (isTRUE(multipage) || identical(environment, "longtblr"))) {
+    stop("`resize_direction` cannot be combined with multipage tables (`multipage = TRUE`, `rowhead`/`rowfoot` >= 1, or `environment = \"longtblr\"`), because a `longtblr` can span multiple pages and cannot be resized as a single box.", call. = FALSE)
   }
 
   # Handle environment using separate helper function
   x <- handle_latex_environment(x, environment)
-
-  # Handle environment_table using separate helper function
-  x <- handle_latex_environment_table(x, environment_table)
 
   # multipage
   if (isTRUE(multipage)) {
@@ -233,8 +240,11 @@ theme_latex <- function(x,
     }
     # Apply both environment and environment_table changes for multipage
     x <- handle_latex_environment(x, "longtblr")
-    x <- handle_latex_environment_table(x, FALSE)
+    environment_table <- FALSE
   }
+
+  # Handle environment_table using separate helper function
+  x <- handle_latex_environment_table(x, environment_table)
 
   # Handle resize functionality
   if (!is.null(resize_direction)) {
@@ -273,11 +283,12 @@ theme_latex <- function(x,
         }
       }
 
-      reg <- "\\\\begin\\{tblr\\}|\\\\begin\\{talltblr\\}"
+      # `longtblr` is excluded: resize + multipage raises an error above
+      reg <- "\\\\begin\\{(tblr|talltblr|tabular)\\}"
       tab <- lines_insert(tab, regex = reg, new = new, position = "before")
 
       new <- "}"
-      reg <- "\\\\end\\{tblr\\}|\\\\end\\{talltblr\\}"
+      reg <- "\\\\end\\{(tblr|talltblr|tabular)\\}"
       tab <- lines_insert(tab, regex = reg, new = new, position = "after")
 
       table@table_string <- tab

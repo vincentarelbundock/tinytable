@@ -44,17 +44,12 @@ prepare_dcolumn <- function(x, sty) {
         content = spec,
         type = "inner"
       )
-      for (idx_i in seq_len(x@nhead)) {
-        spec <- paste(
-          sprintf("cell{%s}{%s}={guard,halign=c,},", idx_i, idx_j),
-          collapse = "\n"
-        )
-        x@table_string <- insert_tabularray_content(
-          x@table_string,
-          content = spec,
-          type = "inner"
-        )
-      }
+      spec <- sprintf("cell{%s}{%s}={guard,halign=c,},", seq_len(x@nhead), idx_j)
+      x@table_string <- insert_tabularray_content(
+        x@table_string,
+        content = spec,
+        type = "inner"
+      )
     }
   }
   return(x)
@@ -78,13 +73,11 @@ tabularray_columns <- function(x, rec) {
   })
   spec <- unique(as.vector(unlist(spec)))
 
-  for (s in spec) {
-    x@table_string <- insert_tabularray_content(
-      x@table_string,
-      content = s,
-      type = "inner"
-    )
-  }
+  x@table_string <- insert_tabularray_content(
+    x@table_string,
+    content = spec,
+    type = "inner"
+  )
 
   return(x)
 }
@@ -105,17 +98,15 @@ tabularray_rows <- function(x, rec) {
   )
 
   spec <- by(rows, list(rows$set, rows$span), function(k) {
-    sprintf("row{%s}={%s}{%s}", paste(k$i, collapse = ","), k$span, k$set)
+    sprintf("row{%s}={%s}{%s}", latex_range_string(k$i), k$span, k$set)
   })
   spec <- unique(as.vector(unlist(spec)))
 
-  for (s in spec) {
-    x@table_string <- insert_tabularray_content(
-      x@table_string,
-      content = s,
-      type = "inner"
-    )
-  }
+  x@table_string <- insert_tabularray_content(
+    x@table_string,
+    content = spec,
+    type = "inner"
+  )
 
   return(x)
 }
@@ -150,13 +141,11 @@ tabularray_cells <- function(x, rec) {
     })
     spec <- sort(unique(as.vector(unlist(spec))))
 
-    for (s in spec) {
-      x@table_string <- insert_tabularray_content(
-        x@table_string,
-        content = s,
-        type = "inner"
-      )
-    }
+    x@table_string <- insert_tabularray_content(
+      x@table_string,
+      content = spec,
+      type = "inner"
+    )
   }
 
   return(x)
@@ -168,21 +157,17 @@ tabularray_cells <- function(x, rec) {
 #' @keywords internal
 #' @noRd
 apply_tabularray_specs <- function(x) {
-  for (spec in unique(stats::na.omit(x@tabularray_inner))) {
-    x@table_string <- insert_tabularray_content(
-      x@table_string,
-      content = spec,
-      type = "inner"
-    )
-  }
+  x@table_string <- insert_tabularray_content(
+    x@table_string,
+    content = unique(as.vector(stats::na.omit(x@tabularray_inner))),
+    type = "inner"
+  )
 
-  for (spec in unique(stats::na.omit(x@tabularray_outer))) {
-    x@table_string <- insert_tabularray_content(
-      x@table_string,
-      content = spec,
-      type = "outer"
-    )
-  }
+  x@table_string <- insert_tabularray_content(
+    x@table_string,
+    content = unique(as.vector(stats::na.omit(x@tabularray_outer))),
+    type = "outer"
+  )
 
   return(x)
 }
@@ -208,13 +193,13 @@ process_tabularray_lines <- function(x, lines) {
   # Process horizontal lines
   hlines <- lines[!is.na(lines$line) & grepl("b|t", lines$line), ]
   if (nrow(hlines) > 0) {
-    x <- process_horizontal_lines(x, hlines)
+    x <- process_tabularray_axis_lines(x, hlines, axis = "i")
   }
 
   # Process vertical lines
   vlines <- lines[!is.na(lines$line) & grepl("l|r", lines$line), ]
   if (nrow(vlines) > 0) {
-    x <- process_vertical_lines(x, vlines)
+    x <- process_tabularray_axis_lines(x, vlines, axis = "j")
   }
 
   return(x)
@@ -382,122 +367,71 @@ process_tabularray_other_styles <- function(x, other) {
   return(x)
 }
 
-#' Process horizontal lines from expanded style data
+#' Process horizontal or vertical lines from expanded style data
+#'
+#' Shared implementation for hlines (`axis = "i"`) and vlines (`axis = "j"`).
+#' Lines are grouped by (position, line spec) so that disjoint requests
+#' sharing the same style never merge into a rectangular cross-product.
 #' @keywords internal
 #' @noRd
-process_horizontal_lines <- function(x, hlines) {
+process_tabularray_axis_lines <- function(x, lines, axis) {
   # Vectorize line specification building
   # Use precomputed line_color_mapped
   line_colors <- ifelse(
-    grepl("^#", hlines$line_color_mapped),
-    sub("^#", "c", hlines$line_color_mapped),
-    hlines$line_color_mapped
+    grepl("^#", lines$line_color_mapped),
+    sub("^#", "c", lines$line_color_mapped),
+    lines$line_color_mapped
   )
 
-  line_widths <- ifelse(is.na(hlines$line_width), 0.1, hlines$line_width)
+  line_widths <- ifelse(is.na(lines$line_width), 0.1, lines$line_width)
   line_specs <- sprintf("solid, %s, %sem", line_colors, format_markup_num(line_widths))
 
   # Add trimming vectorized
-  has_trim <- !is.na(hlines$line_trim) & nzchar(hlines$line_trim)
-  trim_l <- has_trim & grepl("l", hlines$line_trim)
-  trim_r <- has_trim & grepl("r", hlines$line_trim)
+  has_trim <- !is.na(lines$line_trim) & nzchar(lines$line_trim)
+  trim_l <- has_trim & grepl("l", lines$line_trim)
+  trim_r <- has_trim & grepl("r", lines$line_trim)
 
   line_specs <- ifelse(trim_l, paste0(line_specs, ", l=-0.5"), line_specs)
   line_specs <- ifelse(trim_r, paste0(line_specs, ", r=-0.5"), line_specs)
 
-  # Adjust row index based on line type (vectorized)
-  rows <- ifelse(grepl("b", hlines$line), hlines$i + 1, hlines$i)
+  if (axis == "i") {
+    # "b" draws below the row: shift to the next hline slot (vectorized)
+    pos <- ifelse(grepl("b", lines$line), lines$i + 1, lines$i)
+    extent <- lines$j
+    template <- "hline{%s}={%s}{%s}"
+  } else {
+    # "r" draws right of the column: shift to the next vline slot (vectorized)
+    pos <- ifelse(grepl("r", lines$line), lines$j + 1, lines$j)
+    extent <- lines$i
+    template <- "vline{%s}={%s}{%s}"
+  }
 
-  # Build horizontal dataframe
-  horizontal <- data.frame(
-    i = rows,
-    j = hlines$j,
+  dat <- data.frame(
+    pos = pos,
+    extent = extent,
     lin = line_specs,
-    line = hlines$line,
     stringsAsFactors = FALSE
   )
 
-  spec <- by(horizontal, list(horizontal$i, horizontal$lin), function(k) {
-    ival <- latex_range_string(k$i)
-    jval <- latex_range_string(k$j)
+  spec <- by(dat, list(dat$pos, dat$lin), function(k) {
+    pos_val <- latex_range_string(k$pos)
+    extent_val <- latex_range_string(k$extent)
     lin_val <- k$lin[1]
     # Skip invalid line specifications
-    if (is.na(lin_val) || lin_val == "" || ival == "" || jval == "") {
+    if (is.na(lin_val) || lin_val == "" || pos_val == "" || extent_val == "") {
       return(NULL)
     }
-    sprintf("hline{%s}={%s}{%s}", ival, jval, lin_val)
+    sprintf(template, pos_val, extent_val, lin_val)
   })
   spec <- unique(as.vector(unlist(spec)))
   # Remove any NULL or NA entries
   spec <- spec[!is.na(spec) & spec != "NULL"]
 
-  for (s in spec) {
-    x@table_string <- insert_tabularray_content(
-      x@table_string,
-      content = s,
-      type = "inner"
-    )
-  }
-
-  return(x)
-}
-
-#' Process vertical lines from expanded style data
-#' @keywords internal
-#' @noRd
-process_vertical_lines <- function(x, vlines) {
-  # Vectorize line specification building
-  # Use precomputed line_color_mapped
-  line_colors <- ifelse(
-    grepl("^#", vlines$line_color_mapped),
-    sub("^#", "c", vlines$line_color_mapped),
-    vlines$line_color_mapped
+  x@table_string <- insert_tabularray_content(
+    x@table_string,
+    content = spec,
+    type = "inner"
   )
-
-  line_widths <- ifelse(is.na(vlines$line_width), 0.1, vlines$line_width)
-  line_specs <- sprintf("solid, %s, %sem", line_colors, format_markup_num(line_widths))
-
-  # Add trimming vectorized
-  has_trim <- !is.na(vlines$line_trim) & nzchar(vlines$line_trim)
-  trim_l <- has_trim & grepl("l", vlines$line_trim)
-  trim_r <- has_trim & grepl("r", vlines$line_trim)
-
-  line_specs <- ifelse(trim_l, paste0(line_specs, ", l=-0.5"), line_specs)
-  line_specs <- ifelse(trim_r, paste0(line_specs, ", r=-0.5"), line_specs)
-
-  # Adjust column index based on line type (vectorized)
-  col_idx <- ifelse(grepl("r", vlines$line), vlines$j + 1, vlines$j)
-
-  # Build vertical dataframe
-  vertical <- data.frame(
-    i = vlines$i,
-    j = col_idx,
-    lin = line_specs,
-    line = vlines$line,
-    stringsAsFactors = FALSE
-  )
-
-  spec <- by(vertical, list(vertical$lin), function(k) {
-    ival <- latex_range_string(k$i)
-    jval <- latex_range_string(k$j)
-    lin_val <- k$lin[1]
-    # Skip invalid line specifications
-    if (is.na(lin_val) || lin_val == "" || ival == "" || jval == "") {
-      return(NULL)
-    }
-    sprintf("vline{%s}={%s}{%s}", jval, ival, lin_val)
-  })
-  spec <- unique(as.vector(unlist(spec)))
-  # Remove any NULL or NA entries
-  spec <- spec[!is.na(spec) & spec != "NULL"]
-
-  for (s in spec) {
-    x@table_string <- insert_tabularray_content(
-      x@table_string,
-      content = s,
-      type = "inner"
-    )
-  }
 
   return(x)
 }

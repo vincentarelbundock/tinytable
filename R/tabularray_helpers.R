@@ -18,12 +18,12 @@ insert_tabularray_content <- function(x, content = NULL, type = "body") {
 
     if (length(content) > 0) {
         content <- trimws(content)
-        if (!grepl(",$", content) && type != "body") {
-            content <- paste0(content, ",")
-        }
         if (type == "body") {
-            out <- c(out[1:idx], content, out[(idx + 1):length(out)])
+            # Preserve the sequential single-insert semantics: each element is
+            # placed immediately after the marker, so a vector lands reversed.
+            out <- c(out[1:idx], rev(content), out[(idx + 1):length(out)])
         } else {
+            content <- paste0(content, ifelse(grepl(",$", content), "", ","))
             out <- c(out[1:(idx - 1)], content, out[idx:length(out)])
         }
     }
@@ -40,7 +40,9 @@ define_color_preamble <- function(x, col) {
     if (grepl("^#", col)) {
         # hex color need to be defined in LaTeX
         col <- sub("^#", "c", col)
-        regex <- sprintf("DefineColor.*%s", col)
+        # Match the definition token itself, not the color name anywhere in the
+        # document (cell text containing the token must not suppress it).
+        regex <- sprintf("DefineColor\\{%s\\}", col)
         if (!grepl(regex, x@table_string)) {
             b <- sprintf(
                 "\\tinytableDefineColor{%s}{HTML}{%s}",
@@ -122,12 +124,17 @@ insert_tabularray_header <- function(x, header_line) {
     out <- strsplit(x@table_string, split = "\\n")[[1]]
 
     # Insert the header line
-    idx <- max(
-        c(
-            grep("% tabularray inner close", out),
-            grep("\\toprule", out, fixed = TRUE)
-        )
+    idx_candidates <- c(
+        grep("% tabularray inner close", out),
+        grep("\\toprule", out, fixed = TRUE)
     )
+    if (length(idx_candidates) == 0) {
+        stop(
+            "tinytable: cannot locate insertion point for column group header.",
+            call. = FALSE
+        )
+    }
+    idx <- max(idx_candidates)
 
     out <- c(
         out[1:idx],
