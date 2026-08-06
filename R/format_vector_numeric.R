@@ -14,7 +14,7 @@ format_vector_numeric <- function(
   }
 
   # numeric suffix
-  if (isTRUE(num_suffix) && !is.null(digits)) {
+  if (isTRUE(num_suffix)) {
     out <- format_num_suffix(
       vec,
       digits = digits,
@@ -24,9 +24,7 @@ format_vector_numeric <- function(
       num_fmt = num_fmt
     )
     # non-integer numeric
-  } else if (
-    is.numeric(vec) && !isTRUE(check_integerish(vec)) && !is.null(digits)
-  ) {
+  } else if (!isTRUE(check_integerish(vec))) {
     out <- format_non_integer_numeric(
       vec,
       digits = digits,
@@ -35,8 +33,9 @@ format_vector_numeric <- function(
       num_zero = num_zero,
       num_fmt = num_fmt
     )
-    # integer
-  } else if (isTRUE(check_integerish(vec))) {
+    # integerish columns (including whole-number doubles) take a shortcut that
+    # ignores `digits`, `num_zero`, and `num_mark_dec` unless num_fmt = "scientific"
+  } else {
     out <- format_integer(
       vec,
       digits = digits,
@@ -45,13 +44,36 @@ format_vector_numeric <- function(
       num_zero = num_zero,
       num_fmt = num_fmt
     )
-  } else {
-    out <- NULL
   }
   if (is.character(out)) {
     out <- trimws(out)
   }
   return(out)
+}
+
+# `digits` significant digits; column-wise when called on a vector, cell-wise
+# when vapply()ed element by element. Shared by the "significant",
+# "significant_cell", and num_suffix paths.
+format_significant <- function(x, digits, num_zero, num_mark_big, num_mark_dec) {
+  format(
+    x,
+    digits = digits,
+    drop0trailing = !num_zero,
+    big.mark = num_mark_big,
+    decimal.mark = num_mark_dec,
+    scientific = FALSE
+  )
+}
+
+format_scientific <- function(vec, digits, num_zero, num_mark_big, num_mark_dec) {
+  formatC(
+    vec,
+    digits = digits,
+    format = "e",
+    drop0trailing = !num_zero,
+    big.mark = num_mark_big,
+    decimal.mark = num_mark_dec
+  )
 }
 
 format_num_suffix <- function(
@@ -61,31 +83,22 @@ format_num_suffix <- function(
     num_mark_dec,
     num_zero,
     num_fmt) {
-  suffix <- number <- rep("", length(x))
-  suffix <- ifelse(x > 1e3, "K", suffix)
-  suffix <- ifelse(x > 1e6, "M", suffix)
-  suffix <- ifelse(x > 1e9, "B", suffix)
-  suffix <- ifelse(x > 1e12, "T", suffix)
-  fun <- function(x) {
-    out <- sapply(x, function(k) {
-      format(
-        k,
-        digits = digits,
-        drop0trailing = !num_zero,
-        type = "f",
-        big.mark = num_mark_big,
-        decimal.mark = num_mark_dec,
-        scientific = FALSE
-      )
-    })
-  }
-  number <- fun(x)
-  number <- ifelse(x > 1e3, fun(x / 1e3), number)
-  number <- ifelse(x > 1e6, fun(x / 1e6), number)
-  number <- ifelse(x > 1e9, fun(x / 1e9), number)
-  number <- ifelse(x > 1e12, fun(x / 1e12), number)
-  number <- paste0(number, suffix)
-  return(number)
+  # tier 0 = no suffix; thresholds compare abs(x) with `>=` so exact powers
+  # get the higher tier (1e6 -> "1M", not "1000K") and negatives abbreviate
+  tier <- findInterval(abs(x), c(1e3, 1e6, 1e9, 1e12))
+  # NA/NaN/Inf get no suffix and pass through format() untouched
+  tier[!is.finite(x)] <- 0L
+  scaled <- x / 1000^tier
+  number <- vapply(
+    scaled,
+    format_significant,
+    character(1),
+    digits = digits,
+    num_zero = num_zero,
+    num_mark_big = num_mark_big,
+    num_mark_dec = num_mark_dec
+  )
+  paste0(number, c("", "K", "M", "B", "T")[tier + 1])
 }
 
 # Format non-integer numeric values
@@ -97,53 +110,45 @@ format_non_integer_numeric <- function(
     num_zero,
     num_fmt) {
   if (num_fmt == "significant") {
-    return(
-      format(
-        vec,
-        digits = digits,
-        drop0trailing = !num_zero,
-        big.mark = num_mark_big,
-        decimal.mark = num_mark_dec,
-        scientific = FALSE
-      )
-    )
+    return(format_significant(
+      vec,
+      digits = digits,
+      num_zero = num_zero,
+      num_mark_big = num_mark_big,
+      num_mark_dec = num_mark_dec
+    ))
   } else if (num_fmt == "significant_cell") {
-    return(
-      sapply(
-        vec,
-        function(z) {
-          format(
-            z,
-            digits = digits,
-            drop0trailing = !num_zero,
-            big.mark = num_mark_big,
-            decimal.mark = num_mark_dec,
-            scientific = FALSE
-          )
-        })
-    )
+    return(vapply(
+      vec,
+      format_significant,
+      character(1),
+      digits = digits,
+      num_zero = num_zero,
+      num_mark_big = num_mark_big,
+      num_mark_dec = num_mark_dec
+    ))
   } else if (num_fmt == "decimal") {
-    return(
-      formatC(
-        vec,
-        digits = digits,
-        format = "f",
-        drop0trailing = !num_zero,
-        big.mark = num_mark_big,
-        decimal.mark = num_mark_dec
-      )
+    out <- formatC(
+      vec,
+      digits = digits,
+      format = "f",
+      drop0trailing = !num_zero,
+      big.mark = num_mark_big,
+      decimal.mark = num_mark_dec
     )
+    # no signed zero: -0.0001 with digits = 2 must print "0.00"/"0", not "-0"
+    dec <- gsub("(\\W)", "\\\\\\1", num_mark_dec)
+    neg_zero <- grepl(paste0("^-0(", dec, "0*)?$"), out)
+    out[neg_zero] <- sub("-", "", out[neg_zero], fixed = TRUE)
+    return(out)
   } else if (num_fmt == "scientific") {
-    return(
-      formatC(
-        vec,
-        digits = digits,
-        format = "e",
-        drop0trailing = !num_zero,
-        big.mark = num_mark_big,
-        decimal.mark = num_mark_dec
-      )
-    )
+    return(format_scientific(
+      vec,
+      digits = digits,
+      num_zero = num_zero,
+      num_mark_big = num_mark_big,
+      num_mark_dec = num_mark_dec
+    ))
   }
   return(vec)
 }
@@ -157,16 +162,13 @@ format_integer <- function(
     num_zero,
     num_fmt) {
   if (num_fmt == "scientific") {
-    return(
-      formatC(
-        vec,
-        digits = digits,
-        format = "e",
-        drop0trailing = !num_zero,
-        big.mark = num_mark_big,
-        decimal.mark = num_mark_dec
-      )
-    )
+    return(format_scientific(
+      vec,
+      digits = digits,
+      num_zero = num_zero,
+      num_mark_big = num_mark_big,
+      num_mark_dec = num_mark_dec
+    ))
   } else {
     return(format(vec, big.mark = num_mark_big, scientific = FALSE))
   }

@@ -23,6 +23,21 @@ apply_notes <- function(x, format_fn, ...) {
   return(x)
 }
 
+update_group_data_cells <- function(data_slot, rows, cols, format_fn, ...) {
+  for (row in rows) {
+    for (col in cols) {
+      current_value <- data_slot[row, col]
+      if (!is.na(current_value) && trimws(current_value) != "") {
+        formatted_value <- format_fn(current_value, ...)
+        if (!is.null(formatted_value)) {
+          data_slot[row, col] <- formatted_value
+        }
+      }
+    }
+  }
+  return(data_slot)
+}
+
 apply_group_j <- function(x, i, j, format_fn, components, ...) {
   if (!inherits(x, "tinytable")) {
     return(x)
@@ -35,33 +50,23 @@ apply_group_j <- function(x, i, j, format_fn, components, ...) {
   data_slot <- x@group_data_j
 
   if ("groupj" %in% components) {
-    if (nrow(data_slot) > 0) {
-      for (row_idx in seq_len(nrow(data_slot))) {
-        for (col_idx in seq_len(ncol(data_slot))) {
-          current_value <- data_slot[row_idx, col_idx]
-          if (!is.na(current_value) && trimws(current_value) != "") {
-            formatted_value <- format_fn(current_value, ...)
-            if (!is.null(formatted_value)) {
-              data_slot[row_idx, col_idx] <- formatted_value
-            }
-          }
-        }
-      }
-    }
-  } else if (any(i < 0, na.rm = TRUE)) {
+    data_slot <- update_group_data_cells(
+      data_slot,
+      rows = seq_len(nrow(data_slot)),
+      cols = seq_len(ncol(data_slot)),
+      format_fn = format_fn,
+      ...
+    )
+  } else {
     i_idx <- i[i < 0 & !is.na(i)]
     i_idx <- i_idx - min(i_idx) + 1
-    for (row in i_idx) {
-      for (col in j) {
-        current_value <- data_slot[row, col]
-        if (!is.na(current_value) && trimws(current_value) != "") {
-          formatted_value <- format_fn(current_value, ...)
-          if (!is.null(formatted_value)) {
-            data_slot[row, col] <- formatted_value
-          }
-        }
-      }
-    }
+    data_slot <- update_group_data_cells(
+      data_slot,
+      rows = i_idx,
+      cols = j,
+      format_fn = format_fn,
+      ...
+    )
   }
 
   x@group_data_j <- data_slot
@@ -89,6 +94,7 @@ apply_format <- function(
   components = NULL,
   inherit_class = NULL,
   original_data = TRUE,
+  original = NULL,
   ...
 ) {
   if (is.character(components)) {
@@ -113,7 +119,10 @@ apply_format <- function(
     out <- x@data_body
     ori <- x@data
   } else {
-    out <- ori <- x
+    out <- x
+    # `original` preserves the raw input for data frames / vectors, which do
+    # not carry their pre-formatting data the way tinytable objects do
+    ori <- if (is.null(original)) x else original
   }
 
   # Apply formatting to specified components only
@@ -154,54 +163,37 @@ apply_format <- function(
 
     # group i
     if (inherits(x, "tinytable") && length(x@group_index_i) > 0) {
+      idx_group <- x@group_index_i %in% i
       for (col in j_filtered) {
-        if (!inherits(x, "tinytable")) {
-          next
-        }
-        idx <- x@group_index_i %in% i
         tmp <- tryCatch(
-          format_fn(x@group_data_i[idx, col], ...),
+          format_fn(x@group_data_i[idx_group, col], ...),
           error = function(e) NULL
         )
         if (length(tmp) > 0) {
-          x@group_data_i[idx, col] <- tmp
+          x@group_data_i[idx_group, col] <- tmp
         }
       }
     }
 
     # body
+    # index: we are only formatting the body rows
+    # ori & out currently have the same dimensions
+    if (inherits(x, "tinytable")) {
+      idx <- x@index_body %in% i
+    } else {
+      idx <- seq_len(nrow(out)) %in% i
+    }
     for (col in j_filtered) {
-      # index: we are only formatting the body rows
-      # ori & out currently have the same dimensions
-      if (inherits(x, "tinytable")) {
-        idx <- x@index_body %in% i
-      } else {
-        idx <- seq_len(nrow(out)) %in% i
-      }
-
-      # original data rows
-      if (original_data) {
-        vec <- vec_original <- ori[idx, col, drop = TRUE]
-        formatted <- tryCatch(
-          format_fn(
-            vec = vec,
-            vec_original = vec_original,
-            ...
-          ),
-          error = function(e) NULL
-        )
-      } else {
-        vec <- out[idx, col, drop = TRUE]
-        vec_original <- ori[idx, col, drop = TRUE]
-        formatted <- tryCatch(
-          format_fn(
-            vec = vec,
-            vec_original = vec_original,
-            ...
-          ),
-          error = function(e) NULL
-        )
-      }
+      vec_original <- ori[idx, col, drop = TRUE]
+      vec <- if (original_data) vec_original else out[idx, col, drop = TRUE]
+      formatted <- tryCatch(
+        format_fn(
+          vec = vec,
+          vec_original = vec_original,
+          ...
+        ),
+        error = function(e) NULL
+      )
       if (length(formatted) > 0) {
         out[idx, col] <- formatted
       }

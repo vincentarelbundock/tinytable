@@ -106,23 +106,15 @@ rotate_typst_cells <- function(x, angle, i, j) {
 }
 
 rotate_cells_setup <- function(x, i, j) {
-  if (identical(i, "groupi")) {
-    components <- "cells"
-    i <- x@group_index_i
-  } else if (identical(i, "~groupi")) {
-    components <- "cells"
-    i <- setdiff(seq_len(nrow(x)), x@group_index_i)
-  } else if (is.character(i)) {
-    components <- i
-    i <- NULL
-  } else if (!is.null(i) || !is.null(j)) {
-    components <- "cells"
-  } else {
-    components <- c("colnames", "cells", "groupi", "~groupi", "groupj")
-  }
-  i <- sanitize_i(i, x, lazy = FALSE, calling_function = "theme_rotate")
+  s <- resolve_i_components(
+    x,
+    i,
+    j,
+    default = c("colnames", "cells", "groupi", "~groupi", "groupj")
+  )
+  i <- sanitize_i(s$i, x, lazy = FALSE, calling_function = "theme_rotate")
   j <- sanitize_j(j, x)
-  list(i = i, j = j, components = components)
+  list(i = i, j = j, components = s$components)
 }
 
 rotate_cells_lazy_html <- function(x, i, j, angle) {

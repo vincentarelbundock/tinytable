@@ -132,11 +132,12 @@ format_tt <- function(
     c("significant", "significant_cell", "decimal", "scientific")
   )
   assert_flag(num_zero)
+  assert_flag(num_suffix)
   assert_string(num_mark_big)
   assert_string(num_mark_dec)
   assert_string(date, null.ok = TRUE)
   assert_function(bool, null.ok = TRUE)
-  assert_function(identity, null.ok = TRUE)
+  assert_flag(math)
   assert_function(other, null.ok = TRUE)
   assert_flag(markdown)
   assert_flag(quarto)
@@ -153,56 +154,36 @@ format_tt <- function(
   tmp <- nse_i_j(x, i_expr = substitute(i), j_expr = substitute(j), pf = parent.frame())
   list2env(tmp, environment())
 
+  # single argument list shared by the lazy call and the direct invocation
+  args <- list(
+    i = i,
+    j = j,
+    digits = digits,
+    num_fmt = num_fmt,
+    num_zero = num_zero,
+    num_suffix = num_suffix,
+    num_mark_big = num_mark_big,
+    num_mark_dec = num_mark_dec,
+    replace = replace,
+    fn = fn,
+    sprintf = sprintf,
+    date_format = date,
+    bool = bool,
+    math = math,
+    escape = escape,
+    markdown = markdown,
+    quarto = quarto,
+    other = other,
+    linebreak = linebreak,
+    output = output
+  )
+
   if (inherits(out, "tinytable")) {
-    cal <- call(
-      "format_tt_lazy",
-      i = i,
-      j = j,
-      digits = digits,
-      num_fmt = num_fmt,
-      num_zero = num_zero,
-      num_suffix = num_suffix,
-      num_mark_big = num_mark_big,
-      num_mark_dec = num_mark_dec,
-      replace = replace,
-      fn = fn,
-      sprintf = sprintf,
-      date_format = date,
-      bool = bool,
-      math = math,
-      escape = escape,
-      markdown = markdown,
-      quarto = quarto,
-      other = other,
-      linebreak = linebreak,
-      output = output
-    )
+    cal <- as.call(c(list(quote(format_tt_lazy)), args))
     attr(cal, "output") <- output
     out@lazy_format <- c(out@lazy_format, list(cal))
   } else {
-    out <- format_tt_lazy(
-      out,
-      i = i,
-      j = j,
-      digits = digits,
-      num_fmt = num_fmt,
-      num_zero = num_zero,
-      num_suffix = num_suffix,
-      num_mark_big = num_mark_big,
-      num_mark_dec = num_mark_dec,
-      replace = replace,
-      fn = fn,
-      sprintf = sprintf,
-      date_format = date,
-      bool = bool,
-      math = math,
-      other = other,
-      escape = escape,
-      quarto = quarto,
-      markdown = markdown,
-      linebreak = linebreak,
-      output = output
-    )
+    out <- do.call(format_tt_lazy, c(list(x = out), args))
   }
 
   return(out)
@@ -255,20 +236,17 @@ format_tt_lazy <- function(
   }
 
   # Check if i contains component names (do this before processing tinytable objects)
-  if (identical(i, "groupi")) {
-    components <- "cells"
-    i <- x@group_index_i
-  } else if (identical(i, "~groupi")) {
-    components <- "cells"
-    i <- setdiff(seq_len(nrow(x)), x@group_index_i)
-  } else if (is.character(i)) {
-    components <- i # before wiping i
-    i <- NULL
-  } else if (!is.null(i) || !is.null(j)) {
-    components <- "cells"
-  } else {
-    components <- "all"
-  }
+  tmp <- resolve_i_components(x, i, j, default = "all")
+  i <- tmp$i
+  components <- tmp$components
+
+  # cell-targeting components only: the type-based formatters (logical, date,
+  # numeric, other) must not reformat body cells when `i` targets a component
+  # such as "caption" or "colnames"
+  components_cells <- intersect(
+    if ("all" %in% components) c("cells", "groupi", "~groupi") else components,
+    c("cells", "groupi", "~groupi")
+  )
 
   # format_tt() supports vectors
   if (isTRUE(check_atomic_vector(x))) {
@@ -289,6 +267,12 @@ format_tt_lazy <- function(
     )
   }
 
+  # data frames and vectors do not carry their raw data the way tinytable
+  # objects do in @data; keep a copy so `replace` can match typed original
+  # values even after digits/date formatting stringified the working copy
+  original_input <- if (!inherits(x, "tinytable")) x else NULL
+  output_format <- if (inherits(x, "tinytable")) x@output else NULL
+
   # In sanity_tt(), we fill in missing NULL `j` in the format-specific versions,
   # because tabularray can do whole column styling. Here, we need to fill in
   # NULL for all formats since this is applied before creating the table.
@@ -300,6 +284,7 @@ format_tt_lazy <- function(
     x = x,
     i = i,
     j = j,
+    components = components_cells,
     format_fn = format_vector_logical,
     inherit_class = "logical",
     bool_fn = bool
@@ -309,6 +294,7 @@ format_tt_lazy <- function(
     x = x,
     i = i,
     j = j,
+    components = components_cells,
     format_fn = format_vector_date,
     inherit_class = "Date",
     date_format = date_format
@@ -318,6 +304,7 @@ format_tt_lazy <- function(
     x = x,
     i = i,
     j = j,
+    components = components_cells,
     format_fn = format_vector_numeric,
     num_suffix = num_suffix,
     digits = digits,
@@ -335,6 +322,7 @@ format_tt_lazy <- function(
     x = x,
     i = i,
     j = j,
+    components = components_cells,
     format_fn = format_vector_other,
     inherit_class = is_other,
     other_fn = other
@@ -348,6 +336,7 @@ format_tt_lazy <- function(
       j = j,
       components = components,
       format_fn = format_vector_sprintf,
+      original_data = FALSE,
       sprintf_pattern = sprintf
     )
   }
@@ -380,11 +369,6 @@ format_tt_lazy <- function(
 
   # linebreak before replace and escape
   if (!is.null(linebreak)) {
-    if (inherits(x, "tinytable")) {
-      output_format <- x@output
-    } else {
-      output_format <- NULL
-    }
     x <- apply_format(
       x = x,
       i = i,
@@ -405,7 +389,8 @@ format_tt_lazy <- function(
     format_fn = format_vector_replace,
     components = components,
     replace = replace,
-    original_data = FALSE
+    original_data = FALSE,
+    original = original_input
   )
 
   # escape latex characters
@@ -443,11 +428,13 @@ format_tt_lazy <- function(
       format_fn = format_vector_markdown,
       components = components,
       original_data = FALSE,
-      output_format = x@output
+      output_format = output_format
     )
   }
 
-  if (isTRUE(quarto)) {
+  # quarto processing needs a rendered table string; no-op on plain data
+  # frames and vectors
+  if (isTRUE(quarto) && inherits(x, "tinytable")) {
     for (col in j) {
       x <- format_vector_quarto(i = i, col = col, x = x)
     }
@@ -463,4 +450,28 @@ format_tt_lazy <- function(
   }
 
   return(x)
+}
+
+
+# Resolve the `i` argument into row indices and a vector of component names.
+# `i` may be a numeric vector of rows, "groupi"/"~groupi" (row group labels or
+# non-group rows), or a character vector of component names such as "caption",
+# "colnames", "notes", or "groupj". Shared by format_tt_lazy() and
+# rotate_cells_setup(); `default` is used when neither `i` nor `j` is supplied.
+resolve_i_components <- function(x, i, j, default = "all") {
+  if (identical(i, "groupi")) {
+    components <- "cells"
+    i <- x@group_index_i
+  } else if (identical(i, "~groupi")) {
+    components <- "cells"
+    i <- setdiff(seq_len(nrow(x)), x@group_index_i)
+  } else if (is.character(i)) {
+    components <- i # before wiping i
+    i <- NULL
+  } else if (!is.null(i) || !is.null(j)) {
+    components <- "cells"
+  } else {
+    components <- default
+  }
+  list(i = i, components = components)
 }
