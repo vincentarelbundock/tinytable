@@ -200,6 +200,13 @@ tab <- tt(mtcars[1:4, 1:5]) |>
 expect_true(grepl("#align(right,", tab, fixed = TRUE))
 
 
+# theme_typst(figure = FALSE) drops only the figure wrapper: the #block[]
+# preamble defining get-style() must survive or the document cannot compile
+tab <- tt(mtcars[1:4, 1:5]) |>
+  theme_typst(figure = FALSE)
+expect_snapshot_print(tab, label = "typst-figure_false.typ")
+
+
 # Typst resizing follows theme_latex() API
 tab <- tt(mtcars[1:4, 1:5]) |>
   theme_typst(resize_width = 0.8, resize_direction = "down") |>

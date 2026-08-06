@@ -1,19 +1,13 @@
 #show figure: set block(breakable: false)
-#figure( // start preamble figure
-  
-  kind: "tinytable",
-  supplement: "Table", // end preamble figure
 
-block[ // start block
+#block[ // start block
 
   #let style-dict = (
     // tinytable style-dict after
-    "0_0": 0, "1_0": 0
   )
 
   #let style-array = ( 
     // tinytable cell style after
-    (align: center,),
   )
 
   // Helper function to get cell style
@@ -44,7 +38,7 @@ block[ // start block
   // tinytable align-figure before
 
   #table( // tinytable table start
-    columns: (auto),
+    columns: (auto, auto, auto, auto, auto),
     stroke: none,
     rows: auto,
     align: (x, y) => {
@@ -55,20 +49,23 @@ block[ // start block
       let style = get-style(x, y)
       if style != none and "background" in style { style.background }
     },
- table.hline(y: 1, start: 0, end: 1, stroke: 0.05em + black),
- table.hline(y: 2, start: 0, end: 1, stroke: 0.08em + black),
- table.hline(y: 0, start: 0, end: 1, stroke: 0.08em + black),
+ table.hline(y: 1, start: 0, end: 5, stroke: 0.05em + black),
+ table.hline(y: 5, start: 0, end: 5, stroke: 0.08em + black),
+ table.hline(y: 0, start: 0, end: 5, stroke: 0.08em + black),
     // tinytable lines before
 
     // tinytable header start
     table.header(
       repeat: true,
-[markdown],
+[mpg], [cyl], [disp], [hp], [drat],
     ),
     // tinytable header end
 
     // tinytable cell content after
-[This is _italic_ text.],
+[21.0], [6], [160], [110], [3.90],
+[21.0], [6], [160], [110], [3.90],
+[22.8], [4], [108], [93], [3.85],
+[21.4], [6], [258], [110], [3.08],
 
     // tinytable footer after
 
@@ -76,5 +73,4 @@ block[ // start block
 
   // tinytable align-figure after
 
-] // end block
-) // end figure 
+] // end block 

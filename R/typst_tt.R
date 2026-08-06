@@ -81,7 +81,6 @@ setMethod(
     out <- typst_header(x, out)
     out <- typst_widths(x, out)
     out <- typst_notes(x, out)
-    out <- typst_alignment(x, out)
     out <- typst_add_gutter(x, out)
     x@table_string <- out
     return(x)
@@ -122,7 +121,7 @@ typst_body <- function(x, out) {
   body <- paste(body, collapse = ",\n")
   body <- paste0(body, ",\n")
 
-  typst_insert(out, body, type = "body")
+  lines_insert(out, body, "tinytable cell content after", "after")
 }
 
 # Helper function to process header
@@ -233,44 +232,6 @@ typst_note <- function(note, label, ncols) {
     )
     sub("text(, ", "text(", tmp, fixed = TRUE)
   }
-}
-
-# Helper function to process default alignment
-typst_alignment <- function(x, out) {
-  align_default <- sprintf(
-    "  #let align-default-array = ( %s, ) // tinytable align-default-array here",
-    paste(rep("left", ncol(x)), collapse = ", ")
-  )
-  lines_insert(
-    out,
-    align_default,
-    "// tinytable align-default-array before",
-    "after"
-  )
-}
-
-typst_insert <- function(x, content = NULL, type = "body") {
-  if (is.null(content)) {
-    return(x)
-  }
-
-  out <- strsplit(x, "\n")[[1]]
-  comment <- switch(
-    type,
-    "lines" = "tinytable lines before",
-    "style" = "tinytable cell style before",
-    "body" = "tinytable cell content after"
-  )
-  idx <- grep(comment, out)
-
-  if (type == "body") {
-    out <- c(out[1:idx], content, out[(idx + 1):length(out)])
-  } else {
-    out <- c(out[1:(idx - 1)], content, out[idx:length(out)])
-  }
-
-  out <- paste(out, collapse = "\n")
-  return(out)
 }
 
 # Helper function to build Typst group header from group row data

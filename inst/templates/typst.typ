@@ -20,7 +20,6 @@
     if key in style-dict { style-array.at(style-dict.at(key)) } else { none }
   }
 
-  // tinytable align-default-array before
   #show table.cell: it => {
     if style-array.len() == 0 { return it }
     

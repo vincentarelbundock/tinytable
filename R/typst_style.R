@@ -30,6 +30,7 @@ typst_clean_css <- function(css) {
   underline   <- !is.na(other$underline)  & other$underline
   strikeout   <- !is.na(other$strikeout)  & other$strikeout
   monospace   <- !is.na(other$monospace)  & other$monospace
+  smallcap    <- !is.na(other$smallcap)   & other$smallcap
   color_set   <- !is.na(other$color)
   bg_set      <- !is.na(other$background)
   fs_set      <- !is.na(other$fontsize)
@@ -61,6 +62,7 @@ typst_clean_css <- function(css) {
   add_scalar(underline, "underline", "true")
   add_scalar(strikeout, "strikeout", "true")
   add_scalar(monospace, "mono", "true")
+  add_scalar(smallcap, "smallcaps", "true")
 
   if (any(color_set)) {
     cv <- character(n)
@@ -133,19 +135,11 @@ typst_apply_styles <- function(x, rec) {
   # group can produce many cell-position keys, so we pre-allocate a list and
   # unlist() once.
   style_dict_list <- vector("list", length(style_keys))
-  style_key_list <- vector("list", length(style_keys))
   for (idx in seq_along(style_keys)) {
     rows <- which(style_idx == idx)
-    style_key_list[[idx]] <- sprintf("%s_%s", rec$i[rows], rec$j[rows])
     style_dict_list[[idx]] <- sprintf('"%s_%s": %s', rec$i[rows], rec$j[rows], idx - 1)
   }
   style_dict_entries <- unlist(style_dict_list, use.names = FALSE)
-  style_dict_keys <- unlist(style_key_list, use.names = FALSE)
-
-  # Remove duplicate keys (keep last occurrence for each coordinate)
-  if (length(style_dict_entries) > 0) {
-    style_dict_entries <- style_dict_entries[!duplicated(style_dict_keys, fromLast = TRUE)]
-  }
 
   # Insert style-dict entries as single line
   if (length(style_dict_entries) > 0) {
@@ -179,6 +173,30 @@ typst_apply_styles <- function(x, rec) {
 
 
 
+#' Convert tinytable indexing to Typst 0-based indexing
+#'
+#' tinytable: 0=colnames, -1=group1, -2=group2, ..., 1,2,3=data
+#' Typst: group headers come first (0,1,...), then colnames, then data
+#' Need to account for the fact that group headers are inserted at the top
+#' @param df Data frame with `i` (row) and `j` (column) tinytable indices
+#' @param nhead Number of header rows (colnames + column group rows)
+#' @keywords internal
+#' @noRd
+typst_shift_indices <- function(df, nhead) {
+  if (nhead > 0) {
+    # Case with headers/colnames: normal conversion
+    df$i <- ifelse(df$i < 0,
+                   nhead + df$i - 1,  # Headers: -1 becomes nhead-2, -2 becomes nhead-3
+                   df$i + nhead - 1)  # Column names (0) and data: 0 becomes nhead-1, 1 becomes nhead
+  } else {
+    # Case with no headers (nhead = 0): filter out i=0 (non-existent colnames), then convert
+    df <- df[df$i > 0, , drop = FALSE]  # Remove i=0 entries
+    df$i <- df$i - 1  # Data rows: 1 becomes 0, 2 becomes 1, etc.
+  }
+  df$j <- df$j - 1
+  return(df)
+}
+
 typst_split_chunks <- function(x) {
   x <- sort(x)
   breaks <- c(0, which(diff(x) != 1), length(x))
@@ -200,8 +218,11 @@ typst_hlines <- function(x, lin) {
   # Normalize colors once before splitting
   lin$line_color_mapped <- normalize_colors(lin$line_color, "typst")
 
-  tmp <- split(lin, list(lin$i, lin$line, lin$line_color_mapped, lin$line_width))
-  tmp <- Filter(function(x) nrow(x) > 0, tmp)
+  tmp <- split(
+    lin,
+    list(lin$i, lin$line, lin$line_color_mapped, lin$line_width),
+    drop = TRUE
+  )
   tmp <- lapply(tmp, function(k) {
     # Drop duplicate cell-level entries. These arise routinely whenever
     # theme_tinytable() and a user style_tt() declare the same line (same
@@ -237,17 +258,12 @@ typst_hlines <- function(x, lin) {
         # Check if this is a boundary
         if (!is.na(trim_val)) {
           if (grepl("r", trim_val)) {
-            # End of current segment
+            # End of current segment; the next one starts after this column
             final_chunks <- c(final_chunks, list(c(min = current_start, max = col_val + 1)))
-            # Next segment starts after this column
-            if (i < nrow(chunk_rows)) {
-              current_start <- col_val + 1
-            }
+            current_start <- col_val + 1
           } else if (grepl("l", trim_val) && col_val > current_start) {
             # Start of new segment (close previous if any)
-            if (col_val > current_start) {
-              final_chunks <- c(final_chunks, list(c(min = current_start, max = col_val)))
-            }
+            final_chunks <- c(final_chunks, list(c(min = current_start, max = col_val)))
             current_start <- col_val
           }
         }
@@ -265,6 +281,10 @@ typst_hlines <- function(x, lin) {
     if (length(final_chunks) == 0) {
       final_chunks <- lapply(seq_len(nrow(chunks)), function(i) c(min = chunks$min[i], max = chunks$max[i]))
     }
+
+    # Drop zero-width segments and duplicates so each span is drawn once
+    final_chunks <- Filter(function(chunk) chunk["min"] < chunk["max"], final_chunks)
+    final_chunks <- unique(final_chunks)
 
     ymin <- k$i[1]
     ymax <- k$i[1] + 1
@@ -312,27 +332,7 @@ process_typst_lines <- function(x, lines) {
     return(x)
   }
 
-  # Convert tinytable indexing to Typst 0-based indexing
-  # tinytable: 0=colnames, -1=group1, -2=group2, ..., 1,2,3=data
-  # Typst: group headers come first, then colnames, then data
-  # Need to account for the fact that group headers are inserted at the top
-
-  # Convert tinytable indexing to Typst 0-based indexing
-  # tinytable: 0=colnames, -1=group1, -2=group2, ..., 1,2,3=data
-  # Typst: group headers come first (0,1,...), then colnames, then data
-  if (x@nhead > 0) {
-    # Case with headers/colnames: normal conversion
-    lines$i <- ifelse(lines$i < 0,
-                     x@nhead + lines$i - 1,  # Headers: -1 becomes nhead-2, -2 becomes nhead-3
-                     lines$i + x@nhead - 1)  # Column names (0) and data: 0 becomes nhead-1, 1 becomes nhead
-  } else {
-    # Case with no headers (nhead = 0): filter out i=0 (non-existent colnames), then convert
-    lines <- lines[lines$i > 0, , drop = FALSE]  # Remove i=0 entries
-    if (nrow(lines) > 0) {
-      lines$i <- lines$i - 1  # Data rows: 1 becomes 0, 2 becomes 1, etc.
-    }
-  }
-  lines$j <- lines$j - 1
+  lines <- typst_shift_indices(lines, x@nhead)
 
   # Process horizontal and vertical lines
   x <- typst_hlines(x, lines)
@@ -367,29 +367,9 @@ process_typst_other_styles <- function(x, other) {
   css <- .typst_build_css_vectorized(other, color_map)
 
   # Clean CSS and add to data frame
-  other$css <- sapply(css, typst_clean_css)
+  other$css <- typst_clean_css(css)
 
-  # Convert tinytable indexing to Typst 0-based indexing
-  # tinytable: 0=colnames, -1=group1, -2=group2, ..., 1,2,3=data
-  # Typst: group headers come first, then colnames, then data
-  # Need to account for the fact that group headers are inserted at the top
-
-  # Convert tinytable indexing to Typst 0-based indexing
-  # tinytable: 0=colnames, -1=group1, -2=group2, ..., 1,2,3=data
-  # Typst: group headers come first (0,1,...), then colnames, then data
-  if (x@nhead > 0) {
-    # Case with headers/colnames: normal conversion
-    other$i <- ifelse(other$i < 0,
-                     x@nhead + other$i - 1,  # Headers: -1 becomes nhead-2, -2 becomes nhead-3
-                     other$i + x@nhead - 1)  # Column names (0) and data: 0 becomes nhead-1, 1 becomes nhead
-  } else {
-    # Case with no headers (nhead = 0): filter out i=0 (non-existent colnames), then convert
-    other <- other[other$i > 0, , drop = FALSE]  # Remove i=0 entries
-    if (nrow(other) > 0) {
-      other$i <- other$i - 1  # Data rows: 1 becomes 0, 2 becomes 1, etc.
-    }
-  }
-  other$j <- other$j - 1
+  other <- typst_shift_indices(other, x@nhead)
 
   # Generate style-dict and style-array for optimized lookup
   x <- typst_apply_styles(x, other)
@@ -406,13 +386,17 @@ typst_vlines <- function(x, lin) {
   # Normalize colors once before splitting
   lin$line_color_mapped <- normalize_colors(lin$line_color, "typst")
 
-  lin <- split(lin, list(lin$j, lin$line, lin$line_color_mapped, lin$line_width))
-  lin <- Filter(function(x) nrow(x) > 0, lin)
+  lin <- split(
+    lin,
+    list(lin$j, lin$line, lin$line_color_mapped, lin$line_width),
+    drop = TRUE
+  )
   lin <- lapply(lin, function(k) {
     # Drop duplicate cell-level entries; see typst_hlines() for rationale.
     k <- k[!duplicated(k), , drop = FALSE]
-    ymin <- typst_split_chunks(k$i)$min
-    ymax <- typst_split_chunks(k$i)$max
+    chunks <- typst_split_chunks(k$i)
+    ymin <- chunks$min
+    ymax <- chunks$max
     xmin <- k$j[1]
     xmax <- xmin + 1
     line <- k$line[1]
