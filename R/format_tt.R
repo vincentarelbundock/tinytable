@@ -231,6 +231,16 @@ format_tt_lazy <- function(
     other,
     linebreak,
     output) {
+  # Row indices derived from an NSE predicate were computed eagerly in
+  # format_tt() against the pre-group data rows. Although the @lazy_format
+  # loop runs before rbind_body_groupi(), apply_format() interprets numeric
+  # `i` in final-table coordinates (it matches `x@index_body %in% i`), so
+  # predicate-derived indices must be remapped here as well. @index_body is
+  # already available: build_tt() computes it before the lazy_format loop.
+  if (inherits(x, "tinytable")) {
+    i <- nse_remap_i(i, x)
+  }
+
   if (inherits(x, "tbl_df")) {
     assert_dependency("tibble")
     x_is_tibble <- TRUE

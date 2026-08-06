@@ -212,6 +212,13 @@ plot_tt_lazy <- function(
     sprintf = "%s",
     assets = "tinytable_assets",
     ...) {
+  # Row indices derived from an NSE predicate were computed eagerly in
+  # plot_tt() against the pre-group data rows (the marker set by nse_i_j()
+  # survives sanitize_i()). The @lazy_plot loop runs after
+  # rbind_body_groupi(), so @data_body below is the final table and numeric
+  # `i` must be in final-table coordinates: remap through @index_body.
+  i <- nse_remap_i(i, x)
+
   out <- x@data_body
 
   # Handle Tabulator plots with JavaScript formatters

@@ -148,6 +148,12 @@ style_tt_lazy <- function(
   # must not expose the preceding call's frame again.
   out@style <- data.frame()
 
+  # Row indices derived from an NSE predicate (e.g., i = x > 30) were computed
+  # eagerly in style_tt() against the pre-group data rows. Here, at lazy-eval
+  # time, group_tt() label rows have been inserted and numeric `i` refers to
+  # final-table positions, so remap through @index_body.
+  i <- nse_remap_i(i, x)
+
   # Set default line_color if NULL
   if (is.null(line_color) && !is.null(line)) {
     if (identical(x@output, "html") && identical(x@html_engine, "tinytable")) {
