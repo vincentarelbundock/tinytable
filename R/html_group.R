@@ -94,7 +94,9 @@ html_groupj_insert <- function(x, groupj_rows) {
   out <- strsplit(x@table_string, "\\n")[[1]]
 
   all_jstrings <- paste(groupj_rows, collapse = "\n")
-  idx <- grep("<thead>", out, fixed = TRUE)[1]
+  # Anchor on the template's own indented <thead> line so injected content
+  # (e.g. a caption containing the literal string "<thead>") cannot match.
+  idx <- grep("^        <thead>$", out)[1]
   out <- c(out[seq_len(idx)], all_jstrings, out[(idx + 1):length(out)])
   out <- paste(out, collapse = "\n")
 

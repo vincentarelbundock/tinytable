@@ -1,8 +1,10 @@
-css_light <- "
-// tables
+# Shared CSS template for the revealjs theme. Placeholders (in order):
+# body font size, header/last-row border color, caption color, caption font size.
+css_revealjs_template <- "
+/* tables */
 
 .reveal table {
-  // height: auto; /* Adjust table width to fit content up to the available slide space */
+  /* height: auto; Adjust table width to fit content up to the available slide space */
   margin: auto;
   border-collapse: collapse;
   border-spacing: 0;
@@ -19,7 +21,7 @@ css_light <- "
 .reveal table thead th,
 .reveal .slides table tr:last-child td,
 .reveal .slides table {
-  border-bottom: 2px solid #D3D3D3;
+  border-bottom: 2px solid %s;
 }
 
 /* Make column headers bold */
@@ -28,52 +30,21 @@ css_light <- "
 
 /* Styling table captions */
 .reveal table caption {
-  color: #666666; /* Dark grey color for the caption */
-  font-size: %emem;
+  color: %s;
+  font-size: %sem;
 }
 "
 
-css_dark <- "
-// tables
-
+# Extra rules appended for the dark variant only.
+css_revealjs_dark_addendum <- "
 .reveal table {
-  // height: auto; /* Adjust table width to fit content up to the available slide space */
-  margin: auto;
-  border-collapse: collapse;
-  border-spacing: 0;
   background-color: #2d2d2d; /* Dark background for tables */
   color: white; /* White text color */
 }
 
 .reveal table th,
 .reveal table td {
-  border: none;
-  padding: .23em;
-  font-size: %sem;
   color: white; /* White text color */
-}
-
-/* Adds a bottom border to the table header row for distinction */
-.reveal table thead th {
-  border-bottom: 2px solid white; /* White border color for dark theme */
-}
-
-.reveal .slides table tr:last-child td {
-  border-bottom: 2px solid white; /* White border color for dark theme */
-}
-
-.reveal .slides table {
-  border-bottom: 2px solid white; /* White border color for dark theme */
-}
-
-/* Make column headers bold */
-.reveal table thead th {
-}
-
-/* Styling table captions */
-.reveal table caption {
-  color: white; /* White color for the caption */
-  font-size: %emem;
 }
 "
 
@@ -91,9 +62,24 @@ theme_revealjs <- function(
   fontsize = get_option("tinytable_revealjs_fontsize", default = 0.8),
   fontsize_caption = get_option("tinytable_revealjs_fontsize_caption", default = 1)) {
   if (css == "light") {
-    css <- sprintf(css_light, format_markup_num(fontsize), fontsize_caption)
+    css <- sprintf(
+      css_revealjs_template,
+      format_markup_num(fontsize),
+      "#D3D3D3",
+      "#666666", # Dark grey color for the caption
+      format_markup_num(fontsize_caption)
+    )
   } else if (css == "dark") {
-    css <- sprintf(css_dark, format_markup_num(fontsize), fontsize_caption)
+    css <- paste0(
+      sprintf(
+        css_revealjs_template,
+        format_markup_num(fontsize),
+        "white", # White border color for dark theme
+        "white", # White color for the caption
+        format_markup_num(fontsize_caption)
+      ),
+      css_revealjs_dark_addendum
+    )
   }
   x <- theme_html(x, engine = "tinytable", css_rule = css)
   return(x)
