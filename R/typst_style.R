@@ -198,20 +198,7 @@ typst_hlines <- function(x, lin) {
   }
 
   # Normalize colors once before splitting
-  unique_line_colors <- unique(lin$line_color[!is.na(lin$line_color)])
-  if (length(unique_line_colors) > 0) {
-    line_color_map <- stats::setNames(
-      sapply(unique_line_colors, standardize_colors, format = "typst", USE.NAMES = FALSE),
-      unique_line_colors
-    )
-    lin$line_color_mapped <- ifelse(
-      !is.na(lin$line_color) & lin$line_color %in% names(line_color_map),
-      line_color_map[lin$line_color],
-      "black"
-    )
-  } else {
-    lin$line_color_mapped <- "black"
-  }
+  lin$line_color_mapped <- normalize_colors(lin$line_color, "typst")
 
   tmp <- split(lin, list(lin$i, lin$line, lin$line_color_mapped, lin$line_width))
   tmp <- Filter(function(x) nrow(x) > 0, tmp)
@@ -367,19 +354,7 @@ process_typst_other_styles <- function(x, other) {
   other$alignv <- map_alignv(other$alignv, "typst")
 
   # Normalize colors once
-  unique_colors <- c(
-    unique(other$color[!is.na(other$color)]),
-    unique(other$background[!is.na(other$background)])
-  )
-  unique_colors <- unique(unique_colors)
-  if (length(unique_colors) > 0) {
-    color_map <- stats::setNames(
-      sapply(unique_colors, standardize_colors, format = "typst", USE.NAMES = FALSE),
-      unique_colors
-    )
-  } else {
-    color_map <- character(0)
-  }
+  color_map <- build_color_map(c(other$color, other$background), "typst")
 
   # Generate CSS for each cell. The reference implementation builds one cell
   # at a time by repeatedly calling typst_insert_field(), which uses regex
@@ -429,20 +404,7 @@ typst_vlines <- function(x, lin) {
   }
 
   # Normalize colors once before splitting
-  unique_line_colors <- unique(lin$line_color[!is.na(lin$line_color)])
-  if (length(unique_line_colors) > 0) {
-    line_color_map <- stats::setNames(
-      sapply(unique_line_colors, standardize_colors, format = "typst", USE.NAMES = FALSE),
-      unique_line_colors
-    )
-    lin$line_color_mapped <- ifelse(
-      !is.na(lin$line_color) & lin$line_color %in% names(line_color_map),
-      line_color_map[lin$line_color],
-      "black"
-    )
-  } else {
-    lin$line_color_mapped <- "black"
-  }
+  lin$line_color_mapped <- normalize_colors(lin$line_color, "typst")
 
   lin <- split(lin, list(lin$j, lin$line, lin$line_color_mapped, lin$line_width))
   lin <- Filter(function(x) nrow(x) > 0, lin)

@@ -85,23 +85,10 @@ styles_to_css <- function(x) {
   idx <- which(!is.na(x$indent))
   css[idx, 8L] <- paste0("padding-left: ", format_markup_unit(x$indent[idx], "em"))
 
-  map_colors <- function(values) {
-    out <- rep(NA_character_, length(values))
-    vals <- unique(values[!is.na(values)])
-    if (length(vals)) {
-      mapped <- stats::setNames(
-        vapply(vals, standardize_colors, character(1), format = "hex"),
-        vals
-      )
-      idx <- which(!is.na(values))
-      out[idx] <- unname(mapped[values[idx]])
-    }
-    out
-  }
-  color <- map_colors(x$color)
+  color <- normalize_colors(x$color, "hex", default = NA_character_)
   idx <- which(!is.na(color))
   css[idx, 9L] <- paste0("color: ", color[idx])
-  background <- map_colors(x$background)
+  background <- normalize_colors(x$background, "hex", default = NA_character_)
   idx <- which(!is.na(background))
   css[idx, 10L] <- paste0("background-color: ", background[idx])
 
@@ -294,26 +281,9 @@ setMethod(
       trim_l <- grepl("l", lines$line_trim)
       trim_r <- grepl("r", lines$line_trim)
 
-      # Normalize colors once: build a map for unique line_color -> hex
-      unique_colors <- unique(lines$line_color[!is.na(lines$line_color)])
-      if (length(unique_colors) > 0) {
-        color_map <- stats::setNames(
-          sapply(unique_colors, standardize_colors, format = "hex", USE.NAMES = FALSE),
-          unique_colors
-        )
-      } else {
-        color_map <- character(0)
-      }
-
       # Map colors to hex (preserve CSS variables, fallback to "black")
-      lines$color_hex <- ifelse(
-        !is.na(lines$line_color) & lines$line_color %in% names(color_map),
-        color_map[lines$line_color],
-        ifelse(
-          !is.na(lines$line_color) & grepl("^var\\(", lines$line_color),
-          lines$line_color,  # preserve CSS variable references
-          "black"
-        )
+      lines$color_hex <- normalize_colors(
+        lines$line_color, "hex", preserve_css_vars = TRUE
       )
 
       # Default widths

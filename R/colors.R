@@ -92,3 +92,65 @@ standardize_colors <- function(col, format = "hex") {
 
   return(result)
 }
+
+
+#' Build a named map from unique user-supplied colors to normalized values
+#'
+#' Calls standardize_colors() once per unique non-NA value, in order of first
+#' appearance. Callers that need the raw map (e.g. for later name lookups or
+#' to register LaTeX preamble entries) use this directly; others go through
+#' normalize_colors().
+#'
+#' @param values Character vector of user-supplied colors (may contain NA)
+#' @param format Passed to standardize_colors ("hex", "tabularray", "typst")
+#' @return Named character vector: original color -> normalized color
+#' @keywords internal
+#' @noRd
+build_color_map <- function(values, format) {
+  vals <- unique(values[!is.na(values)])
+  if (length(vals) == 0) {
+    return(character(0))
+  }
+  stats::setNames(
+    sapply(vals, standardize_colors, format = format, USE.NAMES = FALSE),
+    vals
+  )
+}
+
+#' Apply a prebuilt color map to a vector of colors
+#'
+#' @param values Character vector of user-supplied colors (may contain NA)
+#' @param map Named character vector from build_color_map()
+#' @param default Value used for NA and unmatched entries
+#' @param preserve_css_vars Keep unmatched var(--...) values untouched
+#'   (used by the HTML lines path)
+#' @return Character vector of normalized colors
+#' @keywords internal
+#' @noRd
+apply_color_map <- function(values, map, default = "black", preserve_css_vars = FALSE) {
+  out <- rep(default, length(values))
+  idx <- which(!is.na(values) & values %in% names(map))
+  out[idx] <- unname(map[values[idx]])
+  if (preserve_css_vars) {
+    idx <- which(!is.na(values) & !(values %in% names(map)) & grepl("^var\\(", values))
+    out[idx] <- values[idx]
+  }
+  out
+}
+
+#' Normalize a vector of user-supplied colors via a unique-value map
+#'
+#' Convenience wrapper: build_color_map() + apply_color_map().
+#'
+#' @inheritParams apply_color_map
+#' @param format Passed to standardize_colors ("hex", "tabularray", "typst")
+#' @keywords internal
+#' @noRd
+normalize_colors <- function(values, format, default = "black", preserve_css_vars = FALSE) {
+  apply_color_map(
+    values,
+    build_color_map(values, format),
+    default = default,
+    preserve_css_vars = preserve_css_vars
+  )
+}

@@ -199,25 +199,11 @@ process_tabularray_lines <- function(x, lines) {
   lines$i <- lines$i + x@nhead
 
   # Normalize colors once and define preambles
-  unique_line_colors <- unique(lines$line_color[!is.na(lines$line_color)])
-  if (length(unique_line_colors) > 0) {
-    line_color_map <- stats::setNames(
-      sapply(unique_line_colors, standardize_colors, format = "tabularray", USE.NAMES = FALSE),
-      unique_line_colors
-    )
-    # Define color preambles once
-    for (col in line_color_map) {
-      x <- define_color_preamble(x, col)
-    }
-    # Map colors in lines dataframe
-    lines$line_color_mapped <- ifelse(
-      !is.na(lines$line_color) & lines$line_color %in% names(line_color_map),
-      line_color_map[lines$line_color],
-      "black"
-    )
-  } else {
-    lines$line_color_mapped <- "black"
+  line_color_map <- build_color_map(lines$line_color, "tabularray")
+  for (col in line_color_map) {
+    x <- define_color_preamble(x, col)
   }
+  lines$line_color_mapped <- apply_color_map(lines$line_color, line_color_map)
 
   # Process horizontal lines
   hlines <- lines[!is.na(lines$line) & grepl("b|t", lines$line), ]
@@ -259,23 +245,10 @@ process_tabularray_other_styles <- function(x, other) {
   # Prepare d-columns (special case)
   x <- prepare_dcolumn(x, other)
 
-  # Normalize color map once
-  unique_colors <- c(
-    unique(other$color[!is.na(other$color)]),
-    unique(other$background[!is.na(other$background)])
-  )
-  unique_colors <- unique(unique_colors)
-  if (length(unique_colors) > 0) {
-    color_map <- stats::setNames(
-      sapply(unique_colors, standardize_colors, format = "tabularray", USE.NAMES = FALSE),
-      unique_colors
-    )
-    # Define color preambles once
-    for (col in color_map) {
-      x <- define_color_preamble(x, col)
-    }
-  } else {
-    color_map <- character(0)
+  # Normalize color map once and define preambles
+  color_map <- build_color_map(c(other$color, other$background), "tabularray")
+  for (col in color_map) {
+    x <- define_color_preamble(x, col)
   }
 
   # Build style strings directly from columns. `other` is the filtered
