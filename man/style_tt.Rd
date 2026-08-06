@@ -143,6 +143,8 @@ Alias for \code{style_tt()}
 }
 \details{
 This function applies styling to a table created by \code{tt()}. It allows customization of text style (bold, italic, monospace), text and background colors, font size, cell width, text alignment, column span, and indentation. The function also supports passing native instructions to LaTeX (tabularray) and HTML (bootstrap) formats.
+
+Vector values for style arguments (e.g., \code{color}, \code{background}, \code{fontsize}) are recycled over the selected cells in the order specified by the user in \code{i} and \code{j}, with \code{i} varying fastest. For example, \code{style_tt(x, j = c(3, 1), background = c("red", "blue"))} colors column 3 red and column 1 blue. When \code{i} is a logical matrix, values are recycled over the \code{TRUE} cells in column-major order.
 }
 \section{Markdown limitations}{
 

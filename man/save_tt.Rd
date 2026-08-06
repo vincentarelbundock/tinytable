@@ -22,7 +22,8 @@ tt_save(
 
 \item{output}{String or file path.
 \itemize{
-\item If \code{output} is "markdown", "latex", "html", "typst", or "tabulator", the table is returned in a string as an \code{R} object.
+\item If \code{output} is "markdown", "latex", "html", or "typst", the table is returned in a string as an \code{R} object.
+\item If \code{output} is "dataframe", the formatted table is returned as a data frame.
 \item If \code{output} is a valid file path, the table is saved to file. The supported extensions are: .docx, .html, .png, .pdf, .tex, .typ, and .md (with aliases .txt, .Rmd and .qmd).
 \item If \code{theme_html(portable = TRUE)} or \code{theme_typst(portable = TRUE)} is used,
 images are included as base64 encoded strings instead of links to local files.

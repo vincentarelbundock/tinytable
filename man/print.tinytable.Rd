@@ -17,7 +17,6 @@
 \item \code{"markdown"}: plain text markdown table.
 \item \code{"typst"}: Typst table.
 \item \code{"dataframe"}: formatted data frame.
-\item \code{"tabulator"}: interactive HTML table using Tabulator.js.
 \item \code{"knitr"}: PNG screenshot via \code{webshot2}, returned through \code{knitr::include_graphics()}. Useful for embedding styled tables in Rmarkdown or Quarto documents. Requires the \code{webshot2} package.
 \item \code{"raster"}: PNG screenshot via \code{webshot2}, drawn on the graphics device via \code{grid::grid.raster()}. Useful for pkgdown \verb{@examples} and README files, where the plot is captured as an image. Requires the \code{webshot2} and \code{png} packages. For README.Rmd files rendered with \code{rmarkdown::render()}, set \code{knitr::opts_chunk$set(fig.path = "man/figures/README-")} in a setup chunk so that pkgdown copies the images correctly.
 }
