@@ -338,3 +338,50 @@ tab <- tt(dat, caption = cap) |>
 t <- expect_table(tab, formats = c("html", "latex"))
 expect_snapshot_print(t[["html"]], "format_tt-conditional_output.html")
 expect_snapshot_print(t[["latex"]], "format_tt-conditional_output.tex")
+
+
+# num_suffix: NA must not render "NANA", Inf must not render "InfT", exact
+# powers get the right tier (1e6 -> "1M", not "1000K"), and negatives are
+# abbreviated via abs()
+x <- format_tt(c(NA, -2e6, 1e3, 1500, 2e6, Inf, 0.5), digits = 2, num_suffix = TRUE)
+expect_equivalent(x, c("NA", "-2M", "1K", "1.5K", "2M", "Inf", "0.5"))
+x <- format_tt(c(1e3, 1e6, 1e9, 1e12), digits = 2, num_suffix = TRUE)
+expect_equivalent(x, c("1K", "1M", "1B", "1T"))
+
+# markdown/quarto flags must not crash on data frame or vector input
+expect_equivalent(format_tt(c("_a_"), markdown = TRUE), "_a_")
+expect_equivalent(format_tt(data.frame(x = "a"), quarto = TRUE)$x, "a")
+
+# component-only i (e.g. "caption") must not reformat body cells
+tab <- tt(data.frame(x = c(1.23456, 2.34567)), caption = "cap") |>
+  format_tt(i = "caption", digits = 1) |>
+  save_tt("dataframe")
+expect_equivalent(tab[[1]], c("x", "1.23456", "2.34567"))
+
+# replace matches typed original values only: a cell that merely formats to
+# the same string (1.4 -> "1" with digits = 0) must not be clobbered
+x <- format_tt(c(1.4, 1, 2.6), digits = 0, num_fmt = "decimal", replace = list("one" = 1))
+expect_equivalent(x, c("1", "one", "3"))
+tab <- tt(data.frame(x = c(1.4, 1, 2.6))) |>
+  format_tt(digits = 0, num_fmt = "decimal", replace = list("one" = 1)) |>
+  save_tt("dataframe")
+expect_equivalent(tab[[1]], c("x", "1", "one", "3"))
+
+# replace = TRUE blanks real NA values on both the vector and tinytable paths,
+# but leaves literal "NA" strings alone
+expect_equivalent(format_tt(c(NA, 1.5), digits = 1, replace = TRUE), c(" ", "2"))
+tab <- tt(data.frame(x = c(NA, 1.5))) |>
+  format_tt(digits = 1, replace = TRUE) |>
+  save_tt("dataframe")
+expect_equivalent(tab[[1]], c("x", "", "2"))
+expect_equivalent(format_tt(c("NA", "FR"), replace = TRUE), c("NA", "FR"))
+
+# decimal formatting must not emit signed zero
+expect_equivalent(
+  format_tt(c(-0.0001, 0.0001), digits = 2, num_fmt = "decimal"),
+  c("0", "0")
+)
+expect_equivalent(
+  format_tt(-0.0001, digits = 2, num_fmt = "decimal", num_zero = TRUE),
+  "0.00"
+)

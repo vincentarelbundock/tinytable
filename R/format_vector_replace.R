@@ -10,39 +10,26 @@ format_vector_replace <- function(
 
   result <- vec
 
+  # match against the original (pre-formatting) values only: a cell that
+  # merely *formats* to the same string as a replacement target (e.g. 1.4
+  # printed as "1" with digits = 0) must not be clobbered
+  ori <- if (is.null(vec_original)) vec else vec_original
+  ori_chr <- as.character(ori)
+  ori_numeric <- is.numeric(ori)
+
   for (z in seq_along(replace)) {
     new <- names(replace)[z]
-    old_vals <- replace[[z]]
 
-    for (old in old_vals) {
-      match_idx <- vapply(
-        seq_along(result),
-        function(i) {
-          x <- result[[i]]
-          x0 <- if (!is.null(vec_original)) vec_original[[i]] else x
-
-          any(c(
-            is.na(old) && is.na(x),
-            is.na(old) && is.na(x0),
-            is.nan(old) && is.nan(x),
-            is.nan(old) && is.nan(x0),
-            is.infinite(old) &&
-              is.infinite(x) &&
-              typeof(x) == "double" &&
-              sign(x) == sign(old),
-            is.infinite(old) &&
-              is.infinite(x0) &&
-              typeof(x0) == "double" &&
-              sign(x0) == sign(old),
-            identical(old, x),
-            identical(old, x0),
-            # Add string conversion matching for mixed types
-            identical(as.character(old), as.character(x)),
-            identical(as.character(old), as.character(x0))
-          ))
-        },
-        logical(1)
-      )
+    for (old in replace[[z]]) {
+      if (is.nan(old)) {
+        match_idx <- is.nan(ori)
+      } else if (is.na(old)) {
+        match_idx <- is.na(ori)
+      } else if (ori_numeric && is.numeric(old) && is.infinite(old)) {
+        match_idx <- is.infinite(ori) & sign(ori) == sign(old)
+      } else {
+        match_idx <- !is.na(ori_chr) & ori_chr == as.character(old)
+      }
 
       result[match_idx] <- new
     }
