@@ -22,8 +22,6 @@ block[ // start block
     if key in style-dict { style-array.at(style-dict.at(key)) } else { none }
   }
 
-  // tinytable align-default-array before
-  #let align-default-array = ( left, left, left, left, left, left, left, left, left, left, ) // tinytable align-default-array here
   #show table.cell: it => {
     if style-array.len() == 0 { return it }
     
@@ -58,7 +56,7 @@ block[ // start block
       let style = get-style(x, y)
       if style != none and "background" in style { style.background }
     },
- table.hline(y: 1, start: 2, end: 4, stroke: 0.03em + black), table.hline(y: 1, start: 4, end: 6, stroke: 0.03em + black), table.hline(y: 1, start: 4, end: 6, stroke: 0.03em + black),
+ table.hline(y: 1, start: 2, end: 4, stroke: 0.03em + black), table.hline(y: 1, start: 4, end: 6, stroke: 0.03em + black),
  table.hline(y: 2, start: 0, end: 10, stroke: 0.05em + black),
  table.hline(y: 8, start: 0, end: 10, stroke: 0.08em + black),
  table.hline(y: 0, start: 0, end: 10, stroke: 0.08em + black),

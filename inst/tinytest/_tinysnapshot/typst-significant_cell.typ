@@ -20,8 +20,6 @@ block[ // start block
     if key in style-dict { style-array.at(style-dict.at(key)) } else { none }
   }
 
-  // tinytable align-default-array before
-  #let align-default-array = ( left, ) // tinytable align-default-array here
   #show table.cell: it => {
     if style-array.len() == 0 { return it }
     

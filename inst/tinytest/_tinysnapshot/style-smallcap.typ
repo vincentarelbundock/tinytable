@@ -8,10 +8,12 @@ block[ // start block
 
   #let style-dict = (
     // tinytable style-dict after
+    "0_0": 0, "0_1": 0, "0_2": 0, "0_3": 0, "0_4": 0, "1_4": 0, "2_4": 0, "3_4": 0
   )
 
   #let style-array = ( 
     // tinytable cell style after
+    (smallcaps: true,),
   )
 
   // Helper function to get cell style
@@ -20,8 +22,6 @@ block[ // start block
     if key in style-dict { style-array.at(style-dict.at(key)) } else { none }
   }
 
-  // tinytable align-default-array before
-  #let align-default-array = ( left, left, left, left, left, ) // tinytable align-default-array here
   #show table.cell: it => {
     if style-array.len() == 0 { return it }
     

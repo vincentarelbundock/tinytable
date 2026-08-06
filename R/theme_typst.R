@@ -96,8 +96,24 @@ theme_typst <- function(x,
   if (!figure) {
     fn <- function(table) {
       tab <- table@table_string
-      tab <- lines_drop(tab, regex = "table\\(", position = "before")
-      tab <- lines_drop(tab, regex = "\\/\\/ end table", position = "after")
+      # Drop only the figure wrapper. The #block[] preamble must be kept: it
+      # defines style-dict/style-array/get-style() and the table.cell show
+      # rule, which the table's align/fill closures call. Same marker-based
+      # approach as the Quarto handling in typst_finalize.R. When Quarto has
+      # already stripped the figure wrapper, the markers are gone and there
+      # is nothing left to drop.
+      if (grepl("// start preamble figure", tab, fixed = TRUE)) {
+        tab <- lines_drop_between(
+          tab,
+          regex_start = "// start preamble figure",
+          regex_end = "// end preamble figure",
+          fixed = TRUE
+        )
+        tab <- lines_drop(tab, regex = "// end figure", fixed = TRUE)
+        # finalize() rewrites "#block" as "block" because the block is an
+        # argument of #figure(); at the top level it must be a code call.
+        tab <- sub("\nblock[ // start block", "\n#block[ // start block", tab, fixed = TRUE)
+      }
       table@table_string <- tab
       return(table)
     }
