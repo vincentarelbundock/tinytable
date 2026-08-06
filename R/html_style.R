@@ -213,21 +213,10 @@ setMethod(
     # CSS rule will be handled by finalize() via template substitution
     # Removed duplicate html_setting call that was causing CSS duplication
 
-    # Use populated @style_other from build_tt()
-    other <- x@style_other
-
-    other <- filter_style_other(other, c(
-      "bold", "italic", "underline", "strikeout",
-      "monospace", "smallcap", "align", "alignv",
-      "color", "background", "fontsize", "indent",
-      "html_css", "colspan", "rowspan"
-    ))
-
-    # Use populated @style_lines from build_tt()
-    lines <- x@style_lines
-    if (nrow(lines) == 0) {
-      lines <- NULL
-    }
+    # Use populated @style_other / @style_lines from build_tt()
+    inputs <- style_backend_inputs(x, STYLE_PROPS_HTML)
+    other <- inputs$other
+    lines <- inputs$lines
 
 
     # rowspan/colspan spans first

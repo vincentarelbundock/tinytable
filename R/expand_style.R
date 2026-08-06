@@ -24,12 +24,7 @@ apply_style_to_rect <- function(style_other, style_row) {
   mask <- style_other$i %in% i_vals & style_other$j %in% j_vals
 
   # Overwrite non-NA values from style_row
-  style_props <- c("bold", "italic", "underline", "strikeout",
-                   "monospace", "smallcap", "align", "alignv",
-                   "color", "background", "fontsize", "indent",
-                   "html_css", "colspan", "rowspan")
-
-  for (prop in style_props) {
+  for (prop in STYLE_PROPS) {
     if (prop %in% names(style_row) && !is.na(style_row[[prop]])) {
       style_other[[prop]][mask] <- style_row[[prop]]
     }
@@ -129,11 +124,6 @@ resolve_styles_batch <- function(style_other, style_df) {
     ))
   }
 
-  style_props <- c("bold", "italic", "underline", "strikeout",
-                   "monospace", "smallcap", "align", "alignv",
-                   "color", "background", "fontsize", "indent",
-                   "html_css", "colspan", "rowspan")
-
   # Unique i and j present in style_other (used when i or j is NA meaning "all")
   so_i <- style_other$i
   so_j <- style_other$j
@@ -175,7 +165,7 @@ resolve_styles_batch <- function(style_other, style_df) {
   # For each property, walk style rows that have a non-NA value, in order,
   # and write directly into style_other at the matching linear indices.
   # "Last write wins" semantics is preserved by iterating in source order.
-  for (prop in style_props) {
+  for (prop in STYLE_PROPS) {
     if (!prop %in% names(style_df)) next
     vals <- style_df[[prop]]
     has <- which(!is.na(vals))

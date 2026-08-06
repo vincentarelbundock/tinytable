@@ -38,14 +38,8 @@ setMethod(
 tabulator_apply_styles <- function(x) {
   if (nrow(x@style) == 0) return(x)
 
-  # Use populated @style_other from build_tt()
-  other <- x@style_other
-
-  other <- filter_style_other(other, c(
-    "bold", "italic", "underline", "strikeout",
-    "monospace", "smallcap", "align", "alignv",
-    "color", "background", "fontsize", "indent"
-  ))
+  # Use populated @style_other from build_tt() (Tabulator ignores line styles)
+  other <- filter_style_other(x@style_other, STYLE_PROPS_TABULATOR)
 
   # Precompute field names once (dots/spaces -> underscores)
   field_names <- tabulator_clean_column_name(x@names)

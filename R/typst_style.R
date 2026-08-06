@@ -473,20 +473,10 @@ setMethod(
     midrule = FALSE, # undocumented, only used by `group_tt()`
     ...
   ) {
-    # Use populated @style_other from build_tt()
-    other <- x@style_other
-
-    other <- filter_style_other(other, c(
-      "bold", "italic", "underline", "strikeout",
-      "monospace", "smallcap", "align", "alignv",
-      "color", "background", "fontsize", "indent"
-    ))
-
-    # Use populated @style_lines from build_tt()
-    lines <- x@style_lines
-    if (nrow(lines) == 0) {
-      lines <- NULL
-    }
+    # Use populated @style_other / @style_lines from build_tt()
+    inputs <- style_backend_inputs(x, STYLE_PROPS_TYPST)
+    other <- inputs$other
+    lines <- inputs$lines
 
     # gutters are used for group_tt(j) but look ugly with cell fill
     if (!is.null(other) && !all(is.na(other$background))) {

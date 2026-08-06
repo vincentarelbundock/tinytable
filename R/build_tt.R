@@ -122,13 +122,7 @@ build_tt <- function(x, output = NULL) {
   rect <- expand.grid(i = iseq, j = jseq)
 
   # Initialize all style columns with NA
-  style_cols <- c(
-    "bold", "italic", "underline", "strikeout", "monospace", "smallcap",
-    "align", "alignv", "color", "background", "fontsize", "indent",
-    "html_css", "colspan", "rowspan"
-  )
-
-  for (col in style_cols) {
+  for (col in STYLE_PROPS) {
     rect[[col]] <- NA
   }
 

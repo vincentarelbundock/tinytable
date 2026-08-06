@@ -530,21 +530,10 @@ setMethod(
       rowspan = NULL,
       indent = 0,
       ...) {
-    # Use populated @style_other from build_tt()
-    other <- x@style_other
-
-    other <- filter_style_other(other, c(
-      "bold", "italic", "underline", "strikeout",
-      "monospace", "smallcap", "align", "alignv",
-      "color", "background", "fontsize", "indent",
-      "colspan", "rowspan"
-    ))
-
-    # Use populated @style_lines from build_tt()
-    lines <- x@style_lines
-    if (nrow(lines) == 0) {
-      lines <- NULL
-    }
+    # Use populated @style_other / @style_lines from build_tt()
+    inputs <- style_backend_inputs(x, STYLE_PROPS_TABULARRAY)
+    other <- inputs$other
+    lines <- inputs$lines
 
     # Process lines using the expanded data
     x <- process_tabularray_lines(x, lines)

@@ -14,27 +14,10 @@ prepare_grid_style <- function(x) {
     return(sty)
   }
 
-  style_cols <- c(
-    "bold",
-    "italic",
-    "strikeout",
-    "underline",
-    "smallcap",
-    "indent",
-    "color",
-    "background",
-    "colspan",
-    "rowspan"
-  )
-
-  sty <- filter_style_other(sty, style_cols)
+  sty <- filter_style_other(sty, STYLE_PROPS_GRID)
 
   # Select only the columns needed for grid styling
-  sty <- sty[, c(
-    "i",
-    "j",
-    style_cols
-  ), drop = FALSE]
+  sty <- sty[, c("i", "j", STYLE_PROPS_GRID), drop = FALSE]
 
   return(sty)
 }
