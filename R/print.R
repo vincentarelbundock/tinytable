@@ -1,3 +1,38 @@
+# knitr/raster screenshot output shared by knit_print.tinytable and
+# print.tinytable. Returns NULL when `output` is neither "knitr" nor "raster".
+print_png <- function(x, output) {
+  if (identical(output, "knitr")) {
+    assert_dependency("webshot2")
+    assert_dependency("knitr")
+    tmp <- tempfile(fileext = ".png")
+    save_tt(x, tmp, overwrite = TRUE)
+    return(knitr::include_graphics(tmp))
+  }
+  if (identical(output, "raster")) {
+    assert_dependency("webshot2")
+    assert_dependency("png")
+    tmp <- tempfile(fileext = ".png")
+    save_tt(x, tmp, overwrite = TRUE)
+    img <- png::readPNG(tmp)
+    grid::grid.newpage()
+    grid::grid.raster(img)
+    return(invisible(x))
+  }
+  NULL
+}
+
+# wrap raw output in a fenced block (or inline backticks for single-line
+# strings) so pandoc passes it through untouched
+# adapted from htmltools:::html_preserve, GPL3
+knitr_fence <- function(out, format) {
+  inline <- !grepl("\n", out, fixed = TRUE)
+  if (inline) {
+    sprintf("`%s`{=%s}", out, format)
+  } else {
+    sprintf("\n```{=%s}\n%s\n```\n", format, out)
+  }
+}
+
 #' @exportS3Method xfun::record_print
 record_print.tinytable <- function(x, ...) {
   if (!isTRUE(check_dependency("litedown"))) {
@@ -34,49 +69,16 @@ knit_print.tinytable <- function(
     x,
     output = get_option("tinytable_print_output", default = NULL),
     ...) {
-  if (identical(output, "knitr")) {
-    assert_dependency("webshot2")
-    assert_dependency("knitr")
-    tmp <- tempfile(fileext = ".png")
-    save_tt(x, tmp, overwrite = TRUE)
-    return(knitr::include_graphics(tmp))
-  }
-
-  if (identical(output, "raster")) {
-    assert_dependency("webshot2")
-    assert_dependency("png")
-    tmp <- tempfile(fileext = ".png")
-    save_tt(x, tmp, overwrite = TRUE)
-    img <- png::readPNG(tmp)
-    grid::grid.newpage()
-    grid::grid.raster(img)
-    return(invisible(x))
+  if (identical(output, "knitr") || identical(output, "raster")) {
+    return(print_png(x, output))
   }
 
   # lazy styles get evaluated here, at the very end
   x <- build_tt(x, output = output)
   out <- x@table_string
 
-  if (isTRUE(x@output == "html")) {
-    # from htmltools:::html_preserve
-    # GPL3
-    inline <- grepl(out, "\n", fixed = TRUE)
-    if (inline) {
-      out <- sprintf("`%s`{=html}", out)
-    } else {
-      out <- sprintf("\n```{=html}\n%s\n```\n", out)
-    }
-  }
-
-  if (isTRUE(x@output == "typst")) {
-    # from htmltools:::html_preserve
-    # GPL3
-    inline <- grepl(out, "\n", fixed = TRUE)
-    if (inline) {
-      out <- sprintf("`%s`{=typst}", out)
-    } else {
-      out <- sprintf("\n```{=typst}\n%s\n```\n", out)
-    }
+  if (isTRUE(x@output %in% c("html", "typst"))) {
+    out <- knitr_fence(out, x@output)
   }
 
   class(out) <- "knit_asis"
@@ -141,23 +143,8 @@ print.tinytable <- function(
     ...) {
   x <- sanitize_output(x, output)
 
-  if (identical(output, "knitr")) {
-    assert_dependency("webshot2")
-    assert_dependency("knitr")
-    tmp <- tempfile(fileext = ".png")
-    save_tt(x, tmp, overwrite = TRUE)
-    return(knitr::include_graphics(tmp))
-  }
-
-  if (identical(output, "raster")) {
-    assert_dependency("webshot2")
-    assert_dependency("png")
-    tmp <- tempfile(fileext = ".png")
-    save_tt(x, tmp, overwrite = TRUE)
-    img <- png::readPNG(tmp)
-    grid::grid.newpage()
-    grid::grid.raster(img)
-    return(invisible(x))
+  if (identical(output, "knitr") || identical(output, "raster")) {
+    return(print_png(x, output))
   }
 
   output <- infer_output(x)

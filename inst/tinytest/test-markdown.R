@@ -210,3 +210,12 @@ tab <- tt(tab, digits = 2) |>
 expect_snapshot_print(tab, "colrowspan-markdown_multiple")
 options(tinytable_print_output = NULL)
 
+
+
+# Regression: markdown styling was dropped entirely for tables created with
+# colnames = FALSE because the column guard compared against length(names(x))
+tab <- tt(data.frame(a = 1:2, b = 3:4), colnames = FALSE) |>
+  style_tt(i = 1, bold = TRUE)
+out <- save_tt(tab, "markdown")
+expect_true(grepl("**1**", out, fixed = TRUE))
+expect_true(grepl("**3**", out, fixed = TRUE))

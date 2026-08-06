@@ -117,7 +117,12 @@ build_tt <- function(x, output = NULL) {
   # Create rectangular style dataframe with one row per cell
   # This happens after row group operations so we have the final row structure
   iseq <- seq_len(nrow(x))
-  iseq <- c(-1 * 0:(x@nhead - 1), iseq)  # include headers
+  # include headers: 0, -1, ... for each header row, but only when there are
+  # header rows. The old expression `-1 * 0:(x@nhead - 1)` produced c(0, 1)
+  # when nhead == 0, adding a phantom header row and duplicating body row 1.
+  if (x@nhead > 0) {
+    iseq <- c(-(seq_len(x@nhead) - 1L), iseq)
+  }
   jseq <- seq_len(ncol(x))
   rect <- expand.grid(i = iseq, j = jseq)
 

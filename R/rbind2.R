@@ -63,7 +63,9 @@ setMethod(
     x_df <- x@data_body
     y_df <- y@data_body
 
-    if (isTRUE(headers) && !is.null(colnames(y))) {
+    # colnames() on a tinytable returns character(0) (never NULL) when the
+    # table was created with `colnames = FALSE`, so check the length
+    if (isTRUE(headers) && length(colnames(y)) > 0) {
       y_df <- base::rbind(colnames(y_df), y_df)
     }
 

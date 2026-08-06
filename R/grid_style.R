@@ -46,7 +46,7 @@ style_grid_body <- function(x) {
     col <- sty[idx, "j"]
 
     # when calling subset(select -x) we can have too many columns in @style
-    if (col > length(names(x))) next
+    if (col > ncol(x)) next
 
     # Prepare styles list for the current cell
     styles <- list(

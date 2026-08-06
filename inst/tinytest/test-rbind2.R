@@ -52,3 +52,13 @@ e <- tt(mtcars[1:2, 1:2], notes = "First table note")
 f <- tt(mtcars[3:4, 1:2], notes = "Second table note")
 tab10 <- rbind2(e, f)
 expect_snapshot_print(tab10, label = "rbind2-notes_carryover.md")
+
+# Regression: rbind2() inserted a header row built from internal data names
+# when `y` was created with colnames = FALSE
+tab <- rbind2(tt(mtcars[1:2, 1:2]), tt(mtcars[3:4, 1:2], colnames = FALSE))
+expect_equal(nrow(tab@data_body), 4)
+expect_false(any(tab@data_body[[1]] == "mpg"))
+# header row still inserted when y has visible column names
+tab <- rbind2(tt(mtcars[1:2, 1:2]), tt(mtcars[3:4, 1:2]))
+expect_equal(nrow(tab@data_body), 5)
+expect_true(any(tab@data_body[[1]] == "mpg"))

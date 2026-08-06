@@ -18,3 +18,38 @@ attr(dat$mpg, "label") <- "Miles per Gallon"
 attr(dat$hp, "label") <- "Horse Power"
 tab <- tt(dat, colnames = "label") |> save_tt("dataframe")
 expect_equal(unlist(tab[1, ]), c("Cylinders", "Miles per Gallon", "Horse Power"))
+
+
+# Regression: colnames = FALSE must not create a phantom header row (i = 0)
+# or duplicate body row 1 in @style_other
+x <- build_tt(tt(mtcars[1:3, 1:3], colnames = FALSE), "html")
+expect_equal(nrow(x@style_other), 9)
+expect_equal(sort(unique(x@style_other$i)), c(1, 2, 3))
+expect_false(any(duplicated(x@style_other[, c("i", "j")])))
+
+# header index sequences unchanged for nhead = 1 and nhead = 2
+x1 <- build_tt(tt(mtcars[1:3, 1:3]), "html")
+expect_equal(sort(unique(x1@style_other$i)), c(0, 1, 2, 3))
+x2 <- build_tt(tt(mtcars[1:3, 1:3]) |> group_tt(j = list("G" = 1:2)), "html")
+expect_equal(sort(unique(x2@style_other$i)), c(-1, 0, 1, 2, 3))
+
+# Regression: as.character() errored on fresh tables because @output was
+# still "tinytable"
+out <- as.character(tt(mtcars[1:2, 1:2]))
+expect_inherits(out, "character")
+expect_true(grepl("mpg", out))
+
+# Regression: colnames<- errored on tables created with colnames = FALSE,
+# and did not restore the header row
+y <- tt(mtcars[1:3, 1:3], colnames = FALSE)
+colnames(y) <- c("a", "b", "c")
+expect_equal(colnames(y), c("a", "b", "c"))
+expect_equal(y@nhead, 1)
+expect_true(grepl("a", save_tt(y, "markdown")))
+y <- tt(mtcars[1:3, 1:3], colnames = FALSE)
+names(y) <- c("a", "b", "c")
+expect_equal(names(y), c("a", "b", "c"))
+expect_equal(y@nhead, 1)
+# wrong length still errors
+y <- tt(mtcars[1:3, 1:3], colnames = FALSE)
+expect_error(colnames(y) <- c("a", "b"))

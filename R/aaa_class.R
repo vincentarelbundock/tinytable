@@ -185,23 +185,48 @@ setMethod("ncol", "tinytable", function(x) {
   return(x@ncol)
 })
 
-#' Method for a tinytable S4 object
-#'
-#' @inheritParams tt
-#' @keywords internal
-#' @export
-setMethod("colnames", "tinytable", function(x) {
+# shared implementation for the colnames() and names() getters
+ttnames <- function(x) {
   return(x@names)
-})
+}
+
+# shared implementation for the colnames<-() and names<-() setters
+# @nhead counts the column name row (0 or 1) plus one row per group_tt(j=...)
+# call, so we adjust it by 1 rather than overwrite it.
+`ttnames<-` <- function(x, value) {
+  # Issue #306
+  if (length(value) == 0) {
+    value <- NULL
+  }
+  if (!is.null(value)) {
+    assert_character(value, len = x@ncol)
+    # restore the header row when the table previously had no column names
+    if (length(x@names) == 0) {
+      x@nhead <- x@nhead + 1
+    }
+  } else {
+    # drop the header row when removing existing column names
+    if (length(x@names) > 0 && x@nhead > 0) {
+      x@nhead <- x@nhead - 1
+    }
+  }
+  x@names <- value
+  return(x)
+}
 
 #' Method for a tinytable S4 object
 #'
 #' @inheritParams tt
 #' @keywords internal
 #' @export
-setMethod("names", "tinytable", function(x) {
-  return(x@names)
-})
+setMethod("colnames", "tinytable", ttnames)
+
+#' Method for a tinytable S4 object
+#'
+#' @inheritParams tt
+#' @keywords internal
+#' @export
+setMethod("names", "tinytable", ttnames)
 
 #' Method for a tinytable S4 object
 #'
@@ -211,19 +236,7 @@ setMethod("names", "tinytable", function(x) {
 setReplaceMethod(
   "colnames",
   signature = "tinytable",
-  definition = function(x, value) {
-    # Issue #306
-    if (length(value) == 0) {
-      value <- NULL
-    }
-    if (!is.null(value)) {
-      assert_character(value, len = length(x@names))
-    } else {
-      if (x@nhead == 1) x@nhead <- 0
-    }
-    x@names <- value
-    return(x)
-  })
+  definition = `ttnames<-`)
 
 #' Method for a tinytable S4 object
 #'
@@ -233,19 +246,7 @@ setReplaceMethod(
 setReplaceMethod(
   "names",
   signature = "tinytable",
-  definition = function(x, value) {
-    # Issue #306
-    if (length(value) == 0) {
-      value <- NULL
-    }
-    if (!is.null(value)) {
-      assert_character(value, len = length(x@names))
-    } else {
-      if (x@nhead == 1) x@nhead <- 0
-    }
-    x@names <- value
-    return(x)
-  })
+  definition = `ttnames<-`)
 
 #' Dimensions a tinytable S4 object
 #'
@@ -260,7 +261,9 @@ setMethod("dim", "tinytable", function(x) {
 #' @inheritParams tt
 #' @keywords internal
 setMethod("as.character", "tinytable", function(x) {
-  out <- save_tt(x, x@output)
+  # fresh tables have @output set to "tinytable", which save_tt() rejects, so
+  # we infer the output format the same way print() does
+  save_tt(x, infer_output(x))
 })
 
 setClass("tinytable_tabularray", contains = "tinytable")
