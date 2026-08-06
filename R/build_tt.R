@@ -28,21 +28,18 @@ rbind_body_groupi <- function(x) {
 
   # Insert body data at index_body positions
   if (nrow(x@data_body) > 0 && length(x@index_body) > 0) {
-    for (i in seq_along(x@index_body)) {
-      row_idx <- x@index_body[i]
-      if (!is.na(row_idx) && row_idx > 0 && row_idx <= total_rows) {
-        final_df[row_idx, ] <- x@data_body[i, ]
-      }
+    ok <- !is.na(x@index_body) & x@index_body >= 1 & x@index_body <= total_rows
+    if (any(ok)) {
+      final_df[x@index_body[ok], ] <- x@data_body[which(ok), , drop = FALSE]
     }
   }
 
   # Insert group i data at group_index_i positions
   if (nrow(x@group_data_i) > 0 && length(x@group_index_i) > 0) {
-    for (i in seq_len(nrow(x@group_data_i))) {
-      row_idx <- x@group_index_i[i]
-      if (!is.na(row_idx) && row_idx > 0 && row_idx <= total_rows) {
-        final_df[row_idx, ] <- x@group_data_i[i, ]
-      }
+    idx <- x@group_index_i[seq_len(nrow(x@group_data_i))]
+    ok <- !is.na(idx) & idx >= 1 & idx <= total_rows
+    if (any(ok)) {
+      final_df[idx[ok], ] <- x@group_data_i[which(ok), , drop = FALSE]
     }
   }
 
@@ -159,13 +156,7 @@ build_tt <- function(x, output = NULL) {
   x@style <- if (length(style_frames)) do.call(rbind, style_frames) else data.frame()
 
   # Fix colspan that exceeds column count after lazy styles are evaluated
-  if (nrow(x@style) > 0) {
-    end <- x@style$j + x@style$colspan - 1
-    x@style$colspan <- ifelse(
-      !is.na(end) & end > x@ncol,
-      x@style$colspan - (end - x@ncol),
-      x@style$colspan)
-  }
+  x@style <- clamp_colspan(x@style, x@ncol)
 
   # apply styling AFTER formatting/escaping to avoid escaping the style brackets
   x <- style_notes(x)

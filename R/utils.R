@@ -1,7 +1,39 @@
 # (pseudo-)unique IDs
+# Restore .Random.seed on exit so table creation does not consume the user's
+# global RNG stream. Reseed with a per-call unique value (time + counter) so
+# consecutive ids still differ even though the user's seed is restored.
+get_id_counter <- local({
+  i <- 0L
+  function() {
+    i <<- i + 1L
+    i
+  }
+})
+
 get_id <- function(stem = "id") {
+  if (exists(".Random.seed", globalenv(), inherits = FALSE)) {
+    old <- get(".Random.seed", globalenv())
+    on.exit(assign(".Random.seed", old, globalenv()), add = TRUE)
+  } else {
+    on.exit(
+      if (exists(".Random.seed", globalenv(), inherits = FALSE)) {
+        rm(".Random.seed", envir = globalenv())
+      },
+      add = TRUE
+    )
+  }
+  set.seed(as.integer(Sys.time()) %% 1000000L + get_id_counter())
   id <- sample(c(0:9, letters), 20, replace = TRUE)
   paste0(stem, paste(id, collapse = ""))
+}
+
+# Clamp colspan values so spans never extend past the last column
+clamp_colspan <- function(style, ncol) {
+  if (nrow(style) > 0 && "colspan" %in% colnames(style)) {
+    end <- style$j + style$colspan - 1
+    style$colspan <- ifelse(!is.na(end) & end > ncol, style$colspan - (end - ncol), style$colspan)
+  }
+  style
 }
 
 # getOption with deprecation warnings
@@ -13,9 +45,10 @@ get_option <- function(x, default = NULL) {
     "tinytable_save_pdf_engine" = "tinytable_pdf_engine"
   )
   if (x %in% names(deprecated)) {
-    x_new <- deprecated[x]
+    x_new <- deprecated[[x]]
     warning(
-      sprintf("Option `%s` is deperacated. Use `%s` instead.", x, x_new)
+      sprintf("Option `%s` is deprecated. Use `%s` instead.", x, x_new),
+      call. = FALSE
     )
     x <- x_new
   }
@@ -85,7 +118,7 @@ lines_drop <- function(
       call. = FALSE
     )
   }
-  if (!anyNA(idx)) {
+  if (length(idx) > 0) {
     if (position == "equal") {
       lines <- lines[!seq_along(lines) %in% idx]
     } else if (position == "before") {
@@ -113,9 +146,8 @@ lines_drop_between <- function(text, regex_start, regex_end, fixed = FALSE, perl
   if (idx_start >= idx_end) {
     stop("`regex_start` matches a line after `regex_end`.", call. = FALSE)
   }
-  lines_to_keep <- c(1:(idx_start - 1), (idx_end + 1):length(lines))
-  output <- lines[lines_to_keep]
-  out <- paste(output, collapse = "\n")
+  keep <- setdiff(seq_along(lines), idx_start:idx_end)
+  out <- paste(lines[keep], collapse = "\n")
   return(out)
 }
 

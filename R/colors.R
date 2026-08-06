@@ -10,10 +10,15 @@ standardize_colors <- function(col, format = "hex") {
   }
 
   single_color <- function(k) {
+    # NA means "no color"; do not let it reach col2rgb() (which returns white)
+    if (is.na(k)) {
+      return(NA_character_)
+    }
+
     # Early return for hex colors
     # do this here to allow typst rgb() wrap later
-    if (isTRUE(grepl("^#", col))) {
-      return(col)
+    if (isTRUE(grepl("^#", k))) {
+      return(k)
     }
 
     # Skip processing for "black" and "white"

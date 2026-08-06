@@ -60,13 +60,7 @@ subset.tinytable <- function(x, subset, select, drop = FALSE, ...) {
   x@lazy_plot <- lapply(x@lazy_plot, remap_j, col_remap = col_remap, old_ncol = old_ncol)
 
   # Avoid colspan that exceeds the new number of columns
-  if (nrow(x@style) > 0) {
-    end <- x@style$j + x@style$colspan - 1
-    x@style$colspan <- ifelse(
-      !is.na(end) & end > x@ncol,
-      x@style$colspan - (end - x@ncol),
-      x@style$colspan)
-  }
+  x@style <- clamp_colspan(x@style, x@ncol)
 
   return(x)
 }
