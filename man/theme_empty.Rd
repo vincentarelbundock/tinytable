@@ -12,5 +12,8 @@ theme_empty(x, ...)
 \item{...}{Additional arguments are ignored.}
 }
 \description{
-This function calls styles and formatting applied to a \code{tinytable} object up to that point in the pipeline.
+This function cancels all styles and formatting applied to a \code{tinytable}
+object up to that point in the pipeline. Images and inline plots inserted
+with \code{plot_tt()} are deliberately preserved: they are table content rather
+than styling.
 }

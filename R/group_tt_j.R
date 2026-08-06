@@ -125,7 +125,7 @@ j_delim_to_named_list <- function(x, j) {
 #'
 #' @keywords internal
 #' @noRd
-sanitize_group_index <- function(idx, hi, orientation) {
+sanitize_group_index <- function(idx, hi, orientation, warn = TRUE) {
   if (is.null(idx)) {
     return(idx)
   }
@@ -139,7 +139,27 @@ sanitize_group_index <- function(idx, hi, orientation) {
   }
   # allow duplicated indices for consecutive rows
   # if (anyDuplicated(unlist(idx)) > 0) stop("Duplicate group indices.", call. = FALSE)
-  out <- lapply(idx, function(x) min(x):max(x))
+  out <- lapply(seq_along(idx), function(k) {
+    v <- sort(unique(idx[[k]]))
+    span <- min(v):max(v)
+    # spans must be contiguous; warn instead of silently swallowing interior columns
+    if (isTRUE(warn) && length(v) != length(span)) {
+      warning(
+        sprintf(
+          "Group \"%s\": requested %ss (%s) are not contiguous. The label will span %ss %d to %d.",
+          names(idx)[k],
+          orientation,
+          paste(idx[[k]], collapse = ", "),
+          orientation,
+          min(v),
+          max(v)
+        ),
+        call. = FALSE
+      )
+    }
+    span
+  })
+  names(out) <- names(idx)
   return(out)
 }
 
