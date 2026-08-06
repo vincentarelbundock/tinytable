@@ -119,7 +119,6 @@ pkgdown_print.tinytable <- function(x, visible = TRUE) {
 #' + `"markdown"`: plain text markdown table.
 #' + `"typst"`: Typst table.
 #' + `"dataframe"`: formatted data frame.
-#' + `"tabulator"`: interactive HTML table using Tabulator.js.
 #' + `"knitr"`: PNG screenshot via `webshot2`, returned through `knitr::include_graphics()`. Useful for embedding styled tables in Rmarkdown or Quarto documents. Requires the `webshot2` package.
 #' + `"raster"`: PNG screenshot via `webshot2`, drawn on the graphics device via `grid::grid.raster()`. Useful for pkgdown `@examples` and README files, where the plot is captured as an image. Requires the `webshot2` and `png` packages. For README.Rmd files rendered with `rmarkdown::render()`, set `knitr::opts_chunk$set(fig.path = "man/figures/README-")` in a setup chunk so that pkgdown copies the images correctly.
 #'

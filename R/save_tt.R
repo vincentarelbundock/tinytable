@@ -4,7 +4,8 @@
 #'
 #' @param x The tinytable object to be saved.
 #' @param output String or file path.
-#' + If `output` is "markdown", "latex", "html", "typst", or "tabulator", the table is returned in a string as an `R` object.
+#' + If `output` is "markdown", "latex", "html", or "typst", the table is returned in a string as an `R` object.
+#' + If `output` is "dataframe", the formatted table is returned as a data frame.
 #' + If `output` is a valid file path, the table is saved to file. The supported extensions are: .docx, .html, .png, .pdf, .tex, .typ, and .md (with aliases .txt, .Rmd and .qmd).
 #' + If `theme_html(portable = TRUE)` or `theme_typst(portable = TRUE)` is used,
 #' images are included as base64 encoded strings instead of links to local files.
@@ -53,13 +54,21 @@ save_tt <- function(
     return(out)
   }
 
+  # normalize to an absolute path immediately: the PDF branch below changes
+  # the working directory, which would otherwise re-resolve a relative path
+  # (e.g. "sub/table.pdf" ending up in "sub/sub/table.pdf")
+  output <- file.path(
+    normalizePath(dirname(output), mustWork = TRUE),
+    basename(output)
+  )
+
   if (file.exists(output) && !overwrite) {
     stop("File already exists and overwrite is set to FALSE.", call. = FALSE)
   }
 
   x@output_dir <- dirname(output)
 
-  file_ext <- tools::file_ext(output)
+  file_ext <- tolower(tools::file_ext(output))
 
   output_format <- switch(file_ext,
     "png" = "html",
@@ -67,7 +76,7 @@ save_tt <- function(
     "pdf" = "latex",
     "tex" = "latex",
     "md" = "markdown",
-    "Rmd" = "markdown",
+    "rmd" = "markdown",
     "qmd" = "markdown",
     "txt" = "markdown",
     "docx" = "markdown",
@@ -81,7 +90,7 @@ save_tt <- function(
   # evaluate styles at the very end of the pipeline, just before writing
   x <- build_tt(x, output = output_format)
 
-  if (file_ext %in% c("html", "tex", "md", "Rmd", "qmd", "txt", "typ")) {
+  if (file_ext %in% c("html", "tex", "md", "rmd", "qmd", "txt", "typ")) {
     write(x@table_string, file = output)
   } else if (file_ext == "png") {
     assert_dependency("webshot2")

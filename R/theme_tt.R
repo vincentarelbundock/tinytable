@@ -50,6 +50,31 @@ theme_tt <- function(x, theme, ...) {
     x <- theme_empty(x)
   } else if (identical(theme, "rotate")) {
     x <- theme_rotate(x, ...)
+  } else {
+    legacy <- c(
+      "bootstrap" = "theme_html(x, engine = \"bootstrap\", class = ...)",
+      "tabular" = "theme_latex(x, environment = \"tabular\")",
+      "resize" = "theme_latex(x, resize_width = ..., resize_direction = ...)",
+      "placement" = "theme_latex(x, placement = ...)",
+      "multipage" = "theme_latex(x, multipage = TRUE)",
+      "spacing" = "the `height` argument of tt()",
+      "rotating" = "theme_rotate(x, angle = ...)"
+    )
+    if (is.character(theme) && length(theme) == 1 && theme %in% names(legacy)) {
+      msg <- sprintf(
+        "The \"%s\" theme was removed from `tinytable`. Use %s instead.",
+        theme,
+        legacy[[theme]]
+      )
+    } else {
+      msg <- sprintf(
+        "Invalid `theme` argument. `theme_tt()` supports these theme names: %s.",
+        paste(sprintf('"%s"', c(
+          "default", "grid", "revealjs", "striped", "empty", "void", "rotate"
+        )), collapse = ", ")
+      )
+    }
+    stop(msg, call. = FALSE)
   }
   return(x)
 }

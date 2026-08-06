@@ -31,12 +31,11 @@ sanitize_i <- function(
     )
   }
   if (identical(i, "groupi")) {
-    idx <- x@group_index_i
-    if (length(idx) == 0) {
+    i <- x@group_index_i
+    if (length(i) == 0) {
       msg <- "No grouping index found. Please use `group_tt()` first."
       stop(msg, call. = FALSE)
     }
-    i <- x@group_index_i
   } else if (identical(i, "~groupi")) {
     i <- setdiff(seq_len(nrow(x)), x@group_index_i)
   } else if (identical(i, "groupj")) {
@@ -63,8 +62,10 @@ sanitize_i <- function(
     return(i)
   }
 
-  out <- seq_len(nrow(x))
   assert_numeric(i, null.ok = TRUE, name = "i")
+  if (anyNA(i)) {
+    stop("`i` must not contain missing values.", call. = FALSE)
+  }
 
   if (is.null(i) && isTRUE(lazy)) {
     out <- NA
@@ -74,7 +75,7 @@ sanitize_i <- function(
   } else {
     if (!is.null(i)) {
       out <- i
-    } else if (inherits(x, "tinytable")) {
+    } else {
       out <- seq_len(nrow(x))
     }
     attr(out, "null") <- FALSE
@@ -104,25 +105,38 @@ sanitize_j <- function(j, x, skip_tabulator_types = FALSE) {
     out <- which(colnames(x) %in% j)
   } else {
     assert_integerish(j, lower = 1, upper = ncol(x), null.ok = TRUE)
+    if (anyNA(j)) {
+      stop("`j` must not contain missing values.", call. = FALSE)
+    }
     if (is.null(j)) {
       out <- seq_len(ncol(x))
     } else {
       out <- j
     }
   }
-  
-  # Filter out columns that should be skipped for tabulator formatting
-  if (skip_tabulator_types && inherits(x, "tinytable") && x@output == "tabulator") {
-    skip_cols <- c()
-    for (col_idx in out) {
-      col_data <- x@data[[col_idx]]
-      if (inherits(col_data, c("integer", "numeric", "double", "logical", "Date", "POSIXct", "POSIXlt"))) {
-        skip_cols <- c(skip_cols, col_idx)
-      }
+
+  # Filter out columns that should be skipped for tabulator formatting:
+  # Tabulator formats numeric/date/logical columns client-side via JS
+  # formatters, so the underlying data must be sent raw.
+  is_tabulator <- inherits(x, "tinytable") &&
+    identical(x@output, "html") &&
+    identical(x@html_engine, "tabulator")
+  if (skip_tabulator_types && is_tabulator) {
+    skip_classes <- c("integer", "numeric", "logical", "Date", "POSIXct", "POSIXlt")
+    # when `bool` formatting is requested, logical columns must still be
+    # formatted in the data because tabulator_clean_data() reads them from
+    # @data_body
+    if (isTRUE(x@tabulator_format_bool)) {
+      skip_classes <- setdiff(skip_classes, "logical")
     }
-    out <- setdiff(out, skip_cols)
+    skip <- vapply(
+      out,
+      function(col_idx) inherits(x@data[[col_idx]], skip_classes),
+      logical(1)
+    )
+    out <- out[!skip]
   }
-  
+
   attr(out, "null") <- is.null(j)
   return(out)
 }
@@ -254,24 +268,37 @@ assert_dependency <- function(library_name) {
   return(invisible())
 }
 
+# shared core for assert_choice() and assert_subset()
+assert_membership <- function(x, choice, all, null.ok, name, template) {
+  if (is.null(x) && isTRUE(null.ok)) {
+    return(TRUE)
+  }
+  ok <- if (isTRUE(all)) {
+    is.character(x) && length(x) >= 1 && all(x %in% choice)
+  } else {
+    is.character(x) && length(x) == 1 && x %in% choice
+  }
+  if (ok) {
+    return(TRUE)
+  }
+  msg <- sprintf(template, name, paste(choice, collapse = ", "))
+  stop(msg, call. = FALSE)
+}
+
 assert_choice <- function(
   x,
   choice,
   null.ok = FALSE,
-  name = as.character(substitute(x))
+  name = paste(deparse(substitute(x)), collapse = " ")
 ) {
-  if (is.null(x) && isTRUE(null.ok)) {
-    return(TRUE)
-  }
-  if (is.character(x) && length(x) == 1 && x %in% choice) {
-    return(TRUE)
-  }
-  msg <- sprintf(
-    "`%s` must be one of: %s",
-    name,
-    paste(choice, collapse = ", ")
+  assert_membership(
+    x,
+    choice,
+    all = FALSE,
+    null.ok = null.ok,
+    name = name,
+    template = "`%s` must be one of: %s"
   )
-  stop(msg, call. = FALSE)
 }
 
 
@@ -279,32 +306,24 @@ assert_subset <- function(
   x,
   choice,
   null.ok = FALSE,
-  name = as.character(substitute(x))
+  name = paste(deparse(substitute(x)), collapse = " ")
 ) {
-  if (is.null(x) && isTRUE(null.ok)) {
-    return(TRUE)
-  }
-  if (is.character(x) && length(x) >= 1 && all(x %in% choice)) {
-    return(TRUE)
-  }
-  msg <- sprintf(
-    "`%s` must be a subset of: %s",
-    name,
-    paste(choice, collapse = ", ")
+  assert_membership(
+    x,
+    choice,
+    all = TRUE,
+    null.ok = null.ok,
+    name = name,
+    template = "`%s` must be a subset of: %s"
   )
-  stop(msg, call. = FALSE)
 }
 
-check_string <- function(x, null.ok = FALSE, len = NULL) {
+check_string <- function(x, null.ok = FALSE) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(invisible(TRUE))
   }
-  if (is.character(x) && length(x) == 1) {
-    if (is.null(len)) {
-      return(invisible(TRUE))
-    } else if (nchar(x) == len) {
-      return(invisible(TRUE))
-    }
+  if (is.character(x) && length(x) == 1 && !is.na(x)) {
+    return(invisible(TRUE))
   }
   return(FALSE)
 }
@@ -312,18 +331,9 @@ check_string <- function(x, null.ok = FALSE, len = NULL) {
 assert_string <- function(
   x,
   null.ok = FALSE,
-  len = NULL,
-  name = as.character(substitute(x))) {
-  if (is.null(len)) {
+  name = paste(deparse(substitute(x)), collapse = " ")) {
+  if (!isTRUE(check_string(x, null.ok = null.ok))) {
     msg <- sprintf("`%s` must be a string.", name)
-  } else {
-    msg <- sprintf("`%s` must be a string of length %s.", name, len)
-  }
-  if (!isTRUE(check_string(x, len = len, null.ok = null.ok))) {
-    stop(msg, call. = FALSE)
-  }
-  if (!is.null(x) && !is.null(len) && nchar(x) != len) {
-    msg <- sprintf("`%s` must be a string of length %s.", name, len)
     stop(msg, call. = FALSE)
   }
 }
@@ -332,7 +342,7 @@ check_flag <- function(x, null.ok = FALSE) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(TRUE)
   }
-  if (is.logical(x) && length(x) == 1) {
+  if (is.logical(x) && length(x) == 1 && !is.na(x)) {
     return(TRUE)
   }
   return(FALSE)
@@ -341,7 +351,7 @@ check_flag <- function(x, null.ok = FALSE) {
 assert_flag <- function(
   x,
   null.ok = FALSE,
-  name = as.character(substitute(x))
+  name = paste(deparse(substitute(x)), collapse = " ")
 ) {
   msg <- sprintf("`%s` must be a logical flag.", name)
   if (!isTRUE(check_flag(x, null.ok = null.ok))) {
@@ -363,7 +373,7 @@ assert_length <- function(
   x,
   len = 1,
   null.ok = FALSE,
-  name = as.character(substitute(x))
+  name = paste(deparse(substitute(x)), collapse = " ")
 ) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(invisible(TRUE))
@@ -381,13 +391,45 @@ assert_length <- function(
 assert_logical <- function(
   x,
   null.ok = FALSE,
-  name = as.character(substitute(x))
+  name = paste(deparse(substitute(x)), collapse = " ")
 ) {
   if (is.null(x) && isTRUE(null.ok)) {
     return(invisible(TRUE))
   }
   msg <- sprintf("`%s` must be a logical vector", name)
   if (!is.logical(x)) stop(msg, call. = FALSE)
+}
+
+# shared core for check_numeric() and check_integerish()
+# NA policy: NA values are tolerated; bounds and integer checks ignore them
+# (na.rm = TRUE) instead of crashing with "missing value where TRUE/FALSE
+# needed". Indices are rejected explicitly in sanitize_i()/sanitize_j().
+check_numeric_core <- function(x, len, lower, upper, null.ok, integerish) {
+  if (is.null(x)) {
+    return(isTRUE(null.ok))
+  }
+  if (!is.numeric(x)) {
+    return(FALSE)
+  }
+  if (integerish) {
+    x <- stats::na.omit(x)
+  }
+  if (!is.null(len) && length(x) != len) {
+    return(FALSE)
+  }
+  if (!is.null(lower) && isTRUE(any(x < lower, na.rm = TRUE))) {
+    return(FALSE)
+  }
+  if (!is.null(upper) && isTRUE(any(x > upper, na.rm = TRUE))) {
+    return(FALSE)
+  }
+  if (
+    integerish &&
+      isTRUE(any(abs(x - round(x)) > (.Machine$double.eps)^0.5, na.rm = TRUE))
+  ) {
+    return(FALSE)
+  }
+  return(TRUE)
 }
 
 check_integerish <- function(
@@ -397,77 +439,14 @@ check_integerish <- function(
   upper = NULL,
   null.ok = TRUE
 ) {
-  if (is.null(x) && isTRUE(null.ok)) {
-    return(TRUE)
-  }
-  if (!is.numeric(x)) {
-    return(FALSE)
-  }
-  x <- stats::na.omit(x)
-  if (!is.null(len) && length(x) != len) {
-    return(FALSE)
-  }
-  if (!is.null(lower) && any(x < lower)) {
-    return(FALSE)
-  }
-  if (!is.null(upper) && any(x > upper)) {
-    return(FALSE)
-  }
-  if (isTRUE(any(abs(x - round(x)) > (.Machine$double.eps)^0.5))) {
-    return(FALSE)
-  }
-  return(TRUE)
-}
-
-assert_integerish <- function(
-  x,
-  len = NULL,
-  lower = NULL,
-  upper = NULL,
-  null.ok = FALSE,
-  name = as.character(substitute(x))
-) {
-  if (isTRUE(null.ok) && is.null(x)) {
-    return(invisible())
-  }
-  msg <- sprintf("`%s` must be integer-ish", name)
-  if (is.null(x) && !isTRUE(null.ok)) {
-    stop(sprintf("%s should not be NULL.", name), call. = FALSE)
-  }
-  if (
-    !isTRUE(
-      check_integerish(
-        x,
-        len = len,
-        lower = lower,
-        upper = upper,
-        null.ok = null.ok
-      )
-    )
-  ) {
-    if (!is.numeric(x)) {
-      msg <- paste0(msg, "; it is not numeric")
-    }
-    if (!is.null(len) && length(x) != len) {
-      msg <- paste0(msg, sprintf("; its length must be %s", len))
-    }
-    if (!is.null(lower) && any(x < lower)) {
-      msg <- paste0(
-        msg,
-        sprintf("; all values must be greater than or equal to %s", lower)
-      )
-    }
-    if (!is.null(upper) && any(x > upper)) {
-      msg <- paste0(
-        msg,
-        sprintf("; all values must be less than or equal to %s", upper)
-      )
-    }
-    if (isTRUE(any(abs(x - round(x)) > (.Machine$double.eps)^0.5))) {
-      msg <- paste0(msg, "; all values must be close to integers")
-    }
-    stop(msg, call. = FALSE)
-  }
+  check_numeric_core(
+    x,
+    len = len,
+    lower = lower,
+    upper = upper,
+    null.ok = null.ok,
+    integerish = TRUE
+  )
 }
 
 check_numeric <- function(
@@ -477,22 +456,82 @@ check_numeric <- function(
   upper = NULL,
   null.ok = TRUE
 ) {
-  if (is.null(x) && isTRUE(null.ok)) {
-    return(TRUE)
+  check_numeric_core(
+    x,
+    len = len,
+    lower = lower,
+    upper = upper,
+    null.ok = null.ok,
+    integerish = FALSE
+  )
+}
+
+# shared core for assert_numeric() and assert_integerish()
+# builds the failure message in a single pass (each condition evaluated once)
+assert_numeric_core <- function(x, len, lower, upper, null.ok, integerish, name) {
+  what <- if (integerish) "integer-ish" else "numeric"
+  if (is.null(x)) {
+    if (isTRUE(null.ok)) {
+      return(invisible())
+    }
+    if (integerish) {
+      stop(sprintf("%s should not be NULL.", name), call. = FALSE)
+    }
+    stop(sprintf("`%s` must be %s", name, what), call. = FALSE)
   }
+  msg <- sprintf("`%s` must be %s", name, what)
   if (!is.numeric(x)) {
-    return(FALSE)
+    if (integerish) {
+      msg <- paste0(msg, "; it is not numeric")
+    }
+    stop(msg, call. = FALSE)
   }
-  if (!is.null(len) && length(x) != len) {
-    return(FALSE)
+  xcheck <- if (integerish) stats::na.omit(x) else x
+  problems <- character()
+  if (!is.null(len) && length(xcheck) != len) {
+    problems <- c(problems, sprintf("; its length must be %s", len))
   }
-  if (!is.null(lower) && any(x < lower)) {
-    return(FALSE)
+  if (!is.null(lower) && isTRUE(any(x < lower, na.rm = TRUE))) {
+    problems <- c(
+      problems,
+      sprintf("; all values must be greater than or equal to %s", lower)
+    )
   }
-  if (!is.null(upper) && any(x > upper)) {
-    return(FALSE)
+  if (!is.null(upper) && isTRUE(any(x > upper, na.rm = TRUE))) {
+    problems <- c(
+      problems,
+      sprintf("; all values must be less than or equal to %s", upper)
+    )
   }
-  return(TRUE)
+  if (
+    integerish &&
+      isTRUE(any(abs(x - round(x)) > (.Machine$double.eps)^0.5, na.rm = TRUE))
+  ) {
+    problems <- c(problems, "; all values must be close to integers")
+  }
+  if (length(problems) > 0) {
+    stop(paste0(msg, paste(problems, collapse = "")), call. = FALSE)
+  }
+  return(invisible())
+}
+
+assert_integerish <- function(
+  x,
+  len = NULL,
+  lower = NULL,
+  upper = NULL,
+  null.ok = FALSE,
+  name = paste(deparse(substitute(x)), collapse = " ")
+) {
+  assert_numeric_core(
+    x,
+    len = len,
+    lower = lower,
+    upper = upper,
+    null.ok = null.ok,
+    integerish = TRUE,
+    name = name
+  )
 }
 
 assert_numeric <- function(
@@ -501,44 +540,24 @@ assert_numeric <- function(
   lower = NULL,
   upper = NULL,
   null.ok = FALSE,
-  name = as.character(substitute(x))
+  name = paste(deparse(substitute(x)), collapse = " ")
 ) {
-  msg <- sprintf("`%s` must be numeric", name)
-  if (
-    !isTRUE(
-      check_numeric(
-        x,
-        len = len,
-        lower = lower,
-        upper = upper,
-        null.ok = null.ok
-      )
-    )
-  ) {
-    if (!is.null(len) && length(x) != len) {
-      msg <- paste0(msg, sprintf("; its length must be %s", len))
-    }
-    if (!is.null(lower) && any(x < lower)) {
-      msg <- paste0(
-        msg,
-        sprintf("; all values must be greater than or equal to %s", lower)
-      )
-    }
-    if (!is.null(upper) && any(x > upper)) {
-      msg <- paste0(
-        msg,
-        sprintf("; all values must be less than or equal to %s", upper)
-      )
-    }
-    stop(msg, call. = FALSE)
-  }
+  assert_numeric_core(
+    x,
+    len = len,
+    lower = lower,
+    upper = upper,
+    null.ok = null.ok,
+    integerish = FALSE,
+    name = name
+  )
 }
 
 assert_data_frame <- function(
   x,
   min_rows = 0,
   min_cols = 0,
-  name = as.character(substitute(x))
+  name = paste(deparse(substitute(x)), collapse = " ")
 ) {
   msg <- sprintf("`%s` must be a data.frame.", name)
   if (!is.data.frame(x)) {
@@ -581,7 +600,7 @@ check_character <- function(
   x,
   len = NULL,
   null.ok = FALSE,
-  name = as.character(substitute(x))
+  name = paste(deparse(substitute(x)), collapse = " ")
 ) {
   if (isTRUE(null.ok) && is.null(x)) {
     return(TRUE)
@@ -599,7 +618,7 @@ assert_character <- function(
   x,
   len = NULL,
   null.ok = FALSE,
-  name = as.character(substitute(x))
+  name = paste(deparse(substitute(x)), collapse = " ")
 ) {
   flag <- check_character(x, len = len, null.ok = null.ok, name = name)
   if (!isTRUE(flag)) {
@@ -614,7 +633,7 @@ assert_list <- function(
   named = FALSE,
   len = NULL,
   null.ok = FALSE,
-  name = as.character(substitute(x))
+  name = paste(deparse(substitute(x)), collapse = " ")
 ) {
   if (isTRUE(null.ok) && is.null(x)) {
     return(invisible(TRUE))
@@ -637,7 +656,7 @@ assert_list <- function(
 assert_function <- function(
   x,
   null.ok = FALSE,
-  name = as.character(substitute(x))
+  name = paste(deparse(substitute(x)), collapse = " ")
 ) {
   if (isTRUE(null.ok) && is.null(x)) {
     return(invisible(TRUE))
@@ -651,7 +670,7 @@ assert_function <- function(
 check_atomic_vector <- function(
   x,
   null.ok = FALSE,
-  name = as.character(substitute(x))
+  name = paste(deparse(substitute(x)), collapse = " ")
 ) {
   if (isTRUE(null.ok) && is.null(x)) {
     return(invisible(TRUE))
@@ -671,7 +690,7 @@ check_atomic_vector <- function(
 
 assert_atomic_vector <- function(x, 
                                  null.ok = FALSE, 
-                                 name = as.character(substitute(x))) {
+                                 name = paste(deparse(substitute(x)), collapse = " ")) {
   flag <- check_atomic_vector(x, null.ok = null.ok, name = name)
   if (!isTRUE(flag)) {
     stop(flag, call. = FALSE)
@@ -717,7 +736,11 @@ sanitize_notes <- function(notes) {
 
 sanitize_replace <- function(replace) {
   if (isTRUE(replace)) {
-    replace <- list(" " = c("NA", "NaN"), " " = c(NA, NaN))
+    # only target real NA/NaN values: format_vector_replace() also matches
+    # against the original (pre-formatting) data, so formatted missing values
+    # are caught without blanking literal "NA"/"NaN" strings (e.g. the
+    # country code "NA" for Namibia)
+    replace <- list(" " = c(NA, NaN))
   } else if (isFALSE(replace)) {
     replace <- list(NULL)
   } else if (isTRUE(check_string(replace))) {
