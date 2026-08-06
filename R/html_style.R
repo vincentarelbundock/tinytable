@@ -220,27 +220,29 @@ setMethod(
 
 
     # rowspan/colspan spans first
-    if (!is.null(other) && nrow(other) > 0 && any(c("rowspan", "colspan") %in% names(other))) {
-      listeners <- character(0)
-      for (row in seq_len(nrow(other))) {
-        rowspan <- if ("rowspan" %in% names(other) && !is.na(other$rowspan[row])) other$rowspan[row] else 1
-        colspan <- if ("colspan" %in% names(other) && !is.na(other$colspan[row])) other$colspan[row] else 1
-        # Skip JavaScript spans for column group headers (negative i) since HTML already handles them via colspan
-        if ((rowspan > 1 || colspan > 1) && other$i[row] >= 0) {
-          # Use the factory function approach instead of individual function names
-          listener <- "      window.addEventListener('load', function () { tableFns_%s.spanCell(%s, %s, %s, %s) })"
-          listener <- sprintf(
-            listener,
-            x@id,
-            other$i[row],
-            other$j[row],
-            rowspan,
-            colspan
-          )
-          listeners <- c(listeners, listener)
-        }
+    if (!is.null(other) && nrow(other) > 0) {
+      rowspan <- if ("rowspan" %in% names(other)) {
+        ifelse(is.na(other$rowspan), 1, other$rowspan)
+      } else {
+        rep(1, nrow(other))
       }
-      if (length(listeners) > 0) {
+      colspan <- if ("colspan" %in% names(other)) {
+        ifelse(is.na(other$colspan), 1, other$colspan)
+      } else {
+        rep(1, nrow(other))
+      }
+      # Skip JavaScript spans for column group headers (negative i) since HTML already handles them via colspan
+      idx <- which((rowspan > 1 | colspan > 1) & other$i >= 0)
+      if (length(idx) > 0) {
+        # Use the factory function approach instead of individual function names
+        listeners <- sprintf(
+          "      window.addEventListener('load', function () { tableFns_%s.spanCell(%s, %s, %s, %s) })",
+          x@id,
+          other$i[idx],
+          other$j[idx],
+          rowspan[idx],
+          colspan[idx]
+        )
         x@table_string <- lines_insert(
           x@table_string,
           paste(rev(listeners), collapse = "\n"),
@@ -333,10 +335,12 @@ setMethod(
       trim_top_right <- tapply(trim_r & has_t, lines$cell_key, any, default = FALSE)[cells_unique] * 3
       trim_bottom_left <- tapply(trim_l & has_b, lines$cell_key, any, default = FALSE)[cells_unique] * 3
       trim_bottom_right <- tapply(trim_r & has_b, lines$cell_key, any, default = FALSE)[cells_unique] * 3
-      trim_left_top <- tapply(trim_l & has_l, lines$cell_key, any, default = FALSE)[cells_unique] * 3
-      trim_left_bottom <- tapply(trim_l & has_l, lines$cell_key, any, default = FALSE)[cells_unique] * 3
-      trim_right_top <- tapply(trim_r & has_r, lines$cell_key, any, default = FALSE)[cells_unique] * 3
-      trim_right_bottom <- tapply(trim_r & has_r, lines$cell_key, any, default = FALSE)[cells_unique] * 3
+      # line_trim only encodes "l"/"r", so both ends of a vertical border share
+      # the same trim value: compute once per side and reuse.
+      trim_left <- tapply(trim_l & has_l, lines$cell_key, any, default = FALSE)[cells_unique] * 3
+      trim_left_top <- trim_left_bottom <- trim_left
+      trim_right <- tapply(trim_r & has_r, lines$cell_key, any, default = FALSE)[cells_unique] * 3
+      trim_right_top <- trim_right_bottom <- trim_right
 
       # Get first (i,j) per cell_key
       first_idx <- match(cells_unique, lines$cell_key)
@@ -498,33 +502,28 @@ setMethod(
     # Group by CSS rule and border status using interaction
     css_df$group_key <- interaction(css_df$merged_css, css_df$has_border, drop = TRUE)
 
-    # For each group, collect cells
-    group_levels <- levels(css_df$group_key)
-    css_groups <- vector("list", length(group_levels))
-    names(css_groups) <- group_levels
-
-    for (g_idx in seq_along(group_levels)) {
-      group_mask <- css_df$group_key == group_levels[g_idx]
-      group_rows <- css_df[group_mask, , drop = FALSE]
-
-      css_groups[[g_idx]] <- list(
+    # For each group, collect cells (split() preserves the factor level order,
+    # matching the previous per-level scan)
+    css_groups <- lapply(split(css_df, css_df$group_key), function(group_rows) {
+      list(
         css_rule = group_rows$merged_css[1],
         has_border = group_rows$has_border[1],
-        cells = lapply(seq_len(nrow(group_rows)), function(r) {
-          list(i = group_rows$i[r], j = group_rows$j[r])
-        }),
+        i = group_rows$i,
+        j = group_rows$j,
         first_j = group_rows$j[1],
         first_i = group_rows$i[1]
       )
-    }
+    })
 
     # Generate CSS rules for each unique group
     # Sort groups by the first cell's coordinates to ensure deterministic ordering
     group_keys_sorted <- names(css_groups)
     if (length(group_keys_sorted) > 0) {
-      # Use precomputed first_j and first_i for efficient sorting
-      sort_keys <- sapply(css_groups, function(g) g$first_j * 10000 + g$first_i, USE.NAMES = FALSE)
-      group_keys_sorted <- group_keys_sorted[order(sort_keys)]
+      # Two-key sort: column first, then row (a combined j * 10000 + i key
+      # collides for tables with 10000+ rows)
+      first_j <- sapply(css_groups, function(g) g$first_j, USE.NAMES = FALSE)
+      first_i <- sapply(css_groups, function(g) g$first_i, USE.NAMES = FALSE)
+      group_keys_sorted <- group_keys_sorted[order(first_j, first_i)]
     }
 
     style_arrays <- css_entries <- character(length(group_keys_sorted))
@@ -533,17 +532,12 @@ setMethod(
       group_data <- css_groups[[group_key]]
       css_rule <- group_data$css_rule
       has_border <- group_data$has_border
-      cells <- group_data$cells
 
       # Generate unique ID for this CSS rule
       id_css <- get_id(stem = "tinytable_css_")
 
       # Generate position array for all cells with this styling
-      valid_cells <- cells
-
-      cell_positions <- sapply(valid_cells, function(cell) {
-        sprintf("{ i: '%s', j: %s }", cell$i, cell$j)
-      })
+      cell_positions <- sprintf("{ i: '%s', j: %s }", group_data$i, group_data$j)
       arr <- c(
         "          {",
         " positions: [ ",
