@@ -1,10 +1,15 @@
-#' Clean column name for JavaScript
-#' @param name Column name to clean
-#' @return Cleaned column name
+#' Clean column names for JavaScript field identifiers
+#'
+#' Sanitizes every character outside `[A-Za-z0-9_]` to `_` and de-duplicates
+#' the results with `make.unique()`. Always call this on the full vector of
+#' column names so that de-duplication is consistent across call sites.
+#'
+#' @param name Character vector of column names to clean
+#' @return Cleaned column names
 #' @keywords internal
 #' @noRd
 tabulator_clean_column_name <- function(name) {
-    gsub("[\\. -]", "_", name)
+    make.unique(gsub("[^A-Za-z0-9_]", "_", name), sep = "_")
 }
 
 
@@ -76,15 +81,31 @@ tabulator_clean_data <- function(x) {
     # Add stable row index for styling (1-based, matching R's row numbering)
     data_clean$`_tinytable_row_index` <- seq_len(nrow(data_clean))
 
-    # Clean column names (replace dots and spaces with underscores)
-    names(data_clean) <- tabulator_clean_column_name(names(data_clean))
-
-    # Clean problematic quotes in character columns only
-    for (i in seq_along(data_clean)) {
-        if (is.character(data_clean[[i]])) {
-            data_clean[[i]] <- gsub('"', "'", data_clean[[i]])
+    # Mark plot_tt() cells holding pre-serialized JSON arrays (sparkline,
+    # histogram) as raw JSON so df_to_json() emits them unquoted
+    raw_formatters <- c("tinytable_sparkline", "tinytable_histogram")
+    for (col_name in names(x@tabulator_column_formatters)) {
+        fmt <- x@tabulator_column_formatters[[col_name]]
+        if (
+            !is.null(fmt$formatter) &&
+                fmt$formatter %in% raw_formatters &&
+                col_name %in% names(data_clean)
+        ) {
+            data_clean[[col_name]] <- I(lapply(
+                data_clean[[col_name]],
+                function(v) {
+                    if (is.character(v) && grepl("^\\[.*\\]$", v)) {
+                        json_raw(v)
+                    } else {
+                        v
+                    }
+                }
+            ))
         }
     }
+
+    # Clean column names (sanitize to [A-Za-z0-9_] and de-duplicate)
+    names(data_clean) <- tabulator_clean_column_name(names(data_clean))
 
     return(data_clean)
 }

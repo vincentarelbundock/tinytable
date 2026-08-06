@@ -615,7 +615,9 @@ plot_tt_tabulator <- function(
       # Store the formatted data in the cell
       if (plot_type %in% c("line", "density", "histogram")) {
         # For sparkline and histogram, store as JSON array string
-        json_array <- paste0("[", paste(formatter_info$data, collapse = ","), "]")
+        # (non-finite values are not valid JS literals -> null)
+        vals <- ifelse(is.finite(formatter_info$data), formatter_info$data, "null")
+        json_array <- paste0("[", paste(vals, collapse = ","), "]")
         x@data_body[i_body[row_idx], col_idx] <- json_array
       } else {
         # For progress/bar, store the numeric value

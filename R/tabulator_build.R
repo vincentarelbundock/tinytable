@@ -55,10 +55,12 @@ setMethod(
 
     # Build basic column definitions only if not already set by theme
     if (length(x@tabulator_columns) == 0) {
+      # Clean the full vector at once so de-duplication is consistent
+      fields <- tabulator_clean_column_name(x@names)
       columns <- lapply(seq_along(x@names), function(i) {
         list(
           title = x@names[i],
-          field = tabulator_clean_column_name(x@names[i])
+          field = fields[i]
         )
       })
 

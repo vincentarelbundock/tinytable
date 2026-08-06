@@ -10,12 +10,13 @@ expect_true(is.character(out))
 expect_true(grepl("tabulator", out))
 expect_true(grepl("Sepal.Length", out))
 
-# Preserve special characters in column names
+# Special characters in column names: field is sanitized to [A-Za-z0-9_],
+# title keeps the original name (JSON-escaped)
 special_dat <- data.frame(`hello\\?` = 1, check.names = FALSE)
 tab <- tt(special_dat)
 out <- save_tt(tab, "html")
-expect_true(grepl('"hello_\\?"', out))
-expect_false(grepl('"hello__"', out))
+expect_true(grepl('"field":"hello__"', out, fixed = TRUE))
+expect_true(grepl('"title":"hello\\\\?"', out, fixed = TRUE))
 
 # Data with multiple types
 dat <- data.frame(

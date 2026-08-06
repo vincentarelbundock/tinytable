@@ -94,6 +94,31 @@ tabulator_column_registry <- list(
     })
 
 # -----------------------------------------------------------------------------
+# inject the columns JSON into the table string exactly once
+# - replaces the template placeholder when still present, otherwise rewrites the
+#   previously injected `columns: [...]` line
+# - the replacement is inserted literally (gsub replacement semantics would
+#   otherwise mangle backslashes in properly escaped JSON)
+# -----------------------------------------------------------------------------
+tabulator_replace_columns_json <- function(table_string, columns_json) {
+    if (grepl("$tinytable_TABULATOR_COLUMNS", table_string, fixed = TRUE)) {
+        return(gsub(
+            "$tinytable_TABULATOR_COLUMNS",
+            columns_json,
+            table_string,
+            fixed = TRUE
+        ))
+    }
+    # columns JSON is emitted on a single line: match to the last `]` on it
+    literal <- gsub("\\", "\\\\", columns_json, fixed = TRUE)
+    sub(
+        "columns: \\[[^\n]*\\]",
+        paste0("columns: ", literal),
+        table_string
+    )
+}
+
+# -----------------------------------------------------------------------------
 # one function to build the columns, applying
 # 1) base spec, 2) lazy-format overrides, 3) style overrides, 4) write JSON
 # -----------------------------------------------------------------------------
@@ -101,9 +126,11 @@ tabulator_apply_columns <- function(x) {
     stopifnot(!is.null(x@names), length(x@names) > 0)
 
     # 1) base column specs
+    # Clean the full vector at once so de-duplication is consistent
+    fields <- tabulator_clean_column_name(x@names)
     columns <- lapply(seq_along(x@data), function(j) {
         col_name <- x@names[j]
-        field <- tabulator_clean_column_name(col_name)
+        field <- fields[j]
         ctype <- class(x@data[[j]])[1]
 
         col_def <- list(title = col_name, field = field)
@@ -176,8 +203,7 @@ tabulator_apply_columns <- function(x) {
     x@tabulator_columns <- unname(columns)
 
     columns_json <- df_to_json(x@tabulator_columns)
-    x@table_string <- gsub("$tinytable_TABULATOR_COLUMNS", columns_json, x@table_string, fixed = TRUE)
-    x@table_string <- gsub("columns: \\[.*?\\]", paste0("columns: ", columns_json), x@table_string)
+    x@table_string <- tabulator_replace_columns_json(x@table_string, columns_json)
 
     x
 }

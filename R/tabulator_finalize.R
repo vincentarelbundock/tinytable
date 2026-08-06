@@ -15,8 +15,7 @@ setMethod(
 
     if (has_custom_columns) {
       # Use custom JSON directly
-      x@table_string <- gsub("$tinytable_TABULATOR_COLUMNS", x@tabulator_columns$json_string, x@table_string, fixed = TRUE)
-      x@table_string <- gsub("columns: \\[.*?\\]", paste0("columns: ", x@tabulator_columns$json_string), x@table_string)
+      x@table_string <- tabulator_replace_columns_json(x@table_string, x@tabulator_columns$json_string)
     } else {
       # Process columns (formatting, styling, conversion) only for basic columns
       x <- tabulator_apply_columns(x)

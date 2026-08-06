@@ -104,8 +104,7 @@ tabulator_apply_column_search <- function(x) {
 
   # Re-serialize columns to JSON after adding search filters
   columns_json <- df_to_json(x@tabulator_columns)
-  x@table_string <- gsub("$tinytable_TABULATOR_COLUMNS", columns_json, x@table_string, fixed = TRUE)
-  x@table_string <- gsub("columns: \\[.*?\\]", paste0("columns: ", columns_json), x@table_string)
+  x@table_string <- tabulator_replace_columns_json(x@table_string, columns_json)
 
   return(x)
 }
