@@ -6,6 +6,7 @@ Breaking change:
 
 * Numeric `j` indices now refer to positions in the rendered table, matching the convention already used by `i`. Previously, `subset(select = )` remapped the `j` indices stored by earlier `style_tt()`, `format_tt()`, `plot_tt()`, and `group_tt()` calls so that they followed the columns they originally pointed to. They now stay put, and are clipped or dropped when they fall outside the narrower table. Column spans created by `group_tt(j = )` likewise keep their position and width, and are trimmed at the new right edge instead of shrinking to the columns that survived inside them. Use column names (`j = "mpg"`) to target a column by identity rather than by position.
 
+* `style_tt(alignv = )` now vertically aligns text next to `plot_tt()` inline plots in LaTeX, as it already did in HTML and Typst. Thanks to @arcruz0 for Issue #673.
 * Performance improvements to `style_tt()`. Thanks to @EinMaulwurf for PR #663.
 * Various performance improvements.
 * Fix grouped tables with row and column grouping order dependence introduced in the recent style-resolution refactor. Thanks to @EinMaulwurf for Issue #664.
