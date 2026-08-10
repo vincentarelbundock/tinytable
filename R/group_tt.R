@@ -106,53 +106,59 @@ process_group_j <- function(x, j) {
     x@group_data_j <- rbind_nocol(new_header_row, x@group_data_j)
   }
 
-  # Add colspan styling for each group span
-  # The group header row index depends on how many group rows exist
-  # Most recent group is at -1, previous groups at -2, -3, etc.
-  header_row_i <- -nrow(x@group_data_j)
-  for (i in seq_along(j)) {
-    group_cols <- j[[i]]
-    if (length(group_cols) > 1) {
-      # Add center alignment and colspan for groups that span multiple columns
-      x <- style_tt(x, i = header_row_i, j = group_cols[1], align = "c", colspan = length(group_cols))
-    } else {
-      # Just center alignment for single-column groups
-      x <- style_tt(x, i = header_row_i, j = group_cols[1], align = "c")
-    }
-  }
-
   return(x)
 }
 
-#' Add styling lines for the newly created column group using user-provided columns
+#' Regenerate the alignment and underline styles of every column group
+#'
+#' The styles are derived entirely from `@group_data_j`, and the entries this
+#' function appends are tagged with a `"tt_group_j"` attribute so that a later
+#' call can discard and rebuild them. `subset()` relies on this: when columns
+#' are removed, the spans are re-laid out and their styles must follow, and
+#' patching the stored anchors and colspans one by one is not possible because
+#' a span's position depends on the spans to its left.
 #' @keywords internal
 #' @noRd
-add_group_line_styling_simple <- function(x, j) {
-  # Sanitize j to get proper indices (same as what was passed to group_tt).
-  # process_group_j() already warned about non-contiguous spans, so silence
-  # the duplicate warning here.
-  j <- sanitize_group_index(j, hi = ncol(x), orientation = "column", warn = FALSE)
+style_group_j <- function(x) {
+  is_tagged <- vapply(
+    x@lazy_style,
+    function(e) isTRUE(attr(e, "tt_group_j")),
+    logical(1)
+  )
+  x@lazy_style <- x@lazy_style[!is_tagged]
 
-  # The newly added group will be at row -1 in the final HTML structure
-  # (since bootstrap processes groups from last to first, the last group ends up at -1)
-  group_row_i <- -1
+  if (nrow(x@group_data_j) == 0) {
+    return(x)
+  }
 
-  # Re-style all group rows (both existing and new) based on final HTML structure
-  # Most recent group (last in @group_data_j) goes to row -1, previous groups go to -2, -3, etc.
-  for (group_idx in nrow(x@group_data_j):1) {
-    table_row_i <- -(nrow(x@group_data_j) - group_idx + 1)
+  n_before <- length(x@lazy_style)
+  n_groups <- nrow(x@group_data_j)
 
-    # Add center alignment
+  # The last group row in @group_data_j is closest to the table body, so it
+  # sits at i = -1; earlier rows go to -2, -3, etc.
+  for (group_idx in n_groups:1) {
+    table_row_i <- -(n_groups - group_idx + 1)
+
+    # Center the whole header row
     x <- style_tt(x, i = table_row_i, align = "c")
 
-    # All groups (including the newly added one) are now stored in @group_data_j
-    # So we can reconstruct all of them from stored data
-    group_row_data <- as.character(x@group_data_j[group_idx, ])
-    spans <- parse_group_spans(group_row_data)
+    spans <- parse_group_spans(as.character(x@group_data_j[group_idx, ]))
 
-    # Add lines for each group span (duplicate labels each get their own line)
+    # Duplicate labels each get their own span, alignment, and underline
     for (idx in seq_len(nrow(spans))) {
       group_cols <- spans$start[idx]:spans$end[idx]
+
+      if (length(group_cols) > 1) {
+        x <- style_tt(
+          x,
+          i = table_row_i,
+          j = group_cols[1],
+          align = "c",
+          colspan = length(group_cols)
+        )
+      } else {
+        x <- style_tt(x, i = table_row_i, j = group_cols[1], align = "c")
+      }
 
       # Determine trimming based on column positions
       trim_left <- min(group_cols) > 1
@@ -167,7 +173,7 @@ add_group_line_styling_simple <- function(x, j) {
       } else if (trim_right) {
         line_trim_spec <- "r"
       } else {
-        line_trim_spec <- NULL  # No trimming
+        line_trim_spec <- NULL # No trimming
       }
 
       x <- style_tt(
@@ -179,6 +185,12 @@ add_group_line_styling_simple <- function(x, j) {
         line_color = "black",
         line_trim = line_trim_spec
       )
+    }
+  }
+
+  if (length(x@lazy_style) > n_before) {
+    for (k in seq.int(n_before + 1L, length(x@lazy_style))) {
+      attr(x@lazy_style[[k]], "tt_group_j") <- TRUE
     }
   }
 
@@ -197,8 +209,6 @@ process_delimiter_grouping <- function(x, j) {
     if (length(j_delim$groupnames) > 0) {
       for (level_groups in rev(j_delim$groupnames)) {
         x <- process_group_j(x, level_groups)
-        # Add line styling for each group level
-        x <- add_group_line_styling_simple(x, level_groups)
       }
     }
     j <- NULL # Set to NULL since we've already applied the groupings
@@ -352,8 +362,10 @@ group_tt <- function(
   }
 
   # delimiter-based column grouping
+  grouped_j <- FALSE
   if (isTRUE(check_string(j))) {
     result <- process_delimiter_grouping(x, j)
+    grouped_j <- !identical(result$x@group_data_j, x@group_data_j)
     x <- result$x
     j <- result$j
   }
@@ -361,7 +373,11 @@ group_tt <- function(
   # column grouping
   if (!is.null(j)) {
     x <- process_group_j(x, j)
-    x <- add_group_line_styling_simple(x, j)
+    grouped_j <- TRUE
+  }
+
+  if (grouped_j) {
+    x <- style_group_j(x)
   }
 
   return(x)

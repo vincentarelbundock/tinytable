@@ -248,7 +248,9 @@ tt(dat) |>
 ```
 
 ::: {.callout-important}
-Unlike most `tinytable` operations, `subset()` is applied eagerly---it modifies the table immediately rather than deferring work to build time. For more predictable results, call `subset()` as the **last step** in the pipeline. Calls to `style_tt()`, `format_tt()`, and `group_tt()` that appear *before* `subset()` will have their column indices automatically remapped to account for removed columns.
+Unlike most `tinytable` operations, `subset()` is applied eagerly---it modifies the table immediately rather than deferring work to build time. For more predictable results, call `subset()` as the **last step** in the pipeline.
+
+Numeric `i` and `j` indices always refer to positions in the **rendered** table, not to positions in the data frame supplied to `tt()`. Removing a column therefore does not shift the indices stored by earlier calls to `style_tt()`, `format_tt()`, or `group_tt()`: a style set on `j = 3` still applies to the third column of the printed table, and a column span still starts where it started. Indices and spans that fall outside the narrower table are clipped or dropped. To target a column by identity rather than by position, use its name (`j = "Petal.Width"`) instead of a number. Conditional styling based on column *values* (`i = Species == "versicolor"`) is evaluated against the data, so it keeps tracking the same rows even after the column it references is dropped.
 :::
 
 

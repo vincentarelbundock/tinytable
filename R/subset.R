@@ -33,7 +33,7 @@ subset.tinytable <- function(x, subset, select, drop = FALSE, ...) {
 
   # Resolve `vars` to positive column positions. Character selections must be
   # matched by name: `seq_len(old_ncol)[vars]` would silently yield NA for
-  # character input, corrupting the column remapping below.
+  # character input, corrupting the column selection below.
   kept <- if (is.logical(vars)) {
     which(vars)
   } else if (is.character(vars)) {
@@ -56,9 +56,6 @@ subset.tinytable <- function(x, subset, select, drop = FALSE, ...) {
     )
   }
 
-  # Build a column remapping vector: col_remap[old_col] = new_col (0 = removed).
-  col_remap <- integer(old_ncol)
-  col_remap[kept] <- seq_along(kept)
   new_ncol <- length(kept)
 
   # Apply subsetting to data
@@ -70,12 +67,34 @@ subset.tinytable <- function(x, subset, select, drop = FALSE, ...) {
     x@group_data_i <- x@group_data_i[, kept, drop = FALSE]
   }
 
-  # Truncate column group data to the new column count. Group spans are
-  # positional: they refer to whatever columns end up at those positions
-  # in the final table.
+  # Truncate the column group labels. Like `i` in `style_tt()`, span positions
+  # refer to the rendered table rather than to the input data, so a span stays
+  # where it was and is only clipped against the new right edge. Spans that
+  # start beyond the last surviving column disappear.
   if (nrow(x@group_data_j) > 0) {
-    x@group_data_j <- x@group_data_j[, seq_len(new_ncol), drop = FALSE]
-    colnames(x@group_data_j) <- colnames(x@data_body)
+    gdj <- x@group_data_j
+    new_gdj <- data.frame(
+      matrix(NA_character_, nrow = nrow(gdj), ncol = new_ncol),
+      stringsAsFactors = FALSE
+    )
+    for (row_idx in seq_len(nrow(gdj))) {
+      spans <- parse_group_spans(as.character(gdj[row_idx, ]))
+      new_row <- rep(NA_character_, new_ncol)
+      for (span_idx in seq_len(nrow(spans))) {
+        start <- spans$start[span_idx]
+        if (start > new_ncol) {
+          next
+        }
+        end <- min(spans$end[span_idx], new_ncol)
+        new_row[start] <- spans$label[span_idx]
+        if (end > start) {
+          new_row[seq.int(start + 1L, end)] <- ""
+        }
+      }
+      new_gdj[row_idx, ] <- new_row
+    }
+    colnames(new_gdj) <- colnames(x@data_body)
+    x@group_data_j <- new_gdj
   }
 
   # Update dimensions and names
@@ -88,10 +107,16 @@ subset.tinytable <- function(x, subset, select, drop = FALSE, ...) {
     x@width_cols <- x@width_cols[kept]
   }
 
-  # Remap numeric j-indices in lazy calls recorded before subset
-  x@lazy_format <- remap_lazy_list(x@lazy_format, col_remap, old_ncol)
-  x@lazy_plot <- remap_lazy_list(x@lazy_plot, col_remap, old_ncol)
-  x@lazy_style <- remap_lazy_list(x@lazy_style, col_remap, old_ncol)
+  # Numeric `j` in a lazy call refers to a position in the rendered table, the
+  # same convention `i` follows, so removing a column does not shift the stored
+  # indices. Entries only need to be clipped to the narrower table.
+  x@lazy_format <- clip_lazy_list(x@lazy_format, new_ncol)
+  x@lazy_plot <- clip_lazy_list(x@lazy_plot, new_ncol)
+  x@lazy_style <- clip_lazy_list(x@lazy_style, new_ncol)
+
+  # Column group styles are derived from @group_data_j, which was just
+  # truncated: rebuild them rather than clip them.
+  x <- style_group_j(x)
 
   # Avoid colspan that exceeds the new number of columns
   x@style <- clamp_colspan(x@style, x@ncol)
@@ -100,29 +125,28 @@ subset.tinytable <- function(x, subset, select, drop = FALSE, ...) {
 }
 
 
-#' Remap j-indices in a list of lazy calls after column subsetting
+#' Clip j-indices in a list of lazy calls after column subsetting
 #'
-#' Entries whose target columns were all removed are dropped entirely:
-#' setting their `j` to NULL instead would make them apply to every
-#' remaining column.
+#' Entries that no longer target any column are dropped entirely: setting
+#' their `j` to NULL instead would make them apply to every remaining column.
 #' @keywords internal
 #' @noRd
-remap_lazy_list <- function(lst, col_remap, old_ncol) {
-  out <- lapply(lst, remap_j, col_remap = col_remap, old_ncol = old_ncol)
+clip_lazy_list <- function(lst, new_ncol) {
+  out <- lapply(lst, clip_j, new_ncol = new_ncol)
   out[!vapply(out, is.null, logical(1))]
 }
 
 
-#' Remap j-indices in a lazy call after column subsetting
+#' Clip the j-indices of a lazy call to the width of a subsetted table
 #'
 #' Returns the (possibly modified) lazy entry, or NULL if every column the
-#' entry targeted was removed by the subset. Only plain numeric `j` values
-#' are remapped; anything else (NULL, character column names, NSE markers,
-#' ...) is deliberately left untouched so we never mangle entries we cannot
-#' interpret.
+#' entry targeted now falls outside the table. Only plain positive numeric `j`
+#' values are clipped; anything else (NULL, negative selections, character
+#' column names, NSE markers, ...) is deliberately left untouched so we never
+#' mangle entries we cannot interpret.
 #' @keywords internal
 #' @noRd
-remap_j <- function(call_args, col_remap, old_ncol) {
+clip_j <- function(call_args, new_ncol) {
   if (is.call(call_args)) {
     j <- call_args[["j"]]
   } else if (is.list(call_args)) {
@@ -131,50 +155,33 @@ remap_j <- function(call_args, col_remap, old_ncol) {
     return(call_args)
   }
 
-  if (!is.numeric(j) || length(j) == 0L || anyNA(j)) {
+  if (!is.numeric(j) || length(j) == 0L || anyNA(j) || any(j <= 0)) {
     return(call_args)
   }
 
-  if (all(j < 0)) {
-    # Negative j is a selection against the pre-subset table: convert it to
-    # the equivalent positive positions against the OLD column count, then
-    # remap those like any other stored indices.
-    if (any(abs(j) > old_ncol)) {
-      return(call_args)
-    }
-    j <- seq_len(old_ncol)[j]
-  } else if (any(j <= 0)) {
-    # mixed signs or zeros: not a valid selection; leave untouched
-    return(call_args)
-  }
-
-  valid <- j >= 1 & j <= old_ncol
-  new_j <- integer(length(j))
-  new_j[valid] <- col_remap[j[valid]]
-  new_j <- new_j[new_j > 0L]
-
-  # All targeted columns were removed.
+  new_j <- j[j <= new_ncol]
   if (length(new_j) == 0L) {
-    colspan <- if (is.call(call_args)) {
-      call_args[["colspan"]]
-    } else {
-      call_args$colspan
+    return(NULL)
+  }
+
+  colspan <- if (is.call(call_args)) {
+    call_args[["colspan"]]
+  } else {
+    call_args$colspan
+  }
+
+  if (is.numeric(colspan) && length(colspan) == 1L && !is.na(colspan)) {
+    # Shrink the span so it stops at the last surviving column. `colspan` must
+    # be >= 2: a span reduced to a single column is a plain cell, so drop the
+    # argument instead of setting it to 1.
+    new_colspan <- min(colspan, new_ncol - min(new_j) + 1L)
+    if (new_colspan < 2L) {
+      new_colspan <- NULL
     }
-    if (!is.null(colspan)) {
-      # The entry anchors a column span (e.g. the full-width row-group labels
-      # created by group_tt(i = ...)). Re-anchor at the first surviving column
-      # to the right of the original anchor so the span still covers the same
-      # region; colspan is clamped to the new width at build time.
-      right <- col_remap[seq(min(j), old_ncol)]
-      right <- right[right > 0L]
-      if (length(right) == 0L) {
-        return(NULL)
-      }
-      new_j <- min(right)
+    if (is.call(call_args)) {
+      call_args[["colspan"]] <- new_colspan
     } else {
-      # Plain cell style/format: drop the lazy entry. Setting j to NULL
-      # instead would make it apply to *every* remaining column.
-      return(NULL)
+      call_args$colspan <- new_colspan
     }
   }
 
