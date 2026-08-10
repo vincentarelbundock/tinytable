@@ -667,3 +667,47 @@ plot_tt_tabulator <- function(
 
   return(x)
 }
+
+
+#' Wrap inline plot images so `alignv` works in LaTeX
+#'
+#' In tabularray, `\includegraphics` sits on the row baseline and defines the
+#' row height, so `valign=` on the neighboring cells is a no-op (#673). To
+#' honor `alignv`, the image itself must be lowered with `\raisebox`. The
+#' effective `alignv` for an image cell is the one styled on that cell, or
+#' failing that, on any other cell of the same row.
+#'
+#' Called in `build_tt()` after `@style_other` is resolved but before
+#' `build_eval()` draws the body.
+#'
+#' @keywords internal
+#' @noRd
+plot_alignv_latex <- function(x) {
+  if (!isTRUE(x@output == "latex")) {
+    return(x)
+  }
+  so <- x@style_other
+  if (is.null(so) || nrow(so) == 0L || !"alignv" %in% names(so)) {
+    return(x)
+  }
+  so <- so[!is.na(so$alignv) & so$i >= 1, , drop = FALSE]
+  if (nrow(so) == 0L) {
+    return(x)
+  }
+  # baseline shift: middle of image (m) or top of image at text ascender (t)
+  lift <- c(
+    m = "-0.5\\height",
+    t = "\\dimexpr-\\height+\\ht\\strutbox\\relax"
+  )
+  for (col in seq_len(ncol(x@data_body))) {
+    cells <- x@data_body[[col]]
+    for (row in which(startsWith(cells, "\\includegraphics"))) {
+      a <- so$alignv[so$i == row & so$j == col] # cell-level style wins
+      if (length(a) == 0L) a <- so$alignv[so$i == row] # else row-level
+      if (length(a) == 0L || !a[1] %in% names(lift)) next # b: keep as-is
+      cells[row] <- base::sprintf("\\raisebox{%s}{%s}", lift[[a[1]]], cells[row])
+    }
+    x@data_body[[col]] <- cells
+  }
+  return(x)
+}

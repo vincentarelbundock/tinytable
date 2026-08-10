@@ -179,6 +179,9 @@ build_tt <- function(x, output = NULL) {
   x@style_other <- x@style_other[ord, ]
   attr(x@style_other, "has_style") <- has_style[ord]
 
+  # inline plots must be re-boxed for `alignv` to have an effect in LaTeX (#673)
+  x <- plot_alignv_latex(x)
+
   # draw the table
   x <- build_eval(x)
 
