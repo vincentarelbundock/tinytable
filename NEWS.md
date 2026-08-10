@@ -10,6 +10,7 @@ Breaking change:
 * Various performance improvements.
 * Fix grouped tables with row and column grouping order dependence introduced in the recent style-resolution refactor. Thanks to @EinMaulwurf for Issue #664.
 * Simpler spanning rows in Typst. Thanks to @EinMaulwurf for Issue #665.
+* Typst: long table notes no longer stretch auto-sized tables to the full page width; columns keep their content-proportional widths and notes wrap at the table's edge. Thanks to @grantmcdermott for Issue #669.
 
 ## 0.17.0
 

@@ -8,6 +8,23 @@ options("tinytable_html_engine" = NULL)
 # Stabilize collation-dependent ordering in snapshot tests.
 try(Sys.setlocale("LC_COLLATE", "C"), silent = TRUE)
 
+# Several test files call unexported functions by their bare name.
+# `pkgload::load_all()` puts them on the search path, but `R CMD check` runs
+# against the installed namespace, where they are not visible. Bind them here
+# so the tests behave the same under both entry points.
+for (.fun in c(
+  "build_tt",
+  "df_to_json",
+  "value_to_json",
+  "json_raw",
+  "filter_style_other",
+  "lines_drop",
+  "lines_drop_between"
+)) {
+  assign(.fun, get(.fun, envir = asNamespace("tinytable")))
+}
+rm(.fun)
+
 # common formatting options
 options(tinytable_format_bool = function(x) tools::toTitleCase(tolower(x)))
 options(tinytable_format_replace = "")

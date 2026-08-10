@@ -331,3 +331,33 @@ expect_true(grepl(
   out,
   fixed = TRUE
 ))
+
+# Issue #669: notes must not stretch the table.
+dat669 <- data.frame(
+  Grp = c("I", "II"),
+  ColA = c("2,000", "5,000"),
+  ColB = c("10,000", "20,000"),
+  Ratio = c("20%", "25%")
+)
+note669 <- "This is a table note that is moderately long and causes the table to stretch."
+tab <- tt(dat669, notes = note669)
+out <- build_tt(tab, "typst")@table_string
+# proportional fr columns computed from measured natural widths
+expect_true(grepl("tinytable-coldata", out, fixed = TRUE))
+expect_true(grepl("columns: tinytable-naturals.map(w => w.pt() * 1fr),", out, fixed = TRUE))
+# notes are capped at the table's natural width
+expect_true(grepl("calc.min(tinytable-naturals.sum(), size.width)", out, fixed = TRUE))
+# scalar width keeps equal fixed columns, consistent with other formats
+tab <- tt(dat669, width = 0.8, notes = note669)
+out <- build_tt(tab, "typst")@table_string
+expect_true(grepl("columns: (20.00%, 20.00%, 20.00%, 20.00%),", out, fixed = TRUE))
+expect_false(grepl("tinytable-coldata", out, fixed = TRUE))
+# no notes and no width: plain auto columns, no measurement machinery
+tab <- tt(dat669)
+out <- build_tt(tab, "typst")@table_string
+expect_true(grepl("columns: (auto, auto, auto, auto),", out, fixed = TRUE))
+expect_false(grepl("tinytable-coldata", out, fixed = TRUE))
+# per-column widths keep fixed percentages
+tab <- tt(dat669, width = c(0.1, 0.2, 0.2, 0.3))
+out <- build_tt(tab, "typst")@table_string
+expect_true(grepl("columns: (10.00%, 20.00%, 20.00%, 30.00%),", out, fixed = TRUE))
