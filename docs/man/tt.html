@@ -589,6 +589,7 @@ tt(
   colnames = get_option("tinytable_tt_colnames", default = TRUE),
   rownames = get_option("tinytable_tt_rownames", default = FALSE),
   escape = get_option("tinytable_tt_escape", default = FALSE),
+  engine = NULL,
   ...
 )
 </code></pre>
@@ -712,6 +713,14 @@ Logical. If <code>TRUE</code>, rownames are included as the first column
 </td>
 <td>
 Logical. If <code>TRUE</code>, escape special characters in the table. Equivalent to <code>format_tt(tt(x), escape = TRUE)</code>.
+</td>
+</tr>
+<tr>
+<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<code id="engine">engine</code>
+</td>
+<td>
+Character string specifying the HTML engine: "tinytable", "bootstrap", or "tabulator". Equivalent to <code>theme_html(tt(x), engine = engine)</code>. When <code>NULL</code> (the default), the <code>tinytable_html_engine</code> global option is honored by <code>theme_html()</code>.
 </td>
 </tr>
 </tbody></table>
@@ -892,25 +901,23 @@ tt(x) |&gt; format_tt(i = 1, fn = fn)
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<!-- preamble start -->
-
-    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_54vbq0605402mpbvsuc3 = TinyTable.createTableFunctions("tinytable_54vbq0605402mpbvsuc3");
+      const tableFns_zjdg2xrc13dxg1wcbubf = TinyTable.createTableFunctions("tinytable_zjdg2xrc13dxg1wcbubf");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 }, { i: '4', j: 5 } ], css_id: 'tinytable_css_y9nisfgf2z7m3co7lqcn',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_ddole4roacmdhtycplao',}, 
+          { positions: [ { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 }, { i: '4', j: 5 } ], css_id: 'tinytable_css_cdi6jmbk4qa4iw7dr4i3',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_l62ksou8qkwf6lfowjqn',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_54vbq0605402mpbvsuc3.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_zjdg2xrc13dxg1wcbubf.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -919,11 +926,11 @@ tt(x) |&gt; format_tt(i = 1, fn = fn)
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_54vbq0605402mpbvsuc3 td.tinytable_css_y9nisfgf2z7m3co7lqcn, #tinytable_54vbq0605402mpbvsuc3 th.tinytable_css_y9nisfgf2z7m3co7lqcn {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    #tinytable_54vbq0605402mpbvsuc3 td.tinytable_css_ddole4roacmdhtycplao, #tinytable_54vbq0605402mpbvsuc3 th.tinytable_css_ddole4roacmdhtycplao {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_zjdg2xrc13dxg1wcbubf td.tinytable_css_cdi6jmbk4qa4iw7dr4i3, #tinytable_zjdg2xrc13dxg1wcbubf th.tinytable_css_cdi6jmbk4qa4iw7dr4i3 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_zjdg2xrc13dxg1wcbubf td.tinytable_css_l62ksou8qkwf6lfowjqn, #tinytable_zjdg2xrc13dxg1wcbubf th.tinytable_css_l62ksou8qkwf6lfowjqn {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_54vbq0605402mpbvsuc3" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_zjdg2xrc13dxg1wcbubf" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -975,24 +982,22 @@ tt(x) |&gt; format_tt(i = 1, fn = fn)
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">"Data about cars."</span></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<!-- preamble start -->
-
-    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_11gx3j1iui6dswypprfj = TinyTable.createTableFunctions("tinytable_11gx3j1iui6dswypprfj");
+      const tableFns_yj2skwezol4w66ognyz1 = TinyTable.createTableFunctions("tinytable_yj2skwezol4w66ognyz1");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '1', j: 1 }, { i: '3', j: 1 }, { i: '1', j: 2 }, { i: '3', j: 2 }, { i: '1', j: 3 }, { i: '3', j: 3 }, { i: '1', j: 4 }, { i: '3', j: 4 }, { i: '1', j: 5 }, { i: '3', j: 5 } ], css_id: 'tinytable_css_77te0sn22a2091wrug12',}, 
+          { positions: [ { i: '1', j: 1 }, { i: '3', j: 1 }, { i: '1', j: 2 }, { i: '3', j: 2 }, { i: '1', j: 3 }, { i: '3', j: 3 }, { i: '1', j: 4 }, { i: '3', j: 4 }, { i: '1', j: 5 }, { i: '3', j: 5 } ], css_id: 'tinytable_css_sfrjaw8g0otxjcbuu7lp',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_11gx3j1iui6dswypprfj.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_yj2skwezol4w66ognyz1.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1001,10 +1006,10 @@ tt(x) |&gt; format_tt(i = 1, fn = fn)
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_11gx3j1iui6dswypprfj td.tinytable_css_77te0sn22a2091wrug12, #tinytable_11gx3j1iui6dswypprfj th.tinytable_css_77te0sn22a2091wrug12 { background-color: #ededed }
+    #tinytable_yj2skwezol4w66ognyz1 td.tinytable_css_sfrjaw8g0otxjcbuu7lp, #tinytable_yj2skwezol4w66ognyz1 th.tinytable_css_sfrjaw8g0otxjcbuu7lp { background-color: #ededed }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_11gx3j1iui6dswypprfj" style="table-layout: fixed; width: 50% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_yj2skwezol4w66ognyz1" style="table-layout: fixed; width: 50% !important; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         <caption>Data about cars.</caption>
         <thead>
               <tr>
@@ -1052,25 +1057,23 @@ tt(x) |&gt; format_tt(i = 1, fn = fn)
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(x, <span class="at">notes =</span> <span class="st">"Hello World!"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<!-- preamble start -->
-
-    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_vafzzz1svaxgezz2xgkt = TinyTable.createTableFunctions("tinytable_vafzzz1svaxgezz2xgkt");
+      const tableFns_vljw2m6cdsdzjgjqd4zc = TinyTable.createTableFunctions("tinytable_vljw2m6cdsdzjgjqd4zc");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 }, { i: '4', j: 5 } ], css_id: 'tinytable_css_yewop63ch7jg7u2zpbyi',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_sb33wzctj0jt7u53dhji',}, 
+          { positions: [ { i: '4', j: 1 }, { i: '4', j: 2 }, { i: '4', j: 3 }, { i: '4', j: 4 }, { i: '4', j: 5 } ], css_id: 'tinytable_css_967x5vixyiwun76kg2ry',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 }, { i: '0', j: 4 }, { i: '0', j: 5 } ], css_id: 'tinytable_css_8j8p9sr7kl7yurjwpc2f',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_vafzzz1svaxgezz2xgkt.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_vljw2m6cdsdzjgjqd4zc.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1079,11 +1082,11 @@ tt(x) |&gt; format_tt(i = 1, fn = fn)
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_vafzzz1svaxgezz2xgkt td.tinytable_css_yewop63ch7jg7u2zpbyi, #tinytable_vafzzz1svaxgezz2xgkt th.tinytable_css_yewop63ch7jg7u2zpbyi {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    #tinytable_vafzzz1svaxgezz2xgkt td.tinytable_css_sb33wzctj0jt7u53dhji, #tinytable_vafzzz1svaxgezz2xgkt th.tinytable_css_sb33wzctj0jt7u53dhji {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_vljw2m6cdsdzjgjqd4zc td.tinytable_css_967x5vixyiwun76kg2ry, #tinytable_vljw2m6cdsdzjgjqd4zc th.tinytable_css_967x5vixyiwun76kg2ry {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_vljw2m6cdsdzjgjqd4zc td.tinytable_css_8j8p9sr7kl7yurjwpc2f, #tinytable_vljw2m6cdsdzjgjqd4zc th.tinytable_css_8j8p9sr7kl7yurjwpc2f {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_vafzzz1svaxgezz2xgkt" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_vljw2m6cdsdzjgjqd4zc" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -1156,25 +1159,23 @@ mpg &amp; cyl\textsuperscript{*} &amp; disp &amp; hp &amp; drat \\
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>k <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">x =</span> <span class="fu">c</span>(<span class="fl">0.000123456789</span>, <span class="fl">12.4356789</span>))</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(k, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<!-- preamble start -->
-
-    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_ut56u4dghhs7mk5lpmdn = TinyTable.createTableFunctions("tinytable_ut56u4dghhs7mk5lpmdn");
+      const tableFns_xy1z7f4ho17ehwnva2zf = TinyTable.createTableFunctions("tinytable_xy1z7f4ho17ehwnva2zf");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '2', j: 1 } ], css_id: 'tinytable_css_e8fae1wseutlg5i4wk6u',}, 
-          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_m5q52ydsnb7w88zekwoh',}, 
+          { positions: [ { i: '2', j: 1 } ], css_id: 'tinytable_css_32e8y7qxr76nw6zsico3',}, 
+          { positions: [ { i: '0', j: 1 } ], css_id: 'tinytable_css_me4m55luzcwj3d6iyroj',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_ut56u4dghhs7mk5lpmdn.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_xy1z7f4ho17ehwnva2zf.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1183,11 +1184,11 @@ mpg &amp; cyl\textsuperscript{*} &amp; disp &amp; hp &amp; drat \\
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_ut56u4dghhs7mk5lpmdn td.tinytable_css_e8fae1wseutlg5i4wk6u, #tinytable_ut56u4dghhs7mk5lpmdn th.tinytable_css_e8fae1wseutlg5i4wk6u {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    #tinytable_ut56u4dghhs7mk5lpmdn td.tinytable_css_m5q52ydsnb7w88zekwoh, #tinytable_ut56u4dghhs7mk5lpmdn th.tinytable_css_m5q52ydsnb7w88zekwoh {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_xy1z7f4ho17ehwnva2zf td.tinytable_css_32e8y7qxr76nw6zsico3, #tinytable_xy1z7f4ho17ehwnva2zf th.tinytable_css_32e8y7qxr76nw6zsico3 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_xy1z7f4ho17ehwnva2zf td.tinytable_css_me4m55luzcwj3d6iyroj, #tinytable_xy1z7f4ho17ehwnva2zf th.tinytable_css_me4m55luzcwj3d6iyroj {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_ut56u4dghhs7mk5lpmdn" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_xy1z7f4ho17ehwnva2zf" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
@@ -1214,25 +1215,23 @@ mpg &amp; cyl\textsuperscript{*} &amp; disp &amp; hp &amp; drat \\
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">attr</span>(dat<span class="sc">$</span>hp, <span class="st">"label"</span>) <span class="ot">&lt;-</span> <span class="st">"Horse Power"</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tt</span>(dat, <span class="at">colnames =</span> <span class="st">"label"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
-<!-- preamble start -->
-
-    <script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.js"></script>
 
     <script>
       // Create table-specific functions using external factory
-      const tableFns_to4klignl9vv0cb4it3c = TinyTable.createTableFunctions("tinytable_to4klignl9vv0cb4it3c");
+      const tableFns_d4jqevk0sqgr1rcqkbdo = TinyTable.createTableFunctions("tinytable_d4jqevk0sqgr1rcqkbdo");
       // tinytable span after
       window.addEventListener('load', function () {
           var cellsToStyle = [
             // tinytable style arrays after
-          { positions: [ { i: '5', j: 1 }, { i: '5', j: 2 }, { i: '5', j: 3 } ], css_id: 'tinytable_css_7ospbyrhx1huavf6ldye',}, 
-          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_f06xdm2t2eia751wzjus',}, 
+          { positions: [ { i: '5', j: 1 }, { i: '5', j: 2 }, { i: '5', j: 3 } ], css_id: 'tinytable_css_ld1mfmrz7suidtp7og97',}, 
+          { positions: [ { i: '0', j: 1 }, { i: '0', j: 2 }, { i: '0', j: 3 } ], css_id: 'tinytable_css_nelwhq5411objh5c9k9d',}, 
           ];
 
           // Loop over the arrays to style the cells
           cellsToStyle.forEach(function (group) {
               group.positions.forEach(function (cell) {
-                  tableFns_to4klignl9vv0cb4it3c.styleCell(cell.i, cell.j, group.css_id);
+                  tableFns_d4jqevk0sqgr1rcqkbdo.styleCell(cell.i, cell.j, group.css_id);
               });
           });
       });
@@ -1241,11 +1240,11 @@ mpg &amp; cyl\textsuperscript{*} &amp; disp &amp; hp &amp; drat \\
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/vincentarelbundock/tinytable@main/inst/tinytable.css">
     <style>
     /* tinytable css entries after */
-    #tinytable_to4klignl9vv0cb4it3c td.tinytable_css_7ospbyrhx1huavf6ldye, #tinytable_to4klignl9vv0cb4it3c th.tinytable_css_7ospbyrhx1huavf6ldye {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
-    #tinytable_to4klignl9vv0cb4it3c td.tinytable_css_f06xdm2t2eia751wzjus, #tinytable_to4klignl9vv0cb4it3c th.tinytable_css_f06xdm2t2eia751wzjus {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_d4jqevk0sqgr1rcqkbdo td.tinytable_css_ld1mfmrz7suidtp7og97, #tinytable_d4jqevk0sqgr1rcqkbdo th.tinytable_css_ld1mfmrz7suidtp7og97 {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 0; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.08em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.1em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
+    #tinytable_d4jqevk0sqgr1rcqkbdo td.tinytable_css_nelwhq5411objh5c9k9d, #tinytable_d4jqevk0sqgr1rcqkbdo th.tinytable_css_nelwhq5411objh5c9k9d {  position: relative; --border-bottom: 1; --border-left: 0; --border-right: 0; --border-top: 1; --line-color-bottom: var(--tt-line-color); --line-color-left: var(--tt-line-color); --line-color-right: var(--tt-line-color); --line-color-top: var(--tt-line-color); --line-width-bottom: 0.05em; --line-width-left: 0.1em; --line-width-right: 0.1em; --line-width-top: 0.08em; --trim-bottom-left: 0%; --trim-bottom-right: 0%; --trim-left-bottom: 0%; --trim-left-top: 0%; --trim-right-bottom: 0%; --trim-right-top: 0%; --trim-top-left: 0%; --trim-top-right: 0%;  }
     </style>
     <div class="container">
-      <table class="tinytable" id="tinytable_to4klignl9vv0cb4it3c" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
+      <table class="tinytable" id="tinytable_d4jqevk0sqgr1rcqkbdo" style="width: auto; margin-left: auto; margin-right: auto;" data-quarto-disable-processing="true">
         
         <thead>
               <tr>
