@@ -462,6 +462,16 @@ setMethod(
     other <- inputs$other
     lines <- inputs$lines
 
+    # Column-group underlines are drawn inside the header cells by
+    # typst_build_group_header(); skip them here to avoid drawing them twice.
+    consumed <- typst_group_line_rules(x)$consumed
+    if (!is.null(lines) && length(consumed) == nrow(lines) && any(consumed)) {
+      lines <- lines[!consumed, , drop = FALSE]
+      if (nrow(lines) == 0) {
+        lines <- NULL
+      }
+    }
+
     # gutters are used for group_tt(j) but look ugly with cell fill
     if (!is.null(other) && !all(is.na(other$background))) {
       x@table_string <- lines_drop(

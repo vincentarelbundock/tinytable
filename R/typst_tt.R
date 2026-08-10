@@ -124,6 +124,72 @@ typst_body <- function(x, out) {
   lines_insert(out, body, "tinytable cell content after", "after")
 }
 
+# Identify the column-group underlines created by `group_tt(j = ...)`
+#
+# Those rules carry a `line_trim` marker, which every other backend uses to
+# leave a gap between the rules of two adjacent groups. Typst's
+# `table.hline()` snaps to column boundaries and has no trim option, so two
+# adjacent group rules merge into a single long line and the reader cannot
+# tell where one group ends and the next begins. We therefore draw them
+# inside the group header cell with `place()`, which is bounded by the cell's
+# inner width and so leaves the gap.
+#
+# Returns the rules to draw (one row per group span) and a logical vector
+# flagging the rows of `x@style_lines` they replace, so `style_eval()` can
+# skip them instead of drawing the same rule twice.
+#' @keywords internal
+#' @noRd
+typst_group_line_rules <- function(x) {
+  lines <- x@style_lines
+  n_lines <- if (is.null(lines)) 0L else nrow(lines)
+  out <- list(rules = NULL, consumed = rep(FALSE, n_lines))
+  if (n_lines == 0 || nrow(x@group_data_j) == 0) {
+    return(out)
+  }
+
+  eq <- function(a, b) !is.na(a) & !is.na(b) & a == b
+
+  rules <- list()
+  n_head <- nrow(x@group_data_j)
+  for (row_idx in seq_len(n_head)) {
+    # The bottom group row is at i = -1, the one above it at i = -2, etc.
+    i_style <- -(n_head - row_idx + 1)
+    spans <- parse_group_spans(as.character(x@group_data_j[row_idx, ]))
+    for (span_idx in seq_len(nrow(spans))) {
+      cols <- spans$start[span_idx]:spans$end[span_idx]
+      bottom <- lines$i == i_style & lines$line == "b" & lines$j %in% cols
+      trimmed <- which(bottom & !is.na(lines$line_trim))
+      if (length(trimmed) == 0) {
+        next
+      }
+      width <- lines$line_width[trimmed[1]]
+      color <- lines$line_color[trimmed[1]]
+      sel <- which(
+        bottom & eq(lines$line_width, width) & eq(lines$line_color, color)
+      )
+      # Only replace a rule that covers the whole span: a partial rule would
+      # be drawn in the wrong place by a cell-wide `place()`.
+      if (!all(cols %in% lines$j[sel])) {
+        next
+      }
+      out$consumed[sel] <- TRUE
+      rules[[length(rules) + 1L]] <- data.frame(
+        header_row = row_idx,
+        start = spans$start[span_idx],
+        end = spans$end[span_idx],
+        line_width = width,
+        line_color = color,
+        stringsAsFactors = FALSE
+      )
+    }
+  }
+
+  if (length(rules) > 0) {
+    out$rules <- do.call(rbind, rules)
+  }
+  out
+}
+
 # Helper function to process header
 typst_header <- function(x, out) {
   # Collect all header lines in correct visual order (top to bottom)
@@ -131,9 +197,15 @@ typst_header <- function(x, out) {
 
   # Add group headers (first call first = top of table)
   if (nrow(x@group_data_j) > 0) {
+    rules <- typst_group_line_rules(x)$rules
     for (row_idx in 1:nrow(x@group_data_j)) {
       group_row <- as.character(x@group_data_j[row_idx, ])
-      header_line <- typst_build_group_header(group_row)
+      row_rules <- if (is.null(rules)) {
+        NULL
+      } else {
+        rules[rules$header_row == row_idx, , drop = FALSE]
+      }
+      header_line <- typst_build_group_header(group_row, rules = row_rules)
       if (!is.null(header_line)) {
         all_headers <- c(all_headers, header_line)
       }
@@ -235,7 +307,10 @@ typst_note <- function(note, label, ncols) {
 }
 
 # Helper function to build Typst group header from group row data
-typst_build_group_header <- function(group_row) {
+#
+# `rules` (see typst_group_line_rules()) holds the underlines to draw inside
+# the span cells rather than as table-wide `table.hline()` calls.
+typst_build_group_header <- function(group_row, rules = NULL) {
   spans <- parse_group_spans(group_row)
 
   header_parts <- character(0)
@@ -248,22 +323,46 @@ typst_build_group_header <- function(group_row) {
     parts
   }
 
+  # `place()` is bounded by the cell's inner width, so the rule stops short of
+  # the column edge on both sides: adjacent group rules stay separated.
+  span_rule <- function(start, end) {
+    if (is.null(rules) || nrow(rules) == 0) {
+      return("")
+    }
+    hit <- which(rules$start == start & rules$end == end)
+    if (length(hit) == 0) {
+      return("")
+    }
+    width <- rules$line_width[hit[1]]
+    width <- format_markup_unit(if (is.na(width)) 0.1 else width, "em")
+    color <- normalize_colors(rules$line_color[hit[1]], "typst")
+    sprintf(
+      " #place(bottom, dy: 0.4em, line(length: 100%%, stroke: %s + %s))",
+      width,
+      color
+    )
+  }
+
   for (span_idx in seq_len(nrow(spans))) {
     # Empty cells for uncovered columns before this span
     header_parts <- emit_empty_until(header_parts, pos, spans$start[span_idx] - 1)
 
     span_length <- spans$end[span_idx] - spans$start[span_idx] + 1
+    rule <- span_rule(spans$start[span_idx], spans$end[span_idx])
     if (span_length > 1) {
       # Multi-column span - use table.cell with colspan
-      # Note: bottom stroke is handled by style system via add_group_line_styling_simple()
       header_parts <- c(header_parts, sprintf(
-        "table.cell(colspan: %s, align: center)[%s]",
+        "table.cell(colspan: %s, align: center)[%s%s]",
         span_length,
-        spans$label[span_idx]
+        spans$label[span_idx],
+        rule
       ))
     } else {
       # Single column - just centered content
-      header_parts <- c(header_parts, sprintf("[%s]", spans$label[span_idx]))
+      header_parts <- c(
+        header_parts,
+        sprintf("[%s%s]", spans$label[span_idx], rule)
+      )
     }
     pos <- spans$end[span_idx] + 1
   }

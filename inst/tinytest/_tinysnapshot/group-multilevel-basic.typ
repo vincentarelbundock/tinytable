@@ -57,7 +57,6 @@ block[ // start block
       if style != none and "background" in style { style.background }
     },
  table.hline(y: 1, start: 0, end: 2, stroke: 0.03em + black),
- table.hline(y: 2, start: 0, end: 1, stroke: 0.03em + black), table.hline(y: 2, start: 1, end: 2, stroke: 0.03em + black),
  table.hline(y: 3, start: 0, end: 2, stroke: 0.05em + black),
  table.hline(y: 4, start: 0, end: 2, stroke: 0.08em + black),
  table.hline(y: 0, start: 0, end: 2, stroke: 0.08em + black),
@@ -67,7 +66,7 @@ block[ // start block
     table.header(
       repeat: true,
 table.cell(colspan: 2, align: center)[hi],
-[hi], [ho],
+[hi #place(bottom, dy: 0.4em, line(length: 100%, stroke: 0.03em + black))], [ho #place(bottom, dy: 0.4em, line(length: 100%, stroke: 0.03em + black))],
 [hi], [hu],
     ),
     // tinytable header end

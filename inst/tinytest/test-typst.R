@@ -298,3 +298,36 @@ expect_snapshot_print(tab, label = "typst-issue592.typ")
 
 
 options(tinytable_print_output = NULL)
+
+
+# Column-group underlines must not merge into a single rule when two groups
+# are adjacent. Typst `table.hline()` snaps to column boundaries and has no
+# trim option, so the rules are drawn inside the group header cells with
+# `place()`, which stops short of the column edges.
+tab <- tt(head(mtcars, 4)) |>
+  group_tt(j = list("Cyl" = 1:3, "Disp" = 4:6)) |>
+  style_tt(i = 1, background = "pink")
+out <- build_tt(tab, "typst")@table_string
+expect_true(grepl(
+  "table.cell(colspan: 3, align: center)[Cyl #place(bottom, dy: 0.4em, line(length: 100%, stroke: 0.03em + black))]",
+  out,
+  fixed = TRUE
+))
+expect_true(grepl(
+  "table.cell(colspan: 3, align: center)[Disp #place(bottom, dy: 0.4em, line(length: 100%, stroke: 0.03em + black))]",
+  out,
+  fixed = TRUE
+))
+# the replaced hline is not also drawn at the table level
+expect_false(grepl("table.hline(y: 1,", out, fixed = TRUE))
+# other rules are untouched
+expect_true(grepl("table.hline(y: 2,", out, fixed = TRUE))
+
+# Single-column groups get the same treatment
+tab <- tt(head(mtcars, 4)) |> group_tt(j = list("A" = 1, "B" = 2))
+out <- build_tt(tab, "typst")@table_string
+expect_true(grepl(
+  "[A #place(bottom, dy: 0.4em, line(length: 100%, stroke: 0.03em + black))]",
+  out,
+  fixed = TRUE
+))
