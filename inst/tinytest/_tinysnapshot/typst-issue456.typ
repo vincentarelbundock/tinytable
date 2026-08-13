@@ -40,9 +40,21 @@ block[ // start block
   }
 
   // tinytable align-figure before
+  #let tinytable-coldata = (
+    ([mpg#super[a]], [21.0#super[a]], [21.0], [22.8], [21.4]),
+    ([cyl], [6], [6], [4], [6]),
+    ([disp], [160], [160], [108], [258]),
+    ([hp], [110], [110], [93], [110]),
+    ([drat], [3.90], [3.90], [3.85], [3.08]),
+  )
+
+  #context layout(size => {
+    let tinytable-naturals = tinytable-coldata.map(col => measure(grid(columns: 1, inset: 5pt, ..col)).width)
+    let tinytable-total = calc.min(tinytable-naturals.sum(), size.width)
+    block(width: tinytable-total)[
 
   #table( // tinytable table start
-    columns: (auto, auto, auto, auto, auto),
+    columns: tinytable-naturals.map(w => w.pt() * 1fr),
     stroke: none,
     rows: auto,
     align: (x, y) => {
@@ -82,6 +94,9 @@ block[ // start block
     
 
   ) // end table
+
+  ]
+  })
 
   // tinytable align-figure after
 

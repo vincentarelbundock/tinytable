@@ -42,10 +42,21 @@ block[ // start block
   }
 
   // tinytable align-figure before
+  #let tinytable-coldata = (
+    ([blah\_blah\_underscore], [21.0#super[b]], [21.0], [22.8]),
+    ([dollar\$sign], [6#super[b]], [6], [4]),
+    ([percent%sign], [160], [160], [108]),
+    ([ampersand&sign], [110], [110], [93]),
+  )
+
+  #context layout(size => {
+    let tinytable-naturals = tinytable-coldata.map(col => measure(grid(columns: 1, inset: 5pt, ..col)).width)
+    let tinytable-total = calc.min(tinytable-naturals.sum(), size.width)
+    block(width: tinytable-total)[
 
   #table( // tinytable table start
     column-gutter: 5pt,
-    columns: (auto, auto, auto, auto),
+    columns: tinytable-naturals.map(w => w.pt() * 1fr),
     stroke: none,
     rows: auto,
     align: (x, y) => {
@@ -85,6 +96,9 @@ table.cell(colspan: 2, align: center)[foo\_bar #place(bottom, dy: 0.4em, line(le
     
 
   ) // end table
+
+  ]
+  })
 
   // tinytable align-figure after
 

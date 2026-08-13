@@ -230,16 +230,77 @@ typst_header <- function(x, out) {
 }
 
 # Helper function to process column widths
+#
+# Three regimes:
+# 1. Explicit `width` (scalar or vector): fixed percentage columns, unchanged.
+#    A scalar is split equally across columns; a vector gives each column its
+#    own share with a total of `sum(width)`.
+# 2. Auto width with notes: proportional columns. Typst sizes `auto` columns
+#    to fit every cell, including the `table.footer` note cell that spans the
+#    full table, so a long note stretches the table to the page width and
+#    distorts the column proportions (#669). Instead we measure each column's
+#    natural width and convert the measurements to `fr` units, with the table
+#    total capped at the natural/page width. The measurement ignores the
+#    footer, so notes wrap at the table width instead of dictating it.
+# 3. Auto width, no notes: plain `auto` columns, unchanged.
 typst_widths <- function(x, out) {
-  if (length(x@width) == 0) {
-    width <- rep("auto", ncol(x))
-  } else if (length(x@width) == 1) {
+  if (length(x@width) == 1) {
     width <- rep(sprintf("%.2f%%", x@width / ncol(x) * 100), ncol(x))
-  } else {
-    width <- sprintf("%.2f%%", x@width * 100)
+    width <- sprintf("    columns: (%s),", paste(width, collapse = ", "))
+    return(lines_insert(out, width, "tinytable table start", "after"))
   }
-  width <- sprintf("    columns: (%s),", paste(width, collapse = ", "))
-  lines_insert(out, width, "tinytable table start", "after")
+  if (length(x@width) > 1) {
+    width <- sprintf("%.2f%%", x@width * 100)
+    width <- sprintf("    columns: (%s),", paste(width, collapse = ", "))
+    return(lines_insert(out, width, "tinytable table start", "after"))
+  }
+
+  if (length(x@notes) == 0) {
+    width <- paste(rep("auto", ncol(x)), collapse = ", ")
+    width <- sprintf("    columns: (%s),", width)
+    return(lines_insert(out, width, "tinytable table start", "after"))
+  }
+
+  # Proportional columns: measure natural column widths in Typst itself.
+  # Group headers and spanning cells are excluded from the measurement; they
+  # span several columns, so they do not pin down any single column's width.
+  coldata <- apply(x@data_body, 2, function(k) {
+    paste0("[", k, "]", collapse = ", ")
+  })
+  if (!is.null(colnames(x)) && length(colnames(x)) > 0) {
+    coldata <- paste0("[", colnames(x), "], ", coldata)
+  }
+  coldata <- sprintf("    (%s),", coldata)
+  coldata <- paste(
+    c("  #let tinytable-coldata = (", coldata, "  )", ""),
+    collapse = "\n"
+  )
+
+  # `grid` with the same inset as `table` measures the same natural width,
+  # but is immune to the `show table.cell` styling rule, whose styles are
+  # keyed by cell position and would misapply in a single-column layout.
+  total <- "calc.min(tinytable-naturals.sum(), size.width)"
+  wrapper_open <- paste(
+    c(
+      coldata,
+      "  #context layout(size => {",
+      "    let tinytable-naturals = tinytable-coldata.map(col => measure(grid(columns: 1, inset: 5pt, ..col)).width)",
+      sprintf("    let tinytable-total = %s", total),
+      "    block(width: tinytable-total)[",
+      ""
+    ),
+    collapse = "\n"
+  )
+
+  out <- lines_insert(out, wrapper_open, "tinytable align-figure before", "after")
+  out <- lines_insert(
+    out,
+    "    columns: tinytable-naturals.map(w => w.pt() * 1fr),",
+    "tinytable table start",
+    "after"
+  )
+  out <- lines_insert(out, "\n  ]\n  })", "end table", "after")
+  out
 }
 
 # Helper function to process notes
