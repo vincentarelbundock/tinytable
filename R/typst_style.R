@@ -210,6 +210,26 @@ typst_split_chunks <- function(x) {
   return(out)
 }
 
+#' Build a Typst stroke specification for a rule
+#'
+#' Solid rules keep the compact `<width> + <color>` form so that existing
+#' output is unchanged. Dashed and dotted rules require the dictionary form,
+#' which is the only way to pass `dash:`.
+#' @keywords internal
+#' @noRd
+typst_line_type <- function(lin) {
+  out <- if ("line_type" %in% names(lin)) lin$line_type else NA_character_
+  ifelse(is.na(out), "solid", out)
+}
+
+typst_stroke <- function(width, color, type) {
+  if (is.na(type) || identical(type, "solid")) {
+    sprintf("%s + %s", width, color)
+  } else {
+    sprintf('(thickness: %s, paint: %s, dash: "%s")', width, color, type)
+  }
+}
+
 typst_hlines <- function(x, lin) {
   if (nrow(lin) == 0) {
     return(x)
@@ -218,9 +238,11 @@ typst_hlines <- function(x, lin) {
   # Normalize colors once before splitting
   lin$line_color_mapped <- normalize_colors(lin$line_color, "typst")
 
+  lin$line_type <- typst_line_type(lin)
+
   tmp <- split(
     lin,
-    list(lin$i, lin$line, lin$line_color_mapped, lin$line_width),
+    list(lin$i, lin$line, lin$line_color_mapped, lin$line_width, lin$line_type),
     drop = TRUE
   )
   tmp <- lapply(tmp, function(k) {
@@ -292,18 +314,19 @@ typst_hlines <- function(x, lin) {
     color <- k$line_color_mapped[1]
     width <- if (is.na(k$line_width[1])) 0.1 else k$line_width[1]
     width <- format_markup_unit(width, "em")
+    stroke <- typst_stroke(width, color, k$line_type[1])
     out <- ""
 
     # Generate hlines for each chunk
     for (chunk in final_chunks) {
       if (grepl("t", line)) {
-        tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %s + %s),"
-        tmp <- sprintf(tmp, ymin, chunk["min"], chunk["max"], width, color)
+        tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %s),"
+        tmp <- sprintf(tmp, ymin, chunk["min"], chunk["max"], stroke)
         out <- paste(out, tmp)
       }
       if (grepl("b", line)) {
-        tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %s + %s),"
-        tmp <- sprintf(tmp, ymax, chunk["min"], chunk["max"], width, color)
+        tmp <- "table.hline(y: %s, start: %s, end: %s, stroke: %s),"
+        tmp <- sprintf(tmp, ymax, chunk["min"], chunk["max"], stroke)
         out <- paste(out, tmp)
       }
     }
@@ -386,9 +409,11 @@ typst_vlines <- function(x, lin) {
   # Normalize colors once before splitting
   lin$line_color_mapped <- normalize_colors(lin$line_color, "typst")
 
+  lin$line_type <- typst_line_type(lin)
+
   lin <- split(
     lin,
-    list(lin$j, lin$line, lin$line_color_mapped, lin$line_width),
+    list(lin$j, lin$line, lin$line_color_mapped, lin$line_width, lin$line_type),
     drop = TRUE
   )
   lin <- lapply(lin, function(k) {
@@ -403,15 +428,16 @@ typst_vlines <- function(x, lin) {
     color <- k$line_color_mapped[1]
     width <- if (is.na(k$line_width[1])) 0.1 else k$line_width[1]
     width <- format_markup_unit(width, "em")
+    stroke <- typst_stroke(width, color, k$line_type[1])
     out <- ""
     if (grepl("l", line)) {
-      tmp <- "table.vline(x: %s, start: %s, end: %s, stroke: %s + %s),"
-      tmp <- sprintf(tmp, xmin, ymin, ymax, width, color)
+      tmp <- "table.vline(x: %s, start: %s, end: %s, stroke: %s),"
+      tmp <- sprintf(tmp, xmin, ymin, ymax, stroke)
       out <- paste(out, tmp)
     }
     if (grepl("r", line)) {
-      tmp <- "table.vline(x: %s, start: %s, end: %s, stroke: %s + %s),"
-      tmp <- sprintf(tmp, xmax, ymin, ymax, width, color)
+      tmp <- "table.vline(x: %s, start: %s, end: %s, stroke: %s),"
+      tmp <- sprintf(tmp, xmax, ymin, ymax, stroke)
       out <- paste(out, tmp)
     }
     return(out)

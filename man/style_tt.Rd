@@ -26,6 +26,7 @@ style_tt(
   line = NULL,
   line_color = NULL,
   line_width = 0.1,
+  line_type = NULL,
   line_trim = NULL,
   finalize = NULL,
   output = NULL,
@@ -53,6 +54,7 @@ tt_style(
   line = NULL,
   line_color = NULL,
   line_width = 0.1,
+  line_type = NULL,
   line_trim = NULL,
   finalize = NULL,
   output = NULL,
@@ -112,7 +114,7 @@ tt_style(
 
 \item{indent}{Text indentation in em units. Positive values only.}
 
-\item{line}{String determines if solid lines (rules or borders) should be drawn around the cell, row, or column.
+\item{line}{String determines if lines (rules or borders) should be drawn around the cell, row, or column. See \code{line_type} to draw dashed or dotted lines.
 \itemize{
 \item "t": top
 \item "b": bottom
@@ -124,6 +126,8 @@ tt_style(
 \item{line_color}{Color of the line. See the \code{color} argument for details.}
 
 \item{line_width}{Width of the line in em units (default: 0.1).}
+
+\item{line_type}{Style of the line: "solid" (default), "dashed", or "dotted". Ignored in Markdown and Word output, and by the Tabulator HTML engine, which always draw solid rules.}
 
 \item{line_trim}{String specifying line trimming. Acceptable values: "l" (left), "r" (right), "lr" (both sides). When specified, shortens the lines by 0.8pt on the specified side(s). Default: NULL (no trimming).}
 

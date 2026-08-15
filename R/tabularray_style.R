@@ -384,7 +384,11 @@ process_tabularray_axis_lines <- function(x, lines, axis) {
   )
 
   line_widths <- ifelse(is.na(lines$line_width), 0.1, lines$line_width)
-  line_specs <- sprintf("solid, %s, %sem", line_colors, format_markup_num(line_widths))
+  line_types <- if ("line_type" %in% names(lines)) lines$line_type else NA_character_
+  line_types <- ifelse(is.na(line_types), "solid", line_types)
+  line_specs <- sprintf(
+    "%s, %s, %sem", line_types, line_colors, format_markup_num(line_widths)
+  )
 
   # Add trimming vectorized
   has_trim <- !is.na(lines$line_trim) & nzchar(lines$line_trim)

@@ -361,16 +361,17 @@ tt(k, width = .7, theme = "empty", colnames = FALSE) |>
 
 ## Lines (borders)
 
-The `style_tt` function allows us to customize the borders that surround eacell of a table, as well horizontal and vertical rules. To control these lines, we use the `line`, `line_width`, and `line_color` arguments. Here's a brief overview of each of these arguments:
+The `style_tt` function allows us to customize the borders that surround eacell of a table, as well horizontal and vertical rules. To control these lines, we use the `line`, `line_width`, `line_color`, and `line_type` arguments. Here's a brief overview of each of these arguments:
 
-- `line`: This argument specifies where solid lines should be drawn. It is a string that can consist of the following characters:
+- `line`: This argument specifies where lines should be drawn. It is a string that can consist of the following characters:
   - `"t"`: Draw a line at the top of the cell, row, or column.
   - `"b"`: Draw a line at the bottom of the cell, row, or column.
   - `"l"`: Draw a line at the left side of the cell, row, or column.
   - `"r"`: Draw a line at the right side of the cell, row, or column.
   - You can combine these characters to draw lines on multiple sides, such as `"tbl"` to draw lines at the top, bottom, and left sides of a cell.
-- `line_width`: This argument controls the width of the solid lines in em units (default: 0.1 em). You can adjust this value to make the lines thicker or thinner.
-- `line_color`: Specifies the color of the solid lines. You can use color names, hexadecimal codes, or other color specifications to define the line color.
+- `line_width`: This argument controls the width of the lines in em units (default: 0.1 em). You can adjust this value to make the lines thicker or thinner.
+- `line_color`: Specifies the color of the lines. You can use color names, hexadecimal codes, or other color specifications to define the line color.
+- `line_type`: Specifies the type of line: `"solid"` (default), `"dashed"`, or `"dotted"`. Markdown and Word ignore this argument and always draw solid lines.
 
 Here is an example where we draw lines around every border ("t", "b", "l", and "r") of specified cells.
 
@@ -392,6 +393,14 @@ tt(x, theme = "empty") |>
   style_tt(i = 0, line = "t", line_color = "orange", line_width = 0.4) |>
   style_tt(i = 1, line = "t", line_color = "purple", line_width = 0.2) |>
   style_tt(i = 4, line = "b", line_color = "orange", line_width = 0.4)
+```
+
+Lines can also be dashed or dotted:
+
+```{r}
+tt(x, theme = "empty") |>
+  style_tt(i = 1, line = "b", line_type = "dashed") |>
+  style_tt(i = 2, line = "b", line_type = "dotted", line_color = "orange")
 ```
 
 

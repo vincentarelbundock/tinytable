@@ -119,6 +119,10 @@ line_to_css <- function(
   width_right = .1,
   width_bottom = .1,
   width_left = .1,
+  type_top = "solid",
+  type_right = "solid",
+  type_bottom = "solid",
+  type_left = "solid",
   trim_top_left = 0,
   trim_top_right = 0,
   trim_bottom_left = 0,
@@ -155,6 +159,10 @@ line_to_css <- function(
     --line-width-left: %sem;
     --line-width-right: %sem;
     --line-width-top: %sem;
+    --line-type-bottom: %s;
+    --line-type-left: %s;
+    --line-type-right: %s;
+    --line-type-top: %s;
     --trim-bottom-left: %s%%;
     --trim-bottom-right: %s%%;
     --trim-left-bottom: %s%%;
@@ -167,6 +175,7 @@ line_to_css <- function(
     border_bottom, border_left, border_right, border_top,
     color_bottom, color_left, color_right, color_top,
     width_bottom, width_left, width_right, width_top,
+    type_bottom, type_left, type_right, type_top,
     trim_bottom_left, trim_bottom_right, trim_left_bottom, trim_left_top,
     trim_right_bottom, trim_right_top, trim_top_left, trim_top_right
   )
@@ -280,6 +289,11 @@ setMethod(
       # Default widths
       lines$line_width <- ifelse(is.na(lines$line_width), 0.1, lines$line_width)
 
+      # Default line type
+      if (!"line_type" %in% names(lines)) {
+        lines$line_type <- NA_character_
+      }
+
       # Aggregate per direction using tapply per cell_key
       cells_unique <- levels(lines$cell_key)
 
@@ -312,6 +326,19 @@ setMethod(
         )[cells_unique]
       }
 
+      # Helper to aggregate line types (first non-default, mirrors colors)
+      agg_first_type <- function(cell_key, has_dir, type) {
+        tapply(
+          ifelse(has_dir, type, NA_character_),
+          cell_key,
+          function(v) {
+            v <- v[!is.na(v)]
+            if (length(v) > 0) v[1] else "solid"
+          },
+          default = "solid"
+        )[cells_unique]
+      }
+
       # Aggregate border flags
       border_top <- agg_any(lines, lines$cell_key, has_t)
       border_right <- agg_any(lines, lines$cell_key, has_r)
@@ -329,6 +356,12 @@ setMethod(
       color_right <- agg_first_color(lines, lines$cell_key, has_r, lines$color_hex)
       color_bottom <- agg_first_color(lines, lines$cell_key, has_b, lines$color_hex)
       color_left <- agg_first_color(lines, lines$cell_key, has_l, lines$color_hex)
+
+      # Aggregate line types
+      type_top <- agg_first_type(lines$cell_key, has_t, lines$line_type)
+      type_right <- agg_first_type(lines$cell_key, has_r, lines$line_type)
+      type_bottom <- agg_first_type(lines$cell_key, has_b, lines$line_type)
+      type_left <- agg_first_type(lines$cell_key, has_l, lines$line_type)
 
       # Aggregate trim flags (any TRUE, multiply by 3 at end)
       trim_top_left <- tapply(trim_l & has_t, lines$cell_key, any, default = FALSE)[cells_unique] * 3
@@ -367,6 +400,10 @@ setMethod(
           width_right = width_right[has_border_mask],
           width_bottom = width_bottom[has_border_mask],
           width_left = width_left[has_border_mask],
+          type_top = type_top[has_border_mask],
+          type_right = type_right[has_border_mask],
+          type_bottom = type_bottom[has_border_mask],
+          type_left = type_left[has_border_mask],
           trim_top_left = trim_top_left[has_border_mask],
           trim_top_right = trim_top_right[has_border_mask],
           trim_bottom_left = trim_bottom_left[has_border_mask],
@@ -393,6 +430,10 @@ setMethod(
           width_right = line_params$width_right,
           width_bottom = line_params$width_bottom,
           width_left = line_params$width_left,
+          type_top = line_params$type_top,
+          type_right = line_params$type_right,
+          type_bottom = line_params$type_bottom,
+          type_left = line_params$type_left,
           trim_top_left = line_params$trim_top_left,
           trim_top_right = line_params$trim_top_right,
           trim_bottom_left = line_params$trim_bottom_left,

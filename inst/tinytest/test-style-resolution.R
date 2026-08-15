@@ -36,6 +36,7 @@ make_style_settings <- function() {
     line = c(NA, "b", "t", "b", "l", NA),
     line_color = c(NA, "red", "blue", "gray", "black", NA),
     line_width = c(NA, 0.1, 0.2, 0.4, 0.3, NA),
+    line_type = c(NA, "dashed", NA, "dotted", NA, NA),
     line_trim = c(NA, "lr", NA, NA, NA, NA),
     stringsAsFactors = FALSE
   )
