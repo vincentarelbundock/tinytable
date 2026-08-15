@@ -154,6 +154,12 @@
     --line-width-bottom: 0.1em;
     --line-width-left: 0.1em;
 
+    /* Border type variables */
+    --line-type-top: solid;
+    --line-type-right: solid;
+    --line-type-bottom: solid;
+    --line-type-left: solid;
+
     /* Border trim variables */
     --trim-top-left: 0%;
     --trim-top-right: 0%;
@@ -175,9 +181,9 @@
     bottom: 0;
     pointer-events: none;
     z-index: 1;
-    border-top: calc(var(--border-top) * var(--line-width-top)) solid var(--line-color-top);
-    border-right: calc(var(--border-right) * var(--line-width-right)) solid var(--line-color-right);
-    border-left: calc(var(--border-left) * var(--line-width-left)) solid var(--line-color-left);
+    border-top: calc(var(--border-top) * var(--line-width-top)) var(--line-type-top, solid) var(--line-color-top);
+    border-right: calc(var(--border-right) * var(--line-width-right)) var(--line-type-right, solid) var(--line-color-right);
+    border-left: calc(var(--border-left) * var(--line-width-left)) var(--line-type-left, solid) var(--line-color-left);
 }
 
 /* Bottom border using ::after */
@@ -187,8 +193,8 @@
     left: var(--trim-bottom-left, 0);
     right: var(--trim-bottom-right, 0);
     bottom: var(--trim-left-bottom, var(--trim-right-bottom, 0));
-    height: calc(var(--border-bottom) * var(--line-width-bottom));
-    background: var(--line-color-bottom);
+    height: 0;
+    border-bottom: calc(var(--border-bottom) * var(--line-width-bottom)) var(--line-type-bottom, solid) var(--line-color-bottom);
     pointer-events: none;
     z-index: 2;
 }

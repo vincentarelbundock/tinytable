@@ -73,6 +73,7 @@ append_lines_to_rect <- function(style_lines, style_row, rect) {
   new_entries$line <- style_row$line
   new_entries$line_color <- if ("line_color" %in% names(style_row)) style_row$line_color else NA
   new_entries$line_width <- if ("line_width" %in% names(style_row)) style_row$line_width else NA
+  new_entries$line_type <- if ("line_type" %in% names(style_row)) style_row$line_type else NA_character_
   new_entries$line_trim <- if ("line_trim" %in% names(style_row)) style_row$line_trim else NA
 
   # Append to style_lines
@@ -113,6 +114,7 @@ resolve_styles_batch <- function(style_other, style_df) {
     line = character(0),
     line_color = character(0),
     line_width = numeric(0),
+    line_type = character(0),
     line_trim = character(0),
     stringsAsFactors = FALSE
   )
@@ -185,6 +187,7 @@ resolve_styles_batch <- function(style_other, style_df) {
   if (length(has_line)) {
     line_color_col <- if ("line_color" %in% names(style_df)) style_df$line_color else rep(NA_character_, n)
     line_width_col <- if ("line_width" %in% names(style_df)) style_df$line_width else rep(NA_real_, n)
+    line_type_col  <- if ("line_type"  %in% names(style_df)) style_df$line_type  else rep(NA_character_, n)
     line_trim_col  <- if ("line_trim"  %in% names(style_df)) style_df$line_trim  else rep(NA_character_, n)
 
     line_entries <- vector("list", length(has_line))
@@ -201,6 +204,7 @@ resolve_styles_batch <- function(style_other, style_df) {
         line = style_df$line[k],
         line_color = line_color_col[k],
         line_width = line_width_col[k],
+        line_type  = line_type_col[k],
         line_trim  = line_trim_col[k],
         stringsAsFactors = FALSE,
         row.names = NULL

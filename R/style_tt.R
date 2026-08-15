@@ -8,8 +8,14 @@
 STYLE_TT_ARGS <- c(
   "bold", "italic", "monospace", "smallcap", "underline", "strikeout",
   "color", "background", "fontsize", "align", "alignv", "colspan", "rowspan",
-  "indent", "line", "line_color", "line_width", "line_trim", "finalize"
+  "indent", "line", "line_color", "line_width", "line_type", "line_trim",
+  "finalize"
 )
+
+# Line types supported by every backend that draws rules. This is the
+# intersection of CSS `border-style`, tabularray hline/vline specs, and Typst
+# `stroke(dash:)`. Do not extend without checking all three.
+LINE_TYPES <- c("solid", "dashed", "dotted")
 
 #' Apply styling to notes or caption
 #' @keywords internal
@@ -155,6 +161,7 @@ style_tt_lazy <- function(
   line = NULL,
   line_color = NULL,
   line_width = 0.1,
+  line_type = NULL,
   line_trim = NULL,
   finalize = NULL,
   ...) {
@@ -249,6 +256,7 @@ style_tt_lazy <- function(
     line = line,
     line_color = line_color,
     line_width = line_width,
+    line_type = line_type,
     line_trim = line_trim,
     html_css = html_css,
     finalize = finalize,
@@ -295,6 +303,11 @@ style_tt_lazy <- function(
     settings[["alignv"]] <- if (is.null(alignv)) NA else alignv
     settings[["line_color"]] <- if (is.null(line)) NA else line_color
     settings[["line_width"]] <- if (is.null(line)) NA else line_width
+    settings[["line_type"]] <- if (is.null(line) || is.null(line_type)) {
+      NA_character_
+    } else {
+      line_type
+    }
     settings[["html_css"]] <- if (!is.null(html_css)) {
       html_css
     } else {
@@ -310,7 +323,7 @@ style_tt_lazy <- function(
     if (!is.null(line) && nchar(line) > 1) {
       line_chars <- strsplit(line, "")[[1]]
       line_only <- settings
-      for (prop in setdiff(colnames(line_only), c("i", "j", "line_color", "line_width", "tabularray"))) {
+      for (prop in setdiff(colnames(line_only), c("i", "j", "line_color", "line_width", "line_type", "tabularray"))) {
         line_only[[prop]] <- NA
       }
       expanded_settings <- vector("list", length(line_chars))
@@ -403,6 +416,7 @@ assert_style_tt <- function(
   line,
   line_color,
   line_width,
+  line_type,
   line_trim,
   finalize = NULL,
   ...
@@ -434,6 +448,7 @@ assert_style_tt <- function(
   assert_string(line, null.ok = TRUE)
   assert_string(line_color, null.ok = TRUE) # default determined by output format
   assert_numeric(line_width, len = 1, lower = 0, null.ok = FALSE) # 0.1 default
+  assert_choice(line_type, LINE_TYPES, null.ok = TRUE)
   assert_choice(line_trim, c("l", "r", "lr"), null.ok = TRUE)
 
   # Validate that line_trim is only used with bottom lines
@@ -542,7 +557,7 @@ assert_style_tt <- function(
 #' @param colspan Number of columns a cell should span. `i` and `j` must be of length 1.
 #' @param rowspan Number of rows a cell should span. `i` and `j` must be of length 1.
 #' @param indent Text indentation in em units. Positive values only.
-#' @param line String determines if solid lines (rules or borders) should be drawn around the cell, row, or column.
+#' @param line String determines if lines (rules or borders) should be drawn around the cell, row, or column. See `line_type` to draw dashed or dotted lines.
 #' + "t": top
 #' + "b": bottom
 #' + "l": left
@@ -550,6 +565,7 @@ assert_style_tt <- function(
 #' + Can be combined such as: "lbt" to draw borders at the left, bottom, and top.
 #' @param line_color Color of the line. See the `color` argument for details.
 #' @param line_width Width of the line in em units (default: 0.1).
+#' @param line_type Style of the line: "solid" (default), "dashed", or "dotted". Ignored in Markdown and Word output, and by the Tabulator HTML engine, which always draw solid rules.
 #' @param line_trim String specifying line trimming. Acceptable values: "l" (left), "r" (right), "lr" (both sides). When specified, shortens the lines by 0.8pt on the specified side(s). Default: NULL (no trimming).
 #' @param finalize A function applied to the table object at the very end of table-building, for post-processing. For example, the function could use regular expressions to add LaTeX commands to the text version of the table hosted in `x@table_string`, or it could programmatically change the caption in `x@caption`.
 #' @param output Apply styling only when the table is rendered in the specified format. A character vector of one or more of "latex", "html", "typst", or "markdown". If `NULL` (default), styling is applied regardless of the output format.
@@ -685,6 +701,7 @@ style_tt <- function(
   line = NULL,
   line_color = NULL,
   line_width = 0.1,
+  line_type = NULL,
   line_trim = NULL,
   finalize = NULL,
   output = NULL,

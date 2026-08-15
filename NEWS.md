@@ -7,6 +7,10 @@ Breaking change:
 
 * Numeric `j` indices now refer to positions in the rendered table, matching the convention already used by `i`. Previously, `subset(select = )` remapped the `j` indices stored by earlier `style_tt()`, `format_tt()`, `plot_tt()`, and `group_tt()` calls so that they followed the columns they originally pointed to. They now stay put, and are clipped or dropped when they fall outside the narrower table. Column spans created by `group_tt(j = )` likewise keep their position and width, and are trimmed at the new right edge instead of shrinking to the columns that survived inside them. Use column names (`j = "mpg"`) to target a column by identity rather than by position.
 
+New:
+
+* `style_tt(line_type = )` draws dashed or dotted rules, in addition to the default solid ones. Supported in HTML, LaTeX, and Typst; Markdown, Word, and the Tabulator HTML engine ignore it and keep drawing solid rules. Thanks to @debruijne for Issue #659.
+
 Misc:
 
 * LaTeX `d` columns no longer mangle values with a leading comparator, such as the `<0.001` produced by p-value formatting. The default `siunitx` specification set `table-align-text-before=false`, which reserved no width ahead of the number, so `siunitx` typeset the comparator outside its column. Thanks to @vincentarelbundock for modelsummary Issue #880.
