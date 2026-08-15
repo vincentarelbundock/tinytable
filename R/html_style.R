@@ -106,6 +106,21 @@ styles_to_css <- function(x) {
 }
 
 
+# Borders are drawn on the ::before and ::after pseudo-elements by the
+# stylesheet in inst/tinytable.css. The default HTML output loads that
+# stylesheet from a CDN, where an older version may still draw solid rules
+# only. Emitting these rules alongside the table's own CSS makes dashed and
+# dotted rules work with any version of the stylesheet.
+line_type_css <- function(table_id) {
+  sprintf(
+    '    #%s :is(td, th)[class*="tinytable_css_"]::before { border-top: calc(var(--border-top) * var(--line-width-top)) var(--line-type-top, solid) var(--line-color-top); border-right: calc(var(--border-right) * var(--line-width-right)) var(--line-type-right, solid) var(--line-color-right); border-left: calc(var(--border-left) * var(--line-width-left)) var(--line-type-left, solid) var(--line-color-left); }
+    #%s :is(td, th)[class*="tinytable_css_"]::after { height: 0; background: none; border-bottom: calc(var(--border-bottom) * var(--line-width-bottom)) var(--line-type-bottom, solid) var(--line-color-bottom); }',
+    table_id,
+    table_id
+  )
+}
+
+
 line_to_css <- function(
   border_top = 0,
   border_right = 0,
@@ -265,6 +280,10 @@ setMethod(
     # Collect all styles per cell first, then consolidate
     cell_styles <- list()
 
+    # Dashed and dotted rules need CSS rules which may be missing from an older
+    # stylesheet loaded from the CDN. Inject a scoped override when used.
+    needs_line_type_css <- FALSE
+
     # Process line styles - vectorized approach
     if (!is.null(lines) && nrow(lines) > 0) {
       # Use interaction() for compact cell keys
@@ -293,6 +312,9 @@ setMethod(
       if (!"line_type" %in% names(lines)) {
         lines$line_type <- NA_character_
       }
+      needs_line_type_css <- any(
+        !is.na(lines$line_type) & lines$line_type != "solid"
+      )
 
       # Aggregate per direction using tapply per cell_key
       cells_unique <- levels(lines$cell_key)
@@ -599,6 +621,10 @@ setMethod(
         table_id, id_css, table_id, id_css, css_rule
       )
       css_entries[group_idx] <- entry
+    }
+
+    if (needs_line_type_css) {
+      css_entries <- c(line_type_css(paste0("tinytable_", x@id)), css_entries)
     }
 
     if (length(style_arrays) > 0) {

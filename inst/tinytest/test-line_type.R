@@ -54,6 +54,16 @@ h <- render(tab, "html")
 expect_true(grepl("--line-type-bottom: dashed", h, fixed = TRUE))
 expect_true(grepl("--line-type-bottom: dotted", h, fixed = TRUE))
 
+# HTML draws borders on pseudo-elements. The stylesheet is often loaded from a
+# CDN, where an older copy always draws solid rules, so the type-aware rules
+# travel with the table itself -- but only when a non-solid type is used.
+expect_true(grepl("var(--line-type-bottom, solid)", h, fixed = TRUE))
+expect_false(grepl(
+  "var(--line-type-bottom, solid)",
+  render(tt(dat) |> style_tt(i = 1, line = "b"), "html"),
+  fixed = TRUE
+))
+
 # Markdown ignores line types rather than erroring
 expect_inherits(render(tab, "markdown"), "character")
 
