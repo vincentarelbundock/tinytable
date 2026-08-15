@@ -103,6 +103,13 @@ tt(dat) |>
   style_tt(align = "d")
 expect_snapshot_print(tab, label = "latex-align_d_03.tex")
 
+# align d: comparators like `<0.001` need reserved width, otherwise siunitx
+# typesets them outside the column
+dat <- data.frame(p = c("<0.001", "0.116", "-0.506"))
+tab <- tt(dat) |> style_tt(j = 1, align = "d")
+expect_false(grepl("table-align-text-before", save_tt(tab, "latex"), fixed = TRUE))
+expect_snapshot_print(tab, label = "latex-align_d_comparator.tex")
+
 # bug discovered with vignette
 x <- tt(mtcars[1:9, 1:8]) |>
   group_tt(

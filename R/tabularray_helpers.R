@@ -65,7 +65,11 @@ define_color_preamble <- function(x, col) {
 calculate_dcolumn_spec <- function(j, x) {
     siunitx <- get_option(
         "tinytable_siunitx_table_format",
-        default = "table-format=-%s.%s,table-align-text-before=false,table-align-text-after=false,input-symbols={-,\\*+()}"
+        # `table-align-text-before` must stay at its default (true), otherwise
+        # siunitx reserves no width for comparators and a value like `<0.001`
+        # is typeset outside the column. `table-align-text-after=false` is
+        # still needed to avoid reserving width for significance stars.
+        default = "table-format=-%s.%s,table-align-text-after=false,input-symbols={-,\\*+()}"
     )
     num <- unlist(x@data_body[, j])
 

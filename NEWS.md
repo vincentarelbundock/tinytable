@@ -1,5 +1,9 @@
 # News
 
+## Development
+
+* LaTeX `d` columns no longer mangle values with a leading comparator, such as the `<0.001` produced by p-value formatting. The default `siunitx` specification set `table-align-text-before=false`, which reserved no width ahead of the number, so `siunitx` typeset the comparator outside its column. Thanks to @vincentarelbundock for modelsummary Issue #880.
+
 ## 0.18.0
 
 Breaking change:
