@@ -472,15 +472,6 @@ setMethod(
       }
     }
 
-    # gutters are used for group_tt(j) but look ugly with cell fill
-    if (!is.null(other) && !all(is.na(other$background))) {
-      x@table_string <- lines_drop(
-        x@table_string,
-        "column-gutter:",
-        fixed = TRUE
-      )
-    }
-
     # Process lines using the expanded data
     x <- process_typst_lines(x, lines)
 

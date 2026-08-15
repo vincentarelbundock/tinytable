@@ -47,7 +47,6 @@ block[ // start block
   // tinytable align-figure before
 
   #table( // tinytable table start
-    column-gutter: 5pt,
     columns: (auto, auto, auto),
     stroke: none,
     rows: auto,

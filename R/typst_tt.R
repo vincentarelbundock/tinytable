@@ -81,7 +81,6 @@ setMethod(
     out <- typst_header(x, out)
     out <- typst_widths(x, out)
     out <- typst_notes(x, out)
-    out <- typst_add_gutter(x, out)
     x@table_string <- out
     return(x)
   }
@@ -436,18 +435,4 @@ typst_build_group_header <- function(group_row, rules = NULL) {
   } else {
     NULL
   }
-}
-
-# Helper function to add column gutter if needed
-typst_add_gutter <- function(x, out) {
-  # Add column gutter if there are column groups and it's not already present
-  if (nrow(x@group_data_j) > 0 && !any(grepl("column-gutter", out))) {
-    out <- lines_insert(
-      out,
-      "    column-gutter: 5pt,",
-      "// tinytable table start",
-      "after"
-    )
-  }
-  out
 }
