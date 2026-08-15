@@ -55,7 +55,6 @@ block[ // start block
     block(width: tinytable-total)[
 
   #table( // tinytable table start
-    column-gutter: 5pt,
     columns: tinytable-naturals.map(w => w.pt() * 1fr),
     stroke: none,
     rows: auto,

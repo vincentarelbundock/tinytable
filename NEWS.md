@@ -15,6 +15,7 @@ Misc:
 * Various performance improvements.
 * Fix grouped tables with row and column grouping order dependence introduced in the recent style-resolution refactor. Thanks to @EinMaulwurf for Issue #664.
 * Simpler spanning rows in Typst. Thanks to @EinMaulwurf for Issue #665.
+* Typst: `group_tt(j = )` no longer inserts `column-gutter: 5pt` in the generated `#table()` call. The gutter used to separate the underlines of adjacent column groups; those underlines are now drawn inside the group header cells, where the cell insets already separate them, so the gutter was only widening the column grid. Grouped and ungrouped tables in the same document now share the same column widths, a document-level `#set table(column-gutter: )` rule is no longer overridden, and table width no longer changes when a cell background is set. Thanks to @amaltawfik for the detailed diagnosis and Typst test cases in Issue #674.
 * Typst: long table notes no longer stretch auto-sized tables to the full page width; columns keep their content-proportional widths and notes wrap at the table's edge. Thanks to @grantmcdermott for Issue #669.
 
 ## 0.17.0
