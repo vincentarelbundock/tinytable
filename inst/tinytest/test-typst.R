@@ -2,6 +2,12 @@ source("helpers.R")
 using("tinysnapshot")
 options(tinytable_print_output = "typst")
 
+# Use Typst's native table kind so captions inherit the document language and
+# share counters and selectors with other tables.
+tab <- tt(head(iris), caption = "A caption") |> save_tt("typst")
+expect_true(grepl("kind: table", tab, fixed = TRUE))
+expect_false(grepl("supplement:", tab, fixed = TRUE))
+
 # semi complicated
 tab <- tt(mtcars[1:4, 1:5], caption = "Hello World") |>
   group_tt(j = list("Group 1" = 4:5, "Group 2" = 2:3)) |>

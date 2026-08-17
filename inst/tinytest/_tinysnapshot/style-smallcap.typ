@@ -1,8 +1,7 @@
 #show figure: set block(breakable: false)
 #figure( // start preamble figure
   caption: smallcaps([Motor Trend Car Road Tests]),
-  kind: "tinytable",
-  supplement: "Table", // end preamble figure
+  kind: table, // end preamble figure
 
 block[ // start block
 

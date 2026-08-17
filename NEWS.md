@@ -13,6 +13,7 @@ New:
 
 Misc:
 
+* Typst figures now use the native `table` kind and automatic supplement, so table captions inherit the document language and share counters and selectors with other Typst tables. This changes the previous `kind: "tinytable"` customization hook. Thanks to @beingalink for Issue #681.
 * Typst rules no longer hard-code their color to `black` when the user does not specify one. The paint is now omitted from the `stroke:` specification, so Typst stroke folding lets the surrounding document's own styling supply it. Explicit `style_tt(line_color = )` values are unchanged. Thanks to @beingalink for Issue #679.
 * HTML rules drawn under `group_tt(j = )` column spans now use the `--tt-line-color` CSS variable, like every other rule in the table, instead of a hard-coded `black`.
 * LaTeX `d` columns no longer mangle values with a leading comparator, such as the `<0.001` produced by p-value formatting. The default `siunitx` specification set `table-align-text-before=false`, which reserved no width ahead of the number, so `siunitx` typeset the comparator outside its column. Thanks to @vincentarelbundock for modelsummary Issue #880.

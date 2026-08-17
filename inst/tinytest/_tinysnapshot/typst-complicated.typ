@@ -1,8 +1,7 @@
 #show figure: set block(breakable: false)
 #figure( // start preamble figure
   caption: text([Hello World]),
-  kind: "tinytable",
-  supplement: "Table", // end preamble figure
+  kind: table, // end preamble figure
 
 block[ // start block
 
