@@ -178,11 +178,14 @@ style_tt_lazy <- function(
   # final-table positions, so remap through @index_body.
   i <- nse_remap_i(i, x)
 
-  # Set default line_color if NULL
+  # Set default line_color if NULL. HTML and Typst both have a native mechanism
+  # to inherit the color from the surrounding document (a CSS variable, and
+  # Typst stroke folding respectively), so we leave the paint unspecified there
+  # rather than hard-coding black and overriding the user's global styling.
   if (is.null(line_color) && !is.null(line)) {
     if (identical(x@output, "html") && identical(x@html_engine, "tinytable")) {
       line_color <- "var(--tt-line-color)"
-    } else {
+    } else if (!identical(x@output, "typst")) {
       line_color <- "black"
     }
   }
@@ -301,7 +304,11 @@ style_tt_lazy <- function(
       settings[[prop]] <- if (is.null(value)) NA else as.vector(value)
     }
     settings[["alignv"]] <- if (is.null(alignv)) NA else alignv
-    settings[["line_color"]] <- if (is.null(line)) NA else line_color
+    settings[["line_color"]] <- if (is.null(line) || is.null(line_color)) {
+      NA_character_
+    } else {
+      line_color
+    }
     settings[["line_width"]] <- if (is.null(line)) NA else line_width
     settings[["line_type"]] <- if (is.null(line) || is.null(line_type)) {
       NA_character_

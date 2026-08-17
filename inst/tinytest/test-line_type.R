@@ -18,7 +18,7 @@ expect_error(
 tab <- tt(dat) |> style_tt(i = 1, line = "b")
 expect_true(grepl("--line-type-bottom: solid", render(tab, "html"), fixed = TRUE))
 expect_true(grepl("solid, black", render(tab, "latex"), fixed = TRUE))
-expect_true(grepl("stroke: 0.1em + black", render(tab, "typst"), fixed = TRUE))
+expect_true(grepl("stroke: 0.1em)", render(tab, "typst"), fixed = TRUE))
 
 # HTML: the type reaches the per-cell custom property
 tab <- tt(dat) |> style_tt(i = 1, line = "b", line_type = "dashed")
