@@ -53,8 +53,8 @@ block[ // start block
       let style = get-style(x, y)
       if style != none and "background" in style { style.background }
     },
- table.hline(y: 4, start: 0, end: 5, stroke: 0.08em + black),
- table.hline(y: 0, start: 0, end: 5, stroke: 0.08em + black),
+ table.hline(y: 4, start: 0, end: 5, stroke: 0.08em),
+ table.hline(y: 0, start: 0, end: 5, stroke: 0.08em),
     // tinytable lines before
 
     // tinytable cell content after

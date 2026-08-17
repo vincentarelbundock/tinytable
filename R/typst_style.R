@@ -222,12 +222,42 @@ typst_line_type <- function(lin) {
   ifelse(is.na(out), "solid", out)
 }
 
+# A `color` of NA means the user did not request a specific paint. We then omit
+# it from the stroke entirely: Typst stroke folding fills the missing field from
+# the surrounding `#set` rules, so the document's global styling wins instead of
+# being overridden by a hard-coded black. See Issue #679.
 typst_stroke <- function(width, color, type) {
   if (is.na(type) || identical(type, "solid")) {
-    sprintf("%s + %s", width, color)
+    if (is.na(color)) width else sprintf("%s + %s", width, color)
+  } else if (is.na(color)) {
+    sprintf('(thickness: %s, dash: "%s")', width, type)
   } else {
     sprintf('(thickness: %s, paint: %s, dash: "%s")', width, color, type)
   }
+}
+
+# split() drops NA levels, which would silently discard every line whose paint
+# is left to the document. Map NA to a sentinel before using it as a split key.
+typst_color_key <- function(color) {
+  ifelse(is.na(color), "__inherit__", color)
+}
+
+# When the very same rule is declared twice -- once with an inherited paint (by
+# theme_tinytable() or group_tt()) and once with an explicit color (by the user)
+# -- the explicit declaration wins. Without this, the two entries land in
+# different split() groups and two overlapping table.hline() calls are emitted
+# for one visual rule. See test-bugfix.R.
+typst_drop_inherited_dupes <- function(lin) {
+  inherited <- is.na(lin$line_color_mapped)
+  if (!any(inherited) || all(inherited)) {
+    return(lin)
+  }
+  key_cols <- intersect(
+    c("i", "j", "line", "line_width", "line_type", "line_trim"),
+    colnames(lin)
+  )
+  key <- do.call(paste, c(lin[key_cols], sep = "\r"))
+  lin[!(inherited & key %in% key[!inherited]), , drop = FALSE]
 }
 
 typst_hlines <- function(x, lin) {
@@ -236,13 +266,15 @@ typst_hlines <- function(x, lin) {
   }
 
   # Normalize colors once before splitting
-  lin$line_color_mapped <- normalize_colors(lin$line_color, "typst")
+  lin$line_color_mapped <- normalize_colors(lin$line_color, "typst", default = NA_character_)
 
   lin$line_type <- typst_line_type(lin)
 
+  lin <- typst_drop_inherited_dupes(lin)
+
   tmp <- split(
     lin,
-    list(lin$i, lin$line, lin$line_color_mapped, lin$line_width, lin$line_type),
+    list(lin$i, lin$line, typst_color_key(lin$line_color_mapped), lin$line_width, lin$line_type),
     drop = TRUE
   )
   tmp <- lapply(tmp, function(k) {
@@ -407,13 +439,15 @@ typst_vlines <- function(x, lin) {
   }
 
   # Normalize colors once before splitting
-  lin$line_color_mapped <- normalize_colors(lin$line_color, "typst")
+  lin$line_color_mapped <- normalize_colors(lin$line_color, "typst", default = NA_character_)
 
   lin$line_type <- typst_line_type(lin)
 
+  lin <- typst_drop_inherited_dupes(lin)
+
   lin <- split(
     lin,
-    list(lin$j, lin$line, lin$line_color_mapped, lin$line_width, lin$line_type),
+    list(lin$j, lin$line, typst_color_key(lin$line_color_mapped), lin$line_width, lin$line_type),
     drop = TRUE
   )
   lin <- lapply(lin, function(k) {
@@ -477,7 +511,7 @@ setMethod(
     align = NULL,
     alignv = NULL,
     line = NULL,
-    line_color = "black",
+    line_color = NA_character_,
     line_width = 0.1,
     indent = 0,
     midrule = FALSE, # undocumented, only used by `group_tt()`

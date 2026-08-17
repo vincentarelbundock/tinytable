@@ -16,7 +16,15 @@
 get_default_line_color <- function(x) {
   use_css_var <- identical(x@output, "html") &&
                  identical(x@html_engine, "tinytable")
-  if (use_css_var) "var(--tt-line-color)" else "black"
+  if (use_css_var) {
+    "var(--tt-line-color)"
+  } else if (identical(x@output, "typst")) {
+    # NULL leaves the paint out of the Typst stroke, so the document's own
+    # styling supplies it. See Issue #679.
+    NULL
+  } else {
+    "black"
+  }
 }
 
 style_to_css <- function(row) {

@@ -309,12 +309,12 @@ tab <- tt(head(mtcars, 4)) |>
   style_tt(i = 1, background = "pink")
 out <- build_tt(tab, "typst")@table_string
 expect_true(grepl(
-  "table.cell(colspan: 3, align: center)[Cyl #place(bottom, dy: 0.4em, line(length: 100%, stroke: 0.03em + black))]",
+  "table.cell(colspan: 3, align: center)[Cyl #place(bottom, dy: 0.4em, line(length: 100%, stroke: 0.03em))]",
   out,
   fixed = TRUE
 ))
 expect_true(grepl(
-  "table.cell(colspan: 3, align: center)[Disp #place(bottom, dy: 0.4em, line(length: 100%, stroke: 0.03em + black))]",
+  "table.cell(colspan: 3, align: center)[Disp #place(bottom, dy: 0.4em, line(length: 100%, stroke: 0.03em))]",
   out,
   fixed = TRUE
 ))
@@ -327,10 +327,26 @@ expect_true(grepl("table.hline(y: 2,", out, fixed = TRUE))
 tab <- tt(head(mtcars, 4)) |> group_tt(j = list("A" = 1, "B" = 2))
 out <- build_tt(tab, "typst")@table_string
 expect_true(grepl(
-  "[A #place(bottom, dy: 0.4em, line(length: 100%, stroke: 0.03em + black))]",
+  "[A #place(bottom, dy: 0.4em, line(length: 100%, stroke: 0.03em))]",
   out,
   fixed = TRUE
 ))
+
+# Issue #679: an unspecified `line_color` must not be hard-coded to black.
+# Typst stroke folding then lets the document's own styling supply the paint.
+tab <- tt(head(mtcars, 4)) |>
+  style_tt(i = c(1, 3), line = "b", line_width = 0.05)
+out <- build_tt(tab, "typst")@table_string
+expect_false(grepl("black", out, fixed = TRUE))
+expect_true(grepl("table.hline(y: 2, start: 0, end: 11, stroke: 0.05em),", out, fixed = TRUE))
+# dashed rules omit `paint:` rather than the whole dictionary
+tab <- tt(head(mtcars, 4)) |> style_tt(i = 1, line = "b", line_type = "dashed")
+out <- build_tt(tab, "typst")@table_string
+expect_true(grepl('stroke: (thickness: 0.1em, dash: "dashed")', out, fixed = TRUE))
+# an explicit color is still honored
+tab <- tt(head(mtcars, 4)) |> style_tt(i = 1, line = "b", line_color = "teal")
+out <- build_tt(tab, "typst")@table_string
+expect_true(grepl('stroke: 0.1em + rgb("#008080")', out, fixed = TRUE))
 
 # Issue #669: notes must not stretch the table.
 dat669 <- data.frame(

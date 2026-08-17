@@ -146,7 +146,9 @@ typst_group_line_rules <- function(x) {
     return(out)
   }
 
-  eq <- function(a, b) !is.na(a) & !is.na(b) & a == b
+  # Two unspecified values match: a NA `line_color` means "inherit the paint
+  # from the document", which is as much a shared property as an explicit color.
+  eq <- function(a, b) (is.na(a) & is.na(b)) | (!is.na(a) & !is.na(b) & a == b)
 
   rules <- list()
   n_head <- nrow(x@group_data_j)
@@ -395,11 +397,11 @@ typst_build_group_header <- function(group_row, rules = NULL) {
     }
     width <- rules$line_width[hit[1]]
     width <- format_markup_unit(if (is.na(width)) 0.1 else width, "em")
-    color <- normalize_colors(rules$line_color[hit[1]], "typst")
+    color <- normalize_colors(rules$line_color[hit[1]], "typst", default = NA_character_)
+    stroke <- if (is.na(color)) width else sprintf("%s + %s", width, color)
     sprintf(
-      " #place(bottom, dy: 0.4em, line(length: 100%%, stroke: %s + %s))",
-      width,
-      color
+      " #place(bottom, dy: 0.4em, line(length: 100%%, stroke: %s))",
+      stroke
     )
   }
 
