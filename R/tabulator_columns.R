@@ -60,7 +60,7 @@ strptime_to_luxon <- function(fmt) {
 
 # -----------------------------------------------------------------------------
 # single formatter registry (data-driven)
-# Each entry returns a list(title/field/formatter/params/…),
+# Each entry returns a list(title/field/formatter/params/...),
 # given (col_def, args).
 # -----------------------------------------------------------------------------
 tabulator_tickcross_params <- function() {
@@ -225,7 +225,7 @@ tabulator_apply_columns <- function(x) {
         }
     }
 
-    # 3) column-level styles (hozAlign, vertAlign, …)
+    # 3) column-level styles (hozAlign, vertAlign, ...)
     if (length(x@tabulator_column_styles) > 0) {
         for (nm in names(x@tabulator_column_styles)) {
             if (!nm %in% names(columns)) next
