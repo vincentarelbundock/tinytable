@@ -246,7 +246,10 @@ plot_tt_lazy <- function(
       # For LaTeX: convert backslashes to forward slashes for cross-platform compatibility
       images <- gsub("\\\\", "/", images)
     } else if (!is_quarto) {
-      images <- normalizePath(images, mustWork = FALSE)
+      # URLs are not file paths: normalizePath() would prepend the working
+      # directory and flip the slashes on Windows.
+      url <- grepl("^http", trimws(images))
+      images[!url] <- normalizePath(images[!url], mustWork = FALSE)
     }
   }
 
