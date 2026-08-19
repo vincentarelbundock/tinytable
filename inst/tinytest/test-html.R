@@ -177,33 +177,29 @@ x <- tt(mtcars[1:4, 1:5], theme = "empty") |>
 expect_snapshot_print(print_html(x), "html-borders.html")
 
 # Images
-if (Sys.info()["sysname"] == "Darwin") {
-  dat <- data.frame(
-    Species = c("Spider", "Squirrel"),
-    Image = ""
-  )
-  img <- c(
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeLPSPrPtVgPg6BLCiN6lBYy8l1xNy0T5yttVjkIk0L3Rva8Zl",
-    "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQdBlFVajljNz5qMbO622ihkIU2r6yA5whM9b8MbRGKOfJ8_UmZ"
-  )
-  dat <- tt(dat) |>
-    plot_tt(j = 2, images = img, height = 3)
-  expect_snapshot_print(print_html(dat), "html-images.html")
-}
+dat <- data.frame(
+  Species = c("Spider", "Squirrel"),
+  Image = ""
+)
+img <- c(
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSeLPSPrPtVgPg6BLCiN6lBYy8l1xNy0T5yttVjkIk0L3Rva8Zl",
+  "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQdBlFVajljNz5qMbO622ihkIU2r6yA5whM9b8MbRGKOfJ8_UmZ"
+)
+dat <- tt(dat) |>
+  plot_tt(j = 2, images = img, height = 3)
+expect_snapshot_print(print_html(dat), "html-images.html")
 
 # Issue #297: group_tt() breaks alignment
-if (Sys.info()["sysname"] == "Darwin") {
-  tab <- data.frame(
-    Person = c("Alice", "Bob", "Charlemagne"),
-    Fruit = c("Apple", "Banana", "Cantaloupe"),
-    Count = c(4, 238432, 32)
-  ) |>
-    tt() |>
-    group_tt(i = list("Thing" = 1, "Thing again" = 2)) |>
-    style_tt(i = c(1, 3), align = "l") |>
-    style_tt(j = 1:3, align = "l")
-  expect_snapshot_print(print_html(dat), "html-issue297.html")
-}
+tab <- data.frame(
+  Person = c("Alice", "Bob", "Charlemagne"),
+  Fruit = c("Apple", "Banana", "Cantaloupe"),
+  Count = c(4, 238432, 32)
+) |>
+  tt() |>
+  group_tt(i = list("Thing" = 1, "Thing again" = 2)) |>
+  style_tt(i = c(1, 3), align = "l") |>
+  style_tt(j = 1:3, align = "l")
+expect_snapshot_print(print_html(tab), "html-issue297.html")
 
 
 # # Issue #355a: rowspan breaks indexing
