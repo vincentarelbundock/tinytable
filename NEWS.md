@@ -3,8 +3,9 @@
 ## Development
 
 
-Breaking change:
+Breaking changes:
 
+* Typst figures now use the native `table` kind and automatic supplement, so table captions inherit the document language and share counters and selectors with other Typst tables. Show rules or outlines that targeted the previous custom kind, such as `figure.where(kind: "tinytable")`, no longer match; use `figure.where(kind: table)` instead. Documents that mix `tinytable` output with native Typst tables now number all tables in a single sequence. Thanks to @beingalink for Issue #681.
 * Numeric `j` indices now refer to positions in the rendered table, matching the convention already used by `i`. Previously, `subset(select = )` remapped the `j` indices stored by earlier `style_tt()`, `format_tt()`, `plot_tt()`, and `group_tt()` calls so that they followed the columns they originally pointed to. They now stay put, and are clipped or dropped when they fall outside the narrower table. Column spans created by `group_tt(j = )` likewise keep their position and width, and are trimmed at the new right edge instead of shrinking to the columns that survived inside them. Use column names (`j = "mpg"`) to target a column by identity rather than by position.
 
 New:
@@ -13,7 +14,6 @@ New:
 
 Misc:
 
-* Typst figures now use the native `table` kind and automatic supplement, so table captions inherit the document language and share counters and selectors with other Typst tables. This changes the previous `kind: "tinytable"` customization hook. Thanks to @beingalink for Issue #681.
 * Typst rules no longer hard-code their color to `black` when the user does not specify one. The paint is now omitted from the `stroke:` specification, so Typst stroke folding lets the surrounding document's own styling supply it. Explicit `style_tt(line_color = )` values are unchanged. Thanks to @beingalink for Issue #679.
 * HTML rules drawn under `group_tt(j = )` column spans now use the `--tt-line-color` CSS variable, like every other rule in the table, instead of a hard-coded `black`.
 * LaTeX `d` columns no longer mangle values with a leading comparator, such as the `<0.001` produced by p-value formatting. The default `siunitx` specification set `table-align-text-before=false`, which reserved no width ahead of the number, so `siunitx` typeset the comparator outside its column. Thanks to @vincentarelbundock for modelsummary Issue #880.
