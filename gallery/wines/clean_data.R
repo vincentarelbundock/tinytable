@@ -43,28 +43,28 @@ clean_input_data <- function(wines_df) {
 # Food pairing icon mapping
 food_to_icon <- c(
   "Agneau" = "agneau.svg",
-  "Apéritif" = "apéritif.svg",
-  "Apéritif et snacks" = "apéritif_et_snacks.svg",
-  "Bœuf" = "bœuf.svg",
+  "Apéritif" = "aperitif.svg",
+  "Apéritif et snacks" = "aperitif_et_snacks.svg",
+  "Bœuf" = "boeuf.svg",
   "Champignons" = "champignons.svg",
-  "Crustacés" = "crustacés.svg",
-  "Desserts fruités" = "desserts_fruités.svg",
-  "Desserts sucrés" = "desserts_sucrés.svg",
-  "Fromage affiné et à pâte dure" = "fromage_affiné_et_à_pâte_dure.svg",
+  "Crustacés" = "crustaces.svg",
+  "Desserts fruités" = "desserts_fruites.svg",
+  "Desserts sucrés" = "desserts_sucres.svg",
+  "Fromage affiné et à pâte dure" = "fromage_affine_et_a_pate_dure.svg",
   "Fromage bleu" = "fromage_bleu.svg",
-  "Fromage de chèvre" = "fromage_de_chèvre.svg",
-  "Fromage doux et à pâte molle" = "fromage_doux_et_à_pâte_molle.svg",
+  "Fromage de chèvre" = "fromage_de_chevre.svg",
+  "Fromage doux et à pâte molle" = "fromage_doux_et_a_pate_molle.svg",
   "Gibier" = "gibier.svg",
-  "Mets épicés" = "mets_épicés.svg",
-  "N'importe quelle camelote alimentaire fera l'affaire" = "n'importe_quelle_camelote_alimentaire_fera_l'affaire.svg",
+  "Mets épicés" = "mets_epices.svg",
+  "N'importe quelle camelote alimentaire fera l'affaire" = "nimporte_quelle_camelote_alimentaire_fera_laffaire.svg",
   "Poisson gras" = "poisson_gras.svg",
   "Poisson maigre" = "poisson_maigre.svg",
   "Porc" = "porc.svg",
-  "Pâtes" = "pâtes.svg",
+  "Pâtes" = "pates.svg",
   "Veau" = "veau.svg",
-  "Viande assaisonnée" = "viande_assaisonnée.svg",
+  "Viande assaisonnée" = "viande_assaisonnee.svg",
   "Volaille" = "volaille.svg",
-  "Végétarien" = "végétarien.svg"
+  "Végétarien" = "vegetarien.svg"
 )
 
 # Function to get grape image paths

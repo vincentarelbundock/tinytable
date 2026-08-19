@@ -12,7 +12,7 @@
 
 \item{y}{\code{tinytable} object}
 
-\item{use_names}{‘TRUE’ binds by matching column name, ‘FALSE’ by position}
+\item{use_names}{\code{TRUE} binds by matching column name, \code{FALSE} by position}
 
 \item{headers}{Logical. TRUE inserts the colnames of \code{y} as an extra row between the two tables.}
 

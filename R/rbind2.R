@@ -19,7 +19,7 @@
 #'
 #' @param x `tinytable` object
 #' @param y `tinytable` object
-#' @param use_names ‘TRUE’ binds by matching column name, ‘FALSE’ by position
+#' @param use_names `TRUE` binds by matching column name, `FALSE` by position
 #' @param headers Logical. TRUE inserts the colnames of `y` as an extra row between the two tables.
 #' @param ... Additional arguments are ignored.
 #' @aliases rbind2

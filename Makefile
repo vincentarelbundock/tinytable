@@ -1,4 +1,4 @@
-.PHONY: help website tabulator-dev tabulator-prod tabulator-build tabulator-watch tabulator-clean tabulator-check tabulator-install tabulator-serve
+.PHONY: help check-ascii website tabulator-dev tabulator-prod tabulator-build tabulator-watch tabulator-clean tabulator-check tabulator-install tabulator-serve
 
 TABULATOR_SCSS_FILE := inst/tabulator_tinytable.scss
 TABULATOR_SCSS_DEP := inst/tabulator.scss
@@ -21,7 +21,16 @@ document:  readme ## document
 readme:  README.qmd ## readme
 	quarto render README.qmd -t gfm
 
-check:  document ## check
+check-ascii:  ## fail if any tracked path contains non-ASCII characters
+	@bad=`git -c core.quotepath=false ls-files | LC_ALL=C grep '[^ -~]' || true`; \
+	if [ -n "$$bad" ]; then \
+	  echo "Non-ASCII file paths break remotes::install_github() on non-UTF-8 locales (see #679):"; \
+	  echo "$$bad"; \
+	  exit 1; \
+	fi
+	@echo "All tracked paths are ASCII."
+
+check:  document check-ascii ## check
 	Rscript -e "devtools::check()"
 
 install: document  ## install
