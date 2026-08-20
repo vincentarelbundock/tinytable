@@ -435,9 +435,27 @@ format_tt_lazy <- function(
   # quarto processing needs a rendered table string; no-op on plain data
   # frames and vectors
   if (isTRUE(quarto) && inherits(x, "tinytable")) {
-    for (col in j) {
-      x <- format_vector_quarto(i = i, col = col, x = x)
+    if (isTRUE(x@output %in% c("html", "bootstrap", "tabulator"))) {
+      fun <- function(z) {
+        z@table_string <- sub(
+          "data-quarto-disable-processing='true'",
+          "data-quarto-disable-processing='false'",
+          z@table_string,
+          fixed = TRUE
+        )
+        return(z)
+      }
+      x <- style_tt(x, finalize = fun)
     }
+    x <- apply_format(
+      x = x,
+      i = i,
+      j = j,
+      format_fn = format_vector_quarto,
+      components = components,
+      original_data = FALSE,
+      output_format = output_format
+    )
   }
 
   # output

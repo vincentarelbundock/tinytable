@@ -352,6 +352,22 @@ expect_equivalent(x, c("1K", "1M", "1B", "1T"))
 expect_equivalent(format_tt(c("_a_"), markdown = TRUE), "_a_")
 expect_equivalent(format_tt(data.frame(x = "a"), quarto = TRUE)$x, "a")
 
+# Issue #685: quarto = TRUE with group_tt(i) must not append NA rows
+thing <- data.frame(
+  type = c("Fruit", "Fruit", "Vegetable", "Vegetable"),
+  thing = c("Apple", "Banana", "Carrot", "Eggplant"),
+  count = c(1, 2, 3, 4)
+)
+x <- thing[, 2:3] |>
+  tt() |>
+  group_tt(i = thing$type) |>
+  format_tt(quarto = TRUE)
+s <- save_tt(x, "html")
+expect_false(grepl(">NA</td>", s, fixed = TRUE))
+expect_true(grepl('<span data-qmd="Eggplant"></span>', s, fixed = TRUE))
+expect_true(grepl('<span data-qmd="Vegetable"></span>', s, fixed = TRUE))
+expect_true(grepl("data-quarto-disable-processing='false'", s, fixed = TRUE))
+
 # component-only i (e.g. "caption") must not reformat body cells
 tab <- tt(data.frame(x = c(1.23456, 2.34567)), caption = "cap") |>
   format_tt(i = "caption", digits = 1) |>

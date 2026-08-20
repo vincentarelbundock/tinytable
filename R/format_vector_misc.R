@@ -68,32 +68,26 @@ format_vector_linebreak <- function(vec, linebreak = NULL, output = NULL, ...) {
   gsub(linebreak, lb, vec, fixed = TRUE)
 }
 
-format_vector_quarto <- function(i, col, x, ...) {
-  out <- x@data_body
-  if (isTRUE(x@output %in% c("html", "bootstrap", "tabulator"))) {
-    fun <- function(z) {
-      z@table_string <- sub(
-        "data-quarto-disable-processing='true'",
-        "data-quarto-disable-processing='false'",
-        z@table_string,
-        fixed = TRUE
-      )
-      return(z)
-    }
-    x <- style_tt(x, finalize = fun)
-    out[i, col] <- sprintf(
-      '<span data-qmd="%s"></span>',
-      out[i, col, drop = TRUE]
-    )
-  } else if (isTRUE(x@output == "latex")) {
-    assert_dependency("base64enc")
-    tmp <- sapply(
-      out[i, col, drop = TRUE],
-      function(z) base64enc::base64encode(charToRaw(z))
-    )
-    out[i, col] <- sprintf("\\QuartoMarkdownBase64{%s}", tmp)
+format_vector_quarto <- function(vec, output_format, ...) {
+  if (is.null(output_format)) {
+    return(NULL)
   }
 
-  x@data_body <- out
-  return(x)
+  if (output_format %in% c("html", "bootstrap", "tabulator")) {
+    sprintf('<span data-qmd="%s"></span>', vec)
+  } else if (output_format == "latex") {
+    assert_dependency("base64enc")
+    vapply(
+      vec,
+      function(z) {
+        sprintf(
+          "\\QuartoMarkdownBase64{%s}",
+          base64enc::base64encode(charToRaw(z))
+        )
+      },
+      character(1)
+    )
+  } else {
+    vec
+  }
 }
