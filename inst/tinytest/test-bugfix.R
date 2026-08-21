@@ -91,3 +91,32 @@ dup <- hlines[grepl("y: 3,", hlines, fixed = TRUE)]
 expect_true(length(dup) >= 1)
 n_dup_segments <- lengths(regmatches(dup, gregexpr("table[.]hline", dup)))
 expect_true(n_dup_segments == 1)
+
+
+# Issue #687: tt() must not depend on the `initialize` S4 method being in the
+# live dispatch table. That method is only merged there by cacheMetaData() if
+# `methods` is attached when the namespace loads, so a session started without
+# it (R_DEFAULT_PACKAGES lacking "methods") used to fail with
+# "invalid name for slot of class tinytable: colnames".
+pkgdir <- system.file(package = "tinytable")
+installed <- nzchar(pkgdir) && file.exists(file.path(pkgdir, "Meta", "package.rds"))
+if (installed) {
+  script <- tempfile(fileext = ".R")
+  writeLines(
+    c(
+      sprintf(".libPaths(%s)", deparse1(.libPaths())),
+      'x <- tinytable::tt(data.frame(a = 1:2, b = 3:4), digits = 3)',
+      'x <- tinytable::style_tt(x, j = 1:2, align = "c")',
+      'stopifnot(identical(colnames(x@data), c("a", "b")))',
+      'invisible(tinytable::save_tt(x, "markdown"))'
+    ),
+    script
+  )
+  status <- system2(
+    file.path(R.home("bin"), "Rscript"),
+    c("--default-packages=utils,stats,grDevices,graphics,datasets,base", shQuote(script)),
+    stdout = FALSE,
+    stderr = FALSE
+  )
+  expect_equal(status, 0L)
+}

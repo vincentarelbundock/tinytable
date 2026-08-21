@@ -177,8 +177,10 @@ tt.default <- function(
   tab <- data.frame(lapply(tab, trimws))
   colnames(tab) <- colnames(x)
 
-  out <- methods::new(
-    "tinytable",
+  # `tinytable_init()` rather than `new("tinytable", ...)`: the `initialize`
+  # method is not always in the live S4 dispatch table (see #687).
+  out <- tinytable_init(
+    methods::new("tinytable"),
     data = x,
     data_body = tab,
     caption = caption,

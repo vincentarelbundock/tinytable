@@ -73,101 +73,112 @@ setClass(
   )
 )
 
+# Fill the slots of a `tinytable` object.
+#
+# This is a plain function and not only an `initialize` method because methods
+# defined for generics owned by the `methods` package are merged into the live
+# dispatch table by `cacheMetaData()` at load time, and that merge is skipped
+# when `methods` is not attached as the namespace loads. In that state,
+# `new("tinytable", colnames = ...)` silently falls back to the default
+# `initialize()`, which treats every argument as a slot name and fails with
+# "invalid name for slot of class tinytable: colnames" (#687). Calling this
+# function directly keeps `tt()` independent of S4 dispatch.
+tinytable_init <- function(.Object,
+                           data = data.frame(),
+                           caption = NULL,
+                           notes = NULL,
+                           theme = list("default"),
+                           data_body = data.frame(),
+                           placement = NULL,
+                           width = NULL,
+                           height = NULL,
+                           colnames = TRUE) {
+  # explicit
+  .Object@data <- data
+  .Object@data_body <- data_body
+  .Object@theme <- theme
+  .Object@placement <- placement
+  .Object@caption <- caption
+  .Object@width <- width
+  .Object@notes <- notes
+  .Object@height <- height
+  # Generate unique ID first
+  .Object@id <- get_id("tinytable_")
+
+  # Default to NULL - framework CSS will be loaded externally
+  .Object@html_css_rule <- NULL
+  .Object@html_script <- NULL
+
+  # dynamic
+  .Object@nrow <- nrow(.Object@data)
+  .Object@ncol <- ncol(.Object@data)
+  .Object@nhead <- if (is.null(colnames(data)) || isFALSE(colnames)) 0 else 1
+
+  # colnames
+  if (isTRUE(colnames)) {
+    .Object@names <- colnames(data)
+  } else if (isFALSE(colnames) || is.null(colnames(data))) {
+    .Object@names <- character()
+  } else if (identical(colnames, "label")) {
+    cols <- character()
+    for (cn in colnames(data)) {
+      lab <- attr(data[[cn]], "label")
+      if (!is.null(lab)) {
+        cols <- c(cols, lab)
+      } else {
+        cols <- c(cols, cn)
+      }
+    }
+    .Object@names <- cols
+  }
+
+  # empty
+  .Object@ansi <- FALSE
+  .Object@grid_hline <- TRUE
+  .Object@grid_hline_header <- TRUE
+  .Object@grid_vline <- TRUE
+  .Object@group_data_i <- data.frame()
+  .Object@group_data_j <- data.frame()
+  .Object@group_index_i <- numeric(0)
+  .Object@html_class <- "tinytable"
+  .Object@html_engine <- "tinytable"
+  .Object@html_portable <- FALSE
+  .Object@typst_portable <- FALSE
+  .Object@index_body <- numeric(0)
+  .Object@latex_engine <- "xelatex"
+  .Object@latex_preamble <- TRUE
+  .Object@lazy_finalize <- list()
+  .Object@lazy_format <- list()
+  .Object@lazy_plot <- list()
+  .Object@lazy_prepare <- list()
+  .Object@markdown_style <- "grid"
+  .Object@output <- "tinytable"
+  .Object@output_dir <- getwd()
+  .Object@style <- data.frame()
+  .Object@style_other <- data.frame()
+  .Object@style_lines <- data.frame()
+  .Object@tabularray_inner <- character()
+  .Object@tabularray_outer <- character()
+  .Object@tabulator_column_formatters <- list()
+  .Object@tabulator_column_styles <- list()
+  .Object@tabulator_columns <- list()
+  .Object@tabulator_css_rule <- ""
+  .Object@tabulator_format_bool <- FALSE
+  .Object@tabulator_options <- ""
+  .Object@tabulator_post_init <- ""
+  .Object@tabulator_search <- NULL
+  .Object@tabulator_stylesheet <- ""
+
+  return(.Object)
+}
+
 #' Method for a tinytable S4 object
 #'
 #' @inheritParams tt
 #' @keywords internal
-setMethod(
-  "initialize",
-  "tinytable",
-  function(.Object,
-           data = data.frame(),
-           caption = NULL,
-           notes = NULL,
-           theme = list("default"),
-           data_body = data.frame(),
-           placement = NULL,
-           width = NULL,
-           height = NULL,
-           colnames = TRUE) {
-    # explicit
-    .Object@data <- data
-    .Object@data_body <- data_body
-    .Object@theme <- theme
-    .Object@placement <- placement
-    .Object@caption <- caption
-    .Object@width <- width
-    .Object@notes <- notes
-    .Object@height <- height
-    # Generate unique ID first
-    .Object@id <- get_id("tinytable_")
-
-    # Default to NULL - framework CSS will be loaded externally
-    .Object@html_css_rule <- NULL
-    .Object@html_script <- NULL
-
-    # dynamic
-    .Object@nrow <- nrow(.Object@data)
-    .Object@ncol <- ncol(.Object@data)
-    .Object@nhead <- if (is.null(colnames(data)) || isFALSE(colnames)) 0 else 1
-
-    # colnames
-    if (isTRUE(colnames)) {
-      .Object@names <- colnames(data)
-    } else if (isFALSE(colnames) || is.null(colnames(data))) {
-      .Object@names <- character()
-    } else if (identical(colnames, "label")) {
-      cols <- character()
-      for (cn in colnames(data)) {
-        lab <- attr(data[[cn]], "label")
-        if (!is.null(lab)) {
-          cols <- c(cols, lab)
-        } else {
-          cols <- c(cols, cn)
-        }
-      }
-      .Object@names <- cols
-    }
-
-    # empty
-    .Object@ansi <- FALSE
-    .Object@grid_hline <- TRUE
-    .Object@grid_hline_header <- TRUE
-    .Object@grid_vline <- TRUE
-    .Object@group_data_i <- data.frame()
-    .Object@group_data_j <- data.frame()
-    .Object@group_index_i <- numeric(0)
-    .Object@html_class <- "tinytable"
-    .Object@html_engine <- "tinytable"
-    .Object@html_portable <- FALSE
-    .Object@typst_portable <- FALSE
-    .Object@index_body <- numeric(0)
-    .Object@latex_engine <- "xelatex"
-    .Object@latex_preamble <- TRUE
-    .Object@lazy_finalize <- list()
-    .Object@lazy_format <- list()
-    .Object@lazy_plot <- list()
-    .Object@lazy_prepare <- list()
-    .Object@markdown_style <- "grid"
-    .Object@output <- "tinytable"
-    .Object@output_dir <- getwd()
-    .Object@style <- data.frame()
-    .Object@style_other <- data.frame()
-    .Object@style_lines <- data.frame()
-    .Object@tabularray_inner <- character()
-    .Object@tabularray_outer <- character()
-    .Object@tabulator_column_formatters <- list()
-    .Object@tabulator_column_styles <- list()
-    .Object@tabulator_columns <- list()
-    .Object@tabulator_css_rule <- ""
-    .Object@tabulator_format_bool <- FALSE
-    .Object@tabulator_options <- ""
-    .Object@tabulator_post_init <- ""
-    .Object@tabulator_search <- NULL
-    .Object@tabulator_stylesheet <- ""
-
-    return(.Object)
-  })
+setMethod("initialize", "tinytable", function(.Object, ...) {
+  tinytable_init(.Object, ...)
+})
 
 #' Method for a tinytable S4 object
 #'

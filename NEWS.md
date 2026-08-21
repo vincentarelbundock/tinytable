@@ -14,6 +14,7 @@ New:
 
 Misc:
 
+* `tt()` no longer fails in R sessions started without the `methods` package attached. Table construction relied on an S4 `initialize` method, which is merged into the live dispatch table only when `methods` is attached as the namespace loads. Without it, `new()` fell back to the default `initialize()` and quit with "invalid name for slot of class tinytable: colnames". Slots are now filled by an ordinary function, so no dispatch is involved. Thanks to @bastienchassagnol for Issue #687.
 * `plot_tt(images = )` no longer mangles remote image URLs on Windows. `normalizePath()` was applied to every entry, and Windows treats a URL as a relative path: it prepended the working directory and flipped the slashes, so the image was fetched from disk instead of the network. URLs are now passed through untouched on every platform.
 * Typst rules no longer hard-code their color to `black` when the user does not specify one. The paint is now omitted from the `stroke:` specification, so Typst stroke folding lets the surrounding document's own styling supply it. Explicit `style_tt(line_color = )` values are unchanged. Thanks to @beingalink for Issue #679.
 * HTML rules drawn under `group_tt(j = )` column spans now use the `--tt-line-color` CSS variable, like every other rule in the table, instead of a hard-coded `black`.
