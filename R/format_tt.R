@@ -435,6 +435,11 @@ format_tt_lazy <- function(
   # quarto processing needs a rendered table string; no-op on plain data
   # frames and vectors
   if (isTRUE(quarto) && inherits(x, "tinytable")) {
+    # assert at the call site because `apply_format()` swallows errors raised
+    # by the formatter, which would silently skip the cells
+    if (isTRUE(x@output == "latex")) {
+      assert_dependency("base64enc")
+    }
     if (isTRUE(x@output %in% c("html", "bootstrap", "tabulator"))) {
       fun <- function(z) {
         z@table_string <- sub(
