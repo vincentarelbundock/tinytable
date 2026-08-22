@@ -30,6 +30,8 @@
 #'
 #' 1. The `\QuartoMarkdownBase64{}` LaTeX macro may not process references and markdown as expected
 #' 2. Quarto processing may conflict with `tinytable` styling/formatting
+#' 3. `quarto=TRUE` should not be combined with `markdown=TRUE`. Quarto hands the cell content to Pandoc, which renders the markdown itself. Pre-rendering the markdown in `tinytable` feeds HTML back to Pandoc and inserts spurious line breaks.
+#' 4. In HTML, cell content is wrapped in a `<span>`, which cannot legally hold block-level elements. Pandoc thus flattens block content such as bulleted lists to inline elements: list markers are dropped and block boundaries become `<br>`. See below for a workaround.
 #'
 #' Options:
 #'
@@ -41,6 +43,22 @@
 #' x <- data.frame(Math = "x^2^", Citation = "@Lovelace1842")
 #' fn <- function(z) sprintf("<span data-qmd='%s'></span>", z)
 #' tt(x) |> format_tt(i = 1, fn = fn)
+#' ```
+#'
+#' To render block-level markdown such as bulleted lists, emit a `<div>` instead of a `<span>`:
+#'
+#' ```r
+#' options(tinytable_quarto_disable_processing = FALSE)
+#'
+#' x <- data.frame(Thing = "Apple", Values = "- 50\n- 60\n- 70")
+#' div_it <- function(z) sprintf('<div data-qmd="%s"></div>', z)
+#' tt(x) |> format_tt(j = 2, fn = div_it, output = "html")
+#' ```
+#'
+#' A `<div>` wraps cell content in `<p>` or `<ul>` tags, which carry a bottom margin. Add this to the document to keep cells tight:
+#'
+#' ```html
+#' <style>.table td > :last-child { margin-bottom: 0; }</style>
 #' ```
 #'
 #' For more details on Quarto table processing: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing

@@ -117,7 +117,7 @@ tt_format(
 
 \item{markdown}{Logical; if TRUE, render markdown syntax in cells. Ex: \verb{_italicized text_} is properly italicized in HTML and LaTeX.}
 
-\item{quarto}{Logical. Enable Quarto data processing and wrap cell content in a \code{data-qmd} span (HTML) or \verb{\\QuartoMarkdownBase64\{\}} macro (LaTeX). See warnings in the Global Options section below.}
+\item{quarto}{Logical. Enable Quarto data processing and wrap cell content in a \code{data-qmd} span (HTML) or \verb{\\QuartoMarkdownBase64\{\}} macro (LaTeX). Do not combine with \code{markdown=TRUE}: Quarto hands the cell content to Pandoc, which renders the markdown itself, so pre-rendering it in \code{tinytable} feeds HTML back to Pandoc and inserts spurious line breaks. See warnings in the Global Options section below.}
 
 \item{fn}{Function for custom formatting. Accepts a vector and returns a character vector of the same length.}
 
@@ -168,6 +168,8 @@ The \code{format_tt(quarto=TRUE)} argument enables Quarto data processing with s
 \enumerate{
 \item The \verb{\\QuartoMarkdownBase64\{\}} LaTeX macro may not process references and markdown as expected
 \item Quarto processing may conflict with \code{tinytable} styling/formatting
+\item \code{quarto=TRUE} should not be combined with \code{markdown=TRUE}. Quarto hands the cell content to Pandoc, which renders the markdown itself. Pre-rendering the markdown in \code{tinytable} feeds HTML back to Pandoc and inserts spurious line breaks.
+\item In HTML, cell content is wrapped in a \verb{<span>}, which cannot legally hold block-level elements. Pandoc thus flattens block content such as bulleted lists to inline elements: list markers are dropped and block boundaries become \verb{<br>}. See below for a workaround.
 }
 
 Options:
@@ -180,6 +182,20 @@ Example of Quarto-specific code in cells:
 \if{html}{\out{<div class="sourceCode r">}}\preformatted{x <- data.frame(Math = "x^2^", Citation = "@Lovelace1842")
 fn <- function(z) sprintf("<span data-qmd='\%s'></span>", z)
 tt(x) |> format_tt(i = 1, fn = fn)
+}\if{html}{\out{</div>}}
+
+To render block-level markdown such as bulleted lists, emit a \verb{<div>} instead of a \verb{<span>}:
+
+\if{html}{\out{<div class="sourceCode r">}}\preformatted{options(tinytable_quarto_disable_processing = FALSE)
+
+x <- data.frame(Thing = "Apple", Values = "- 50\\n- 60\\n- 70")
+div_it <- function(z) sprintf('<div data-qmd="\%s"></div>', z)
+tt(x) |> format_tt(j = 2, fn = div_it, output = "html")
+}\if{html}{\out{</div>}}
+
+A \verb{<div>} wraps cell content in \verb{<p>} or \verb{<ul>} tags, which carry a bottom margin. Add this to the document to keep cells tight:
+
+\if{html}{\out{<div class="sourceCode html">}}\preformatted{<style>.table td > :last-child \{ margin-bottom: 0; \}</style>
 }\if{html}{\out{</div>}}
 
 For more details on Quarto table processing: https://quarto.org/docs/authoring/tables.html#disabling-quarto-table-processing

@@ -75,7 +75,7 @@ format_vector(
 
 \item{markdown}{Logical; if TRUE, render markdown syntax in cells. Ex: \verb{_italicized text_} is properly italicized in HTML and LaTeX.}
 
-\item{quarto}{Logical. Enable Quarto data processing and wrap cell content in a \code{data-qmd} span (HTML) or \verb{\\QuartoMarkdownBase64\{\}} macro (LaTeX). See warnings in the Global Options section below.}
+\item{quarto}{Logical. Enable Quarto data processing and wrap cell content in a \code{data-qmd} span (HTML) or \verb{\\QuartoMarkdownBase64\{\}} macro (LaTeX). Do not combine with \code{markdown=TRUE}: Quarto hands the cell content to Pandoc, which renders the markdown itself, so pre-rendering it in \code{tinytable} feeds HTML back to Pandoc and inserts spurious line breaks. See warnings in the Global Options section below.}
 
 \item{fn}{Function for custom formatting. Accepts a vector and returns a character vector of the same length.}
 

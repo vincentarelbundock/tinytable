@@ -37,7 +37,7 @@
 #' - If `i` and `j` are both `NULL`, escape all cells, column names, caption, notes, and spanning labels created by `group_tt()`.
 #' @param markdown Logical; if TRUE, render markdown syntax in cells. Ex: `_italicized text_` is properly italicized in HTML and LaTeX.
 #' @param fn Function for custom formatting. Accepts a vector and returns a character vector of the same length.
-#' @param quarto Logical. Enable Quarto data processing and wrap cell content in a `data-qmd` span (HTML) or `\QuartoMarkdownBase64{}` macro (LaTeX). See warnings in the Global Options section below.
+#' @param quarto Logical. Enable Quarto data processing and wrap cell content in a `data-qmd` span (HTML) or `\QuartoMarkdownBase64{}` macro (LaTeX). Do not combine with `markdown=TRUE`: Quarto hands the cell content to Pandoc, which renders the markdown itself, so pre-rendering it in `tinytable` feeds HTML back to Pandoc and inserts spurious line breaks. See warnings in the Global Options section below.
 #' @param sprintf String passed to the `?sprintf` function to format numbers or interpolate strings with a user-defined pattern (similar to the `glue` package, but using Base R).
 #' @param linebreak NULL or a single string. If it is a string, replaces that string with appropriate line break sequences depending on the output format (HTML: `<br>`, LaTeX: `\\\\`, Typst: `\\ `). Markdown output is excluded from line break replacement.
 #' @param output Apply formatting only if the `tt()` object is rendered in the specified format. A character vector of one or more of "latex", "html", "typst", or "markdown". If `NULL` (default), apply formatting regardless of the output format.
