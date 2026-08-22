@@ -4,45 +4,10 @@
 \alias{initialize,tinytable-method}
 \title{Method for a tinytable S4 object}
 \usage{
-\S4method{initialize}{tinytable}(
-  .Object,
-  data = data.frame(),
-  caption = NULL,
-  notes = NULL,
-  theme = list("default"),
-  data_body = data.frame(),
-  placement = NULL,
-  width = NULL,
-  height = NULL,
-  colnames = TRUE
-)
+\S4method{initialize}{tinytable}(.Object, ...)
 }
 \arguments{
-\item{caption}{A string that will be used as the caption of the table. This argument should \emph{not} be used in Quarto or Rmarkdown documents. In that context, please use the appropriate chunk options.}
-
-\item{notes}{Notes to append to the bottom of the table. This argument accepts several different inputs:
-\itemize{
-\item Single string insert a single note: \code{"blah blah"}
-\item Multiple strings insert multiple notes sequentially: \code{list("Hello world", "Foo bar")}
-\item A named list inserts a list with the name as superscript: \code{list("a" = list("Hello World"))}
-\item A named list with positions inserts markers as superscripts inside table cells: \code{list("a" = list(i = 0:1, j = 2, text = "Hello World"))}
-}}
-
-\item{theme}{Function or string.
-\itemize{
-\item String: grid, revealjs, rotate, striped, empty
-\item Function: Applied to the \code{tinytable} object.
-}}
-
-\item{width}{Table or column width.
-\itemize{
-\item Single numeric value smaller than or equal to 1 determines the full table width, in proportion of line width.
-\item Numeric vector of length equal to the number of columns in \code{x} determines the width of each column, in proportion of line width. If the sum of \code{width} exceeds 1, each element is divided by \code{sum(width)}. This makes the table full-width with relative column sizes.
-}}
-
-\item{height}{Row height in em units. Single numeric value greater than zero that determines the row height spacing.}
-
-\item{colnames}{\code{TRUE}, \code{FALSE}, or "label". If "label", use the \code{attr(x$col,"label")} attribute if available and fall back on column names otherwise.}
+\item{...}{Additional arguments are ignored}
 }
 \description{
 Method for a tinytable S4 object
