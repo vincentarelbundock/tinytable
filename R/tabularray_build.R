@@ -80,15 +80,16 @@ setMethod(
           type = "outer"
         )
       }
+      # Empty groups give unlabelled notes distinct, invisible identifiers.
+      # Spaces cannot distinguish them because TeX collapses repeated spaces.
       if (is.null(names(x@notes))) {
-        lab <- sapply(seq_along(x@notes), function(k) strrep(" ", k - 1))
+        lab <- sapply(seq_along(x@notes), function(k) strrep("{}", k - 1))
       } else {
         lab <- NULL
         pad <- 0
         for (i in seq_along(x@notes)) {
-          # tabularray requires unique labels, but multiple blanks work
           if (names(x@notes)[i] == "") {
-            lab[i] <- strrep(" ", pad) # not sure why -1 is necessary in tabularray
+            lab[i] <- strrep("{}", pad)
             pad <- pad + 1
           } else {
             lab[i] <- names(x@notes)[i]
