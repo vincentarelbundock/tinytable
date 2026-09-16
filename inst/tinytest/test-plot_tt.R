@@ -1,3 +1,14 @@
+source("helpers.R")
+
+# plot_tt(data = ...) writes PNG files to a `tinytable_assets/` directory
+# relative to the working directory. Under R CMD check (tinytest::test_package)
+# that is the installed package's tinytest/ folder, which CRAN mounts
+# read-only. at_home() is FALSE there and TRUE under run_test_dir()/scrutin,
+# so local runs and GitHub CI still exercise this file.
+if (!at_home()) {
+  exit_file("Skipped under R CMD check: writes to the working directory")
+}
+
 # issue #95: plot_tt() can select j with a regex
 tab <- data.frame(a = 1, b = 2) |>
   tt() |>
