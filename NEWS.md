@@ -2,6 +2,8 @@
 
 ## Development
 
+* LaTeX and PDF output now preserves all unlabelled table notes when there are three or more. Thanks to @retodomax for [Issue #692](https://github.com/vincentarelbundock/tinytable/issues/692).
+
 * `format_tt(quarto = TRUE)` no longer appends spurious `NA` rows to tables with `group_tt(i = )` row groups, and no longer wraps the wrong cells. The Quarto wrapper indexed `@data_body` directly with row positions expressed in the rendered-table numbering, which includes group label rows; it now goes through the same `apply_format()` dispatcher as every other formatter. As a consequence, `quarto = TRUE` now also applies to column names, captions, notes, and group labels by default, matching the behavior of `markdown = TRUE`. Thanks to @andrewheiss for Issue #685.
 
 ## 0.18.0
