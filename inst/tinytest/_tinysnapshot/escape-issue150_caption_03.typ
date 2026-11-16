@@ -42,14 +42,26 @@ block[ // start block
 
   // tinytable align-figure before
   #let tinytable-coldata = (
-    ([blah\_blah\_underscore], [21.0#super[b]], [21.0], [22.8]),
-    ([dollar\$sign], [6#super[b]], [6], [4]),
-    ([percent%sign], [160], [160], [108]),
-    ([ampersand&sign], [110], [110], [93]),
+    ([blah\_blah\_underscore], [21.0#super[b]], [21.0], [22.8],),
+    ([dollar\$sign], [6#super[b]], [6], [4],),
+    ([percent%sign], [160], [160], [108],),
+    ([ampersand&sign], [110], [110], [93],),
   )
 
+  #let tinytable-spans = ()
+
   #context layout(size => {
+    let tinytable-measure = cell => measure(grid(columns: 1, inset: 5pt, cell)).width
     let tinytable-naturals = tinytable-coldata.map(col => measure(grid(columns: 1, inset: 5pt, ..col)).width)
+    for (a, b, cell) in tinytable-spans {
+      let w = tinytable-measure(cell)
+      let cur = tinytable-naturals.slice(a, b).sum()
+      if w > cur {
+        for k in range(a, b) {
+          tinytable-naturals.at(k) = if cur > 0pt { tinytable-naturals.at(k) * (w / cur) } else { w / (b - a) }
+        }
+      }
+    }
     let tinytable-total = calc.min(tinytable-naturals.sum(), size.width)
     block(width: tinytable-total)[
 

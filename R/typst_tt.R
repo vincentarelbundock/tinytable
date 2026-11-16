@@ -263,29 +263,45 @@ typst_widths <- function(x, out) {
   }
 
   # Proportional columns: measure natural column widths in Typst itself.
-  # Group headers and spanning cells are excluded from the measurement; they
-  # span several columns, so they do not pin down any single column's width.
-  coldata <- apply(x@data_body, 2, function(k) {
-    paste0("[", k, "]", collapse = ", ")
-  })
-  if (!is.null(colnames(x)) && length(colnames(x)) > 0) {
-    coldata <- paste0("[", colnames(x), "], ", coldata)
-  }
-  coldata <- sprintf("    (%s),", coldata)
+  m <- typst_measure_cells(x)
+  coldata <- vapply(seq_len(ncol(m$cells)), function(j) {
+    k <- m$cells[!m$skip[, j], j]
+    if (length(k) == 0) k <- "[]"
+    sprintf("    (%s,),", paste(k, collapse = ", "))
+  }, character(1))
   coldata <- paste(
     c("  #let tinytable-coldata = (", coldata, "  )", ""),
     collapse = "\n"
   )
+  spans <- if (length(m$spans)) {
+    paste0(paste(m$spans, collapse = ", "), ",")
+  } else {
+    ""
+  }
+  spans <- sprintf("  #let tinytable-spans = (%s)\n", spans)
 
   # `grid` with the same inset as `table` measures the same natural width,
   # but is immune to the `show table.cell` styling rule, whose styles are
   # keyed by cell position and would misapply in a single-column layout.
+  # Spanning cells (e.g. `group_tt(i=)` labels) are measured separately: when
+  # one is wider than the columns it covers, those columns grow in proportion.
   total <- "calc.min(tinytable-naturals.sum(), size.width)"
   wrapper_open <- paste(
     c(
       coldata,
+      spans,
       "  #context layout(size => {",
+      "    let tinytable-measure = cell => measure(grid(columns: 1, inset: 5pt, cell)).width",
       "    let tinytable-naturals = tinytable-coldata.map(col => measure(grid(columns: 1, inset: 5pt, ..col)).width)",
+      "    for (a, b, cell) in tinytable-spans {",
+      "      let w = tinytable-measure(cell)",
+      "      let cur = tinytable-naturals.slice(a, b).sum()",
+      "      if w > cur {",
+      "        for k in range(a, b) {",
+      "          tinytable-naturals.at(k) = if cur > 0pt { tinytable-naturals.at(k) * (w / cur) } else { w / (b - a) }",
+      "        }",
+      "      }",
+      "    }",
       sprintf("    let tinytable-total = %s", total),
       "    block(width: tinytable-total)[",
       ""
@@ -302,6 +318,77 @@ typst_widths <- function(x, out) {
   )
   out <- lines_insert(out, "\n  ]\n  })", "end table", "after")
   out
+}
+
+# Cells used to measure natural column widths (#695)
+#
+# Returns a list with
+# - `cells`: character matrix (header row + body rows) of Typst content
+#   expressions, with each cell's `indent` applied as `pad()`, because the
+#   `show table.cell` rule that normally adds it is bypassed by the measurement.
+# - `skip`: logical matrix flagging cells that must not set a single column's
+#   width: cells spanning several columns and cells hidden under a span.
+# - `spans`: Typst `(start, end, content)` triples for multi-column cells.
+typst_measure_cells <- function(x) {
+  cells <- as.matrix(x@data_body)
+  has_header <- !is.null(colnames(x)) && length(colnames(x)) > 0
+  if (has_header) {
+    cells <- rbind(colnames(x), cells)
+  }
+  cells <- matrix(paste0("[", cells, "]"), ncol = ncol(x))
+  nh <- as.integer(has_header)
+  nr <- nrow(cells)
+  nc <- ncol(cells)
+  skip <- matrix(FALSE, nr, nc)
+
+  # @style_other is resolved before build_eval(): column- and row-wide
+  # settings are expanded to cells and later style_tt() calls win.
+  sty <- x@style_other
+  if (!all(c("i", "j") %in% names(sty))) {
+    return(list(cells = cells, skip = skip, spans = character(0)))
+  }
+  row_of <- function(i) i + nh
+  ok <- !is.na(sty$i) & !is.na(sty$j) & row_of(sty$i) >= 1 &
+    row_of(sty$i) <= nr & sty$j >= 1 & sty$j <= nc
+  sty <- sty[ok, , drop = FALSE]
+
+  if ("indent" %in% names(sty)) {
+    ind <- sty[!is.na(sty$indent) & sty$indent > 0, , drop = FALSE]
+    ind <- ind[!duplicated(ind[, c("i", "j")], fromLast = TRUE), , drop = FALSE]
+    if (nrow(ind) > 0) {
+      idx <- cbind(row_of(ind$i), ind$j)
+      cells[idx] <- sprintf(
+        "pad(left: %s)%s",
+        vapply(ind$indent, format_markup_unit, character(1), "em"),
+        cells[idx]
+      )
+    }
+  }
+
+  spans <- character(0)
+  cs <- if ("colspan" %in% names(sty)) sty$colspan else rep(NA, nrow(sty))
+  rs <- if ("rowspan" %in% names(sty)) sty$rowspan else rep(NA, nrow(sty))
+  is_span <- (!is.na(cs) & cs > 1) | (!is.na(rs) & rs > 1)
+  sp <- sty[is_span, , drop = FALSE]
+  sp$cs <- ifelse(is.na(cs[is_span]), 1, cs[is_span])
+  sp$rs <- ifelse(is.na(rs[is_span]), 1, rs[is_span])
+  sp <- sp[!duplicated(sp[, c("i", "j", "cs", "rs")]), , drop = FALSE]
+  for (k in seq_len(nrow(sp))) {
+    r <- row_of(sp$i[k])
+    j <- sp$j[k]
+    rows <- r:min(nr, r + sp$rs[k] - 1)
+    cols <- j:min(nc, j + sp$cs[k] - 1)
+    # hidden cells under the span
+    skip[rows, cols] <- TRUE
+    if (length(cols) > 1) {
+      spans <- c(spans, sprintf("(%d, %d, %s)", j - 1, max(cols), cells[r, j]))
+    } else {
+      # row-only span: still a single column's content
+      skip[r, j] <- FALSE
+    }
+  }
+
+  list(cells = cells, skip = skip, spans = spans)
 }
 
 # Helper function to process notes

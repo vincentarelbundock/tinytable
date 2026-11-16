@@ -42,15 +42,27 @@ block[ // start block
 
   // tinytable align-figure before
   #let tinytable-coldata = (
-    ([Sepal.Length], [5.1], [4.9], [4.7], [4.6], [5.0], [5.4]),
-    ([Sepal.Width], [3.5], [3.0], [3.2], [3.1], [3.6], [3.9]),
-    ([Petal.Length], [1.4], [1.4], [1.3], [1.5], [1.4], [1.7]),
-    ([Petal.Width], [0.2], [0.2], [0.2], [0.2], [0.2], [0.4]),
-    ([Species], [setosa], [setosa], [setosa], [setosa], [setosa], [setosa]),
+    ([Sepal.Length], [5.1], [4.9], [4.7], [4.6], [5.0], [5.4],),
+    ([Sepal.Width], [3.5], [3.0], [3.2], [3.1], [3.6], [3.9],),
+    ([Petal.Length], [1.4], [1.4], [1.3], [1.5], [1.4], [1.7],),
+    ([Petal.Width], [0.2], [0.2], [0.2], [0.2], [0.2], [0.4],),
+    ([Species], [setosa], [setosa], [setosa], [setosa], [setosa], [setosa],),
   )
 
+  #let tinytable-spans = ()
+
   #context layout(size => {
+    let tinytable-measure = cell => measure(grid(columns: 1, inset: 5pt, cell)).width
     let tinytable-naturals = tinytable-coldata.map(col => measure(grid(columns: 1, inset: 5pt, ..col)).width)
+    for (a, b, cell) in tinytable-spans {
+      let w = tinytable-measure(cell)
+      let cur = tinytable-naturals.slice(a, b).sum()
+      if w > cur {
+        for k in range(a, b) {
+          tinytable-naturals.at(k) = if cur > 0pt { tinytable-naturals.at(k) * (w / cur) } else { w / (b - a) }
+        }
+      }
+    }
     let tinytable-total = calc.min(tinytable-naturals.sum(), size.width)
     block(width: tinytable-total)[
 
