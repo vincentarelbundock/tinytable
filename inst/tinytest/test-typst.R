@@ -383,3 +383,38 @@ expect_false(grepl("tinytable-coldata", out, fixed = TRUE))
 tab <- tt(dat669, width = c(0.1, 0.2, 0.2, 0.3))
 out <- build_tt(tab, "typst")@table_string
 expect_true(grepl("columns: (10.00%, 20.00%, 20.00%, 30.00%),", out, fixed = TRUE))
+
+# Issue #695: with notes, column widths ignored indent and counted spanning
+# group labels in every column.
+dat695 <- data.frame(Yr = c(2025L, 2026L, 2024L), N = c(1L, 2L, 3L))
+tab <- tt(dat695, notes = "n") |>
+  group_tt(i = list("New rules" = 1, "Old" = 3)) |>
+  style_tt(i = "~groupi", j = 1, indent = 2)
+out <- build_tt(tab, "typst")@table_string
+coldata <- sub("(?s).*#let tinytable-coldata = \\((.*?)\n  \\)\n.*", "\\1", out, perl = TRUE)
+# spanning group labels are not measured as single-column content...
+expect_false(grepl("[New rules]", coldata, fixed = TRUE))
+expect_false(grepl("[Old]", coldata, fixed = TRUE))
+# ...but as spans covering all columns
+expect_true(grepl("#let tinytable-spans = ((0, 2, [New rules]), (0, 2, [Old]),)", out, fixed = TRUE))
+# indented cells are measured with their indent
+expect_true(grepl("([Yr], pad(left: 2em)[2025], pad(left: 2em)[2026], pad(left: 2em)[2024],),", out, fixed = TRUE))
+expect_true(grepl("([N], [1], [2], [3],),", out, fixed = TRUE))
+# matrix-inserted group rows hold per-column content and are still measured
+tab <- tt(dat695, notes = "n") |>
+  group_tt(i = 2, j = matrix(c("wide-inserted-value", "q"), nrow = 1))
+out <- build_tt(tab, "typst")@table_string
+expect_true(grepl("([Yr], [2025], [wide-inserted-value], [2026], [2024],),", out, fixed = TRUE))
+expect_true(grepl("#let tinytable-spans = ()", out, fixed = TRUE))
+# column-wide indent is measured; a later indent = 0 overrides an earlier one
+tab <- tt(data.frame(a = c(1000, 2)), notes = "n") |> style_tt(j = 1, indent = 2)
+out <- build_tt(tab, "typst")@table_string
+expect_true(grepl("(pad(left: 2em)[a], pad(left: 2em)[1000], pad(left: 2em)[2],),", out, fixed = TRUE))
+tab <- tt(data.frame(a = c(1000, 2)), notes = "n") |>
+  style_tt(i = 1, j = 1, indent = 20) |>
+  style_tt(i = 1, j = 1, indent = 0)
+out <- build_tt(tab, "typst")@table_string
+expect_true(grepl("([a], [1000], [2],),", out, fixed = TRUE))
+# empty theme (no styles at all) with notes does not error
+out <- build_tt(tt(data.frame(a = 1, b = 2), theme = "empty", notes = "n"), "typst")@table_string
+expect_true(grepl("([a], [1],),", out, fixed = TRUE))
