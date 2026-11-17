@@ -13,3 +13,21 @@ options(tinytable_print_output = NULL)
 x <- mtcars[1:3, 1:3]
 tab <- save_tt(tt(x, notes = "Hello World!"), "markdown")
 expect_inherits(tab, "character")
+
+# Issue #692: TeX collapses spaces, so unlabelled notes need distinct keys.
+notes <- list("first", "second", "third", "fourth")
+expected <- c(
+  "note{}={first},",
+  "note{{}}={second},",
+  "note{{}{}}={third},",
+  "note{{}{}{}}={fourth},"
+)
+for (n in list(notes, append(notes, list(a = "labelled"), after = 2))) {
+  tab <- tt(data.frame(x = 1:3, y = c("A", "B", "C")), notes = n)
+  out <- save_tt(tab, "latex")
+  lines <- strsplit(out, "\n", fixed = TRUE)[[1]]
+  expect_identical(lines[lines %in% expected], expected)
+  if (!is.null(names(n))) {
+    expect_true("note{a}={labelled}," %in% lines)
+  }
+}
