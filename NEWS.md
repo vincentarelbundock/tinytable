@@ -5,6 +5,7 @@
 * `format_tt(quarto = TRUE)` no longer appends spurious `NA` rows to tables with `group_tt(i = )` row groups, and no longer wraps the wrong cells. The Quarto wrapper indexed `@data_body` directly with row positions expressed in the rendered-table numbering, which includes group label rows; it now goes through the same `apply_format()` dispatcher as every other formatter. As a consequence, `quarto = TRUE` now also applies to column names, captions, notes, and group labels by default, matching the behavior of `markdown = TRUE`. Thanks to @andrewheiss for Issue #685.
 * Fix COPYRIGHTS file issues.
 * Typst: in tables with `notes`, column widths now account for `style_tt(indent = )`, so indented cells no longer overflow into the next column. Spanning cells, such as `group_tt(i = )` labels, no longer set the width of every column they cover; instead, the covered columns widen proportionally only when a label does not fit. Thanks to @tomasrei for Issue #695.
+* RStudio: when chunk output is sent to the console, tables printed from a Quarto or R Markdown chunk now open in the viewer pane instead of printing raw HTML to the console. Detection is best-effort, so the behavior can also be set explicitly with `options(tinytable_print_rstudio_notebook = "viewer")` or `"inline"`. Thanks to @tomasrei for Issue #697.
 
 ## 0.18.0
 

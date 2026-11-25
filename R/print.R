@@ -134,6 +134,12 @@ pkgdown_print.tinytable <- function(x, visible = TRUE) {
 #' When printing to HTML in `interactive()` mode, a temporary file is created and `viewer()` is called to preview the file with the local browser (ex: Firefox or Chrome). The temporary file is then automatically cleaned up. On some operating systems, like some Linux distributions, browser do not have read access to the `/tmp/` directory. In such cases, users can specify a custom location to store temporary HTML files. Note that this prevents `tinytable` from automatically cleaning up temporary files automatically.
 #'
 #' `options(tinytable_tempdir = "/home/username/temp_directory")`
+#'
+#' In RStudio, tables printed from a code chunk in a Quarto or R Markdown document are displayed inline below the chunk. When chunk output is sent to the console instead (per-document `editor_options: chunk_output_type: console`, or the global "Show output inline" preference), `tinytable` displays the table in the viewer pane. This detection is best-effort; it can be overridden with:
+#'
+#' + `options(tinytable_print_rstudio_notebook = "viewer")`: always use the viewer pane.
+#' + `options(tinytable_print_rstudio_notebook = "inline")`: always display inline.
+#' + `options(tinytable_print_rstudio_notebook = "auto")`: default.
 #' @param ... Other arguments are ignored.
 #' @return launch a browser window or cat() the table to console.
 #' @export

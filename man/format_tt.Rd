@@ -162,6 +162,14 @@ In addition, some more specific options are available to control the behavior of
 \item \code{tinytable_pdf_clean}: Delete temporary and log files for pdf output in \code{save_tt()}
 \item \code{tinytable_color_name_normalization}: Enable/disable automatic color name processing (default: TRUE). When enabled, R color names recognized by \code{col2rgb()} are converted to hex format for consistent rendering across HTML, LaTeX, and Typst formats. If R color conversion fails, LaTeX color names are used as fallback. Colors explicitly supplied as hex values with "#" prefix are passed through unchanged. Set to FALSE to disable processing and pass color names unchanged.
 }
+\subsection{Printing}{
+\itemize{
+\item \code{tinytable_print_output}: Default output format when a table is printed, e.g. \code{"html"}, \code{"markdown"}, \code{"latex"}, \code{"typst"}, or \code{"dataframe"}. See \code{?print.tinytable}.
+\item \code{tinytable_tempdir}: Directory where temporary HTML files are written when previewing tables in the viewer or browser.
+\item \code{tinytable_print_rstudio_notebook}: How HTML tables are displayed when printed from a code chunk in a Quarto or R Markdown document in RStudio. \code{"auto"} (default) displays them inline below the chunk, or in the viewer pane when chunk output is sent to the console. \code{"inline"} always displays them inline. \code{"viewer"} always opens the viewer pane.
+}
+}
+
 \subsection{Quarto}{
 
 The \code{format_tt(quarto=TRUE)} argument enables Quarto data processing with some limitations:
